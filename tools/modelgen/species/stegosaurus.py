@@ -11,7 +11,7 @@ In game: scale ~0.6 -> ~4.5 blocks long, ~2 blocks tall at the plates.
 """
 import math
 from rig import Model, wave, sinx, track, keys
-from quadruped import hind_leg, front_leg, quad_gait
+from quadruped import hind_leg, front_leg, quad_gait, quad_sit
 from paint import vnoise, hex2rgb, mix, smooth
 
 ID = "stegosaurus"
@@ -108,7 +108,6 @@ def build():
             m.box("tail4", (x - 0.5, y0 + 0.5, zb), (x + 0.5, y0 + 1.5, zb + 8), tag="spike", name="spike",
                   rot=(-22 - 6 * i, 52 * sx, 0), origin=(x, y0 + 1, zb), paint={"axis": "+z"})
 
-    pal = {k_: hex2rgb(v) for k_, v in m.palette.items()}
 
     def pattern(model, tx, rgb, region):
         P = tx.P
@@ -117,7 +116,7 @@ def build():
             cy_, cz_ = c.origin[1], c.origin[2]
             half = c.size[1] / 2
             e = max(abs(P[1] - cy_), abs(P[2] - cz_)) / max(half, 1e-6)
-            col = mix(pal["plate"], pal["plate_edge"], smooth(0.25, 1.0, e))
+            col = mix(tx.pal["plate"], tx.pal["plate_edge"], smooth(0.25, 1.0, e))
             vein = math.sin((P[1] - cy_ + P[2] - cz_) * 2.2)
             if vein > 0.85 and e < 0.85:
                 col = col * 0.8
@@ -131,6 +130,8 @@ def build():
                     rgb = rgb * 0.82
         return rgb
     m.pattern = pattern
+    m.sexes = {"male": {"plate": "#8a2a1a", "plate_edge": "#f0a640"},
+               "female": {"plate": "#5e4632", "plate_edge": "#b99c66", "dorsal": "#56603a"}}
     animations(m)
     return m
 
@@ -163,6 +164,7 @@ def animations(m):
         "tail4": track(rot=keys([(0, 0, 0, 0), (0.3, 0, 10, 0), (0.55, 0, -20, 0), (1.0, 0, 0, 0)])),
         "neck1": track(rot=keys([(0, 0, 0, 0), (0.3, 0, -8, 0), (0.55, 0, 8, 0), (1.0, 0, 0, 0)])),
     })
+    m.anim("sit", 4.0, True, quad_sit(m, 7))
     jk = [(0, 0, 0, 0), (0.6, 0, 0, 0)]
     for k in range(6):
         t0 = 0.75 + k * 0.3

@@ -1,25 +1,21 @@
 package com.primalera.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.primalera.PrimalEra;
 import com.primalera.entity.DinosaurEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 /**
- * One renderer for every dinosaur. Model, texture and animations are looked
- * up by species id:
- *   geo/entity/&lt;id&gt;.geo.json, textures/entity/&lt;id&gt;.png,
- *   animations/entity/&lt;id&gt;.animation.json
- * The "head" bone follows where the animal is looking.
+ * One renderer for every dinosaur. Model and animations are looked up by species id:
+ *   geo/entity/&lt;id&gt;.geo.json, animations/entity/&lt;id&gt;.animation.json,
+ *   textures/entity/&lt;id&gt;_male.png and _female.png
  */
 public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRenderer<T> {
     private static final float BABY_SCALE = 0.5F;
 
     public DinosaurRenderer(EntityRendererProvider.Context context, String speciesId, float modelScale, float shadow) {
-        super(context, new DefaultedEntityGeoModel<>(PrimalEra.id(speciesId), "head"));
+        super(context, new DinoGeoModel<>(speciesId));
         this.withScale(modelScale);
         this.shadowRadius = shadow;
     }

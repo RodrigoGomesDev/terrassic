@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " X",
+    "B "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:bone_block"
+    },
+    "B": {
+      "item": "minecraft:bone"
+    }
+  },
+  "result": {
+    "item": "primalera:bone_club",
+    "count": 1
+  }
+}

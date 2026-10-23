@@ -37,9 +37,17 @@ python3 contact.py ../../art/preview_sheet.png front34 side back34
 - O osso `head` é controlado pelo jogo (olhar). Por isso a cabeça é nivelada pelo osso filho `skull`.
 - Os tamanhos dos cubos precisam ser inteiros (box UV). Para ajuste fino, use `inflate`.
 
+## Macho, fêmea e sela
+
+- `m.sexes = {"male": {...}, "female": {...}}` sobrescreve cores da paleta para cada sexo; o gerador pinta
+  `<especie>_male.png` e `<especie>_female.png` e guarda as duas no `.bbmodel`.
+- Ossos `male_display` / `female_display` só aparecem no jogo para aquele sexo (ex.: crista maior do macho).
+- `add_saddle(...)` cria o osso `saddle`, mostrado só quando o dinossauro está selado.
+- `sit_tracks(...)` / `quad_sit(...)` criam a animação de descanso (`sit`).
+
 ## Adicionar uma espécie
 
-1. Copie o arquivo mais parecido: `smalltheropod.py` + `velociraptor.py` para bípedes pequenos, `tyrannosaurus.py` para bípedes grandes, ou `quadruped.py` + `triceratops.py` para quadrúpedes.
+1. Copie o arquivo mais parecido: `smalltheropod.py` + `velociraptor.py`/`gallimimus.py`/`dilophosaurus.py` para bípedes, `tyrannosaurus.py`/`spinosaurus.py` para terópodes grandes, ou `quadruped.py` + `parasaurolophus.py`/`brachiosaurus.py` para quadrúpedes.
 2. Ajuste as proporções a partir das medidas reais (comprimento, altura do quadril, crânio).
 3. Adicione o nome em `ALL`, no `build_all.py`, e rode o gerador.
-4. No mod, crie a classe da entidade e registre em `ModEntities`, `ModItems` e `PrimalEraClient` (e em `ModSpawns`, se for nascer no mundo).
+4. No mod: adicione a espécie na tabela de `tools/javagen/gen_species.py` e em `gen_resources.py`, rode os dois, registre em `ModEntities`, `ModItems`, `ModBlocks`, `PrimalEraClient` e `ModSpawns`, e desenhe o ovo gerador em `tools/spritegen/sprites.py`.

@@ -1,7 +1,7 @@
 {
  "tyrannosaurus": {
-  "bones": 23,
-  "cubes": 45,
+  "bones": 24,
+  "cubes": 52,
   "texture": [
    128,
    256
@@ -23,13 +23,128 @@
    "animation.tyrannosaurus.walk",
    "animation.tyrannosaurus.run",
    "animation.tyrannosaurus.attack",
-   "animation.tyrannosaurus.roar"
+   "animation.tyrannosaurus.roar",
+   "animation.tyrannosaurus.sit"
   ],
   "render_scale": 1.0
  },
- "triceratops": {
+ "spinosaurus": {
   "bones": 24,
-  "cubes": 49,
+  "cubes": 52,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9,
+    -3.0305848999656604e-05,
+    -59.08103907101545
+   ],
+   [
+    9,
+    49,
+    61.999976490604155
+   ]
+  ],
+  "animations": [
+   "animation.spinosaurus.idle",
+   "animation.spinosaurus.walk",
+   "animation.spinosaurus.run",
+   "animation.spinosaurus.attack",
+   "animation.spinosaurus.roar",
+   "animation.spinosaurus.sit"
+  ],
+  "render_scale": 1.0
+ },
+ "dilophosaurus": {
+  "bones": 24,
+  "cubes": 34,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -5,
+    -0.14989446755437097,
+    -32.06308085254459
+   ],
+   [
+    5,
+    31.239390958993308,
+    41.00004408120612
+   ]
+  ],
+  "animations": [
+   "animation.dilophosaurus.idle",
+   "animation.dilophosaurus.walk",
+   "animation.dilophosaurus.run",
+   "animation.dilophosaurus.sit",
+   "animation.dilophosaurus.display",
+   "animation.dilophosaurus.attack"
+  ],
+  "render_scale": 1.0
+ },
+ "velociraptor": {
+  "bones": 23,
+  "cubes": 36,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -4,
+    1.3542856184933783e-05,
+    -29.5429465280745
+   ],
+   [
+    4,
+    26.12975986530676,
+    38.99998109612815
+   ]
+  ],
+  "animations": [
+   "animation.velociraptor.idle",
+   "animation.velociraptor.walk",
+   "animation.velociraptor.run",
+   "animation.velociraptor.sit",
+   "animation.velociraptor.attack"
+  ],
+  "render_scale": 0.5
+ },
+ "compsognathus": {
+  "bones": 24,
+  "cubes": 29,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -3,
+    -0.18719412780487366,
+    -23.96162557896686
+   ],
+   [
+    3,
+    22.297129622199563,
+    41.01104805343135
+   ]
+  ],
+  "animations": [
+   "animation.compsognathus.idle",
+   "animation.compsognathus.walk",
+   "animation.compsognathus.run",
+   "animation.compsognathus.sit",
+   "animation.compsognathus.attack"
+  ],
+  "render_scale": 0.3
+ },
+ "triceratops": {
+  "bones": 25,
+  "cubes": 56,
   "texture": [
    128,
    256
@@ -51,6 +166,7 @@
    "animation.triceratops.walk",
    "animation.triceratops.run",
    "animation.triceratops.attack",
+   "animation.triceratops.sit",
    "animation.triceratops.graze"
   ],
   "render_scale": 1.0
@@ -79,62 +195,155 @@
    "animation.stegosaurus.walk",
    "animation.stegosaurus.run",
    "animation.stegosaurus.attack",
+   "animation.stegosaurus.sit",
    "animation.stegosaurus.graze"
   ],
   "render_scale": 1.0
  },
- "velociraptor": {
-  "bones": 23,
-  "cubes": 36,
+ "ankylosaurus": {
+  "bones": 24,
+  "cubes": 78,
   "texture": [
    128,
    128
   ],
   "bounds_px": [
    [
-    -4,
-    1.3542856184933783e-05,
-    -29.5429465280745
+    -12,
+    -4.4865476168109986e-05,
+    -27.835203101845156
    ],
    [
-    4,
-    26.12975986530676,
-    38.99998109612815
+    12,
+    20,
+    42.10942925107145
    ]
   ],
   "animations": [
-   "animation.velociraptor.idle",
-   "animation.velociraptor.walk",
-   "animation.velociraptor.run",
-   "animation.velociraptor.attack"
+   "animation.ankylosaurus.idle",
+   "animation.ankylosaurus.walk",
+   "animation.ankylosaurus.run",
+   "animation.ankylosaurus.attack",
+   "animation.ankylosaurus.sit",
+   "animation.ankylosaurus.graze"
   ],
-  "render_scale": 0.5
+  "render_scale": 1.0
  },
- "compsognathus": {
+ "brachiosaurus": {
+  "bones": 28,
+  "cubes": 49,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -12.5,
+    -4.1437348202721935e-06,
+    -43.91811930937932
+   ],
+   [
+    12.5,
+    82.53673791161792,
+    64.08728363697023
+   ]
+  ],
+  "animations": [
+   "animation.brachiosaurus.idle",
+   "animation.brachiosaurus.walk",
+   "animation.brachiosaurus.run",
+   "animation.brachiosaurus.attack",
+   "animation.brachiosaurus.sit",
+   "animation.brachiosaurus.graze"
+  ],
+  "render_scale": 1.0
+ },
+ "parasaurolophus": {
+  "bones": 27,
+  "cubes": 49,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.5,
+    2.3649910575684885e-05,
+    -44.650358156435296
+   ],
+   [
+    9.5,
+    39.776864041293024,
+    56.11652063190722
+   ]
+  ],
+  "animations": [
+   "animation.parasaurolophus.idle",
+   "animation.parasaurolophus.walk",
+   "animation.parasaurolophus.run",
+   "animation.parasaurolophus.attack",
+   "animation.parasaurolophus.sit",
+   "animation.parasaurolophus.graze",
+   "animation.parasaurolophus.call"
+  ],
+  "render_scale": 1.0
+ },
+ "pachycephalosaurus": {
   "bones": 24,
-  "cubes": 29,
+  "cubes": 39,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -6,
+    -0.3830063767844889,
+    -31.063690025525496
+   ],
+   [
+    6,
+    35.9944853090949,
+    44.00001258866714
+   ]
+  ],
+  "animations": [
+   "animation.pachycephalosaurus.idle",
+   "animation.pachycephalosaurus.walk",
+   "animation.pachycephalosaurus.run",
+   "animation.pachycephalosaurus.sit",
+   "animation.pachycephalosaurus.graze",
+   "animation.pachycephalosaurus.attack"
+  ],
+  "render_scale": 0.667
+ },
+ "gallimimus": {
+  "bones": 24,
+  "cubes": 40,
   "texture": [
    64,
    128
   ],
   "bounds_px": [
    [
-    -3,
-    -0.18719412780487366,
-    -23.96162557896686
+    -4.5,
+    3.5581221019542753e-06,
+    -24.422172786313368
    ],
    [
-    3,
-    22.297129622199563,
-    41.01104805343135
+    4.5,
+    31.388352645324137,
+    37.99998109612815
    ]
   ],
   "animations": [
-   "animation.compsognathus.idle",
-   "animation.compsognathus.walk",
-   "animation.compsognathus.run",
-   "animation.compsognathus.attack"
+   "animation.gallimimus.idle",
+   "animation.gallimimus.walk",
+   "animation.gallimimus.run",
+   "animation.gallimimus.sit",
+   "animation.gallimimus.graze",
+   "animation.gallimimus.attack"
   ],
-  "render_scale": 0.3
+  "render_scale": 1.0
  }
 }

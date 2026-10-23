@@ -53,7 +53,7 @@ def vnoise(x, y, z, seed=0):
 
 class Texel:
     """Everything the shader gets to know about one texel."""
-    __slots__ = ("P", "W", "N", "face", "cube", "ci", "s", "t", "i", "j", "edge", "cy", "row", "rows", "col", "cols")
+    __slots__ = ("P", "W", "N", "face", "cube", "ci", "s", "t", "i", "j", "edge", "cy", "row", "rows", "col", "cols", "pal")
 
 
 def face_geometry(verts):
@@ -142,6 +142,10 @@ def make_shader(pal, pattern=None, decals=None, noise=1.0):
     pattern(model, tx, rgb, region) -> rgb  (optional species specific layer)
     decals: list of dict(kind, bones, pos, r, side)
     """
+    pal = dict(pal)
+    pal.setdefault("saddle", "#6e4426")
+    pal.setdefault("saddle_dark", "#3a2416")
+    pal.setdefault("saddle_metal", "#b9a571")
     P = {k: hex2rgb(v) for k, v in pal.items()}
     decals = decals or []
 
@@ -191,7 +195,19 @@ def make_shader(pal, pattern=None, decals=None, noise=1.0):
         else:
             rgb = P["flank"].copy()
 
+        # saddle: leather with dark straps and stitched edge
+        if cube.tag == "saddle":
+            rgb = P["saddle"].copy()
+            if cube.name == "strap":
+                rgb = P["saddle_dark"].copy()
+            elif cube.name == "buckle":
+                rgb = P["saddle_metal"].copy()
+            elif tx.edge:
+                rgb = P["saddle_dark"] * 1.1
+            return rgb * (1 + 0.05 * (hash3(tx.i, tx.j, 3) - 0.5))
+
         # species pattern
+        tx.pal = P
         if pattern is not None:
             rgb = pattern(model, tx, rgb, region)
 

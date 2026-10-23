@@ -3,9 +3,9 @@
   "id": "primalera",
   "version": "${version}",
   "name": "PrimalEra",
-  "description": "Real dinosaurs, rebuilt from fossil references: Tyrannosaurus, Triceratops, Stegosaurus, Velociraptor and Compsognathus, each with its own size, behaviour and animations.",
+  "description": "Real dinosaurs rebuilt from fossil references: 12 species from the tiny Compsognathus to the giant Brachiosaurus, males and females, eggs that hatch, taming, riding and archaic weapons.",
   "authors": [
-    "Grupo Permaneo"
+    "Rodrigo Gomes (Grupo Permaneo)"
   ],
   "contact": {},
   "license": "All-Rights-Reserved",

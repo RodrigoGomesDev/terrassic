@@ -12,6 +12,7 @@ from playwright.async_api import async_playwright
 BUILD_JS = r"""
 (spec) => {
   newProject(Formats.bedrock);
+  if (Modes.selected && Modes.selected.id !== 'edit') Modes.options.edit.select();
   Project.name = spec.id;
   Project.geometry_name = spec.id;
   Project.texture_width = spec.texture_width;
@@ -49,9 +50,13 @@ BUILD_JS = r"""
 
 FINISH_JS = r"""
 (args) => {
-  const [spec, dataurl] = args;
-  const tex = new Texture({name: spec.id + '.png'}).fromDataURL(dataurl).add(false);
+  const [spec, dataurl, extra] = args;
+  const tex = new Texture({name: spec.id + '_male.png'}).fromDataURL(dataurl).add(false);
   for (const c of Cube.all) { for (const f in c.faces) c.faces[f].texture = tex.uuid; }
+  // extra textures (female variant) are stored in the project for editing but not applied
+  for (const [name, url] of (extra || [])) { new Texture({name}).fromDataURL(url).add(false); }
+  // bedrock is a single-texture format: the "default" texture is the one shown
+  if (tex.setAsDefaultTexture) tex.setAsDefaultTexture();
   Canvas.updateAll();
   const groups = window.__groups;
   for (const a of spec.animations) {
@@ -124,11 +129,20 @@ class Blockbench:
     async def build(self, spec):
         return await self.page.evaluate(BUILD_JS, spec)
 
-    async def finish(self, spec, png_bytes):
+    async def finish(self, spec, png_bytes, extra=None):
         url = "data:image/png;base64," + base64.b64encode(png_bytes).decode()
-        await self.page.evaluate(FINISH_JS, [spec, url])
+        ex = [[n, "data:image/png;base64," + base64.b64encode(b).decode()] for n, b in (extra or [])]
+        await self.page.evaluate(FINISH_JS, [spec, url, ex])
         await self.page.wait_for_timeout(400)
         return await self.page.evaluate("() => ({bbmodel: Codecs.project.compile(), geo: Codecs.bedrock.compile(), anim: JSON.stringify(AnimationCodec.codecs.bedrock.compileFile(Animation.all))})")
+
+    async def set_texture(self, index):
+        """Apply the n-th project texture to every cube (used to render the female variant)."""
+        await self.page.evaluate("""(i) => { const t = Texture.all[i]; t.setAsDefaultTexture(); t.select(); Canvas.updateAllFaces(); Canvas.updateAll(); }""", index)
+        await self.page.wait_for_timeout(150)
+
+    async def set_visible(self, bone, visible):
+        await self.page.evaluate("""([n, v]) => { const g = Group.all.find(g => g.name === n); if (g) { g.visibility = v; g.forEachChild(c => { c.visibility = v; }); Canvas.updateVisibility(); } }""", [bone, visible])
 
     async def shot(self, cam, anim=None, time=0.0):
         url = await self.page.evaluate(SHOT_JS, [cam, anim, time])

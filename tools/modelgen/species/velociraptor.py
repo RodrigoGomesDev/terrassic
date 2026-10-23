@@ -66,6 +66,9 @@ P = {
     "tail_secs": [(5, 5), (4, 4), (3, 3), (2, 2)],
     "tail_fan": [(2, 5), (3, 7)],
     "pattern": pattern,
+    "sexes": {"male": {"feather": "#3f3024", "dorsal": "#5c3f28", "eye": "#e8c040"},
+              "female": {"feather": "#6a4a30", "dorsal": "#7a5a3c", "flank": "#a88058"}},
+    "sit": {"drop": 7},
     "anim_speed": 1.0,
 }
 

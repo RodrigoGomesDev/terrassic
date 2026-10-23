@@ -1,11 +1,21 @@
 """
-Shared rig for small, feathered theropods (Velociraptor, Compsognathus).
+Shared rig for small and medium bipeds: Velociraptor, Compsognathus, Dilophosaurus, Gallimimus and
+Pachycephalosaurus.
 
-Both are modelled at a larger pixel size and scaled down by the renderer so
-they keep enough texture detail (the raptor at 2x, the compy at 3x).
+Small ones are modelled at a larger pixel size and scaled down by the renderer so they keep enough texture
+detail (the raptor at 2x, the compy at 3x, the pachy at 1.5x).
+
+Options in the parameter dict P (besides the geometry):
+  teeth      : False for beaked animals (gallimimus, pachy)
+  beak       : tag the snout as "beak"
+  head_extra : extra head cubes [(x0,y0,z0, x1,y1,z1, tag, bone[, rot, origin_rel])] relative to the head
+               pivot; bone is "skull", "male_display" or "female_display"
+  saddle     : (top_y, z0, z1, width, body_half_width) for rideable species
+  sit        : dict(drop=, thigh=, shin=, foot=, toes=, tail=, neck=) resting pose
+  sexes      : {"male": {palette overrides}, "female": {...}}
 """
 import math
-from rig import Model, wave, sinx, track, keys
+from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks
 
 
 def build_small(ident, P):
@@ -31,15 +41,34 @@ def build_small(ident, P):
     cw, ch, cl = H["cranium"]          # width, height, length
     sw, sh, sl = H["snout"]
     m.box("skull", *rel(-cw / 2, -1, -cl + 1, cw / 2, ch - 1, 1), name="cranium", paint={"faces": {"down": "mouth"}})
+    teeth = P.get("teeth", True)
+    snout_paint = {"faces": {"down": "mouth"}}
+    jaw_paint = {"faces": {"up": "mouth"}}
+    if teeth:
+        snout_paint["teeth"] = {"edge": "bottom", "rows": 1}
+        jaw_paint["teeth"] = {"edge": "top", "rows": 1}
     m.box("skull", *rel(-sw / 2, H.get("snout_y", 0), -cl + 1 - sl, sw / 2, H.get("snout_y", 0) + sh, -cl + 1),
-          name="snout", paint={"faces": {"down": "mouth"}, "teeth": {"edge": "bottom", "rows": 1}})
+          name="snout", tag="beak" if P.get("beak") else "skin", paint=snout_paint)
     jw, jh, jl = H["jaw"]
     m.bone("jaw", "skull", (0, ay - 1, az - 1))
     m.box("jaw", *rel(-jw / 2, -1 - jh, -jl - 1, jw / 2, -1, -1), name="jaw",
-          paint={"faces": {"up": "mouth"}, "teeth": {"edge": "top", "rows": 1}})
+          tag="beak" if P.get("beak") else "skin", paint=jaw_paint)
     if H.get("crest"):
         cx0, cy0, cz0, cx1, cy1, cz1 = H["crest"]
         m.box("skull", *rel(cx0, cy0, cz0, cx1, cy1, cz1), name="crest", tag="feather")
+    made = set()
+    for ex in P.get("head_extra", []):
+        x0, y0, z0, x1, y1, z1, tag, bone = ex[:8]
+        rot = ex[8] if len(ex) > 8 else None
+        org = ex[9] if len(ex) > 9 else None
+        if bone in ("male_display", "female_display") and bone not in made:
+            m.bone(bone, "skull", (0, ay, az))
+            made.add(bone)
+        kw = {}
+        if rot:
+            kw["rot"] = rot
+            kw["origin"] = (org[0], ay + org[1], az + org[2]) if org else None
+        m.box(bone, *rel(x0, y0, z0, x1, y1, z1), tag=tag, name=tag, **{k: v for k, v in kw.items() if v is not None})
     er = H.get("eye_r", 1.0)
     ey, ez = A[1] + H["eye"][0], A[2] + H["eye"][1]
     m.decals += [
@@ -94,6 +123,9 @@ def build_small(ident, P):
             L = int(round(s["len"]))
             m.box(names[seg], (-wid / 2, y0 - 0.5, z0), (wid / 2, y0 + 0.5, z0 + L + 1), tag="feather", name="fan")
 
+    if P.get("saddle"):
+        add_saddle(m, "body", *P["saddle"])
+    m.sexes = P.get("sexes", {"male": {}, "female": {}})
     m.pattern = P.get("pattern")
     animations(m, P)
     return m
@@ -140,6 +172,53 @@ def animations(m, P):
             t[f"tail{i+1}"] = track(rot=wave(8, lambda p, a=a, i=i, run=run: ((3 if run else 0) + 1.2 * math.cos(4 * math.pi * p), -a * math.sin(2 * math.pi * (p - 0.1 * (i + 1))), 0), Lc))
         m.anim(name, Lc, True, t)
 
+    st = P.get("sit", {})
+    drop = st.get("drop", P["hip"][0] * 0.45)
+    joints = {}
+    for side in ("l", "r"):
+        joints["@thigh_" + side] = (st.get("thigh", 55), 0, 0)
+        joints["shin_" + side] = (st.get("shin", -100), 0, 0)
+        joints["foot_" + side] = (st.get("foot", 55), 0, 0)
+        joints["toes_" + side] = (st.get("toes", -10), 0, 0)
+        joints["arm_" + side] = (20, 0, 0)
+    joints["tail1"] = (st.get("tail", 8), 0, 0)
+    joints["tail2"] = (4, 0, 0)
+    joints["neck1"] = (st.get("neck", -10), 0, 0)
+    joints["skull"] = (6, 0, 0)
+    m.anim("sit", 3.0, True, sit_tracks(3.0, drop, joints))
+
+    if P.get("display"):
+        # dilophosaurus crest display: head up, mouth open, side shake
+        m.anim("display", 1.6, False, {
+            "neck1": track(rot=keys([(0, 0, 0, 0), (0.3, 18, 0, 0), (1.3, 18, 0, 0), (1.6, 0, 0, 0)])),
+            "skull": track(rot=keys([(0, 0, 0, 0), (0.3, 8, 0, 0), (0.6, 8, 0, 10), (0.9, 8, 0, -10), (1.2, 8, 0, 6), (1.6, 0, 0, 0)])),
+            "jaw": track(rot=keys([(0, 0, 0, 0), (0.3, -30, 0, 0), (1.3, -30, 0, 0), (1.6, 0, 0, 0)])),
+            "arm_l": track(rot=keys([(0, 0, 0, 0), (0.3, -30, 0, -15), (1.3, -30, 0, -15), (1.6, 0, 0, 0)])),
+            "arm_r": track(rot=keys([(0, 0, 0, 0), (0.3, -30, 0, 15), (1.3, -30, 0, 15), (1.6, 0, 0, 0)])),
+        })
+    if P.get("herbivore"):
+        jk = [(0, 0, 0, 0), (0.6, 0, 0, 0)]
+        for k in range(5):
+            t0 = 0.75 + k * 0.3
+            jk += [(t0, -12, 0, 0), (t0 + 0.15, -2, 0, 0)]
+        jk += [(2.6, 0, 0, 0)]
+        m.anim("graze", 2.6, False, {
+            "neck1": track(rot=keys([(0, 0, 0, 0), (0.6, -35, 0, 0), (2.1, -35, 0, 0), (2.6, 0, 0, 0)])),
+            "neck2": track(rot=keys([(0, 0, 0, 0), (0.6, -20, 0, 0), (2.1, -20, 0, 0), (2.6, 0, 0, 0)])),
+            "skull": track(rot=keys([(0, 0, 0, 0), (0.6, -15, 0, 0), (2.1, -15, 0, 0), (2.6, 0, 0, 0)])),
+            "jaw": track(rot=keys(jk)),
+            "body": track(rot=keys([(0, 0, 0, 0), (0.6, -6, 0, 0), (2.1, -6, 0, 0), (2.6, 0, 0, 0)])),
+        })
+    if P.get("pachy"):
+        # headbutt: lower the dome and ram forward
+        m.anim("attack", 0.7, False, {
+            "neck1": track(rot=keys([(0, 0, 0, 0), (0.2, 10, 0, 0), (0.35, -25, 0, 0), (0.7, 0, 0, 0)])),
+            "skull": track(rot=keys([(0, 0, 0, 0), (0.2, 6, 0, 0), (0.35, -30, 0, 0), (0.7, 0, 0, 0)])),
+            "body": track(rot=keys([(0, 0, 0, 0), (0.2, 4, 0, 0), (0.35, -8, 0, 0), (0.7, 0, 0, 0)]),
+                          pos=keys([(0, 0, 0, 0), (0.2, 0, 0, 2), (0.35, 0, -0.5, -3), (0.7, 0, 0, 0)])),
+        })
+    if P.get("pachy"):
+        return
     La = 0.6
     m.anim("attack", La, False, {
         "neck1": track(rot=keys([(0, 0, 0, 0), (0.15, 14, 0, 0), (0.3, -18, 0, 0), (0.45, -8, 0, 0), (0.6, 0, 0, 0)])),

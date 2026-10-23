@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  F",
+    " T ",
+    "S  "
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "T": {
+      "item": "minecraft:string"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "primalera:flint_spear",
+    "count": 1
+  }
+}

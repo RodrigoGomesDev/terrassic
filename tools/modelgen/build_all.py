@@ -23,7 +23,9 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "primalera")
 ART = os.path.join(ROOT, "art")
 
-ALL = ["tyrannosaurus", "triceratops", "stegosaurus", "velociraptor", "compsognathus"]
+ALL = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus",
+       "triceratops", "stegosaurus", "ankylosaurus", "brachiosaurus", "parasaurolophus",
+       "pachycephalosaurus", "gallimimus"]
 
 
 def clean_anim(anim_json):
@@ -75,10 +77,16 @@ async def run(names):
             spec = model.spec()
             dump = await bb.build(spec)
             lo, hi = bounds(dump)
-            shader = make_shader(model.palette, model.pattern, model.decals)
-            tex = paint_model(model, dump, shader)
-            buf = io.BytesIO(); tex.save(buf, "PNG")
-            out = await bb.finish(spec, buf.getvalue())
+            sexes = getattr(model, "sexes", None) or {"male": {}, "female": {}}
+            texs = {}
+            for sex in ("male", "female"):
+                pal = dict(model.palette)
+                pal.update(sexes.get(sex, {}))
+                shader = make_shader(pal, model.pattern, model.decals)
+                texs[sex] = paint_model(model, dump, shader)
+            def png(img):
+                b = io.BytesIO(); img.save(b, "PNG"); return b.getvalue()
+            out = await bb.finish(spec, png(texs["male"]), [(f"{name}_female.png", png(texs["female"]))])
             art = os.path.join(ART, name)
             os.makedirs(os.path.join(art, "previews"), exist_ok=True)
             with open(os.path.join(art, f"{name}.bbmodel"), "w") as f:
@@ -89,17 +97,34 @@ async def run(names):
             anim = clean_anim(out["anim"])
             with open(os.path.join(ASSETS, "animations", "entity", f"{name}.animation.json"), "w") as f:
                 json.dump(anim, f, indent=1)
-            tex.save(os.path.join(ASSETS, "textures", "entity", f"{name}.png"))
-            tex.save(os.path.join(art, f"{name}.png"))
+            for sex, img in texs.items():
+                img.save(os.path.join(ASSETS, "textures", "entity", f"{name}_{sex}.png"))
+                img.save(os.path.join(art, f"{name}_{sex}.png"))
             cams = cameras(lo, hi)
+            # previews show the male look; female and saddled looks get their own shots
+            await bb.set_visible("female_display", False)
+            await bb.set_visible("saddle", False)
             for cname, cam in cams.items():
-                png = await bb.shot(cam)
-                open(os.path.join(art, "previews", f"{cname}.png"), "wb").write(png)
+                shot = await bb.shot(cam)
+                open(os.path.join(art, "previews", f"{cname}.png"), "wb").write(shot)
+            await bb.set_texture(1)
+            await bb.set_visible("male_display", False)
+            await bb.set_visible("female_display", True)
+            shot = await bb.shot(cams["front34"])
+            open(os.path.join(art, "previews", "front34_female.png"), "wb").write(shot)
+            await bb.set_texture(0)
+            await bb.set_visible("male_display", True)
+            await bb.set_visible("female_display", False)
+            if any(b.name == "saddle" for b in model.bones):
+                await bb.set_visible("saddle", True)
+                shot = await bb.shot(cams["front34"])
+                open(os.path.join(art, "previews", "front34_saddle.png"), "wb").write(shot)
+                await bb.set_visible("saddle", False)
             for a in model.animations:
                 short = a["name"].split(".")[-1]
                 for k, t in enumerate((0.0, 0.25, 0.5, 0.75)):
-                    png = await bb.shot(cams["side"], a["name"], round(t * a["length"], 3))
-                    open(os.path.join(art, "previews", f"anim_{short}_{k}.png"), "wb").write(png)
+                    shot = await bb.shot(cams["side"], a["name"], round(t * a["length"], 3))
+                    open(os.path.join(art, "previews", f"anim_{short}_{k}.png"), "wb").write(shot)
             report[name] = {
                 "bones": len(spec["bones"]), "cubes": len(spec["cubes"]),
                 "texture": [spec["texture_width"], spec["texture_height"]],

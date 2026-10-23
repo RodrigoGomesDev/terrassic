@@ -15,6 +15,8 @@ async def main(names):
             cam = cameras(info["lo"], info["hi"])["front34"]
             for name, length in info["anims"]:
                 short = name.split(".")[-1]
+                if short not in ("walk", SIGNATURE.get(n, "")):
+                    continue
                 frames = []
                 nf = max(12, min(40, int(length * 15)))
                 for i in range(nf):
@@ -30,9 +32,14 @@ async def main(names):
                 pad = 12
                 box = (max(0, box[0]-pad), max(0, box[1]-pad), box[2]+pad, box[3]+pad)
                 frames = [f.crop(box) for f in frames]
-                frames = [f.resize((int(f.width * 420 / max(f.size)), int(f.height * 420 / max(f.size)))) for f in frames]
+                frames = [f.resize((int(f.width * 300 / max(f.size)), int(f.height * 300 / max(f.size)))) for f in frames]
                 out = os.path.join(ART, n, "previews", f"{short}.gif")
                 frames[0].save(out, save_all=True, append_images=frames[1:], duration=int(1000 * length / nf), loop=0, optimize=True)
                 print(out)
 
-asyncio.run(main(sys.argv[1:] or ["tyrannosaurus", "triceratops", "stegosaurus", "velociraptor", "compsognathus"]))
+SIGNATURE = {"tyrannosaurus": "roar", "spinosaurus": "roar", "dilophosaurus": "display", "parasaurolophus": "call",
+             "triceratops": "attack", "stegosaurus": "attack", "ankylosaurus": "attack", "brachiosaurus": "attack",
+             "pachycephalosaurus": "attack", "velociraptor": "run", "compsognathus": "run", "gallimimus": "run"}
+if __name__ == "__main__":
+    from build_all import ALL
+    asyncio.run(main(sys.argv[1:] or ALL))

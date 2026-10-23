@@ -11,7 +11,8 @@ In game: scale ~0.6 -> ~5.5 blocks long, ~2 blocks tall at the frill.
 """
 import math
 from rig import Model, wave, sinx, track, keys
-from quadruped import hind_leg, front_leg, quad_gait
+from quadruped import hind_leg, front_leg, quad_gait, quad_sit
+from rig import add_saddle
 from paint import vnoise, hash3
 
 ID = "triceratops"
@@ -87,12 +88,12 @@ def build():
             c = tx.cube
             if c.name == "frill_top" or P[0] > c.to[0] - 1.01 or P[0] < c.frm[0] + 1.01:
                 ok = (int(math.floor(P[0] + 0.5)) + int(math.floor(P[1]))) % 3 != 0
-                return model_pal["frill_edge"] * (1.0 if ok else 0.85)
+                return tx.pal["frill_edge"] * (1.0 if ok else 0.85)
             if abs(P[0]) < 1.5:
                 return rgb * 0.7
             spot = ((abs(P[0]) - 6.5) ** 2 + (P[1] - (c.frm[1] + 8.5)) ** 2)
             if spot < 4.5:
-                return model_pal["frill_edge"] * 0.95 if spot > 1.5 else rgb * 0.55
+                return tx.pal["frill_edge"] * 0.95 if spot > 1.5 else rgb * 0.55
             return rgb
         if tag == "skin":
             n = vnoise(P[0] / 3.0, P[1] / 3.0, P[2] / 3.0, 11)
@@ -102,9 +103,10 @@ def build():
                 rgb = rgb * 1.18
         return rgb
 
-    from paint import hex2rgb
-    model_pal = {k: hex2rgb(v) for k, v in m.palette.items()}
     m.pattern = pattern
+    m.sexes = {"male": {"frill": "#a8482a", "frill_edge": "#f2e4c2", "horn_tip": "#f4ecd2"},
+               "female": {"frill": "#7c6248", "frill_edge": "#cbbd9b", "dorsal": "#5e5545", "flank": "#7f725c"}}
+    add_saddle(m, "body", 28, -3, 7, 10, 10, flap=7)
     animations(m)
     return m
 
@@ -137,6 +139,7 @@ def animations(m):
         "body": track(rot=keys([(0, 0, 0, 0), (0.3, -3, 0, 0), (0.5, 3, 0, 0), (0.9, 0, 0, 0)]),
                       pos=keys([(0, 0, 0, 0), (0.3, 0, -0.6, -1.5), (0.5, 0, 0.2, -3), (0.9, 0, 0, 0)])),
     })
+    m.anim("sit", 4.0, True, quad_sit(m, 8))
     # graze: dip the head to the ground and chew
     jk = [(0, 0, 0, 0), (0.6, 0, 0, 0)]
     for k in range(6):

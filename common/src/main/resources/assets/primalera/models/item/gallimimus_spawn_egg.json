@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "primalera:item/gallimimus_spawn_egg"
+  }
+}

@@ -1,6 +1,7 @@
 package com.primalera;
 
 import com.primalera.client.PrimalEraClient;
+import com.primalera.registry.ModBlocks;
 import com.primalera.registry.ModEntities;
 import com.primalera.registry.ModItems;
 import com.primalera.registry.ModTabs;
@@ -19,8 +20,10 @@ public final class PrimalEra {
     }
 
     public static void init() {
+        // order matters on Fabric (registered immediately): tabs, entities, blocks, then items
         ModTabs.TABS.register();
         ModEntities.ENTITY_TYPES.register();
+        ModBlocks.BLOCKS.register();
         ModItems.ITEMS.register();
         ModEntities.registerAttributes();
         ModSpawns.init();

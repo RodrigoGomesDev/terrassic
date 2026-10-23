@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "hatch=0": {
+      "model": "primalera:block/pachycephalosaurus_egg_0"
+    },
+    "hatch=1": {
+      "model": "primalera:block/pachycephalosaurus_egg_1"
+    },
+    "hatch=2": {
+      "model": "primalera:block/pachycephalosaurus_egg_2"
+    }
+  }
+}

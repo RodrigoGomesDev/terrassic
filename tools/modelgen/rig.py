@@ -271,3 +271,42 @@ def track(rot=None, pos=None):
 def keys(points):
     """Explicit keyframes: [(time, x, y, z), ...]"""
     return [[round(t, 4), x, y, z] for (t, x, y, z) in points]
+
+
+# ---------------------------------------------------------------- saddle
+def add_saddle(m, parent, top_y, z0, z1, width, body_half_width, flap=4):
+    """Saddle bone sitting on the back (top_y = top surface of the body). Hidden in game unless saddled."""
+    zc = (z0 + z1) / 2
+    m.bone("saddle", parent, (0, top_y, zc))
+    w = width
+    m.box("saddle", (-w / 2, top_y - 1, z0), (w / 2, top_y + 1, z1), tag="saddle", name="seat")
+    m.box("saddle", (-w / 2 + 1, top_y + 1, z1 - 1), (w / 2 - 1, top_y + 2, z1), tag="saddle", name="cantle")
+    m.box("saddle", (-1, top_y + 1, z0), (1, top_y + 2, z0 + 1), tag="saddle", name="pommel")
+    bw = body_half_width
+    for sx in (1, -1):
+        x0 = bw if sx > 0 else -bw - 1
+        m.box("saddle", (x0, top_y - flap, zc - 1), (x0 + 1, top_y, zc + 1), tag="saddle", name="strap")
+        m.box("saddle", (x0, top_y - flap - 1, zc - 1), (x0 + 1, top_y - flap, zc + 1), tag="saddle", name="buckle")
+
+
+# ---------------------------------------------------------------- resting pose
+def sit_tracks(length, drop, joints, breathe=0.25, extra=None):
+    """
+    Constant resting pose with a little breathing.
+    drop   : how much the body (and the leg roots) go down, in px
+    joints : {bone: (rot_x, rot_y, rot_z)} constant rotations (legs folded, tail down...)
+    Leg root bones listed in 'roots' must also be moved down by 'drop'.
+    """
+    tracks = {}
+    tracks["body"] = track(pos=keys([(0, 0, -drop, 0), (length / 2, 0, -drop + breathe, 0), (length, 0, -drop, 0)]),
+                           rot=keys([(0, 0, 0, 0), (length / 2, 0.6, 0, 0), (length, 0, 0, 0)]))
+    for bone, rot in joints.items():
+        if bone.startswith("@"):  # '@bone' = leg root: move down with the body
+            name = bone[1:]
+            tracks[name] = track(rot=keys([(0, *rot), (length, *rot)]),
+                                 pos=keys([(0, 0, -drop, 0), (length, 0, -drop, 0)]))
+        else:
+            tracks[bone] = track(rot=keys([(0, *rot), (length, *rot)]))
+    if extra:
+        tracks.update(extra)
+    return tracks

@@ -10,7 +10,7 @@ Reference (Wikipedia, Sue / FMNH PR 2081 and later estimates):
 In game: scale ~0.55 (1 m = ~8.8 px)  ->  ~6.6 blocks long, hips ~2.3 blocks.
 """
 import math
-from rig import Model, wave, sinx, siny, sinz, combo, track, keys
+from rig import Model, wave, sinx, siny, sinz, combo, track, keys, add_saddle, sit_tracks
 
 ID = "tyrannosaurus"
 
@@ -114,6 +114,10 @@ def build():
         return rgb
     m.pattern = pattern
     m.palette["dorsal_dark"] = "#3d3227"
+    # males: rusty-red brow horns and darker back; females: plain
+    m.sexes = {"male": {"dorsal_dark": "#7a3424", "dorsal": "#45392b"},
+               "female": {"dorsal_dark": "#4b3f30", "flank": "#7a6548"}}
+    add_saddle(m, "body", 37, -6, 4, 8, 7, flap=6)
 
     animations(m)
     return m
@@ -203,3 +207,13 @@ def animations(m):
         "arm_r": track(rot=keys([(0, 0, 0, 0), (0.4, -20, 0, 10), (1.6, -20, 0, 10), (2.4, 0, 0, 0)])),
     }
     m.anim("roar", Lo, False, roar)
+
+    # resting: drops onto its belly with the legs folded
+    joints = {}
+    for side in ("l", "r"):
+        joints["@thigh_" + side] = (62, 0, 0)
+        joints["shin_" + side] = (-118, 0, 0)
+        joints["foot_" + side] = (62, 0, 0)
+        joints["toes_" + side] = (-6, 0, 0)
+    joints.update({"tail1": (9, 0, 0), "tail2": (4, 0, 0), "tail3": (-2, 0, 0), "neck1": (-6, 0, 0), "skull": (4, 0, 0)})
+    m.anim("sit", 4.0, True, sit_tracks(4.0, 13, joints, breathe=0.4))

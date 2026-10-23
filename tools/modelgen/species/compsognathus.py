@@ -61,6 +61,9 @@ P = {
     "tail_pts": [(12, 5), (12.5, 12), (13, 19), (13, 26), (13, 33), (13.2, 40)],
     "tail_secs": [(4, 4), (3, 3), (2, 2), (2, 2), (1, 1)],
     "pattern": pattern,
+    "sexes": {"male": {"flank": "#9a9248", "dorsal": "#4e4e24"},
+              "female": {"flank": "#8a8458", "dorsal": "#5e5a36", "belly": "#e6dfb8"}},
+    "sit": {"drop": 5},
     "anim_speed": 1.3,
 }
 
