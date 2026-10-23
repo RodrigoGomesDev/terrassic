@@ -1,0 +1,140 @@
+{
+ "tyrannosaurus": {
+  "bones": 23,
+  "cubes": 45,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.5,
+    -0.10587278931878608,
+    -48.239780870332204
+   ],
+   [
+    9.5,
+    42.228768026226376,
+    58.078468862043515
+   ]
+  ],
+  "animations": [
+   "animation.tyrannosaurus.idle",
+   "animation.tyrannosaurus.walk",
+   "animation.tyrannosaurus.run",
+   "animation.tyrannosaurus.attack",
+   "animation.tyrannosaurus.roar"
+  ],
+  "render_scale": 1.0
+ },
+ "triceratops": {
+  "bones": 24,
+  "cubes": 49,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -11,
+    -0.24848177044797648,
+    -44.2554416149631
+   ],
+   [
+    11,
+    36.224082217454594,
+    44.2066357550258
+   ]
+  ],
+  "animations": [
+   "animation.triceratops.idle",
+   "animation.triceratops.walk",
+   "animation.triceratops.run",
+   "animation.triceratops.attack",
+   "animation.triceratops.graze"
+  ],
+  "render_scale": 1.0
+ },
+ "stegosaurus": {
+  "bones": 25,
+  "cubes": 59,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9,
+    -2.689262250399338e-05,
+    -38.88323547528455
+   ],
+   [
+    9,
+    36.7713886832774,
+    54.60858659065945
+   ]
+  ],
+  "animations": [
+   "animation.stegosaurus.idle",
+   "animation.stegosaurus.walk",
+   "animation.stegosaurus.run",
+   "animation.stegosaurus.attack",
+   "animation.stegosaurus.graze"
+  ],
+  "render_scale": 1.0
+ },
+ "velociraptor": {
+  "bones": 23,
+  "cubes": 36,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -4,
+    1.3542856184933783e-05,
+    -29.5429465280745
+   ],
+   [
+    4,
+    26.12975986530676,
+    38.99998109612815
+   ]
+  ],
+  "animations": [
+   "animation.velociraptor.idle",
+   "animation.velociraptor.walk",
+   "animation.velociraptor.run",
+   "animation.velociraptor.attack"
+  ],
+  "render_scale": 0.5
+ },
+ "compsognathus": {
+  "bones": 24,
+  "cubes": 29,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -3,
+    -0.18719412780487366,
+    -23.96162557896686
+   ],
+   [
+    3,
+    22.297129622199563,
+    41.01104805343135
+   ]
+  ],
+  "animations": [
+   "animation.compsognathus.idle",
+   "animation.compsognathus.walk",
+   "animation.compsognathus.run",
+   "animation.compsognathus.attack"
+  ],
+  "render_scale": 0.3
+ }
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "primalera",
+  "version": "${version}",
+  "name": "PrimalEra",
+  "description": "Real dinosaurs, rebuilt from fossil references: Tyrannosaurus, Triceratops, Stegosaurus, Velociraptor and Compsognathus, each with its own size, behaviour and animations.",
+  "authors": [
+    "Grupo Permaneo"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/primalera/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.primalera.fabric.PrimalEraFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "architectury": ">=9.2.0",
+    "geckolib": ">=4.4.0",
+    "fabric-api": "*"
+  }
+}

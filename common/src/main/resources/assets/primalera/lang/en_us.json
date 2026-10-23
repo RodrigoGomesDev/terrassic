@@ -1,0 +1,13 @@
+{
+  "itemGroup.primalera.main": "PrimalEra",
+  "entity.primalera.tyrannosaurus": "Tyrannosaurus",
+  "item.primalera.tyrannosaurus_spawn_egg": "Tyrannosaurus Spawn Egg",
+  "entity.primalera.triceratops": "Triceratops",
+  "item.primalera.triceratops_spawn_egg": "Triceratops Spawn Egg",
+  "entity.primalera.stegosaurus": "Stegosaurus",
+  "item.primalera.stegosaurus_spawn_egg": "Stegosaurus Spawn Egg",
+  "entity.primalera.velociraptor": "Velociraptor",
+  "item.primalera.velociraptor_spawn_egg": "Velociraptor Spawn Egg",
+  "entity.primalera.compsognathus": "Compsognathus",
+  "item.primalera.compsognathus_spawn_egg": "Compsognathus Spawn Egg"
+}

@@ -1,0 +1,13 @@
+{
+  "itemGroup.primalera.main": "PrimalEra",
+  "entity.primalera.tyrannosaurus": "Tiranossauro",
+  "item.primalera.tyrannosaurus_spawn_egg": "Ovo Gerador de Tiranossauro",
+  "entity.primalera.triceratops": "Tricerátops",
+  "item.primalera.triceratops_spawn_egg": "Ovo Gerador de Tricerátops",
+  "entity.primalera.stegosaurus": "Estegossauro",
+  "item.primalera.stegosaurus_spawn_egg": "Ovo Gerador de Estegossauro",
+  "entity.primalera.velociraptor": "Velociraptor",
+  "item.primalera.velociraptor_spawn_egg": "Ovo Gerador de Velociraptor",
+  "entity.primalera.compsognathus": "Compsognato",
+  "item.primalera.compsognathus_spawn_egg": "Ovo Gerador de Compsognato"
+}

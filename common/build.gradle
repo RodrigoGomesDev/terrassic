@@ -1,0 +1,17 @@
+architectury {
+    common rootProject.enabled_platforms.split(',')
+}
+
+dependencies {
+    // We depend on Fabric Loader here to use the Fabric @Environment annotations,
+    // which get remapped to the correct annotations on each platform.
+    // Do NOT use other classes from Fabric Loader.
+    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+
+    // Architectury API: cross-loader registries, events, spawn eggs, biome spawns.
+    modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
+
+    // GeckoLib: the common code compiles against the Fabric build of GeckoLib.
+    // Its public API (software.bernie.geckolib.*) is identical on Forge.
+    modCompileOnly "software.bernie.geckolib:geckolib-fabric-$rootProject.minecraft_version:$rootProject.geckolib_version"
+}
