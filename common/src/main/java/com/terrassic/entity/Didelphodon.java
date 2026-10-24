@@ -42,7 +42,7 @@ public class Didelphodon extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.26F;
     public static final float SHADOW = 0.3F;
-    private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get());
+    private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get());
 
     public Didelphodon(EntityType<? extends Didelphodon> type, Level level) {
         super(type, level);

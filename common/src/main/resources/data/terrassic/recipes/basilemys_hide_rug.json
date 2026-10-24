@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "HH"
+  ],
+  "key": {
+    "H": {
+      "item": "terrassic:basilemys_hide"
+    }
+  },
+  "result": {
+    "item": "terrassic:basilemys_hide_rug",
+    "count": 2
+  }
+}

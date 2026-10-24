@@ -173,7 +173,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 113 | **Hesperornis** | Ave | 🌊 | Piscívoro | 1,8 m | Pescador | Territorial | Comida (peixe) | — | Ave mergulhadora; traz peixe do fundo | v0.5 |
 | 114 | Baptornis | Ave | 🌊 | Piscívoro | 1 m | Pescador | Arisco | Comida (peixe) | — | Guarda da base |  |
 | 115 | **Ichthyornis** | Ave | 🪽 | Piscívoro | 0,6 m env. | Pescador | Arisco | Comida (peixe) | 🦜 | Ave de ombro que pesca e traz peixe para o dono | v0.4 |
-| 116 | Vegavis | Ave | 🐊 | Onívoro | 0,6 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus); parente dos patos |  |
+| 116 | **Vegavis** | Ave | 🪽 | Onívoro | 0,7 m | Onívoro pequeno | Arisco | Comida | 🦜 | A "galinha/pato" do Cretáceo: penas, carne e ovos; vai no ombro | v0.7 |
 | 117 | Patagopteryx | Ave | 🦖 | Onívoro | 0,5 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 118 | Asteriornis | Ave | 🪽 | Onívoro | 0,4 m env. | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus); o "frango do fim do mundo" |  |
 
@@ -395,7 +395,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 285 | Protosphyraena | Peixe | 🌊 | Carnívoro | 3 m | Predador médio | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 286 | Ichthyodectes | Peixe | 🌊 | Carnívoro | 3 m | Predador médio | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 287 | Gillicus | Peixe | 🌊 | Piscívoro | 2 m | Pescador | Territorial | — | — | Recurso: carne, couro, osso e amostras |  |
-| 288 | Enchodus | Peixe | 🌊 | Piscívoro | 1,5 m | Pescador | Pacífico | — | — | Recurso: carne, couro, osso e amostras; o "arenque dente-de-sabre" |  |
+| 288 | **Enchodus** | Peixe | 🐟 | Piscívoro | 0,8 m | Pescador | Atrevido (morde quem nada perto) | Comida | — | O peixe do mar: solta o próprio Enchodus, o "bacalhau" do Terrassic | v0.7 |
 
 ## Crocodilos
 
@@ -422,7 +422,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 302 | Protostega | Tartaruga marinha | 🌊 | Onívoro | 3 m | Onívoro médio | Defensivo | Comida | ✅ | Montaria aquática |  |
 | 303 | Desmatochelys | Tartaruga marinha | 🌊 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 304 | Toxochelys | Tartaruga marinha | 🌊 | Onívoro | 1,5 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
-| 305 | Basilemys | Tartaruga | 🦖 | Herbívoro | 1,5 m | Herbívoro pequeno | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
+| 305 | **Basilemys** | Tartaruga | 🐢 | Herbívoro | 1,7 m | Herbívoro pequeno | Pacífico (recolhe-se no casco) | Comida | — | Carne e escamas; a tartaruga terrestre dos deltas | v0.7 |
 
 ## Lagartos, serpentes e anfíbios
 
@@ -449,7 +449,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 319 | Zalambdalestes | Mamífero | 🐾 | Insetívoro | 0,2 m | Comedor de insetos | Arisco | — | — | Vida pequena do bioma |  |
 | 320 | Deltatheridium | Mamífero | 🐾 | Carnívoro | 0,15 m | Caçador pequeno | Arisco | — | — | Vida pequena do bioma |  |
 | 321 | Kryptobaatar | Mamífero | 🐾 | Herbívoro | 0,1 m | Herbívoro pequeno | Arisco | — | — | Vida pequena do bioma |  |
-| 322 | Mesodma | Mamífero | 🐾 | Herbívoro | 0,1 m | Herbívoro pequeno | Arisco | — | — | Vida pequena do bioma |  |
+| 322 | **Mesodma** | Mamífero | 🐾 | Onívoro | 0,25 m | Onívoro pequeno | Arisco | Comida | — | O "coelho" do Cretáceo: caça miúda noturna | v0.7 |
 
 ## Invertebrados
 

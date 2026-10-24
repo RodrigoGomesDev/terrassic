@@ -13,10 +13,11 @@
 | Carne de Dinossauro Assada (`cooked_dino_meat`) | 8 / 0,8 (como bife assado) | forno (200 ticks), defumador (100), fogueira (600); morrer queimando já assa |
 | Carne Nobre Crua (`raw_prime_meat`) | 4 / 0,3 | só das espécies grandes (tabela `PRIME` em `gen_resources.py`): titãs 3-6 (Argentinosaurus 4-8), predadores ápice, ceratopsianos, anquilossauros, hadrossauros, terizinossauros, mosassauros, azdarquídeos 1-3 |
 | Carne Nobre Assada (`cooked_prime_meat`) | 10 / 0,9 + Regeneração I por 5 s | idem; o prato de festa do acampamento, como no ARK |
+| Enchodus Cru / Assado (`enchodus`, `cooked_enchodus`) | 2 / 0,1 e 5 / 0,6 (como bacalhau) | do Enchodus (1) e, desde a fase 112, no lugar do bacalhau que Spinosaurus, Pteranodon, Ichthyornis, Xiphactinus, Archelon e Hesperornis soltavam; assa como o bacalhau |
 
-- Os peixes continuam dando bacalhau: o Xiphactinus é peixe, e o que o Spinosaurus, o Pteranodon, o Ichthyornis, o
-  Hesperornis e o Archelon soltam é o peixe que tinham na barriga. Quando Enchodus e Lepisosteus entrarem, eles trazem
-  os peixes próprios do Cretáceo.
+- Desde a fase 112 (Enchodus) o bacalhau sumiu dos loots: o Xiphactinus é peixe, e o que o Spinosaurus, o Pteranodon, o
+  Ichthyornis, o Hesperornis e o Archelon soltam é o Enchodus que tinham na barriga (tabela `FISH` em `gen_resources.py`).
+  Quem comia bacalhau (`Items.COD` na lista `food`) também aceita Enchodus. O Lepisosteus traz o peixe de rio.
 - Couro, penas, ossos, dentes e chifres continuam como estavam; o couro de cada espécie (`<especie>_hide`) também.
 - A carcaça (`docs/CARCACAS.md`) não muda: o loot passa pela mesma tabela, então as porções já saem em carne de dinossauro.
   As partículas de "carne" da carcaça usam o item novo.
@@ -33,10 +34,10 @@ nosso), e os textos do Guia em `lore.py` falam na carne de dinossauro em vez de 
 | Ordem | Espécie | Papel no mundo | Tamanho real | O que dá | Rig |
 |---|---|---|---|---|---|
 | 1 | **Leptoceratops** ✅ fase 108 | o "porco": ceratopsiano pequeno sem gola grande, em bandos de 3-5 nas planícies e florestas; foge, mas um macho encurralado dá cabeçada | 2 m, ~70 kg (Hell Creek, Scollard) | carne 2-4, couro 1-2 | ceratopsiano (Protoceratops) |
-| 2 | **Vegavis** | a "galinha/pato": ave aquática que grasna (a siringe mais antiga conhecida), em bandos nos rios, deltas e praias; bota ovos em ninhos na margem | 0,6 m (Ilha Vega, Antártica) | carne 1, penas 1-3, ovos (bloco de ovo pequeno) | ave (Ichthyornis/Hesperornis) |
-| 3 | **Mesodma** | o "coelho": multituberculado do tamanho de um rato grande, noturno, em tocas sob as raízes; some na grama alta | 15 cm sem a cauda (Hell Creek) | carne 0-1, couro de coelho | mamífero (Didelphodon, 3x) |
-| 4 | **Basilemys** | a tartaruga terrestre: lenta, de casco alto, pasta em planícies e deltas; protege-se no casco | 1,3 m de casco (Dinosaur Park) | carne 1-2, casco (escamas) 1-3 | tartaruga (Archelon, terrestre) |
-| 5 | **Enchodus** | o "peixe-sabre": peixe marinho com presas, em cardumes no Mar Interior; morde quem nada perto | 1,5 m (Niobrara) | peixe próprio (Enchodus cru/assado), substitui o bacalhau no loot dos marinhos | peixe (Xiphactinus) |
+| 2 | **Vegavis** ✅ fase 109 | a "galinha/pato": ave aquática que grasna (a siringe mais antiga conhecida), em bandos nos rios, deltas e praias; bota ovos em ninhos na margem | 0,6 m (Ilha Vega, Antártica) | carne 1, penas 1-3, ovos (bloco de ovo pequeno) | ave (Ichthyornis/Hesperornis) |
+| 3 | **Mesodma** ✅ fase 110 | o "coelho": multituberculado do tamanho de um rato grande, noturno, em tocas sob as raízes; some na grama alta | 15 cm sem a cauda (Hell Creek) | carne 0-1, couro de coelho | mamífero (Didelphodon, 3x) |
+| 4 | **Basilemys** ✅ fase 111 | a tartaruga terrestre: lenta, de casco alto, pasta em planícies e deltas; protege-se no casco | 1,3 m de casco (Dinosaur Park) | carne 1-2, casco (escamas) 1-3 | tartaruga (Archelon, terrestre) |
+| 5 | **Enchodus** ✅ fase 112 | o "peixe-sabre": peixe marinho com presas, em cardumes no Mar Interior; morde quem nada perto | 1,5 m (Niobrara) | peixe próprio (Enchodus cru/assado), substitui o bacalhau no loot dos marinhos | peixe (Xiphactinus) |
 | 6 | **Lepisosteus** | o peixe-agulha de rio (gar), de escamas ganoides duras; em rios e deltas | 1,2 m (Hell Creek) | peixe próprio, escamas (sílex de escama?) | peixe |
 
 Checklist por espécie: modelo e animações no padrão 2x (textura 1 px = 1 px do jogo, anatomia pesquisada, como o

@@ -58,6 +58,10 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Citipati            desert*, badlands, savanna      3       1-2
  *  Mononykus           desert*, badlands, savanna, plains 6       2-4
  *  Didelphodon         river, swamp, mangrove, forest, plains 6       1-2
+ *  Mesodma             forest, plains, swamp, mangrove, river, taiga 10      2-4
+ *  Basilemys           plains, river, swamp, mangrove, beach, stony shore 7       1-3
+ *  Enchodus            ocean (not frozen), deep ocean (not frozen), beach, stony shore 12      3-7
+ *  Lepisosteus         river, swamp, mangrove, beach, stony shore 10      2-4
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -70,6 +74,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Quetzalcoatlus      plains, savanna, badlands       3       1-2
  *  Hatzegopteryx       hills, forest                   2       1
  *  Ichthyornis         beach, stony shore              10      3-6
+ *  Vegavis             river, swamp, mangrove, beach, stony shore 10      3-6
  *  Mosasaurus          deep ocean (not frozen)         2       1
  *  Tylosaurus          deep ocean (not frozen), ocean (not frozen) 3       1
  *  Elasmosaurus        ocean (not frozen), deep ocean (not frozen) 4       1-2
@@ -122,6 +127,12 @@ public final class ModSpawns {
         placement(ModEntities.CITIPATI);
         placement(ModEntities.MONONYKUS);
         placement(ModEntities.DIDELPHODON);
+        placement(ModEntities.MESODMA);
+        placement(ModEntities.BASILEMYS);
+        SpawnPlacementsRegistry.register(ModEntities.ENCHODUS, SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.LEPISOSTEUS, SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -137,6 +148,8 @@ public final class ModSpawns {
         SpawnPlacementsRegistry.register(ModEntities.HATZEGOPTERYX, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.ICHTHYORNIS, SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.VEGAVIS, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
@@ -273,6 +286,18 @@ public final class ModSpawns {
             if (river || swamp || forest || plains) {
                 add(props, ModEntities.DIDELPHODON.get(), 6, 1, 2);
             }
+            if (forest || plains || swamp || river || taiga) {
+                add(props, ModEntities.MESODMA.get(), 10, 2, 4);
+            }
+            if (plains || river || swamp || coast) {
+                add(props, ModEntities.BASILEMYS.get(), 7, 1, 3);
+            }
+            if (ocean || deepSea || coast) {
+                add(props, MobCategory.WATER_CREATURE, ModEntities.ENCHODUS.get(), 12, 3, 7);
+            }
+            if (river || swamp || coast) {
+                add(props, MobCategory.WATER_CREATURE, ModEntities.LEPISOSTEUS.get(), 10, 2, 4);
+            }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);
             }
@@ -308,6 +333,9 @@ public final class ModSpawns {
             }
             if (coast) {
                 add(props, ModEntities.ICHTHYORNIS.get(), 10, 3, 6);
+            }
+            if (river || swamp || coast) {
+                add(props, ModEntities.VEGAVIS.get(), 10, 3, 6);
             }
             if (deepSea) {
                 add(props, MobCategory.WATER_CREATURE, ModEntities.MOSASAURUS.get(), 2, 1, 1);
