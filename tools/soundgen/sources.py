@@ -9,6 +9,7 @@ Accepted licences:
   - "PD-USGov": work of the US federal government (National Park Service, US Fish and Wildlife Service).
     Public domain; NPS asks for a courtesy credit ("National Park Service"), which LICENSES-SOUNDS.md gives.
   - "CC0": Creative Commons Zero.
+NPS recordings co-credited to the MSU Acoustic Atlas are left out (public domain not confirmed).
 Wikimedia files are re-checked by fetch.py against the Commons API and skipped if the licence is not PD/CC0.
 """
 
@@ -19,8 +20,6 @@ OGA = "https://opengameart.org/sites/default/files/"
 # id -> source. kind: "file" (single audio file), "zip" (all audio files inside), "commons" (Wikimedia Commons file name)
 SOURCES = {
     # ---- big theropods (boom_large)
-    "nps_bison_rut": dict(kind="file", url=NPS + "YELL-BisonRut-JenniferJerrett.mp3", licence="PD-USGov",
-                          author="NPS / Jennifer Jerrett", page=YELL + "sounds-bison.htm", what="bison bellowing (rut)"),
     "nps_bison_bellow_a": dict(kind="file", url=NPS + "yell-YELLMM8K2005914Bison.mp3", licence="PD-USGov",
                                author="NPS / Shan Burson", page=YELL + "sounds-bison.htm", what="bison bellow"),
     "nps_bison_bellow_b": dict(kind="file", url=NPS + "yell-YELLMM8K2005918Bison.mp3", licence="PD-USGov",
@@ -40,12 +39,10 @@ SOURCES = {
     "nps_elk_bugle": dict(kind="file", url="https://www.nps.gov/nps-audiovideo/legacy/mp3/nri/avElement/nri-ElkBuglingGRSA.mp3",
                           licence="PD-USGov", author="NPS", page="https://www.nps.gov/subjects/sound/sounds-elk.htm",
                           what="bull elk bugling, Great Sand Dunes"),
-    "nps_loon": dict(kind="file", url=NPS + "yell-YELLCOLO20160913T18ms.mp3", licence="PD-USGov",
-                     author="NPS & MSU Acoustic Atlas / Jennifer Jerrett", page=YELL + "sounds-commonloon.htm",
-                     what="common loon tremolo calls"),
-    "nps_goose": dict(kind="file", url=NPS + "yell-YELLCAGE20160914T04ms.mp3", licence="PD-USGov",
-                      author="NPS & MSU Acoustic Atlas / Jennifer Jerrett", page=YELL + "sounds-canadagoose.htm",
-                      what="Canada geese honking"),
+    "wm_swans": dict(kind="commons", url="Tundra swans.ogg", licence="PD-USGov",
+                     author="US Fish and Wildlife Service", what="tundra swans calling"),
+    "wm_geese": dict(kind="commons", url="Geese Honking (loud).ogg", licence="PD-USGov",
+                     author="US Fish and Wildlife Service", what="geese honking"),
     # ---- pterosaurs (squawk_pterosaur)
     "nps_crane": dict(kind="file", url=NPS + "yell-YELLFLBCSACR20075171.mp3", licence="PD-USGov",
                       author="NPS / Shan Burson", page=YELL + "sounds-sandhillcrane.htm", what="sandhill cranes calling"),

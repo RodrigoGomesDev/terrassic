@@ -55,22 +55,22 @@ VOICE_SETS = {
             rec("nps_grizzly_warn/*", S("grunt", dur=0.5, f0=120, f1=78, seed=5), dur=0.45, pitch=0.7),
             rec("nps_grizzly_warn/*", S("grunt", dur=0.45, f0=135, f1=90, seed=6), dur=0.45, pitch=0.75, pick=1)]),
         "death": ("deep", 48, [
-            rec("nps_bison_rut/*", S("groan", dur=2.6, f0=80, f1=34, seed=7), dur=1.8, pitch=0.55, fade_out=0.6,
+            rec("nps_bison_bellow_b/*", S("groan", dur=2.6, f0=80, f1=34, seed=7), dur=1.8, pitch=0.55, fade_out=0.6,
                 layer=S("groan", dur=3.2, f0=70, f1=30, seed=7))]),
         "step": ("ground", 24, [S("thud", f0=46, seed=8), S("thud", f0=40, seed=9)]),
     },
-    # hadrosaurs: resonant crest call (elk bugle and loon slowed down into a horn)
+    # hadrosaurs: resonant crest call (elk bugle and tundra swans slowed down into a horn)
     "horn_hadrosaur": {
         "ambient": ("tube", 64, [
             rec("nps_elk_bugle/*", S("horn", dur=2.6, f0=92, f1=84, seed=11), dur=1.4, pitch=0.5,
                 layer=S("horn", dur=2.8, f0=92, f1=84, seed=11), layer_gain=0.35),
-            rec("nps_loon/*", S("horn", dur=1.8, f0=98, f1=92, seed=12), dur=1.2, pitch=0.55,
+            rec("wm_swans/*", S("horn", dur=1.8, f0=98, f1=92, seed=12), dur=1.2, pitch=0.55,
                 layer=S("horn", dur=2.2, f0=98, f1=92, seed=12), layer_gain=0.35),
             rec("nps_elk_bugle/*", S("horn", dur=3.2, f0=88, f1=80, vibrato=3.5, seed=13), dur=1.6, pitch=0.45, pick=1,
                 layer=S("horn", dur=3.6, f0=88, f1=80, seed=13), layer_gain=0.35)]),
         "hurt": ("tube", 24, [
-            rec("nps_goose/*", S("grunt", dur=0.45, f0=180, f1=130, noise=0.3, seed=14), dur=0.3, pitch=0.6),
-            rec("nps_goose/*", S("grunt", dur=0.4, f0=200, f1=150, noise=0.3, seed=15), dur=0.3, pitch=0.65, pick=1)]),
+            rec("wm_geese/*", S("grunt", dur=0.45, f0=180, f1=130, noise=0.3, seed=14), dur=0.3, pitch=0.6),
+            rec("wm_geese/*", S("grunt", dur=0.4, f0=200, f1=150, noise=0.3, seed=15), dur=0.3, pitch=0.65, pick=1)]),
         "death": ("tube", 32, [
             rec("nps_elk_bugle/*", S("horn", dur=2.4, f0=96, f1=60, vibrato=6.0, seed=16), dur=1.3, pitch=0.42, pick=2,
                 fade_out=0.6)]),
@@ -86,7 +86,7 @@ VOICE_SETS = {
         "death": ("beak", 24, [rec("nps_crane/*", S("squawk", dur=0.9, f0=400, f1=180, rough=0.7, seed=25), dur=0.7,
                                    pitch=0.6, pick=1, fade_out=0.6)]),
         "flap": ("air", 16, [rec("oga_wings/*", S("flap", dur=0.45, beats=1, seed=26), dur=0.5, pitch=0.8),
-                             rec("oga_wings/*", S("flap", dur=0.5, beats=1, seed=27), dur=0.5, pitch=0.75, file=1)]),
+                             rec("oga_wings/*", S("flap", dur=0.5, beats=1, seed=27), dur=0.5, pitch=0.65)]),
     },
 }
 

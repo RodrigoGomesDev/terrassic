@@ -33,7 +33,7 @@ LOUDNESS = "loudnorm=I=-18:TP=-2:LRA=11"
 def src_path(pattern, index=0):
     """art/sounds/src/<id>/<glob> -> the index-th matching file (sorted), or None if not downloaded."""
     hits = sorted(glob.glob(os.path.join(SRC, pattern)))
-    hits = [h for h in hits if h.lower().endswith(AUDIO_EXT)]
+    hits = [h for h in hits if h.lower().endswith(AUDIO_EXT) and not os.path.basename(h).startswith(".")]
     return hits[index] if len(hits) > index else None
 
 
