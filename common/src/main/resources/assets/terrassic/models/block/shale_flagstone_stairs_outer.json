@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "terrassic:block/shale_flagstone",
+    "top": "terrassic:block/shale_flagstone",
+    "side": "terrassic:block/shale_flagstone"
+  }
+}

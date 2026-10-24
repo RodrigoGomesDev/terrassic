@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR",
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:quartzite"
+    }
+  },
+  "result": {
+    "item": "terrassic:quartzite_stacked",
+    "count": 4
+  }
+}

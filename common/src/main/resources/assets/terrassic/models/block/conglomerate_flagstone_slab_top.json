@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "terrassic:block/conglomerate_flagstone",
+    "top": "terrassic:block/conglomerate_flagstone",
+    "side": "terrassic:block/conglomerate_flagstone"
+  }
+}

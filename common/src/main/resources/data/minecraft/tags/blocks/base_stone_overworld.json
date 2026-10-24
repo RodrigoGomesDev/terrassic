@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:limestone",
+    "terrassic:shale",
+    "terrassic:chalk",
+    "terrassic:laterite",
+    "terrassic:quartzite",
+    "terrassic:gneiss",
+    "terrassic:conglomerate"
+  ]
+}

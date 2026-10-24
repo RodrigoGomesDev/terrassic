@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:flint_stacked"
+  },
+  "result": "terrassic:flint_stacked_wall",
+  "count": 1
+}

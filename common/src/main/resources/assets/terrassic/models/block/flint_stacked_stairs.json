@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "terrassic:block/flint_stacked",
+    "top": "terrassic:block/flint_stacked",
+    "side": "terrassic:block/flint_stacked"
+  }
+}

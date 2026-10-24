@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR",
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:conglomerate"
+    }
+  },
+  "result": {
+    "item": "terrassic:conglomerate_stacked",
+    "count": 4
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:shale"
+  },
+  "result": "terrassic:shale_flagstone_stairs",
+  "count": 1
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:gneiss"
+    }
+  ],
+  "result": {
+    "item": "terrassic:gneiss_pebbles",
+    "count": 4
+  }
+}

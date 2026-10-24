@@ -40,7 +40,9 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   primitivos"). Regras do Rodrigo: realistas, só materiais da época, e NUNCA cópia de bloco vanilla (por isso a
   pedra empilhada de pedregulho e o tapete de pele genérico saíram). Feito: lote 1 (palha, esteira, pau a pique,
   paliçada, cerca de osso, painel de couro) + fase 1 de pedras (calcário, folhelho, giz, sílex: natural, empilhada,
-  lajeado, empilhada com musgo, com escada/laje/muro), com veios no mundo (sílex nasce dentro do giz).
+  lajeado, empilhada com musgo, com escada/laje/muro), com veios no mundo (sílex nasce dentro do giz) + fase 2
+  (laterita na savana, quartzito nas montanhas, gnaisse, conglomerado, e seixos soltos das 8 rochas em praias,
+  rios e savana). 112 blocos. Próxima: fase 3, madeiras (Araucária, Ginkgo, Metassequoia + árvores no mundo).
 - `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.

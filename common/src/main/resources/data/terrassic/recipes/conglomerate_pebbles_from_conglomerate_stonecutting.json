@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:conglomerate"
+  },
+  "result": "terrassic:conglomerate_pebbles",
+  "count": 4
+}

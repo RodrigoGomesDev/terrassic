@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "terrassic:block/mossy_quartzite_stacked",
+    "top": "terrassic:block/mossy_quartzite_stacked",
+    "side": "terrassic:block/mossy_quartzite_stacked"
+  }
+}

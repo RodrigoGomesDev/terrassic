@@ -1,9 +1,14 @@
 """
-Terrassic 16x16 tileable textures for the primitive building blocks (thatch, wattle and daub, log palisade,
-dry stone, bone fence, hide screen, fur rug, straw mat).  Everything is drawn with code (no external art).
+Terrassic 16x16 tileable textures for the primitive building blocks.  Everything is drawn with code (no external
+art): tileable value noise for the material, a colour ramp taken from the real material, tileable Voronoi cells for
+stacked stones and flagstones, light from the top-left.
+
+Rocks: ROCKS has one entry per rock; every rock gets <rock>.png (natural), <rock>_stacked.png (dry-laid stones),
+<rock>_flagstone.png (flat paving), mossy_<rock>_stacked.png and <rock>_pebbles.png (loose pebbles on soil).  The other textures are in OTHER.
 
 usage: python3 blocks.py [preview.png]   -> writes into common/src/main/resources/assets/terrassic/textures/block
 """
+import math
 import os
 import random
 import sys
@@ -15,262 +20,491 @@ from sprites import Canvas, hexc, shade, mixc  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 TEX = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures", "block")
+N = 16
 
 
-def noise(cv, rnd, base, lo=0.92, hi=1.06):
-    for y in range(16):
-        for x in range(16):
-            cv.set(x, y, shade(base, lo + (hi - lo) * rnd.random()))
+# ------------------------------------------------------------------ tileable helpers
+class Noise:
+    """Tileable value noise on the 16x16 torus: smooth-interpolated random lattices summed over octaves.
+    stretch > 1 on an axis gives more cells (finer detail) along it."""
+
+    def __init__(self, seed, periods=(2, 4, 8), weights=(0.5, 0.3, 0.2), stretch=(1.0, 1.0)):
+        rnd = random.Random(seed)
+        self.layers = []
+        for p, w in zip(periods, weights):
+            px = max(1, round(p * stretch[0]))
+            py = max(1, round(p * stretch[1]))
+            grid = [[rnd.random() for _ in range(px)] for _ in range(py)]
+            self.layers.append((px, py, grid, w))
+
+    def __call__(self, x, y):
+        total = 0.0
+        for px, py, grid, w in self.layers:
+            fx, fy = x / N * px, y / N * py
+            x0, y0 = int(math.floor(fx)), int(math.floor(fy))
+            tx, ty = fx - x0, fy - y0
+            tx, ty = tx * tx * (3 - 2 * tx), ty * ty * (3 - 2 * ty)
+            a = grid[y0 % py][x0 % px]; b = grid[y0 % py][(x0 + 1) % px]
+            c = grid[(y0 + 1) % py][x0 % px]; d = grid[(y0 + 1) % py][(x0 + 1) % px]
+            total += w * ((a * (1 - tx) + b * tx) * (1 - ty) + (c * (1 - tx) + d * tx) * ty)
+        return total
+
+
+def ramp(colors, t):
+    """Colour at t in [0,1] along a list of hex colours (dark -> light)."""
+    t = max(0.0, min(0.999, t))
+    pos = t * (len(colors) - 1)
+    i = int(pos)
+    return mixc(hexc(colors[i]), hexc(colors[i + 1]), pos - i)
+
+
+def contrast(v, k):
+    return 0.5 + (v - 0.5) * k
+
+
+class Cells:
+    """Tileable Voronoi: each pixel gets its nearest seed (owner) and its distance to the border (d2 - d1).
+    sx < 1 stretches the cells horizontally (wide stones)."""
+
+    def __init__(self, seed, count, sx=1.0, sy=1.0):
+        rnd = random.Random(seed)
+        self.seeds = [(rnd.uniform(0, N), rnd.uniform(0, N)) for _ in range(count)]
+        self.sx, self.sy = sx, sy
+        self.owner = [[0] * N for _ in range(N)]
+        self.edge = [[0.0] * N for _ in range(N)]
+        for y in range(N):
+            for x in range(N):
+                ds = sorted((self._dist(x + 0.5, y + 0.5, s), i) for i, s in enumerate(self.seeds))
+                self.owner[y][x] = ds[0][1]
+                self.edge[y][x] = ds[1][0] - ds[0][0]
+
+    def _dist(self, x, y, s):
+        dx = abs(x - s[0]); dy = abs(y - s[1])
+        return math.hypot(min(dx, N - dx) * self.sx, min(dy, N - dy) * self.sy)
+
+    def at(self, x, y):
+        return self.owner[y % N][x % N]
+
+    def border(self, x, y, width):
+        return self.edge[y % N][x % N] < width
+
+
+def paint(fn):
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            cv.set(x, y, fn(x, y))
+    return cv
+
+
+def copy(cv):
+    out = Canvas()
+    out.p = [row[:] for row in cv.p]
+    return out
+
+
+# ------------------------------------------------------------------ rocks
+# id: colour ramp (dark -> light), noise stretch (x, y), contrast, gap colour, surface detail
+ROCKS = {
+    "limestone": {"ramp": ["#8f8670", "#b2a98f", "#c9c1a6", "#ddd6bd", "#e9e3cc"], "stretch": (1.0, 2.0),
+                  "contrast": 1.1, "gap": "#4a4232", "detail": "fossils"},
+    "shale": {"ramp": ["#2b2d31", "#3d4045", "#4f5359", "#61666b", "#757a7d"], "stretch": (0.5, 3.0),
+              "contrast": 1.2, "gap": "#141516", "detail": "laminae"},
+    "chalk": {"ramp": ["#b9b7ad", "#cfcdc3", "#dfddd5", "#ebeae3", "#f7f6f1"], "stretch": (1.0, 1.0),
+              "contrast": 0.9, "gap": "#77725f", "detail": "cracks"},
+    "flint": {"ramp": ["#bdb9aa", "#d2cebf", "#e1ddd0", "#ebe8de", "#f4f1e8"], "stretch": (1.0, 1.0),
+              "contrast": 0.8, "gap": "#4f4b42", "detail": "nodules"},
+    "laterite": {"ramp": ["#4f2213", "#6e311b", "#8c4224", "#a8552f", "#bf6c40"], "stretch": (1.0, 1.0),
+                 "contrast": 1.3, "gap": "#2a140b", "detail": "pores"},
+    "quartzite": {"ramp": ["#8a7470", "#a68d87", "#bea79f", "#d4c1b8", "#e8dad1"], "stretch": (1.5, 1.0),
+                  "contrast": 0.9, "gap": "#4e403c", "detail": "sparkle"},
+    "gneiss": {"ramp": ["#353538", "#55555a", "#7a7a7f", "#a2a2a5", "#cfcfd0"], "stretch": (1.0, 1.0),
+               "contrast": 1.0, "gap": "#1d1d1f", "detail": "bands"},
+    "conglomerate": {"ramp": ["#5e4e39", "#77654b", "#8f7c5f", "#a69273", "#b9a688"], "stretch": (1.0, 1.0),
+                     "contrast": 0.9, "gap": "#33291d", "detail": "clasts"},
+}
+# pebbles of each rock sit on this sandy soil
+PEBBLE_SOIL = ["#5a4a36", "#6e5c45", "#806d53", "#917e62"]
+# loose clasts cemented in the conglomerate: quartz, flint, sandstone, granite, shale
+CLAST_RAMPS = [["#b8b0a2", "#d8d2c6", "#efebe2"], ["#2b313b", "#4f5764", "#6e7684"], ["#a8865a", "#c4a271", "#dcc08f"],
+               ["#7d5a4e", "#a37a68", "#c49d8a"], ["#45484d", "#62666b", "#7e8287"]]
+FLINT_RAMP = ["#1c2129", "#2b313b", "#3b424d", "#4f5764", "#6a7280"]
+MOSS_RAMP = ["#2f4519", "#40591f", "#557229", "#6b8a34", "#83a043"]
+SOIL = hexc("#3e3022")
+
+
+def rock_base(rid):
+    """Natural rock surface: the plain block, and the material the stacked stones are cut from."""
+    r = ROCKS[rid]
+    n = Noise(rid, stretch=r["stretch"])
+    fine = Noise(rid + "fine", periods=(16,), weights=(1.0,))
+    rnd = random.Random(rid + "spots")
+    cv = paint(lambda x, y: ramp(r["ramp"], contrast(n(x, y) * 0.75 + fine(x, y) * 0.25, r["contrast"])))
+    detail = r["detail"]
+    if detail == "laminae":  # thin bedding planes, broken in places, and rusty iron specks
+        for y in (2, 6, 9, 13):
+            for x in range(N):
+                if rnd.random() < 0.8:
+                    cv.set(x, y, shade(cv.get(x, y), 0.7))
+                    cv.set(x, (y + 1) % N, shade(cv.get(x, (y + 1) % N), 1.12))
+        for _ in range(3):
+            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#7a5a3a"))
+    elif detail == "fossils":  # small shell fragments and pores
+        for _ in range(1):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            for dx, dy in ((0, 0), (1, -1), (2, -1), (3, 0)):
+                cv.set((x + dx) % N, (y + dy) % N, hexc("#f2ecd8"))
+            cv.set((x + 1) % N, y % N, hexc("#8a7f66")); cv.set((x + 2) % N, y % N, hexc("#8a7f66"))
+        for _ in range(5):
+            cv.set(rnd.randrange(N), rnd.randrange(N), shade(hexc(r["ramp"][1]), 0.92))
+    elif detail == "cracks":  # hairline cracks and grey specks
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for _ in range(9):
+            cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.82))
+            x += rnd.choice((1, 1, 0)); y += rnd.choice((1, 0, -1))
+        for _ in range(5):
+            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#9e9b90"))
+    elif detail == "pores":  # laterite: iron-rich clay rock full of small dark holes and yellow ochre streaks
+        for _ in range(16):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            cv.set(x, y, hexc("#2a140b")); cv.set(x, (y + 1) % N, shade(cv.get(x, (y + 1) % N), 1.15))
+        for _ in range(4):
+            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#c99a4a"))
+    elif detail == "sparkle":  # quartzite: sugary grains that catch the light
+        for _ in range(14):
+            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#f6eee8"))
+        for _ in range(5):
+            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#7c6662"))
+    elif detail == "bands":  # gneiss: wavy dark and light mineral bands
+        wav = Noise(rid + "wave", periods=(2, 4), weights=(0.7, 0.3))
+        for y in range(N):
+            for x in range(N):
+                b = math.sin((y + x * 0.25) * (2 * math.pi / 8) + wav(x, y) * 3.0)
+                c = cv.get(x, y)
+                cv.set(x, y, shade(c, 0.62) if b > 0.55 else (shade(c, 1.22) if b < -0.7 else c))
+    elif detail == "clasts":  # conglomerate: rounded pebbles of other rocks cemented in sandy matrix
+        for i in range(9):
+            cr = CLAST_RAMPS[rnd.randrange(len(CLAST_RAMPS))]
+            cx, cy = rnd.uniform(0, N), rnd.uniform(0, N)
+            rx, ry = rnd.uniform(1.2, 2.6), rnd.uniform(1.0, 2.0)
+            for y in range(N):
+                for x in range(N):
+                    dx = min(abs(x + 0.5 - cx), N - abs(x + 0.5 - cx)) / rx
+                    dy = min(abs(y + 0.5 - cy), N - abs(y + 0.5 - cy)) / ry
+                    if dx * dx + dy * dy <= 1:
+                        lit = (x + 0.5 < cx) + (y + 0.5 < cy)
+                        cv.set(x, y, hexc(cr[min(2, lit)]))
+    elif detail == "nodules":  # dark flint nodules with a white cortex rim and a glossy point
+        fl = Noise(rid + "nod", periods=(4, 8), weights=(0.7, 0.3))
+        wobble = Noise(rid + "wob", periods=(4, 8), weights=(0.6, 0.4))
+        for (cx, cy, rx, ry) in ((5.0, 5.0, 4.4, 3.0), (12.0, 11.5, 3.6, 3.8)):
+            for y in range(N):
+                for x in range(N):
+                    dx = min(abs(x - cx), N - abs(x - cx)) / rx
+                    dy = min(abs(y - cy), N - abs(y - cy)) / ry
+                    d = math.hypot(dx, dy) + (wobble(x, y) - 0.5) * 0.7
+                    if d < 0.78:
+                        cv.set(x, y, ramp(FLINT_RAMP, fl(x, y) * 0.9 + (0.2 if (x < cx and y < cy) else 0)))
+                    elif d < 1.05:
+                        cv.set(x, y, hexc("#ece7da"))
+            cv.set(int(cx - rx / 3) % N, int(cy - ry / 3) % N, hexc("#9aa3b2"))
+    return cv
+
+
+def stones(base, cells, gap, tone_seed, width, light, dark):
+    """Stones cut from the rock texture: each Voronoi cell is one stone and the borders are gaps. Top/left edges
+    catch the light and bottom/right edges are in shadow, so every stone reads as a lump."""
+    rnd = random.Random(tone_seed)
+    tones = [0.86 + 0.24 * rnd.random() for _ in cells.seeds]
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            if cells.border(x, y, width):
+                cv.set(x, y, shade(gap, 0.85 + 0.3 * rnd.random()))
+                continue
+            o = cells.owner[y][x]
+            c = shade(base.get(x, y), tones[o])
+            if cells.at(x, y - 1) != o or cells.border(x, y - 1, width) or cells.at(x - 1, y) != o or cells.border(x - 1, y, width):
+                c = shade(c, light)
+            if cells.at(x, y + 1) != o or cells.border(x, y + 1, width) or cells.at(x + 1, y) != o or cells.border(x + 1, y, width):
+                c = shade(c, dark)
+            cv.set(x, y, c)
+    return cv
+
+
+def courses(seed):
+    """Dry-laid wall layout: horizontal courses 3-5 px high, each split into stones 4-9 px long with an offset, so
+    the joints never line up. Returns owner[y][x] = stone index or -1 for a joint (wraps on both axes)."""
+    rnd = random.Random(seed)
+    heights = rnd.choice(([4, 3, 5, 4], [5, 3, 4, 4], [3, 4, 4, 5], [4, 4, 3, 5]))
+    owner = [[-1] * N for _ in range(N)]
+    stone = 0
+    y0 = 0
+    for h in heights:
+        cuts, x = [], rnd.randrange(N)
+        total = 0
+        while total < N:
+            w = rnd.randint(4, 9)
+            if N - total - w < 4:
+                w = N - total
+            cuts.append((x + total, w))
+            total += w
+        for (sx, w) in cuts:
+            for yy in range(y0, y0 + h - 1):  # last row of the course is the joint
+                for xx in range(sx, sx + w - 1):  # last column of the stone is the joint
+                    owner[yy % N][xx % N] = stone
+            # knock off the corners so the stones look rounded
+            for (cx, cy) in ((sx, y0), (sx + w - 2, y0), (sx, y0 + h - 2), (sx + w - 2, y0 + h - 2)):
+                if rnd.random() < 0.75:
+                    owner[cy % N][cx % N] = -1
+            stone += 1
+        y0 += h
+    return owner, stone
+
+
+def laid(base, owner, count, gap, seed):
+    """Stones from the rock texture laid in courses: lit top edge, shadowed bottom edge, own tone per stone."""
+    rnd = random.Random(seed)
+    tones = [0.84 + 0.26 * rnd.random() for _ in range(count)]
+    cv = Canvas()
+    own = lambda x, y: owner[y % N][x % N]  # noqa: E731
+    for y in range(N):
+        for x in range(N):
+            o = own(x, y)
+            if o < 0:
+                cv.set(x, y, shade(gap, 0.8 + 0.35 * rnd.random()))
+                continue
+            c = shade(base.get(x, y), tones[o])
+            if own(x, y - 1) != o:
+                c = shade(c, 1.16)
+            elif own(x - 1, y) != o:
+                c = shade(c, 1.06)
+            if own(x, y + 1) != o:
+                c = shade(c, 0.7)
+            elif own(x + 1, y) != o:
+                c = shade(c, 0.86)
+            cv.set(x, y, c)
+    return cv
+
+
+def rock_textures(rid):
+    r = ROCKS[rid]
+    base = rock_base(rid)
+    owner, count = courses(rid + "courses")
+    stacked = laid(base, owner, count, hexc(r["gap"]), rid + "t1")
+    flag = stones(base, Cells(rid + "flag", 5), mixc(hexc(r["gap"]), SOIL, 0.6), rid + "t2", 0.45, 1.07, 0.88)
+    # moss grows in the joints and on the top edge of the stones
+    moss = copy(stacked)
+    mn = Noise(rid + "moss", periods=(2, 4, 8), weights=(0.45, 0.35, 0.2))
+    rnd = random.Random(rid + "moss")
+    for y in range(N):
+        for x in range(N):
+            joint = owner[y][x] < 0
+            top = not joint and owner[(y - 1) % N][x] != owner[y][x]
+            v = mn(x, y) + (0.18 if joint else 0.0) + (0.1 if top else 0.0)
+            if v > 0.72:
+                moss.set(x, y, ramp(MOSS_RAMP, (v - 0.72) / 0.28 + 0.2 * rnd.random()))
+    return {rid: base, f"{rid}_stacked": stacked, f"{rid}_flagstone": flag, f"mossy_{rid}_stacked": moss}
+
+
+def pebbles(rid):
+    """Loose rounded pebbles of the rock lying on sandy soil (the top of the thin pebble layer)."""
+    r = ROCKS[rid]
+    rnd = random.Random(rid + "pebbles")
+    soil = Noise(rid + "soil", periods=(4, 8, 16), weights=(0.4, 0.3, 0.3))
+    cv = paint(lambda x, y: ramp(PEBBLE_SOIL, soil(x, y)))
+    for _ in range(11):
+        cx, cy = rnd.uniform(0, N), rnd.uniform(0, N)
+        rx, ry = rnd.uniform(1.0, 2.4), rnd.uniform(0.9, 1.8)
+        tone = 0.3 + 0.5 * rnd.random()
+        pr = FLINT_RAMP if rid == "flint" else r["ramp"]
+        for y in range(N):
+            for x in range(N):
+                dx = (x + 0.5 - cx); dx = (dx + N / 2) % N - N / 2
+                dy = (y + 0.5 - cy); dy = (dy + N / 2) % N - N / 2
+                d = (dx / rx) ** 2 + (dy / ry) ** 2
+                if d <= 1:
+                    v = tone + (0.3 if dx < 0 and dy < 0 else 0) - (0.25 if dx > 0 and dy > 0 else 0)
+                    cv.set(x, y, ramp(pr, v))
+                elif d <= 1.6 and dy > 0:
+                    cv.set(x, y, shade(cv.get(x, y), 0.75))  # shadow on the soil
+    return cv
 
 
 # ------------------------------------------------------------------ thatch (palha)
-STRAW = hexc("#c9a54e"); STRAW_L = hexc("#e6c873"); STRAW_D = hexc("#8e6f2c"); STRAW_DD = hexc("#5f4a1e")
+THATCH_RAMP = ["#4f3f20", "#75602f", "#957c40", "#b39752", "#cdb269"]
 
 
 def thatch():
-    """Overlapping bundles of straw: 4 rows, each bundle hangs over the one below (dark lip at its bottom)."""
+    """Courses of straw bundles: thin vertical strands; each course overhangs the one below (shadow under the
+    lip, sun-bleached tips at the bottom of every course)."""
+    strands = Noise("thatch", periods=(16, 8), weights=(0.7, 0.3), stretch=(1.0, 0.25))
     rnd = random.Random("thatch")
-    cv = Canvas()
-    for y in range(16):
-        row = y % 4
-        for x in range(16):
-            # vertical strands, staggered per row so the seams do not line up
-            strand = (x + (y // 4) * 2) % 3
-            c = (STRAW_L, STRAW, shade(STRAW, 0.9))[strand]
-            if row == 3:
-                c = STRAW_D if rnd.random() < 0.7 else STRAW_DD
-            elif row == 0 and rnd.random() < 0.25:
-                c = STRAW_L
-            cv.set(x, y, shade(c, 0.95 + 0.1 * rnd.random()))
-    # a few loose straws crossing the lips
-    for _ in range(6):
-        x, y = rnd.randrange(16), rnd.choice((3, 7, 11, 15))
-        cv.set(x, y, STRAW)
-    return cv
+
+    def px(x, y):
+        course, row = y // 4, y % 4
+        v = strands((x + course * 5) % N, y) * 0.8 + 0.2 * rnd.random()
+        if row == 0:
+            v = v * 0.55  # shadow under the course above
+        elif row == 3:
+            v = v * 0.6 + 0.4  # bleached tips
+        return ramp(THATCH_RAMP, v)
+    return paint(px)
 
 
 def thatch_top():
-    """Top of the thatch: straw lying flat, mostly horizontal strands."""
+    strands = Noise("thatch_top", periods=(16, 8), weights=(0.6, 0.4), stretch=(0.25, 1.0))
     rnd = random.Random("thatch_top")
-    cv = Canvas()
-    for y in range(16):
-        for x in range(16):
-            c = (STRAW, STRAW_L, STRAW, shade(STRAW, 0.85))[(y + (x // 5)) % 4]
-            cv.set(x, y, shade(c, 0.94 + 0.1 * rnd.random()))
-    for _ in range(10):
-        x, y = rnd.randrange(16), rnd.randrange(16)
-        cv.set(x, y, STRAW_D)
-    return cv
+    return paint(lambda x, y: ramp(THATCH_RAMP, strands(x, y) * 0.8 + 0.2 * rnd.random()))
 
 
-# ------------------------------------------------------------------ wattle and daub (pau-a-pique)
-DAUB = hexc("#9c7a55"); DAUB_L = hexc("#b8956a"); DAUB_D = hexc("#6e5238")
-STICK = hexc("#7a5530"); STICK_L = hexc("#9a6e40"); STICK_D = hexc("#4e341a")
+def straw_mat():
+    """Hand-woven straw mat: over-under strips 4 px wide, each strip with its own strands."""
+    n = Noise("mat", periods=(16,), weights=(1.0,))
+    rnd = random.Random("mat")
+
+    def px(x, y):
+        horizontal = ((x // 4) + (y // 4)) % 2 == 0
+        k = (y % 4) if horizontal else (x % 4)
+        v = 0.3 + 0.35 * n(x, y) + (0.18 if k in (1, 2) else -0.12) + 0.08 * rnd.random()
+        return ramp(THATCH_RAMP, v)
+    return paint(px)
+
+
+# ------------------------------------------------------------------ wattle and daub (pau a pique)
+DAUB_RAMP = ["#5e4a34", "#7c644a", "#957b5c", "#ab9170", "#bea583"]
+STICK_RAMP = ["#3a2814", "#54391d", "#6e4d2a", "#87623a"]
 
 
 def wattle_daub():
-    """Mud plaster over woven sticks: timber frame on the border, woven sticks showing through cracks."""
-    rnd = random.Random("wattle")
-    cv = Canvas()
-    noise(cv, rnd, DAUB, 0.9, 1.08)
-    # plaster lumps
-    for _ in range(14):
-        x, y = rnd.randrange(1, 15), rnd.randrange(1, 15)
-        cv.set(x, y, DAUB_L); cv.set(x + 1, y, DAUB_L); cv.set(x, y + 1, DAUB_D)
-    # woven sticks peeking through (horizontal weave in the middle band)
-    for y in (5, 10):
-        for x in range(2, 14):
-            if (x // 3 + y) % 2 == 0 and rnd.random() < 0.85:
-                cv.set(x, y, STICK_L if x % 3 == 0 else STICK)
-                cv.set(x, y + 1, STICK_D)
-    # timber frame: posts left/right, beams top/bottom
-    for i in range(16):
-        cv.set(i, 0, STICK_L); cv.set(i, 15, STICK_D)
-        cv.set(0, i, STICK); cv.set(15, i, STICK_D)
+    """Clay plaster smeared by hand over woven sticks: lumpy, with a drying crack and straw fibres."""
+    n = Noise("daub", periods=(2, 4, 8), weights=(0.4, 0.35, 0.25))
+    rnd = random.Random("daub")
+    cv = paint(lambda x, y: ramp(DAUB_RAMP, contrast(n(x, y), 1.4)))
+    for _ in range(9):  # straw fibres in the clay
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for i in range(rnd.choice((2, 3))):
+            cv.set((x + i) % N, y, hexc("#c8b27a"))
+    x, y = rnd.randrange(N), rnd.randrange(N)
+    for _ in range(12):  # drying crack
+        cv.set(x % N, y % N, hexc("#4a3826"))
+        x += rnd.choice((1, 1, 0)); y += rnd.choice((1, 0, 0, -1))
     return cv
 
 
 # ------------------------------------------------------------------ log palisade (paliçada)
-BARK = hexc("#5e4428"); BARK_L = hexc("#7c5c36"); BARK_D = hexc("#3c2a16")
-WOOD_CUT = hexc("#c09a62"); WOOD_RING = hexc("#9c7744")
+BARK_RAMP = ["#2a1d10", "#3e2c19", "#563f25", "#6e5233", "#836542"]
+WOOD_RAMP = ["#8c6a3e", "#a8834f", "#c09a62", "#d2ae76"]
 
 
 def palisade_side():
-    """Bark of a rough, unbarked log: long vertical grooves."""
-    rnd = random.Random("palisade")
-    cv = Canvas()
-    for x in range(16):
-        groove = rnd.random() < 0.3
-        for y in range(16):
-            c = BARK_D if groove else (BARK_L if rnd.random() < 0.18 else BARK)
-            cv.set(x, y, shade(c, 0.93 + 0.1 * rnd.random()))
-    for _ in range(4):  # knots
-        x, y = rnd.randrange(2, 14), rnd.randrange(2, 14)
-        cv.set(x, y, BARK_D); cv.set(x, y + 1, shade(BARK_D, 0.8))
+    """Unbarked trunk: long vertical ridges and furrows, a couple of knots."""
+    n = Noise("bark", periods=(8, 16), weights=(0.6, 0.4), stretch=(1.0, 0.2))
+    rnd = random.Random("bark")
+    cv = paint(lambda x, y: ramp(BARK_RAMP, contrast(n(x, y), 1.6)))
+    for _ in range(2):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        cv.set(x, y, hexc("#1c130a")); cv.set(x, (y + 1) % N, hexc("#2a1d10")); cv.set((x + 1) % N, y, hexc("#6e5233"))
     return cv
 
 
 def palisade_top():
-    """Cut end of the log, sharpened: light wood with rings and an axe-hewn bevel."""
-    cv = Canvas()
-    for y in range(16):
-        for x in range(16):
-            d = max(abs(x - 7.5), abs(y - 7.5))
-            if d > 6.5:
-                c = BARK
-            elif int(d) % 3 == 0:
-                c = WOOD_RING
-            else:
-                c = WOOD_CUT
-            cv.set(x, y, c)
-    for i in range(3, 13):  # hatchet marks
-        cv.set(i, i, shade(WOOD_RING, 0.85))
-    return cv
+    """Hewn end of a log: growth rings around the pith, an axe facet."""
+    rnd = random.Random("ptop")
 
-
-# ------------------------------------------------------------------ dry stone (pedra empilhada)
-STONE = hexc("#8a8780"); STONE_L = hexc("#a8a59c"); STONE_D = hexc("#5e5c56"); GAP = hexc("#2e2c28")
-# irregular stones as rectangles (x0, y0, x1, y1), tiling across the edges of the 16x16 block
-STONES = [(0, 0, 6, 3), (8, 0, 15, 4), (0, 5, 4, 9), (6, 5, 11, 8), (13, 6, 15, 10),
-          (6, 10, 11, 14), (0, 11, 4, 15), (13, 12, 15, 15)]
-
-
-def dry_stone():
-    """Stacked, unmortared stones: dark gaps, each stone with its own tone, lit from top-left."""
-    rnd = random.Random("dry_stone")
-    cv = Canvas()
-    for y in range(16):
-        for x in range(16):
-            cv.set(x, y, GAP)
-    for (x0, y0, x1, y1) in STONES:
-        tone = shade(mixc(STONE, hexc("#8f8270"), rnd.random() * 0.5), 0.9 + 0.2 * rnd.random())
-        for y in range(y0, y1 + 1):
-            for x in range(x0, x1 + 1):
-                c = shade(tone, 0.95 + 0.08 * rnd.random())
-                if y == y0 or x == x0:
-                    c = mixc(c, STONE_L, 0.5)
-                if y == y1 or x == x1:
-                    c = mixc(c, STONE_D, 0.6)
-                cv.set(x, y, c)
-        # round the corners a bit
-        cv.set(x1, y1, GAP)
-    # moss specks
-    for _ in range(5):
-        cv.set(rnd.randrange(16), rnd.randrange(16), hexc("#5f6e3a"))
+    def px(x, y):
+        d = math.hypot(x - 7.5, y - 7.5)
+        if d > 7.2:
+            return ramp(BARK_RAMP, 0.4 + 0.2 * rnd.random())
+        ring = 0.5 + 0.5 * math.sin(d * 2.2)
+        return ramp(WOOD_RAMP, 0.25 + 0.55 * ring + 0.1 * rnd.random())
+    cv = paint(px)
+    for i in range(3, 13):
+        cv.set(i, 15 - i, shade(cv.get(i, 15 - i), 0.82))
     return cv
 
 
 # ------------------------------------------------------------------ bone fence (cerca de osso)
-BONE = hexc("#e8e0c8"); BONE_D = hexc("#b8ad90"); BONE_L = hexc("#fbf6e8"); SINEW = hexc("#8a5a34")
+BONE_RAMP = ["#9c9178", "#bdb296", "#d6ccb0", "#e6dec6", "#f3eedf"]
 
 
 def bone_fence():
-    """Bone surface with knobbly joints and sinew lashings (used by the fence post and rails)."""
-    rnd = random.Random("bone_fence")
-    cv = Canvas()
-    for y in range(16):
-        for x in range(16):
-            c = BONE_L if x % 4 == 1 else (BONE_D if x % 4 == 3 else BONE)
-            cv.set(x, y, shade(c, 0.96 + 0.06 * rnd.random()))
-    for y in (0, 15):  # joints
-        for x in range(16):
-            cv.set(x, y, BONE_D)
-    for y in (3, 4, 10, 11):  # sinew lashing
-        for x in range(16):
-            cv.set(x, y, SINEW if (x + y) % 2 else shade(SINEW, 0.8))
+    """Long bones: porous, yellowed surface, a rounded highlight down each bone, sinew lashings."""
+    n = Noise("bone", periods=(4, 16), weights=(0.6, 0.4), stretch=(0.5, 1.5))
+    rnd = random.Random("bone")
+    cv = paint(lambda x, y: ramp(BONE_RAMP, 0.2 + 0.5 * (1 - abs((x % 8) - 3.5) / 4.5) + 0.3 * n(x, y)))
+    for _ in range(10):  # pores
+        cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#8a7f66"))
+    for y in (3, 4, 11, 12):
+        for x in range(N):
+            cv.set(x, y, mixc(hexc("#5e3a20"), hexc("#8a5a34"), ((x + y) % 3) / 3))
     return cv
 
 
 # ------------------------------------------------------------------ hide screen (painel de couro)
-HIDE = hexc("#a0703e"); HIDE_L = hexc("#bf8a52"); HIDE_D = hexc("#74502a"); STITCH = hexc("#e0d2b0")
+HIDE_RAMP = ["#5a3a1e", "#76502b", "#8f653a", "#a87b4b", "#bf915e"]
 
 
 def hide_screen():
-    """Stretched hide lashed to a stick frame: frame on the border, stitches near the edges."""
+    """Scraped, stretched hide: uneven thickness (light and dark patches), a vein, stitched to the frame posts."""
+    n = Noise("hide", periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
     rnd = random.Random("hide")
-    cv = Canvas()
-    noise(cv, rnd, HIDE, 0.9, 1.06)
-    for _ in range(8):  # natural blotches of the hide
-        x, y = rnd.randrange(2, 14), rnd.randrange(2, 14)
-        cv.set(x, y, HIDE_L); cv.set(x + 1, y, HIDE_L); cv.set(x, y + 1, HIDE_D)
-    for i in range(16):
-        cv.set(0, i, STICK); cv.set(15, i, STICK_D)
-    for i in range(2, 15, 3):  # lashing from the hide to the posts
-        cv.set(1, i, STITCH); cv.set(14, i, STITCH)
+    cv = paint(lambda x, y: ramp(HIDE_RAMP, contrast(n(x, y), 1.3)))
+    x, y = 4, 2
+    for _ in range(10):
+        cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.84))
+        x += rnd.choice((0, 1)); y += 1
+    for i in range(N):
+        cv.set(0, i, ramp(STICK_RAMP, 0.7)); cv.set(15, i, ramp(STICK_RAMP, 0.3))
+    for i in range(1, N, 3):
+        cv.set(1, i, hexc("#d8c9a4")); cv.set(14, i, hexc("#d8c9a4"))
     return cv
 
 
 def hide_screen_edge():
-    """Edge of the hide panel (pane 'top' texture): just the frame stick."""
-    cv = Canvas()
-    for y in range(16):
-        for x in range(16):
-            cv.set(x, y, STICK if x % 4 else STICK_D)
-    return cv
+    return paint(lambda x, y: ramp(STICK_RAMP, 0.3 + 0.4 * ((x % 4) in (1, 2))))
 
 
-# ------------------------------------------------------------------ fur rug (tapete de pele)
-FUR = hexc("#7a5a3a"); FUR_L = hexc("#a07a50"); FUR_D = hexc("#4e3820")
-
-
-def fur_rug():
-    """Shaggy fur: short diagonal tufts in three tones."""
-    rnd = random.Random("fur")
-    cv = Canvas()
-    noise(cv, rnd, FUR, 0.88, 1.04)
-    for _ in range(26):
-        x, y = rnd.randrange(16), rnd.randrange(16)
-        cv.set(x, y, FUR_L); cv.set(x + 1, y + 1, FUR_D)
-    return cv
-
-
-# ------------------------------------------------------------------ straw mat (esteira de palha)
-def straw_mat():
-    """Woven straw mat: 4x4 basket weave."""
-    cv = Canvas()
-    for y in range(16):
-        for x in range(16):
-            horizontal = ((x // 4) + (y // 4)) % 2 == 0
-            k = (y % 4) if horizontal else (x % 4)
-            c = (STRAW_L, STRAW, STRAW, STRAW_D)[k]
-            cv.set(x, y, c)
-    return cv
-
-
-TEXTURES = {
-    "thatch": thatch, "thatch_top": thatch_top, "wattle_and_daub": wattle_daub,
-    "log_palisade": palisade_side, "log_palisade_top": palisade_top, "dry_stone": dry_stone,
-    "bone_fence": bone_fence, "hide_screen": hide_screen, "hide_screen_edge": hide_screen_edge,
-    "fur_rug": fur_rug, "straw_mat": straw_mat,
+OTHER = {
+    "thatch": thatch, "thatch_top": thatch_top, "straw_mat": straw_mat, "wattle_and_daub": wattle_daub,
+    "log_palisade": palisade_side, "log_palisade_top": palisade_top, "bone_fence": bone_fence,
+    "hide_screen": hide_screen, "hide_screen_edge": hide_screen_edge,
 }
 
 
 def build():
     out = {}
-    for name, fn in TEXTURES.items():
-        cv = fn()
+    for rid in ROCKS:
+        out.update(rock_textures(rid))
+        out[f"{rid}_pebbles"] = pebbles(rid)
+    for name, fn in OTHER.items():
+        out[name] = fn()
+    for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
-        out[name] = cv
     return out
 
 
-def preview(path, out):
-    """Each texture upscaled 6x, tiled 2x2 so seams are visible."""
-    cell = 16 * 6 * 2 + 12
-    cols = 4
-    rows = (len(out) + cols - 1) // cols
-    sheet = Image.new("RGBA", (cols * cell, rows * cell), (60, 60, 68, 255))
-    for i, name in enumerate(out):
-        im = Image.open(os.path.join(TEX, f"{name}.png")).resize((96, 96), Image.NEAREST)
-        ox, oy = (i % cols) * cell + 6, (i // cols) * cell + 6
+def preview(path, names):
+    """Each texture upscaled 4x and tiled 2x2 (so seams show), with its name under it."""
+    from PIL import ImageDraw
+    tile = 16 * 4
+    cell_w, cell_h = tile * 2 + 16, tile * 2 + 26
+    cols = 6
+    rows = (len(names) + cols - 1) // cols
+    sheet = Image.new("RGBA", (cols * cell_w, rows * cell_h), (44, 44, 50, 255))
+    draw = ImageDraw.Draw(sheet)
+    for i, name in enumerate(names):
+        im = Image.open(os.path.join(TEX, f"{name}.png")).resize((tile, tile), Image.NEAREST)
+        ox, oy = (i % cols) * cell_w + 8, (i // cols) * cell_h + 6
         for tx in range(2):
             for ty in range(2):
-                sheet.alpha_composite(im, (ox + tx * 96, oy + ty * 96))
+                sheet.alpha_composite(im, (ox + tx * tile, oy + ty * tile))
+        draw.text((ox, oy + tile * 2 + 4), name, fill=(230, 230, 230, 255))
     sheet.save(path)
 
 
 if __name__ == "__main__":
     textures = build()
     if len(sys.argv) > 1:
-        preview(sys.argv[1], textures)
-    print("block textures written to", TEX)
+        preview(sys.argv[1], list(textures))
+    print(len(textures), "block textures written to", TEX)

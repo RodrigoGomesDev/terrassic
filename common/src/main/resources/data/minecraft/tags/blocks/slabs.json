@@ -2,6 +2,29 @@
   "replace": false,
   "values": [
     "terrassic:thatch_slab",
-    "terrassic:dry_stone_slab"
+    "terrassic:limestone_stacked_slab",
+    "terrassic:limestone_flagstone_slab",
+    "terrassic:mossy_limestone_stacked_slab",
+    "terrassic:shale_stacked_slab",
+    "terrassic:shale_flagstone_slab",
+    "terrassic:mossy_shale_stacked_slab",
+    "terrassic:chalk_stacked_slab",
+    "terrassic:chalk_flagstone_slab",
+    "terrassic:mossy_chalk_stacked_slab",
+    "terrassic:flint_stacked_slab",
+    "terrassic:flint_flagstone_slab",
+    "terrassic:mossy_flint_stacked_slab",
+    "terrassic:laterite_stacked_slab",
+    "terrassic:laterite_flagstone_slab",
+    "terrassic:mossy_laterite_stacked_slab",
+    "terrassic:quartzite_stacked_slab",
+    "terrassic:quartzite_flagstone_slab",
+    "terrassic:mossy_quartzite_stacked_slab",
+    "terrassic:gneiss_stacked_slab",
+    "terrassic:gneiss_flagstone_slab",
+    "terrassic:mossy_gneiss_stacked_slab",
+    "terrassic:conglomerate_stacked_slab",
+    "terrassic:conglomerate_flagstone_slab",
+    "terrassic:mossy_conglomerate_stacked_slab"
   ]
 }

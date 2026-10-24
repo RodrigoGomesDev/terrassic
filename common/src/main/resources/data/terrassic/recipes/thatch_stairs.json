@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "pattern": [
-    "T  ",
-    "TT ",
-    "TTT"
+    "X  ",
+    "XX ",
+    "XXX"
   ],
   "key": {
-    "T": {
+    "X": {
       "item": "terrassic:thatch"
     }
   },

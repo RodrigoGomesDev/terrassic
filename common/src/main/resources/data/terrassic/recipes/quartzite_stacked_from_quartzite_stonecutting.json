@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:quartzite"
+  },
+  "result": "terrassic:quartzite_stacked",
+  "count": 1
+}

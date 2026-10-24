@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:shale"
+    }
+  ],
+  "result": {
+    "item": "terrassic:shale_pebbles",
+    "count": 4
+  }
+}

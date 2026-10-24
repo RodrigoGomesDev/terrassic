@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "terrassic:block/mossy_gneiss_stacked",
+    "top": "terrassic:block/mossy_gneiss_stacked",
+    "side": "terrassic:block/mossy_gneiss_stacked"
+  }
+}

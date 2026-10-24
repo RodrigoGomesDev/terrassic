@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:chalk"
+    }
+  },
+  "result": {
+    "item": "terrassic:chalk_flagstone",
+    "count": 2
+  }
+}

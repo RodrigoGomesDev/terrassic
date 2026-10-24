@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "terrassic:block/quartzite_flagstone",
+    "top": "terrassic:block/quartzite_flagstone",
+    "side": "terrassic:block/quartzite_flagstone"
+  }
+}

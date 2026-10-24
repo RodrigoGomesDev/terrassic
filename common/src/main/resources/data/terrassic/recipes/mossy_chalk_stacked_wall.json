@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:mossy_chalk_stacked"
+    }
+  },
+  "result": {
+    "item": "terrassic:mossy_chalk_stacked_wall",
+    "count": 6
+  }
+}

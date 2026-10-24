@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/shale_stacked_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/shale_stacked_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/shale_stacked"
+    }
+  }
+}

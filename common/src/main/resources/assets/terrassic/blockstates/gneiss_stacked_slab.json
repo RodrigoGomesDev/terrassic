@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/gneiss_stacked_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/gneiss_stacked_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/gneiss_stacked"
+    }
+  }
+}

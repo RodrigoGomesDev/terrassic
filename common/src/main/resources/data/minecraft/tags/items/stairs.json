@@ -2,6 +2,29 @@
   "replace": false,
   "values": [
     "terrassic:thatch_stairs",
-    "terrassic:dry_stone_stairs"
+    "terrassic:limestone_stacked_stairs",
+    "terrassic:limestone_flagstone_stairs",
+    "terrassic:mossy_limestone_stacked_stairs",
+    "terrassic:shale_stacked_stairs",
+    "terrassic:shale_flagstone_stairs",
+    "terrassic:mossy_shale_stacked_stairs",
+    "terrassic:chalk_stacked_stairs",
+    "terrassic:chalk_flagstone_stairs",
+    "terrassic:mossy_chalk_stacked_stairs",
+    "terrassic:flint_stacked_stairs",
+    "terrassic:flint_flagstone_stairs",
+    "terrassic:mossy_flint_stacked_stairs",
+    "terrassic:laterite_stacked_stairs",
+    "terrassic:laterite_flagstone_stairs",
+    "terrassic:mossy_laterite_stacked_stairs",
+    "terrassic:quartzite_stacked_stairs",
+    "terrassic:quartzite_flagstone_stairs",
+    "terrassic:mossy_quartzite_stacked_stairs",
+    "terrassic:gneiss_stacked_stairs",
+    "terrassic:gneiss_flagstone_stairs",
+    "terrassic:mossy_gneiss_stacked_stairs",
+    "terrassic:conglomerate_stacked_stairs",
+    "terrassic:conglomerate_flagstone_stairs",
+    "terrassic:mossy_conglomerate_stacked_stairs"
   ]
 }

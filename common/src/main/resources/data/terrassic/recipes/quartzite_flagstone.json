@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:quartzite"
+    }
+  },
+  "result": {
+    "item": "terrassic:quartzite_flagstone",
+    "count": 2
+  }
+}

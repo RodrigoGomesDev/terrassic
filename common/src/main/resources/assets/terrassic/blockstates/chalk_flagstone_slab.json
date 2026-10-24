@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/chalk_flagstone_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/chalk_flagstone_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/chalk_flagstone"
+    }
+  }
+}

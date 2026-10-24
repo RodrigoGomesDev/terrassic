@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/flint_stacked_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/flint_stacked_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/flint_stacked"
+    }
+  }
+}

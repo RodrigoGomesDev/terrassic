@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:gneiss_stacked"
+  },
+  "result": "terrassic:gneiss_stacked_slab",
+  "count": 2
+}

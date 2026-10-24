@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "terrassic:block/laterite_flagstone",
+    "top": "terrassic:block/laterite_flagstone",
+    "side": "terrassic:block/laterite_flagstone"
+  }
+}

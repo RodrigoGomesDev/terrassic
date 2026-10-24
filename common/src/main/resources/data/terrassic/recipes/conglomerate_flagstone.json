@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:conglomerate"
+    }
+  },
+  "result": {
+    "item": "terrassic:conglomerate_flagstone",
+    "count": 2
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:laterite_stacked"
+  },
+  "result": "terrassic:laterite_stacked_stairs",
+  "count": 1
+}

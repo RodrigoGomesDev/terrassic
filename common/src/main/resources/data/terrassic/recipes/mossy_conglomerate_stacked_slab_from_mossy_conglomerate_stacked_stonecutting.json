@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:mossy_conglomerate_stacked"
+  },
+  "result": "terrassic:mossy_conglomerate_stacked_slab",
+  "count": 2
+}

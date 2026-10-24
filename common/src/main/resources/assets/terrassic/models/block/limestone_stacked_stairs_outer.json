@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "terrassic:block/limestone_stacked",
+    "top": "terrassic:block/limestone_stacked",
+    "side": "terrassic:block/limestone_stacked"
+  }
+}

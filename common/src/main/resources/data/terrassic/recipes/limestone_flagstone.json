@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:limestone"
+    }
+  },
+  "result": {
+    "item": "terrassic:limestone_flagstone",
+    "count": 2
+  }
+}

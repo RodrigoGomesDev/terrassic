@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:flint_nodules"
+  },
+  "result": "terrassic:flint_flagstone_slab",
+  "count": 2
+}

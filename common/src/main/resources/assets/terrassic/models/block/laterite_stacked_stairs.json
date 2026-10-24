@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "terrassic:block/laterite_stacked",
+    "top": "terrassic:block/laterite_stacked",
+    "side": "terrassic:block/laterite_stacked"
+  }
+}

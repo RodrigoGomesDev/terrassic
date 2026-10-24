@@ -1,6 +1,21 @@
 {
   "replace": false,
   "values": [
-    "terrassic:dry_stone_wall"
+    "terrassic:limestone_stacked_wall",
+    "terrassic:mossy_limestone_stacked_wall",
+    "terrassic:shale_stacked_wall",
+    "terrassic:mossy_shale_stacked_wall",
+    "terrassic:chalk_stacked_wall",
+    "terrassic:mossy_chalk_stacked_wall",
+    "terrassic:flint_stacked_wall",
+    "terrassic:mossy_flint_stacked_wall",
+    "terrassic:laterite_stacked_wall",
+    "terrassic:mossy_laterite_stacked_wall",
+    "terrassic:quartzite_stacked_wall",
+    "terrassic:mossy_quartzite_stacked_wall",
+    "terrassic:gneiss_stacked_wall",
+    "terrassic:mossy_gneiss_stacked_wall",
+    "terrassic:conglomerate_stacked_wall",
+    "terrassic:mossy_conglomerate_stacked_wall"
   ]
 }

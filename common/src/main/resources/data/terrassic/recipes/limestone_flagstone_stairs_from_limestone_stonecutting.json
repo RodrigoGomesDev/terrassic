@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:limestone"
+  },
+  "result": "terrassic:limestone_flagstone_stairs",
+  "count": 1
+}

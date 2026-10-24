@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR",
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:flint_nodules"
+    }
+  },
+  "result": {
+    "item": "terrassic:flint_stacked",
+    "count": 4
+  }
+}

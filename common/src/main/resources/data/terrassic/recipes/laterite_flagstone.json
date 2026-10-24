@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:laterite"
+    }
+  },
+  "result": {
+    "item": "terrassic:laterite_flagstone",
+    "count": 2
+  }
+}

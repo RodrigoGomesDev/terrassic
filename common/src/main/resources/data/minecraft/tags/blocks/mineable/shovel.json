@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:limestone_pebbles",
+    "terrassic:shale_pebbles",
+    "terrassic:chalk_pebbles",
+    "terrassic:flint_pebbles",
+    "terrassic:laterite_pebbles",
+    "terrassic:quartzite_pebbles",
+    "terrassic:gneiss_pebbles",
+    "terrassic:conglomerate_pebbles"
+  ]
+}

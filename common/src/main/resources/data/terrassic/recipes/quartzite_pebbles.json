@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:quartzite"
+    }
+  ],
+  "result": {
+    "item": "terrassic:quartzite_pebbles",
+    "count": 4
+  }
+}

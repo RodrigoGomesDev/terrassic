@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:conglomerate"
+    }
+  ],
+  "result": {
+    "item": "terrassic:conglomerate_pebbles",
+    "count": 4
+  }
+}

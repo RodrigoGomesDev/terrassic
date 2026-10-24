@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:shale_stacked"
+  },
+  "result": "terrassic:shale_stacked_wall",
+  "count": 1
+}

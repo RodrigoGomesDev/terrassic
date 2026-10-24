@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "terrassic:block/shale_stacked",
+    "top": "terrassic:block/shale_stacked",
+    "side": "terrassic:block/shale_stacked"
+  }
+}

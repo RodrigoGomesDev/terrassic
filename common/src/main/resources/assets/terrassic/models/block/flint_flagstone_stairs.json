@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "terrassic:block/flint_flagstone",
+    "top": "terrassic:block/flint_flagstone",
+    "side": "terrassic:block/flint_flagstone"
+  }
+}

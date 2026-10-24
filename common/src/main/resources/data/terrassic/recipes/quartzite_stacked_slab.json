@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:quartzite_stacked"
+    }
+  },
+  "result": {
+    "item": "terrassic:quartzite_stacked_slab",
+    "count": 6
+  }
+}
