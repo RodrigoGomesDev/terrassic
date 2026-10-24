@@ -12,21 +12,21 @@ import java.util.List;
 public record GuideSpecies(String id, String era, String diet, float length, boolean rideable, boolean eggOnly,
                            int fossilWeight, float guiScale) {
     public static final List<GuideSpecies> ALL = List.of(
-            new GuideSpecies("tyrannosaurus", "late_cretaceous", "carnivore", 12.3F, true, true, 2, 8.13F),
+            new GuideSpecies("tyrannosaurus", "late_cretaceous", "carnivore", 13.0F, true, true, 2, 7.68F),
             new GuideSpecies("spinosaurus", "late_cretaceous", "piscivore", 14.0F, false, true, 2, 7.14F),
             new GuideSpecies("dilophosaurus", "jurassic", "carnivore", 7.0F, false, true, 4, 14.31F),
-            new GuideSpecies("velociraptor", "late_cretaceous", "carnivore", 2.0F, false, true, 4, 46.69F),
-            new GuideSpecies("compsognathus", "jurassic", "carnivore", 1.2F, false, false, 3, 82.09F),
+            new GuideSpecies("velociraptor", "late_cretaceous", "carnivore", 2.07F, false, true, 4, 48.63F),
+            new GuideSpecies("compsognathus", "jurassic", "carnivore", 1.25F, false, false, 3, 79.44F),
             new GuideSpecies("triceratops", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 11.1F),
             new GuideSpecies("stegosaurus", "jurassic", "herbivore", 9.0F, false, false, 5, 11.11F),
-            new GuideSpecies("ankylosaurus", "late_cretaceous", "herbivore", 7.0F, false, false, 4, 14.3F),
-            new GuideSpecies("brachiosaurus", "jurassic", "herbivore", 22.0F, true, false, 3, 6.44F),
+            new GuideSpecies("ankylosaurus", "late_cretaceous", "herbivore", 8.0F, false, false, 4, 12.5F),
+            new GuideSpecies("brachiosaurus", "jurassic", "herbivore", 22.0F, true, false, 3, 4.54F),
             new GuideSpecies("parasaurolophus", "late_cretaceous", "herbivore", 9.5F, true, false, 5, 10.52F),
             new GuideSpecies("pachycephalosaurus", "late_cretaceous", "herbivore", 4.5F, false, false, 4, 22.2F),
             new GuideSpecies("gallimimus", "late_cretaceous", "omnivore", 6.0F, true, false, 4, 16.64F),
             new GuideSpecies("maiasaura", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 11.17F),
-            new GuideSpecies("pteranodon", "late_cretaceous", "piscivore", 6.5F, true, false, 3, 14.81F),
-            new GuideSpecies("mosasaurus", "late_cretaceous", "carnivore", 15.0F, false, false, 2, 6.67F));
+            new GuideSpecies("pteranodon", "late_cretaceous", "piscivore", 7.25F, true, false, 3, 13.85F),
+            new GuideSpecies("mosasaurus", "late_cretaceous", "carnivore", 17.0F, false, false, 2, 5.89F));
 
     public static GuideSpecies byId(String id) {
         for (GuideSpecies s : ALL) {

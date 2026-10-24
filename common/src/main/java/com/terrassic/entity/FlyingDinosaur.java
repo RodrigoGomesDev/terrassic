@@ -2,6 +2,7 @@ package com.terrassic.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -141,6 +142,17 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         if (this.flapTicks < 100) {
             this.flapTicks++;
         }
+        // wing beats while flapping (not while gliding), about once per cycle of the fly animation
+        SoundEvent flap = this.flapSound();
+        if (flap != null && !this.level().isClientSide() && this.isFlying() && this.tickCount % 16 == 0
+                && (this.flapTicks < 15 || this.getDeltaMovement().y > -0.03D)) {
+            this.playSound(flap, 0.8F, 0.9F + this.random.nextFloat() * 0.2F);
+        }
+    }
+
+    /** Wing beat sound, or null for none. */
+    protected SoundEvent flapSound() {
+        return null;
     }
 
     // ------------------------------------------------------------------ animation

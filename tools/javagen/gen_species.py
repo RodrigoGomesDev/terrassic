@@ -4,11 +4,15 @@ sets numbers, food, sounds and a few overrides. Re-run after editing SPECIES:  p
 """
 import json
 import os
+import sys
 OUT = os.path.join(os.path.dirname(__file__), "..", "..", "common", "src", "main", "java", "com", "terrassic", "entity")
 GUIDE_OUT = os.path.join(os.path.dirname(OUT), "research", "GuideSpecies.java")
 REPORT = os.path.join(os.path.dirname(__file__), "..", "..", "art", "build_report.json")
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "soundgen"))
+from recipes import SPECIES_VOICE, VOICE_SETS, field as sound_field  # noqa: E402
 
 # In-game size of each species. 1 block = 1 metre, so the player (1.8 blocks) is a 1.8 m tall person.
+# Lengths are the upper end of the published estimates for adults (largest known specimens), see docs/TAMANHOS.md.
 # scale  = renderer scale of the GeckoLib model (the model's pixel size comes from tools/modelgen,
 #          see art/build_report.json); length = scale * model length.
 # w, h   = hitbox in blocks. Kept narrower than the model on purpose: Minecraft hitboxes are square and
@@ -18,24 +22,25 @@ REPORT = os.path.join(os.path.dirname(__file__), "..", "..", "art", "build_repor
 # Riding offsets (ride_offset, ride_forward in SPECIES) are given at scale 1.0 and multiplied by scale.
 SIZES = {
     #                   real length (m)  scale   w     h    baby   shadow
-    "tyrannosaurus":      dict(real=12.3, scale=1.85, w=2.5, h=4.5, baby=0.25, shadow=2.4),
+    "tyrannosaurus":      dict(real=13.0, scale=1.96, w=2.6, h=4.8, baby=0.25, shadow=2.4),
     "spinosaurus":        dict(real=14.0, scale=1.85, w=2.5, h=4.6, baby=0.25, shadow=2.4),
     "dilophosaurus":      dict(real=7.0,  scale=1.53, w=1.2, h=2.6, baby=0.35, shadow=1.0),
-    "velociraptor":       dict(real=2.0,  scale=0.5,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
-    "compsognathus":      dict(real=1.2,  scale=0.3,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
+    "velociraptor":       dict(real=2.07, scale=0.48,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
+    "compsognathus":      dict(real=1.25, scale=0.31,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
     "triceratops":        dict(real=9.0,  scale=1.63, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
-    "ankylosaurus":       dict(real=7.0,  scale=1.6,  w=2.4, h=1.9, baby=0.3,  shadow=1.9),
-    # real Brachiosaurus: 18-22 m long, head 9-13 m up. Our model holds the neck very upright, so it is
-    # sized by height (~12 blocks to the head, ~15.5 long) to stay under the clouds of a normal world.
-    "brachiosaurus":      dict(real=22.0, scale=2.3,  w=3.5, h=7.0, baby=0.15, shadow=3.5),
+    "ankylosaurus":       dict(real=8.0,  scale=1.83, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
+    # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
+    # 22 m length; our model holds the neck more upright than that, so the head reaches ~17 blocks.
+    "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
-    # Pteranodon: "real" is the wingspan. The body is small (hitbox ~ folded on the ground).
-    "pteranodon":         dict(real=6.5,  scale=1.0,  w=1.2, h=1.6, baby=0.3,  shadow=0.9),
-    "mosasaurus":         dict(real=15.0, scale=1.95, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
+    # Pteranodon: "real" is the wingspan (largest males ~7.25 m). The body is small (hitbox ~ folded on the ground).
+    "pteranodon":         dict(real=7.25, scale=1.07, w=1.3, h=1.7, baby=0.3,  shadow=1.0),
+    # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
+    "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -176,6 +181,7 @@ def gen(s, bounds):
     cls, base = s["cls"], s["base"]
     size = SIZES[s["id"]]
     s = dict(s, cull=culling(size, bounds[s["id"]]))
+    voice = SPECIES_VOICE.get(s["id"])  # own voice set (tools/soundgen) or None = vanilla sounds
     imports = {
         "com.terrassic.registry.ModEntities", "net.minecraft.server.level.ServerLevel", "net.minecraft.sounds.SoundEvent",
         "net.minecraft.sounds.SoundEvents", "net.minecraft.world.damagesource.DamageSource", "net.minecraft.world.entity.AgeableMob",
@@ -287,6 +293,8 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.entity.LivingEntity")
         anim = "roar" if s.get("roar") else "display"
         snd = "SoundEvents.RAVAGER_ROAR, 3.0F, %sF" % (0.55 if s["id"] == "tyrannosaurus" else 0.7) if s.get("roar") else "SoundEvents.HOGLIN_ANGRY, 1.2F, 1.3F"
+        if voice and "threat" in VOICE_SETS[voice[0]]:
+            snd = f"ModSounds.{sound_field(voice[0], 'threat')}.get(), 3.0F, {voice[1]}F"
         body.append(f"""    @Override
     public void setTarget(LivingEntity target) {{
         LivingEntity previous = this.getTarget();
@@ -366,19 +374,23 @@ def gen(s, bounds):
     }}
 """)
     amb, hurt, death, pitch, vol, interval = s["sounds"]
+    amb, hurt, death = (f"SoundEvents.{x}" for x in (amb, hurt, death))
+    if voice:
+        vset, pitch = voice
+        amb, hurt, death = (f"ModSounds.{sound_field(vset, e)}.get()" for e in ("ambient", "hurt", "death"))
     body.append(f"""    @Override
     protected SoundEvent getAmbientSound() {{
-        return SoundEvents.{amb};
+        return {amb};
     }}
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {{
-        return SoundEvents.{hurt};
+        return {hurt};
     }}
 
     @Override
     protected SoundEvent getDeathSound() {{
-        return SoundEvents.{death};
+        return {death};
     }}
 
     @Override
@@ -399,11 +411,22 @@ def gen(s, bounds):
         imports.add("net.minecraft.core.BlockPos")
         imports.add("net.minecraft.world.level.block.state.BlockState")
         st, v, p = s["step"]
+        st = f"SoundEvents.{st}"
+        if voice and "step" in VOICE_SETS[voice[0]]:
+            st, p = f"ModSounds.{sound_field(voice[0], 'step')}.get()", 1.0
         body.append(f"""
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {{
-        this.playSound(SoundEvents.{st}, {v}F, {p}F);
+        this.playSound({st}, {v}F, {p}F);
     }}""")
+    if voice and "flap" in VOICE_SETS[voice[0]]:
+        body.append(f"""
+    @Override
+    protected SoundEvent flapSound() {{
+        return ModSounds.{sound_field(voice[0], 'flap')}.get();
+    }}""")
+    if voice:
+        imports.add("com.terrassic.registry.ModSounds")
     src = "package com.terrassic.entity;\n\n" + "\n".join(f"import {i};" for i in sorted(imports)) + "\n\n"
     src += f"/**\n * {s['doc']}\n *\n * Generated by tools/javagen/gen_species.py - edit the table there.\n */\n"
     src += f"public class {cls} extends {base} {{\n" + "\n".join(body) + "\n}\n"

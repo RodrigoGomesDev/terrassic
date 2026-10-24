@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -117,22 +118,22 @@ public class Parasaurolophus extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.CAMEL_AMBIENT;
+        return ModSounds.HORN_HADROSAUR_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.CAMEL_HURT;
+        return ModSounds.HORN_HADROSAUR_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.CAMEL_DEATH;
+        return ModSounds.HORN_HADROSAUR_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.7F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
