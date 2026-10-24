@@ -49,6 +49,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("mesodma", "late_cretaceous", "omnivore", 0.25F, false, false, 8, 413.14F),
             new GuideSpecies("basilemys", "late_cretaceous", "herbivore", 1.7F, false, false, 7, 58.39F),
             new GuideSpecies("enchodus", "late_cretaceous", "carnivore", 0.8F, false, false, 9, 122.3F),
+            new GuideSpecies("lepisosteus", "late_cretaceous", "carnivore", 1.0F, false, false, 8, 98.77F),
             new GuideSpecies("parasaurolophus", "late_cretaceous", "herbivore", 9.5F, true, false, 5, 10.52F),
             new GuideSpecies("pachycephalosaurus", "late_cretaceous", "herbivore", 4.5F, false, false, 4, 22.35F),
             new GuideSpecies("thescelosaurus", "late_cretaceous", "herbivore", 4.0F, false, false, 5, 24.91F),

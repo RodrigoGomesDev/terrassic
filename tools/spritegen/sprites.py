@@ -599,6 +599,19 @@ def spawn_eggs():
     eye(cv, 10, 5, "#e0c060")
     eggs["enchodus"] = cv
 
+    # Lepisosteus: olive egg with dark spots and the diamond scales, a gold eye (16x16 fallback)
+    cv = base_egg(None, "#4e5e34", "#d8d4b0")
+    rnd = random.Random("lepisosteus")
+    for _ in range(8):
+        x, y = rnd.randrange(3, 13), rnd.randrange(3, 12)
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#2e3620"))
+    for x in range(4, 12):
+        if inside(cv, x, 9) and x % 2 == 0:
+            cv.set(x, 9, hexc("#9aa070"))
+    eye(cv, 10, 5, "#c8b050")
+    eggs["lepisosteus"] = cv
+
     # Parasaurolophus: teal egg with the long red crest sweeping back from the top
     cv = base_egg(None, "#46584c", "#d8d4b0")
     for i, (x, y) in enumerate(((7, 4), (6, 3), (5, 2), (4, 1), (3, 0))):
@@ -949,7 +962,7 @@ EGG_BLOCK = {
     "pachyrhinosaurus": ("#c8c4b8", "#3c4044"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
     "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),
-    "ichthyornis": ("#e4ebe8", "#4a4a4c"), "vegavis": ("#e8e0c8", "#7a4a2e"), "mesodma": ("#e2d8c0", "#6a5a44"), "basilemys": ("#c8b878", "#4e4a30"), "enchodus": ("#eef0ea", "#3c6a6e"),
+    "ichthyornis": ("#e4ebe8", "#4a4a4c"), "vegavis": ("#e8e0c8", "#7a4a2e"), "mesodma": ("#e2d8c0", "#6a5a44"), "basilemys": ("#c8b878", "#4e4a30"), "enchodus": ("#eef0ea", "#3c6a6e"), "lepisosteus": ("#d8d4b0", "#4e5e34"),
 }
 
 
@@ -1255,6 +1268,24 @@ FISH_ROWS = {  # 16x16, side view, head to the right; . empty, b body, d back, c
         "................",
         "................",
     ],
+    "lepisosteus": [
+        "................",
+        "................",
+        "................",
+        "....ff..........",
+        ".f..ffddddd.....",
+        ".ff.ddddddddd...",
+        ".ffbbbbdbbbbdee.",
+        "ffbbbbbbbbbbbbpe",
+        "fbbbcccccccbbbmm",
+        ".fcccccccccmtmtm",
+        ".f..cccccc......",
+        "......ff........",
+        "......ff........",
+        "................",
+        "................",
+        "................",
+    ],
 }
 
 
@@ -1276,6 +1307,12 @@ def fishes():
     ckd = {"b": hexc("#c09058"), "d": hexc("#8a5a30"), "c": hexc("#e0c090"), "f": hexc("#6e4a28"),
            "e": hexc("#f0e0b0"), "p": hexc("#3a2a18"), "t": hexc("#f6f2e6"), "m": hexc("#5a3517")}
     out["cooked_enchodus"] = fish_sprite(FISH_ROWS["enchodus"], ckd)
+    raw = {"b": hexc("#8c9460"), "d": hexc("#4e5e34"), "c": hexc("#d8d4b0"), "f": hexc("#6e7848"),
+           "e": hexc("#c8b050"), "p": hexc("#0f0c0a"), "t": hexc("#f6f2e6"), "m": hexc("#8a3844")}
+    out["lepisosteus"] = fish_sprite(FISH_ROWS["lepisosteus"], raw)
+    ckd = {"b": hexc("#b88850"), "d": hexc("#7a5028"), "c": hexc("#dcc08c"), "f": hexc("#6a4826"),
+           "e": hexc("#f0e0b0"), "p": hexc("#3a2a18"), "t": hexc("#f6f2e6"), "m": hexc("#5a3517")}
+    out["cooked_lepisosteus"] = fish_sprite(FISH_ROWS["lepisosteus"], ckd)
     for name, cv in out.items():
         cv.outline(0.42)
         cv.save(os.path.join(TEX, "item", f"{name}.png"))

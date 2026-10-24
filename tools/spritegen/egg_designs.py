@@ -696,6 +696,26 @@ def enchodus():
     return e
 
 
+def lepisosteus():
+    """The gar: an olive egg with the diamond ganoid scales, dark spots and the long needle snout drawn down the front."""
+    e = Egg("lepisosteus", {"b": "#8c9460", "c": "#d8d4b0", "d": "#4e5e34", "n": "#2e3620",
+                            "f": "#6e7848", "g": "#c8b050", "R": MOUTH})
+    e.poly([(17, 7), (19, 2), (22, 2), (22, 7)], "f")
+    _side(e, [(4, 20), (0, 23), (1, 25), (5, 23)], "f")
+    cap(e, "d", (5, 3, 26, 17), None)
+    e.ell((8, 19, 23, 36), "c", clip=True)
+    for (x, y) in ((8, 8), (13, 5), (18, 9), (23, 6), (11, 13), (20, 14)):
+        e.px([(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)], "n")      # the dark spots
+    for cx in (11, 20):
+        e.ell((cx - 1, 13, cx + 1, 15), "g")
+        e.px([(cx, 14)], "n")
+    e.poly([(13, 18), (18, 18), (17, 33), (14, 33)], "d")                  # the long snout
+    e.line([(14, 20), (14, 32)], "R")
+    e.pal["W"] = TOOTH
+    e.px([(15, 21), (15, 23), (15, 25), (15, 27), (15, 29), (15, 31)], "W")  # the needle teeth
+    return e
+
+
 def therizinosaurus():
     e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
                                    "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
@@ -935,7 +955,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma", "basilemys", "enchodus"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma", "basilemys", "enchodus", "lepisosteus"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

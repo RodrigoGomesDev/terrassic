@@ -35,7 +35,7 @@ public class Tylosaurus extends SwimmingDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.58F;
     public static final float SHADOW = 2.0F;
-    private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get());
+    private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Tylosaurus(EntityType<? extends Tylosaurus> type, Level level) {
         super(type, level);

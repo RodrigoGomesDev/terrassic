@@ -32,6 +32,7 @@ import com.terrassic.entity.Giganotosaurus;
 import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Hesperornis;
 import com.terrassic.entity.Ichthyornis;
+import com.terrassic.entity.Lepisosteus;
 import com.terrassic.entity.Leptoceratops;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Majungasaurus;
@@ -122,6 +123,7 @@ public final class TerrassicClient {
         renderer(ModEntities.MESODMA, "mesodma", Mesodma.MODEL_SCALE, Mesodma.SHADOW);
         renderer(ModEntities.BASILEMYS, "basilemys", Basilemys.MODEL_SCALE, Basilemys.SHADOW);
         renderer(ModEntities.ENCHODUS, "enchodus", Enchodus.MODEL_SCALE, Enchodus.SHADOW);
+        renderer(ModEntities.LEPISOSTEUS, "lepisosteus", Lepisosteus.MODEL_SCALE, Lepisosteus.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

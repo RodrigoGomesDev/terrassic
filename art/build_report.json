@@ -1984,5 +1984,38 @@
    "animation.enchodus.tame"
   ],
   "render_scale": 0.2
+ },
+ "lepisosteus": {
+  "bones": 17,
+  "cubes": 51,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -7.709977175816339,
+    0.5,
+    -56.0
+   ],
+   [
+    7.709977175816339,
+    19.5,
+    52.0
+   ]
+  ],
+  "animations": [
+   "animation.lepisosteus.idle",
+   "animation.lepisosteus.walk",
+   "animation.lepisosteus.run",
+   "animation.lepisosteus.sit",
+   "animation.lepisosteus.attack",
+   "animation.lepisosteus.knocked_out",
+   "animation.lepisosteus.wake",
+   "animation.lepisosteus.eat",
+   "animation.lepisosteus.beg",
+   "animation.lepisosteus.tame"
+  ],
+  "render_scale": 0.2
  }
 }

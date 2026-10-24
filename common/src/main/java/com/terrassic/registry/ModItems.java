@@ -81,6 +81,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MESODMA_SPAWN_EGG = egg("mesodma", ModEntities.MESODMA);
     public static final RegistrySupplier<Item> BASILEMYS_SPAWN_EGG = egg("basilemys", ModEntities.BASILEMYS);
     public static final RegistrySupplier<Item> ENCHODUS_SPAWN_EGG = egg("enchodus", ModEntities.ENCHODUS);
+    public static final RegistrySupplier<Item> LEPISOSTEUS_SPAWN_EGG = egg("lepisosteus", ModEntities.LEPISOSTEUS);
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_SPAWN_EGG = egg("parasaurolophus", ModEntities.PARASAUROLOPHUS);
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_SPAWN_EGG = egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS);
     public static final RegistrySupplier<Item> THESCELOSAURUS_SPAWN_EGG = egg("thescelosaurus", ModEntities.THESCELOSAURUS);
@@ -143,6 +144,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MESODMA_HIDE = hide("mesodma");
     public static final RegistrySupplier<Item> BASILEMYS_HIDE = hide("basilemys");
     public static final RegistrySupplier<Item> ENCHODUS_HIDE = hide("enchodus");
+    public static final RegistrySupplier<Item> LEPISOSTEUS_HIDE = hide("lepisosteus");
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_HIDE = hide("parasaurolophus");
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_HIDE = hide("pachycephalosaurus");
     public static final RegistrySupplier<Item> THESCELOSAURUS_HIDE = hide("thescelosaurus");
@@ -198,6 +200,13 @@ public final class ModItems {
     public static final RegistrySupplier<Item> COOKED_ENCHODUS = ITEMS.register("cooked_enchodus",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
                     .food(new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build())));
+    // Lepisosteus, the gar, in the rivers (the salmon's seat; raw and cooked like salmon).
+    public static final RegistrySupplier<Item> LEPISOSTEUS = ITEMS.register("lepisosteus",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).build())));
+    public static final RegistrySupplier<Item> COOKED_LEPISOSTEUS = ITEMS.register("cooked_lepisosteus",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(6).saturationMod(0.8F).build())));
 
     // ---- archaic weapons
     public static final RegistrySupplier<Item> FLINT_KNIFE = ITEMS.register("flint_knife",

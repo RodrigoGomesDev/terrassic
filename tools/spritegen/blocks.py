@@ -1593,6 +1593,9 @@ SKULLS = {
     # the sabre-toothed herring: a pointed skull with the big orbit and the fangs at the front
     "enchodus": [".........ooooo..", "......ooobbbbbo.", "...ooobbbbbeebo.", ".oobbbbbbbbeebo.",
                  "obbbbbbbbbbbbbo.", "otbbbbbbbbbbbo..", "t.tooobbbbbbo...", ".....oooooooo..."],
+    # the gar: a flat skull with the orbit far back and the long needle-toothed snout
+    "lepisosteus": ["...........oooo.", ".........oobbbbo", "oooooooooobbeebo", "obbbbbbbbbbbbbbo",
+                    "otototbbbbbbbbbo", ".ooooooobbbbbbo.", "........ooooooo."],
     "maiasaura": ["..........o.....", ".........olo....", "........obbo....", "......oobbbboo..",
                   "....oobbbbbeebo.", "..oobbbbbbbeebo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbbo.",
                   "oobbbbbbbbbbbo..", ".obbbbbbbbbbo...", "..oooooooooo...."],
@@ -1741,7 +1744,7 @@ HIDE_PATTERN = {  # rug pattern of each species (scales by default)
     "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots", "leptoceratops": "spots",
     "ankylosaurus": "osteoderms", "triceratops": "big_scales", "mosasaurus": "fine_scales",
     "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
-    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz", "mesodma": "fuzz", "basilemys": "osteoderms", "enchodus": "fine_scales",
+    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz", "mesodma": "fuzz", "basilemys": "osteoderms", "enchodus": "fine_scales", "lepisosteus": "big_scales",
     "struthiomimus": "feathers", "deinocheirus": "feathers", "therizinosaurus": "feathers",
     "hesperornis": "feathers", "ichthyornis": "feathers", "vegavis": "feathers",
 }

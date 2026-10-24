@@ -24,6 +24,7 @@ SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearin
     "mesodma": ("Mesodma", "Mesodma", "Mesodma", False),
     "basilemys": ("Basilemys", "Basilemys", "Basilemys", False),
     "enchodus": ("Enchodus", "Enchodus", "Enchodus", None),
+    "lepisosteus": ("Lepisosteus", "Lepisosteus", "Lepisosteus", None),
     "stegosaurus": ("Stegosaurus", "Estegossauro", "Estegosaurio", True),
     "ankylosaurus": ("Ankylosaurus", "Anquilossauro", "Anquilosaurio", True),
     "euoplocephalus": ("Euoplocephalus", "Euoplocéfalo", "Euoplocephalus", True),
@@ -91,6 +92,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # the fish of the Cretaceous waters (docs/FAUNA.md): Enchodus in the sea (the cod's seat)
     "enchodus": ("Raw Enchodus", "Enchodus Cru", "Enchodus Crudo", "item/generated"),
     "cooked_enchodus": ("Cooked Enchodus", "Enchodus Assado", "Enchodus Asado", "item/generated"),
+    "lepisosteus": ("Raw Gar", "Peixe-agulha Cru", "Pejelagarto Crudo", "item/generated"),
+    "cooked_lepisosteus": ("Cooked Gar", "Peixe-agulha Assado", "Pejelagarto Asado", "item/generated"),
 }
 
 LANG_EXTRA = {
@@ -271,6 +274,7 @@ def main():
     cooked("raw_dino_meat", "cooked_dino_meat")
     cooked("raw_prime_meat", "cooked_prime_meat")
     cooked("enchodus", "cooked_enchodus")
+    cooked("lepisosteus", "cooked_lepisosteus")
 
     # ------------------------------------------------------------- entity loot
     # Cretaceous food (docs/FAUNA.md): there are no cattle, sheep or chickens in the Terrassic world, so every animal
@@ -278,7 +282,7 @@ def main():
     MEAT = {"minecraft:beef": "terrassic:raw_dino_meat", "minecraft:mutton": "terrassic:raw_dino_meat",
             "minecraft:chicken": "terrassic:raw_dino_meat", "minecraft:porkchop": "terrassic:raw_dino_meat"}
     SEA_MEAT = {"mosasaurus", "tylosaurus", "elasmosaurus", "deinosuchus"}  # their "cod" below is their own flesh
-    FISH = {"minecraft:cod": "terrassic:enchodus"}  # the fish the others had in the belly is the Cretaceous one
+    FISH = {"minecraft:cod": "terrassic:enchodus", "minecraft:salmon": "terrassic:lepisosteus"}  # the fish the others had in the belly is the Cretaceous one
     PRIME = {  # species: (min, max) prime cuts
         "brachiosaurus": (3, 6), "alamosaurus": (3, 6), "argentinosaurus": (4, 8), "dreadnoughtus": (3, 6), "saltasaurus": (2, 4),
         "opisthocoelicaudia": (2, 4), "tyrannosaurus": (1, 3), "spinosaurus": (1, 3), "giganotosaurus": (1, 3),
@@ -360,6 +364,7 @@ def main():
         "mesodma": [item("terrassic:raw_dino_meat", 0, 1, True), item("minecraft:rabbit_hide", 0, 1), item("minecraft:bone", 0, 1)],
         "basilemys": [item("terrassic:raw_dino_meat", 1, 2, True), item("minecraft:scute", 1, 3), item("minecraft:bone", 1, 2)],
         "enchodus": [item("terrassic:enchodus", 1, 1, True), item("minecraft:bone", 0, 1)],
+        "lepisosteus": [item("terrassic:lepisosteus", 1, 1, True), item("minecraft:bone", 0, 1)],
     }
     for sid, pools in loot.items():
         if sid in SEA_MEAT:
