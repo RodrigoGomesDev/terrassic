@@ -3,6 +3,7 @@ package com.terrassic.registry;
 import com.terrassic.Terrassic;
 // BEGIN GENERATED imports
 import com.terrassic.entity.Ankylosaurus;
+import com.terrassic.entity.Archelon;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Dilophosaurus;
@@ -90,6 +91,8 @@ public final class ModEntities {
             mob("elasmosaurus", Elasmosaurus::new, MobCategory.WATER_CREATURE, Elasmosaurus.WIDTH, Elasmosaurus.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Xiphactinus>> XIPHACTINUS =
             mob("xiphactinus", Xiphactinus::new, MobCategory.WATER_CREATURE, Xiphactinus.WIDTH, Xiphactinus.HEIGHT, 12);
+    public static final RegistrySupplier<EntityType<Archelon>> ARCHELON =
+            mob("archelon", Archelon::new, MobCategory.WATER_CREATURE, Archelon.WIDTH, Archelon.HEIGHT, 12);
     // END GENERATED species
 
     // ---- projectiles
@@ -130,6 +133,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(TYLOSAURUS, Tylosaurus::createAttributes);
         EntityAttributeRegistry.register(ELASMOSAURUS, Elasmosaurus::createAttributes);
         EntityAttributeRegistry.register(XIPHACTINUS, Xiphactinus::createAttributes);
+        EntityAttributeRegistry.register(ARCHELON, Archelon::createAttributes);
         // END GENERATED attributes
     }
 }

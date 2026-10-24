@@ -712,5 +712,38 @@
    "animation.xiphactinus.tame"
   ],
   "render_scale": 1.0
+ },
+ "archelon": {
+  "bones": 12,
+  "cubes": 23,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -34.25715410244066,
+    1.0,
+    -34.0
+   ],
+   [
+    34.25715410244066,
+    14.0,
+    28.06105952210926
+   ]
+  ],
+  "animations": [
+   "animation.archelon.idle",
+   "animation.archelon.walk",
+   "animation.archelon.run",
+   "animation.archelon.sit",
+   "animation.archelon.attack",
+   "animation.archelon.knocked_out",
+   "animation.archelon.wake",
+   "animation.archelon.eat",
+   "animation.archelon.beg",
+   "animation.archelon.tame"
+  ],
+  "render_scale": 1.0
  }
 }

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "hatch=0": {
+      "model": "terrassic:block/archelon_egg_0"
+    },
+    "hatch=1": {
+      "model": "terrassic:block/archelon_egg_1"
+    },
+    "hatch=2": {
+      "model": "terrassic:block/archelon_egg_2"
+    }
+  }
+}

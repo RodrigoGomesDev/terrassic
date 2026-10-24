@@ -22,6 +22,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Tylosaurus (v0.5) | 12-13 m (espécime "Bunker" KUVP 5033 ~13 m; Everhart 2005), esguio, nadadeiras pequenas | novo | **13,0 x 1,9** | 2,6 x 1,8 | 20% |
 | Elasmosaurus (v0.5) | ~10,3 m, pescoço ~7 m com 72 vértebras (Sachs 2005) | novo | **10,3 x 1,3** | 2,0 x 1,4 | 20% |
 | Xiphactinus (v0.5) | 4,5-6 m, o maior da família (Everhart 2005; "peixe dentro do peixe" FHSM VP-333 ~4 m) | novo | **6,0 x 1,9** (com nadadeiras) | 1,6 x 1,2 | 30% |
+| Archelon (v0.5) | 4,6 m de comprimento, 4 m entre as pontas das nadadeiras (Wieland 1896/1902; YPM 3000) | novo | **4,6 x 1,0** (5,0 de envergadura) | 2,2 x 1,1 | 25% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

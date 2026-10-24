@@ -487,6 +487,22 @@ GUIDE = {
         note=("Abri um para ver o que comia. Tinha outro peixe inteiro dentro, e dentro desse, outro.",
               "I opened one up to see what it ate. There was another whole fish inside, and inside that one, another.",
               "Abrí uno para ver qué comía. Tenía otro pez entero dentro, y dentro de ese, otro.")),
+    "archelon": dict(
+        sci=("Viveu há cerca de 75 milhões de anos no Mar Interior Ocidental, na América do Norte. A maior tartaruga que já existiu: 4,6 m de comprimento e 4 m de uma nadadeira à outra, mais de 2 toneladas. O casco não era uma cúpula rígida, mas couro esticado sobre uma armação de costelas alargadas, com uma crista de nós na espinha. Bico forte em gancho, nadadeiras dianteiras enormes, as traseiras pequenas. Saía à praia para pôr ovos.",
+             "Lived about 75 million years ago in the Western Interior Seaway, in North America. The largest turtle that ever lived: 4.6 m long and 4 m from flipper to flipper, over 2 tonnes. The shell was not a rigid dome but leather stretched over a frame of widened ribs, with a knobbly ridge down the spine. A strong hooked beak, enormous front flippers, small hind ones. It came ashore to lay eggs.",
+             "Vivió hace unos 75 millones de años en el Mar Interior Occidental, en América del Norte. La tortuga más grande que ha existido: 4,6 m de largo y 4 m de una aleta a la otra, más de 2 toneladas. El caparazón no era una cúpula rígida sino cuero tendido sobre un armazón de costillas ensanchadas, con una cresta de nudos en el espinazo. Pico fuerte en gancho, aletas delanteras enormes, las traseras pequeñas. Salía a la playa a poner huevos."),
+        behavior=("Cruza devagar a costa e o mar aberto, sozinha ou aos pares, pastando algas e caçando lulas. Nunca ataca primeiro, mas quem a fere leva uma bicada que arranca pedaço, e o casco aguenta quase tudo.",
+                  "Cruises the coast and the open sea slowly, alone or in pairs, grazing seaweed and hunting squid. Never attacks first, but whoever hurts it gets a bite that takes a chunk, and the shell takes almost anything.",
+                  "Recorre despacio la costa y el mar abierto, sola o en parejas, pastando algas y cazando calamares. Nunca ataca primero, pero quien la hiere recibe un picotazo que arranca un pedazo, y el caparazón aguanta casi todo."),
+        taming=("Doma-se na mão, com alga, erva-do-mar ou peixe. Os pais põem o ovo na areia se houver praia perto; no fundo do mar, soltam o ovo na água e você o planta onde quiser.",
+                "Hand-tamed with kelp, seagrass or fish. The parents lay the egg on sand when a beach is near; out at sea they drop the egg in the water and you plant it wherever you like.",
+                "Se doma a mano, con alga, hierba marina o pescado. Los padres ponen el huevo en la arena si hay playa cerca; en alta mar sueltan el huevo en el agua y usted lo planta donde quiera."),
+        utility=("Montaria aquática lenta mas blindada: mergulha, sobe e leva o cavaleiro sem afogar, e o casco segura os dentes do mar. Dá escamas de tartaruga.",
+                 "A slow but armoured aquatic mount: it dives, surfaces and carries the rider without drowning, and the shell holds off the teeth of the sea. Drops turtle scutes.",
+                 "Montura acuática lenta pero blindada: bucea, sube y lleva al jinete sin ahogarlo, y el caparazón frena los dientes del mar. Da escamas de tortuga."),
+        note=("Dormi em cima dela uma noite inteira, no meio do mar. De manhã ela nem tinha notado.",
+              "I slept on top of her a whole night, in the middle of the sea. In the morning she had not even noticed.",
+              "Dormí encima de ella una noche entera, en medio del mar. Por la mañana ni se había dado cuenta.")),
 }
 
 ERAS = {

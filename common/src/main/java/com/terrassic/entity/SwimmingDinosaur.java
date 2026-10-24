@@ -114,7 +114,7 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
         }
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 20, true, false,
-                e -> this.canHunt() && (e.isInWaterOrBubble() || e.getVehicle() instanceof Boat)));
+                e -> this.huntsPlayers() && this.canHunt() && (e.isInWaterOrBubble() || e.getVehicle() instanceof Boat)));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 80, true, false,
                 e -> this.canHunt() && e.isInWaterOrBubble() && this.isPrey(e)));
     }
@@ -136,6 +136,11 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
             return InteractionResult.PASS;
         }
         return super.mobInteract(player, hand);
+    }
+
+    /** Whether wild adults attack players in the water (false for the peaceful grazers, which only fight back). */
+    protected boolean huntsPlayers() {
+        return true;
     }
 
     /** Only hunts while in the water; tamed ones only defend. */

@@ -54,6 +54,8 @@ SIZES = {
     "elasmosaurus":       dict(real=10.3, scale=1.42, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
     # Xiphactinus audax: 4.5-6 m, the biggest of its family (Everhart 2005; the "fish within a fish" FHSM VP-333 is ~4 m).
     "xiphactinus":        dict(real=6.0, scale=1.16, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
+    # Archelon ischyros: 4.6 m long, 4 m flipper to flipper (Wieland 1896/1902; YPM 3000), the largest turtle ever.
+    "archelon":           dict(real=4.6, scale=1.18, w=2.2, h=1.1, baby=0.25, shadow=1.6),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -80,6 +82,7 @@ GUIDE = {
     "tylosaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "elasmosaurus":       dict(era="late_cretaceous", diet="piscivore", fossil=3),
     "xiphactinus":        dict(era="late_cretaceous", diet="carnivore", fossil=3),
+    "archelon":           dict(era="late_cretaceous", diet="omnivore", fossil=3),
 }
 
 # Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
@@ -108,6 +111,7 @@ WORLD = {
     "tylosaurus":         dict(biomes=("deep_sea", "ocean"), weight=3, group=(1, 1), track=12),  # also the shallower open sea
     "elasmosaurus":       dict(biomes=("ocean", "deep_sea"), weight=4, group=(1, 2), track=12),  # fishes the open sea in pairs
     "xiphactinus":        dict(biomes=("ocean", "deep_sea"), weight=6, group=(1, 3), track=12),  # small hunting packs
+    "archelon":           dict(biomes=("ocean", "coast"), weight=4, group=(1, 2), track=12),      # cruises near the shore
 }
 
 # biome predicate -> (Java expression in ModSpawns, description for the doc comment)
@@ -267,6 +271,13 @@ SPECIES = [
       sounds=("COD_AMBIENT", "COD_HURT", "COD_DEATH", 0.5, 1.6, 300), xp=14, run=0.06,
       prey="e instanceof AbstractFish || e instanceof Squid || e instanceof Ichthyornis && e.isInWater()",
       prey_imports=["net.minecraft.world.entity.animal.AbstractFish", "net.minecraft.world.entity.animal.Squid"], prey_interval=80),
+ dict(id="archelon", cls="Archelon", base="SwimmingDinosaur",
+      doc="Archelon ischyros - the largest turtle ever, 4.6 m long and 4 m across the flippers, a leathery shell over a rib frame and a hooked beak. Peaceful grazer of squid and seaweed that only bites back; hand-tamed with kelp or fish, lays eggs (on land, or drops the egg in the water), and carries a rider as a slow armoured aquatic mount.",
+      attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.9, ATTACK_DAMAGE=6, ARMOR=14, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
+      food="Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON",
+      sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 0.5, 1.6, 400), xp=12, run=0.03,
+      prey="e instanceof Squid", prey_imports=["net.minecraft.world.entity.animal.Squid"], hunts_players=False,
+      tame="feeding", rideable=True, ride_offset=0.9, ride_forward=0.1, ride_speed=0.75, dive=0.8),
 ]
 
 
@@ -373,6 +384,8 @@ def gen(s, bounds):
             body.append("    @Override\n    protected boolean liveYoung() {\n        return true;\n    }\n")
         if "dive" in s:
             body.append(f"    @Override\n    protected double diveSpeed() {{\n        return {s['dive']}D;\n    }}\n")
+        if s.get("hunts_players") is False:
+            body.append("    @Override\n    protected boolean huntsPlayers() {\n        return false;\n    }\n")
     if s.get("fights") is False:
         body.append("    @Override\n    protected boolean fightsBack() {\n        return false;\n    }\n")
     if s.get("hit_effects"):
@@ -386,7 +399,8 @@ def gen(s, bounds):
                     "        if (hit && target instanceof LivingEntity living) {\n" + fx + "\n        }\n        return hit;\n    }\n")
     if base in ("FlyingDinosaur", "SwimmingDinosaur"):
         imports.add("net.minecraft.world.entity.LivingEntity")
-        imports.update(s.get("prey_imports", ["net.minecraft.world.entity.animal.AbstractFish"]))
+        imports.add("net.minecraft.world.entity.animal.AbstractFish")   # the default prey; prey_imports only adds
+        imports.update(s.get("prey_imports", []))
         body.append(f"    @Override\n    protected boolean isPrey(LivingEntity e) {{\n        return {s['prey']};\n    }}\n")
     if base == "PredatorDinosaur":
         imports.add("net.minecraft.world.entity.LivingEntity")
