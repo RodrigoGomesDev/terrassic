@@ -1,6 +1,9 @@
 package com.terrassic.entity;
 
 import com.terrassic.entity.ai.DinoSleepGoal;
+import com.terrassic.entity.ai.FollowHerdGoal;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
@@ -90,6 +93,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(8, new FollowHerdGoal(this));
         this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
@@ -109,6 +113,20 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
                 this.feed(8);
             }
         }
+    }
+
+    /** A runner that is hurt sets the whole herd running: the others take the attacker as the one who hurt them. */
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && !this.level().isClientSide() && !this.isTame() && !this.fightsBack() && source.getEntity() instanceof LivingEntity attacker) {
+            for (HerbivoreDinosaur other : this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(16.0D),
+                    e -> e != this && !e.isTame() && e.getLastHurtByMob() == null)) {
+                other.setLastHurtByMob(attacker);
+                other.setSleeping(false);
+            }
+        }
+        return hurt;
     }
 
     @Override

@@ -93,6 +93,8 @@ import java.util.List;
  *       time; herbivores graze it back, meat eaters eat carrion and kills, tame animals eat what they are fed (or
  *       their own cargo). Well fed animals heal; starving ones take damage; a fed predator does not hunt. Wild
  *       animals sleep through their resting hours ({@link #nocturnal()}).</li>
+ *   <li><b>Herds and packs</b> (docs/BANDOS.md): wild adults keep a neighbour of their species within seven blocks
+ *       (FollowHerdGoal); fleeing herds stampede together; pack hunters ({@link #packHunter()}) share a target.</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
  *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
  * </ul>
@@ -231,6 +233,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public boolean isSleepTime() {
         boolean day = this.level().isDay();
         return (this.nocturnal() ? day : !day) && !this.level().isThundering();
+    }
+
+    /** Whether a wild adult with a target brings the others of its species within 16 blocks onto it. */
+    protected boolean packHunter() {
+        return false;
     }
 
     /** Whether this animal eats carcasses (meat eaters). */

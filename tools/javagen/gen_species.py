@@ -226,7 +226,7 @@ SPECIES = [
       food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP",
       sounds=("HOGLIN_AMBIENT", "HOGLIN_HURT", "HOGLIN_DEATH", 1.25, 1.2, 220),
       xp=12, step_height=1.0, head=(45, 30),
-      prey="e.getBbWidth() < 1.0F && !(e instanceof DinosaurEntity)", display=True, prey_interval=100, nocturnal=True),
+      prey="e.getBbWidth() < 1.0F && !(e instanceof DinosaurEntity)", display=True, prey_interval=100, nocturnal=True, pack=True),
  dict(id="velociraptor", cls="Velociraptor", base="PredatorDinosaur",
       doc="Velociraptor mongoliensis - fast feathered pack hunter. When one raptor picks a target, the rest of the pack nearby joins in. Leaps at its prey and avoids T. rex.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=5, FOLLOW_RANGE=24),
@@ -238,7 +238,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=6, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=1.5),
       food="Items.CHICKEN, Items.COD, Items.SALMON",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.2, 1.0, 120),
-      xp=2, run=0.03, prey="false", hunts_players=False, feeding_tame=True, skittish=True),
+      xp=2, run=0.03, prey="false", hunts_players=False, feeding_tame=True, skittish=True, pack=True),
  dict(id="triceratops", cls="Triceratops", base="HerbivoreDinosaur",
       doc="Triceratops horridus - armoured herd herbivore that charges with its horns. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.22, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
@@ -459,7 +459,7 @@ SPECIES = [
       food="Items.BEEF, Items.PORKCHOP, Items.CHICKEN, Items.MUTTON",
       sounds=("HOGLIN_AMBIENT", "HOGLIN_HURT", "HOGLIN_DEATH", 0.8, 1.4, 260), step=("RAVAGER_STEP", 0.5, 1.0),
       xp=16, step_height=1.0, head=(45, 25),
-      prey="e.getBbWidth() < 1.4F && !(e instanceof Baurusuchus)", prey_interval=100),
+      prey="e.getBbWidth() < 1.4F && !(e instanceof Baurusuchus)", prey_interval=100, pack=True),
 ]
 
 
@@ -504,8 +504,6 @@ def gen(s, bounds):
         body.append(f"    private static final Ingredient FOOD = Ingredient.of({s['food']});")
     if s.get("roar") or s.get("display"):
         body.append("    private int displayCooldown;")
-    if s.get("pack"):
-        body.append("    private static boolean alertingPack;")
     body.append("")
     body.append(f"    public {cls}(EntityType<? extends {cls}> type, Level level) {{")
     body.append("        super(type, level);")
@@ -674,23 +672,7 @@ def gen(s, bounds):
     }}
 """)
     if s.get("pack"):
-        imports.add("net.minecraft.world.entity.LivingEntity")
-        body.append("""    @Override
-    public void setTarget(LivingEntity target) {
-        super.setTarget(target);
-        if (target != null && !this.level().isClientSide() && !alertingPack && !this.isTame()) {
-            alertingPack = true;
-            try {
-                for (Velociraptor other : this.level().getEntitiesOfClass(Velociraptor.class, this.getBoundingBox().inflate(16.0D),
-                        r -> r != this && r != target && r.getTarget() == null && !r.isBaby() && !r.isTame())) {
-                    other.setTarget(target);
-                }
-            } finally {
-                alertingPack = false;
-            }
-        }
-    }
-""")
+        body.append("    @Override\n    protected boolean packHunter() {\n        return true;\n    }\n")
     if s.get("call"):
         imports.add("net.minecraft.world.damagesource.DamageSource")
         call = "this.callOut()" if s.get("calm") else 'triggerAnim(ACTION_CONTROLLER, "call")'

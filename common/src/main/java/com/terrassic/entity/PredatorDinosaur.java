@@ -2,6 +2,7 @@ package com.terrassic.entity;
 
 import com.terrassic.entity.ai.DinoSleepGoal;
 import com.terrassic.entity.ai.EatCarcassGoal;
+import com.terrassic.entity.ai.FollowHerdGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
@@ -79,6 +80,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(7, new FollowHerdGoal(this));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
@@ -102,6 +104,13 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         super.customServerAiStep();
         if (this.isVehicle() && this.getTarget() != null) {
             this.setTarget(null);
+        }
+        // the pack: a wild hunter with a target brings the idle hunters of its species nearby onto it
+        if (this.packHunter() && !this.isTame() && this.getTarget() != null && this.tickCount % 20 == 0) {
+            for (PredatorDinosaur other : this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(16.0D),
+                    e -> e != this && !e.isTame() && !e.isBaby() && e.getTarget() == null && e.canHunt())) {
+                other.setTarget(this.getTarget());
+            }
         }
     }
 }

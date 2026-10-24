@@ -91,6 +91,11 @@ public class Compsognathus extends PredatorDinosaur {
     }
 
     @Override
+    protected boolean packHunter() {
+        return true;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.COMPSOGNATHUS.get().create(level);
     }

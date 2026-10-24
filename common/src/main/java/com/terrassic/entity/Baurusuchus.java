@@ -88,6 +88,11 @@ public class Baurusuchus extends PredatorDinosaur {
     }
 
     @Override
+    protected boolean packHunter() {
+        return true;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.BAURUSUCHUS.get().create(level);
     }

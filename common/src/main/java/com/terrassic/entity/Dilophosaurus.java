@@ -120,6 +120,11 @@ public class Dilophosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected boolean packHunter() {
+        return true;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.DILOPHOSAURUS.get().create(level);
     }

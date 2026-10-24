@@ -30,7 +30,6 @@ public class Velociraptor extends PredatorDinosaur {
     public static final float MODEL_SCALE = 0.48F;
     public static final float SHADOW = 0.4F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP);
-    private static boolean alertingPack;
 
     public Velociraptor(EntityType<? extends Velociraptor> type, Level level) {
         super(type, level);
@@ -92,19 +91,8 @@ public class Velociraptor extends PredatorDinosaur {
     }
 
     @Override
-    public void setTarget(LivingEntity target) {
-        super.setTarget(target);
-        if (target != null && !this.level().isClientSide() && !alertingPack && !this.isTame()) {
-            alertingPack = true;
-            try {
-                for (Velociraptor other : this.level().getEntitiesOfClass(Velociraptor.class, this.getBoundingBox().inflate(16.0D),
-                        r -> r != this && r != target && r.getTarget() == null && !r.isBaby() && !r.isTame())) {
-                    other.setTarget(target);
-                }
-            } finally {
-                alertingPack = false;
-            }
-        }
+    protected boolean packHunter() {
+        return true;
     }
 
     @Override
