@@ -43,6 +43,10 @@ GROUPS = {
 }
 MAMMALS = {"MAM", "DIC", "CIN", "MMA", "PRB", "XEN", "UNG", "FEL", "CAN", "URS", "HIE", "MAR", "PRI", "ROE"}
 FISH = {"PEI", "TUB"}
+# Grupos com prova de que pariam filhotes vivos (sem ovo): filhote recém-nascido em vez de ovo.
+LIVE_BIRTH = MAMMALS | {"MOS", "PLE", "PLI", "ICT", "SAP"}
+# Quadrúpedes pesados: aguentam um cavaleiro com menos comprimento que um bípede.
+BULKY = {"CER", "ANQ", "NOD", "EST", "SAU", "TIT", "DIC", "PSE", "TAR", "TAM", "HAD", "IGU"}
 BUGS = {"INV", "INS"}
 DIETS = {"H": "Herbívoro", "C": "Carnívoro", "P": "Piscívoro", "O": "Onívoro", "I": "Insetívoro", "F": "Filtrador"}
 EMOJI = {"T": "🦖", "V": "🪽", "A": "🌊", "F": "🐊"}
@@ -103,7 +107,7 @@ def parse(era_id):
         tokens = marks.split()
         hab = next((t[1] for t in tokens if t.startswith("@")), GROUPS[grp][1])
         cur[1].append(dict(name=name, grp=grp, diet=diet, size=val, height=height, hab=hab,
-                           br="BR" in tokens, note=note))
+                           live="VIVO" in tokens or grp in LIVE_BIRTH, note=note))
     return sections
 
 
@@ -111,7 +115,7 @@ def derive(c):
     grp, diet, hab, val = c["grp"], c["diet"], c["hab"], c["size"]
     mammal = grp in MAMMALS
     eff = val * (1.0 if grp == "AVE" else 1.5) if c["height"] else val
-    baby = "Filhote" if mammal else "Ovo"
+    baby = "Filhote" if c["live"] else "Ovo"
     # domar
     if grp in BUGS:
         tame = "—"
@@ -120,9 +124,10 @@ def derive(c):
     elif eff < 0.25:
         tame = "—"
     elif diet in "HOFI":
-        tame = "Comida"
+        # como no ARK, os gigantes não aceitam comida da mão: precisam de nocaute
+        tame = "Nocaute" if eff >= 25 else "Comida"
     elif diet == "P":
-        tame = "Comida (peixe)" if eff < 6 else "Nocaute"
+        tame = "Comida (peixe)" if eff < 2 else baby if eff < 6 else "Nocaute"
     else:
         big = eff * (3 if mammal else 1)
         tame = "Comida" if big < 1.5 else baby if big < 6 else "Nocaute"
@@ -130,13 +135,15 @@ def derive(c):
     if tame == "—":
         mount = "—"
     elif hab == "V":
-        mount = "🪑" if eff >= 9 else "✅" if eff >= 3.5 else "🦜" if eff <= 1.5 else "—"
+        # só voadores grandes aguentam o jogador (o Pteranodon de 7 m é o primeiro)
+        mount = "🪑" if eff >= 9 else "✅" if eff >= 5 else "🦜" if eff <= 1.5 else "—"
     elif hab == "A":
         mount = "🪑" if eff >= 12 else "✅" if eff >= 3 else "—"
     elif c["height"]:
         mount = "✅" if val >= 1.4 else "—"
     else:
-        ride = 1.6 if mammal else 3.5
+        # precisa ter uns 300 kg para carregar uma pessoa: bípedes a partir de ~4,5 m, quadrúpedes pesados ~3 m
+        ride = 1.8 if mammal else 3 if grp in BULKY else 4.5
         mount = "🪑" if eff >= 18 else "✅" if eff >= ride else "🦜" if eff <= 1.2 else "—"
     # nicho
     scale = eff * (2.5 if mammal and hab != "A" else 1)
@@ -156,6 +163,17 @@ def derive(c):
     else:
         niche = ("Gigante" if scale >= 18 else "Herbívoro grande" if scale >= 6
                  else "Herbívoro médio" if scale >= 2 else "Herbívoro pequeno")
+    # comportamento do animal selvagem (como no ARK: pacífico, arisco, defensivo, territorial, agressivo)
+    if grp in BUGS or (grp in FISH and eff < 2) or diet == "F":
+        mood = "Pacífico"
+    elif diet in "CP":
+        mood = "Agressivo" if scale >= 3 else "Territorial" if scale >= 1.5 else "Arisco"
+    elif grp in {"ANQ", "NOD", "CER", "EST", "PAQ", "TZN", "PRB", "URS"} or scale >= 10:
+        mood = "Territorial"
+    elif scale >= 3:
+        mood = "Defensivo"
+    else:
+        mood = "Arisco"
     # uso
     if mount == "🪑":
         use = "Plataforma para construir em cima"
@@ -176,7 +194,7 @@ def derive(c):
         use = "Recurso: carne, couro, osso e amostras"
     if c["note"]:
         use = f"{use}; {c['note']}"
-    return dict(tame=tame, mount=mount, niche=niche, use=use)
+    return dict(tame=tame, mount=mount, niche=niche, mood=mood, use=use)
 
 
 def size_txt(c):
@@ -192,14 +210,14 @@ def build():
     for i, (era_id, title, chapter, age) in enumerate(era_list, 1):
         sections = parse(era_id)
         rows, n = [], 0
-        st = dict(total=0, tame=0, mount=0, plat=0, shoulder=0, fly=0, sea=0, mammal=0, br=0, plan=0)
+        st = dict(total=0, tame=0, mount=0, plat=0, shoulder=0, fly=0, sea=0, mammal=0, plan=0)
         out = [f"# {title}", "", f"**{chapter}** · {age}", "",
                "Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (`docs/ROSTER.md`).", ""]
         for sec_title, creatures in sections:
             if sec_title:
                 out += [f"## {sec_title}", ""]
-            out += ["| # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Domar | Montaria | Uso no jogo | Versão |",
-                    "|---|---|---|---|---|---|---|---|---|---|---|"]
+            out += ["| # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Comportamento | Domar | Montaria | Uso no jogo | Versão |",
+                    "|---|---|---|---|---|---|---|---|---|---|---|---|"]
             for c in creatures:
                 n += 1
                 d = derive(c)
@@ -214,10 +232,8 @@ def build():
                     st["plan"] += 1
                 emoji = "🐾" if c["grp"] in MAMMALS and c["hab"] == "T" else EMOJI[c["hab"]]
                 name = f"**{c['name']}**" if p else c["name"]
-                if c["br"]:
-                    name += " (BR)"
                 out.append(f"| {n} | {name} | {GROUPS[c['grp']][0]} | {emoji} | {DIETS[c['diet']]} | {size_txt(c)} "
-                           f"| {d['niche']} | {d['tame']} | {d['mount']} | {d['use']} | {version} |")
+                           f"| {d['niche']} | {d['mood']} | {d['tame']} | {d['mount']} | {d['use']} | {version} |")
                 st["total"] += 1
                 st["tame"] += d["tame"] != "—"
                 st["mount"] += d["mount"].startswith(("✅", "🪑"))
@@ -226,7 +242,6 @@ def build():
                 st["fly"] += c["hab"] == "V"
                 st["sea"] += c["hab"] == "A"
                 st["mammal"] += c["grp"] in MAMMALS
-                st["br"] += c["br"]
                 rows.append(dict(c, **d, era=era_id, group=GROUPS[c["grp"]][0], version=version))
             out.append("")
         fname = f"{i:02d}_{era_id}.md"
@@ -258,12 +273,12 @@ def write_index(stats, missing):
         "com a versão. As outras entram aos poucos, era por era.",
         "",
         "| Era | Capítulo | Criaturas | Domáveis | Montáveis | Plataforma | Ombro | Voadoras | Aquáticas "
-        "| Mamíferos | Do Brasil | No plano |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Mamíferos | No plano |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for title, chapter, fname, st in stats:
         lines.append(f"| [{title}]({fname}) | {chapter} | {st['total']} | {st['tame']} | {st['mount']} | {st['plat']} "
-                     f"| {st['shoulder']} | {st['fly']} | {st['sea']} | {st['mammal']} | {st['br']} | {st['plan']} |")
+                     f"| {st['shoulder']} | {st['fly']} | {st['sea']} | {st['mammal']} | {st['plan']} |")
     lines += [
         "",
         "## Legenda",
@@ -272,11 +287,12 @@ def write_index(stats, missing):
         "|---|---|",
         "| **Tipo** | 🦖 terrestre · 🐾 mamífero terrestre · 🪽 voador ou planador · 🌊 aquático · 🐊 anfíbio (anda e nada) |",
         "| **Nicho** | O lugar da criatura na cadeia alimentar da era (define spawn, bando e quem caça quem) |",
-        "| **Domar** | **Comida**: alimentar até domesticar · **Ovo**: só criado desde o ovo · **Filhote**: mamífero, "
-        "criado desde filhote · **Nocaute**: derrubar com armas de narcótico e alimentar enquanto dorme · **—**: não domesticável |",
+        "| **Domar** | **Comida**: alimentar até domesticar · **Ovo**: só criado desde o ovo · **Filhote**: animal que "
+        "paria filhotes vivos (mamíferos, mosassauros, plesiossauros, ictiossauros), criado desde recém-nascido · **Nocaute**: derrubar com armas de narcótico e alimentar enquanto dorme · **—**: não domesticável |",
         "| **Montaria** | ✅ montável · 🪑 sela de plataforma (dá para construir em cima) · 🦜 vai no ombro · — não montável |",
         "| **Tamanho** | Comprimento do corpo, envergadura (env.) nos voadores ou altura (alt.). 1 bloco = 1 m |",
-        "| **(BR)** | Fóssil encontrado no Brasil |",
+        "| **Comportamento** | Como o animal selvagem reage ao jogador, no estilo ARK: **Pacífico** ignora · **Arisco** "
+        "foge · **Defensivo** só revida · **Territorial** ataca quem chega perto · **Agressivo** caça o jogador |",
         "| **Versão** | Versão do plano em `docs/ROSTER.md`; vazio = ainda sem versão |",
         "",
         "## Regras",
@@ -284,11 +300,15 @@ def write_index(stats, missing):
         "- **Tamanhos:** topo das estimativas publicadas para adultos, 1 bloco = 1 m (regra aprovada pelo Rodrigo). "
         "Aqui são valores de planejamento; quando a espécie for implementada, o tamanho final e a fonte vão para "
         "`docs/TAMANHOS.md`.",
-        "- **Domar e montaria** saem de regras automáticas para as criaturas sem versão: herbívoros e onívoros se "
-        "domam com comida; carnívoros pequenos com ovo (ou filhote, nos mamíferos) e os grandes com nocaute; peixes, "
-        "invertebrados e bichos minúsculos não se domam. Répteis com 3,5 m ou mais e mamíferos com 1,6 m ou mais "
-        "são montáveis; gigantes (18 m ou mais) ganham sela de plataforma; criaturas pequenas vão no ombro. Quando "
-        "uma criatura entrar no plano, os valores do `ROSTER.md` passam a valer.",
+        "- **Domar e montaria (ARK + vida real)** saem de regras automáticas para as criaturas sem versão. Herbívoros "
+        "e onívoros se domam com comida, menos os gigantes (25 m ou mais), que precisam de nocaute como no ARK. "
+        "Carnívoros pequenos se criam do ovo (ou do filhote, nos que pariam filhotes vivos) e os grandes, com nocaute. "
+        "Peixes, invertebrados e bichos minúsculos não se domam. Para montar, o animal precisa aguentar uma pessoa "
+        "(uns 300 kg): bípedes a partir de ~4,5 m, quadrúpedes pesados a partir de ~3 m, mamíferos a partir de ~1,8 m e "
+        "voadores a partir de 5 m de envergadura. Gigantes (18 m ou mais) ganham sela de plataforma; criaturas "
+        "pequenas vão no ombro. Quando uma criatura entrar no plano, os valores do `ROSTER.md` passam a valer.",
+        "- **Mundial:** as espécies vêm do mundo todo, na proporção dos fósseis conhecidos (América do Norte, Ásia, "
+        "Europa, África, América do Sul, Austrália e Antártida), sem foco em um país.",
         "- **Uma criatura, uma era:** cada gênero aparece numa era só, a que melhor representa a espécie. "
         "Criaturas de fora das 5 eras (Megalodon, Dunkleosteus) ficam nas Anomalias da Fenda.",
         "- **Correção científica:** o Argentavis está no Epílogo pelo plano, mas viveu no Mioceno (6 milhões de "

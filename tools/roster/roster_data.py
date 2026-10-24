@@ -1,13 +1,13 @@
 """Bestiário completo do Terrassic, por era (dados brutos).
 
-Cada linha:  Nome | grupo | dieta | tamanho | marcas | nota
+Cada linha:  Nome | grupo | dieta | tamanho |marcas| nota
 - grupo: código de GROUPS em gen_roster.py (define o rótulo e o ambiente padrão).
 - dieta: H herbívoro, C carnívoro, P piscívoro, O onívoro, I insetívoro, F filtrador.
 - tamanho em metros, topo das estimativas publicadas (1 bloco = 1 m). Comprimento do corpo; envergadura nos
   voadores; sufixo "a" = altura (mamíferos grandes e aves que não voam). Valor de PLANEJAMENTO: a fonte exata
   entra em docs/TAMANHOS.md quando a espécie for implementada.
-- marcas (opcional, separadas por espaço): BR = fóssil do Brasil; @T @V @A @F troca o ambiente
-  (terrestre, voador, aquático, anfíbio).
+- marcas (opcional): @T @V @A @F troca o ambiente (terrestre, voador, aquático, anfíbio); VIVO = paria
+  filhotes vivos (sem ovo).
 - nota (opcional): o que a criatura faz de especial no jogo.
 
 Rode `python3 gen_roster.py` depois de editar: ele escreve docs/bestiario/.
@@ -41,29 +41,27 @@ Alioramus|TIR|C|6||focinho longo, caça presas rápidas
 Qianzhousaurus|TIR|C|6
 Nanuqsaurus|TIR|C|6||vive na neve do norte
 Timurlengia|TIR|C|4
-Moros|TIR|C|4
+Moros|TIR|C|3
 Suskityrannus|TIR|C|3
 # Abelissauros e noassauros
 Carnotaurus|ABE|C|8
 Majungasaurus|ABE|C|8
 Rajasaurus|ABE|C|8
 Abelisaurus|ABE|C|9
-Pycnonemosaurus|ABE|C|9|BR
+Pycnonemosaurus|ABE|C|9
 Skorpiovenator|ABE|C|7
 Ekrixinatosaurus|ABE|C|7
 Rugops|ABE|C|6||carniceiro, segue carcaças
 Aucasaurus|ABE|C|6
 Arcovenator|ABE|C|6
 Viavenator|ABE|C|6
-Thanos|ABE|C|6|BR
-Kurupi|ABE|C|5|BR
 Llukalkan|ABE|C|5
+Chenanisaurus|ABE|C|8
 Quilmesaurus|ABE|C|5
 Masiakasaurus|ABE|C|2||dentes para frente, pesca e caça lagartos
 Noasaurus|ABE|C|1.5
-Vespersaurus|ABE|C|1.5|BR|anda sobre um dedo só, vive no deserto
+Vespersaurus|ABE|C|1.5||anda sobre um dedo só, vive no deserto
 Velocisaurus|ABE|C|1
-Berthasaura|ABE|O|1|BR|sem dentes, bico de ave
 # Carcarodontossauros e megaraptores
 Giganotosaurus|CAR|C|13
 Carcharodontosaurus|CAR|C|12
@@ -82,7 +80,7 @@ Australovenator|CAR|C|6
 Murusraptor|CAR|C|6
 # Espinossauros
 Spinosaurus|ESP|P|14
-Oxalaia|ESP|P|12|BR
+Oxalaia|ESP|P|12
 # Raptores e parentes
 Achillobator|RAP|C|6
 Austroraptor|RAP|P|6||pesca nos rios da Patagônia
@@ -111,6 +109,7 @@ Zanabazar|TRO|C|2.3
 Saurornithoides|TRO|C|2
 Talos|TRO|C|2
 Byronosaurus|TRO|C|1.5
+Gobivenator|TRO|C|1
 # Ornitomimossauros
 Deinocheirus|ORN|O|11
 Gallimimus|ORN|O|6
@@ -145,6 +144,7 @@ Alvarezsaurus|ALV|I|1.4
 Mononykus|ALV|I|1
 Albertonykus|ALV|I|0.7
 Shuvuuia|ALV|I|0.6
+Kol|ALV|I|1.5
 # Aves
 Gargantuavis|AVE|H|2||ave grande que não voa
 Hesperornis|AVE|P|1.5|@A
@@ -162,27 +162,28 @@ Notocolossus|TIT|H|28
 Dreadnoughtus|TIT|H|26
 Futalognkosaurus|TIT|H|26
 Paralititan|TIT|H|26
-Uberabatitan|TIT|H|26|BR
-Austroposeidon|TIT|H|25|BR
+Uberabatitan|TIT|H|26
+Austroposeidon|TIT|H|25
 Isisaurus|TIT|H|18
 Ampelosaurus|TIT|H|16
 Rapetosaurus|TIT|H|15
-Aeolosaurus|TIT|H|15|BR
-Maxakalisaurus|TIT|H|13|BR
-Baurutitan|TIT|H|13|BR
-Adamantisaurus|TIT|H|13|BR
+Jainosaurus|TIT|H|18
+Diamantinasaurus|TIT|H|16
+Savannasaurus|TIT|H|15
+Wintonotitan|TIT|H|15
+Lohuecotitan|TIT|H|9
+Atsinganosaurus|TIT|H|9
+Lirainosaurus|TIT|H|4
+Aeolosaurus|TIT|H|15
+Maxakalisaurus|TIT|H|13
 Saltasaurus|TIT|H|12
 Nemegtosaurus|TIT|H|12
 Opisthocoelicaudia|TIT|H|12
 Sarmientosaurus|TIT|H|12
 Rinconsaurus|TIT|H|11
-Trigonosaurus|TIT|H|10|BR
-Brasilotitan|TIT|H|10|BR
 Mansourasaurus|TIT|H|10
-Gondwanatitan|TIT|H|7|BR
 Neuquensaurus|TIT|H|7
 Magyarosaurus|TIT|H|6||titanossauro anão das ilhas
-Ibirania|TIT|H|6|BR|titanossauro anão do interior de São Paulo
 # Ceratopsianos
 Triceratops|CER|H|9
 Torosaurus|CER|H|9
@@ -201,6 +202,13 @@ Diabloceratops|CER|H|5.5
 Chasmosaurus|CER|H|5
 Kosmoceratops|CER|H|5||o mais enfeitado de todos, 15 chifres
 Regaliceratops|CER|H|5
+Albertaceratops|CER|H|6
+Xenoceratops|CER|H|6
+Mercuriceratops|CER|H|6
+Avaceratops|CER|H|4.5
+Vagaceratops|CER|H|4.5
+Spiclypeus|CER|H|4.5
+Ajkaceratops|CER|H|1
 Einiosaurus|CER|H|4.5
 Nasutoceratops|CER|H|4.5
 Zuniceratops|CER|H|3.5
@@ -219,6 +227,8 @@ Anodontosaurus|ANQ|H|6
 Zuul|ANQ|H|6
 Pinacosaurus|ANQ|H|5
 Dyoplosaurus|ANQ|H|4
+Akainacephalus|ANQ|H|5
+Nodocephalosaurus|ANQ|H|4.5
 Panoplosaurus|NOD|H|7
 Edmontonia|NOD|H|6.6
 Denversaurus|NOD|H|6
@@ -249,6 +259,7 @@ Amurosaurus|HAD|H|8
 Kamuysaurus|HAD|H|8
 Acristavus|HAD|H|8
 Bactrosaurus|HAD|H|6
+Secernosaurus|HAD|H|3
 Telmatosaurus|HAD|H|5||hadrossauro anão das ilhas
 Tethyshadros|HAD|H|4
 # Ornitópodes pequenos
@@ -278,8 +289,7 @@ Pteranodon|PTE|P|7.25
 Azhdarcho|PTE|C|4.5
 Zhejiangopterus|PTE|C|3.5
 Bakonydraco|PTE|C|3.5
-Keresdrakon|PTE|C|3|BR
-Caiuajara|PTE|H|2.4|BR|vive em colônias no deserto
+Caiuajara|PTE|H|2.4||vive em colônias no deserto
 Nyctosaurus|PTE|P|2||crista gigante em forma de antena
 # Mosassauros
 Mosasaurus|MOS|C|17
@@ -328,19 +338,13 @@ Deinosuchus|CRO|C|12
 Kaprosuchus|CRT|C|6||crocodilo javali, com presas
 Laganosuchus|CRO|P|6
 Mahajangasuchus|CRO|C|4
-Baurusuchus|CRT|C|3.5|BR
-Stratiotosuchus|CRT|C|3|BR
-Pepesuchus|CRO|P|3|BR
-Itasuchus|CRO|C|3|BR
+Baurusuchus|CRT|C|3.5
 Leidyosuchus|CRO|C|3
 Borealosuchus|CRO|C|3
 Brachychampsa|CRO|C|2.5
-Uberabasuchus|CRT|C|2.5|BR
 Shamosuchus|CRO|C|2
-Armadillosuchus|CRT|O|2|BR|crocodilo blindado que cava como tatu
-Montealtosuchus|CRT|C|1.7|BR
-Sphagesaurus|CRT|O|1.5|BR
-Mariliasuchus|CRT|O|1|BR|cava tocas
+Armadillosuchus|CRT|O|2||crocodilo blindado que cava como tatu
+Mariliasuchus|CRT|O|1||cava tocas
 Simosuchus|CRT|H|0.75||crocodilo herbívoro de focinho curto
 # Tartarugas
 Archelon|TAM|O|4.6
@@ -348,8 +352,6 @@ Protostega|TAM|O|3
 Desmatochelys|TAM|O|2
 Toxochelys|TAM|O|1.5
 Basilemys|TAR|H|1.5|@T
-Roxochelys|TAR|O|1|BR
-Bauruemys|TAR|O|0.5|BR
 # Lagartos, serpentes e anfíbios
 Madtsoia|LAG|C|6||serpente constritora gigante
 Sanajeh|LAG|C|3.5||serpente que come ovos e filhotes de dinossauro
@@ -359,7 +361,6 @@ Polyglyphanodon|LAG|H|1.3
 Estesia|LAG|C|1||lagarto de mordida venenosa
 Pachyrhachis|LAG|P|1|@A
 Beelzebufo|ANF|C|0.4||sapo-diabo, come filhotes
-Baurubatrachus|ANF|C|0.2|BR
 # Mamíferos
 Didelphodon|MAM|O|0.8
 Adalatherium|MAM|O|0.5
@@ -368,7 +369,6 @@ Cimolestes|MAM|I|0.3
 Alphadon|MAM|O|0.3
 Zalambdalestes|MAM|I|0.2
 Deltatheridium|MAM|C|0.15
-Purgatorius|MAM|O|0.15||um dos primeiros primatas
 Kryptobaatar|MAM|H|0.1
 Mesodma|MAM|H|0.1
 # Invertebrados
@@ -393,11 +393,12 @@ Ichthyovenator|ESP|P|9
 Riparovenator|ESP|P|9
 Siamosaurus|ESP|P|9
 Ceratosuchops|ESP|P|8
-Irritator|ESP|P|8|BR
+Irritator|ESP|P|8
 Kryptops|ABE|C|6
 Yutyrannus|TIR|C|9
 Siamotyrannus|TIR|C|6
 Eotyrannus|TIR|C|4
+Iberospinus|ESP|P|8
 Dilong|TIR|C|1.6
 Xiongguanlong|TIR|C|4
 # Raptores, troodontídeos e pequenos terópodes
@@ -413,16 +414,23 @@ Jianianhualong|TRO|C|1.1
 Sinovenator|TRO|C|1
 Sinusonasus|TRO|C|1
 Graciliraptor|RAP|C|0.9
+Yurgovuchia|RAP|C|2.5
+Geminiraptor|TRO|C|2
+Jinfengopteryx|TRO|C|0.55
 Mei|TRO|C|0.5||dorme enrolado como pássaro
 Sinocalliopteryx|CEL|C|2.4
-Mirischia|CEL|C|2|BR
+Mirischia|CEL|C|2
 Huaxiagnathus|CEL|C|1.8
-Santanaraptor|CEL|C|1.5|BR
+Santanaraptor|CEL|C|1.5
 Sinosauropteryx|CEL|C|1
+Nedcolbertia|CEL|C|3
+Fukuivenator|TER|O|2.5
 # Ornitomimossauros, oviraptorossauros e terizinossauros
 Pelecanimimus|ORN|O|2.5||mais de 200 dentes; pesca
 Harpymimus|ORN|O|2
 Nqwebasaurus|ORN|O|1
+Shenzhousaurus|ORN|O|1.6
+Microvenator|OVI|O|1.2
 Caudipteryx|OVI|O|1
 Incisivosaurus|OVI|H|1
 Protarchaeopteryx|OVI|O|0.7
@@ -436,7 +444,6 @@ Sapeornis|AVE|H|0.5|@V
 Gansus|AVE|P|0.4|@V|ave mergulhadora
 Longipteryx|AVE|P|0.3|@V
 Iberomesornis|AVE|I|0.2|@V
-Cratoavis|AVE|I|0.1|BR @V
 # Saurópodes
 Sauroposeidon|SAU|H|30
 Ruyangosaurus|TIT|H|30
@@ -454,15 +461,19 @@ Cedarosaurus|SAU|H|15
 Limaysaurus|SAU|H|15
 Agustinia|SAU|H|15||saurópode com espinhos nas costas
 Brontomerus|SAU|H|14||coxa enorme, chuta predadores
-Tapuiasaurus|TIT|H|13|BR
+Tapuiasaurus|TIT|H|13
 Venenosaurus|SAU|H|12
 Euhelopus|SAU|H|11
 Amargasaurus|SAU|H|10
-Amazonsaurus|SAU|H|10|BR
 Demandasaurus|SAU|H|10
 Nigersaurus|SAU|H|9
 Bajadasaurus|SAU|H|9
 Leinkupal|SAU|H|9
+Ligabuesaurus|TIT|H|20
+Mierasaurus|SAU|H|15
+Moabosaurus|SAU|H|10
+Fukuititan|TIT|H|10
+Zapalasaurus|SAU|H|9
 # Iguanodontes e ornitópodes
 Iguanodon|IGU|H|13
 Lurdusaurus|IGU|H|9
@@ -478,6 +489,11 @@ Jinzhousaurus|IGU|H|7
 Probactrosaurus|IGU|H|6
 Hypselospinus|IGU|H|6
 Proa|IGU|H|6
+Lanzhousaurus|IGU|H|10
+Iguanacolossus|IGU|H|9
+Bayannurosaurus|IGU|H|9
+Hippodraco|IGU|H|4.5
+Planicoxa|IGU|H|4.5
 Morelladon|IGU|H|6||pequena vela nas costas
 Fukuisaurus|IGU|H|4.7
 Valdosaurus|ORP|H|4
@@ -486,6 +502,9 @@ Bolong|IGU|H|3
 Hypsilophodon|ORP|H|2
 Leaellynasaura|ORP|H|2||vive nas florestas polares, enxerga no escuro
 Zephyrosaurus|ORP|H|1.8
+Diluvicursor|ORP|H|2.3
+Qantassaurus|ORP|H|1.8
+Elrhazosaurus|ORP|H|1.5
 Changchunsaurus|ORP|H|1.5
 Jeholosaurus|ORP|H|1.4
 Echinodon|HET|O|0.6
@@ -515,30 +534,23 @@ Animantarx|NOD|H|3
 Liaoningosaurus|NOD|O|0.34|@F|anquilossauro minúsculo que pode ter pescado
 Wuerhosaurus|EST|H|7
 # Pterossauros
-Tropeognathus|PTE|P|8.7|BR
+Tropeognathus|PTE|P|8.7
 Moganopterus|PTE|P|7
 Coloborhynchus|PTE|P|7
-Tupuxuara|PTE|O|5.4|BR
+Tupuxuara|PTE|O|5.4
 Ornithocheirus|PTE|P|5
 Caulkicephalus|PTE|P|5
-Tupandactylus|PTE|H|5|BR
-Cearadactylus|PTE|P|5|BR
-Arthurdactylus|PTE|P|4.6|BR
-Anhanguera|PTE|P|4.5|BR
-Thalassodromeus|PTE|P|4.5|BR|crista gigante; pesca roçando a água
+Tupandactylus|PTE|H|5
+Anhanguera|PTE|P|4.5
+Thalassodromeus|PTE|P|4.5||crista gigante; pesca roçando a água
 Istiodactylus|PTE|C|4.3||carniceiro, come carcaças
-Ludodactylus|PTE|P|4|BR
-Brasileodactylus|PTE|P|4|BR
 Zhenyuanopterus|PTE|P|4
 Guidraco|PTE|P|4
-Barbosania|PTE|P|4|BR
-Lacusovagus|PTE|O|4|BR
-Tapejara|PTE|O|3.5|BR
+Tapejara|PTE|O|3.5
 Hamipterus|PTE|P|3.5||colônias enormes de ninhos
 Dsungaripterus|PTE|O|3||bico curvo que quebra conchas
 Pterodaustro|PTE|F|3||filtra a água como um flamingo
 Nurhachius|PTE|P|2.5
-Banguela|PTE|P|1.5|BR
 Ikrandraco|PTE|P|1.5
 Sinopterus|PTE|O|1.2
 # Répteis marinhos
@@ -559,32 +571,28 @@ Sarcosuchus|CRO|C|9.5
 Pholidosaurus|CRO|P|3
 Isisfordia|CRO|C|1.1
 Hylaeochampsa|CRO|C|1
-Araripesuchus|CRT|C|1|BR
+Araripesuchus|CRT|C|1
 Anatosuchus|CRT|I|0.7||crocodilo de focinho de pato
 Bernissartia|CRO|O|0.6
-Susisuchus|CRO|C|0.5|BR
 Ikechosaurus|COR|P|1.5
 Monjurosuchus|COR|P|1
 Hyphalosaurus|COR|P|0.8||pescoço comprido, vive nos lagos
 # Tartarugas, lagartos e anfíbios
-Araripemys|TAR|C|0.25|BR
-Santanachelys|TAM|O|0.2|BR|uma das primeiras tartarugas marinhas
-Cearachelys|TAR|O|0.3|BR
+Araripemys|TAR|C|0.25
+Santanachelys|TAM|O|0.2||uma das primeiras tartarugas marinhas
 Sinemys|TAR|O|0.3
+Manchurochelys|TAR|O|0.3
 Yabeinosaurus|LAG|C|0.4
+Dalinghosaurus|LAG|I|0.3
 Callobatrachus|ANF|I|0.1
+Liaobatrachus|ANF|I|0.1
 # Peixes
-Mawsonia|PEI|C|6|BR|celacanto gigante
-Axelrodichthys|PEI|C|2|BR
-Calamopleurus|PEI|C|2|BR
-Cladocyclus|PEI|C|1.2|BR
-Vinctifer|PEI|P|1|BR
-Tribodus|TUB|C|1|BR
-Tharrhias|PEI|O|0.5|BR
-Araripelepidotes|PEI|O|0.5|BR
-Rhacolepis|PEI|P|0.3|BR
-Neoproscinetes|PEI|O|0.3|BR
-Dastilbe|PEI|P|0.1|BR|o peixinho mais comum do Araripe
+Mawsonia|PEI|C|6||celacanto gigante
+Axelrodichthys|PEI|C|2
+Cladocyclus|PEI|C|1.2
+Peipiaosteus|PEI|C|1
+Protopsephurus|PEI|F|1
+Vinctifer|PEI|P|1
 Lycoptera|PEI|P|0.1
 # Mamíferos
 Repenomamus|MAM|C|1
@@ -867,44 +875,39 @@ Herrerasaurus|DIN|C|6
 Liliensternus|TER|C|5.2
 Zupaysaurus|TER|C|5
 Coloradisaurus|SPM|H|4
-Macrocollum|SPM|H|3.5|BR
+Macrocollum|SPM|H|3.5
 Coelophysis|TER|C|3
-Gnathovorax|DIN|C|3|BR
+Gnathovorax|DIN|C|3
 Sanjuansaurus|DIN|C|3
-Unaysaurus|SPM|H|2.5|BR
-Bagualosaurus|SPM|H|2.5|BR
+Unaysaurus|SPM|H|2.5
 Thecodontosaurus|SPM|H|2.5
 Tawa|TER|C|2.5
-Staurikosaurus|DIN|C|2.25|BR
-Guaibasaurus|SPM|O|2|BR
+Staurikosaurus|DIN|C|2.25
 Chindesaurus|DIN|C|2
 Chromogisaurus|SPM|O|2
 Pantydraco|SPM|O|2
 Silesaurus|DIN|H|2.3||dinossauriforme de bico
 Eoraptor|DIN|O|1.7
-Saturnalia|SPM|O|1.5|BR
-Buriolestes|SPM|C|1.5|BR
+Saturnalia|SPM|O|1.5
+Buriolestes|SPM|C|1.5
 Daemonosaurus|TER|C|1.5
 Asilisaurus|DIN|H|1.5
-Sacisaurus|DIN|H|1.5|BR
-Pampadromaeus|SPM|O|1.4|BR
+Pampadromaeus|SPM|O|1.4
 Panphagia|SPM|O|1.3
 Eodromaeus|DIN|C|1.2
 Procompsognathus|TER|C|1
 Eocursor|ORP|H|1
 Pisanosaurus|DIN|H|1
-Nhandumirim|DIN|C|1|BR
 Dromomeron|DIN|C|1
 Lagerpeton|DIN|C|0.7
 Marasuchus|DIN|C|0.5
-Ixalerpeton|DIN|I|0.4|BR
 Scleromochlus|DIN|I|0.2||parente minúsculo dos pterossauros, pula como sapo
 Kongonaphon|DIN|I|0.1
 # Parentes dos crocodilos (pseudossúquios)
 Saurosuchus|PSE|C|9
 Fasolasuchus|PSE|C|9
 Sillosuchus|PSE|O|9
-Prestosuchus|PSE|C|7|BR
+Prestosuchus|PSE|C|7
 Batrachotomus|PSE|C|6
 Smok|PSE|C|6
 Teratosaurus|PSE|C|6
@@ -912,7 +915,6 @@ Polonosuchus|PSE|C|6
 Postosuchus|PSE|C|5
 Longosuchus|PSE|H|5
 Desmatosuchus|PSE|H|4.5
-Rauisuchus|PSE|C|4|BR
 Poposaurus|PSE|C|4
 Ornithosuchus|PSE|C|4
 Ticinosuchus|PSE|C|3
@@ -922,10 +924,9 @@ Effigia|PSE|O|3
 Stagonolepis|PSE|H|3
 Typothorax|PSE|H|3
 Paratypothorax|PSE|H|3
-Aetosauroides|PSE|H|3|BR
+Aetosauroides|PSE|H|3
 Qianosuchus|PSE|C|3|@F|nada e caça no mar raso
 Lotosaurus|PSE|H|2.5||vela nas costas, sem dentes
-Decuriasuchus|PSE|C|2.5|BR|caça em bando
 Neoaetosauroides|PSE|H|2
 Riojasuchus|PSE|C|2
 Aetosaurus|PSE|H|1.5
@@ -951,17 +952,15 @@ Proterochampsa|ARC|P|2.5
 Proterosuchus|ARC|C|2
 Doswellia|ARC|C|2||coberto de placas
 Chanaresuchus|ARC|P|1.5
-Cerritosaurus|ARC|C|1.5|BR
 Vancleavea|ARC|P|1.2|@F|blindado, nada como enguia
 Euparkeria|ARC|C|0.6
 # Rincossauros, alocotossauros e outros répteis
 Shringasaurus|REP|H|4||chifres na cabeça
 Azendohsaurus|REP|H|3
 Trilophosaurus|REP|H|2.5
-Teyumbaita|RIN|H|2|BR
 Isalorhynchus|RIN|H|2
 Stenaulorhynchus|RIN|H|1.5
-Hyperodapedon|RIN|H|1.5|BR
+Hyperodapedon|RIN|H|1.5
 Mesosuchus|RIN|O|1
 Rhynchosaurus|RIN|H|1
 Tanystropheus|REP|P|6|@F
@@ -1043,27 +1042,24 @@ Eretmorhipis|REP|I|0.7|@A|parecido com ornitorrinco
 Lisowicia|DIC|H|4.5||dicinodonte do tamanho de um elefante
 Placerias|DIC|H|3.5
 Ischigualastia|DIC|H|3.5
-Stahleckeria|DIC|H|3|BR
-Jachaleria|DIC|H|3|BR
+Stahleckeria|DIC|H|3
+Jachaleria|DIC|H|3
 Kannemeyeria|DIC|H|3
-Dinodontosaurus|DIC|H|2.4|BR
+Dinodontosaurus|DIC|H|2.4
 Lystrosaurus|DIC|H|2.5||sobreviveu à maior extinção da Terra
 Sinokannemeyeria|DIC|H|2
 Cynognathus|CIN|C|2
 Diademodon|CIN|H|2
-Exaeretodon|CIN|H|1.8|BR
+Exaeretodon|CIN|H|1.8
 Moschorhinus|CIN|C|1.5
-Trucidocynodon|CIN|C|1.2|BR
-Traversodon|CIN|H|1|BR
-Chiniquodon|CIN|C|1|BR
+Trucidocynodon|CIN|C|1.2
+Chiniquodon|CIN|C|1
 Thrinaxodon|CIN|C|0.5||vive em tocas
 Massetognathus|CIN|H|0.5
 Euchambersia|CIN|C|0.5||mordida venenosa
 Trirachodon|CIN|O|0.4
-Prozostrodon|CIN|I|0.2|BR
-Riograndia|CIN|O|0.2|BR
 Probainognathus|CIN|I|0.15
-Brasilodon|CIN|I|0.15|BR|parente muito próximo dos mamíferos
+Brasilodon|CIN|I|0.15||parente muito próximo dos mamíferos
 # Anfíbios
 Mastodonsaurus|ANF|C|6||anfíbio gigante com presas
 Koskinonodon|ANF|C|3
@@ -1112,7 +1108,7 @@ Deinotério (Deinotherium bozasi)|PRB|H|4a||presas curvadas para baixo
 Stegodon|PRB|H|3.8a
 Mastodonte-americano (Mammut americanum)|PRB|H|3a
 Cuvieronius|PRB|H|2.8a
-Notiomastodon|PRB|H|2.5a|BR
+Notiomastodon|PRB|H|2.5a
 Mamute-anão (Mammuthus exilis)|PRB|H|2a||das ilhas da Califórnia
 Elefante-anão-da-Sicília (Palaeoloxodon falconeri)|PRB|H|1a||do tamanho de um porco
 # Rinocerontes, cavalos e antas
@@ -1127,7 +1123,7 @@ Hidruntino (Equus hydruntinus)|UNG|H|2
 Cavalo-de-Yukon (Equus lambei)|UNG|H|2
 Haringtonhippus|UNG|H|2
 Hippidion|UNG|H|2
-Equus neogeus|UNG|H|2|BR
+Equus neogeus|UNG|H|2
 Anta (Tapirus)|UNG|H|2
 # Cervídeos, bovídeos e camelídeos
 Megaloceros|UNG|H|2.1a
@@ -1159,7 +1155,7 @@ Capromeryx|UNG|H|0.9
 Myotragus|UNG|H|1||cabra anã das Baleares
 Camelops|UNG|H|3.5
 Hemiauchenia|UNG|H|2.5
-Palaeolama|UNG|H|2|BR
+Palaeolama|UNG|H|2
 Guanaco (Lama guanicoe)|UNG|H|2
 Sivatherium|UNG|H|3||girafa de pescoço curto com chifres em leque
 # Porcos e hipopótamos
@@ -1173,39 +1169,39 @@ Metridiochoerus|UNG|O|1.5
 Platygonus|UNG|O|1
 Mylohyus|UNG|O|1
 # Preguiças, tatus e gliptodontes
-Megatério (Megatherium)|XEN|H|6|BR
-Eremotherium|XEN|H|6|BR
+Megatério (Megatherium)|XEN|H|6
+Eremotherium|XEN|H|6
 Lestodon|XEN|H|4.6
-Glossotherium|XEN|H|4|BR
+Glossotherium|XEN|H|4
 Mylodon|XEN|H|3
 Paramylodon|XEN|H|3
 Megalonyx|XEN|H|3
 Nothrotheriops|XEN|H|2.7
-Catonyx|XEN|H|2.5|BR
+Catonyx|XEN|H|2.5
 Scelidotherium|XEN|H|2.5
-Valgipes|XEN|H|2|BR
-Nothrotherium|XEN|H|1.5|BR
+Valgipes|XEN|H|2
+Nothrotherium|XEN|H|1.5
 Megalocnus|XEN|H|1.5||preguiça-gigante de Cuba
 Doedicurus|XEN|H|4||cauda com clava cheia de espinhos
-Gliptodonte (Glyptodon)|XEN|H|3.3|BR
-Panochthus|XEN|H|3|BR
+Gliptodonte (Glyptodon)|XEN|H|3.3
+Panochthus|XEN|H|3
 Neosclerocalyptus|XEN|H|2.5
 Glyptotherium|XEN|H|2.5
-Hoplophorus|XEN|H|2|BR
-Holmesina|XEN|O|2|BR
-Pampatherium|XEN|O|2|BR
+Hoplophorus|XEN|H|2
+Holmesina|XEN|O|2
+Pampatherium|XEN|O|2
 Eutatus|XEN|O|1.5
-Propraopus|XEN|I|1|BR
+Propraopus|XEN|I|1
 # Notoungulados e litopternas
-Toxodon|UNG|H|2.7|BR
-Mixotoxodon|UNG|H|3|BR
+Toxodon|UNG|H|2.7
+Mixotoxodon|UNG|H|3
 Macrauchenia|UNG|H|3||tromba curta, corre em zigue-zague
-Xenorhinotherium|UNG|H|3|BR
+Xenorhinotherium|UNG|H|3
 # Felinos
 Tigre-de-Ngandong (Panthera tigris soloensis)|FEL|C|2.8
 Leão-americano (Panthera atrox)|FEL|C|2.5
 Leão-das-cavernas (Panthera spelaea)|FEL|C|2.1
-Tigre-dentes-de-sabre (Smilodon populator)|FEL|C|2|BR
+Tigre-dentes-de-sabre (Smilodon populator)|FEL|C|2
 Smilodon fatalis|FEL|C|1.75
 Homotherium|FEL|C|2.2||dentes-de-cimitarra, corre longe
 Panthera gombaszoegensis|FEL|C|2
@@ -1221,7 +1217,7 @@ Lince-eurasiático (Lynx lynx)|FEL|C|1
 Lobo-terrível (Aenocyon dirus)|CAN|C|1.7
 Lobo-cinzento (Canis lupus)|CAN|C|1.6
 Xenocyon|CAN|C|1.3
-Protocyon|CAN|C|1.2|BR
+Protocyon|CAN|C|1.2
 Cuon (Cuon alpinus)|CAN|C|1.1
 Raposa-do-ártico (Vulpes lagopus)|CAN|C|0.7
 Hiena-das-cavernas (Crocuta spelaea)|HIE|C|1.6
@@ -1241,8 +1237,8 @@ Megaladapis|PRI|H|1.5||lêmure do tamanho de um gorila
 Archaeoindris|PRI|H|1.5
 Theropithecus oswaldi|PRI|H|1.5||babuíno gigante
 Palaeopropithecus|PRI|H|1.3||lêmure-preguiça
-Protopithecus|PRI|O|1|BR
-Caipora|PRI|O|1|BR
+Protopithecus|PRI|O|1
+Caipora|PRI|O|1
 # Roedores e pequenos mamíferos
 Castor-gigante (Castoroides)|ROE|H|2.2
 Capivara-gigante (Neochoerus)|ROE|H|2|@F

@@ -61,6 +61,8 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   Exporta art/<especie>/<especie>.bbmodel, geo/animations/texturas para common/src/main/resources/assets/terrassic.
   Convenções: 16px = 1 bloco, animal olha para -Z, osso `head` = olhar (não animar; use `skull`),
   animações `animation.<especie>.<idle|walk|run|sit|attack|roar|graze|call|display>`.
+  Planejadas para domesticação (todo modelo novo já deve ter): knockout, knocked_out, wake, eat, tame, beg, hatch
+  (ver docs/ROSTER.md, seção "Domesticação: animações e telas").
 - Sprites 16x16: `tools/spritegen/sprites.py` (ovos geradores únicos, armas, ovos-bloco).
 - JSON (lang pt_br/en_us/es_es + variantes do espanhol, receitas, loot, modelos, blockstates): `tools/javagen/gen_resources.py`.
 - Ciência: `tools/javagen/gen_science.py` (itens, Rocha Fossilífera, Mesa, receitas, worldgen, conquistas, `Lore.java`) e
@@ -89,7 +91,7 @@ Montáveis: T. rex, Triceratops, Brachiosaurus, Parasaurolophus, Gallimimus.
 
 ## Roadmap e lista de criaturas
 A lista completa das criaturas (152, organizadas POR ERA, seguindo a história) e a versão de cada uma estão em `docs/ROSTER.md`.
-O bestiário completo (1.207 criaturas, 200-300+ por era, com animais pré-históricos que não são dinossauros) fica em
+O bestiário completo (1.203 criaturas do mundo todo, 200-300+ por era, com animais pré-históricos que não são dinossauros) fica em
 `docs/bestiario/`, gerado por `tools/roster/gen_roster.py` a partir de `tools/roster/roster_data.py` (não edite os .md à mão).
 Consulte e atualize esse arquivo antes de adicionar uma espécie. Cada era é fechada jogável antes da próxima:
 - v0.3–v0.9: Capítulo 1 (Cretáceo Superior, Overworld). v0.3 história + cientista (Caderno de Campo, fósseis, Mesa de Pesquisa,

@@ -2,7 +2,7 @@
 
 Este é o plano de todas as criaturas do mod e em que versão cada uma entra. O mod é organizado **por era**, seguindo a história em `docs/HISTORIA.md`: cada era vira um capítulo jogável do começo ao fim antes de começar a próxima (ver `docs/ESCOPO.md`). O estilo é o do ARK: mundo primitivo, criaturas selvagens perigosas, domesticação, montarias e criaturas com utilidade. Tudo com cara de época antiga: madeira, pedra, osso, couro e sílex, sem tecnologia moderna.
 
-**Bestiário completo:** a lista de tudo o que pode entrar no mod, com 200 a mais de 300 criaturas por era (1.207 no total, incluindo animais pré-históricos que não são dinossauros), está em `docs/bestiario/`. Este arquivo continua sendo o plano de versões: quando uma criatura do bestiário ganhar versão, ela entra aqui.
+**Bestiário completo:** a lista de tudo o que pode entrar no mod, com 200 a mais de 300 criaturas por era (1.203 no total, de todos os continentes, incluindo animais pré-históricos que não são dinossauros), está em `docs/bestiario/`. Este arquivo continua sendo o plano de versões: quando uma criatura do bestiário ganhar versão, ela entra aqui.
 
 Para mudar a lista, edite este arquivo. Quando uma espécie for implementada, marque-a como ✅ e adicione-a em `tools/javagen/gen_species.py`.
 
@@ -12,11 +12,10 @@ Para mudar a lista, edite este arquivo. Quando uma espécie for implementada, ma
 |---|---|
 | **Tipo** | 🦖 terrestre · 🪽 voador · 🌊 aquático · 🐊 anfíbio (anda e nada) · 🐾 mamífero |
 | **Dieta** | Herbívoro, Carnívoro, Piscívoro (peixe), Onívoro, Insetívoro, Filtrador |
-| **Domar** | **Comida**: alimentar até domesticar · **Ovo**: só criado desde filhote · **Nocaute**: derrubar com armas de narcótico e alimentar enquanto dorme (v0.7) · **—**: não domesticável |
+| **Domar** | **Comida**: alimentar até domesticar · **Ovo**: só criado desde o ovo · **Filhote**: animais que pariam filhotes vivos (mamíferos, mosassauros, plesiossauros, ictiossauros), criados desde recém-nascidos · **Nocaute**: derrubar com armas de narcótico e alimentar enquanto dorme (v0.7) · **—**: não domesticável |
 | **Montaria** | ✅ montável · 🪑 sela de plataforma (dá para construir em cima) · 🦜 vai no ombro · — não montável |
 | **Utilidade** | O papel da criatura domesticada, no estilo ARK |
 | **Tamanho** | Comprimento real (ou envergadura nos voadores). No jogo a escala é cerca de metade |
-| **(BR)** | Fóssil encontrado no Brasil |
 
 Nota: pterossauros, répteis marinhos, crocodilos antigos e mamíferos não são dinossauros, mas viviam nos mesmos ecossistemas e entram no mod.
 
@@ -69,7 +68,7 @@ Sistemas: tela de abertura e "Relatório do Incidente", **Caderno de Campo** (te
 | Espécie | Tipo | Dieta | Domar | Montaria | Utilidade | Tamanho |
 |---|---|---|---|---|---|---|
 | **Pteranodon** | 🪽 | Piscívoro | Comida (peixe) | ✅ | Primeira montaria voadora: leve, rápida, não carrega peso | 6–7 m env. |
-| **Mosasaurus** | 🌊 | Carnívoro | Ovo | ✅ na v0.5 | Terror do Mar Interior; nesta versão só selvagem | 15 m |
+| **Mosasaurus** | 🌊 | Carnívoro | Filhote | ✅ na v0.5 | Terror do Mar Interior; nesta versão só selvagem | 15 m |
 | **Maiasaura** | 🦖 | Herbívoro | Comida | ✅ | "Boa mãe": vive em colônias de ninhos; filhotes perto dela crescem mais rápido | 9 m |
 
 **Andamento (24/10/2026, feito na nuvem, ainda não compilado):** prontos o Caderno de Campo com as 4 abas, a tela de abertura, o Guia com níveis, fósseis com pincel e cinzel, a Mesa de Pesquisa, o Carvão de Esboço, a tradução es_es, o **Pteranodon** (voo montado simples: decolar, voar para onde olha, bater asas, planar), o **Mosasaurus** selvagem (oceano profundo, caça quem está na água ou de barco, seca se encalhar), a **Maiasaura** (filhotes perto dela crescem 2x mais rápido), o pulo na montaria (espaço, como o cavalo) tirar a sela (com tesoura, porque shift + clique já manda sentar), a **Lente de Âmbar** (luneta com zoom; observar 2 s registra no Guia), o **Frasco de Argila** (resina de abeto ou árvore da selva vira Âmbar Bruto, ingrediente da Lente; levado no inventário, enche com uma Amostra de Sangue ao derrotar um dinossauro, que vale +2 pontos na Mesa de Pesquisa) e a configuração de spawn (`config/terrassic.json`). Falta: sons próprios (plano em `docs/SONS.md`). O DNA e a clonagem a partir das amostras ficam para depois.
@@ -91,14 +90,14 @@ Sistemas: montaria aquática (nadar e mergulhar sem se afogar), sela aquática, 
 
 | Espécie | Tipo | Dieta | Domar | Montaria | Utilidade | Tamanho |
 |---|---|---|---|---|---|---|
-| **Mosasaurus** (montável) | 🌊 | Carnívoro | Ovo | 🪑 | Montaria aquática gigante com plataforma | 15 m |
+| **Mosasaurus** (montável) | 🌊 | Carnívoro | Filhote | 🪑 | Montaria aquática gigante com plataforma | 15 m |
 | **Tylosaurus** | 🌊 | Carnívoro | Nocaute | ✅ | Investida com o focinho que atordoa | 13 m |
 | **Elasmosaurus** | 🌊 | Piscívoro | Comida (peixe) | ✅ | Pescoço longo; montaria para explorar e pescar | 10 m |
 | **Xiphactinus** | 🌊 | Carnívoro | — | — | Peixe predador gigante; comida e amostras | 5 m |
 | **Archelon** | 🌊 | Herbívoro | Comida | 🪑 | Tartaruga gigante, lenta e resistente; sela com bolsa | 4 m |
 | **Hesperornis** | 🌊 | Piscívoro | Comida (peixe) | — | Ave mergulhadora; traz peixe do fundo | 1,5 m |
 | **Deinosuchus** | 🐊 | Carnívoro | Nocaute | ✅ | Crocodilo gigante; emboscada e giro mortal | 10–12 m |
-| **Baurusuchus** (BR) | 🐊 | Carnívoro | Ovo | — | Crocodilo terrestre rápido; guarda da base | 3,5 m |
+| **Baurusuchus** | 🐊 | Carnívoro | Ovo | — | Crocodilo terrestre rápido; guarda da base | 3,5 m |
 
 ## v0.6 Planícies, manadas e titãs
 
@@ -119,8 +118,8 @@ Sistemas: **ecossistema** (cadeia alimentar por tamanho, carcaças, bandos, ninh
 | **Alamosaurus** | 🦖 | Herbívoro | Comida | 🪑 | Titanossauro; plataforma para construir em cima | 26–30 m |
 | **Saltasaurus** | 🦖 | Herbívoro | Comida | ✅ | Titanossauro pequeno e blindado; montaria resistente | 12 m |
 | **Argentinosaurus** | 🦖 | Herbívoro | Nocaute | 🪑 | O maior animal terrestre do mod; uma casa que anda | 35 m |
-| **Maxakalisaurus** (BR) | 🦖 | Herbívoro | Comida | ✅ | Titanossauro de Minas Gerais; carga média | 13 m |
-| **Uberabatitan** (BR) | 🦖 | Herbívoro | Comida | 🪑 | Titanossauro de Uberaba; plataforma | 26 m |
+| **Maxakalisaurus** | 🦖 | Herbívoro | Comida | ✅ | Titanossauro de Minas Gerais; carga média | 13 m |
+| **Uberabatitan** | 🦖 | Herbívoro | Comida | 🪑 | Titanossauro de Uberaba; plataforma | 26 m |
 
 ## v0.7 Predadores ápice
 
@@ -134,7 +133,7 @@ Sistemas: **nocaute** (zarabatana com dardo de narcótico, boleadeira e ervas so
 | **Tarbosaurus** | 🦖 | Carnívoro | Nocaute | ✅ | Primo asiático do T. rex; mais resistente | 10–12 m |
 | **Daspletosaurus** | 🦖 | Carnívoro | Nocaute | ✅ | Caça em casal | 8–9 m |
 | **Albertosaurus** | 🦖 | Carnívoro | Nocaute | ✅ | Tiranossauro leve e rápido; caça em bando | 9 m |
-| **Pycnonemosaurus** (BR) | 🦖 | Carnívoro | Nocaute | ✅ | Abelissaurídeo do Mato Grosso; arrancada curta muito rápida | 9 m |
+| **Pycnonemosaurus** | 🦖 | Carnívoro | Nocaute | ✅ | Abelissaurídeo do Mato Grosso; arrancada curta muito rápida | 9 m |
 | **Dakotaraptor** | 🦖 | Carnívoro | Ovo | ✅ | Raptor grande; montaria de caça ágil que pula alto | 5,5 m |
 | **Troodon** | 🦖 | Carnívoro | Ovo | — | Caçador noturno, enxerga no escuro; bom guarda à noite | 2,4 m |
 | **Oviraptor** | 🦖 | Onívoro | Comida | — | Aumenta a chance de ovos dos dinos domesticados por perto | 2 m |
@@ -169,21 +168,21 @@ Capítulo 1 completo, testado no Fabric e no Forge, com os três idiomas complet
 | **Nigersaurus** | 🦖 | Herbívoro | Comida | ✅ | Pasta rente ao chão; colhe plantas baixas em quantidade | 9 m |
 | **Baryonyx** | 🐊 | Piscívoro | Ovo | ✅ | Montaria de rio; pesca e luta dentro e fora da água | 9 m |
 | **Suchomimus** | 🐊 | Piscívoro | Ovo | ✅ | Pescador grande de rio | 11 m |
-| **Irritator** (BR) | 🐊 | Piscívoro | Ovo | — | Espinossaurídeo do Araripe; pescador de lagoa | 6–8 m |
+| **Irritator** | 🐊 | Piscívoro | Ovo | — | Espinossaurídeo do Araripe; pescador de lagoa | 6–8 m |
 | **Acrocanthosaurus** | 🦖 | Carnívoro | Nocaute | ✅ | Predador de topo da era; montaria de combate | 11,5 m |
 | **Concavenator** | 🦖 | Carnívoro | Nocaute | ✅ | Corcunda; caçador de mata fechada | 6 m |
 | **Utahraptor** | 🦖 | Carnívoro | Ovo | ✅ | O maior raptor; montaria de ataque | 6–7 m |
 | **Deinonychus** | 🦖 | Carnívoro | Ovo | — | Caça em bando de 4 a 6 | 3,4 m |
 | **Yutyrannus** | 🦖 | Carnívoro | Nocaute | ✅ | Tiranossauro com penas; não sente frio no Planalto Vulcânico | 9 m |
 | **Microraptor** | 🪽 | Carnívoro | Ovo | — | Planador de quatro asas; derruba o jogador da montaria | 0,8 m |
-| **Santanaraptor** (BR) | 🦖 | Carnívoro | Ovo | — | Pequeno caçador; guarda de base | 1,5 m |
-| **Mirischia** (BR) | 🦖 | Carnívoro | Comida | 🦜 | Pequeno de ombro; avisa de predadores | 2 m |
+| **Santanaraptor** | 🦖 | Carnívoro | Ovo | — | Pequeno caçador; guarda de base | 1,5 m |
+| **Mirischia** | 🦖 | Carnívoro | Comida | 🦜 | Pequeno de ombro; avisa de predadores | 2 m |
 | **Sinosauropteryx** | 🦖 | Carnívoro | Comida | 🦜 | Pequeno com penas listradas; acha ovos e lagartos | 1 m |
 | **Sarcosuchus** | 🐊 | Carnívoro | Nocaute | ✅ | Crocodilo gigante de rio; emboscada na margem (o chefe "Rei do Rio" é um deles) | 9 m |
-| **Araripesuchus** (BR) | 🐊 | Carnívoro | Comida | — | Crocodilo pequeno e terrestre; caça insetos e lagartos | 1 m |
-| **Tapejara** (BR) | 🪽 | Onívoro | Comida | ✅ (2 lugares) | Crista colorida; leva um passageiro | 3,5 m env. |
-| **Tupandactylus** (BR) | 🪽 | Herbívoro | Comida | ✅ | Crista gigante; voa devagar mas é muito estável | 4–5 m env. |
-| **Anhanguera** (BR) | 🪽 | Piscívoro | Comida (peixe) | ✅ | Pesca em voo rasante | 4,5 m env. |
+| **Araripesuchus** | 🐊 | Carnívoro | Comida | — | Crocodilo pequeno e terrestre; caça insetos e lagartos | 1 m |
+| **Tapejara** | 🪽 | Onívoro | Comida | — | Crista colorida; voa junto com o dono e avisa de predadores (com 3,5 m de envergadura e uns 15 kg, não aguenta uma pessoa) | 3,5 m env. |
+| **Tupandactylus** | 🪽 | Herbívoro | Comida | ✅ | Crista gigante; voa devagar mas é muito estável | 4–5 m env. |
+| **Anhanguera** | 🪽 | Piscívoro | Comida (peixe) | ✅ | Pesca em voo rasante | 4,5 m env. |
 | **Ornithocheirus** | 🪽 | Piscívoro | Nocaute | ✅ | Planador de longa distância; gasta pouca stamina | 5 m env. |
 | **Confuciusornis** | 🪽 | Onívoro | Comida | 🦜 | Ave de ombro; deixa o jogador planar ao cair | 0,7 m env. |
 | **Kronosaurus** | 🌊 | Carnívoro | Nocaute | ✅ | Mordida enorme; montaria marinha de combate | 10 m |
@@ -237,23 +236,23 @@ Chefe: **Leviatã da Fenda** (Liopleurodon gigante).
 
 | Espécie | Tipo | Dieta | Domar | Montaria | Utilidade | Tamanho |
 |---|---|---|---|---|---|---|
-| **Staurikosaurus** (BR) | 🦖 | Carnívoro | Ovo | — | Um dos primeiros dinossauros; caçador rápido | 2 m |
-| **Saturnalia** (BR) | 🦖 | Onívoro | Comida | — | Pequeno ancestral dos saurópodes; colhe folhas | 1,5 m |
-| **Buriolestes** (BR) | 🦖 | Carnívoro | Comida | 🦜 | Pequeno de ombro; caça insetos e lagartos | 1,5 m |
-| **Gnathovorax** (BR) | 🦖 | Carnívoro | Ovo | — | O maior dinossauro predador de Santa Maria; guarda | 3 m |
-| **Pampadromaeus** (BR) | 🦖 | Onívoro | Comida | — | Pequeno e rápido; foge e avisa de perigo | 1,2 m |
-| **Macrocollum** (BR) | 🦖 | Herbívoro | Comida | ✅ | O primeiro dinossauro de pescoço longo; carga leve | 3,5 m |
-| **Unaysaurus** (BR) | 🦖 | Herbívoro | Comida | — | Colhe folhas e frutos baixos | 2,5 m |
+| **Staurikosaurus** | 🦖 | Carnívoro | Ovo | — | Um dos primeiros dinossauros; caçador rápido | 2 m |
+| **Saturnalia** | 🦖 | Onívoro | Comida | — | Pequeno ancestral dos saurópodes; colhe folhas | 1,5 m |
+| **Buriolestes** | 🦖 | Carnívoro | Comida | 🦜 | Pequeno de ombro; caça insetos e lagartos | 1,5 m |
+| **Gnathovorax** | 🦖 | Carnívoro | Ovo | — | O maior dinossauro predador de Santa Maria; guarda | 3 m |
+| **Pampadromaeus** | 🦖 | Onívoro | Comida | — | Pequeno e rápido; foge e avisa de perigo | 1,2 m |
+| **Macrocollum** | 🦖 | Herbívoro | Comida | — | O primeiro dinossauro de pescoço longo; leva uma bolsa de carga leve, mas não aguenta o jogador | 3,5 m |
+| **Unaysaurus** | 🦖 | Herbívoro | Comida | — | Colhe folhas e frutos baixos | 2,5 m |
 | **Herrerasaurus** | 🦖 | Carnívoro | Ovo | ✅ | Montaria de caça; o maior dinossauro carnívoro da era | 6 m |
 | **Eoraptor** | 🦖 | Onívoro | Comida | 🦜 | Pequeno de ombro; acha sementes | 1 m |
 | **Coelophysis** | 🦖 | Carnívoro | Ovo | — | Caça em bandos grandes | 3 m |
 | **Plateosaurus** | 🦖 | Herbívoro | Comida | ✅ | A primeira montaria de carga do Triássico | 8 m |
-| **Prestosuchus** (BR) | 🦖 | Carnívoro | Nocaute | ✅ | Parente dos crocodilos; predador de topo (o Guardião do Coração da Fenda é um deles) | 7 m |
+| **Prestosuchus** | 🦖 | Carnívoro | Nocaute | ✅ | Parente dos crocodilos; predador de topo (o Guardião do Coração da Fenda é um deles) | 7 m |
 | **Postosuchus** | 🦖 | Carnívoro | Nocaute | ✅ | Parente dos crocodilos que anda em duas patas | 5 m |
 | **Desmatosuchus** | 🦖 | Herbívoro | Comida | ✅ | Blindado com espinhos; montaria tanque | 4,5 m |
 | **Effigia** | 🦖 | Onívoro | Comida | ✅ | Parente dos crocodilos que parece um Gallimimus; montaria rápida | 2–3 m |
-| **Hyperodapedon** (BR) | 🦖 | Herbívoro | Comida | — | Rincossauro; cava raízes. O fóssil mais comum de Santa Maria | 1,3 m |
-| **Dinodontosaurus** (BR) | 🐾 | Herbívoro | Comida | ✅ | Dicinodonte (parente dos mamíferos); carga pesada | 2,4 m |
+| **Hyperodapedon** | 🦖 | Herbívoro | Comida | — | Rincossauro; cava raízes. O fóssil mais comum de Santa Maria | 1,3 m |
+| **Dinodontosaurus** | 🐾 | Herbívoro | Comida | ✅ | Dicinodonte (parente dos mamíferos); carga pesada | 2,4 m |
 | **Placerias** | 🐾 | Herbívoro | Comida | ✅ | Dicinodonte com presas; cava água no deserto | 3,5 m |
 | **Tanystropheus** | 🐊 | Piscívoro | Comida | — | Pescoço gigante; pesca da margem | 6 m |
 | **Eudimorphodon** | 🪽 | Piscívoro | Comida (peixe) | 🦜 | Um dos primeiros pterossauros; pesca para o dono | 1 m env. |
@@ -269,18 +268,18 @@ Chefe: **Coração da Fenda** (com o Guardião, um Prestosuchus da Fenda). A Kat
 | Espécie | Tipo | Dieta | Domar | Montaria | Utilidade | Tamanho |
 |---|---|---|---|---|---|---|
 | **Mamute-lanoso** | 🐾 | Herbívoro | Comida | ✅ | Derruba árvores e coleta madeira em quantidade | 4 m alt. |
-| **Tigre-dentes-de-sabre (Smilodon)** (BR) | 🐾 | Carnívoro | Nocaute | ✅ | Montaria ágil que pula alto | 2 m |
-| **Lobo-terrível** | 🐾 | Carnívoro | Ovo | ✅ | Caça em matilha, rastreia criaturas | 1,7 m |
+| **Tigre-dentes-de-sabre (Smilodon)** | 🐾 | Carnívoro | Nocaute | ✅ | Montaria ágil que pula alto | 2 m |
+| **Lobo-terrível** | 🐾 | Carnívoro | Filhote | ✅ | Caça em matilha, rastreia criaturas | 1,7 m |
 | **Rinoceronte-lanoso** | 🐾 | Herbívoro | Comida | ✅ | Investida que derruba inimigos | 4 m |
-| **Megatério** (BR) | 🐾 | Herbívoro | Comida | ✅ | Preguiça gigante; forte contra insetos e aranhas | 6 m |
+| **Megatério** | 🐾 | Herbívoro | Comida | ✅ | Preguiça gigante; forte contra insetos e aranhas | 6 m |
 | **Megaloceros** | 🐾 | Herbívoro | Comida | ✅ | Montaria muito rápida que pula alto | 2 m alt. |
 | **Doedicurus** | 🐾 | Herbívoro | Comida | — | Tatu gigante; coleta pedra rolando como bola | 4 m |
 | **Argentavis** | 🪽 | Carnívoro | Nocaute | ✅ | Ave gigante; carrega peso e criaturas médias voando | 6–7 m env. |
 | **Urso-das-cavernas** | 🐾 | Onívoro | Nocaute | ✅ | Montaria forte; acha mel e frutas | 3 m |
 | **Leão-das-cavernas** | 🐾 | Carnívoro | Nocaute | ✅ | Caçador rápido na neve | 2,1 m |
 | **Gliptodonte** | 🐾 | Herbívoro | Comida | — | Tatu gigante blindado; escudo vivo para a base | 3 m |
-| **Toxodon** (BR) | 🐾 | Herbívoro | Comida | ✅ | Montaria resistente da estepe do sul | 2,7 m |
-| **Notiomastodon** (BR) | 🐾 | Herbívoro | Comida | ✅ | Mastodonte sul-americano; carga pesada | 2,5 m alt. |
+| **Toxodon** | 🐾 | Herbívoro | Comida | ✅ | Montaria resistente da estepe do sul | 2,7 m |
+| **Notiomastodon** | 🐾 | Herbívoro | Comida | ✅ | Mastodonte sul-americano; carga pesada | 2,5 m alt. |
 | **Castor-gigante** | 🐾 | Herbívoro | Comida | — | Derruba árvores e faz represas | 2,2 m |
 
 # Anomalias da Fenda (em qualquer era)
@@ -307,7 +306,27 @@ Além delas, criaturas de outras eras aparecem como **versões "da Fenda"** (olh
 | Criaturas de ombro | v0.4 | Criaturas pequenas ficam no ombro e dão um bônus |
 | Nado montado | v0.5 | Montarias aquáticas mergulham sem o jogador se afogar |
 | Inventário de carga e sela de plataforma | v0.6 | Montarias grandes carregam itens; dá para construir em cima dos gigantes |
-| Nocaute | v0.7 | Derrubar criaturas selvagens com armas de narcótico e domesticar enquanto dormem |
+| Nocaute | v0.7 | Derrubar criaturas selvagens com armas de narcótico e domesticar enquanto dormem, com animações de nocaute, sono, comer e acordar (ver abaixo) |
+
+## Domesticação: animações e telas (anotado em 24/10/2026)
+
+Pedido do Rodrigo: domar tem que ser visível e gostoso de ver, como no ARK. Todo modelo novo já deve sair com estas
+animações, mesmo antes do sistema existir, para não precisar refazer os modelos depois.
+
+| Animação | Quando toca | Detalhe |
+|---|---|---|
+| `knockout` | O torpor chega no máximo | O bicho cambaleia, cai de lado (ou afunda devagar, nos aquáticos; plana até o chão, nos voadores) |
+| `knocked_out` | Enquanto está desmaiado | Deitado, respiração lenta, olho fechado; partículas de "Zzz" |
+| `wake` | Acorda sozinho ou foi domado | Levanta sacudindo a cabeça; se não foi domado, sai bravo ou foge |
+| `eat` | Recebe comida (na mão ou desmaiado) | Mastiga; partícula do item que comeu |
+| `tame` | Domesticação completa | Pulo ou rugido curto de alegria, partículas de coração |
+| `beg` | Domado e com fome | Pede comida ao dono (cabeça baixa, som curto) |
+| `hatch` | Filhote sai do ovo | O filhote quebra a casca e "marca" o jogador mais próximo |
+
+Telas e efeitos: barra de **torpor** (narcótico) e barra de **domesticação** em cima do bicho desmaiado, com a
+**efetividade** caindo se ele levar dano, como no ARK; aviso quando o torpor está acabando; o bicho desmaiado pode ser
+atacado por predadores, então é preciso protegê-lo. Os filhotes que nascem vivos (mamíferos e répteis marinhos) usam
+uma animação de nascimento no lugar de `hatch`.
 
 ## Ordem sugerida dentro de cada versão
 
