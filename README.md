@@ -1,5 +1,11 @@
 # Terrassic — v0.2.0
 
+![Terrassic](art/capa/terrassic_banner_1920x1080.png)
+
+> **Terrassic** é um mod de dinossauros para Minecraft 1.20.1, em Fabric e Forge, feito do zero com modelos, texturas e história próprios. Um acidente no laboratório do Projeto Terrassic joga você no Cretáceo de mãos vazias, atrás da Dra. Katarina Usha, que atravessou o tempo antes de você. Cada criatura tem o tamanho real do maior fóssil conhecido (1 bloco = 1 metro), macho e fêmea, ovos que chocam e filhotes que marcam você como família. Dome, monte e voe; desenterre fósseis, preencha o Caderno de Campo e construa com o que a época oferece. Uma era de cada vez, sempre no seu ritmo: a história guia, mas nunca prende.
+>
+> Resumo em português, inglês e espanhol, e textos para a página do mod: [`docs/RESUMO.md`](docs/RESUMO.md).
+
 Mod de dinossauros para **Minecraft 1.20.1** que roda em **Fabric e Forge** (multi-loader com Architectury). Os modelos 3D são animados no estilo do Cobblemon (cubos low-poly e animações GeckoLib) e foram reconstruídos a partir de medidas reais de fósseis.
 
 Autor: **Rodrigo Gomes (Grupo Permaneo)**. Modelos, texturas, sprites e código são autorais, gerados pelas ferramentas em `tools/`.
