@@ -86,11 +86,11 @@ NODES += [
         ("Estrelas que caem", "Falling stars", "Estrellas que caen"),
         ("Comece o ritual no Altar do Salto. O céu vai se encher de fogo.",
          "Start the ritual at the Leap Altar. The sky will fill with fire.",
-         "Empieza el ritual en el Altar del Salto. El cielo se llenará de fuego.")), xp=25, ready=False),
+         "Empieza el ritual en el Altar del Salto. El cielo se llenará de fuego.")), xp=25),
     N("chapter1/rift_tyrant", "chapter1/meteor_ritual", "terrassic:rex_tooth", T(
         ("Tirano da Fenda", "Rift Tyrant", "Tirano de la Grieta"),
         ("Vença o Tirano da Fenda enquanto os meteoros caem.", "Defeat the Rift Tyrant while the meteors fall.",
-         "Vence al Tirano de la Grieta mientras caen los meteoros.")), frame="goal", xp=100, ready=False),
+         "Vence al Tirano de la Grieta mientras caen los meteoros.")), frame="goal", xp=100),
     N("chapter1/leap", "chapter1/rift_tyrant", "minecraft:ender_eye", T(
         ("O Salto", "The Leap", "El Salto"),
         ("Ative o Altar e salte para o Cretáceo Inferior, atrás da Katarina.",
@@ -126,10 +126,10 @@ NODES += [
         ("Pise num pedaço de outra era que a Fenda colou neste mundo.",
          "Step onto a piece of another era that the Rift stuck into this world.",
          "Pisa un pedazo de otra era que la Grieta pegó en este mundo.")), xp=25, ready=False),
-    N("chapter1/rift_anomaly", "chapter1/time_island", "minecraft:crying_obsidian", T(
+    N("chapter1/rift_anomaly", "chapter1/out_of_time", "minecraft:crying_obsidian", T(
         ("Anomalia", "Anomaly", "Anomalía"),
         ("Derrote uma criatura da Fenda, de olhos cor de âmbar.", "Defeat a Rift creature with amber eyes.",
-         "Derrota a una criatura de la Grieta de ojos color ámbar.")), xp=25, ready=False),
+         "Derrota a una criatura de la Grieta de ojos color ámbar.")), xp=25),
 
     # ================================================================ Field Notebook (every era)
     N("journal/root", None, "terrassic:field_notebook", T(

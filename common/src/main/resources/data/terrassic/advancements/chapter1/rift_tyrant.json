@@ -1,0 +1,23 @@
+{
+  "parent": "terrassic:chapter1/meteor_ritual",
+  "display": {
+    "icon": {
+      "item": "terrassic:rex_tooth"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.rift_tyrant.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.rift_tyrant.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

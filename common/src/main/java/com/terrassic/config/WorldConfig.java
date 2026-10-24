@@ -25,7 +25,10 @@ import java.nio.file.Path;
  *   "storm_min_days": 3,          // in-game days between two storms
  *   "storm_minutes_min": 3,       // length of a storm, in real minutes
  *   "storm_minutes_max": 5,
- *   "storm_creatures": 3          // creatures from other eras that can be around each player at once
+ *   "storm_creatures": 3,         // creatures from other eras that can be around each player at once
+ *   "progression_mode": "normal", // v0.9, mode of new worlds: "normal", "rapido" or "livre" (docs/SALTO.md)
+ *   "meteor_damage": true,        // v0.9: meteors of the ritual hurt what they hit (never blocks)
+ *   "ritual_call_seconds": 30     // v0.9: meteors before the Rift Tyrant answers the ritual
  * }
  * </pre>
  */
@@ -65,6 +68,29 @@ public final class WorldConfig {
         return Math.max(0, (int) number("storm_creatures", 3));
     }
 
+    /** v0.9: how the chapters open (docs/SALTO.md): "normal", "rapido" or "livre"; the default of new worlds. */
+    public static String progressionMode() {
+        try {
+            return get().get("progression_mode").getAsString();
+        } catch (RuntimeException e) {
+            return "normal";
+        }
+    }
+
+    /** v0.9: shooting stars and the meteors of the ritual may hurt (false = only light and sound). */
+    public static boolean meteorDamage() {
+        try {
+            return get().get("meteor_damage").getAsBoolean();
+        } catch (RuntimeException e) {
+            return true;
+        }
+    }
+
+    /** v0.9: seconds of falling meteors before the Rift Tyrant answers the ritual. */
+    public static int ritualCallSeconds() {
+        return Math.max(5, (int) number("ritual_call_seconds", 30));
+    }
+
     /** A number from the file, or the default when the value is missing or not a number (never throws). */
     private static double number(String key, double fallback) {
         try {
@@ -98,6 +124,9 @@ public final class WorldConfig {
         changed |= def(cfg, "storm_minutes_min", 3);
         changed |= def(cfg, "storm_minutes_max", 5);
         changed |= def(cfg, "storm_creatures", 3);
+        changed |= def(cfg, "progression_mode", "normal");
+        changed |= def(cfg, "meteor_damage", true);
+        changed |= def(cfg, "ritual_call_seconds", 30);
         if (changed) {
             try {
                 Files.createDirectories(file.getParent());
@@ -118,6 +147,8 @@ public final class WorldConfig {
         }
         if (value instanceof Boolean b) {
             cfg.addProperty(key, b);
+        } else if (value instanceof String str) {
+            cfg.addProperty(key, str);
         } else {
             cfg.addProperty(key, (Number) value);
         }

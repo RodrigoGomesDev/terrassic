@@ -25,7 +25,9 @@ import java.nio.file.Path;
  *   "hud_pack": true,        // HUD: your tamed dinosaurs nearby
  *   "hud_new_species": true, // HUD: toast when a species reaches a new Field Guide level
  *   "hud_era_title": true,   // HUD: the era's name when you arrive
- *   "hud_rift_alert": true   // HUD: pulsing amber shard during a Rift Storm
+ *   "hud_rift_alert": true,  // HUD: pulsing amber shard during a Rift Storm
+ *   "shooting_stars": true,  // v0.9: shooting stars at night, more with each amber fragment
+ *   "ritual_sky": true       // v0.9: red sky and fog around an altar during the ritual of the meteors
  * }
  * </pre>
  */
@@ -34,7 +36,7 @@ public final class ClientConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static JsonObject root;
     private static final String[] FLAGS = {"title_screen", "loading_tips", "hud_mount", "hud_pack", "hud_new_species",
-            "hud_era_title", "hud_rift_alert"};
+            "hud_era_title", "hud_rift_alert", "shooting_stars", "ritual_sky"};
 
     private ClientConfig() {
     }

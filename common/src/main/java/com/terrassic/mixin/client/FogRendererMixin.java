@@ -1,6 +1,7 @@
 package com.terrassic.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.terrassic.client.LeapClient;
 import com.terrassic.client.RiftStormClient;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -13,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Amber fog (and clear colour) during a Rift Storm (v0.8, phase M4). Optional. */
+/** Amber fog (and clear colour) during a Rift Storm (v0.8, phase M4), red during the ritual of the meteors (v0.9). Optional. */
 @Mixin(FogRenderer.class)
 public abstract class FogRendererMixin {
     @Shadow
@@ -26,10 +27,11 @@ public abstract class FogRendererMixin {
     @Inject(method = "setupColor", at = @At("TAIL"), require = 0)
     private static void terrassic$stormFog(Camera camera, float partialTick, ClientLevel level, int renderDistance,
                                            float bossColor, CallbackInfo ci) {
-        if (RiftStormClient.intensity(partialTick) <= 0.0F || camera.getFluidInCamera() != FogType.NONE) {
+        if (RiftStormClient.intensity(partialTick) <= 0.0F && LeapClient.ritual(partialTick) <= 0.0F
+                || camera.getFluidInCamera() != FogType.NONE) {
             return;
         }
-        Vec3 c = RiftStormClient.tintFog(new Vec3(fogRed, fogGreen, fogBlue), partialTick);
+        Vec3 c = LeapClient.tintFog(RiftStormClient.tintFog(new Vec3(fogRed, fogGreen, fogBlue), partialTick), partialTick);
         fogRed = (float) c.x;
         fogGreen = (float) c.y;
         fogBlue = (float) c.z;

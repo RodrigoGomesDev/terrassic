@@ -36,8 +36,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -237,7 +235,7 @@ public final class RiftStorm {
             }
             dino.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.EVENT, null, null);
             dino.addTag(TAG);
-            dino.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0, false, false));
+            dino.setRift(true);  // v0.9: drawn with glowing amber cracks (client/RiftLayer)
             level.addFreshEntity(dino);
             level.sendParticles(AMBER, dino.getX(), dino.getY() + dino.getBbHeight() / 2, dino.getZ(), 80,
                     dino.getBbWidth() / 2, dino.getBbHeight() / 2, dino.getBbWidth() / 2, 0.02D);
@@ -255,6 +253,9 @@ public final class RiftStorm {
             Data.get(p.server).survivors.remove(p.getUUID());
         } else if (entity.getTags().contains(TAG)) {
             entity.spawnAtLocation(new ItemStack(ModItems.RAW_AMBER.get(), 1 + entity.getRandom().nextInt(2)));
+        }
+        if (entity instanceof DinosaurEntity dino && dino.isRift() && source.getEntity() instanceof ServerPlayer killer) {
+            Research.award(killer, "chapter1/rift_anomaly");
         }
         return EventResult.pass();
     }

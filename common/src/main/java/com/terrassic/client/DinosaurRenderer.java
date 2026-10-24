@@ -22,6 +22,7 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
         super(context, new DinoGeoModel<>(speciesId));
         this.withScale(modelScale);
         this.shadowRadius = shadow;
+        this.addRenderLayer(new RiftLayer<>(this));  // v0.9: creatures of the Rift glow with amber cracks
     }
 
     @Override

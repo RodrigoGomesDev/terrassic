@@ -3,6 +3,7 @@ package com.terrassic;
 import com.terrassic.client.TerrassicClient;
 import com.terrassic.client.TerrassicWorldClient;
 import com.terrassic.config.Rules;
+import com.terrassic.leap.Leap;
 import com.terrassic.network.RulesNetwork;
 import com.terrassic.registry.ModBlockEntities;
 import com.terrassic.registry.ModBlocks;
@@ -46,6 +47,7 @@ public final class Terrassic {
         ArrivalCrater.init(); // v0.8: the arrival crater next to the world spawn
         KatarinaRefuge.init(); // v0.8: Mate at the River House, the Amber Lens pointing to it
         RiftStorm.init(); // v0.8: Rift Storms
+        Leap.init(); // v0.9: Leap Altar, ritual of the meteors, Rift Tyrant, the Leap (docs/SALTO.md)
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicWorldClient::init); // v0.8: storm effects, HUD
         Research.init();
         Rules.init(); // world rules in the style of ARK (docs/REGRAS.md)

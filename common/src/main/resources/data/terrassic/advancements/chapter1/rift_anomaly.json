@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/out_of_time",
+  "display": {
+    "icon": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.rift_anomaly.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.rift_anomaly.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

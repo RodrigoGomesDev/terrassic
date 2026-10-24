@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HAH",
+    "BBB",
+    "SSS"
+  ],
+  "key": {
+    "H": {
+      "item": "terrassic:tanned_hide_panel"
+    },
+    "A": {
+      "item": "terrassic:amber_block"
+    },
+    "B": {
+      "item": "terrassic:ossuary_wall"
+    },
+    "S": {
+      "item": "terrassic:limestone_stacked"
+    }
+  },
+  "result": {
+    "item": "terrassic:leap_altar"
+  }
+}

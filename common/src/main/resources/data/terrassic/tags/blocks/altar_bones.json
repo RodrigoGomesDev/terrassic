@@ -1,0 +1,233 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "terrassic:tyrannosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:spinosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:dilophosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:velociraptor_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:compsognathus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:triceratops_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:styracosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:pachyrhinosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:protoceratops_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:stegosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:ankylosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:euoplocephalus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:therizinosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:deinocheirus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:brachiosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:alamosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:saltasaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:argentinosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:opisthocoelicaudia_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:dreadnoughtus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:giganotosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:carcharodontosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:carnotaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:tarbosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:daspletosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:albertosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:majungasaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:dakotaraptor_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:troodon_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:oviraptor_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:citipati_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:mononykus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:didelphodon_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:parasaurolophus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:pachycephalosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:thescelosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:gallimimus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:struthiomimus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:maiasaura_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:pteranodon_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:quetzalcoatlus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:hatzegopteryx_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:ichthyornis_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:mosasaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:tylosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:elasmosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:xiphactinus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:archelon_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:hesperornis_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:deinosuchus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:baurusuchus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:edmontosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:corythosaurus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:ossuary_wall",
+      "required": false
+    },
+    {
+      "id": "terrassic:rib_arch",
+      "required": false
+    },
+    {
+      "id": "terrassic:bone_pile",
+      "required": false
+    },
+    {
+      "id": "minecraft:bone_block",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "terrassic:menhir",
+      "required": false
+    },
+    {
+      "id": "terrassic:limestone_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_limestone_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:shale_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_shale_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:chalk_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_chalk_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:flint_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_flint_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:laterite_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_laterite_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:quartzite_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_quartzite_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:gneiss_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_gneiss_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:conglomerate_stacked",
+      "required": false
+    },
+    {
+      "id": "terrassic:mossy_conglomerate_stacked",
+      "required": false
+    }
+  ]
+}

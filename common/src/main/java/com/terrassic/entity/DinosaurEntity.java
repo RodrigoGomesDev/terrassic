@@ -133,6 +133,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_PLATFORM =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    /** A creature "of the Rift" (v0.9): amber cracks and eyes glowing on the model (client/RiftLayer). */
+    private static final EntityDataAccessor<Boolean> DATA_RIFT =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DATA_HUNGER =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_SLEEPING =
@@ -516,6 +519,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_SADDLED, false);
         this.entityData.define(DATA_CHESTED, false);
         this.entityData.define(DATA_PLATFORM, false);
+        this.entityData.define(DATA_RIFT, false);
         this.entityData.define(DATA_HUNGER, 70);
         this.entityData.define(DATA_SLEEPING, false);
         this.entityData.define(DATA_SIZE, 1.0F);
@@ -565,6 +569,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.roamer = roamer;
     }
 
+    /** Whether it came through the Rift (Rift Storm leaks, the Rift Tyrant): drawn with glowing amber cracks. */
+    public boolean isRift() {
+        return this.entityData.get(DATA_RIFT);
+    }
+
+    public void setRift(boolean rift) {
+        this.entityData.set(DATA_RIFT, rift);
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
@@ -578,6 +591,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         tag.putInt("Sated", this.sated);
         tag.putInt("Hunger", this.getHunger());
         tag.putBoolean("Roamer", this.roamer);
+        if (this.isRift()) {
+            tag.putBoolean("Rift", true);
+        }
         tag.putFloat("Size", this.getAdultSize());
         tag.putFloat("BirthSize", this.entityData.get(DATA_BIRTH_SIZE));
         if (this.cargo != null) {
@@ -607,6 +623,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setPlatform(tag.getBoolean("Platform"));
         this.sated = tag.getInt("Sated");
         this.roamer = tag.getBoolean("Roamer");
+        this.setRift(tag.getBoolean("Rift"));
         if (tag.contains("Hunger")) {
             this.setHunger(tag.getInt("Hunger"));
         }

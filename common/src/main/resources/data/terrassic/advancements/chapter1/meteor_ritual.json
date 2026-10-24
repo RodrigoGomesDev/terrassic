@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/four_fragments",
+  "display": {
+    "icon": {
+      "item": "minecraft:fire_charge"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.meteor_ritual.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.meteor_ritual.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "stage=0": {
+      "model": "terrassic:block/leap_altar"
+    },
+    "stage=1": {
+      "model": "terrassic:block/leap_altar"
+    },
+    "stage=2": {
+      "model": "terrassic:block/leap_altar_lit"
+    },
+    "stage=3": {
+      "model": "terrassic:block/leap_altar_lit"
+    }
+  }
+}

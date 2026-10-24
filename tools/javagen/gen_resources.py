@@ -225,12 +225,15 @@ def main():
     from pack_lang import LANG as TEXPACK_LANG  # built-in era resource packs: their names and descriptions
     import gen_rules  # world rules (docs/REGRAS.md): Rule.java + the Rules screen texts
     gen_rules.main()
+    import gen_leap  # v0.9 (docs/SALTO.md): Leap Altar, ring tags, Rift Tyrant, ritual and leap texts
+    gen_leap.main()
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
         lang[code].update(gen_world.LANG[code])
         lang[code].update(TEXPACK_LANG[code])
         lang[code].update(gen_rules.LANG[code])
+        lang[code].update(gen_leap.LANG[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")
