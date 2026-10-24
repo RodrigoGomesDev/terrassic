@@ -56,9 +56,20 @@ python3 checks.py        # confere que o backend Python reconstrói os 12 modelo
 - `add_saddle(...)` cria o osso `saddle`, mostrado só quando o dinossauro está selado.
 - `sit_tracks(...)` / `quad_sit(...)` criam a animação de descanso (`sit`).
 
+## Arquétipos
+
+Para centenas de espécies, cada família tem **um rig compartilhado** (arquétipo) e cada espécie vira uma ficha curta
+(paleta, cabeça, crista, padrão de pele), com cerca de 20 linhas. Corpo, pernas, cauda, sela e animações vêm do arquétipo.
+
+- `species/hadrosaur.py`: hadrossauros (bico de pato). Usado por `parasaurolophus.py` e `maiasaura.py`.
+- Todo arquétipo traz a animação `knocked_out` (deitado de lado, para a domesticação por nocaute; ver `docs/DOMESTICACAO.md`).
+  A pose usa `rig.knockout_tracks(...)`; os números de rolagem, altura e deslocamento ficam em `KNOCKOUT` no arquétipo.
+- O tamanho no jogo vem da escala do renderizador (`SIZES` em `tools/javagen/gen_species.py`), então o rig fica num tamanho só.
+- Próximos arquétipos: terópode (pequeno e grande), ceratopsiano, saurópode, anquilossauro, pterossauro e réptil marinho.
+
 ## Adicionar uma espécie
 
-1. Copie o arquivo mais parecido: `smalltheropod.py` + `velociraptor.py`/`gallimimus.py`/`dilophosaurus.py` para bípedes, `tyrannosaurus.py`/`spinosaurus.py` para terópodes grandes, ou `quadruped.py` + `parasaurolophus.py`/`brachiosaurus.py` para quadrúpedes.
+1. Se a família já tem arquétipo, copie uma ficha (ex.: `maiasaura.py`) e mude a paleta, a cabeça e a crista. Se não tem, copie o arquivo mais parecido: `smalltheropod.py` + `velociraptor.py`/`gallimimus.py`/`dilophosaurus.py` para bípedes, `tyrannosaurus.py`/`spinosaurus.py` para terópodes grandes, ou `quadruped.py` + `brachiosaurus.py` para quadrúpedes.
 2. Ajuste as proporções a partir das medidas reais (comprimento, altura do quadril, crânio).
 3. Adicione o nome em `ALL`, no `build_all.py`, e rode o gerador.
-4. No mod: adicione a espécie na tabela de `tools/javagen/gen_species.py` e em `gen_resources.py`, rode os dois, registre em `ModEntities`, `ModItems`, `ModBlocks`, `TerrassicClient` e `ModSpawns`, e desenhe o ovo gerador em `tools/spritegen/sprites.py`.
+4. No mod: adicione a espécie nas tabelas de `tools/javagen/gen_species.py` (`SPECIES`, `SIZES`, `GUIDE`, `WORLD`) e em `gen_resources.py`, e rode os dois. Os registros em `ModEntities`, `ModItems`, `ModBlocks`, `TerrassicClient` e `ModSpawns` são gerados (entre os marcadores GENERATED). Desenhe o ovo gerador em `tools/spritegen/sprites.py`.

@@ -310,3 +310,18 @@ def sit_tracks(length, drop, joints, breathe=0.25, extra=None):
     if extra:
         tracks.update(extra)
     return tracks
+
+
+def knockout_tracks(length, roll, drop, shift, joints, breathe=0.3):
+    """
+    Unconscious pose for knockout taming (ARK style): the whole animal tips over onto its side and lies limp,
+    breathing slowly. The root bone (pivot on the ground) rolls by `roll` degrees around the body axis, then moves
+    `shift` px sideways and `drop` px down so the body rests on the ground inside the hitbox.
+    joints : {bone: (rot_x, rot_y, rot_z)} limp limbs, neck and tail.
+    """
+    tracks = {"root": track(rot=keys([(0, 0, 0, roll), (length, 0, 0, roll)]),
+                            pos=keys([(0, shift, -drop, 0), (length, shift, -drop, 0)])),
+              "body": track(pos=keys([(0, 0, 0, 0), (length / 2, breathe, 0, 0), (length, 0, 0, 0)]))}
+    for bone, rot in joints.items():
+        tracks[bone] = track(rot=keys([(0, *rot), (length, *rot)]))
+    return tracks

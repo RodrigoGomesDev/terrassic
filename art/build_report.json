@@ -268,12 +268,12 @@
   "bounds_px": [
    [
     -9.5,
-    2.3649910575684885e-05,
-    -44.650358156435296
+    2.3649910577258316e-05,
+    -44.65035815643529
    ],
    [
     9.5,
-    39.776864041293024,
+    39.77686404129304,
     56.11652063190722
    ]
   ],
@@ -284,7 +284,8 @@
    "animation.parasaurolophus.attack",
    "animation.parasaurolophus.sit",
    "animation.parasaurolophus.graze",
-   "animation.parasaurolophus.call"
+   "animation.parasaurolophus.call",
+   "animation.parasaurolophus.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -430,7 +431,8 @@
    "animation.maiasaura.attack",
    "animation.maiasaura.sit",
    "animation.maiasaura.graze",
-   "animation.maiasaura.call"
+   "animation.maiasaura.call",
+   "animation.maiasaura.knocked_out"
   ],
   "render_scale": 1.0
  }
