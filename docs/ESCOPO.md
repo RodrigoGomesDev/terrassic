@@ -83,7 +83,7 @@ O que faz cada era parecer um lugar de verdade:
 
 É um projeto grande: ~140 criaturas, 5 dimensões, 4 chefes, HUD, música. Para ele não virar algo que nunca fica pronto, a recomendação é **fechar uma era por vez, jogável do começo ao fim**:
 - **Até a v1.0, "Ecos do Fim":** o Capítulo 1 completo no Overworld (todas as criaturas do Cretáceo Superior, cientista, Caderno de Campo, HUD, ambientação, chefe e o salto). Já é um mod completo por si só.
-- **v2.0 Araripe, v3.0 Jurássico, v4.0 Triássico com o final, v5.0 Era do Gelo.**
+- **v2.0 Penas e Cinzas, v3.0 Jurássico, v4.0 Triássico com o final, v5.0 Era do Gelo.**
 - Os sistemas de montaria do ROSTER (voo, nado, carga, nocaute) entram na era em que a primeira criatura que precisa deles aparece.
 
 Essa ordem precisa ser refletida no `docs/ROSTER.md`, que hoje organiza as versões por sistema (céus, mares, trabalhadores). Fica para depois que esta proposta for aprovada.

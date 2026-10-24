@@ -42,15 +42,20 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   paliçada, cerca de osso, painel de couro) + fase 1 de pedras (calcário, folhelho, giz, sílex: natural, empilhada,
   lajeado, empilhada com musgo, com escada/laje/muro), com veios no mundo (sílex nasce dentro do giz) + fase 2
   (laterita na savana, quartzito nas montanhas, gnaisse, conglomerado, e seixos soltos das 8 rochas em praias,
-  rios e savana). 112 blocos. Próxima: fase 3, madeiras (Araucária, Ginkgo, Metassequoia + árvores no mundo).
+  rios e savana) + fase 3 (madeiras Araucária, Ginkgo, Metassequoia: tronco, descascado, lenho, folhas, muda,
+  tábuas lavradas com escada/laje, cerca e portão de galhos, paliçada, porta e alçapão de troncos; árvores nascem em
+  floresta/savana/taiga/rio e as mudas crescem via `block/PrehistoricTreeGrower`). 153 blocos. A paliçada genérica
+  saiu (cada madeira tem a sua). Próxima: fase 4 (Taxodium, feto arbóreo e 19 plantas).
 - `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.
 - `world/ModSpawns` spawn por bioma. `world/ModWorldgen`: veios de Rocha Fossilífera e Páginas Soltas em baús vanilla.
 - `research/` (v0.3, mecânicas de cientista): `Knowledge` (o que cada jogador sabe: nível do Guia e pontos por espécie,
   páginas da Katarina, objetivos, contadores), salvo por jogador em `ResearchData` (SavedData do overworld, não no item),
-  `Research` (eventos que enchem o Knowledge e completam objetivos; nunca move o jogador), `Objective` (12 objetivos do
-  Capítulo 1, cada um é uma conquista vanilla `terrassic:chapter1/<id>`), `GuideSpecies` e `Lore` (GERADOS).
+  `Research` (eventos que enchem o Knowledge, completam objetivos e dão conquistas com `Research.award`; nunca move o
+  jogador), `Objective` (12 objetivos do Capítulo 1 em 4 temas; 2 de 3 = 1 fragmento de âmbar), `GuideSpecies` e `Lore` (GERADOS).
+  Conquistas: árvore em `docs/CONQUISTAS.md`, gerada por `tools/javagen/conquistas.py` (aba por capítulo + aba Caderno de Campo;
+  só entram as `ready=True`; o gerador confere ícones, o enum `Objective` e todo id usado em `Research.award`).
   Níveis do Guia: silhueta (fóssil na Mesa), avistado (16 blocos com visão), estudado (avistado + 3 pontos: fóssil 1,
   esboço 2, derrotar 3), domesticado. Estudado = domar mais fácil e +20% de dano contra a espécie.
 - `network/ModNetwork`: pacotes servidor→cliente (Knowledge em NBT, abrir a tela de abertura). Receptores em `client/ClientHooks`.
@@ -65,7 +70,7 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   (ver docs/ROSTER.md, seção "Domesticação: animações e telas").
 - Sprites 16x16: `tools/spritegen/sprites.py` (ovos geradores únicos, armas, ovos-bloco).
 - JSON (lang pt_br/en_us/es_es + variantes do espanhol, receitas, loot, modelos, blockstates): `tools/javagen/gen_resources.py`.
-- Ciência: `tools/javagen/gen_science.py` (itens, Rocha Fossilífera, Mesa, receitas, worldgen, conquistas, `Lore.java`) e
+- Ciência: `tools/javagen/gen_science.py` (itens, Rocha Fossilífera, Mesa, receitas, worldgen, conquistas de `conquistas.py`, `Lore.java`) e
   `tools/javagen/lore.py` (TODO o texto de história, Guia, objetivos e tela, nos 3 idiomas). Sprites em `tools/spritegen/science.py`.
   Espécie nova precisa de entrada em `GUIDE` (gen_species.py), em `lore.GUIDE` e um motivo em `FOSSIL_MOTIF` (science.py).
 - Blocos de construção: texturas em `tools/spritegen/blocks.py` (ruído e Voronoi tileáveis, paleta do material real,
@@ -90,20 +95,22 @@ Montáveis: T. rex, Triceratops, Brachiosaurus, Parasaurolophus, Gallimimus.
 - Na pasta podem sobrar arquivos antigos da v0.1 (texturas <especie>.png sem _male/_female, GIFs): podem ser apagados.
 
 ## Roadmap e lista de criaturas
-A lista completa das criaturas (152, organizadas POR ERA, seguindo a história) e a versão de cada uma estão em `docs/ROSTER.md`.
-O bestiário completo (1.203 criaturas do mundo todo, 200-300+ por era, com animais pré-históricos que não são dinossauros) fica em
-`docs/bestiario/`, gerado por `tools/roster/gen_roster.py` a partir de `tools/roster/roster_data.py` (não edite os .md à mão).
-Consulte e atualize esse arquivo antes de adicionar uma espécie. Cada era é fechada jogável antes da próxima:
-- v0.3–v0.9: Capítulo 1 (Cretáceo Superior, Overworld). v0.3 história + cientista (Caderno de Campo, fósseis, Mesa de Pesquisa,
-  Lente de Âmbar, es_es, sons, pulo/tirar sela) + Pteranodon, Mosasaurus, Maiasaura; v0.4 céus; v0.5 Mar Interior; v0.6 manadas,
-  carga e titãs; v0.7 predadores ápice + nocaute; v0.8 mundo Terrassic, estruturas, HUD, ambientação; v0.9 Altar do Salto e chefe.
-- v1.0 "Ecos do Fim" (Capítulo 1 completo). v2.0 Cretáceo Inferior/Araripe, v3.0 Jurássico, v4.0 Triássico e final, v5.0 Era do Gelo.
-- Stegosaurus, Brachiosaurus, Dilophosaurus e Compsognathus são jurássicos: ficam no Overworld como "vazamentos da Fenda" até a v3.0.
-- Portes para 1.21.x.
+- **`docs/ROADMAP.md`: o roadmap único, organizado POR ERA**: visão, regras fixas, a fila de cada era (modelos 3D, criaturas,
+  ovos, vozes, flora, blocos, mundo, estruturas, chefe), as frentes transversais, o que anda em paralelo, as versões e as
+  perguntas abertas. Atualize a linha da fase lá quando ela mudar de estado.
+- REGRA (Rodrigo, 24/10/2026): só se produz conteúdo da ERA ATUAL (hoje o Cretáceo Superior, até a v1.0), na ordem da fila
+  dela; nada de gerar modelos 3D "um pouco de cada era". Arquétipo nasce quando a primeira espécie da fila precisa dele.
+- REGRA (Rodrigo, 24/10/2026): ser autônomo. Implementar todas as fases possíveis sem esperar; se o limite de uso acabar,
+  voltar assim que ele renovar, começando pelos modelos 3D e depois as fases restantes do roadmap.
+- Plano de criaturas por versão: `docs/ROSTER.md` (152, por era). Bestiário completo: `docs/bestiario/` (1.203 criaturas do mundo todo),
+  gerado por `tools/roster/gen_roster.py` a partir de `tools/roster/roster_data.py` (não edite os .md à mão). Consulte antes de adicionar uma espécie.
+- Uma era por vez: v0.3–v0.9 Capítulo 1 (Cretáceo Superior), **v1.0 "Ecos do Fim"**, v2.0 Penas e Cinzas, v3.0 Jurássico,
+  v4.0 Triássico e final, v5.0 Era do Gelo. Stegosaurus, Brachiosaurus, Dilophosaurus e Compsognathus são jurássicos e ficam
+  no Overworld como "vazamentos da Fenda" até a v3.0.
 
 ## História, eras e escopo
-- `docs/HISTORIA.md`: história (premissa "O Salto", Dra. Katarina Brandt, a Fenda, Altar do Salto), 4 capítulos indo para trás no tempo
-  (Cretáceo Superior no Overworld, Cretáceo Inferior/Araripe, Jurássico, Triássico) + epílogo na Era do Gelo, ecossistema completo por era,
+- `docs/HISTORIA.md`: história (premissa "O Salto", Dra. Katarina Usha, a Fenda, Altar do Salto), 4 capítulos indo para trás no tempo
+  (Cretáceo Superior no Overworld, Cretáceo Inferior/Penas e Cinzas, Jurássico, Triássico) + epílogo na Era do Gelo, ecossistema completo por era,
   mecânicas de cientista, avanço de capítulo com pulo, finais, mundo e livros. Aprovado pelo Rodrigo em 24/10/2026.
 - Regra 0: o Minecraft é livre. Nunca mover o jogador de era automaticamente; eras sempre abertas e revisitáveis; a história nunca bloqueia o básico.
 - `docs/ESCOPO.md`: um mod só, completo e autoral (sem modpack, sem mods de terceiros além das bibliotecas GeckoLib e Architectury embutidas),

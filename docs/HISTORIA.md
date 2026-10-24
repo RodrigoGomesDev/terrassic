@@ -25,9 +25,9 @@ A história traça um caminho, mas **é um guia, não um trilho.** Muitos jogado
 
 ## 1. Premissa: "O Salto"
 
-Santa Maria, Rio Grande do Sul. Nas rochas do Triássico da região, que estão entre as mais ricas em fósseis do mundo, uma equipe encontrou um âmbar que brilha sozinho. Dentro dele o tempo parece parado. Batizaram de **Âmbar Temporal**, e em volta dele o laboratório do **Projeto Terrassic** construiu uma máquina para **observar** o passado. Só observar: ninguém deveria atravessar.
+Num sítio de fósseis do Triássico, uma equipe internacional de paleontólogos encontrou um âmbar que brilha sozinho. Dentro dele o tempo parece parado. Batizaram de **Âmbar Temporal**, e em volta dele o laboratório do **Projeto Terrassic** construiu uma máquina para **observar** o passado. Só observar: ninguém deveria atravessar.
 
-A líder do projeto, a paleontóloga **Dra. Katarina Brandt**, atravessou mesmo assim e não voltou. Nove dias depois, você, assistente de campo do projeto, entra na câmara para buscá-la. A máquina falha, o núcleo de âmbar explode em luz, e você acorda no passado **de mãos vazias**. Por isso o jogo começa como o Minecraft normal: sem nada.
+A líder do projeto, a paleontóloga **Dra. Katarina Usha**, russa, atravessou mesmo assim e não voltou. Nove dias depois, você, assistente de campo do projeto, entra na câmara para buscá-la. A máquina falha, o núcleo de âmbar explode em luz, e você acorda no passado **de mãos vazias**. Por isso o jogo começa como o Minecraft normal: sem nada.
 
 - **A máquina se quebrou no salto.** O núcleo de Âmbar Temporal se partiu em fragmentos espalhados pelas eras. Para seguir em frente você reconstrói a máquina do jeito que a época permite: o **Altar do Salto**, um anel de pedra, osso e couro com o âmbar no centro. Nada moderno atravessa; até a máquina do tempo vira algo primitivo.
 - **A Katarina chegou antes e sobreviveu.** Para o laboratório se passaram nove dias; para ela, anos. Ela deixou cadernos em acampamentos, cavernas e ruínas, e são esses os livros que o jogador encontra. Ela está sempre uma era mais fundo no passado do que você.
@@ -51,9 +51,9 @@ Como outros mods fazem:
 2. **Livro "Relatório do Incidente"** no inventário inicial, para reler quando quiser.
 
 Texto da tela de abertura (pt-BR):
-1. *Santa Maria, Rio Grande do Sul. Laboratório do Projeto Terrassic.*
+1. *Laboratório do Projeto Terrassic. Três andares abaixo de um sítio de fósseis do Triássico.*
 2. *A máquina foi feita só para olhar o passado. Ninguém deveria atravessar.*
-3. *Há nove dias, a Dra. Katarina Brandt atravessou. E não voltou.*
+3. *Há nove dias, a Dra. Katarina Usha atravessou. E não voltou.*
 4. *O núcleo de âmbar ainda brilhava quando você entrou na câmara.*
 5. *Então veio a luz. E depois, o silêncio.*
 6. **Cretáceo Superior — 68 milhões de anos atrás**
@@ -67,7 +67,7 @@ O jogador avança de capítulo **indo cada vez mais fundo no passado**, atrás d
 | Capítulo | Era | Onde | Paisagem | Evento da era | Chefe |
 |---|---|---|---|---|---|
 | 1. **Ecos do Fim** | Cretáceo Superior (100–66 Ma) | Mundo normal (Overworld) | Florestas de flores e coníferas, planícies, rios, mar interior | Chuva de meteoros (final) | Tirano da Fenda |
-| 2. **A Lagoa de Araripe** | Cretáceo Inferior (145–100 Ma) | Dimensão própria | Lagoas, mangues, florestas de coníferas, vulcões ao longe | Cinza vulcânica | Rei do Rio |
+| 2. **Penas e Cinzas** | Cretáceo Inferior (145–100 Ma) | Dimensão própria | Lagoas, mangues, florestas de coníferas, vulcões ao longe | Cinza vulcânica | Rei do Rio |
 | 3. **O Reino dos Gigantes** | Jurássico (201–145 Ma) | Dimensão própria | Florestas de araucárias e samambaias, arquipélagos, mares rasos | Monções | Leviatã da Fenda |
 | 4. **A Origem** | Triássico (252–201 Ma) | Dimensão própria | Pangeia: deserto vermelho, oásis, rios de estação | Episódio Pluvial | Coração da Fenda |
 | Epílogo. **O Caminho de Volta** | Era do Gelo (Pleistoceno) | Dimensão própria | Quase tudo gelo e neve; faixa de estepe no sul | A Grande Nevasca | — (sobrevivência) |
@@ -83,9 +83,9 @@ O jogador acorda na margem de um rio. Aprende a sobreviver, acha o primeiro acam
 - **Final:** quando o jogador decide começar o ritual no Altar (nunca antes), o céu se enche de meteoros e o chefe aparece. Vencido o chefe, o Altar fica pronto, e se o jogador ativar o salto naquele momento ele parte enquanto o clarão do impacto cobre o céu. É a cena mais marcante do mod.
 - **O asteroide:** é só céu e efeitos, perto do Altar, durante o ritual. O mundo não é destruído. Se o jogador não saltar, os meteoros param no fim da luta, e o Cretáceo continua lá para sempre (a Fenda prende a era antes do impacto).
 
-### Capítulo 2: A Lagoa de Araripe (Cretáceo Inferior)
+### Capítulo 2: Penas e Cinzas (Cretáceo Inferior)
 
-Inspirado na Chapada do Araripe, no Ceará, um dos lugares com fósseis mais bem preservados do mundo. Lagoas rasas, mangues, pterossauros com cristas coloridas. A Katarina construiu aqui uma palafita sobre a água. Os cadernos dela mudam de tom: ela percebe que as criaturas fora de época aparecem logo depois de cada salto dela.
+Um Cretáceo Inferior feito de vários lugares do mundo: florestas frias com dinossauros de penas e vulcões, como em Liaoning (China), lagoas de pterossauros de cristas coloridas, como no Araripe, rios enormes com crocodilos gigantes, como no Saara, e as planícies do Iguanodon e do Baryonyx, como na Europa. A Katarina construiu aqui uma palafita sobre a água. Os cadernos dela mudam de tom: ela percebe que as criaturas fora de época aparecem logo depois de cada salto dela.
 
 - **Eventos:** **chuva de cinza** de vulcões distantes (escurece o céu, sufoca quem fica na rua sem abrigo; depois da chuva aparecem fósseis "frescos" preservados na cinza, como em Jehol, na China) e **lagoas salgadas** que matam peixes na seca, atraindo predadores para a margem.
 - **Chefe:** o **Rei do Rio**, um Sarcosuchus da Fenda, enorme, que ataca de emboscada na margem da lagoa.
@@ -99,7 +99,7 @@ O mundo dos saurópodes: manadas de Brachiosaurus e Diplodocus, o chão tremendo
 
 ### Capítulo 4: A Origem (Triássico)
 
-A Pangeia: um continente só, deserto vermelho no meio, vida concentrada nos rios e oásis. Os primeiros dinossauros são pequenos, e quem manda são os parentes dos crocodilos (Prestosuchus, Postosuchus). É também a terra de Santa Maria no passado, então os fósseis que deram origem ao projeto estão vivos aqui. O jogador encontra a **Katarina viva**, no último acampamento dela, perto do Coração da Fenda.
+A Pangeia: um continente só, deserto vermelho no meio, vida concentrada nos rios e oásis. Os primeiros dinossauros são pequenos, e quem manda são os parentes dos crocodilos (Prestosuchus, Postosuchus). É também a época das rochas onde o Âmbar Temporal foi achado, então os fósseis que deram origem ao projeto estão vivos aqui. O jogador encontra a **Katarina viva**, no último acampamento dela, perto do Coração da Fenda.
 
 - **Evento:** o **Episódio Pluvial Carniano**, um período real de chuvas que durou cerca de 1 a 2 milhões de anos e ajudou os dinossauros a se espalharem. No jogo, o deserto vira verde por um tempo, os rios enchem e aparecem espécies que só vivem na chuva.
 - **Chefe:** o **Coração da Fenda** (ver seção 7).
@@ -114,24 +114,24 @@ O salto de volta para casa é instável e para no meio do caminho, na Era do Gel
 
 A meta é ter **todas as criaturas que fazem sentido para cada era**, com cada nicho ocupado: herbívoros grandes e pequenos, predadores de topo e médios, caçadores pequenos, carniceiros, voadores, aquáticos, pequenos mamíferos e plantas. Isso vai muito além das 47 criaturas do ROSTER atual (chega a 152; a lista completa por versão está no `docs/ROSTER.md`). A lista abaixo é a base; ela entra no `docs/ROSTER.md` depois de aprovada.
 
-Legenda: **negrito** = já está no ROSTER; (BR) = fóssil do Brasil.
+Legenda: **negrito** = já está no ROSTER. As espécies vêm de fósseis do mundo todo, para cada era ter fauna de vários continentes.
 
 **Capítulo 1, Cretáceo Superior**
-- Herbívoros grandes: **Triceratops**, **Ankylosaurus**, **Parasaurolophus**, **Therizinosaurus**, **Pachyrhinosaurus**, Edmontosaurus, Corythosaurus, Styracosaurus, Euoplocephalus, Alamosaurus, Saltasaurus, Argentinosaurus, Maxakalisaurus (BR), Uberabatitan (BR)
+- Herbívoros grandes: **Triceratops**, **Ankylosaurus**, **Parasaurolophus**, **Therizinosaurus**, **Pachyrhinosaurus**, Edmontosaurus, Corythosaurus, Styracosaurus, Euoplocephalus, Alamosaurus, Saltasaurus, Argentinosaurus, Opisthocoelicaudia, Dreadnoughtus
 - Herbívoros pequenos e médios: **Pachycephalosaurus**, **Gallimimus**, Protoceratops, Maiasaura, Struthiomimus, Deinocheirus, Thescelosaurus
-- Predadores de topo: **Tyrannosaurus**, **Giganotosaurus**, **Carcharodontosaurus**, **Spinosaurus**, **Carnotaurus**, Tarbosaurus, Daspletosaurus, Albertosaurus, Pycnonemosaurus (BR)
+- Predadores de topo: **Tyrannosaurus**, **Giganotosaurus**, **Carcharodontosaurus**, **Spinosaurus**, **Carnotaurus**, Tarbosaurus, Daspletosaurus, Albertosaurus, Majungasaurus
 - Caçadores pequenos e onívoros: **Velociraptor**, **Troodon**, **Oviraptor**, Dakotaraptor, Citipati, Mononykus
-- Crocodilos: Deinosuchus, Baurusuchus (BR)
+- Crocodilos: Deinosuchus, Baurusuchus
 - Voadores: **Pteranodon**, **Quetzalcoatlus**, Hatzegopteryx, Ichthyornis (ave)
 - Aquáticos: **Mosasaurus**, Tylosaurus, Elasmosaurus, Xiphactinus (peixe gigante), Archelon (tartaruga), Hesperornis (ave mergulhadora)
 - Pequenos mamíferos: Didelphodon (rouba ovos)
 
 **Capítulo 2, Cretáceo Inferior**
 - Herbívoros: **Iguanodon**, Ouranosaurus, Psittacosaurus, Sauropelta, Gastonia, Amargasaurus, Nigersaurus
-- Predadores: **Baryonyx**, **Irritator** (BR), Suchomimus, Acrocanthosaurus, Concavenator, Utahraptor, Deinonychus, Yutyrannus (com penas, vive no frio)
-- Pequenos: **Microraptor**, Santanaraptor (BR), Mirischia (BR), Sinosauropteryx
-- Crocodilos: **Sarcosuchus**, Araripesuchus (BR)
-- Voadores: **Tapejara** (BR), Tupandactylus (BR), Anhanguera (BR), Ornithocheirus, Confuciusornis (ave)
+- Predadores: **Baryonyx**, **Irritator**, Suchomimus, Acrocanthosaurus, Concavenator, Utahraptor, Deinonychus, Yutyrannus (com penas, vive no frio)
+- Pequenos: **Microraptor**, Sinornithosaurus, Mei, Sinosauropteryx
+- Crocodilos: **Sarcosuchus**, Bernissartia
+- Voadores: **Tapejara**, Hamipterus (colônias com ninhos), Anhanguera, Ornithocheirus, Confuciusornis (ave)
 - Aquáticos: Kronosaurus, Leptocleidus
 - Pequenos mamíferos: Repenomamus (come filhotes de dinossauro)
 
@@ -144,14 +144,14 @@ Legenda: **negrito** = já está no ROSTER; (BR) = fóssil do Brasil.
 - Aquáticos: **Liopleurodon**, **Ichthyosaurus**, **Plesiosaurus**, Ophthalmosaurus, Cryptoclidus, Metriorhynchus (crocodilo marinho), Leedsichthys (o maior peixe que já existiu, filtrador pacífico)
 
 **Capítulo 4, Triássico**
-- Primeiros dinossauros: Staurikosaurus (BR), Saturnalia (BR), Buriolestes (BR), Gnathovorax (BR), Pampadromaeus (BR), Macrocollum (BR), Unaysaurus (BR), Herrerasaurus, Eoraptor, Coelophysis, Plateosaurus
-- Parentes dos crocodilos (os predadores de topo): Prestosuchus (BR), Postosuchus, Desmatosuchus (blindado), Effigia
-- Outros répteis e parentes dos mamíferos: Hyperodapedon (BR, o fóssil mais comum de Santa Maria), Dinodontosaurus (BR), Placerias, Tanystropheus (pescoço gigante)
+- Primeiros dinossauros: Staurikosaurus, Saturnalia, Buriolestes, Liliensternus, Chindesaurus, Riojasaurus, Thecodontosaurus, Herrerasaurus, Eoraptor, Coelophysis, Plateosaurus
+- Parentes dos crocodilos (os predadores de topo): Prestosuchus, Postosuchus, Desmatosuchus (blindado), Effigia
+- Outros répteis e parentes dos mamíferos: Hyperodapedon (um dos fósseis mais comuns do Triássico), Lisowicia (dicinodonte do tamanho de um elefante), Placerias, Tanystropheus (pescoço gigante)
 - Voadores e planadores: Eudimorphodon, Sharovipteryx
 - Aquáticos: Nothosaurus, Shonisaurus, Cymbospondylus
 
 **Epílogo, Era do Gelo**
-- Os 8 do ROSTER (**Mamute-lanoso**, **Smilodon**, **Lobo-terrível**, **Rinoceronte-lanoso**, **Megatério** (BR), **Megaloceros**, **Doedicurus**, **Argentavis**) e mais: Urso-das-cavernas, Leão-das-cavernas, Gliptodonte, Toxodon (BR), Notiomastodon (BR), Castor-gigante
+- Os 8 do ROSTER (**Mamute-lanoso**, **Smilodon**, **Lobo-terrível**, **Rinoceronte-lanoso**, **Megatério**, **Megaloceros**, **Doedicurus**, **Argentavis**) e mais: Urso-das-cavernas, Leão-das-cavernas, Gliptodonte, Toxodon, Mastodonte-americano, Castor-gigante
 
 **Anomalias da Fenda** (aparecem em qualquer era perto das Ruínas da Fenda e nas Tempestades da Fenda): **Dunkleosteus** (Devoniano), Megalodon, e versões "da Fenda" de criaturas de outras eras, com olhos e rachaduras cor de âmbar.
 
@@ -195,13 +195,13 @@ Cada capítulo tem um **Diário de Campo** com 12 objetivos em 4 temas: Sobreviv
 - **O Diário mostra uma dica** para cada objetivo, e a seta da Lente de Âmbar aponta o acampamento da Katarina mais próximo.
 - Objetivos são feitos com o sistema de **conquistas do vanilla** (aba Terrassic). Isso já vem traduzido, aparece na tela de conquistas e é fácil de ajustar por datapack.
 
-Exemplo, Capítulo 1:
+Capítulo 1 (a árvore de conquistas completa, com as abas das outras eras, está em `docs/CONQUISTAS.md`):
 | Tema | Objetivos (completar 2 de 3) |
 |---|---|
 | Sobrevivência | Construir um abrigo de palha · Fazer a primeira lança · Sobreviver a uma Tempestade da Fenda |
 | Ciência | Estudar 5 espécies · Escavar o primeiro fóssil · Usar a Mesa de Pesquisa |
 | Domesticação | Domesticar um herbívoro · Chocar um ovo · Montar uma criatura |
-| Exploração | Achar 2 acampamentos da Katarina · Achar uma Ruína da Fenda · Ver uma migração |
+| Exploração | Achar 3 páginas da Katarina (os acampamentos dão páginas) · Avistar um réptil marinho e um pterossauro (Mar Interior) · Ver uma migração |
 
 ### Como pular
 1. **Salto Instável (dentro da história):** dá para montar o Altar com só 2 fragmentos e fazer um salto forçado, sem chefe. O preço: você chega em lugar aleatório da era seguinte, as Tempestades da Fenda ficam mais frequentes por um tempo, e as páginas que ficaram para trás continuam lá para buscar depois (o Altar deixa voltar para eras já visitadas). O chefe pulado continua lá: dá para voltar e enfrentá-lo depois, e ele conta para o final.
@@ -271,22 +271,22 @@ As páginas do caderno saem **por jogador**: cada baú de acampamento entrega um
 - **Estruturas próprias:** **Casa do Rio** (o Refúgio da Katarina, uma casa de troncos na margem; o Parasaurolophus dela, "Mate", ainda está lá e aceita o jogador como dono), colônia de ninhos de Maiasaura, praia de desova de Archelon.
 - **Eventos:** migração de hadrossauros, estrelas cadentes cada vez mais frequentes, Tempestades da Fenda, o ritual dos meteoros (só quando o jogador começa).
 
-### Capítulo 2: Cretáceo Inferior, a Lagoa de Araripe
-- **Biomas:** Lagoa Salgada, Mangue, Floresta de Coníferas, Planalto Vulcânico (frio, com neve no inverno, onde vive o Yutyrannus), Lajedo Calcário.
+### Capítulo 2: Cretáceo Inferior, Penas e Cinzas
+- **Biomas:** Lagoa Salgada, Mangue, Floresta de Coníferas, Planalto Vulcânico (frio, com neve no inverno, onde vive o Yutyrannus), Lajedo Calcário, Rio dos Gigantes (onde vivem o Sarcosuchus e o Suchomimus).
 - **Plantas:** as primeiras flores pequenas, coníferas, samambaias, cavalinhas, plantas aquáticas.
-- **Materiais da era:** **Pedra Cariri** (o calcário de verdade do Crato, que vira bloco de construção e guarda os fósseis mais perfeitos do mod), cinza vulcânica (vira argamassa), penas.
-- **Estruturas próprias:** **Palafita da Katarina** (o Refúgio, sobre a água), falésia dos pterossauros (colônia de Tapejara e Tupandactylus), campo de cinza com fósseis preservados.
+- **Materiais da era:** **Calcário Laminado** (o calcário em lâminas finas de lagoas antigas, que vira bloco de construção e guarda os fósseis mais perfeitos do mod), cinza vulcânica (vira argamassa), penas.
+- **Estruturas próprias:** **Palafita da Katarina** (o Refúgio, sobre a água), falésia dos pterossauros (colônia de Tapejara e Hamipterus, com ninhos na areia), campo de cinza com fósseis preservados.
 - **Eventos:** chuva de cinza, seca das lagoas salgadas.
 
 ### Capítulo 3: Jurássico
-- **Biomas:** Floresta de Araucárias (a araucária, árvore símbolo do Sul do Brasil, já existia no Jurássico), Samambaial, Planície de Coníferas, Arquipélago (ilhas dos saurópodes anões), Lagoa de Solnhofen (lagoa calcária onde vive o Archaeopteryx), Mar Raso com recifes de esponjas.
+- **Biomas:** Floresta de Araucárias (as araucárias se espalhavam pelo mundo todo no Jurássico), Samambaial, Planície de Coníferas, Arquipélago (ilhas dos saurópodes anões), Lagoa de Solnhofen (lagoa calcária onde vive o Archaeopteryx), Mar Raso com recifes de esponjas.
 - **Plantas:** araucárias, ginkgos, cicas, samambaias arborescentes, cavalinhas gigantes. Sem flores e sem grama.
 - **Materiais da era:** pinhão (comida), madeira de araucária, calcário de Solnhofen, conchas de amonite.
 - **Estruturas próprias:** **Caverna da Katarina** (o Refúgio, numa encosta, com um mapa da era pintado na parede), trilha de pegadas de saurópodes (centenas de pegadas que levam até a manada), recifes.
 - **Eventos:** monções, marés que abrem e fecham passagens entre as ilhas.
 
 ### Capítulo 4: Triássico
-- **Biomas:** Deserto Vermelho (dunas e arenito), Oásis, Rio de Estação (seco na seca, cheio na chuva), Floresta de Dicroidium (a samambaia com semente que dominava o Sul da Pangeia), Floresta de Coníferas (as árvores que hoje são a floresta petrificada de Mata, no RS), Lago.
+- **Biomas:** Deserto Vermelho (dunas e arenito), Oásis, Rio de Estação (seco na seca, cheio na chuva), Floresta de Dicroidium (a samambaia com semente que dominava o Sul da Pangeia), Floresta de Coníferas (as árvores que hoje formam florestas petrificadas, como a do Arizona), Lago.
 - **Plantas:** Dicroidium, coníferas antigas, cavalinhas, musgo.
 - **Materiais da era:** arenito vermelho, madeira de conífera antiga, âmbar triássico (o mais forte), ossos de rincossauro.
 - **Estruturas próprias:** **Último Acampamento** (onde está a Katarina, a única pessoa do mod, como personagem com quem dá para falar), **Coração da Fenda** (formação gigante de âmbar no meio do deserto, longe do ponto de chegada, como o portal do End), ossuário de Coelophysis.
@@ -329,6 +329,13 @@ O jogador começa com o Caderno de Campo e o Relatório já dentro dele. Se perd
 
 > **Dia 1.203.** As estrelas caem toda noite agora. Achei âmbar brilhando numa rocha que não devia ter âmbar nenhum, e debaixo dela uma pegada de três dedos, pequena, de um animal que eu só conheço dos livros do Triássico. A Fenda está trazendo o passado para cá. E eu acho que fui eu que abri.
 
+### Detalhes brasileiros (piada interna)
+O mod é mundial, mas guarda uns detalhes do Brasil para quem conhece:
+- O Parasaurolophus da Katarina se chama **Mate**: para quem fala inglês é "parceiro"; para um gaúcho, é o chimarrão.
+- O assistente de campo (o jogador) ensinou palavras em português para a Katarina, e elas aparecem nos cadernos sem tradução:
+
+> **Dia 512.** Meu assistente tinha uma palavra para isto, *saudade*. Eu ria dele. Hoje, olhando a lua deste céu sem satélites, eu entendi.
+
 ### Como os textos são traduzidos
 Cada página é uma chave de tradução, com o texto em pt_br, en_us e es_es gerado pelo `gen_resources.py`. O tom é o mesmo nos três: frases curtas, primeira pessoa, sem termos técnicos sem explicação.
 
@@ -341,6 +348,5 @@ Todo texto do mod sai em **português (pt_br), inglês (en_us) e espanhol (es_es
 
 ## 11. Decisões em aberto
 
-- Sobrenome da Katarina (proposta: Brandt, comum entre descendentes de alemães no RS).
 - Ao morrer em outra era, renascer na cama daquela era ou, sem cama, no Altar da era (proposta), em vez de voltar ao mundo normal.
 - Ordem de desenvolvimento: era por era, proposta em `docs/ESCOPO.md`.
