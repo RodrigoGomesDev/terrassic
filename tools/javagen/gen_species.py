@@ -34,6 +34,7 @@ SIZES = {
     "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Pteranodon: "real" is the wingspan. The body is small (hitbox ~ folded on the ground).
     "pteranodon":         dict(real=6.5,  scale=1.0,  w=1.2, h=1.6, baby=0.3,  shadow=0.9),
+    "mosasaurus":         dict(real=15.0, scale=1.95, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -52,6 +53,7 @@ GUIDE = {
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
+    "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
 }
 
 SPECIES = [
@@ -137,6 +139,14 @@ SPECIES = [
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.45, 1.4, 220), xp=12, run=0.03,
       rideable=True, ride_offset=0.95, ride_forward=0.05, ride_speed=1.0,
       prey="e instanceof AbstractFish"),
+ # ---- marine reptiles (SwimmingDinosaur: smooth swimming, wild only for now)
+ dict(id="mosasaurus", cls="Mosasaurus", base="SwimmingDinosaur",
+      doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Wild only in this version.",
+      attrs=dict(MAX_HEALTH=180, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=1.0, ARMOR=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=32),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.45, 2.0, 400), xp=40, run=0.04,
+      prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof Pteranodon",
+      prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"]),
 ]
 
 
@@ -228,9 +238,9 @@ def gen(s, bounds):
             body.append(f"    @Override\n    protected double riderForwardOffset() {{\n        return {round(s['ride_forward'] * size['scale'], 2)}D;\n    }}\n")
     if s.get("fights") is False:
         body.append("    @Override\n    protected boolean fightsBack() {\n        return false;\n    }\n")
-    if base == "FlyingDinosaur":
+    if base in ("FlyingDinosaur", "SwimmingDinosaur"):
         imports.add("net.minecraft.world.entity.LivingEntity")
-        imports.add("net.minecraft.world.entity.animal.AbstractFish")
+        imports.update(s.get("prey_imports", ["net.minecraft.world.entity.animal.AbstractFish"]))
         body.append(f"    @Override\n    protected boolean isPrey(LivingEntity e) {{\n        return {s['prey']};\n    }}\n")
     if base == "PredatorDinosaur":
         imports.add("net.minecraft.world.entity.LivingEntity")

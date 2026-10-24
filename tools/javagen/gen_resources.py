@@ -8,7 +8,7 @@ RES = os.path.join(ROOT, "common", "src", "main", "resources")
 A = os.path.join(RES, "assets", "terrassic")
 D = os.path.join(RES, "data", "terrassic")
 
-SPECIES = {  # id: (en, pt, es, large egg)
+SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
     "spinosaurus": ("Spinosaurus", "Espinossauro", "Espinosaurio", True),
     "dilophosaurus": ("Dilophosaurus", "Dilofossauro", "Dilofosaurio", False),
@@ -22,10 +22,12 @@ SPECIES = {  # id: (en, pt, es, large egg)
     "pachycephalosaurus": ("Pachycephalosaurus", "Paquicefalossauro", "Paquicefalosaurio", False),
     "gallimimus": ("Gallimimus", "Galimimo", "Gallimimus", False),
     "pteranodon": ("Pteranodon", "Pteranodonte", "Pteranodonte", False),
+    "mosasaurus": ("Mosasaurus", "Mosassauro", "Mosasaurio", None),
 }
 
 ITEMS = {  # id: (en, pt, es, model parent)
     "rex_tooth": ("T. rex Tooth", "Dente de Tiranossauro", "Diente de Tiranosaurio", "item/generated"),
+    "mosasaurus_tooth": ("Mosasaurus Tooth", "Dente de Mosassauro", "Diente de Mosasaurio", "item/generated"),
     "triceratops_horn": ("Triceratops Horn", "Chifre de Tricerátops", "Cuerno de Triceratops", "item/generated"),
     "ankylosaurus_club": ("Ankylosaurus Tail Club", "Clava Caudal de Anquilossauro", "Maza Caudal de Anquilosaurio", "item/generated"),
     "flint_knife": ("Flint Knife", "Faca de Sílex", "Cuchillo de Sílex", "item/handheld"),
@@ -105,11 +107,13 @@ def main():
         lang["en_us"][f"item.terrassic.{sid}_spawn_egg"] = f"{en} Spawn Egg"
         lang["pt_br"][f"item.terrassic.{sid}_spawn_egg"] = f"Ovo Gerador de {pt}"
         lang["es_es"][f"item.terrassic.{sid}_spawn_egg"] = f"Huevo Generador de {es}"
+        # unique spawn egg sprite (layer0 only; tint colours are white)
+        write(f"{A}/models/item/{sid}_spawn_egg.json", {"parent": "item/generated", "textures": {"layer0": f"terrassic:item/{sid}_spawn_egg"}})
+        if large is None:
+            continue
         lang["en_us"][f"block.terrassic.{sid}_egg"] = f"{en} Egg"
         lang["pt_br"][f"block.terrassic.{sid}_egg"] = f"Ovo de {pt}"
         lang["es_es"][f"block.terrassic.{sid}_egg"] = f"Huevo de {es}"
-        # unique spawn egg sprite (layer0 only; tint colours are white)
-        write(f"{A}/models/item/{sid}_spawn_egg.json", {"parent": "item/generated", "textures": {"layer0": f"terrassic:item/{sid}_spawn_egg"}})
         # egg block: 3 hatch stages
         for st in range(3):
             write(f"{A}/models/block/{sid}_egg_{st}.json", egg_model(sid, st, large))
@@ -177,6 +181,8 @@ def main():
         "pachycephalosaurus": [item("minecraft:mutton", 1, 3, True), item("minecraft:bone", 1, 2)],
         "gallimimus": [item("minecraft:chicken", 1, 3, True), item("minecraft:feather", 2, 4)],
         "pteranodon": [item("minecraft:chicken", 1, 2, True), item("minecraft:leather", 0, 2), item("minecraft:cod", 0, 2, True)],
+        "mosasaurus": [item("minecraft:cod", 4, 8, True), item("minecraft:leather", 3, 6), item("minecraft:bone", 3, 6),
+                       item("terrassic:mosasaurus_tooth", 1, 3, chance=0.6)],
     }
     for sid, pools in loot.items():
         write(f"{D}/loot_tables/entities/{sid}.json", {"type": "minecraft:entity", "pools": pools})

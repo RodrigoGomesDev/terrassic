@@ -375,5 +375,33 @@
    "animation.pteranodon.attack"
   ],
   "render_scale": 1.0
+ },
+ "mosasaurus": {
+  "bones": 16,
+  "cubes": 22,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -16.846121179034185,
+    -3.545027837619486,
+    -50.000003065059566
+   ],
+   [
+    16.846121179034185,
+    18.82391325137683,
+    72.97190537889804
+   ]
+  ],
+  "animations": [
+   "animation.mosasaurus.idle",
+   "animation.mosasaurus.walk",
+   "animation.mosasaurus.run",
+   "animation.mosasaurus.sit",
+   "animation.mosasaurus.attack"
+  ],
+  "render_scale": 1.0
  }
 }

@@ -50,9 +50,12 @@ public final class ModItems {
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_SPAWN_EGG = egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS);
     public static final RegistrySupplier<Item> GALLIMIMUS_SPAWN_EGG = egg("gallimimus", ModEntities.GALLIMIMUS);
     public static final RegistrySupplier<Item> PTERANODON_SPAWN_EGG = egg("pteranodon", ModEntities.PTERANODON);
+    public static final RegistrySupplier<Item> MOSASAURUS_SPAWN_EGG = egg("mosasaurus", ModEntities.MOSASAURUS);
 
     // ---- materials dropped by dinosaurs
     public static final RegistrySupplier<Item> REX_TOOTH = ITEMS.register("rex_tooth",
+            () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    public static final RegistrySupplier<Item> MOSASAURUS_TOOTH = ITEMS.register("mosasaurus_tooth",
             () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> TRICERATOPS_HORN = ITEMS.register("triceratops_horn",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));

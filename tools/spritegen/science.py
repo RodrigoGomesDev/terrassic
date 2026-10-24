@@ -200,6 +200,24 @@ MOTIFS = {
         "................",
         "................",
     ],
+    "mosa_jaw": [
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "..LLLLLLLLLL....",
+        ".LBBBBBBBBBBL...",
+        ".BoBoBoBoBoBBL..",
+        ".DBBBBBBBBBBBBL.",
+        "..DDDDDDDDDBBBD.",
+        "............DD..",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+    ],
     "beak_skull": [
         "................",
         "................",
@@ -226,7 +244,7 @@ FOSSIL_MOTIF = {
     "velociraptor": "small_skull", "compsognathus": "small_skull", "triceratops": "horned_skull",
     "stegosaurus": "plates", "ankylosaurus": "tail_club", "brachiosaurus": "vertebrae",
     "parasaurolophus": "crest_skull", "pachycephalosaurus": "dome_skull", "gallimimus": "beak_skull",
-    "pteranodon": "ptero_skull",
+    "pteranodon": "ptero_skull", "mosasaurus": "mosa_jaw",
 }
 
 

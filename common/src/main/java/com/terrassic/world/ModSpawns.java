@@ -2,6 +2,7 @@ package com.terrassic.world;
 
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
+import com.terrassic.entity.SwimmingDinosaur;
 import com.terrassic.registry.ModEntities;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.hooks.level.biome.BiomeProperties;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Brachiosaurus       savanna, plains                 1       1-2
  *  Tyrannosaurus       savanna, jungle                 1       1
  *  Pteranodon          beach, stony shore              8       2-4
+ *  Mosasaurus          deep ocean (not frozen)         2       1      (WATER_CREATURE, despawns like dolphins)
  *  (*desert only where there is sand to stand on)
  */
 public final class ModSpawns {
@@ -54,6 +56,8 @@ public final class ModSpawns {
         placement(ModEntities.GALLIMIMUS);
         SpawnPlacementsRegistry.register(ModEntities.PTERANODON, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
 
         LifecycleEvent.SETUP.register(() -> BiomeModifications.addProperties((ctx, props) -> {
             boolean forest = ctx.hasTag(BiomeTags.IS_FOREST);
@@ -68,6 +72,7 @@ public final class ModSpawns {
             boolean desert = key.equals("minecraft:desert");
             boolean swamp = key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp");
             boolean coast = ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore");
+            boolean deepSea = ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen");
 
             if (forest || jungle) {
                 add(props, ModEntities.COMPSOGNATHUS.get(), 8, 3, 6);
@@ -107,6 +112,10 @@ public final class ModSpawns {
             }
             if (coast) {
                 add(props, ModEntities.PTERANODON.get(), 8, 2, 4);
+            }
+            if (deepSea) {
+                props.getSpawnProperties().addSpawn(MobCategory.WATER_CREATURE,
+                        new MobSpawnSettings.SpawnerData(ModEntities.MOSASAURUS.get(), 2, 1, 1));
             }
         }));
     }

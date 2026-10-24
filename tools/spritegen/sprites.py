@@ -85,9 +85,22 @@ class Canvas:
             for x in range(self.n):
                 if self.p[y][x] is not None:
                     img.putpixel((x, y), self.p[y][x])
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        img.save(path)
+        save_png(img, path)
         return img
+
+
+def save_png(img, path):
+    """Writes the PNG only when its pixels changed, so re-running the generators leaves untouched files
+    byte-identical (git then sees no change)."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    if os.path.exists(path):
+        try:
+            with Image.open(path) as old:
+                if old.size == img.size and old.convert("RGBA").tobytes() == img.convert("RGBA").tobytes():
+                    return
+        except OSError:
+            pass
+    img.save(path)
 
 
 # ------------------------------------------------------------------ spawn eggs
@@ -287,6 +300,19 @@ def spawn_eggs():
     eye(cv, 9, 5, "#d8a838")
     eggs["pteranodon"] = cv
 
+    # Mosasaurus: dark sea-blue egg with a pale belly, a row of teeth and a tail fluke
+    cv = base_egg(None, "#2e3a44", "#d8dbd0")
+    for x in range(3, 13):
+        if inside(cv, x, 9):
+            cv.set(x, 9, hexc("#8a3a36"))
+        if inside(cv, x, 8) and x % 2 == 1:
+            cv.set(x, 8, hexc("#efe9d6"))
+        if inside(cv, x, 10) and x % 2 == 0:
+            cv.set(x, 10, hexc("#efe9d6"))
+    cv.set(2, 3, hexc("#26323a")); cv.set(3, 4, hexc("#26323a")); cv.set(2, 5, hexc("#26323a"))
+    eye(cv, 10, 5, "#c8b04a")
+    eggs["mosasaurus"] = cv
+
     for name, cv in eggs.items():
         cv.outline(0.45)
         cv.save(os.path.join(TEX, "item", f"{name}_spawn_egg.png"))
@@ -460,6 +486,18 @@ def weapons():
         cv.set(x, 13, hexc("#a08a64"))
     cv.set(8, 6, IVORY_D); cv.set(8, 9, IVORY_D)
     out["rex_tooth"] = cv
+
+    cv = Canvas()  # mosasaurus tooth: stout cone curving back, with a brown root
+    for (y, a, b) in ((2, 10, 10), (3, 9, 10), (4, 9, 11), (5, 8, 11), (6, 8, 11), (7, 7, 11), (8, 7, 11),
+                      (9, 6, 11), (10, 6, 11)):
+        for x in range(a, b + 1):
+            cv.set(x, y, IVORY if x < b else IVORY_D)
+        cv.set(a, y, hexc("#fbf6e8"))
+    for (y, a, b) in ((11, 5, 11), (12, 5, 11), (13, 6, 10)):
+        for x in range(a, b + 1):
+            cv.set(x, y, hexc("#8a6a48") if x < b else hexc("#64482e"))
+    cv.set(9, 6, IVORY_D); cv.set(8, 9, IVORY_D)
+    out["mosasaurus_tooth"] = cv
 
     cv = Canvas()  # triceratops horn (curved)
     pts = [(3, 13, 4), (4, 12, 4), (5, 11, 4), (6, 10, 4), (7, 9, 3), (8, 8, 3), (9, 7, 3), (10, 6, 2), (10, 5, 2), (11, 4, 2), (11, 3, 1), (12, 2, 1), (12, 1, 1)]

@@ -359,6 +359,22 @@ GUIDE = {
         note=("A crista não serve para voar. Acho que serve para ser vista. Funcionou comigo.",
               "The crest is not for flying. I think it is for being seen. It worked on me.",
               "La cresta no sirve para volar. Creo que sirve para ser vista. Conmigo funcionó.")),
+    "mosasaurus": dict(
+        sci=("Viveu há cerca de 70 milhões de anos nos mares da Europa e da América do Norte. Não é um dinossauro: é um lagarto marinho, parente dos varanos e das cobras. Uns 15 m, nadadeiras no lugar das patas e uma cauda com barbatana em meia-lua. Paria filhotes vivos, na água.",
+             "Lived about 70 million years ago in the seas of Europe and North America. Not a dinosaur: a marine lizard, related to monitor lizards and snakes. About 15 m, flippers instead of legs and a tail with a crescent fin. It gave birth to live young, in the water.",
+             "Vivió hace unos 70 millones de años en los mares de Europa y América del Norte. No es un dinosaurio: es un lagarto marino, pariente de los varanos y las serpientes. Unos 15 m, aletas en lugar de patas y una cola con aleta en media luna. Paría crías vivas, en el agua."),
+        behavior=("Vive no oceano profundo. Caça tudo o que está na água: peixes, lulas, golfinhos, tartarugas e quem estiver nadando ou de barco. Encalhado na terra, fica fraco e seca.",
+                  "Lives in the deep ocean. Hunts everything in the water: fish, squid, dolphins, turtles and whoever is swimming or in a boat. Stranded on land it is weak and dries out.",
+                  "Vive en el océano profundo. Caza todo lo que está en el agua: peces, calamares, delfines, tortugas y a quien esté nadando o en barco. Varado en tierra se debilita y se seca."),
+        taming=("Ainda não se sabe domar. Por enquanto, fique longe do mar fundo.",
+                "Nobody knows how to tame it yet. For now, stay away from deep water.",
+                "Todavía no se sabe domarlo. Por ahora, aléjate del mar profundo."),
+        utility=("Nenhuma. É o motivo de atravessar o mar pela costa.",
+                 "None. It is the reason to cross the sea along the coast.",
+                 "Ninguna. Es el motivo para cruzar el mar por la costa."),
+        note=("Vi a sombra passar debaixo do barco. Era maior que o barco. Remei até a praia sem olhar para trás.",
+              "I saw the shadow pass under the boat. It was bigger than the boat. I rowed to the beach without looking back.",
+              "Vi la sombra pasar debajo del bote. Era más grande que el bote. Remé hasta la playa sin mirar atrás.")),
 }
 
 ERAS = {

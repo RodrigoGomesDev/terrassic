@@ -70,6 +70,9 @@ Sistemas: tela de abertura e "Relatório do Incidente", **Caderno de Campo** (te
 | **Mosasaurus** | 🌊 | Carnívoro | Ovo | ✅ na v0.5 | Terror do Mar Interior; nesta versão só selvagem | 15 m |
 | **Maiasaura** | 🦖 | Herbívoro | Comida | ✅ | "Boa mãe": vive em colônias de ninhos; filhotes perto dela crescem mais rápido | 9 m |
 
+**Andamento (24/10/2026, feito na nuvem, ainda não compilado):** prontos o Caderno de Campo com as 4 abas, a tela de abertura, o Guia com níveis, fósseis com pincel e cinzel, a Mesa de Pesquisa, o Carvão de Esboço, a tradução es_es, o **Pteranodon** (voo montado simples: decolar, voar para onde olha, bater asas, planar) e o **Mosasaurus** selvagem (oceano profundo, caça quem está na água ou de barco, seca se encalhar). Faltam: Maiasaura, Lente de Âmbar, Frasco de Argila, sons próprios, pulo na montaria, tirar a sela e configuração de spawn.
+Nota científica: o Mosasaurus paria filhotes vivos, sem ovo. Quando ele ficar domável (v0.5), o caminho mais fiel é domar o filhote recém-nascido em vez de chocar um ovo.
+
 ## v0.4 Os céus do Cretáceo
 
 Sistemas: voo montado completo (subir, descer, planar, stamina), criaturas de ombro, sela por espécie.

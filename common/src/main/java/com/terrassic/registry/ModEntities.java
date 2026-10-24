@@ -6,6 +6,7 @@ import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Gallimimus;
+import com.terrassic.entity.Mosasaurus;
 import com.terrassic.entity.Pachycephalosaurus;
 import com.terrassic.entity.Parasaurolophus;
 import com.terrassic.entity.Pteranodon;
@@ -61,6 +62,10 @@ public final class ModEntities {
     // ---- flyers
     public static final RegistrySupplier<EntityType<Pteranodon>> PTERANODON =
             mob("pteranodon", Pteranodon::new, Pteranodon.WIDTH, Pteranodon.HEIGHT, 10);
+    // ---- marine reptiles
+    public static final RegistrySupplier<EntityType<Mosasaurus>> MOSASAURUS = ENTITY_TYPES.register("mosasaurus",
+            () -> EntityType.Builder.of(Mosasaurus::new, MobCategory.WATER_CREATURE)
+                    .sized(Mosasaurus.WIDTH, Mosasaurus.HEIGHT).clientTrackingRange(12).build("mosasaurus"));
 
     // ---- projectiles
     public static final RegistrySupplier<EntityType<ThrownSpear>> SPEAR = ENTITY_TYPES.register("spear",
@@ -90,5 +95,6 @@ public final class ModEntities {
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
         EntityAttributeRegistry.register(GALLIMIMUS, Gallimimus::createAttributes);
         EntityAttributeRegistry.register(PTERANODON, Pteranodon::createAttributes);
+        EntityAttributeRegistry.register(MOSASAURUS, Mosasaurus::createAttributes);
     }
 }

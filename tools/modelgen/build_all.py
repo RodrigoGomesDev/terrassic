@@ -23,13 +23,16 @@ sys.path.insert(0, os.path.join(HERE, "species"))
 from paint import paint_model, make_shader  # noqa: E402
 from pybench import PyBench  # noqa: E402
 
+sys.path.insert(0, os.path.join(HERE, "..", "spritegen"))
+from sprites import save_png  # noqa: E402
+
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
 ART = os.path.join(ROOT, "art")
 
 ALL = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus",
        "triceratops", "stegosaurus", "ankylosaurus", "brachiosaurus", "parasaurolophus",
-       "pachycephalosaurus", "gallimimus", "pteranodon"]
+       "pachycephalosaurus", "gallimimus", "pteranodon", "mosasaurus"]
 
 
 def clean_anim(anim_json):
@@ -123,8 +126,8 @@ async def run(names, force_py=False):
             with open(os.path.join(ASSETS, "animations", "entity", f"{name}.animation.json"), "w") as f:
                 json.dump(anim, f, indent=1)
             for sex, img in texs.items():
-                img.save(os.path.join(ASSETS, "textures", "entity", f"{name}_{sex}.png"))
-                img.save(os.path.join(art, f"{name}_{sex}.png"))
+                save_png(img, os.path.join(ASSETS, "textures", "entity", f"{name}_{sex}.png"))
+                save_png(img, os.path.join(art, f"{name}_{sex}.png"))
             cams = cameras(lo, hi)
             # previews show the male look; female and saddled looks get their own shots
             await bb.set_visible("female_display", False)
