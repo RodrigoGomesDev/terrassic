@@ -8,6 +8,7 @@ import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModTabs;
 import com.terrassic.research.Research;
+import com.terrassic.world.CretaceousBiomes;
 import com.terrassic.world.ModSpawns;
 import com.terrassic.world.ModWorldgen;
 import dev.architectury.utils.Env;
@@ -34,6 +35,7 @@ public final class Terrassic {
         ModEntities.registerAttributes();
         ModSpawns.init();
         ModWorldgen.init();
+        CretaceousBiomes.init(); // v0.8: Cretaceous biomes of the "Terrassic" world type
         Research.init();
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }

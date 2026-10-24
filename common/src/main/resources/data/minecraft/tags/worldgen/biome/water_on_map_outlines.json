@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:cretaceous_river",
+    "terrassic:cypress_swamp",
+    "terrassic:deep_inner_sea",
+    "terrassic:inner_sea",
+    "terrassic:river_delta"
+  ]
+}

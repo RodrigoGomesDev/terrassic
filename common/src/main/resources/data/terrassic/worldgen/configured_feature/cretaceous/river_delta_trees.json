@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "terrassic:cretaceous/sabal_checked",
+        "chance": 0.4
+      },
+      {
+        "feature": "terrassic:cretaceous/tree_fern_checked",
+        "chance": 0.3
+      }
+    ],
+    "default": "terrassic:cretaceous/platanus_checked"
+  }
+}

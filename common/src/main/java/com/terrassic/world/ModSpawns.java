@@ -151,19 +151,19 @@ public final class ModSpawns {
         LifecycleEvent.SETUP.register(() -> BiomeModifications.addProperties((ctx, props) -> {
             String key = ctx.getKey().map(k -> k.toString()).orElse("");
             // BEGIN GENERATED biomes
-            boolean forest = ctx.hasTag(BiomeTags.IS_FOREST);
-            boolean jungle = ctx.hasTag(BiomeTags.IS_JUNGLE);
-            boolean savanna = ctx.hasTag(BiomeTags.IS_SAVANNA);
-            boolean badlands = ctx.hasTag(BiomeTags.IS_BADLANDS);
-            boolean taiga = ctx.hasTag(BiomeTags.IS_TAIGA);
-            boolean hill = ctx.hasTag(BiomeTags.IS_HILL);
-            boolean river = ctx.hasTag(BiomeTags.IS_RIVER);
-            boolean plains = key.equals("minecraft:plains") || key.equals("minecraft:sunflower_plains");
-            boolean desert = key.equals("minecraft:desert");
-            boolean swamp = key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp");
-            boolean coast = ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore");
-            boolean deepSea = ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen");
-            boolean ocean = ctx.hasTag(BiomeTags.IS_OCEAN) && !key.contains("frozen");
+            boolean forest = ctx.hasTag(BiomeTags.IS_FOREST) || ctx.hasTag(CretaceousBiomes.habitat("forest"));
+            boolean jungle = ctx.hasTag(BiomeTags.IS_JUNGLE) || ctx.hasTag(CretaceousBiomes.habitat("jungle"));
+            boolean savanna = ctx.hasTag(BiomeTags.IS_SAVANNA) || ctx.hasTag(CretaceousBiomes.habitat("savanna"));
+            boolean badlands = ctx.hasTag(BiomeTags.IS_BADLANDS) || ctx.hasTag(CretaceousBiomes.habitat("badlands"));
+            boolean taiga = ctx.hasTag(BiomeTags.IS_TAIGA) || ctx.hasTag(CretaceousBiomes.habitat("taiga"));
+            boolean hill = ctx.hasTag(BiomeTags.IS_HILL) || ctx.hasTag(CretaceousBiomes.habitat("hill"));
+            boolean river = ctx.hasTag(BiomeTags.IS_RIVER) || ctx.hasTag(CretaceousBiomes.habitat("river"));
+            boolean plains = (key.equals("minecraft:plains") || key.equals("minecraft:sunflower_plains")) || ctx.hasTag(CretaceousBiomes.habitat("plains"));
+            boolean desert = key.equals("minecraft:desert") || ctx.hasTag(CretaceousBiomes.habitat("desert"));
+            boolean swamp = (key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp")) || ctx.hasTag(CretaceousBiomes.habitat("swamp"));
+            boolean coast = (ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore")) || ctx.hasTag(CretaceousBiomes.habitat("coast"));
+            boolean deepSea = (ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen")) || ctx.hasTag(CretaceousBiomes.habitat("deep_sea"));
+            boolean ocean = (ctx.hasTag(BiomeTags.IS_OCEAN) && !key.contains("frozen")) || ctx.hasTag(CretaceousBiomes.habitat("ocean"));
 
             if (savanna || jungle) {
                 add(props, ModEntities.TYRANNOSAURUS.get(), 1, 1, 1);

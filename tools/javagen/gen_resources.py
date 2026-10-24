@@ -212,9 +212,12 @@ def main():
     gen_blocks.main()
     import gen_science  # fossils, field tools, research table, advancements, story and Field Guide texts
     gen_science.main()
+    import gen_world  # v0.8: Cretaceous biomes, "Terrassic" world types, biome tags
+    gen_world.main()
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
+        lang[code].update(gen_world.LANG[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")

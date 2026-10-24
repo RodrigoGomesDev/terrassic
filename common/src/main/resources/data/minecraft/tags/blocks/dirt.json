@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:fern_litter",
+    "terrassic:lateritic_soil",
+    "terrassic:needle_litter",
+    "terrassic:peat"
+  ]
+}

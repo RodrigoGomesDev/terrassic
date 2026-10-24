@@ -220,21 +220,22 @@ WORLD = {
     "baurusuchus":        dict(biomes=("savanna", "badlands", "plains"), weight=4, group=(1, 2), track=10),  # hot dry plains
 }
 
-# biome predicate -> (Java expression in ModSpawns, description for the doc comment)
+# biome predicate -> (Java expression in ModSpawns, description for the doc comment). Each also checks the biome tag
+# terrassic:habitat/<word>, which lists the Cretaceous biomes of the "Terrassic" world type (gen_world.py).
 BIOMES = {
-    "forest": ("ctx.hasTag(BiomeTags.IS_FOREST)", "forest"),
-    "jungle": ("ctx.hasTag(BiomeTags.IS_JUNGLE)", "jungle"),
-    "savanna": ("ctx.hasTag(BiomeTags.IS_SAVANNA)", "savanna"),
-    "badlands": ("ctx.hasTag(BiomeTags.IS_BADLANDS)", "badlands"),
-    "taiga": ("ctx.hasTag(BiomeTags.IS_TAIGA)", "taiga"),
-    "hill": ("ctx.hasTag(BiomeTags.IS_HILL)", "hills"),
-    "river": ("ctx.hasTag(BiomeTags.IS_RIVER)", "river"),
-    "plains": ('key.equals("minecraft:plains") || key.equals("minecraft:sunflower_plains")', "plains"),
-    "desert": ('key.equals("minecraft:desert")', "desert*"),
-    "swamp": ('key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp")', "swamp, mangrove"),
-    "coast": ('ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore")', "beach, stony shore"),
-    "deep_sea": ('ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen")', "deep ocean (not frozen)"),
-    "ocean": ('ctx.hasTag(BiomeTags.IS_OCEAN) && !key.contains("frozen")', "ocean (not frozen)"),
+    "forest": ('ctx.hasTag(BiomeTags.IS_FOREST) || ctx.hasTag(CretaceousBiomes.habitat("forest"))', "forest"),
+    "jungle": ('ctx.hasTag(BiomeTags.IS_JUNGLE) || ctx.hasTag(CretaceousBiomes.habitat("jungle"))', "jungle"),
+    "savanna": ('ctx.hasTag(BiomeTags.IS_SAVANNA) || ctx.hasTag(CretaceousBiomes.habitat("savanna"))', "savanna"),
+    "badlands": ('ctx.hasTag(BiomeTags.IS_BADLANDS) || ctx.hasTag(CretaceousBiomes.habitat("badlands"))', "badlands"),
+    "taiga": ('ctx.hasTag(BiomeTags.IS_TAIGA) || ctx.hasTag(CretaceousBiomes.habitat("taiga"))', "taiga"),
+    "hill": ('ctx.hasTag(BiomeTags.IS_HILL) || ctx.hasTag(CretaceousBiomes.habitat("hill"))', "hills"),
+    "river": ('ctx.hasTag(BiomeTags.IS_RIVER) || ctx.hasTag(CretaceousBiomes.habitat("river"))', "river"),
+    "plains": ('(key.equals("minecraft:plains") || key.equals("minecraft:sunflower_plains")) || ctx.hasTag(CretaceousBiomes.habitat("plains"))', "plains"),
+    "desert": ('key.equals("minecraft:desert") || ctx.hasTag(CretaceousBiomes.habitat("desert"))', "desert*"),
+    "swamp": ('(key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp")) || ctx.hasTag(CretaceousBiomes.habitat("swamp"))', "swamp, mangrove"),
+    "coast": ('(ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore")) || ctx.hasTag(CretaceousBiomes.habitat("coast"))', "beach, stony shore"),
+    "deep_sea": ('(ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen")) || ctx.hasTag(CretaceousBiomes.habitat("deep_sea"))', "deep ocean (not frozen)"),
+    "ocean": ('(ctx.hasTag(BiomeTags.IS_OCEAN) && !key.contains("frozen")) || ctx.hasTag(CretaceousBiomes.habitat("ocean"))', "ocean (not frozen)"),
 }
 
 SPECIES = [

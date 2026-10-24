@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "terrassic:cretaceous/taxodium_checked",
+        "chance": 0.85
+      }
+    ],
+    "default": "terrassic:cretaceous/tree_fern_checked"
+  }
+}

@@ -4,7 +4,8 @@
   "package": "com.terrassic.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "PlayerMixin"
+    "PlayerMixin",
+    "NoiseGeneratorSettingsMixin"
   ],
   "client": [
     "client.InventoryKeyMixin"
