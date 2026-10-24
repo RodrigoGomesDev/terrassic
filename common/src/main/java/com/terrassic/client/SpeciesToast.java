@@ -30,7 +30,9 @@ public final class SpeciesToast implements Toast {
 
     @Override
     public Visibility render(GuiGraphics g, ToastComponent toasts, long time) {
-        g.blit(TEXTURE, 0, 0, 0, 0, this.width(), this.height());
+        // the Terrassic look (docs/IDENTIDADE.md): a basalt slab, the portrait in a recessed frame
+        com.terrassic.client.ui.TerrassicUi.slab(g, 0, 0, this.width(), this.height());
+        com.terrassic.client.ui.TerrassicUi.well(g, 3, 3, 29, 29, false);
         String key = switch (this.level) {
             case Knowledge.SILHOUETTE -> "hud.terrassic.species.silhouette";
             case Knowledge.SIGHTED -> "hud.terrassic.species.sighted";
@@ -38,15 +40,15 @@ public final class SpeciesToast implements Toast {
             default -> "hud.terrassic.species.tamed";
         };
         var font = toasts.getMinecraft().font;
-        g.drawString(font, Component.translatable(key), 32, 7, 0xFFB63C, false);
+        g.drawString(font, Component.translatable(key), 33, 8, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.AMBER_500), false);
         Component name = this.level <= Knowledge.SILHOUETTE ? Component.literal("???")
                 : Component.translatable("entity.terrassic." + this.species);
-        g.drawString(font, name, 32, 18, 0xFFFFFF, false);
+        g.drawString(font, name, 33, 19, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.BONE_100), false);
         LivingEntity model = this.level <= Knowledge.SILHOUETTE ? null : model(this.species);
         if (model != null) {
             TerrassicHud.portrait(g, model, 4, 4, 24);
         } else {
-            g.drawString(font, "?", 14, 12, 0xE8DCC0, false);
+            g.drawString(font, "?", 14, 12, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.STONE_200), false);
         }
         return time >= 5000L ? Visibility.HIDE : Visibility.SHOW;
     }
