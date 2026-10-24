@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "terrassic:block/thatch",
+    "end": "terrassic:block/thatch_top"
+  }
+}

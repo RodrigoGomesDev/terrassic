@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:dry_stone",
+    "terrassic:dry_stone_stairs",
+    "terrassic:dry_stone_slab",
+    "terrassic:dry_stone_wall",
+    "terrassic:bone_fence",
+    "terrassic:fossil_rock",
+    "terrassic:research_table"
+  ]
+}

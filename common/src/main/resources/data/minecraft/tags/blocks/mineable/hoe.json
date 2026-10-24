@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:thatch",
+    "terrassic:thatch_stairs",
+    "terrassic:thatch_slab",
+    "terrassic:straw_mat"
+  ]
+}

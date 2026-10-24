@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " F ",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "item": "terrassic:log_palisade",
+    "count": 6
+  }
+}

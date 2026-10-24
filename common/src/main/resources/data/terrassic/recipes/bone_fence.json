@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "BTB",
+    "BTB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "T": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "terrassic:bone_fence",
+    "count": 3
+  }
+}

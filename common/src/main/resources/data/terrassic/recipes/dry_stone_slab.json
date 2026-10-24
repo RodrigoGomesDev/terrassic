@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "DDD"
+  ],
+  "key": {
+    "D": {
+      "item": "terrassic:dry_stone"
+    }
+  },
+  "result": {
+    "item": "terrassic:dry_stone_slab",
+    "count": 6
+  }
+}

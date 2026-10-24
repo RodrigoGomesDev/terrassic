@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "TTT"
+  ],
+  "key": {
+    "T": {
+      "item": "terrassic:thatch"
+    }
+  },
+  "result": {
+    "item": "terrassic:thatch_slab",
+    "count": 6
+  }
+}

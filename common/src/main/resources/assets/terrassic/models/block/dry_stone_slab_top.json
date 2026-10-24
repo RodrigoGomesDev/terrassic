@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "terrassic:block/dry_stone",
+    "top": "terrassic:block/dry_stone",
+    "side": "terrassic:block/dry_stone"
+  }
+}
