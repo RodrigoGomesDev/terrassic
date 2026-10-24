@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/fern_thatch_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/fern_thatch_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/fern_thatch"
+    }
+  }
+}

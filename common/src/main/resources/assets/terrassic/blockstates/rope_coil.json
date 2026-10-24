@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "terrassic:block/rope_coil"
+    },
+    "axis=z": {
+      "model": "terrassic:block/rope_coil_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "terrassic:block/rope_coil_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

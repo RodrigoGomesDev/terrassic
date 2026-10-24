@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_right_open",
+  "textures": {
+    "top": "terrassic:block/wicker_door_top",
+    "bottom": "terrassic:block/wicker_door_bottom"
+  }
+}

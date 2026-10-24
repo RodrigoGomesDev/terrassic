@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "terrassic:block/rope_coil",
+    "end": "terrassic:block/rope_coil_top"
+  }
+}

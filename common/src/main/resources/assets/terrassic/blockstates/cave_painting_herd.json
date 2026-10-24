@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/cave_painting_herd"
+    },
+    "facing=east": {
+      "model": "terrassic:block/cave_painting_herd",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/cave_painting_herd",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/cave_painting_herd",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "T",
+    "T"
+  ],
+  "key": {
+    "T": {
+      "item": "terrassic:thatch"
+    }
+  },
+  "result": {
+    "item": "terrassic:thatch_eave",
+    "count": 4
+  }
+}

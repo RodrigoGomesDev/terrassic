@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "T",
+    "T"
+  ],
+  "key": {
+    "T": {
+      "item": "terrassic:fern_thatch"
+    }
+  },
+  "result": {
+    "item": "terrassic:fern_thatch_eave",
+    "count": 4
+  }
+}

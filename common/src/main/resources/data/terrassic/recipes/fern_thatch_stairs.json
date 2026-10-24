@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:fern_thatch"
+    }
+  },
+  "result": {
+    "item": "terrassic:fern_thatch_stairs",
+    "count": 4
+  }
+}

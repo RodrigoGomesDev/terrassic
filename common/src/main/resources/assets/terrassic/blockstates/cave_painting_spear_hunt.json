@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/cave_painting_spear_hunt"
+    },
+    "facing=east": {
+      "model": "terrassic:block/cave_painting_spear_hunt",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/cave_painting_spear_hunt",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/cave_painting_spear_hunt",
+      "y": 270
+    }
+  }
+}

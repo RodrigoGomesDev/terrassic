@@ -30,6 +30,10 @@
     "terrassic:ginkgo_hewn_slab",
     "terrassic:metasequoia_hewn_slab",
     "terrassic:taxodium_hewn_slab",
-    "terrassic:tree_fern_hewn_slab"
+    "terrassic:tree_fern_hewn_slab",
+    "terrassic:rammed_earth_slab",
+    "terrassic:reed_thatch_slab",
+    "terrassic:cycad_thatch_slab",
+    "terrassic:fern_thatch_slab"
   ]
 }

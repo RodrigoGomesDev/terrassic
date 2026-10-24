@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RSR",
+    "SRS",
+    "RSR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:rush"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "terrassic:wicker_block",
+    "count": 2
+  }
+}

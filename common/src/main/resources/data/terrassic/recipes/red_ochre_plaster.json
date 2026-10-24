@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:clay_plaster"
+    },
+    {
+      "item": "terrassic:laterite_pebbles"
+    }
+  ],
+  "result": {
+    "item": "terrassic:red_ochre_plaster",
+    "count": 1
+  }
+}

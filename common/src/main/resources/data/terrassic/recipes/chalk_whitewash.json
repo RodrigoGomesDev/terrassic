@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:clay_plaster"
+    },
+    {
+      "item": "terrassic:chalk_pebbles"
+    }
+  ],
+  "result": {
+    "item": "terrassic:chalk_whitewash",
+    "count": 1
+  }
+}

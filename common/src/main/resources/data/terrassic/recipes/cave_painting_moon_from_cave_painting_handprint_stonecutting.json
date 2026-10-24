@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:cave_painting_handprint"
+  },
+  "result": "terrassic:cave_painting_moon",
+  "count": 1
+}

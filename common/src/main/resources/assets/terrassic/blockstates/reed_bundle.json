@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "terrassic:block/reed_bundle"
+    },
+    "axis=z": {
+      "model": "terrassic:block/reed_bundle_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "terrassic:block/reed_bundle_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

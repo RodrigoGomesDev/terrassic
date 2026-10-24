@@ -19,9 +19,9 @@ NS = "terrassic"
 JAVA = os.path.join(ROOT, "common", "src", "main", "java", "com", "terrassic", "registry", "BuildingBlocks.java")
 
 # kinds: cube | column | log | leaves | sapling | stairs | slab | wall | fence | fence_gate | door | trapdoor | pane |
-#        carpet | palisade | plant | tall_plant | water_plant | multiface
+#        carpet | palisade | plant | tall_plant | water_plant | multiface | facing | eave | climber
 # material (Java ModBlocks.material): stone | soft_stone | hard_stone | pebbles | thatch | mud | wood | leaves | sapling |
-#        plant | plant_cover | water_plant | multiface | bone | hide
+#        plant | plant_cover | water_plant | multiface | bone | hide | earth | plaster | wicker | fiber | net
 BLOCKS = {}
 
 
@@ -202,6 +202,83 @@ PLANT_MATERIAL = {"plant": "plant", "tall_plant": "plant", "water_plant": "water
 for pid, (names, kind, _, _) in PLANTS.items():
     tex = (f"{pid}_top", f"{pid}_bottom") if kind == "tall_plant" else pid
     add(pid, names, kind, tex, "hoe", PLANT_MATERIAL[kind], "PLANT")
+
+# ------------------------------------------------------------- family: earth, plaster and cave paintings (phase 5)
+add("cross_braced_wattle", ("Cross-Braced Wattle", "Pau a Pique Travado", "Bahareque Arriostrado"), "cube",
+    "cross_braced_wattle", "axe", "mud", "DIRT")
+add("timber_framed_wattle", ("Timber-Framed Wattle", "Pau a Pique com Esteios", "Bahareque con Entramado"), "cube",
+    "timber_framed_wattle", "axe", "mud", "DIRT")
+add("whitewashed_wattle", ("Whitewashed Wattle", "Pau a Pique Caiado", "Bahareque Encalado"), "cube",
+    "whitewashed_wattle", "axe", "mud", "QUARTZ")
+add_shapes("rammed_earth", ("Rammed Earth", "Taipa de Pilão", "Tapial"), "rammed_earth", "shovel", "earth", "DIRT",
+           ("stairs", "slab", "wall"))
+add("packed_earth_floor", ("Packed Earth Floor", "Chão de Terra Batida", "Suelo de Tierra Apisonada"), "cube",
+    "packed_earth_floor", "shovel", "earth", "DIRT")
+PLASTERS = {
+    "clay_plaster": (("Clay Plaster", "Reboco de Barro", "Revoque de Barro"), "TERRACOTTA_LIGHT_GRAY"),
+    "red_ochre_plaster": (("Red Ochre Plaster", "Reboco de Ocre Vermelho", "Revoque de Ocre Rojo"), "TERRACOTTA_RED"),
+    "yellow_ochre_plaster": (("Yellow Ochre Plaster", "Reboco de Ocre Amarelo", "Revoque de Ocre Amarillo"),
+                             "TERRACOTTA_YELLOW"),
+    "charcoal_plaster": (("Charcoal Plaster", "Reboco de Carvão", "Revoque de Carbón"), "COLOR_BLACK"),
+    "chalk_whitewash": (("Chalk Whitewash", "Caiação de Giz", "Encalado de Tiza"), "QUARTZ"),
+}
+for _pid, (_names, _color) in PLASTERS.items():
+    add(_pid, _names, "cube", _pid, "pickaxe", "plaster", _color)
+# cave paintings: a limestone block with a pictogram on its front (facing the player who placed it)
+PAINTINGS = {
+    "handprint": ("Handprint", "Mão", "Mano"),
+    "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio"),
+    "triceratops": ("Triceratops", "Tricerátops", "Triceratops"),
+    "brachiosaurus": ("Brachiosaurus", "Braquiossauro", "Braquiosaurio"),
+    "stegosaurus": ("Stegosaurus", "Estegossauro", "Estegosaurio"),
+    "raptor": ("Raptor", "Raptor", "Raptor"),
+    "pteranodon": ("Pteranodon", "Pteranodonte", "Pteranodon"),
+    "mosasaurus": ("Mosasaurus", "Mosassauro", "Mosasaurio"),
+    "spear_hunt": ("Spear Hunt", "Caça com Lança", "Caza con Lanza"),
+    "herd": ("Herd", "Manada", "Manada"),
+    "footprints": ("Footprints", "Pegadas", "Huellas"),
+    "fire": ("Fire", "Fogo", "Fuego"),
+    "sun": ("Sun", "Sol", "Sol"),
+    "moon": ("Moon", "Lua", "Luna"),
+    "spiral": ("Spiral", "Espiral", "Espiral"),
+    "stars": ("Stars", "Estrelas", "Estrellas"),
+}
+for _name, (_en, _pt, _es) in PAINTINGS.items():
+    add(f"cave_painting_{_name}", (f"Cave Painting: {_en}", f"Pintura Rupestre: {_pt}", f"Pintura Rupestre: {_es}"),
+        "facing", (f"cave_painting_{_name}", "limestone"), "pickaxe", "soft_stone", "SAND")
+
+# ------------------------------------------------------------- family: roofs and weaving (phase 5)
+add("thatch_eave", ("Thatch Eave", "Beiral de Palha", "Alero de Paja"), "eave", "thatch", "hoe", "thatch", "COLOR_YELLOW")
+ROOFS = {  # roof id: names, colour, crafted from (2x2)
+    "reed_thatch": (("Reed Thatch", "Palha de Junco", "Paja de Junco"), "COLOR_YELLOW", "rush"),
+    "cycad_thatch": (("Cycad Frond Thatch", "Cobertura de Cicadácea", "Techo de Cícada"), "COLOR_GREEN", "cycad"),
+    "fern_thatch": (("Fern Thatch", "Cobertura de Samambaia", "Techo de Helecho"), "COLOR_BROWN", "bracken"),
+}
+for _rid, ((_en, _pt, _es), _color, _) in ROOFS.items():
+    _tex = (_rid, f"{_rid}_top")
+    add(_rid, (_en, _pt, _es), "column", _tex, "hoe", "thatch", _color)
+    add(f"{_rid}_stairs", (f"{_en} Stairs", f"Escada de {_pt}", f"Escaleras de {_es}"), "stairs", _tex, "hoe", "thatch",
+        _color, _rid)
+    add(f"{_rid}_slab", (f"{_en} Slab", f"Laje de {_pt}", f"Losa de {_es}"), "slab", _tex, "hoe", "thatch", _color, _rid)
+    add(f"{_rid}_eave", (f"{_en} Eave", f"Beiral de {_pt}", f"Alero de {_es}"), "eave", _rid, "hoe", "thatch", _color)
+add("wicker_block", ("Wicker Block", "Bloco de Vime", "Bloque de Mimbre"), "cube", "wicker_block", "axe", "wicker",
+    "WOOD")
+add("wicker_panel", ("Wicker Panel", "Painel de Vime", "Panel de Mimbre"), "pane", ("wicker_block", "wicker_block"),
+    "axe", "wicker", "WOOD")
+add("woven_fence", ("Woven Fence", "Cerca Trançada", "Valla Trenzada"), "fence", "wicker_block", "axe", "wicker", "WOOD")
+add("wicker_door", ("Wicker Door", "Porta de Vime", "Puerta de Mimbre"), "door", ("wicker_door_top", "wicker_door_bottom"),
+    "axe", "wicker", "WOOD")
+add("wicker_trapdoor", ("Wicker Trapdoor", "Alçapão de Vime", "Trampilla de Mimbre"), "trapdoor", "wicker_trapdoor",
+    "axe", "wicker", "WOOD")
+add("reed_mat", ("Reed Mat", "Esteira de Junco", "Estera de Junco"), "carpet", "reed_mat", "hoe", "thatch",
+    "COLOR_YELLOW")
+add("reed_bundle", ("Reed Bundle", "Feixe de Junco", "Haz de Juncos"), "log", ("reed_bundle", "reed_bundle_top"),
+    "hoe", "thatch", "COLOR_YELLOW")
+add("rope_coil", ("Rope Coil", "Rolo de Corda", "Rollo de Cuerda"), "log", ("rope_coil", "rope_coil_top"), "hoe",
+    "fiber", "COLOR_BROWN")
+add("fiber_net", ("Fiber Net", "Rede de Fibra", "Red de Fibra"), "climber", "fiber_net", "hoe", "net", "COLOR_BROWN",
+    tags=("climbable",))
+BLOCK_ONLY_TAGS = ("climbable",)
 
 LANG = {"en_us": {}, "pt_br": {}, "es_es": {}}
 for _bid, _row in BLOCKS.items():
@@ -453,6 +530,43 @@ def gen_water_plant(bid, tex):
     return None
 
 
+def gen_facing(bid, tex):
+    """A full block with a picture on its front, turned towards the player who placed it."""
+    front, side = tex
+    model(bid, "minecraft:block/orientable", front=t(front), side=t(side), top=t(side))
+    write(f"{A}/blockstates/{bid}.json", {"variants": {
+        f"facing={f}": variant(bid, y=y) for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+    return m(bid)
+
+
+def gen_eave(bid, tex):
+    """A thin sheet of roofing tilted 22.5 degrees, sloping down towards its facing: the overhang of a roof."""
+    full, edge = [0, 0, 16, 16], [0, 0, 16, 3]
+    faces = {d: {"uv": full if d in ("up", "down") else edge, "texture": "#t"}
+             for d in ("north", "south", "east", "west", "up", "down")}
+    write(f"{A}/models/block/{bid}.json", {
+        "parent": "minecraft:block/block", "textures": {"t": t(tex), "particle": t(tex)},
+        "elements": [{"from": [0, 11, 0], "to": [16, 14, 16], "faces": faces,
+                      "rotation": {"origin": [8, 12.5, 8], "axis": "x", "angle": -22.5, "rescale": True}}]})
+    write(f"{A}/blockstates/{bid}.json", {"variants": {
+        f"facing={f}": variant(bid, y=y) for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+    return m(bid)
+
+
+def gen_climber(bid, tex):
+    """Hangs on the side of a block or under a ceiling like a vine, and can be climbed (nets)."""
+    write(f"{A}/models/block/{bid}.json", {
+        "parent": "minecraft:block/block", "ambientocclusion": False,
+        "textures": {"texture": t(tex), "particle": t(tex)},
+        "elements": [{"from": [0, 0, 0.8], "to": [16, 16, 0.8], "shade": False, "faces": {
+            "north": {"uv": [16, 0, 0, 16], "texture": "#texture"}, "south": {"uv": [0, 0, 16, 16], "texture": "#texture"}}}]})
+    rot = {"north": {}, "east": {"y": 90}, "south": {"y": 180}, "west": {"y": 270}, "up": {"x": 270}}
+    parts = [{"when": {face: "true"}, "apply": variant(bid, r.get("x", 0), r.get("y", 0), uvlock=True)}
+             for face, r in rot.items()]
+    write(f"{A}/blockstates/{bid}.json", {"multipart": parts})
+    return None
+
+
 def gen_multiface(bid, tex):
     """Grows flat on any face of a block, like glow lichen: one thin face model, rotated per direction."""
     write(f"{A}/models/block/{bid}.json", {
@@ -471,7 +585,8 @@ def gen_multiface(bid, tex):
 GEN = {"plant": gen_plant, "tall_plant": gen_tall_plant, "water_plant": gen_water_plant, "multiface": gen_multiface,
        "cube": gen_cube, "column": gen_column, "stairs": gen_stairs, "wall": gen_wall, "fence": gen_fence,
        "pane": gen_pane, "carpet": gen_carpet, "palisade": gen_palisade, "log": gen_log, "leaves": gen_leaves,
-       "sapling": gen_sapling, "fence_gate": gen_fence_gate, "door": gen_door, "trapdoor": gen_trapdoor}
+       "sapling": gen_sapling, "fence_gate": gen_fence_gate, "door": gen_door, "trapdoor": gen_trapdoor,
+       "facing": gen_facing, "eave": gen_eave, "climber": gen_climber}
 
 
 # ------------------------------------------------------------- loot
@@ -607,6 +722,38 @@ def recipes():
         shaped(f"{tid}_palisade", [" F ", "LLL", "LLL"], {"F": "minecraft:flint", "L": f"{NS}:{tid}_log"}, f"{tid}_palisade", 6)
         shaped(f"{tid}_lashed_door", ["PP", "PP", "PP"], {"P": planks}, f"{tid}_lashed_door", 3)
         shaped(f"{tid}_lashed_trapdoor", ["PPP", "PPP"], {"P": planks}, f"{tid}_lashed_trapdoor", 2)
+    # earth and plaster
+    shapeless("cross_braced_wattle", [f"{NS}:wattle_and_daub", "minecraft:stick", "minecraft:stick"], "cross_braced_wattle")
+    shapeless("timber_framed_wattle", [f"{NS}:wattle_and_daub", "#minecraft:logs"], "timber_framed_wattle")
+    shapeless("whitewashed_wattle", [f"{NS}:wattle_and_daub", f"{NS}:chalk_pebbles"], "whitewashed_wattle")
+    shapeless("rammed_earth", ["minecraft:dirt", "minecraft:dirt", "minecraft:gravel", "minecraft:clay_ball"],
+              "rammed_earth", 2)
+    shapeless("packed_earth_floor", ["minecraft:dirt"] * 4 + [f"{NS}:thatch"], "packed_earth_floor", 4)
+    shapeless("clay_plaster", ["minecraft:clay_ball", "minecraft:clay_ball", "minecraft:sand", "minecraft:wheat"],
+              "clay_plaster", 2)
+    for pid, pigment in (("red_ochre_plaster", f"{NS}:laterite_pebbles"), ("yellow_ochre_plaster", "minecraft:yellow_dye"),
+                         ("charcoal_plaster", "minecraft:charcoal"), ("chalk_whitewash", f"{NS}:chalk_pebbles")):
+        shapeless(pid, [f"{NS}:clay_plaster", pigment], pid)
+    first = "cave_painting_handprint"  # charcoal on limestone; the stonecutter turns it into any other picture
+    shapeless(first, [f"{NS}:limestone", "minecraft:charcoal"], first)
+    for name in PAINTINGS:
+        if f"cave_painting_{name}" != first:
+            stonecut(first, f"cave_painting_{name}")
+    # roofs and weaving
+    shaped("thatch_eave", ["T", "T"], {"T": f"{NS}:thatch"}, "thatch_eave", 4)
+    for rid, (_, _, plant) in ROOFS.items():
+        shaped(rid, ["PP", "PP"], {"P": f"{NS}:{plant}"}, rid, 2)
+        shaped(f"{rid}_eave", ["T", "T"], {"T": f"{NS}:{rid}"}, f"{rid}_eave", 4)
+    rush, stick = f"{NS}:rush", "minecraft:stick"
+    shaped("wicker_block", ["RSR", "SRS", "RSR"], {"R": rush, "S": stick}, "wicker_block", 2)
+    shaped("wicker_panel", ["SRS", "SRS"], {"R": rush, "S": stick}, "wicker_panel", 6)
+    shaped("woven_fence", ["SWS", "SWS"], {"W": f"{NS}:wicker_block", "S": stick}, "woven_fence", 3)
+    shaped("wicker_door", ["WW", "WW", "WW"], {"W": f"{NS}:wicker_block"}, "wicker_door", 3)
+    shaped("wicker_trapdoor", ["WWW", "WWW"], {"W": f"{NS}:wicker_block"}, "wicker_trapdoor", 2)
+    shaped("reed_mat", ["RR"], {"R": rush}, "reed_mat", 3)
+    shaped("reed_bundle", ["RRR", "RRR", "RRR"], {"R": rush}, "reed_bundle")
+    shaped("rope_coil", ["SSS", "SSS", "SSS"], {"S": "minecraft:string"}, "rope_coil")
+    shaped("fiber_net", ["S S", " S ", "S S"], {"S": "minecraft:string"}, "fiber_net", 4)
     for bid in BLOCKS:
         shape_recipes(bid)
 
@@ -629,7 +776,8 @@ def tags():
             extra.setdefault(tag, []).append(f"{NS}:{bid}")
     for tag, ids in extra.items():
         write(os.path.join(mc, "blocks", f"{tag}.json"), {"replace": False, "values": ids})
-        write(os.path.join(mc, "items", f"{tag}.json"), {"replace": False, "values": ids})
+        if tag not in BLOCK_ONLY_TAGS:
+            write(os.path.join(mc, "items", f"{tag}.json"), {"replace": False, "values": ids})
     for tid in WOODS:  # terrassic:<tree>_logs: the four log blocks of a tree, for the planks recipe
         ids = [f"{NS}:{tid}_log", f"{NS}:stripped_{tid}_log", f"{NS}:{tid}_wood", f"{NS}:stripped_{tid}_wood"]
         write(os.path.join(os.path.dirname(D), NS, "tags", "blocks", f"{tid}_logs.json"), {"replace": False, "values": ids})
@@ -741,9 +889,11 @@ def worldgen():
 JAVA_KIND = {"cube": "cube", "column": "cube", "palisade": "palisade", "stairs": "stairs", "slab": "slab",
              "wall": "wall", "fence": "fence", "pane": "pane", "carpet": "carpet", "log": "log", "leaves": "leaves",
              "sapling": "sapling", "fence_gate": "fenceGate", "door": "door", "trapdoor": "trapdoor", "plant": "plant",
-             "tall_plant": "tallPlant", "water_plant": "waterPlant", "multiface": "multiface"}
+             "tall_plant": "tallPlant", "water_plant": "waterPlant", "multiface": "multiface", "facing": "facing",
+             "eave": "eave", "climber": "climber"}
 # drawn with transparent pixels: rendered as cutout on the client (BuildingBlocksClient)
-CUTOUT_KINDS = ("leaves", "sapling", "door", "trapdoor", "plant", "tall_plant", "water_plant", "multiface")
+CUTOUT_KINDS = ("leaves", "sapling", "door", "trapdoor", "plant", "tall_plant", "water_plant", "multiface", "pane",
+                "climber")
 
 
 def gen_java(features):
@@ -808,7 +958,7 @@ def main():
             item_model = GEN[kind](bid, tex)
         if kind == "door":
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{bid}"}})
-        elif kind in ("sapling", "plant", "water_plant", "multiface"):
+        elif kind in ("sapling", "plant", "water_plant", "multiface", "climber"):
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": t(tex)}})
         elif item_model is None:
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": t(tex[0])}})

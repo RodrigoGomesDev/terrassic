@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "terrassic:block/reed_thatch_top",
+    "top": "terrassic:block/reed_thatch_top",
+    "side": "terrassic:block/reed_thatch"
+  }
+}

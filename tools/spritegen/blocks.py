@@ -926,6 +926,277 @@ def plant_textures():
     return out
 
 
+# ------------------------------------------------------------------ earth, plaster and cave paintings (phase 5)
+EARTH_RAMP = ["#4a3524", "#5e4530", "#73573d", "#88694a", "#9c7b58"]
+PLASTERS = {  # id: colour ramp of the plaster
+    "clay_plaster": ["#7a6248", "#8f7558", "#a38868", "#b59a79", "#c4aa8a"],
+    "red_ochre_plaster": ["#5e2618", "#76321f", "#8e3f28", "#a34d31", "#b45e3e"],
+    "yellow_ochre_plaster": ["#8a6424", "#a2782e", "#b88b3a", "#c99d4a", "#d6ae5e"],
+    "charcoal_plaster": ["#1c1b1a", "#272523", "#33302d", "#403c38", "#4d4843"],
+    "chalk_whitewash": ["#b8b4a8", "#ccc8bd", "#dcd8ce", "#e8e5dc", "#f2f0e9"],
+}
+
+
+def plaster(pid):
+    """Hand-smoothed plaster: soft trowel strokes, hairline cracks, a few grains of sand."""
+    n = Noise(pid, periods=(2, 4, 8), weights=(0.45, 0.35, 0.2), stretch=(1.5, 1.0))
+    rnd = random.Random(pid)
+    cv = paint(lambda x, y: ramp(PLASTERS[pid], contrast(n(x, y), 0.9)))
+    x, y = rnd.randrange(N), rnd.randrange(N)
+    for _ in range(7):
+        cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.82))
+        x += rnd.choice((1, 1, 0)); y += rnd.choice((1, 0, -1))
+    for _ in range(6):
+        c = cv.get(xx := rnd.randrange(N), yy := rnd.randrange(N))
+        cv.set(xx, yy, shade(c, 1.12))
+    return cv
+
+
+def rammed_earth():
+    """Rammed earth: horizontal layers of tamped soil of slightly different colour, small stones in it."""
+    rnd = random.Random("rammed")
+    n = Noise("rammed", periods=(4, 16), weights=(0.5, 0.5), stretch=(2.0, 0.5))
+    layer_tone = [0.85 + 0.25 * rnd.random() for _ in range(4)]
+    cv = paint(lambda x, y: shade(ramp(EARTH_RAMP, 0.25 + 0.5 * n(x, y)), layer_tone[y // 4] * (0.82 if y % 4 == 3 else 1.0)))
+    for _ in range(7):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        cv.set(x, y, hexc("#8a857a")); cv.set((x + 1) % N, y, hexc("#6a665c"))
+    return cv
+
+
+def packed_earth():
+    """Hut floor of beaten earth mixed with straw, worn smooth and darker where people walk."""
+    n = Noise("packed", periods=(2, 4, 8), weights=(0.4, 0.35, 0.25))
+    rnd = random.Random("packed")
+    cv = paint(lambda x, y: ramp(EARTH_RAMP, 0.35 + 0.45 * n(x, y)))
+    for _ in range(8):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        cv.set(x, y, hexc("#b39752")); cv.set((x + 1) % N, y, hexc("#957c40"))
+    return cv
+
+
+def wattle_variant(kind):
+    """Wattle and daub with timber: cross braces, a log frame, or whitewashed with chalk."""
+    if kind == "whitewashed":
+        cv = plaster("chalk_whitewash")
+        rnd = random.Random("ww")
+        for _ in range(10):  # daub showing through worn whitewash
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            cv.set(x, y, ramp(DAUB_RAMP, 0.5)); cv.set((x + 1) % N, y, ramp(DAUB_RAMP, 0.6))
+        return cv
+    cv = wattle_daub()
+    beam = lambda x, y, k: cv.set(x % N, y % N, ramp(BARK_TIMBER, k))  # noqa: E731
+    for i in range(N):
+        beam(i, 0, 0.7); beam(i, 15, 0.3); beam(0, i, 0.6); beam(15, i, 0.35)
+        if kind == "frame":
+            beam(i, 1, 0.55); beam(1, i, 0.5); beam(14, i, 0.4); beam(i, 14, 0.45)
+    if kind == "cross":
+        for i in range(1, 15):
+            beam(i, i, 0.65); beam(i + 1, i, 0.4); beam(15 - i, i, 0.6); beam(14 - i, i, 0.4)
+    return cv
+
+
+BARK_TIMBER = ["#2e2014", "#46321f", "#5e452c", "#76593a"]
+
+# pictograms, drawn on limestone in red ochre (r), charcoal (k) and chalk (w); '.' = bare rock
+PAINTINGS = {
+    "handprint": ["................", "....r.r.r.......", "....r.r.r.r.....", "....r.r.r.r.....",
+                  "....rrrrrrr.....", "..r.rrrrrrr.....", "...rrrrrrrr.....", "....rrrrrrr.....",
+                  ".....rrrrr......", ".....rrrrr......", "................", "...........r....",
+                  "..........rrr...", "...........r....", "................", "................"],
+    "tyrannosaurus": ["................", "........kkkk....", ".......kkkkkkk..", ".......kkk......",
+                      "......kkkk.k....", "..k..kkkkk......", ".kkkkkkkkkk.....", "kk..kkkkkkk.....",
+                      "......kkkk......", "......k..k......", "......k..k......", ".....kk..kk.....",
+                      "................", "..r..........r..", ".rrr........rrr.", "................"],
+    "triceratops": ["................", "................", ".k..............", "..kk..kkkkkk....",
+                    "kkkkkkkkkkkkkk..", ".kkkkkkkkkkkkkk.", "..kkkkkkkkkkkk.k", "..kkkkkkkkkkkk..",
+                    "...k.k....k.k...", "...k.k....k.k...", "................", "..rrrr.rr.rrrr..",
+                    "................", "................", "................", "................"],
+    "brachiosaurus": ["..kk............", ".kkkk...........", "..kk............", "..kk............",
+                      "..kk............", "..kk............", "..kkk...........", "...kkkkkkkk.....",
+                      "...kkkkkkkkkk...", "....kkkkkkkkkkk.", "....k.k...k.k...", "....k.k...k.k...",
+                      "....k.k...k.k...", "................", "...r.r.r.r.r.r..", "................"],
+    "stegosaurus": ["................", "......r.r.r.....", ".....rkrkrkr....", "....kkkkkkkkk...",
+                    "...kkkkkkkkkkk..", "kkkkkkkkkkkkkkk.", "k..kkkkkkkkkk.kk", "....k.k...k.k..k",
+                    "....k.k...k.k...", "................", "................", "................",
+                    "................", "................", "................", "................"],
+    "raptor": ["................", "................", ".........kkk....", "........kkkkk...",
+               "..k.....kk......", "...kkkkkkk......", "....kkkkk.......", ".....kkk........",
+               "....k..k........", "...kk..kk.......", "................", "......rrr.......",
+               ".....r...r......", "................", "................", "................"],
+    "pteranodon": ["................", "................", "......k.........", ".....kkk...kk...",
+                   "kk..kkkkkkkkkk..", ".kkkkkkkkkkk....", "...kkkkkkkk.....", "......kk........",
+                   "................", "................", "....r.....r.....", "...r.r...r.r....",
+                   "................", "................", "................", "................"],
+    "mosasaurus": ["................", "................", "................", "...kk...........",
+                   "..kkkkkkkkk.....", ".kkkkkkkkkkkk...", "kk.kkkkkkkkkkkk.", "....k...k....kkk",
+                   "...............k", "................", "w.w.w.w.w.w.w.w.", ".w.w.w.w.w.w.w.w",
+                   "................", "................", "................", "................"],
+    "spear_hunt": ["................", ".....r..........", "....rrr.....kk..", ".....r....kkkkk.",
+                   "....rrr..kkkkkkk", "...r.r.rkkkkkkk.", "....r.r..k...k..", "...r...r.k...k..",
+                   "................", ".r.......r......", "rrr.....rrr.....", ".r.......r......",
+                   "rrr.....rrr.....", "r.r.....r.r.....", "................", "................"],
+    "herd": ["................", "................", ".kkk...kkk...kkk", "kkkkk.kkkkk.kkkk",
+             "kkkkk.kkkkk.kkkk", ".k.k...k.k...k.k", "................", "...kkk...kkk....",
+             "..kkkkk.kkkkk...", "..kkkkk.kkkkk...", "...k.k...k.k....", "................",
+             "................", "................", "................", "................"],
+    "footprints": ["..r.r...........", "...r............", "..rrr...........", "........r.r.....",
+                   ".........r......", "........rrr.....", "..r.r...........", "...r............",
+                   "..rrr...........", "........r.r.....", ".........r......", "........rrr.....",
+                   "..r.r...........", "...r............", "..rrr...........", "................"],
+    "fire": ["................", ".......r........", "......rr........", "......rrr...r...",
+             "....r.rrrr..r...", "....rrrwrrrrr...", "...rrrwwwrrr....", "...rrwwwwwrr....",
+             "...rrwwwwwrr....", "....rrwwwrr.....", ".....rrrrr......", "...kkkkkkkkk....",
+             "....k.k.k.k.....", "................", "................", "................"],
+    "sun": ["................", ".......r........", "..r....r....r...", "...r.......r....",
+            "......rrr.......", ".....rrrrr......", "rr..rrrrrrr..rr.", ".....rrrrr......",
+            "......rrr.......", "...r.......r....", "..r....r....r...", ".......r........",
+            "................", "................", "................", "................"],
+    "moon": ["................", ".....yyyy.......", "...yyy..........", "..yy............",
+             "..yy............", ".yy.............", ".yy.............", ".yy.............",
+             "..yy............", "..yy.......y....", "...yyy.........y", ".....yyyy.......",
+             "..........y.....", "................", "................", "................"],
+    "spiral": ["................", "...rrrrrrrr.....", "..r........r....", ".r..rrrrrr..r...",
+               ".r.r......r.r...", ".r.r.rrrr.r.r...", ".r.r.r..r.r.r...", ".r.r.r.rr.r.r...",
+               ".r.r.r....r.r...", ".r.r..rrrr..r...", ".r..r......r....", "..r..rrrrrr.....",
+               "...r............", "....rrrrrrrr....", "................", "................"],
+    "stars": ["................", "..y.......y.....", ".yyy.....yyy....", "..y.......y.....",
+              "......y.........", ".....yyy........", "......y....y....", "..........yyy...",
+              "...y.......y....", "..yyy...........", "...y....y.......", "........k.......",
+              ".......kkk......", "......kkkkk.....", "................", "................"],
+}
+PIGMENT = {"y": ["#9a6a22", "#a87a2a", "#b5852f"], "r": ["#7a2a18", "#8e3420", "#a03e28"], "k": ["#1e1a17", "#2a2420", "#35302a"], "w": ["#e6e0d0", "#f0ebe0", "#d8d2c2"]}
+
+
+def cave_painting(name):
+    """Pigment on limestone, worn by time: the rock grain shows through the paint here and there."""
+    cv = copy(rock_base("limestone"))
+    rnd = random.Random("paint" + name)
+    for y, row in enumerate(PAINTINGS[name]):
+        for x, ch in enumerate(row):
+            if ch in PIGMENT and rnd.random() > 0.12:
+                cv.set(x, y, mixc(hexc(rnd.choice(PIGMENT[ch])), cv.get(x, y), 0.15 * rnd.random()))
+    return cv
+
+
+# ------------------------------------------------------------------ roofs and weaving (phase 5)
+ROOFS = {  # roof covering: ramp, style
+    "reed_thatch": (["#4a4426", "#6a6034", "#8a7e45", "#a89a58", "#c2b26c"], "bundles"),
+    "cycad_thatch": (["#2a3418", "#3a4720", "#4e5c2a", "#647236", "#7c8844"], "fronds"),
+    "fern_thatch": (["#3a2a18", "#55401f", "#715628", "#8c6b33", "#a47f40"], "fronds"),
+}
+
+
+def roof(rid, top=False):
+    """Roof covering: bundles of reed in courses, or overlapping dried leaves/fronds with a midrib."""
+    ramp_c, style = ROOFS[rid]
+    strands = Noise(rid + str(top), periods=(16, 8), weights=(0.7, 0.3), stretch=((0.25, 1.0) if top else (1.0, 0.25)))
+    rnd = random.Random(rid + str(top))
+
+    def px(x, y):
+        v = strands(x, y) * 0.8 + 0.2 * rnd.random()
+        if not top:
+            course, row = y // 4, y % 4
+            if style == "fronds":
+                mid = (x + course * 4) % 8 == 3
+                v = v * (0.55 if row == 0 else 1.0) + (0.25 if mid else 0)
+            else:
+                v = v * (0.55 if row == 0 else 1.0) + (0.3 if row == 3 else 0)
+        return ramp(ramp_c, v)
+    return paint(px)
+
+
+WICKER_RAMP = ["#5a4428", "#7a5e36", "#987646", "#b08d58", "#c4a26c"]
+
+
+def wicker(alpha=False):
+    """Basket weave of split cane: over-under strands 2 px wide; door/trapdoor version has holes."""
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            over = ((x // 2) + (y // 2)) % 2 == 0
+            k = (y % 2) if over else (x % 2)
+            if alpha and over and (x % 4 == 1 and y % 4 == 1):
+                continue
+            cv.set(x, y, ramp(WICKER_RAMP, 0.35 + (0.35 if k == 0 else 0.0) + (0.15 if over else -0.1)))
+    return cv
+
+
+def wicker_door(part):
+    cv = wicker(alpha=True)
+    for i in range(N):  # frame poles
+        cv.set(0, i, ramp(BARK_TIMBER, 0.6)); cv.set(15, i, ramp(BARK_TIMBER, 0.3))
+        if (part == "top" and i == 0) or (part == "bottom" and i == 15):
+            for x in range(N):
+                cv.set(x, i, ramp(BARK_TIMBER, 0.5))
+    return cv
+
+
+def reed_mat():
+    """Mat of whole reeds laid side by side and tied with fibre."""
+    def px(x, y):
+        if y in (3, 12):
+            return hexc("#4a3a22")
+        return ramp(ROOFS["reed_thatch"][0], 0.35 + 0.4 * (x % 3 != 2) + 0.15 * ((x * 7 + y) % 5 == 0))
+    return paint(px)
+
+
+def rope_coil(top):
+    """Coiled plant-fibre rope: side shows the turns, top the spiral."""
+    rope = ["#5e4a2e", "#7a6240", "#967c54", "#ad9468"]
+    if top:
+        return paint(lambda x, y: ramp(rope, 0.2 + 0.7 * (0.5 + 0.5 * math.cos(math.hypot(x - 7.5, y - 7.5) * 2.1))))
+    return paint(lambda x, y: ramp(rope, 0.15 + 0.75 * (0.5 + 0.5 * math.cos((y + x * 0.5) * math.pi / 2))))
+
+
+def fiber_net():
+    """Knotted fibre net, transparent between the cords."""
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            if (x + y) % 5 == 0 or (x - y) % 5 == 0:
+                cv.set(x, y, hexc("#8a7452" if (x + y) % 2 else "#a68e66"))
+    return cv
+
+
+def reed_bundle(top):
+    """Bundle of cut reeds tied with fibre: side shows the stems, top the cut ends."""
+    if top:
+        return paint(lambda x, y: hexc("#4a4426") if (x % 3 == 0 and y % 3 == 0) else ramp(ROOFS["reed_thatch"][0], 0.5 + 0.3 * ((x + y) % 2)))
+    def px(x, y):
+        if y in (4, 11):
+            return hexc("#4a3a22")
+        return ramp(ROOFS["reed_thatch"][0], 0.3 + 0.45 * (x % 2) + 0.1 * ((y * 3 + x) % 4 == 0))
+    return paint(px)
+
+
+def phase5_textures():
+    out = {p_: plaster(p_) for p_ in PLASTERS}
+    out.update({"rammed_earth": rammed_earth(), "packed_earth_floor": packed_earth(),
+                "cross_braced_wattle": wattle_variant("cross"), "timber_framed_wattle": wattle_variant("frame"),
+                "whitewashed_wattle": wattle_variant("whitewashed")})
+    for name in PAINTINGS:
+        out[f"cave_painting_{name}"] = cave_painting(name)
+    for rid in ROOFS:
+        out[rid] = roof(rid)
+        out[f"{rid}_top"] = roof(rid, True)
+    out.update({"wicker_block": wicker(), "wicker_door_top": wicker_door("top"), "wicker_door_bottom": wicker_door("bottom"),
+                "wicker_trapdoor": wicker(alpha=True), "reed_mat": reed_mat(), "rope_coil": rope_coil(False),
+                "rope_coil_top": rope_coil(True), "fiber_net": fiber_net(), "reed_bundle": reed_bundle(False),
+                "reed_bundle_top": reed_bundle(True)})
+    return out
+
+
+def phase5_items():
+    cv = Canvas()
+    top, bottom = wicker_door("top"), wicker_door("bottom")
+    for y in range(N):
+        src = top if y < 8 else bottom
+        for x in range(4, 12):
+            cv.set(x, y, src.get((x - 4) * 2, (y % 8) * 2))
+    return {"wicker_door": cv}
+
+
 OTHER = {
     "thatch": thatch, "thatch_top": thatch_top, "straw_mat": straw_mat, "wattle_and_daub": wattle_daub,
     "bone_fence": bone_fence,
@@ -943,11 +1214,14 @@ def build():
     for tid in WOODS:
         out.update(wood_textures(tid))
     out.update(plant_textures())
+    out.update(phase5_textures())
     for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
     for tid in WOODS:
         for name, cv in wood_items(tid).items():
             cv.save(os.path.join(os.path.dirname(TEX), "item", f"{name}.png"))
+    for name, cv in phase5_items().items():
+        cv.save(os.path.join(os.path.dirname(TEX), "item", f"{name}.png"))
     return out
 
 

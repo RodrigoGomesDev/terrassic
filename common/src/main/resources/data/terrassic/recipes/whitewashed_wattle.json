@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:wattle_and_daub"
+    },
+    {
+      "item": "terrassic:chalk_pebbles"
+    }
+  ],
+  "result": {
+    "item": "terrassic:whitewashed_wattle",
+    "count": 1
+  }
+}

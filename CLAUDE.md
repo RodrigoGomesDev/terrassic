@@ -48,7 +48,10 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   saiu (cada madeira tem a sua) + fase 4 (Cipreste-do-pântano em pântano/rio, Feto Arbóreo na selva, e 19 plantas do
   Mesozoico: cavalinhas, Calamites, samambaias, cicadáceas, Williamsonia, Archaefructus, nenúfar, capim, licopódio,
   selaginela, hepática, líquen nas pedras da montanha, junco, alga de pântano, fungo-prateleira nos troncos; todas nascem
-  no mundo). 200 blocos. Próxima: fase 5 (terra, reboco, pinturas rupestres, telhados e trançados).
+  no mundo). 200 blocos + fase 5 (pau a pique travado/com esteios/caiado, taipa de pilão, terra batida, 5 rebocos,
+  16 pinturas rupestres viradas para o jogador via `block/FacingBlock`, coberturas de junco/cicadácea/samambaia com
+  escada, laje e beiral inclinado, vime, cerca trançada, esteira e feixe de junco, rolo de corda, rede de fibra
+  escalável como trepadeira). 251 blocos. Próxima: fase 6 (couro, osso, troféus de crânio, fósseis na rocha).
 - `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.

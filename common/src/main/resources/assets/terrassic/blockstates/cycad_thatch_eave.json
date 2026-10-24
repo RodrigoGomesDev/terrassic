@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/cycad_thatch_eave"
+    },
+    "facing=east": {
+      "model": "terrassic:block/cycad_thatch_eave",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/cycad_thatch_eave",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/cycad_thatch_eave",
+      "y": 270
+    }
+  }
+}

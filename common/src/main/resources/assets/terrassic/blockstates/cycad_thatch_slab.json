@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/cycad_thatch_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/cycad_thatch_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/cycad_thatch"
+    }
+  }
+}

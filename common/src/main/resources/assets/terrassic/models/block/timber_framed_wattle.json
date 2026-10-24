@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "terrassic:block/timber_framed_wattle"
+  }
+}
