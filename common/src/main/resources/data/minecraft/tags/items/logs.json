@@ -20,6 +20,22 @@
     "terrassic:tree_fern_log",
     "terrassic:stripped_tree_fern_log",
     "terrassic:tree_fern_wood",
-    "terrassic:stripped_tree_fern_wood"
+    "terrassic:stripped_tree_fern_wood",
+    "terrassic:sabal_log",
+    "terrassic:stripped_sabal_log",
+    "terrassic:sabal_wood",
+    "terrassic:stripped_sabal_wood",
+    "terrassic:magnolia_log",
+    "terrassic:stripped_magnolia_log",
+    "terrassic:magnolia_wood",
+    "terrassic:stripped_magnolia_wood",
+    "terrassic:podocarpus_log",
+    "terrassic:stripped_podocarpus_log",
+    "terrassic:podocarpus_wood",
+    "terrassic:stripped_podocarpus_wood",
+    "terrassic:platanus_log",
+    "terrassic:stripped_platanus_log",
+    "terrassic:platanus_wood",
+    "terrassic:stripped_platanus_wood"
   ]
 }

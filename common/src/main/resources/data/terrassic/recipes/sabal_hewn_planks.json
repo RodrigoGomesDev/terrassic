@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "terrassic:sabal_logs"
+    }
+  ],
+  "result": {
+    "item": "terrassic:sabal_hewn_planks",
+    "count": 4
+  }
+}

@@ -31,9 +31,14 @@
     "terrassic:metasequoia_hewn_slab",
     "terrassic:taxodium_hewn_slab",
     "terrassic:tree_fern_hewn_slab",
+    "terrassic:sabal_hewn_slab",
+    "terrassic:magnolia_hewn_slab",
+    "terrassic:podocarpus_hewn_slab",
+    "terrassic:platanus_hewn_slab",
     "terrassic:rammed_earth_slab",
     "terrassic:reed_thatch_slab",
     "terrassic:cycad_thatch_slab",
-    "terrassic:fern_thatch_slab"
+    "terrassic:fern_thatch_slab",
+    "terrassic:polished_amber_slab"
   ]
 }

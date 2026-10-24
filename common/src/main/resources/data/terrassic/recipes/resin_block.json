@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR",
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:resin_jar"
+    }
+  },
+  "result": {
+    "item": "terrassic:resin_block",
+    "count": 1
+  }
+}

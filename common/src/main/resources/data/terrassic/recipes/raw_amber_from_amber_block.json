@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:amber_block"
+    }
+  ],
+  "result": {
+    "item": "terrassic:raw_amber",
+    "count": 9
+  }
+}

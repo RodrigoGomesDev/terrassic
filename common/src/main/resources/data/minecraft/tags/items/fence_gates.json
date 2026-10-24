@@ -5,6 +5,10 @@
     "terrassic:ginkgo_branch_fence_gate",
     "terrassic:metasequoia_branch_fence_gate",
     "terrassic:taxodium_branch_fence_gate",
-    "terrassic:tree_fern_branch_fence_gate"
+    "terrassic:tree_fern_branch_fence_gate",
+    "terrassic:sabal_branch_fence_gate",
+    "terrassic:magnolia_branch_fence_gate",
+    "terrassic:podocarpus_branch_fence_gate",
+    "terrassic:platanus_branch_fence_gate"
   ]
 }

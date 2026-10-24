@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "minecraft:mud"
+    },
+    {
+      "item": "terrassic:liverwort"
+    },
+    {
+      "item": "terrassic:liverwort"
+    }
+  ],
+  "result": {
+    "item": "terrassic:peat",
+    "count": 1
+  }
+}

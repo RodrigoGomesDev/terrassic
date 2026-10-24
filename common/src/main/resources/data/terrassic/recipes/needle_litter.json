@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "item": "terrassic:metasequoia_leaves"
+    }
+  ],
+  "result": {
+    "item": "terrassic:needle_litter",
+    "count": 2
+  }
+}

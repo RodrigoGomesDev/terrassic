@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " F ",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "L": {
+      "item": "terrassic:podocarpus_log"
+    }
+  },
+  "result": {
+    "item": "terrassic:podocarpus_palisade",
+    "count": 6
+  }
+}

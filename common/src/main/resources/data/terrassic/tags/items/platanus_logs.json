@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:platanus_log",
+    "terrassic:stripped_platanus_log",
+    "terrassic:platanus_wood",
+    "terrassic:stripped_platanus_wood"
+  ]
+}

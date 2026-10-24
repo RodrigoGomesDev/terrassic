@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "terrassic:block/needle_litter_side",
+    "end": "terrassic:block/needle_litter"
+  }
+}

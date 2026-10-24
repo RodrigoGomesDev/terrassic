@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "item": "terrassic:laterite_pebbles"
+    }
+  ],
+  "result": {
+    "item": "terrassic:lateritic_soil",
+    "count": 2
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right",
+  "textures": {
+    "top": "terrassic:block/sabal_lashed_door_top",
+    "bottom": "terrassic:block/sabal_lashed_door_bottom"
+  }
+}

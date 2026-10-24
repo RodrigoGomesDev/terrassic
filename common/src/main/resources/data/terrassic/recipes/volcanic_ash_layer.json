@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "terrassic:volcanic_ash"
+    }
+  },
+  "result": {
+    "item": "terrassic:volcanic_ash_layer",
+    "count": 6
+  }
+}

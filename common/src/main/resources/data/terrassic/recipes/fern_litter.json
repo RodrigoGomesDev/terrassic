@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "item": "terrassic:bracken"
+    },
+    {
+      "item": "terrassic:bracken"
+    }
+  ],
+  "result": {
+    "item": "terrassic:fern_litter",
+    "count": 2
+  }
+}

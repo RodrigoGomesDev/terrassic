@@ -144,6 +144,34 @@ WOODS = {
                    "foliage_placer": {"type": "minecraft:acacia_foliage_placer", "radius": 2, "offset": 0},
                    "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 1, "lower_size": 0, "upper_size": 1}},
                   ("minecraft:is_jungle",), 2),
+    # Sabal palm: short single trunk with a tuft of fan leaves, on beaches and in the savanna
+    "sabal": (("Sabal Palm", "Palmeira Sabal", "Palmera Sabal"), "SAND", "TERRACOTTA_GRAY",
+              {"trunk_placer": {"type": "minecraft:straight_trunk_placer", "base_height": 6, "height_rand_a": 3, "height_rand_b": 0},
+               "foliage_placer": {"type": "minecraft:acacia_foliage_placer", "radius": 2, "offset": 0},
+               "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 1, "lower_size": 0, "upper_size": 1}},
+              ("minecraft:is_beach", "minecraft:is_savanna"), 5),
+    # Magnolia: one of the first flowering trees, a rounded crown on a medium trunk, in forests
+    "magnolia": (("Magnolia", "Magnólia", "Magnolia"), "TERRACOTTA_WHITE", "STONE",
+                 {"trunk_placer": {"type": "minecraft:fancy_trunk_placer", "base_height": 6, "height_rand_a": 3, "height_rand_b": 0},
+                  "foliage_placer": {"type": "minecraft:blob_foliage_placer", "radius": 3, "offset": 0, "height": 3},
+                  "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 1, "lower_size": 0, "upper_size": 1}},
+                 ("minecraft:is_forest",), 6),
+    # Podocarpus: a narrow evergreen of mountain and rain forests
+    "podocarpus": (("Podocarpus", "Podocarpo", "Podocarpo"), "TERRACOTTA_ORANGE", "TERRACOTTA_BROWN",
+                   {"trunk_placer": {"type": "minecraft:straight_trunk_placer", "base_height": 9, "height_rand_a": 3, "height_rand_b": 1},
+                    "foliage_placer": {"type": "minecraft:spruce_foliage_placer",
+                                       "radius": {"type": "minecraft:uniform", "value": {"min_inclusive": 2, "max_inclusive": 3}},
+                                       "offset": {"type": "minecraft:uniform", "value": {"min_inclusive": 0, "max_inclusive": 1}},
+                                       "trunk_height": {"type": "minecraft:uniform", "value": {"min_inclusive": 1, "max_inclusive": 3}}},
+                    "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 2, "lower_size": 0, "upper_size": 2}},
+                   ("minecraft:is_taiga", "minecraft:is_jungle"), 5),
+    # Platanus / plane tree: big spreading tree of riverbanks, known from Cretaceous fossil leaves
+    "platanus": (("Plane Tree", "Platanus", "Plátano de Sombra"), "TERRACOTTA_WHITE", "TERRACOTTA_LIGHT_GRAY",
+                 {"trunk_placer": {"type": "minecraft:fancy_trunk_placer", "base_height": 9, "height_rand_a": 5, "height_rand_b": 0},
+                  "foliage_placer": {"type": "minecraft:fancy_foliage_placer", "radius": 2, "offset": 4, "height": 4},
+                  "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 0, "lower_size": 0, "upper_size": 0,
+                                   "min_clipped_height": 4}},
+                 ("minecraft:is_river", "minecraft:is_forest"), 6),
 }
 STRIPPABLES = []  # (log, stripped log)
 for tid, ((en, pt, es), wood_color, bark_color, _, _, _) in WOODS.items():
@@ -442,6 +470,40 @@ PROPS["hanging_basket"] = [box([7.5, 10, 7.5], [8.5, 16, 8.5], STRIPPED, False),
 add("wicker_basket", ("Wicker Basket", "Cesto de Vime", "Cesto de Mimbre"), "basket", None, "axe", "wicker", "WOOD")
 PROPS["wicker_basket"] = [box([2, 0, 2], [14, 12, 14], ("wicker_block", "wicker_basket_top"))]
 NO_ITEM_KINDS = ("wall_torch",)
+
+# ------------------------------------------------------------- family: Cretaceous soils (none of them is a vanilla soil)
+add("fern_litter", ("Fern Litter", "Serrapilheira de Samambaia", "Hojarasca de Helecho"), "column",
+    ("fern_litter_side", "fern_litter"), "shovel", "soil", "DIRT")
+add("needle_litter", ("Needle Litter", "Serrapilheira de Acículas", "Pinocha"), "column",
+    ("needle_litter_side", "needle_litter"), "shovel", "soil", "DIRT")
+add("cracked_mud", ("Cracked Mud", "Lama Rachada", "Barro Agrietado"), "cube", "cracked_mud", "shovel", "earth", "DIRT")
+add("volcanic_ash", ("Volcanic Ash", "Cinza Vulcânica", "Ceniza Volcánica"), "cube", "volcanic_ash", "shovel", "ash",
+    "COLOR_LIGHT_GRAY")
+add("volcanic_ash_layer", ("Volcanic Ash Layer", "Camada de Cinza Vulcânica", "Capa de Ceniza Volcánica"), "carpet",
+    "volcanic_ash", "shovel", "ash", "COLOR_LIGHT_GRAY")
+add("peat", ("Peat", "Turfa", "Turba"), "cube", "peat", "shovel", "soil", "COLOR_BROWN")
+add("lateritic_soil", ("Lateritic Soil", "Solo Laterítico", "Suelo Laterítico"), "cube", "lateritic_soil", "shovel",
+    "soil", "TERRACOTTA_RED")
+add("salt_crust", ("Salt Crust", "Crosta de Sal", "Costra de Sal"), "cube", "salt_crust", "pickaxe", "salt", "SNOW")
+
+# ------------------------------------------------------------- family: amber and resin
+# ordinary fossil resin (raw_amber of the science items); the glowing Temporal Amber of the story is not a block
+add("amber_block", ("Block of Amber", "Bloco de Âmbar", "Bloque de Ámbar"), "cube", "amber_block", "pickaxe", "amber",
+    "COLOR_ORANGE")
+add_shapes("polished_amber", ("Polished Amber", "Âmbar Polido", "Ámbar Pulido"), "polished_amber", "pickaxe", "amber",
+           "COLOR_ORANGE", ("stairs", "slab", "wall"))
+add("amber_mosaic", ("Amber Mosaic", "Mosaico de Âmbar", "Mosaico de Ámbar"), "cube", "amber_mosaic", "pickaxe", "amber",
+    "COLOR_ORANGE")
+for _kind, _names in (("insect", ("Amber with Insect", "Âmbar com Inseto", "Ámbar con Insecto")),
+                      ("feather", ("Amber with Feather", "Âmbar com Pena", "Ámbar con Pluma")),
+                      ("leaf", ("Amber with Leaf", "Âmbar com Folha", "Ámbar con Hoja"))):
+    add(f"amber_with_{_kind}", _names, "cube", f"amber_with_{_kind}", "pickaxe", "amber", "COLOR_ORANGE")
+add("resin_block", ("Resin Block", "Bloco de Resina", "Bloque de Resina"), "cube", "resin_block", "axe", "resin",
+    "COLOR_YELLOW")
+add("amber_lantern", ("Amber Lantern", "Lanterna de Âmbar", "Farol de Ámbar"), "prop", None, "pickaxe", "amber_light",
+    "COLOR_ORANGE")
+PROPS["amber_lantern"] = [box([5, 0, 5], [11, 8, 11], ("amber_lantern", "amber_lantern_top")),
+                          box([7, 8, 7], [9, 10, 9], "amber_lantern_top", False)]
 
 LANG = {"en_us": {}, "pt_br": {}, "es_es": {}}
 for _bid, _row in BLOCKS.items():
@@ -1088,6 +1150,25 @@ def recipes():
     shaped("hanging_basket", ["T", "W", "F"], {"T": "minecraft:string", "W": f"{NS}:wicker_block", "F": f"{NS}:bracken"},
            "hanging_basket")
     shaped("wicker_basket", ["R R", "RRR"], {"R": f"{NS}:rush"}, "wicker_basket")
+    # Cretaceous soils
+    shapeless("fern_litter", ["minecraft:dirt", "minecraft:dirt", f"{NS}:bracken", f"{NS}:bracken"], "fern_litter", 2)
+    shapeless("needle_litter", ["minecraft:dirt", "minecraft:dirt", f"{NS}:metasequoia_leaves"], "needle_litter", 2)
+    write(f"{D}/recipes/cracked_mud.json", {
+        "type": "minecraft:smelting", "category": "blocks", "ingredient": {"item": "minecraft:mud"},
+        "result": f"{NS}:cracked_mud", "experience": 0.1, "cookingtime": 200})
+    shapeless("volcanic_ash", ["minecraft:gravel", "minecraft:charcoal"], "volcanic_ash", 2)
+    shaped("volcanic_ash_layer", ["AAA"], {"A": f"{NS}:volcanic_ash"}, "volcanic_ash_layer", 6)
+    shapeless("peat", ["minecraft:mud", f"{NS}:liverwort", f"{NS}:liverwort"], "peat")
+    shapeless("lateritic_soil", ["minecraft:dirt", "minecraft:dirt", f"{NS}:laterite_pebbles"], "lateritic_soil", 2)
+    shapeless("salt_crust", ["minecraft:sand", "minecraft:sand", "minecraft:bone_meal"], "salt_crust", 2)
+    # amber and resin
+    shaped("amber_block", ["AAA", "AAA", "AAA"], {"A": f"{NS}:raw_amber"}, "amber_block")
+    shapeless("raw_amber_from_amber_block", [f"{NS}:amber_block"], "raw_amber", 9)
+    for cut in ("polished_amber", "amber_mosaic", "amber_with_insect", "amber_with_feather", "amber_with_leaf"):
+        stonecut("amber_block", cut)
+    shaped("polished_amber", ["AA", "AA"], {"A": f"{NS}:amber_block"}, "polished_amber", 4)
+    shaped("resin_block", ["RR", "RR"], {"R": f"{NS}:resin_jar"}, "resin_block")
+    shaped("amber_lantern", [" B ", "BAB", " B "], {"B": "minecraft:bone", "A": f"{NS}:polished_amber"}, "amber_lantern")
     for bid in BLOCKS:
         shape_recipes(bid)
 

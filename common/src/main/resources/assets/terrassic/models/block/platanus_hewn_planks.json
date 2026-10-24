@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "terrassic:block/platanus_hewn_planks"
+  }
+}

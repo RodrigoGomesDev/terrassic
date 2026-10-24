@@ -5,6 +5,10 @@
     "terrassic:ginkgo_leaves",
     "terrassic:metasequoia_leaves",
     "terrassic:taxodium_leaves",
-    "terrassic:tree_fern_leaves"
+    "terrassic:tree_fern_leaves",
+    "terrassic:sabal_leaves",
+    "terrassic:magnolia_leaves",
+    "terrassic:podocarpus_leaves",
+    "terrassic:platanus_leaves"
   ]
 }

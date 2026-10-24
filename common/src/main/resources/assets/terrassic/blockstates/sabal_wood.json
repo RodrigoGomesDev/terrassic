@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "terrassic:block/sabal_wood"
+    },
+    "axis=z": {
+      "model": "terrassic:block/sabal_wood_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "terrassic:block/sabal_wood_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

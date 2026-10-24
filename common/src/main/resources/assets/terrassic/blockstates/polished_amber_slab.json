@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/polished_amber_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/polished_amber_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/polished_amber"
+    }
+  }
+}

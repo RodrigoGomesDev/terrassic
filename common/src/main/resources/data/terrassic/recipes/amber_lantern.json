@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " B ",
+    "BAB",
+    " B "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "A": {
+      "item": "terrassic:polished_amber"
+    }
+  },
+  "result": {
+    "item": "terrassic:amber_lantern",
+    "count": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:sabal_log",
+    "terrassic:stripped_sabal_log",
+    "terrassic:sabal_wood",
+    "terrassic:stripped_sabal_wood"
+  ]
+}

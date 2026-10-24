@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:amber_block"
+  },
+  "result": "terrassic:amber_with_insect",
+  "count": 1
+}

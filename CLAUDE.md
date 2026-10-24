@@ -57,7 +57,11 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   osso/resina/junco com versão de parede, lamparina, fogueira de pedras `block/HearthBlock`, varal, pilão, mó, bacia,
   camas de palha/couro e rede `block/PrimitiveBedBlock`, potes cru e queimado, cocho, ninhos, estacas
   `block/SpikesBlock`, armadilha, menir, totens, tambor `DrumBlock`, móbile `ChimesBlock`, cesto de 9 espaços
-  `BasketBlock` + `registry/ModBlockEntities`). Blocos de modelo próprio: tabela PROPS em gen_blocks.py.
+  `BasketBlock` + `registry/ModBlockEntities`). Blocos de modelo próprio: tabela PROPS em gen_blocks.py. Fase 8: crânio próprio por espécie
+  (SKULLS em blocks.py; espécie nova precisa de uma linha lá, como do desenho do ovo), madeiras do Cretáceo II (Palmeira
+  Sabal, Magnólia, Podocarpo, Platanus, com árvores no mundo), âmbar e resina (comum, de raw_amber/resin_jar; o Âmbar
+  Temporal da história não é bloco), solos do Cretáceo (serrapilheiras, lama rachada, cinza vulcânica, turfa, solo
+  laterítico, crosta de sal).
 - `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.

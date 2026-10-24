@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:polished_amber"
+    }
+  },
+  "result": {
+    "item": "terrassic:polished_amber_wall",
+    "count": 6
+  }
+}

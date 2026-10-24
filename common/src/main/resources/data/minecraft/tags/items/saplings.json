@@ -5,6 +5,10 @@
     "terrassic:ginkgo_sapling",
     "terrassic:metasequoia_sapling",
     "terrassic:taxodium_sapling",
-    "terrassic:tree_fern_sapling"
+    "terrassic:tree_fern_sapling",
+    "terrassic:sabal_sapling",
+    "terrassic:magnolia_sapling",
+    "terrassic:podocarpus_sapling",
+    "terrassic:platanus_sapling"
   ]
 }

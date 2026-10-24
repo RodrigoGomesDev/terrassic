@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/amber_lantern"
+    },
+    "facing=east": {
+      "model": "terrassic:block/amber_lantern",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/amber_lantern",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/amber_lantern",
+      "y": 270
+    }
+  }
+}

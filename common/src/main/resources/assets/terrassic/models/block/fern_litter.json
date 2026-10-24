@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "terrassic:block/fern_litter_side",
+    "end": "terrassic:block/fern_litter"
+  }
+}

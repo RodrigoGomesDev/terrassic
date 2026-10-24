@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "LL",
+    "LL"
+  ],
+  "key": {
+    "L": {
+      "item": "terrassic:platanus_log"
+    }
+  },
+  "result": {
+    "item": "terrassic:platanus_wood",
+    "count": 3
+  }
+}

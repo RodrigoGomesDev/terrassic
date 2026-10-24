@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_inventory",
+  "textures": {
+    "texture": "terrassic:block/podocarpus_branch_fence"
+  }
+}

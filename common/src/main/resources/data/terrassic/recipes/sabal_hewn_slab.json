@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:sabal_hewn_planks"
+    }
+  },
+  "result": {
+    "item": "terrassic:sabal_hewn_slab",
+    "count": 6
+  }
+}

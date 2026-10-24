@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:magnolia_log",
+    "terrassic:stripped_magnolia_log",
+    "terrassic:magnolia_wood",
+    "terrassic:stripped_magnolia_wood"
+  ]
+}

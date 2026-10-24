@@ -31,9 +31,14 @@
     "terrassic:metasequoia_hewn_stairs",
     "terrassic:taxodium_hewn_stairs",
     "terrassic:tree_fern_hewn_stairs",
+    "terrassic:sabal_hewn_stairs",
+    "terrassic:magnolia_hewn_stairs",
+    "terrassic:podocarpus_hewn_stairs",
+    "terrassic:platanus_hewn_stairs",
     "terrassic:rammed_earth_stairs",
     "terrassic:reed_thatch_stairs",
     "terrassic:cycad_thatch_stairs",
-    "terrassic:fern_thatch_stairs"
+    "terrassic:fern_thatch_stairs",
+    "terrassic:polished_amber_stairs"
   ]
 }

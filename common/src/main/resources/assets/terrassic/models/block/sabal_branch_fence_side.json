@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_side",
+  "textures": {
+    "texture": "terrassic:block/sabal_branch_fence"
+  }
+}

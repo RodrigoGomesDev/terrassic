@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "terrassic:magnolia_logs"
+    }
+  ],
+  "result": {
+    "item": "terrassic:magnolia_hewn_planks",
+    "count": 4
+  }
+}

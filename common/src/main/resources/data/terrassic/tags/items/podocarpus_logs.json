@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:podocarpus_log",
+    "terrassic:stripped_podocarpus_log",
+    "terrassic:podocarpus_wood",
+    "terrassic:stripped_podocarpus_wood"
+  ]
+}

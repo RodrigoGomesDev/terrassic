@@ -15,6 +15,13 @@
     "terrassic:rammed_earth_wall",
     "terrassic:packed_earth_floor",
     "terrassic:bone_pile",
-    "terrassic:sand_nest"
+    "terrassic:sand_nest",
+    "terrassic:fern_litter",
+    "terrassic:needle_litter",
+    "terrassic:cracked_mud",
+    "terrassic:volcanic_ash",
+    "terrassic:volcanic_ash_layer",
+    "terrassic:peat",
+    "terrassic:lateritic_soil"
   ]
 }
