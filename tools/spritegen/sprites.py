@@ -323,9 +323,15 @@ def spawn_eggs():
     eye(cv, 10, 5, "#c8b04a")
     eggs["mosasaurus"] = cv
 
+    # species with a front-view 32x32 design (egg_designs.py) use it; the rest keep the 16x16 sketch above
+    import egg_designs
     for name, cv in eggs.items():
+        path = os.path.join(TEX, "item", f"{name}_spawn_egg.png")
+        if name in egg_designs.ORDER:
+            egg_designs.render(name).save(path)
+            continue
         cv.outline(0.45)
-        cv.save(os.path.join(TEX, "item", f"{name}_spawn_egg.png"))
+        cv.save(path)
     return eggs
 
 
