@@ -32,6 +32,7 @@ SIZES = {
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
+    "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Pteranodon: "real" is the wingspan. The body is small (hitbox ~ folded on the ground).
     "pteranodon":         dict(real=6.5,  scale=1.0,  w=1.2, h=1.6, baby=0.3,  shadow=0.9),
     "mosasaurus":         dict(real=15.0, scale=1.95, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
@@ -52,6 +53,7 @@ GUIDE = {
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
+    "maiasaura":          dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
 }
@@ -63,7 +65,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=160, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=16, ATTACK_KNOCKBACK=1.5, ARMOR=6, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.6, 2.0, 240), step=("RAVAGER_STEP", 0.9, 0.6),
-      xp=40, step_height=1.5, head=(35, 25), rideable=True, ride_offset=2.1, ride_speed=1.1,
+      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.1, ride_speed=1.1,
       prey="!(e instanceof Tyrannosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, prey_interval=200),
  dict(id="spinosaurus", cls="Spinosaurus", base="PredatorDinosaur",
@@ -97,7 +99,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.22, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.25, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=20, rideable=True, ride_offset=1.55, ride_speed=1.05),
+      xp=20, rideable=True, jump=0.45, ride_offset=1.55, ride_speed=1.05),
  dict(id="stegosaurus", cls="Stegosaurus", base="HerbivoreDinosaur",
       doc="Stegosaurus stenops - slow herbivore that defends itself with the spiked tail (thagomizer).",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.20, ATTACK_DAMAGE=10, ATTACK_KNOCKBACK=1.2, ARMOR=8, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=20),
@@ -113,13 +115,13 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.45, 3.0, 360), step=("RAVAGER_STEP", 1.2, 0.5),
-      xp=50, step_height=1.6, head=(25, 30), rideable=True, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
+      xp=50, step_height=1.6, head=(25, 30), rideable=True, jump=0.0, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.7, 1.6, 260), xp=12,
-      fights=False, rideable=True, ride_offset=1.6, ride_speed=1.15, call=True),
+      fights=False, rideable=True, jump=0.65, ride_offset=1.6, ride_speed=1.15, call=True),
  dict(id="pachycephalosaurus", cls="Pachycephalosaurus", base="HerbivoreDinosaur",
       doc="Pachycephalosaurus wyomingensis - bipedal herbivore with a thick bony dome. Headbutts hard (huge knockback) when provoked.",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=0.28, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=3.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=16),
@@ -130,7 +132,13 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
       food="Items.WHEAT_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.55, 1.2, 200), xp=8, run=0.03,
-      fights=False, rideable=True, ride_offset=1.1, ride_forward=0.12, ride_speed=1.35),
+      fights=False, rideable=True, jump=0.8, ride_offset=1.1, ride_forward=0.12, ride_speed=1.35),
+ dict(id="maiasaura", cls="Maiasaura", base="HerbivoreDinosaur",
+      doc="Maiasaura peeblesorum - the \"good mother\" hadrosaur. Lives in nesting colonies; babies of any species near an adult grow twice as fast. Rideable when tamed.",
+      attrs=dict(MAX_HEALTH=65, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ARMOR=3, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=20),
+      food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
+      sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
+      rideable=True, jump=0.6, ride_offset=1.45, ride_speed=1.05, call=True, nurse=True),
  # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
       doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",
@@ -234,6 +242,8 @@ def gen(s, bounds):
         body.append("    @Override\n    public boolean isRideable() {\n        return true;\n    }\n")
         body.append(f"    @Override\n    protected float riddenSpeedFactor() {{\n        return {s['ride_speed']}F;\n    }}\n")
         body.append(f"    @Override\n    public double getPassengersRidingOffset() {{\n        return {round(s['ride_offset'] * size['scale'], 2)}D * this.getScale();\n    }}\n")
+        if "jump" in s:
+            body.append(f"    @Override\n    protected double jumpStrength() {{\n        return {s['jump']}D;\n    }}\n")
         if s.get("ride_forward"):
             body.append(f"    @Override\n    protected double riderForwardOffset() {{\n        return {round(s['ride_forward'] * size['scale'], 2)}D;\n    }}\n")
     if s.get("fights") is False:
@@ -330,6 +340,22 @@ def gen(s, bounds):
         super.playAmbientSound();
         if (!this.level().isClientSide() && this.random.nextInt(3) == 0) {
             triggerAnim(ACTION_CONTROLLER, "call");
+        }
+    }
+""")
+    if s.get("nurse"):
+        imports.update({"net.minecraft.core.particles.ParticleTypes"})
+        body.append("""    /** "Good mother": every 5 s, babies of any species within 10 blocks of an adult grow 5 s more (2x as fast). */
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (!this.isBaby() && this.tickCount % 100 == 0 && this.level() instanceof ServerLevel server) {
+            for (DinosaurEntity baby : server.getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(10.0D),
+                    DinosaurEntity::isBaby)) {
+                baby.ageUp(5);
+                server.sendParticles(ParticleTypes.HAPPY_VILLAGER, baby.getX(), baby.getY() + baby.getBbHeight(), baby.getZ(),
+                        2, 0.3D, 0.2D, 0.3D, 0.0D);
+            }
         }
     }
 """)

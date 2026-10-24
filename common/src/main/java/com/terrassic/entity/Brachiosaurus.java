@@ -93,6 +93,11 @@ public class Brachiosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double jumpStrength() {
+        return 0.0D;
+    }
+
+    @Override
     protected double riderForwardOffset() {
         return 1.84D;
     }

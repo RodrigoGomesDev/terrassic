@@ -21,6 +21,7 @@ SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearin
     "parasaurolophus": ("Parasaurolophus", "Parassaurolofo", "Parasaurolophus", True),
     "pachycephalosaurus": ("Pachycephalosaurus", "Paquicefalossauro", "Paquicefalosaurio", False),
     "gallimimus": ("Gallimimus", "Galimimo", "Gallimimus", False),
+    "maiasaura": ("Maiasaura", "Maiassaura", "Maiasaura", False),
     "pteranodon": ("Pteranodon", "Pteranodonte", "Pteranodonte", False),
     "mosasaurus": ("Mosasaurus", "Mosassauro", "Mosasaurio", None),
 }
@@ -180,6 +181,7 @@ def main():
         "parasaurolophus": [item("minecraft:beef", 2, 5, True), item("minecraft:leather", 1, 3)],
         "pachycephalosaurus": [item("minecraft:mutton", 1, 3, True), item("minecraft:bone", 1, 2)],
         "gallimimus": [item("minecraft:chicken", 1, 3, True), item("minecraft:feather", 2, 4)],
+        "maiasaura": [item("minecraft:beef", 2, 5, True), item("minecraft:leather", 1, 3)],
         "pteranodon": [item("minecraft:chicken", 1, 2, True), item("minecraft:leather", 0, 2), item("minecraft:cod", 0, 2, True)],
         "mosasaurus": [item("minecraft:cod", 4, 8, True), item("minecraft:leather", 3, 6), item("minecraft:bone", 3, 6),
                        item("terrassic:mosasaurus_tooth", 1, 3, chance=0.6)],

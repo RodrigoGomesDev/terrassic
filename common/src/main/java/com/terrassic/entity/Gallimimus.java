@@ -82,6 +82,11 @@ public class Gallimimus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double jumpStrength() {
+        return 0.8D;
+    }
+
+    @Override
     protected double riderForwardOffset() {
         return 0.18D;
     }

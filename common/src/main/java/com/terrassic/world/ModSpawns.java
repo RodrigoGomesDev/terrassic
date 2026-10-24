@@ -33,6 +33,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Spinosaurus         river, swamp, mangrove          2       1
  *  Brachiosaurus       savanna, plains                 1       1-2
  *  Tyrannosaurus       savanna, jungle                 1       1
+ *  Maiasaura           plains, savanna                 4       3-6    (nesting colonies)
  *  Pteranodon          beach, stony shore              8       2-4
  *  Mosasaurus          deep ocean (not frozen)         2       1      (WATER_CREATURE, despawns like dolphins)
  *  (*desert only where there is sand to stand on)
@@ -54,6 +55,7 @@ public final class ModSpawns {
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.GALLIMIMUS);
+        placement(ModEntities.MAIASAURA);
         SpawnPlacementsRegistry.register(ModEntities.PTERANODON, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
@@ -109,6 +111,9 @@ public final class ModSpawns {
             }
             if (savanna || jungle) {
                 add(props, ModEntities.TYRANNOSAURUS.get(), 1, 1, 1);
+            }
+            if (plains || savanna) {
+                add(props, ModEntities.MAIASAURA.get(), 4, 3, 6);
             }
             if (coast) {
                 add(props, ModEntities.PTERANODON.get(), 8, 2, 4);

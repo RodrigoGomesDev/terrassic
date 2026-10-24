@@ -19,12 +19,12 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
 
 ## Código (common/src/main/java/com/terrassic)
 - `entity/DinosaurEntity` (extends TamableAnimal): sexo sincronizado (textura por sexo), domesticação,
-  sentar/seguir, sela + montaria, procriação só macho+fêmea, procriação põe ovo-bloco, controllers GeckoLib
+  sentar/seguir, sela + montaria (pulo com espaço, tesoura tira a sela), procriação só macho+fêmea, procriação põe ovo-bloco, controllers GeckoLib
   ("movement": idle/walk/run/sit; "action": attack + extras via triggerAnim).
 - `HerbivoreDinosaur` (lutador ou fugitivo, pasta) e `PredatorDinosaur` (caça, domesticável só filhote).
 - `FlyingDinosaur` (à mão): voadores. Navegação de voo, plana, sem dano de queda, voo montado (pular decola/bate asas, olhar dirige, soltar plana). Precisa das animações `fly` e `glide`. Spawn por `checkFlyerSpawnRules` (areia, cascalho, pedra, grama).
 - `SwimmingDinosaur` (à mão): répteis marinhos. Nado como golfinho (SmoothSwimming + WaterBoundPathNavigation), respira na água, seca após 60 s encalhado, some longe do jogador como golfinho, por enquanto só selvagem (sem domar, sem cria). Categoria WATER_CREATURE; spawn por `checkSeaSpawnRules`. Em `gen_resources.SPECIES` o 4º campo `None` = espécie sem bloco de ovo.
-- 14 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
+- 15 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
 - Tamanhos: tabela `SIZES` em `gen_species.py` (1 bloco = 1 metro; escala do modelo, hitbox, filhote, sombra).
   O script lê `art/build_report.json` (medidas dos modelos) e gera as constantes WIDTH/HEIGHT/MODEL_SCALE/SHADOW,
   `babyScale()`, culling e altura da sela; `ModEntities` e `TerrassicClient` só leem essas constantes.
@@ -72,7 +72,7 @@ Montáveis: T. rex, Triceratops, Brachiosaurus, Parasaurolophus, Gallimimus.
 - Tamanhos novos (24/10/2026, escala real) ainda não compilados/testados no jogo: conferir caminho na floresta,
   altura da sela, pés deslizando na caminhada dos gigantes e filhotes.
 - Sons ainda são vanilla (placeholders).
-- Montaria não pula; sela não pode ser removida.
+- Montaria pula com espaço (barra de pulo do cavalo, força por espécie em `jump` no gen_species); tesoura tira a sela.
 - Herbívoros selvagens só procriam depois de domesticados.
 - Na pasta podem sobrar arquivos antigos da v0.1 (texturas <especie>.png sem _male/_female, GIFs): podem ser apagados.
 

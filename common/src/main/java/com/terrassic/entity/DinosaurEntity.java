@@ -29,6 +29,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -64,11 +65,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  *       textures, bones called "male_*" / "female_*" are only shown for that sex, and only couples can breed.</li>
  *   <li><b>Taming</b>: herbivores (and the compy) are tamed by hand-feeding; predators only accept food while they
  *       are babies. A baby hatching from an egg imprints on the closest player and is born tame.</li>
- *   <li><b>Riding</b>: species that return true from {@link #isRideable()} accept a saddle once tamed.</li>
+ *   <li><b>Riding</b>: species that return true from {@link #isRideable()} accept a saddle once tamed. Space
+ *       jumps (hold it for a higher jump, like a horse); shears take the saddle off.</li>
  *   <li><b>Eggs</b>: breeding lays a dinosaur egg block next to the female, which hatches after a few minutes.</li>
  * </ul>
  */
-public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity {
+public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity, PlayerRideableJumping {
     public static final String ACTION_CONTROLLER = "action";
 
     private static final EntityDataAccessor<Boolean> DATA_FEMALE =
@@ -89,6 +91,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity 
     private RawAnimation walkAnim;
     private RawAnimation runAnim;
     private RawAnimation sitAnim;
+    /** Jump asked by the rider (0..1), done on the next ridden tick on the ground. */
+    private float riderJump;
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -127,6 +131,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity 
     /** How far forward of the entity's centre the saddle sits (blocks). */
     protected double riderForwardOffset() {
         return 0.0D;
+    }
+
+    /** Upward speed of a full-power ridden jump (0.5 ~ 1.3 blocks, 0.8 ~ 3 blocks). 0 = cannot jump. */
+    protected double jumpStrength() {
+        return 0.5D;
     }
 
     /** Squared horizontal speed (blocks/tick) above which the run cycle is used. */
@@ -304,6 +313,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity 
                 }
                 return InteractionResult.sidedSuccess(client);
             }
+            // shears take the saddle off
+            if (this.isSaddled() && !this.isVehicle() && stack.is(Items.SHEARS)) {
+                if (!client) {
+                    this.setSaddled(false);
+                    this.spawnAtLocation(Items.SADDLE);
+                    this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
+                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
             if (stack.isEmpty()) {
                 // ride (saddled) or toggle sit / follow (sneak, or not saddled)
                 if (this.isSaddled() && !this.isBaby() && !player.isSecondaryUseActive() && !this.isVehicle()) {
@@ -400,6 +419,46 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity 
             this.getNavigation().stop();
             this.setTarget(null);
         }
+    }
+
+    @Override
+    public void travel(Vec3 input) {
+        if (this.riderJump > 0.0F && this.isVehicle() && this.onGround() && this.isControlledByLocalInstance()) {
+            Vec3 v = this.getDeltaMovement();
+            double up = this.jumpStrength() * this.riderJump * this.getBlockJumpFactor() + this.getJumpBoostPower();
+            this.setDeltaMovement(v.x, up, v.z);
+            if (input.z > 0.0D) {
+                float yaw = this.getYRot() * Mth.DEG_TO_RAD;
+                this.setDeltaMovement(this.getDeltaMovement().add(-0.4F * Mth.sin(yaw) * this.riderJump, 0.0D,
+                        0.4F * Mth.cos(yaw) * this.riderJump));
+            }
+            this.hasImpulse = true;
+            this.riderJump = 0.0F;
+        }
+        super.travel(input);
+    }
+
+    // jumping while ridden (the vanilla horse jump bar)
+
+    @Override
+    public void onPlayerJump(int power) {
+        if (!this.canJump()) {
+            return;
+        }
+        this.riderJump = power <= 0 ? 0.0F : power >= 90 ? 1.0F : 0.4F + 0.6F * power / 90.0F;
+    }
+
+    @Override
+    public boolean canJump() {
+        return this.isSaddled() && !this.isBaby() && this.jumpStrength() > 0.0D;
+    }
+
+    @Override
+    public void handleStartJump(int power) {
+    }
+
+    @Override
+    public void handleStopJump() {
     }
 
     @Override

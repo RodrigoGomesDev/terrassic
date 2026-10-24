@@ -100,6 +100,11 @@ public class Tyrannosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected double jumpStrength() {
+        return 0.5D;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return !(e instanceof Tyrannosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby();
     }

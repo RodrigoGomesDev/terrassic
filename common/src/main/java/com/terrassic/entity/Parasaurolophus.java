@@ -84,6 +84,11 @@ public class Parasaurolophus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double jumpStrength() {
+        return 0.65D;
+    }
+
+    @Override
     protected boolean fightsBack() {
         return false;
     }

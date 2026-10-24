@@ -70,7 +70,7 @@ Sistemas: tela de abertura e "Relatório do Incidente", **Caderno de Campo** (te
 | **Mosasaurus** | 🌊 | Carnívoro | Ovo | ✅ na v0.5 | Terror do Mar Interior; nesta versão só selvagem | 15 m |
 | **Maiasaura** | 🦖 | Herbívoro | Comida | ✅ | "Boa mãe": vive em colônias de ninhos; filhotes perto dela crescem mais rápido | 9 m |
 
-**Andamento (24/10/2026, feito na nuvem, ainda não compilado):** prontos o Caderno de Campo com as 4 abas, a tela de abertura, o Guia com níveis, fósseis com pincel e cinzel, a Mesa de Pesquisa, o Carvão de Esboço, a tradução es_es, o **Pteranodon** (voo montado simples: decolar, voar para onde olha, bater asas, planar) e o **Mosasaurus** selvagem (oceano profundo, caça quem está na água ou de barco, seca se encalhar). Faltam: Maiasaura, Lente de Âmbar, Frasco de Argila, sons próprios, pulo na montaria, tirar a sela e configuração de spawn.
+**Andamento (24/10/2026, feito na nuvem, ainda não compilado):** prontos o Caderno de Campo com as 4 abas, a tela de abertura, o Guia com níveis, fósseis com pincel e cinzel, a Mesa de Pesquisa, o Carvão de Esboço, a tradução es_es, o **Pteranodon** (voo montado simples: decolar, voar para onde olha, bater asas, planar), o **Mosasaurus** selvagem (oceano profundo, caça quem está na água ou de barco, seca se encalhar), a **Maiasaura** (filhotes perto dela crescem 2x mais rápido), o pulo na montaria (espaço, como o cavalo) e tirar a sela (com tesoura, porque shift + clique já manda sentar). Faltam: Lente de Âmbar, Frasco de Argila, sons próprios e configuração de spawn.
 Nota científica: o Mosasaurus paria filhotes vivos, sem ovo. Quando ele ficar domável (v0.5), o caminho mais fiel é domar o filhote recém-nascido em vez de chocar um ovo.
 
 ## v0.4 Os céus do Cretáceo
@@ -299,7 +299,7 @@ Além delas, criaturas de outras eras aparecem como **versões "da Fenda"** (olh
 | Sistema | Versão | O que faz |
 |---|---|---|
 | Sela de couro | v0.2 ✅ | Sela simples, usada nas montarias terrestres |
-| Pulo e tirar a sela | v0.3 | Espaço pula com a montaria; shift + clique tira a sela |
+| Pulo e tirar a sela | v0.3 | Espaço pula com a montaria; tesoura tira a sela (shift + clique manda sentar) |
 | Voo simples | v0.3 | Pteranodon: subir, descer e planar |
 | Voo completo e sela por espécie | v0.4 | Stamina voando; cada espécie usa a sua sela, feita com couro, osso e fibra |
 | Criaturas de ombro | v0.4 | Criaturas pequenas ficam no ombro e dão um bônus |

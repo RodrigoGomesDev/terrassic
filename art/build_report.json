@@ -403,5 +403,35 @@
    "animation.mosasaurus.attack"
   ],
   "render_scale": 1.0
+ },
+ "maiasaura": {
+  "bones": 27,
+  "cubes": 49,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.5,
+    2.3649910577258316e-05,
+    -42.69406222922195
+   ],
+   [
+    9.5,
+    31.0,
+    56.11652063190722
+   ]
+  ],
+  "animations": [
+   "animation.maiasaura.idle",
+   "animation.maiasaura.walk",
+   "animation.maiasaura.run",
+   "animation.maiasaura.attack",
+   "animation.maiasaura.sit",
+   "animation.maiasaura.graze",
+   "animation.maiasaura.call"
+  ],
+  "render_scale": 1.0
  }
 }

@@ -9,7 +9,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
@@ -56,7 +55,7 @@ import software.bernie.geckolib.core.object.PlayState;
  * Ridden movement runs on the rider's client (vanilla vehicles do), so the flying state is derived from
  * {@code onGround()} instead of being synced.
  */
-public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAnimal, PlayerRideableJumping {
+public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAnimal {
     /** Ridden flight: acceleration along the look direction per tick at FLYING_SPEED 0.6, and air drag. */
     private static final double FLIGHT_ACCEL = 0.045D;
     private static final double FLIGHT_DRAG = 0.95D;

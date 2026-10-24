@@ -290,6 +290,16 @@ def spawn_eggs():
     eye(cv, 10, 4, "#d89a2a")
     eggs["gallimimus"] = cv
 
+    # Maiasaura: brown egg with dark blotches and a little orange crest
+    cv = base_egg(None, "#5a4a36", "#e0d6b6")
+    for (x, y) in ((4, 8), (5, 8), (9, 9), (10, 9), (6, 11), (11, 11), (7, 7)):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#3e3226"))
+    cv.set(8, 2, hexc("#c06a36")); cv.set(9, 2, hexc("#d8a860"))
+    cv.set(12, 6, hexc("#3e362e")); cv.set(13, 6, hexc("#3e362e")); cv.set(13, 7, hexc("#2a241e"))
+    eye(cv, 10, 5, "#b8862c")
+    eggs["maiasaura"] = cv
+
     # Pteranodon: grey-white egg with a slate wing band and a red crest sweeping back
     cv = base_egg(None, "#77736a", "#ece6d8")
     for x in range(3, 13):
@@ -328,6 +338,7 @@ EGG_BLOCK = {
     "stegosaurus": ("#dfe0c4", "#5f6b3c"), "ankylosaurus": ("#d8ccb0", "#6b5f48"),
     "brachiosaurus": ("#e2e2d6", "#7f8984"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "gallimimus": ("#f0ece0", "#9c917c"),
+    "maiasaura": ("#e4dac0", "#7a6244"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
 }
 

@@ -54,6 +54,16 @@ Nada da v0.3 foi compilado: a nuvem não alcança o maven do Fabric, do Forge e 
 - [ ] Animações: cauda ondulando ao nadar; mordida com a mandíbula abrindo para baixo.
 - [ ] Drop: bacalhau, couro, osso e às vezes Dente de Mosassauro.
 
-## 6. Coisas que já existiam (regressão)
+## 6. Maiassaura
+- [ ] Aparece em planícies e savanas, em bandos de 3 a 6.
+- [ ] Doma com trigo, samambaia ou frutas silvestres; aceita sela e monta.
+- [ ] Filhotes de qualquer espécie a até 10 blocos de uma adulta crescem 2x mais rápido, com partículas verdes a cada 5 s.
+- [ ] Animações de pastar e de chamado (cabeça para cima, boca aberta).
+
+## 7. Pulo e sela (todas as montarias)
+- [ ] Montado, segurar espaço mostra a barra de pulo; soltar pula (mais alto quanto mais carregado). Gallimimus pula mais alto, Tricerátops e Tiranossauro menos, Braquiossauro não pula.
+- [ ] Clique com tesoura numa montaria selada (sem ninguém em cima) tira a sela e devolve o item.
+
+## 8. Coisas que já existiam (regressão)
 - [ ] As 12 espécies da v0.2 continuam aparecendo, domando e montando como antes.
 - [ ] Blocos primitivos (sapê, pedra seca etc.) continuam com textura e receita.
