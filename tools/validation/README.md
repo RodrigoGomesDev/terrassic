@@ -34,5 +34,23 @@ Testes adicionais de orçamento e servidor real: [`docs/TESTES_SERVIDOR.md`](../
 de entidades após reiniciar um mundo temporário nos dois loaders.
 
 `network_regression.py` conecta dois clientes de protocolo por sockets reais a um servidor descartável. Verifica
-páginas por UUID, snapshot/delta, reconexão e persistência após reinício; suporta a negociação FML3 do Forge.
+páginas por UUID, snapshot/delta, dimensões, morte/respawn, reconexão e persistência após reinício; suporta FML3 do Forge.
 Comandos e limites em [`docs/CADERNO_DADOS.md`](../../docs/CADERNO_DADOS.md). Esses clientes não renderizam o jogo.
+
+`load_profile.py` aumenta a carga por etapas em um servidor descartável compilado a partir de uma revisão fixa.
+Registra eventos reais de ticks pelo JFR integrado, sem mods de perfil adicionais. Comandos, resultados e
+limites em [`docs/PERFIL_LOCAL.md`](../../docs/PERFIL_LOCAL.md).
+
+## Validação automática
+
+O workflow [validation.yml](../../.github/workflows/validation.yml) executa integridade, fixtures Python,
+orçamento Java e `./gradlew build` (incluindo `researchRegression`) em pushes da main, branches `paralelo/*`,
+pull requests para main e disparos manuais. Executa no Linux com JDK 21 e tem prazo de 30 minutos.
+
+As ações oficiais [Checkout](https://github.com/actions/checkout),
+[Setup Java](https://github.com/actions/setup-java) e [Setup Gradle](https://github.com/gradle/actions)
+estão fixadas por commit. O job só precisa ler o repositório. Execuções novas substituem a anterior na mesma
+referência; o cache é gravado pela main e apenas lido nas demais referências.
+
+A CI não inicia servidores nem aceita EULA automaticamente, não executa testes visuais e não publica releases.
+Conexões, persistência em servidor e perfis locais continuam pelos roteiros explícitos acima.

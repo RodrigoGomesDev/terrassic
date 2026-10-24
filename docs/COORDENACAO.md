@@ -44,6 +44,7 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Codex | `tools/validation/load_profile.py`, `tools/validation/java/JfrSummary.java`, `local_server.py`, documentação | Concluído: perfis Fabric/Forge com 0, 4, 8 e 16 conexões; roteiro e métricas em `PERFIL_LOCAL.md`. Não equivale a jogadores ativos nem valida o alvo de 100 jogadores |
 | Codex | `tools/validation/minecraft_client.py`, `network_regression.py`, documentação | Concluído: Caderno após troca de dimensão e morte/respawn, reconexão e reinício passou em Fabric/Forge; arquivos liberados |
 | Codex | `tools/validation/load_profile.py`, documentação | Em uso: ampliar perfil Fabric para 0, 16 e 32 conexões, com 20 s de aquecimento e 30 s de gravação; sem alterar gameplay |
+| Codex | `.github/workflows/validation.yml`, `tools/validation/README.md`, documentação | Em uso: integrar verificações de recursos, fixtures, orçamento e build Fabric/Forge no GitHub Actions; sem deploy ou publicação de release |
 | Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Em uso (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
