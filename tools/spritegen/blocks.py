@@ -19,6 +19,8 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(__file__))
 from sprites import Canvas, hexc, shade, mixc  # noqa: E402
+import pixelkit as pk  # noqa: E402
+from pixelkit import CLEAR, at, put  # noqa: E402,F401
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 TEX = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures", "block")
@@ -105,232 +107,255 @@ def copy(cv):
     return out
 
 
-# ------------------------------------------------------------------ rocks
-# id: colour ramp (dark -> light), noise stretch (x, y), contrast, gap colour, surface detail
+# ------------------------------------------------------------------ rocks (engine v2: tone grids, see pixelkit.py)
+# id: ramp of 5 tones (dark -> light), joint colour, noise stretch (x, y) and surface detail
 ROCKS = {
-    "limestone": {"ramp": ["#8f8670", "#b2a98f", "#c9c1a6", "#ddd6bd", "#e9e3cc"], "stretch": (1.0, 2.0),
-                  "contrast": 1.1, "gap": "#4a4232", "detail": "fossils"},
-    "shale": {"ramp": ["#2b2d31", "#3d4045", "#4f5359", "#61666b", "#757a7d"], "stretch": (0.5, 3.0),
-              "contrast": 1.2, "gap": "#141516", "detail": "laminae"},
-    "chalk": {"ramp": ["#b9b7ad", "#cfcdc3", "#dfddd5", "#ebeae3", "#f7f6f1"], "stretch": (1.0, 1.0),
-              "contrast": 0.9, "gap": "#77725f", "detail": "cracks"},
-    "flint": {"ramp": ["#bdb9aa", "#d2cebf", "#e1ddd0", "#ebe8de", "#f4f1e8"], "stretch": (1.0, 1.0),
-              "contrast": 0.8, "gap": "#4f4b42", "detail": "nodules"},
-    "laterite": {"ramp": ["#4f2213", "#6e311b", "#8c4224", "#a8552f", "#bf6c40"], "stretch": (1.0, 1.0),
-                 "contrast": 1.3, "gap": "#2a140b", "detail": "pores"},
-    "quartzite": {"ramp": ["#8a7470", "#a68d87", "#bea79f", "#d4c1b8", "#e8dad1"], "stretch": (1.5, 1.0),
-                  "contrast": 0.9, "gap": "#4e403c", "detail": "sparkle"},
-    "gneiss": {"ramp": ["#353538", "#55555a", "#7a7a7f", "#a2a2a5", "#cfcfd0"], "stretch": (1.0, 1.0),
-               "contrast": 1.0, "gap": "#1d1d1f", "detail": "bands"},
-    "conglomerate": {"ramp": ["#5e4e39", "#77654b", "#8f7c5f", "#a69273", "#b9a688"], "stretch": (1.0, 1.0),
-                     "contrast": 0.9, "gap": "#33291d", "detail": "clasts"},
+    "limestone": {"ramp": ["#8f8670", "#a99f86", "#bdb49a", "#cfc7ae", "#e0d9c2"], "gap": "#5a5040",
+                  "stretch": (0.5, 2.0), "detail": "fossils"},
+    "shale": {"ramp": ["#2a2c30", "#383b40", "#464a50", "#555a60", "#686d72"], "gap": "#18191b",
+              "stretch": (0.25, 2.0), "detail": "laminae"},
+    "chalk": {"ramp": ["#b4b1a6", "#c9c6bc", "#d9d7ce", "#e7e5de", "#f3f2ec"], "gap": "#6e6858",
+              "stretch": (1.0, 1.5), "detail": "cracks"},
+    "flint": {"ramp": ["#bcb8aa", "#cdc9bc", "#dcd8cc", "#e8e5db", "#f3f1e9"], "gap": "#5e594d",
+              "stretch": (1.0, 1.0), "detail": "nodules"},
+    "laterite": {"ramp": ["#4a2012", "#66301b", "#824024", "#9c522e", "#b5683c"], "gap": "#2a140b",
+                 "stretch": (1.0, 1.0), "detail": "pores"},
+    "quartzite": {"ramp": ["#8f7a75", "#a68f89", "#baa39c", "#ccb7af", "#e2d2c9"], "gap": "#56463f",
+                  "stretch": (0.7, 1.5), "detail": "sparkle"},
+    "gneiss": {"ramp": ["#3a3a3e", "#55565b", "#717277", "#8f9095", "#b3b4b6"], "gap": "#1f1f22",
+               "stretch": (1.0, 1.0), "detail": "bands"},
+    "conglomerate": {"ramp": ["#5c4c38", "#726048", "#88755a", "#9c886b", "#b09c7e"], "gap": "#34291d",
+                     "stretch": (1.0, 1.0), "detail": "clasts"},
 }
-# pebbles of each rock sit on this sandy soil
-PEBBLE_SOIL = ["#5a4a36", "#6e5c45", "#806d53", "#917e62"]
-# loose clasts cemented in the conglomerate: quartz, flint, sandstone, granite, shale
-CLAST_RAMPS = [["#b8b0a2", "#d8d2c6", "#efebe2"], ["#2b313b", "#4f5764", "#6e7684"], ["#a8865a", "#c4a271", "#dcc08f"],
-               ["#7d5a4e", "#a37a68", "#c49d8a"], ["#45484d", "#62666b", "#7e8287"]]
-FLINT_RAMP = ["#1c2129", "#2b313b", "#3b424d", "#4f5764", "#6a7280"]
-MOSS_RAMP = ["#2f4519", "#40591f", "#557229", "#6b8a34", "#83a043"]
-SOIL = hexc("#3e3022")
+HI = 4
+GAP = -1
+GAPCH = "g"
+# extra colours (keys >= 10 so they never collide with ramp tones)
+FLINT = {10: "#1d222a", 11: "#2c323c", 12: "#3e4550", 13: "#58606c", 14: "#eae5d8"}
+OCHRE = {15: "#c4923e", 16: "#a87430"}
+CLASTS = [  # quartz, dark chert, sandstone, granite, shale: dark, mid, light (own keys from 40 up)
+    {40: "#8e877a", 41: "#c4bdb0", 42: "#ece8df"},
+    {43: "#1f242b", 44: "#353c46", 45: "#56606c"},
+    {46: "#8a6a44", 47: "#ad8a5c", 48: "#cfae7c"},
+    {49: "#6a4a40", 50: "#93705e", 51: "#bb9682"},
+    {52: "#3a3c40", 53: "#55585e", 54: "#73777d"},
+]
+MOSS = {30: "#2c4318", 31: "#3d5a1f", 32: "#527428", 33: "#6a8e33"}
+SOIL = ["#4a3c2c", "#5c4b38", "#6e5c46", "#806d55"]
 
 
-def rock_base(rid):
-    """Natural rock surface: the plain block, and the material the stacked stones are cut from."""
+def extra_for(rid):
     r = ROCKS[rid]
-    n = Noise(rid, stretch=r["stretch"])
-    fine = Noise(rid + "fine", periods=(16,), weights=(1.0,))
-    rnd = random.Random(rid + "spots")
-    cv = paint(lambda x, y: ramp(r["ramp"], contrast(n(x, y) * 0.75 + fine(x, y) * 0.25, r["contrast"])))
-    detail = r["detail"]
-    if detail == "laminae":  # thin bedding planes, broken in places, and rusty iron specks
-        for y in (2, 6, 9, 13):
-            for x in range(N):
-                if rnd.random() < 0.8:
-                    cv.set(x, y, shade(cv.get(x, y), 0.7))
-                    cv.set(x, (y + 1) % N, shade(cv.get(x, (y + 1) % N), 1.12))
-        for _ in range(3):
-            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#7a5a3a"))
-    elif detail == "fossils":  # small shell fragments and pores
-        for _ in range(1):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            for dx, dy in ((0, 0), (1, -1), (2, -1), (3, 0)):
-                cv.set((x + dx) % N, (y + dy) % N, hexc("#f2ecd8"))
-            cv.set((x + 1) % N, y % N, hexc("#8a7f66")); cv.set((x + 2) % N, y % N, hexc("#8a7f66"))
-        for _ in range(5):
-            cv.set(rnd.randrange(N), rnd.randrange(N), shade(hexc(r["ramp"][1]), 0.92))
-    elif detail == "cracks":  # hairline cracks and grey specks
+    ex = {GAP: r["gap"]}
+    ex.update(FLINT); ex.update(OCHRE); ex.update(MOSS)
+    for c in CLASTS:
+        ex.update(c)
+    return ex
+
+
+def chisel(g, seed, count, hi=HI, min_dist=3.2, horizontal=True):
+    """The drawn detail of the modern stone textures: short lit ledges with a shadow line just under them
+    (or beside them), spread evenly by blue noise instead of random speckle."""
+    rnd = random.Random(seed)
+    for x, y in pk.scatter(seed, count, min_dist):
+        ln = rnd.choice((2, 3, 3, 4))
+        for i in range(ln):
+            px, py = (x + i, y) if horizontal else (x, y + i)
+            if 0 <= at(g, px, py) <= hi:
+                put(g, px, py, min(hi, at(g, px, py) + 1))
+            qx, qy = (px, py + 1) if horizontal else (px + 1, py)
+            if 0 <= at(g, qx, qy) <= hi and i < ln - 1:
+                put(g, qx, qy, max(0, at(g, qx, qy) - 1))
+    return g
+
+
+def rock_face(rid, seed=""):
+    """Calm natural rock: one dominant tone with big soft patches, then evenly spread chiselled ledges."""
+    r = ROCKS[rid]
+    g = pk.calm(rid + seed + "calm", base=2, share=0.62, periods=(2, 4, 8), weights=(0.45, 0.35, 0.2),
+                stretch=r["stretch"])
+    return chisel(g, rid + seed + "chisel", 9, horizontal=r["stretch"][1] >= r["stretch"][0])
+
+
+def base_grid(rid):
+    """The natural rock face as tone indices."""
+    r = ROCKS[rid]
+    d = r["detail"]
+    rnd = random.Random(rid + "v2")
+    if d == "laminae":
+        g = rock_face(rid)
+        for y in (1, 5, 8, 12):  # bedding planes: a dark parting with a lit lip under it, broken here and there
+            x0 = rnd.randrange(N)
+            for i in range(N):
+                if (i + x0) % 11 < 9:
+                    put(g, x0 + i, y, 0)
+                    if at(g, x0 + i, y + 1) < 3:
+                        put(g, x0 + i, y + 1, at(g, x0 + i, y + 1) + 1)
+        for _ in range(2):  # rusty pyrite specks
+            put(g, rnd.randrange(N), rnd.randrange(N), 16)
+        return g
+    if d == "bands":  # gneiss: wavy foliation, dark mica bands and light feldspar bands
+        wav = pk.Noise(rid + "w", periods=(2, 4), weights=(0.7, 0.3))
+        f = pk.field(lambda x, y: math.sin((y + x * 0.25) * (2 * math.pi / 8) + wav(x, y) * 3.0))
+        g = pk.levels(f, [0.12, 0.2, 0.33, 0.2, 0.15])
+        return chisel(pk.despeckle(pk.despeckle(g)), rid + "ch", 5)
+    g = rock_face(rid)
+    if d == "fossils":  # a small shell and a crinoid disc, lit on top
         x, y = rnd.randrange(N), rnd.randrange(N)
-        for _ in range(9):
-            cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.82))
-            x += rnd.choice((1, 1, 0)); y += rnd.choice((1, 0, -1))
-        for _ in range(5):
-            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#9e9b90"))
-    elif detail == "pores":  # laterite: iron-rich clay rock full of small dark holes and yellow ochre streaks
-        for _ in range(16):
+        pk.fleck(g, x, y, [".44.", "4224", "1..1"], {"4": 4, "2": 2, "1": 1})
+        x, y = (x + 8) % N, (y + 7) % N
+        pk.fleck(g, x, y, ["4.", "21"], {"4": 4, "2": 2, "1": 1})
+        pk.dashes(g, rid + "bed", 3, 1, (3, 5))
+    elif d == "cracks":  # chalk: one hairline crack and a few grey flint grains
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for _ in range(10):
+            put(g, x, y, 1)
+            x += rnd.choice((1, 1, 0)); y += rnd.choice((1, 0, 0, -1))
+        for _ in range(3):
             x, y = rnd.randrange(N), rnd.randrange(N)
-            cv.set(x, y, hexc("#2a140b")); cv.set(x, (y + 1) % N, shade(cv.get(x, (y + 1) % N), 1.15))
+            pk.fleck(g, x, y, ["00"], {"0": 0})
+    elif d == "pores":  # laterite: rounded holes (dark pit, lit lower rim) and ochre nodules
+        for _ in range(9):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            pk.fleck(g, x, y, [GAPCH * 2, "44"] if rnd.random() < 0.4 else [GAPCH, "4"], {GAPCH: GAP, "4": 4})
         for _ in range(4):
-            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#c99a4a"))
-    elif detail == "sparkle":  # quartzite: sugary grains that catch the light
-        for _ in range(14):
-            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#f6eee8"))
-        for _ in range(5):
-            cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#7c6662"))
-    elif detail == "bands":  # gneiss: wavy dark and light mineral bands
-        wav = Noise(rid + "wave", periods=(2, 4), weights=(0.7, 0.3))
-        for y in range(N):
-            for x in range(N):
-                b = math.sin((y + x * 0.25) * (2 * math.pi / 8) + wav(x, y) * 3.0)
-                c = cv.get(x, y)
-                cv.set(x, y, shade(c, 0.62) if b > 0.55 else (shade(c, 1.22) if b < -0.7 else c))
-    elif detail == "clasts":  # conglomerate: rounded pebbles of other rocks cemented in sandy matrix
-        for i in range(9):
-            cr = CLAST_RAMPS[rnd.randrange(len(CLAST_RAMPS))]
-            cx, cy = rnd.uniform(0, N), rnd.uniform(0, N)
-            rx, ry = rnd.uniform(1.2, 2.6), rnd.uniform(1.0, 2.0)
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            pk.fleck(g, x, y, ["ab"] if rnd.random() < 0.5 else ["a", "b"], {"a": 15, "b": 16})
+    elif d == "sparkle":  # quartzite: sugary grains catching the light, and a few dark grains
+        for x, y in pk.scatter(rid + "sp", 7, 3.5):
+            put(g, x, y, 4)
+        for x, y in pk.scatter(rid + "dk", 3, 5):
+            put(g, x, y, 1)
+    elif d == "nodules":  # flint nodules in the chalk: glassy dark core, white cortex rim, a glint
+        wob = pk.Noise(rid + "wob", periods=(4, 8), weights=(0.6, 0.4))
+        core = pk.Noise(rid + "core", periods=(4, 8), weights=(0.6, 0.4))
+        for (cx, cy, rx, ry) in ((5.0, 5.0, 4.4, 3.0), (12.0, 11.5, 3.4, 3.6)):
             for y in range(N):
                 for x in range(N):
                     dx = min(abs(x + 0.5 - cx), N - abs(x + 0.5 - cx)) / rx
                     dy = min(abs(y + 0.5 - cy), N - abs(y + 0.5 - cy)) / ry
-                    if dx * dx + dy * dy <= 1:
-                        lit = (x + 0.5 < cx) + (y + 0.5 < cy)
-                        cv.set(x, y, hexc(cr[min(2, lit)]))
-    elif detail == "nodules":  # dark flint nodules with a white cortex rim and a glossy point
-        fl = Noise(rid + "nod", periods=(4, 8), weights=(0.7, 0.3))
-        wobble = Noise(rid + "wob", periods=(4, 8), weights=(0.6, 0.4))
-        for (cx, cy, rx, ry) in ((5.0, 5.0, 4.4, 3.0), (12.0, 11.5, 3.6, 3.8)):
+                    dd = math.hypot(dx, dy) + (wob(x, y) - 0.5) * 0.6
+                    if dd < 0.8:
+                        lit = (x + 0.5 < cx and y + 0.5 < cy)
+                        v = 10 + (2 if core(x, y) > 0.55 else 1) + (1 if lit and dd > 0.45 else 0)
+                        g[y][x] = min(13, v) if not (dd > 0.55 and x + 0.5 > cx and y + 0.5 > cy) else 10
+                    elif dd < 1.05:
+                        g[y][x] = 14
+            put(g, int(cx - rx / 3), int(cy - ry / 3), 13)
+    elif d == "clasts":  # conglomerate: rounded pebbles of other rocks set in the sandy matrix
+        for i in range(6):
+            cl = CLASTS[rnd.randrange(len(CLASTS))]
+            k0 = min(cl)
+            cx, cy = rnd.uniform(0, N), rnd.uniform(0, N)
+            rx, ry = rnd.uniform(1.6, 2.8), rnd.uniform(1.3, 2.1)
             for y in range(N):
                 for x in range(N):
-                    dx = min(abs(x - cx), N - abs(x - cx)) / rx
-                    dy = min(abs(y - cy), N - abs(y - cy)) / ry
-                    d = math.hypot(dx, dy) + (wobble(x, y) - 0.5) * 0.7
-                    if d < 0.78:
-                        cv.set(x, y, ramp(FLINT_RAMP, fl(x, y) * 0.9 + (0.2 if (x < cx and y < cy) else 0)))
-                    elif d < 1.05:
-                        cv.set(x, y, hexc("#ece7da"))
-            cv.set(int(cx - rx / 3) % N, int(cy - ry / 3) % N, hexc("#9aa3b2"))
-    return cv
+                    dx = (x + 0.5 - cx + N / 2) % N - N / 2
+                    dy = (y + 0.5 - cy + N / 2) % N - N / 2
+                    e = (dx / rx) ** 2 + (dy / ry) ** 2
+                    if e <= 1:
+                        k = 1 + (1 if (dx + dy < -0.6 * (rx + ry) / 2 and e > 0.25) else 0) \
+                            - (1 if (dx + dy > 0.5 * (rx + ry) / 2 and e > 0.3) else 0)
+                        g[y][x] = k0 + k
+                    elif e <= 1.8 and dy > -0.3 and 0 <= at(g, x, y) < 10:
+                        g[y][x] = 0  # the matrix shaded under the pebble
+    return g
 
 
-def stones(base, cells, gap, tone_seed, width, light, dark):
-    """Stones cut from the rock texture: each Voronoi cell is one stone and the borders are gaps. Top/left edges
-    catch the light and bottom/right edges are in shadow, so every stone reads as a lump."""
-    rnd = random.Random(tone_seed)
-    tones = [0.86 + 0.24 * rnd.random() for _ in cells.seeds]
-    cv = Canvas()
-    for y in range(N):
-        for x in range(N):
-            if cells.border(x, y, width):
-                cv.set(x, y, shade(gap, 0.85 + 0.3 * rnd.random()))
-                continue
-            o = cells.owner[y][x]
-            c = shade(base.get(x, y), tones[o])
-            if cells.at(x, y - 1) != o or cells.border(x, y - 1, width) or cells.at(x - 1, y) != o or cells.border(x - 1, y, width):
-                c = shade(c, light)
-            if cells.at(x, y + 1) != o or cells.border(x, y + 1, width) or cells.at(x + 1, y) != o or cells.border(x + 1, y, width):
-                c = shade(c, dark)
-            cv.set(x, y, c)
-    return cv
+
+def rock_base(rid):
+    """Natural rock surface (also the matrix of the cave paintings and skull fossils)."""
+    return pk.colour(base_grid(rid), ROCKS[rid]["ramp"], extra_for(rid))
 
 
-def courses(seed):
-    """Dry-laid wall layout: horizontal courses 3-5 px high, each split into stones 4-9 px long with an offset, so
-    the joints never line up. Returns owner[y][x] = stone index or -1 for a joint (wraps on both axes)."""
-    rnd = random.Random(seed)
-    heights = rnd.choice(([4, 3, 5, 4], [5, 3, 4, 4], [3, 4, 4, 5], [4, 4, 3, 5]))
-    owner = [[-1] * N for _ in range(N)]
-    stone = 0
-    y0 = 0
-    for h in heights:
-        cuts, x = [], rnd.randrange(N)
-        total = 0
-        while total < N:
-            w = rnd.randint(4, 9)
-            if N - total - w < 4:
-                w = N - total
-            cuts.append((x + total, w))
-            total += w
-        for (sx, w) in cuts:
-            for yy in range(y0, y0 + h - 1):  # last row of the course is the joint
-                for xx in range(sx, sx + w - 1):  # last column of the stone is the joint
-                    owner[yy % N][xx % N] = stone
-            # knock off the corners so the stones look rounded
-            for (cx, cy) in ((sx, y0), (sx + w - 2, y0), (sx, y0 + h - 2), (sx + w - 2, y0 + h - 2)):
-                if rnd.random() < 0.75:
-                    owner[cy % N][cx % N] = -1
-            stone += 1
-        y0 += h
-    return owner, stone
+def stacked_grid(rid):
+    """Dry-laid stones: courses, own tone per stone, lit top edge, shaded bottom/right, dark joints."""
+    rnd = random.Random(rid + "h")
+    owner, count = pk.courses(rid + "courses", heights=rnd.choice(([5, 5, 6], [6, 5, 5], [5, 6, 5])),
+                              lengths=(5, 10), round_corners=0.5, min_last=5)
+    # calm face per stone (modern stone bricks): one tone with a soft patch, a two-level chamfer, dark joints
+    g = pk.calm(rid + "st", base=2, share=0.7, periods=(2, 4), weights=(0.6, 0.4))
+    g = pk.per_region(g, owner, count, rid + "tone", spread=(-1, 0, 0, 1), hi=HI - 1)
+    g = pk.bevel(g, owner, HI, joint=GAP)
+    for x, y in pk.scatter(rid + "chip", 4, 5):  # a chipped spot here and there
+        if owner[y][x] >= 0 and at(owner, x, y - 1) == owner[y][x] and at(owner, x + 1, y) == owner[y][x]:
+            put(g, x, y, max(0, at(g, x, y) - 1)); put(g, x + 1, y, min(HI, at(g, x + 1, y) + 1))
+    return g, owner
 
 
-def laid(base, owner, count, gap, seed):
-    """Stones from the rock texture laid in courses: lit top edge, shadowed bottom edge, own tone per stone."""
-    rnd = random.Random(seed)
-    tones = [0.84 + 0.26 * rnd.random() for _ in range(count)]
-    cv = Canvas()
-    own = lambda x, y: owner[y % N][x % N]  # noqa: E731
-    for y in range(N):
-        for x in range(N):
-            o = own(x, y)
-            if o < 0:
-                cv.set(x, y, shade(gap, 0.8 + 0.35 * rnd.random()))
-                continue
-            c = shade(base.get(x, y), tones[o])
-            if own(x, y - 1) != o:
-                c = shade(c, 1.16)
-            elif own(x - 1, y) != o:
-                c = shade(c, 1.06)
-            if own(x, y + 1) != o:
-                c = shade(c, 0.7)
-            elif own(x + 1, y) != o:
-                c = shade(c, 0.86)
-            cv.set(x, y, c)
-    return cv
+def stacked(rid):
+    g, _ = stacked_grid(rid)
+    return pk.colour(g, ROCKS[rid]["ramp"], extra_for(rid))
 
 
-def rock_textures(rid):
-    r = ROCKS[rid]
-    base = rock_base(rid)
-    owner, count = courses(rid + "courses")
-    stacked = laid(base, owner, count, hexc(r["gap"]), rid + "t1")
-    flag = stones(base, Cells(rid + "flag", 5), mixc(hexc(r["gap"]), SOIL, 0.6), rid + "t2", 0.45, 1.07, 0.88)
-    # moss grows in the joints and on the top edge of the stones
-    moss = copy(stacked)
-    mn = Noise(rid + "moss", periods=(2, 4, 8), weights=(0.45, 0.35, 0.2))
-    rnd = random.Random(rid + "moss")
+def flagstone(rid):
+    """Flat slabs: big irregular stones with a fine joint, each lit along its top-left edge."""
+    owner = pk.regions_from_cells(rid + "flag", 5, gap=0.8)
+    count = max(max(r) for r in owner) + 1
+    g = pk.calm(rid + "fl", base=2, share=0.68, periods=(2, 4), weights=(0.6, 0.4))
+    g = pk.per_region(g, owner, count, rid + "ft", spread=(0, 0, 1, -1), hi=HI - 1)
+    g = pk.bevel(g, owner, HI, joint=GAP)
+    return pk.colour(g, ROCKS[rid]["ramp"], extra_for(rid))
+
+
+def mossy(rid):
+    """Moss grows in the joints and creeps over the top edges of the stones."""
+    g, owner = stacked_grid(rid)
+    mn = pk.Noise(rid + "moss", periods=(2, 4, 8), weights=(0.45, 0.35, 0.2))
     for y in range(N):
         for x in range(N):
             joint = owner[y][x] < 0
-            top = not joint and owner[(y - 1) % N][x] != owner[y][x]
-            v = mn(x, y) + (0.18 if joint else 0.0) + (0.1 if top else 0.0)
-            if v > 0.72:
-                moss.set(x, y, ramp(MOSS_RAMP, (v - 0.72) / 0.28 + 0.2 * rnd.random()))
-    return {rid: base, f"{rid}_stacked": stacked, f"{rid}_flagstone": flag, f"mossy_{rid}_stacked": moss}
+            top = not joint and at(owner, x, y - 1) < 0
+            v = mn(x, y) + (0.2 if joint else 0) + (0.12 if top else 0)
+            if v > 0.8:
+                below_joint = at(owner, x, y + 1) < 0
+                g[y][x] = 30 + min(3, int((v - 0.8) / 0.05)) - (1 if below_joint and not joint else 0)
+                if joint:
+                    g[y][x] = max(30, g[y][x] - 1)
+    return pk.colour(pk.despeckle(g, protect=(GAP,)), ROCKS[rid]["ramp"], extra_for(rid))
 
 
 def pebbles(rid):
-    """Loose rounded pebbles of the rock lying on sandy soil (the top of the thin pebble layer)."""
+    """Loose rounded pebbles of the rock lying on sandy soil."""
     r = ROCKS[rid]
     rnd = random.Random(rid + "pebbles")
-    soil = Noise(rid + "soil", periods=(4, 8, 16), weights=(0.4, 0.3, 0.3))
-    cv = paint(lambda x, y: ramp(PEBBLE_SOIL, soil(x, y)))
-    for _ in range(11):
+    soil = pk.calm(rid + "soil", base=1, share=0.6, periods=(2, 4, 8), weights=(0.4, 0.4, 0.2))
+    g = [[100 + v for v in row] for row in soil]
+    placed = []
+    for _ in range(40):
+        if len(placed) >= 7:
+            break
         cx, cy = rnd.uniform(0, N), rnd.uniform(0, N)
-        rx, ry = rnd.uniform(1.0, 2.4), rnd.uniform(0.9, 1.8)
-        tone = 0.3 + 0.5 * rnd.random()
-        pr = FLINT_RAMP if rid == "flint" else r["ramp"]
+        rx, ry = rnd.uniform(1.7, 2.8), rnd.uniform(1.3, 2.0)
+        if any(min(abs(cx - a), N - abs(cx - a)) < rx + b + 0.8 and min(abs(cy - c), N - abs(cy - c)) < ry + d + 0.6
+               for a, c, b, d in placed):
+            continue
+        placed.append((cx, cy, rx, ry))
+        tone = rnd.choice((2, 2, 3))
         for y in range(N):
             for x in range(N):
-                dx = (x + 0.5 - cx); dx = (dx + N / 2) % N - N / 2
-                dy = (y + 0.5 - cy); dy = (dy + N / 2) % N - N / 2
-                d = (dx / rx) ** 2 + (dy / ry) ** 2
-                if d <= 1:
-                    v = tone + (0.3 if dx < 0 and dy < 0 else 0) - (0.25 if dx > 0 and dy > 0 else 0)
-                    cv.set(x, y, ramp(pr, v))
-                elif d <= 1.6 and dy > 0:
-                    cv.set(x, y, shade(cv.get(x, y), 0.75))  # shadow on the soil
-    return cv
+                dx = (x + 0.5 - cx + N / 2) % N - N / 2
+                dy = (y + 0.5 - cy + N / 2) % N - N / 2
+                e = (dx / rx) ** 2 + (dy / ry) ** 2
+                if e <= 1:
+                    k = tone + (1 if dy < -ry * 0.3 or (dx < -rx * 0.4 and dy < 0) else 0) \
+                        - (1 if dy > ry * 0.35 else 0)
+                    g[y][x] = max(0, min(HI, k))
+                elif e <= 1.8 and dy > 0 and at(g, x, y) >= 100:
+                    g[y][x] = 99  # contact shadow on the soil
+                elif e <= 1.6 and at(g, x, y) >= 100:
+                    g[y][x] = 100
+    if rid == "flint":
+        g = [[(10 + min(3, v)) if v < 100 and v >= 0 else v for v in row] for row in g]
+    ex = extra_for(rid)
+    ex.update({100 + i: c for i, c in enumerate(SOIL)})
+    ex[99] = "#3a2e22"
+    return pk.colour(g, r["ramp"], ex)
+
+
+def rock_textures(rid):
+    return {rid: rock_base(rid), f"{rid}_stacked": stacked(rid), f"{rid}_flagstone": flagstone(rid),
+            f"mossy_{rid}_stacked": mossy(rid), f"{rid}_pebbles": pebbles(rid)}
 
 
 # ------------------------------------------------------------------ thatch (palha)
@@ -338,39 +363,66 @@ THATCH_RAMP = ["#4f3f20", "#75602f", "#957c40", "#b39752", "#cdb269"]
 
 
 def thatch():
-    """Courses of straw bundles: thin vertical strands; each course overhangs the one below (shadow under the
-    lip, sun-bleached tips at the bottom of every course)."""
-    strands = Noise("thatch", periods=(16, 8), weights=(0.7, 0.3), stretch=(1.0, 0.25))
-    rnd = random.Random("thatch")
-
-    def px(x, y):
-        course, row = y // 4, y % 4
-        v = strands((x + course * 5) % N, y) * 0.8 + 0.2 * rnd.random()
-        if row == 0:
-            v = v * 0.55  # shadow under the course above
-        elif row == 3:
-            v = v * 0.6 + 0.4  # bleached tips
-        return ramp(THATCH_RAMP, v)
-    return paint(px)
+    """Two courses of straw bundles (8 px each, like the bands of the vanilla hay bale): a deep shadow under the
+    lip of the course above, upright straws one pixel wide in alternating tones, ragged sun-bleached tips."""
+    rnd = random.Random("thatch2")
+    g = pk.grid(2)
+    for c in range(2):
+        y0 = c * 8
+        shift_ = rnd.randrange(N)
+        tone = [rnd.choice((1, 2, 2, 3, 3, 4)) for _ in range(N)]
+        tips = [rnd.choice((5, 6, 6, 7, 7, 8)) for _ in range(N)]
+        for x in range(N):
+            t = tone[(x + shift_) % N]
+            for k in range(8):
+                y = y0 + k
+                if k == 0:
+                    v = 0
+                elif k == 1:
+                    v = 1 if x % 3 else 0
+                elif k >= tips[x]:
+                    v = 4 if (x + k) % 2 else 3
+                else:
+                    v = t if (k + x) % 5 else t - 1
+                g[y][x] = max(0, min(4, v))
+        for _ in range(4):  # a few stray straws crossing
+            x, y = rnd.randrange(N), y0 + rnd.randint(2, 5)
+            put(g, x, y, 4); put(g, x + 1, y + 1, 4)
+    return pk.colour(g, THATCH_RAMP)
 
 
 def thatch_top():
-    strands = Noise("thatch_top", periods=(16, 8), weights=(0.6, 0.4), stretch=(0.25, 1.0))
-    rnd = random.Random("thatch_top")
-    return paint(lambda x, y: ramp(THATCH_RAMP, strands(x, y) * 0.8 + 0.2 * rnd.random()))
+    """Ends of the straw seen from above: short stalks lying every way, lit on one side."""
+    rnd = random.Random("thatchtop2")
+    g = pk.despeckle(pk.clusters("tt2", [0.19, 0.62, 0.19], periods=(2, 4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for _ in range(26):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        dx, dy = rnd.choice(((1, 0), (0, 1), (1, 1), (1, -1)))
+        ln = rnd.randint(2, 4)
+        t = rnd.choice((3, 4, 4))
+        for i in range(ln):
+            put(g, x + dx * i, y + dy * i, t)
+    return pk.colour(g, THATCH_RAMP)
 
 
 def straw_mat():
-    """Hand-woven straw mat: over-under strips 4 px wide, each strip with its own strands."""
-    n = Noise("mat", periods=(16,), weights=(1.0,))
-    rnd = random.Random("mat")
-
-    def px(x, y):
-        horizontal = ((x // 4) + (y // 4)) % 2 == 0
-        k = (y % 4) if horizontal else (x % 4)
-        v = 0.3 + 0.35 * n(x, y) + (0.18 if k in (1, 2) else -0.12) + 0.08 * rnd.random()
-        return ramp(THATCH_RAMP, v)
-    return paint(px)
+    """Hand-woven straw mat: 4 px strips going over and under, each strip of three straws, the strip that dives
+    under its neighbour in shadow."""
+    g = pk.grid(2)
+    rnd = random.Random("mat2")
+    for y in range(N):
+        for x in range(N):
+            horiz = ((x // 4) + (y // 4)) % 2 == 0
+            k = (y % 4) if horiz else (x % 4)
+            along = (x % 4) if horiz else (y % 4)
+            v = (4, 3, 2, 1)[k]
+            if along == 3:
+                v -= 1  # dives under the crossing strip
+            g[y][x] = max(0, v)
+    for _ in range(5):
+        put(g, rnd.randrange(N), rnd.randrange(N), 0)
+    return pk.colour(g, THATCH_RAMP)
 
 
 # ------------------------------------------------------------------ wattle and daub (pau a pique)
@@ -378,20 +430,45 @@ DAUB_RAMP = ["#5e4a34", "#7c644a", "#957b5c", "#ab9170", "#bea583"]
 STICK_RAMP = ["#3a2814", "#54391d", "#6e4d2a", "#87623a"]
 
 
-def wattle_daub():
-    """Clay plaster smeared by hand over woven sticks: lumpy, with a drying crack and straw fibres."""
-    n = Noise("daub", periods=(2, 4, 8), weights=(0.4, 0.35, 0.25))
-    rnd = random.Random("daub")
-    cv = paint(lambda x, y: ramp(DAUB_RAMP, contrast(n(x, y), 1.4)))
-    for _ in range(9):  # straw fibres in the clay
+def daub_grid(seed="daub2", sticks=True):
+    """Clay daub as tone indices: lumpy hand-pressed clay, straw fibres, one drying crack and, where the clay
+    has fallen away, the woven sticks underneath (tones 50+)."""
+    rnd = random.Random(seed)
+    g = pk.despeckle(pk.clusters(seed, [0.05, 0.15, 0.55, 0.18, 0.07], periods=(2, 4, 8), weights=(0.4, 0.4, 0.2)), passes=2)
+    if sticks:  # a patch where the daub fell off: horizontal withies woven round an upright stake
+        x0, y0 = rnd.randrange(N), rnd.randrange(N)
+        for j in range(5):
+            for i in range(6):
+                if (i in (0, 5) and j in (0, 4)) or rnd.random() < 0.08:
+                    continue
+                x, y = x0 + i, y0 + j
+                put(g, x, y, (52 if j % 2 == 0 else 50) if i != 2 else (53 if j % 2 else 51))
+        for i in range(6):  # the broken clay edge throws a shadow
+            if at(g, x0 + i, y0 - 1) < 50:
+                put(g, x0 + i, y0 - 1, 4)
+            if at(g, x0 + i, y0 + 5) < 50:
+                put(g, x0 + i, y0 + 5, 0)
+    for _ in range(7):  # straw in the clay
         x, y = rnd.randrange(N), rnd.randrange(N)
-        for i in range(rnd.choice((2, 3))):
-            cv.set((x + i) % N, y, hexc("#c8b27a"))
+        if at(g, x, y) < 50:
+            for i in range(rnd.choice((2, 3))):
+                if at(g, x + i, y) < 50:
+                    put(g, x + i, y, 60)
     x, y = rnd.randrange(N), rnd.randrange(N)
-    for _ in range(12):  # drying crack
-        cv.set(x % N, y % N, hexc("#4a3826"))
+    for _ in range(9):  # drying crack, lit on its lower lip
+        if at(g, x, y) < 50:
+            put(g, x, y, 0)
+            if at(g, x, y + 1) < 50:
+                put(g, x, y + 1, 4)
         x += rnd.choice((1, 1, 0)); y += rnd.choice((1, 0, 0, -1))
-    return cv
+    return g
+
+
+DAUB_EXTRA = {50: "#3a2814", 51: "#54391d", 52: "#6e4d2a", 53: "#87623a", 60: "#c8b27a"}
+
+
+def wattle_daub():
+    return pk.colour(daub_grid(sticks=False), DAUB_RAMP, DAUB_EXTRA)
 
 
 # ------------------------------------------------------------------ bone fence (cerca de osso)
@@ -399,16 +476,23 @@ BONE_RAMP = ["#9c9178", "#bdb296", "#d6ccb0", "#e6dec6", "#f3eedf"]
 
 
 def bone_fence():
-    """Long bones: porous, yellowed surface, a rounded highlight down each bone, sinew lashings."""
-    n = Noise("bone", periods=(4, 16), weights=(0.6, 0.4), stretch=(0.5, 1.5))
-    rnd = random.Random("bone")
-    cv = paint(lambda x, y: ramp(BONE_RAMP, 0.2 + 0.5 * (1 - abs((x % 8) - 3.5) / 4.5) + 0.3 * n(x, y)))
-    for _ in range(10):  # pores
-        cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#8a7f66"))
-    for y in (3, 4, 11, 12):
+    """Long bones side by side: each 4 px wide, round (lit, body, body, shaded edge), porous, yellowed towards
+    the ends, bound with two sinew lashings that cast a shadow."""
+    rnd = random.Random("bone2")
+    g = pk.grid(2)
+    for y in range(N):
         for x in range(N):
-            cv.set(x, y, mixc(hexc("#5e3a20"), hexc("#8a5a34"), ((x + y) % 3) / 3))
-    return cv
+            g[y][x] = (4, 3, 2, 1)[x % 4] if x % 8 < 4 else (3, 3, 2, 0)[x % 4]
+    for _ in range(8):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        if x % 4 in (1, 2):
+            put(g, x, y, 1)
+    for y in (3, 11):
+        for x in range(N):
+            g[y][x] = 30 if x % 3 else 31
+            g[y + 1][x] = 32
+            g[y + 2][x] = max(0, g[y + 2][x] - 1)
+    return pk.colour(g, BONE_RAMP, {30: "#8a5a34", 31: "#a87048", 32: "#5e3a20"})
 
 
 # ------------------------------------------------------------------ hide screen (painel de couro)
@@ -416,23 +500,24 @@ HIDE_RAMP = ["#5a3a1e", "#76502b", "#8f653a", "#a87b4b", "#bf915e"]
 
 
 def hide_screen():
-    """Scraped, stretched hide: uneven thickness (light and dark patches), a vein, stitched to the frame posts."""
-    n = Noise("hide", periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
-    rnd = random.Random("hide")
-    cv = paint(lambda x, y: ramp(HIDE_RAMP, contrast(n(x, y), 1.3)))
-    x, y = 4, 2
-    for _ in range(10):
-        cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.84))
-        x += rnd.choice((0, 1)); y += 1
-    for i in range(N):
-        cv.set(0, i, ramp(STICK_RAMP, 0.7)); cv.set(15, i, ramp(STICK_RAMP, 0.3))
-    for i in range(1, N, 3):
-        cv.set(1, i, hexc("#d8c9a4")); cv.set(14, i, hexc("#d8c9a4"))
-    return cv
+    """Scraped, stretched hide laced to two stick posts."""
+    rnd = random.Random("hide2")
+    g = pk.despeckle(pk.clusters("hide2", [0.05, 0.15, 0.55, 0.18, 0.07], periods=(2, 4, 8)), passes=2)
+    x, y = 5, 0
+    for _ in range(16):
+        if at(g, x, y) > 1:
+            put(g, x, y, at(g, x, y) - 1)
+        x += rnd.choice((-1, 0, 0, 1)); y += 1
+    cv = pk.colour(g, HIDE_RAMP)
+    return framed(cv, top=False)
 
 
 def hide_screen_edge():
-    return paint(lambda x, y: ramp(STICK_RAMP, 0.3 + 0.4 * ((x % 4) in (1, 2))))
+    g = pk.grid(0)
+    for y in range(N):
+        for x in range(N):
+            g[y][x] = (1, 3, 2, 0)[x % 4]
+    return pk.colour(g, STICK_RAMP)
 
 
 # ------------------------------------------------------------------ prehistoric woods
@@ -442,11 +527,11 @@ WOODS = {
     # dark glossy green, stiff spiky scale leaves
     "araucaria": {"bark": ["#2e241b", "#43352a", "#5a4a3b", "#706050", "#857563"], "bark_style": "rings",
                   "wood": ["#9c8058", "#b8996a", "#cdb07e", "#dcc294", "#e8d3a8"],
-                  "leaf": ["#14281a", "#1f3a22", "#2c4f2c", "#3d6638", "#527d46"], "leaf_style": "spiky"},
+                  "leaf": ["#183020", "#25452a", "#355e36", "#4a7a44", "#62944f"], "leaf_style": "spiky"},
     # Ginkgo: grey, deeply furrowed bark; pale cream wood; bright fan-shaped leaves
     "ginkgo": {"bark": ["#2f2c27", "#48433b", "#615a50", "#7a7267", "#938a7e"], "bark_style": "furrows",
                "wood": ["#a89470", "#c2ad86", "#d6c29a", "#e3d1ab", "#eedfbd"],
-               "leaf": ["#3b5a1c", "#557a26", "#6f9631", "#8cb03f", "#a8c858"], "leaf_style": "fans"},
+               "leaf": ["#2e4a16", "#456a22", "#5e8a2c", "#7aa63a", "#98c04e"], "leaf_style": "fans"},
     # Metasequoia (dawn redwood): red-brown fibrous bark peeling in long strips; pinkish heartwood;
     # soft feathery light-green needles
     "metasequoia": {"bark": ["#3a1c10", "#55291a", "#723a25", "#8f4c32", "#a86142"], "bark_style": "fibres",
@@ -481,165 +566,196 @@ WOODS = {
 LASHING = ["#4a3a22", "#6e5a3a", "#8f7a55", "#b39d74"]
 
 
-def bark(tid):
+def bark_grid(tid):
+    """Bark as tone indices (0 = deepest crevice, 4 = lit ridge).  Every style is built from vertical structure,
+    like the vanilla logs, with the texture of the real tree on top."""
     w = WOODS[tid]
     style = w["bark_style"]
-    rnd = random.Random(tid + "bark")
-    if style == "rings":  # scaly plates in horizontal bands with dark leaf scars
-        n = Noise(tid + "b", periods=(4, 16), weights=(0.5, 0.5), stretch=(1.0, 1.0))
-        cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.3) * (0.6 if y % 4 == 3 else 1.0) + (0.12 if y % 4 == 0 else 0)))
-        for _ in range(6):
+    rnd = random.Random(tid + "bark2")
+    if style == "rings":  # araucaria: overlapping scaly plates in horizontal tiers, each tier lit on top
+        g = pk.grid(2)
+        for tier in range(4):
+            y0 = tier * 4
+            x = rnd.randrange(N)
+            while x < N + 16:
+                wdt = rnd.randint(3, 5)
+                for i in range(wdt):
+                    put(g, x + i, y0, 3 if i else 2)
+                    put(g, x + i, y0 + 1, 4 if 0 < i < wdt - 1 else 3)
+                    put(g, x + i, y0 + 2, 2 if i < wdt - 1 else 1)
+                    put(g, x + i, y0 + 3, 1 if i < wdt - 1 else 0)
+                put(g, x + wdt - 1, y0 + 1, 2)
+                x += wdt
+        for _ in range(5):  # dark leaf scars
+            put(g, rnd.randrange(N), rnd.randrange(4) * 4 + 2, 0)
+        return g
+    if style == "frond_bases":  # tree fern / palm: diamond lattice of old leaf stubs in a fibrous mat
+        g = pk.despeckle(pk.clusters(tid + "fib", [0.19, 0.62, 0.19], periods=(8, 16), stretch=(2.0, 0.5)), passes=2)
+        for cy in range(0, N, 6 if tid == "sabal" else 4):
+            for cx in range(0 if (cy // (6 if tid == "sabal" else 4)) % 2 == 0 else 4, N, 8):
+                if tid == "sabal":  # palm: crossed boots of old leaf stalks, wide and flat
+                    pk.fleck(g, cx - 2, cy, ["..44..", ".4333.", "433332", ".2221.", "..10.."],
+                             {"4": 4, "3": 3, "2": 2, "1": 1, "0": 0})
+                else:  # tree fern: round stalk scars with a dark core
+                    pk.fleck(g, cx - 1, cy, [".43.", "4302", ".21."], {"4": 4, "3": 3, "2": 2, "1": 1, "0": 0})
+        return g
+    if style == "smooth":  # magnolia: thin smooth bark, soft mottling, rows of lenticels
+        g = pk.despeckle(pk.clusters(tid + "sm", [0.1, 0.2, 0.55, 0.15], periods=(4, 8), stretch=(1.5, 0.75)), passes=2)
+        g = [[v + 1 for v in row] for row in g]
+        for _ in range(9):
             x, y = rnd.randrange(N), rnd.randrange(N)
-            cv.set(x, y, hexc(w["bark"][0]))
-        return cv
-    if style == "furrows":  # deep vertical furrows, ridges catching light
-        n = Noise(tid + "b", periods=(8, 16), weights=(0.6, 0.4), stretch=(1.0, 0.25))
-        fine = Noise(tid + "f", periods=(16,), weights=(1.0,))
-        return paint(lambda x, y: ramp(w["bark"], contrast(n(x, y) * 0.8 + fine(x, y) * 0.2, 1.7)))
-    if style == "frond_bases":  # tree fern: diamond pattern of old frond stalks and hairy roots
-        n = Noise(tid + "b", periods=(4, 16), weights=(0.5, 0.5))
-        cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.2) * 0.8))
+            pk.fleck(g, x, y, ["00", "33"] if rnd.random() < 0.6 else ["0", "3"], {"0": 0, "3": 3})
+        return g
+    if style == "plates":  # platanus: bark flaking off in patches of olive, grey and cream
+        owner = pk.regions_from_cells(tid + "pl", 8, gap=0.0)
+        tones = [rnd.choice((1, 2, 3, 3, 4)) for _ in range(8)]
+        g = [[tones[owner[y][x]] for x in range(N)] for y in range(N)]
+        fine = pk.clusters(tid + "f", [0.2, 0.6, 0.2], periods=(8, 16))
         for y in range(N):
             for x in range(N):
-                if (x + y) % 6 == 0 or (x - y) % 6 == 0:
-                    cv.set(x, y, hexc(w["bark"][4]) if (x + 2 * y) % 4 else hexc(w["bark"][3]))
-        return cv
-    if style == "smooth":  # thin smooth bark: soft mottling and small horizontal lenticels
-        n = Noise(tid + "b", periods=(2, 4), weights=(0.6, 0.4))
-        cv = paint(lambda x, y: ramp(w["bark"], 0.35 + 0.4 * n(x, y)))
-        for _ in range(7):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            cv.set(x, y, hexc(w["bark"][1])); cv.set((x + 1) % N, y, hexc(w["bark"][1]))
-        return cv
-    if style == "plates":  # bark flaking off in patches (camouflage), each patch its own tone
-        cells = Cells(tid + "plates", 9)
-        tones = [rnd.uniform(0.15, 0.95) for _ in cells.seeds]
-        return paint(lambda x, y: ramp(w["bark"], tones[cells.at(x, y)] - (0.12 if cells.border(x, y, 0.8) else 0)))
-    # fibres: long stringy strips, some peeling (lighter edge)
-    n = Noise(tid + "b", periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
-    cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.5)))
-    for _ in range(4):
+                o = owner[y][x]
+                if at(owner, x, y + 1) != o or at(owner, x + 1, y) != o:  # the edge of the flake casts a shadow
+                    g[y][x] = max(0, g[y][x] - 2)
+                else:
+                    g[y][x] = max(0, min(4, g[y][x] + fine[y][x] - 1))
+        return g
+    # fibres (metasequoia, taxodium, podocarpus) and furrows (ginkgo): long vertical ridges and crevices
+    furrow = style == "furrows"
+    g = pk.clusters(tid + "v", [0.12, 0.23, 0.3, 0.23, 0.12], periods=(4, 8, 16), weights=(0.35, 0.4, 0.25),
+                    stretch=(2.0, 0.25))
+    g = pk.despeckle(g)
+    for _ in range(7 if furrow else 5):  # crevices: a dark line with the lit ridge on its left
         x, y = rnd.randrange(N), rnd.randrange(N)
-        for i in range(rnd.randint(3, 6)):
-            cv.set(x, (y + i) % N, hexc(w["bark"][4]))
-            cv.set((x + 1) % N, (y + i) % N, hexc(w["bark"][0]))
-    return cv
+        for i in range(rnd.randint(5, 10) if furrow else rnd.randint(4, 8)):
+            put(g, x, y + i, 0)
+            if at(g, x - 1, y + i) < 3:
+                put(g, x - 1, y + i, 3 if furrow else 2)
+            if rnd.random() < (0.15 if furrow else 0.25):
+                x += rnd.choice((-1, 1))
+    if not furrow:  # loose strips peeling off: a bright strip with a shadow line on its right
+        for _ in range(3):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            for i in range(rnd.randint(3, 5)):
+                put(g, x, y + i, 4); put(g, x + 1, y + i, 1)
+    return g
+
+
+def bark(tid):
+    return pk.colour(bark_grid(tid), WOODS[tid]["bark"])
 
 
 def log_top(tid, stripped=False):
-    """Cut end: growth rings around an off-centre pith, radial drying cracks; bark ring unless stripped."""
+    """Cut end like the vanilla log tops: rounded-square growth rings, alternating light and dark wood, a pith,
+    one radial drying crack and a 1 px rim of bark (or of darker sapwood once stripped)."""
     w = WOODS[tid]
-    rnd = random.Random(tid + "top")
-    wob = Noise(tid + "rw", periods=(2, 4), weights=(0.7, 0.3))
-
-    def px(x, y):
-        d = math.hypot(x - 7.2, y - 7.8) + (wob(x, y) - 0.5) * 1.2
-        edge = max(abs(x - 7.5), abs(y - 7.5))
-        if not stripped and edge > 6.6:
-            return ramp(w["bark"], 0.35 + 0.3 * rnd.random())
-        ring = 0.5 + 0.5 * math.cos(d * 2.4)
-        return ramp(w["wood"], 0.15 + 0.6 * ring + 0.12 * rnd.random() - (0.15 if d < 1.2 else 0))
-    cv = paint(px)
-    x, y = 7.2, 7.8
-    ang = rnd.uniform(0, math.tau)
-    for r in range(1, 7):  # one radial drying crack
-        cv.set(int(x + math.cos(ang) * r), int(y + math.sin(ang) * r), hexc(w["wood"][0]))
-    return cv
+    rnd = random.Random(tid + "top2")
+    cx, cy = 7.5 + rnd.choice((-0.5, 0, 0.5)), 7.5 + rnd.choice((-0.5, 0, 0.5))
+    g = pk.grid(2)
+    for y in range(N):
+        for x in range(N):
+            dx, dy = abs(x - cx), abs(y - cy)
+            d = 0.6 * max(dx, dy) + 0.4 * math.hypot(dx, dy)
+            # thin dark latewood lines every ~2.5 px between broad light earlywood bands
+            g[y][x] = 1 if (d + 0.6) % 2.5 < 0.9 else (3 if d > 1.2 else 2)
+    put(g, int(cx), int(cy), 0)
+    ang = rnd.choice((0.6, 2.3, 3.9, 5.4))
+    for r in range(1, 7):  # drying crack
+        put(g, int(round(cx + math.cos(ang) * r)), int(round(cy + math.sin(ang) * r)), 0)
+    edge = [(x, y) for y in range(N) for x in range(N) if x in (0, 15) or y in (0, 15)]
+    if stripped:
+        for x, y in edge:
+            g[y][x] = 1
+        return pk.colour(g, w["wood"])
+    bk = bark_grid(tid)
+    out = {}
+    for x, y in edge:
+        out[(x, y)] = 50 + max(0, min(4, bk[y][x]))
+        g[y][x] = out[(x, y)]
+    for y in (1, 14):  # the inner sapwood ring just under the bark is darker
+        for x in range(1, 15):
+            g[y][x] = 1
+    for x in (1, 14):
+        for y in range(1, 15):
+            g[y][x] = 1
+    ex = {50 + i: c for i, c in enumerate(w["bark"])}
+    return pk.colour(g, w["wood"], ex)
 
 
 def stripped_side(tid):
-    """Debarked trunk: long fibres with the draw-knife marks."""
+    """Debarked trunk: long smooth fibres in few tones, with the facets of the draw-knife."""
     w = WOODS[tid]
-    n = Noise(tid + "s", periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
-    cv = paint(lambda x, y: ramp(w["wood"], 0.2 + 0.65 * n(x, y)))
-    rnd = random.Random(tid + "knife")
-    for _ in range(3):
+    g = pk.clusters(tid + "s2", [0.15, 0.35, 0.35, 0.15], periods=(4, 8, 16), weights=(0.3, 0.4, 0.3),
+                    stretch=(2.0, 0.25))
+    g = [[v + 1 for v in row] for row in pk.despeckle(g)]
+    rnd = random.Random(tid + "knife2")
+    for _ in range(3):  # knife facets: a flat lit stroke ending in a small dark nick
         x, y = rnd.randrange(N), rnd.randrange(N)
-        for i in range(4):
-            cv.set((x + i) % N, (y + (i // 2)) % N, shade(cv.get((x + i) % N, (y + (i // 2)) % N), 0.85))
-    return cv
+        for i in range(rnd.randint(3, 5)):
+            put(g, x, y + i, 4)
+        put(g, x, y + i + 1, 1)
+    return pk.colour(g, w["wood"])
 
 
 def hewn_planks(tid):
-    """Planks split and dressed with an adze: four boards of uneven height, scalloped tool marks, no nails."""
+    """Boards split from the trunk and dressed with an adze, laid like the modern vanilla planks: four calm 4 px
+    boards (each its own tone, lit top row, shaded row over the dark seam), a few long grain lines, shallow adze
+    hollows (a lit stroke with a shadow under it), staggered butt joints and wooden pegs instead of nails."""
     w = WOODS[tid]
-    rnd = random.Random(tid + "hewn")
-    n = Noise(tid + "h", periods=(16, 8), weights=(0.5, 0.5), stretch=(0.25, 1.0))
-    seams = [3, 7, 12, 15]
-    tones = [0.85 + 0.25 * rnd.random() for _ in seams]
+    rnd = random.Random(tid + "hewn3")
+    g = pk.grid(2)
+    for b in range(4):
+        y0 = b * 4
+        t = 2 + rnd.choice((-1, 0, 0, 1)) * (1 if b % 2 else 0)
+        for x in range(N):
+            g[y0][x] = t
+            g[y0 + 1][x] = t
+            g[y0 + 2][x] = t
+            g[y0 + 3][x] = 1  # seam: shaded, not black, like the vanilla planks
+        for _ in range(2):  # grain line
+            x, ln = rnd.randrange(N), rnd.randint(3, 6)
+            yy = y0 + rnd.choice((1, 2))
+            for i in range(ln):
+                put(g, x + i, yy, t - 1)
+        x = rnd.randrange(N)  # an adze hollow
+        for i in range(3):
+            put(g, x + i, y0 + 1, min(4, t + 1))
+        joint = (rnd.randrange(N) if b % 2 == 0 else (rnd.randrange(N) + 8)) % N
+        if b % 2 == 0:  # board ends only every other board, like long planks
+            for k in range(3):
+                put(g, joint, y0 + k, 1)
+            peg = (joint + rnd.choice((3, 4, 5))) % N
+            put(g, peg, y0 + 1, 0); put(g, peg, y0 + 2, min(4, t + 1))
+    return pk.colour(g, w["wood"])
 
-    def px(x, y):
-        board = next(i for i, s in enumerate(seams) if y <= s)
-        if y == seams[board] and not (board == 1 and 6 <= x <= 8):
-            return ramp(w["wood"], 0.02)
-        scallop = 0.22 * math.cos((x + board * 3) * (2 * math.pi / 5))  # adze strokes, scalloped hollows
-        v = (0.3 + 0.45 * n(x, y) + scallop) * tones[board]
-        if y == (seams[board - 1] + 1 if board else 0):
-            v += 0.1
-        return ramp(w["wood"], v)
-    cv = paint(px)
-    for i, s in enumerate(seams):  # a drying crack along the grain of each board
-        x0 = rnd.randrange(N)
-        y = s - 2 if s - 2 >= 0 else 0
-        for k in range(rnd.randint(3, 6)):
-            cv.set((x0 + k) % N, y, ramp(w["wood"], 0.05))
-    return cv
+
+LEAF_SHAPES = {  # stamps for each leaf style: 4 lit tip, 3 leaf, 2 shaded leaf, 1 shadow under it, 0 dark gap
+    "spiky": [["4..", ".3.", "..2"], ["..4", ".3.", "2.."], ["4.", "32", ".1"]],  # stiff scale leaves
+    "fans": [["4443", "3332", ".22.", ".1.."], [".443", "4332", ".21."]],  # ginkgo fans on a short stalk
+    "feathery": [["4.4.4.", "322222", ".3.3.3"], ["4.4.4", "22222", "3.3.3"]],  # needle sprays on a twig
+    "broad": [[".44.", "4332", ".221"], ["443", "322", ".1."]],  # glossy oval leaves with a midrib shadow
+    "palm": [["4...", ".4..", "..3.", "...2"], ["...4", "..4.", ".3..", "2..."], ["4444", "3333", "1111"]],
+    "fronds": [["4.4.4", "33333", "2.2.2"], ["4.4", "333", "2.2"]],  # paired leaflets along a frond
+}
 
 
 def leaves(tid):
-    """Foliage with gaps (transparent), clustered the way the real leaves grow."""
+    """Foliage like the vanilla leaves: dense clusters with ~12% see-through gaps and plenty of shadow pixels, and
+    on top the stamped leaf shape of the species (scales, fans, needles, broad leaves, palm straps, fronds)."""
     w = WOODS[tid]
     style = w["leaf_style"]
-    rnd = random.Random(tid + "leaf")
-    n = Noise(tid + "l", periods=(4, 8, 16), weights=(0.4, 0.35, 0.25))
-    cv = Canvas()
-    for y in range(N):
-        for x in range(N):
-            v = n(x, y)
-            if v < 0.36:
-                continue  # gap
-            cv.set(x, y, ramp(w["leaf"], contrast(v, 1.6) + 0.1 * rnd.random()))
-    if style == "spiky":  # stiff overlapping scale leaves: diagonal bright points
-        for _ in range(14):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            cv.set(x, y, hexc(w["leaf"][4])); cv.set((x + 1) % N, (y + 1) % N, hexc(w["leaf"][1]))
-    elif style == "fans":  # fan-shaped leaves: little bright wedges
-        for _ in range(7):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            for dx in (-1, 0, 1):
-                cv.set((x + dx) % N, y, hexc(w["leaf"][4]))
-            cv.set(x, (y + 1) % N, hexc(w["leaf"][3]))
-    elif style == "broad":  # broad glossy leaves: bright highlight and dark midrib, a few flowers (magnolia)
-        for _ in range(8):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            cv.set(x, y, hexc(w["leaf"][4])); cv.set((x + 1) % N, y, hexc(w["leaf"][3]))
-            cv.set(x, (y + 1) % N, hexc(w["leaf"][1]))
-        for _ in range(3 if "flowers" in w else 0):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
-                cv.set((x + dx) % N, (y + dy) % N, hexc(w["flowers"][(dx + dy) % 2]))
-            cv.set((x + 1) % N, (y + 1) % N, hexc(w["flowers"][2]))
-    elif style == "palm":  # fan palm: stiff strap-like segments radiating from a point
-        for x0, y0 in ((3, 6), (11, 14), (12, 4)):
-            for a in range(6):
-                ang = math.pi * (0.12 + a / 6.5)
-                for r in range(1, 8):
-                    x, y = int(x0 + math.cos(ang) * r) % N, int(y0 - math.sin(ang) * r) % N
-                    cv.set(x, y, hexc(w["leaf"][4 if r < 4 else 3]))
-                    cv.set(x, (y + 1) % N, hexc(w["leaf"][1]))
-    elif style == "fronds":  # tree fern: long fronds with paired leaflets
-        for _ in range(4):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            for i in range(7):
-                cv.set((x + i) % N, (y + i // 2) % N, hexc(w["leaf"][1]))
-                cv.set((x + i) % N, (y + i // 2 - 1) % N, hexc(w["leaf"][4]))
-    else:  # feathery: rows of tiny needles along twigs
-        for _ in range(5):
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            for i in range(5):
-                cv.set((x + i) % N, y, hexc(w["leaf"][1]))
-                cv.set((x + i) % N, (y - 1) % N if i % 2 else (y + 1) % N, hexc(w["leaf"][4]))
-    return cv
+    rnd = random.Random(tid + "leaf2")
+    g = pk.clusters(tid + "l2", [0.12, 0.2, 0.3, 0.26, 0.12], periods=(4, 8, 16), weights=(0.3, 0.35, 0.35))
+    g = pk.despeckle(g)
+    g = [[CLEAR if v == 0 else v - 1 for v in row] for row in g]  # rank 0 = gap, then tones 0..3
+    shapes = LEAF_SHAPES[style]
+    for _ in range({"palm": 7, "feathery": 9, "fronds": 9}.get(style, 12)):
+        sh = rnd.choice(shapes)
+        pk.fleck(g, rnd.randrange(N), rnd.randrange(N), sh, {"4": 4, "3": 3, "2": 2, "1": 1, "0": 0})
+    if "flowers" in w:  # magnolia: a few big cream flowers with a pink blush at the base
+        for _ in range(3):
+            pk.fleck(g, rnd.randrange(N), rnd.randrange(N), [".ab.", "abba", ".cc."], {"a": 61, "b": 60, "c": 62})
+    ex = {60 + i: c for i, c in enumerate(w.get("flowers", []))}
+    return pk.colour(g, w["leaf"], ex)
 
 
 def sapling(tid):
@@ -702,45 +818,63 @@ def sapling(tid):
 
 
 def door(tid, part):
-    """Door of split logs lashed to two cross-bars with rawhide; a gap between logs shows light (transparent)."""
+    """Door of split logs lashed to two cross-bars with rawhide: every log rounded (lit left edge, shaded right
+    edge), thin light gaps between some logs, sharpened tops, a bark bar with wrapped lashings."""
     w = WOODS[tid]
-    rnd = random.Random(tid + part)
-    n = Noise(tid + "d" + part, periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
-    cv = Canvas()
-    for y in range(N):
-        for x in range(N):
-            if x in (4, 11) and rnd.random() < 0.5:
-                continue  # crack between logs
-            col = x // 4
-            v = 0.2 + 0.55 * n(x, y) + (0.15 if x % 4 == 1 else 0) - (0.15 if x % 4 == 3 else 0)
-            cv.set(x, y, ramp(w["wood"], v - 0.05 * col))
+    rnd = random.Random(tid + part + "door2")
+    grain = pk.clusters(tid + "dg" + part, [0.3, 0.45, 0.25], periods=(4, 8, 16), stretch=(2.0, 0.25))
+    g = pk.grid(2)
+    for x in range(N):
+        k = x % 4
+        for y in range(N):
+            v = 1 + grain[y][x] + (1 if k == 0 else 0) - (1 if k == 3 else 0)
+            g[y][x] = max(0, min(4, v))
+    for x in (3, 11):  # a see-through crack between two logs, where they do not quite touch
+        y0, ln = rnd.randrange(N), rnd.randint(2, 4)
+        for i in range(ln):
+            put(g, x, y0 + i, CLEAR)
+    x, y = rnd.randrange(4) * 4 + rnd.choice((1, 2)), rnd.randrange(5, 10)  # one knot
+    pk.fleck(g, x, y, ["0", "3"], {"0": 1, "3": 3})
     bar = 3 if part == "top" else 11
-    for x in range(N):  # cross-bar and lashing
-        cv.set(x, bar, ramp(w["bark"], 0.6)); cv.set(x, bar + 1, ramp(w["bark"], 0.3))
-        if x % 4 == 1:
-            cv.set(x, bar - 1, hexc(LASHING[2])); cv.set(x, bar + 2, hexc(LASHING[1]))
+    for x in range(N):  # bark cross-bar: lit top, darker underside, shadow cast on the logs below
+        g[bar][x] = 53 if x % 5 else 52
+        g[bar + 1][x] = 51
+        if g[bar + 2][x] is not CLEAR:
+            g[bar + 2][x] = 1
+    for x in (1, 5, 9, 13):  # rawhide lashings wrapped round bar and log
+        for y, t in ((bar - 1, 62), (bar, 63), (bar + 1, 62), (bar + 2, 61)):
+            g[y][x] = t
     if part == "top":
-        for x in range(N):  # sharpened tops of the logs
+        for x in range(N):  # sharpened log tips
             if x % 4 in (0, 3):
-                cv.p[0][x] = None
-    return cv
+                g[0][x] = CLEAR
+            if x % 4 == 0:
+                g[1][x] = 3
+    ex = {50 + i: c for i, c in enumerate(w["bark"])}
+    ex.update({60 + i: c for i, c in enumerate(LASHING)})
+    return pk.colour(g, w["wood"], ex)
 
 
 def trapdoor(tid):
-    """Hatch of lashed round poles, two cross-bars."""
+    """Hatch of round poles laid side by side (each lit on top, shaded below, gaps between), two bark battens."""
     w = WOODS[tid]
-    n = Noise(tid + "t", periods=(16, 8), weights=(0.6, 0.4), stretch=(0.125, 1.0))
-    cv = Canvas()
+    grain = pk.clusters(tid + "tg", [0.3, 0.45, 0.25], periods=(4, 8, 16), stretch=(0.25, 2.0))
+    g = pk.grid(2)
     for y in range(N):
+        k = y % 4
         for x in range(N):
-            if y % 4 == 3 and x not in (3, 4, 11, 12):
-                continue  # gaps between poles
-            v = 0.2 + 0.6 * n(x, y) + (0.15 if y % 4 == 0 else 0)
-            cv.set(x, y, ramp(w["wood"], v))
+            if k == 3 and x not in (2, 3, 12, 13):
+                g[y][x] = CLEAR  # gap between poles
+                continue
+            g[y][x] = max(0, min(4, 1 + grain[y][x] + (1 if k == 0 else 0) - (1 if k == 2 else 0)))
     for y in range(N):
-        for x in (3, 4, 11, 12):
-            cv.set(x, y, ramp(w["bark"], 0.5 if x in (3, 11) else 0.3))
-    return cv
+        for x, t in ((2, 53), (3, 51), (12, 53), (13, 51)):
+            g[y][x] = t
+        if y % 4 == 1:
+            g[y][2], g[y][3], g[y][12], g[y][13] = 62, 61, 62, 61  # lashings
+    ex = {50 + i: c for i, c in enumerate(w["bark"])}
+    ex.update({60 + i: c for i, c in enumerate(LASHING)})
+    return pk.colour(g, w["wood"], ex)
 
 
 def door_item(tid):
@@ -756,13 +890,14 @@ def door_item(tid):
 
 
 def branch_fence(tid):
-    """Fence of whole branches: bark with knots and a lighter cut surface."""
-    cv = bark(tid)
-    rnd = random.Random(tid + "branch")
-    for _ in range(3):
+    """Fence of whole branches: the bark of the tree with a couple of cut-off twig knots."""
+    w = WOODS[tid]
+    g = bark_grid(tid)
+    rnd = random.Random(tid + "branch2")
+    for _ in range(2):
         x, y = rnd.randrange(N), rnd.randrange(N)
-        cv.set(x, y, ramp(WOODS[tid]["wood"], 0.6)); cv.set((x + 1) % N, y, ramp(WOODS[tid]["bark"], 0.0))
-    return cv
+        pk.fleck(g, x, y, [".0.", "0a0", ".0."], {"0": 0, "a": 60})
+    return pk.colour(g, w["bark"], {60: w["wood"][3]})
 
 
 def wood_textures(tid):
@@ -998,67 +1133,99 @@ PLASTERS = {  # id: colour ramp of the plaster
 
 
 def plaster(pid):
-    """Hand-smoothed plaster: soft trowel strokes, hairline cracks, a few grains of sand."""
-    n = Noise(pid, periods=(2, 4, 8), weights=(0.45, 0.35, 0.2), stretch=(1.5, 1.0))
-    rnd = random.Random(pid)
-    cv = paint(lambda x, y: ramp(PLASTERS[pid], contrast(n(x, y), 0.9)))
+    """Hand-smoothed plaster: two close tones in broad soft trowel patches, a lit crescent where a stroke
+    ended, one hairline crack (dark with a lit lip)."""
+    rnd = random.Random(pid + "3")
+    g = pk.calm(pid + "p3", base=2, share=0.72, periods=(2, 4), weights=(0.6, 0.4), stretch=(1.5, 1.0))
     x, y = rnd.randrange(N), rnd.randrange(N)
-    for _ in range(7):
-        cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.82))
-        x += rnd.choice((1, 1, 0)); y += rnd.choice((1, 0, -1))
     for _ in range(6):
-        c = cv.get(xx := rnd.randrange(N), yy := rnd.randrange(N))
-        cv.set(xx, yy, shade(c, 1.12))
-    return cv
+        put(g, x, y, 1); put(g, x, y + 1, 3)
+        x += 1; y += rnd.choice((1, 0, 0, -1))
+    return pk.colour(g, PLASTERS[pid])
 
 
 def rammed_earth():
-    """Rammed earth: horizontal layers of tamped soil of slightly different colour, small stones in it."""
-    rnd = random.Random("rammed")
-    n = Noise("rammed", periods=(4, 16), weights=(0.5, 0.5), stretch=(2.0, 0.5))
-    layer_tone = [0.85 + 0.25 * rnd.random() for _ in range(4)]
-    cv = paint(lambda x, y: shade(ramp(EARTH_RAMP, 0.25 + 0.5 * n(x, y)), layer_tone[y // 4] * (0.82 if y % 4 == 3 else 1.0)))
-    for _ in range(7):
+    """Rammed earth: horizontal lifts of tamped soil, each its own shade, a dark seam between lifts with the lit
+    edge of the next lift under it, and small stones caught in the mix."""
+    rnd = random.Random("rammed2")
+    g = pk.despeckle(pk.clusters("rammed2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(1.0, 2.0)), passes=2)
+    lifts = [0, 4, 7, 12]
+    for i, y0 in enumerate(lifts):
+        y1 = lifts[i + 1] if i + 1 < len(lifts) else N
+        off = (0, 1, 0, 1)[i] + rnd.choice((0, 0, 1))
+        for y in range(y0, y1):
+            for x in range(N):
+                g[y][x] = max(0, min(4, g[y][x] + off))
+        for x in range(N):
+            g[(y1 - 1) % N][x] = 0 if x % 7 else 1
+            g[y0][x] = min(4, g[y0][x] + 1)
+    for _ in range(6):
         x, y = rnd.randrange(N), rnd.randrange(N)
-        cv.set(x, y, hexc("#8a857a")); cv.set((x + 1) % N, y, hexc("#6a665c"))
-    return cv
+        pk.fleck(g, x, y, ["ab", "c."] if rnd.random() < 0.5 else ["ab"], {"a": 61, "b": 60, "c": 0})
+    return pk.colour(g, EARTH_RAMP, {60: "#6a665c", 61: "#8e897e"})
 
 
 def packed_earth():
-    """Hut floor of beaten earth mixed with straw, worn smooth and darker where people walk."""
-    n = Noise("packed", periods=(2, 4, 8), weights=(0.4, 0.35, 0.25))
-    rnd = random.Random("packed")
-    cv = paint(lambda x, y: ramp(EARTH_RAMP, 0.35 + 0.45 * n(x, y)))
-    for _ in range(8):
+    """Hut floor of beaten earth with straw, worn smooth: soft clumps, straw bits and the odd pebble."""
+    rnd = random.Random("packed2")
+    g = pk.despeckle(pk.clusters("packed2", [0.1, 0.2, 0.55, 0.15], periods=(2, 4, 8), weights=(0.4, 0.4, 0.2)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for _ in range(7):
         x, y = rnd.randrange(N), rnd.randrange(N)
-        cv.set(x, y, hexc("#b39752")); cv.set((x + 1) % N, y, hexc("#957c40"))
-    return cv
+        horizontal = rnd.random() < 0.6
+        pk.fleck(g, x, y, ["ab"] if horizontal else ["a", "b"], {"a": 60, "b": 61})
+    for _ in range(3):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        pk.fleck(g, x, y, ["c", "0"], {"c": 62, "0": 0})
+    return pk.colour(g, EARTH_RAMP, {60: "#b09a60", 61: "#8e7846", 62: "#8a857a"})
 
 
 def wattle_variant(kind):
-    """Wattle and daub with timber: cross braces, a log frame, or whitewashed with chalk."""
+    """Wattle and daub with timber: cross braces, a log frame, or whitewashed with chalk.  The timbers are
+    hewn beams in relief: lit on their top/left faces, shaded under/right, casting a shadow on the daub."""
     if kind == "whitewashed":
-        cv = plaster("chalk_whitewash")
-        rnd = random.Random("ww")
-        for _ in range(10):  # daub showing through worn whitewash
-            x, y = rnd.randrange(N), rnd.randrange(N)
-            cv.set(x, y, ramp(DAUB_RAMP, 0.5)); cv.set((x + 1) % N, y, ramp(DAUB_RAMP, 0.6))
-        return cv
-    cv = wattle_daub()
-    beam = lambda x, y, k: cv.set(x % N, y % N, ramp(BARK_TIMBER, k))  # noqa: E731
+        g = daub_grid("ww2", sticks=False)
+        wn = pk.Noise("wwn", periods=(4, 8), weights=(0.6, 0.4))
+        out = pk.grid()
+        for y in range(N):
+            for x in range(N):
+                v = g[y][x]
+                worn = wn(x, y) < 0.22
+                out[y][x] = v if v >= 50 else (70 + min(4, v + 2)) if worn else min(4, v + 1)
+        ex = {70 + i: c for i, c in enumerate(DAUB_RAMP)}
+        ex.update(DAUB_EXTRA)
+        return pk.colour(out, PLASTERS["chalk_whitewash"], ex)
+    g = daub_grid("daub2" + kind, sticks=False)
+    beam = pk.grid(-1)  # beam id per pixel, -1 = daub
     for i in range(N):
-        beam(i, 0, 0.7); beam(i, 15, 0.3); beam(0, i, 0.6); beam(15, i, 0.35)
+        for (x, y) in ((i, 0), (i, 15), (0, i), (15, i)):
+            beam[y][x] = 0
         if kind == "frame":
-            beam(i, 1, 0.55); beam(1, i, 0.5); beam(14, i, 0.4); beam(i, 14, 0.45)
+            for (x, y) in ((i, 1), (1, i), (14, i), (i, 14)):
+                beam[y][x] = 0
     if kind == "cross":
-        for i in range(1, 15):
-            beam(i, i, 0.65); beam(i + 1, i, 0.4); beam(15 - i, i, 0.6); beam(14 - i, i, 0.4)
-    return cv
+        for i in range(N):
+            for (x, y) in ((i, i), ((i + 1) % N, i), (15 - i, i), ((14 - i) % N, i)):
+                beam[y][x] = 0
+    grain = pk.clusters("beam" + kind, [0.3, 0.4, 0.3], periods=(8, 16), stretch=(1.0, 1.0))
+    for y in range(N):
+        for x in range(N):
+            if beam[y][x] < 0:
+                if at(beam, x, y - 1) >= 0 or at(beam, x - 1, y) >= 0:  # shadow of the beam on the clay
+                    if g[y][x] < 50:
+                        g[y][x] = max(0, g[y][x] - 2)
+                continue
+            lit = at(beam, x, y - 1) < 0 or at(beam, x - 1, y) < 0
+            dark = at(beam, x, y + 1) < 0 or at(beam, x + 1, y) < 0
+            g[y][x] = 80 + max(0, min(3, 1 + grain[y][x] + (1 if lit and not dark else 0) - (1 if dark and not lit else 0)))
+    ex = dict(DAUB_EXTRA)
+    ex.update({80 + i: c for i, c in enumerate(BARK_TIMBER)})
+    return pk.colour(g, DAUB_RAMP, ex)
 
 
 BARK_TIMBER = ["#2e2014", "#46321f", "#5e452c", "#76593a"]
 
-# pictograms, drawn on limestone in red ochre (r), charcoal (k) and chalk (w); '.' = bare rock
+
 PAINTINGS = {
     "handprint": ["................", "....r.r.r.......", "....r.r.r.r.....", "....r.r.r.r.....",
                   "....rrrrrrr.....", "..r.rrrrrrr.....", "...rrrrrrrr.....", "....rrrrrrr.....",
@@ -1125,18 +1292,25 @@ PAINTINGS = {
               "...y.......y....", "..yyy...........", "...y....y.......", "........k.......",
               ".......kkk......", "......kkkkk.....", "................", "................"],
 }
-PIGMENT = {"y": ["#9a6a22", "#a87a2a", "#b5852f"], "r": ["#7a2a18", "#8e3420", "#a03e28"], "k": ["#1e1a17", "#2a2420", "#35302a"], "w": ["#e6e0d0", "#f0ebe0", "#d8d2c2"]}
+PIGMENT = {"y": ["#9a6a22", "#a87a2a", "#b5852f"], "r": ["#7a2a18", "#8e3420", "#a03e28"], "k": ["#1e1a17", "#2a2420", "#35302a"],
+           "w": ["#d8d2c2", "#e6e0d0", "#f0ebe0"]}  # dark -> light
 
 
 def cave_painting(name):
-    """Pigment on limestone, worn by time: the rock grain shows through the paint here and there."""
-    cv = copy(rock_base("limestone"))
-    rnd = random.Random("paint" + name)
+    """Pigment on limestone, worn by time: the paint takes the light and shade of the rock under it (three tones
+    per pigment), and here and there it has flaked off and the bare rock shows through."""
+    g = pk.to_grid(rock_base("limestone"), ROCKS["limestone"]["ramp"])
+    rnd = random.Random("paint2" + name)
+    keys = {"r": 60, "k": 63, "y": 66, "w": 69}
     for y, row in enumerate(PAINTINGS[name]):
         for x, ch in enumerate(row):
-            if ch in PIGMENT and rnd.random() > 0.12:
-                cv.set(x, y, mixc(hexc(rnd.choice(PIGMENT[ch])), cv.get(x, y), 0.15 * rnd.random()))
-    return cv
+            if ch in keys and rnd.random() > 0.1:
+                rock = g[y][x] if g[y][x] is not CLEAR and g[y][x] < 10 else 2
+                g[y][x] = keys[ch] + (0 if rock <= 1 else 1 if rock <= 3 else 2)
+    ex = extra_for("limestone")
+    for ch, k in keys.items():
+        ex.update({k + i: c for i, c in enumerate(PIGMENT[ch])})
+    return pk.colour(g, ROCKS["limestone"]["ramp"], ex)
 
 
 # ------------------------------------------------------------------ roofs and weaving (phase 5)
@@ -1148,86 +1322,193 @@ ROOFS = {  # roof covering: ramp, style
 
 
 def roof(rid, top=False):
-    """Roof covering: bundles of reed in courses, or overlapping dried leaves/fronds with a midrib."""
+    """Roof covering in two courses (8 px), each overhanging the next.  Reed: upright bundled stems with ragged
+    tips.  Fronds (cycad, fern): overlapping dried fronds, a midrib with leaflets slanting down both sides."""
     ramp_c, style = ROOFS[rid]
-    strands = Noise(rid + str(top), periods=(16, 8), weights=(0.7, 0.3), stretch=((0.25, 1.0) if top else (1.0, 0.25)))
-    rnd = random.Random(rid + str(top))
-
-    def px(x, y):
-        v = strands(x, y) * 0.8 + 0.2 * rnd.random()
-        if not top:
-            course, row = y // 4, y % 4
-            if style == "fronds":
-                mid = (x + course * 4) % 8 == 3
-                v = v * (0.55 if row == 0 else 1.0) + (0.25 if mid else 0)
-            else:
-                v = v * (0.55 if row == 0 else 1.0) + (0.3 if row == 3 else 0)
-        return ramp(ramp_c, v)
-    return paint(px)
+    rnd = random.Random(rid + str(top) + "2")
+    if top:  # seen from above: stems / leaflets lying along the slope
+        g = pk.despeckle(pk.clusters(rid + "top2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(0.5, 2.0)), passes=2)
+        g = [[v + 1 for v in row] for row in g]
+        for _ in range(18):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            for i in range(rnd.randint(2, 4)):
+                put(g, x + i, y, 4 if i == 0 else 3)
+            put(g, x, y + 1, 1)
+        return pk.colour(g, ramp_c)
+    if style == "bundles":
+        g = pk.grid(2)
+        for c in range(2):
+            y0 = c * 8
+            tone = [rnd.choice((1, 2, 2, 3, 3, 4)) for _ in range(N)]
+            tips = [rnd.choice((6, 7, 7, 8)) for _ in range(N)]
+            for x in range(N):
+                for k in range(8):
+                    if k == 0:
+                        v = 0
+                    elif k == 1:
+                        v = 1
+                    elif k >= tips[x]:
+                        v = 4 if (x + k) % 2 else 3
+                    elif k in (3, 4) and x % 4 == 1:
+                        v = 1  # fibre tie round the bundle
+                    else:
+                        v = tone[x]
+                    g[y0 + k][x] = v
+        return pk.colour(g, ramp_c)
+    g = pk.grid(1)
+    for c in range(2):
+        y0 = c * 8
+        for f in range(2):  # two fronds per course, offset in every course
+            mx = (f * 8 + c * 4 + 3) % N
+            for k in range(8):
+                y = y0 + k
+                if k == 0:
+                    for x in range(mx - 4, mx + 4):
+                        put(g, x, y, 0)
+                    continue
+                put(g, mx, y, 4)  # midrib
+                for side in (-1, 1):
+                    for d in range(1, 4):
+                        # leaflets slant down and out from the midrib; each leaflet lit on its upper edge
+                        if (k + d) % 3 == 0:
+                            put(g, mx + side * d, y, 3)
+                        elif (k + d) % 3 == 1:
+                            put(g, mx + side * d, y, 2)
+                        else:
+                            put(g, mx + side * d, y, 1)
+            put(g, mx + 4, y0 + 1, 0)
+    return pk.colour(g, ramp_c)
 
 
 WICKER_RAMP = ["#5a4428", "#7a5e36", "#987646", "#b08d58", "#c4a26c"]
 
 
-def wicker(alpha=False):
-    """Basket weave of split cane: over-under strands 2 px wide; door/trapdoor version has holes."""
-    cv = Canvas()
+def wicker_grid(alpha=False):
+    """Basket weave of split cane, 2 px strands: the strand on top is lit along its upper edge, the one passing
+    under is in shadow where it dives; door/hatch version has little open windows."""
+    g = pk.grid(2)
     for y in range(N):
         for x in range(N):
-            over = ((x // 2) + (y // 2)) % 2 == 0
-            k = (y % 2) if over else (x % 2)
-            if alpha and over and (x % 4 == 1 and y % 4 == 1):
-                continue
-            cv.set(x, y, ramp(WICKER_RAMP, 0.35 + (0.35 if k == 0 else 0.0) + (0.15 if over else -0.1)))
-    return cv
+            over_h = ((x // 2) + (y // 2)) % 2 == 0
+            if over_h:  # horizontal strand on top
+                v = 4 if y % 2 == 0 else 2
+                if x % 2 == 1 and y % 2 == 1:
+                    v = 2
+            else:  # vertical strand on top
+                v = 3 if x % 2 == 0 else 1
+            g[y][x] = v
+            if alpha and (x % 4 == 1 and y % 4 == 1):
+                g[y][x] = CLEAR
+    return g
+
+
+def wicker(alpha=False):
+    return pk.colour(wicker_grid(alpha), WICKER_RAMP)
 
 
 def wicker_door(part):
-    cv = wicker(alpha=True)
-    for i in range(N):  # frame poles
-        cv.set(0, i, ramp(BARK_TIMBER, 0.6)); cv.set(15, i, ramp(BARK_TIMBER, 0.3))
+    g = wicker_grid(alpha=True)
+    for i in range(N):  # frame poles in relief
+        g[i][0], g[i][1], g[i][15] = 52, 51, 50
         if (part == "top" and i == 0) or (part == "bottom" and i == 15):
             for x in range(N):
-                cv.set(x, i, ramp(BARK_TIMBER, 0.5))
-    return cv
+                g[i][x] = 52 if part == "top" else 51
+    ex = {50 + i: c for i, c in enumerate(BARK_TIMBER)}
+    return pk.colour(g, WICKER_RAMP, ex)
 
 
 def reed_mat():
-    """Mat of whole reeds laid side by side and tied with fibre."""
-    def px(x, y):
-        if y in (3, 12):
-            return hexc("#4a3a22")
-        return ramp(ROOFS["reed_thatch"][0], 0.35 + 0.4 * (x % 3 != 2) + 0.15 * ((x * 7 + y) % 5 == 0))
-    return paint(px)
+    """Mat of whole reeds side by side (each 2 px: lit and shaded half, a node every few pixels), tied with
+    twisted fibre."""
+    g = pk.grid(2)
+    rnd = random.Random("reedmat2")
+    nodes = [rnd.randrange(5) for _ in range(8)]
+    for y in range(N):
+        for x in range(N):
+            r = x // 2
+            v = (3 if x % 2 == 0 else 1) + (1 if (y + nodes[r]) % 6 == 0 and x % 2 == 0 else 0)
+            if (y + nodes[r]) % 6 == 1:
+                v -= 1
+            g[y][x] = max(0, v)
+    for y in (3, 12):
+        for x in range(N):
+            g[y][x] = 60 if x % 2 else 61
+            g[y + 1][x] = 0 if x % 2 else g[y + 1][x]
+    return pk.colour(g, ROOFS["reed_thatch"][0], {60: "#4a3a22", 61: "#6e5a3a"})
+
+
+ROPE = ["#4a3a24", "#5e4a2e", "#7a6240", "#967c54", "#b09870"]
 
 
 def rope_coil(top):
-    """Coiled plant-fibre rope: side shows the turns, top the spiral."""
-    rope = ["#5e4a2e", "#7a6240", "#967c54", "#ad9468"]
+    """Coiled fibre rope: side shows four turns of twisted rope (diagonal plies, shadow between turns); top
+    shows the spiral of the coil."""
+    g = pk.grid(2)
     if top:
-        return paint(lambda x, y: ramp(rope, 0.2 + 0.7 * (0.5 + 0.5 * math.cos(math.hypot(x - 7.5, y - 7.5) * 2.1))))
-    return paint(lambda x, y: ramp(rope, 0.15 + 0.75 * (0.5 + 0.5 * math.cos((y + x * 0.5) * math.pi / 2))))
+        for y in range(N):
+            for x in range(N):
+                ang = math.atan2(y - 7.5, x - 7.5)
+                r = math.hypot(x - 7.5, y - 7.5) + ang / math.tau * 2.5
+                ph = r % 2.5
+                g[y][x] = 0 if ph < 0.6 else (4 if ph < 1.2 else 3 if ph < 1.8 else 2)
+        put(g, 7, 7, 0); put(g, 8, 8, 0)
+        return pk.colour(g, ROPE)
+    for y in range(N):
+        for x in range(N):
+            k = y % 4
+            ply = (x + y) % 3
+            if k == 3:
+                v = 0
+            else:
+                v = (4 if ply == 0 else 3 if ply == 1 else 1) - (1 if k == 2 and ply != 2 else 0)
+            g[y][x] = max(0, v)
+    return pk.colour(g, ROPE)
 
 
 def fiber_net():
-    """Knotted fibre net, transparent between the cords."""
-    cv = Canvas()
+    """Knotted fibre net, transparent between the cords: diagonal cords lit on one side, a knot at each crossing."""
+    g = pk.grid(CLEAR)
     for y in range(N):
         for x in range(N):
-            if (x + y) % 5 == 0 or (x - y) % 5 == 0:
-                cv.set(x, y, hexc("#8a7452" if (x + y) % 2 else "#a68e66"))
-    return cv
+            a, b = (x + y) % 6 == 0, (x - y) % 6 == 0
+            if a and b:
+                g[y][x] = 3
+            elif a:
+                g[y][x] = 2
+            elif b:
+                g[y][x] = 1
+    for y in range(0, N, 6):  # knots: a small lump
+        for x in range(N):
+            if (x + y) % 6 == 0 and (x - y) % 6 == 0:
+                put(g, x + 1, y, 2); put(g, x, y + 1, 0)
+    return pk.colour(g, ROPE)
 
 
 def reed_bundle(top):
-    """Bundle of cut reeds tied with fibre: side shows the stems, top the cut ends."""
+    """Bundle of cut reeds tied with fibre: side shows the stems and their nodes, top the hollow cut ends."""
+    rampr = ROOFS["reed_thatch"][0]
     if top:
-        return paint(lambda x, y: hexc("#4a4426") if (x % 3 == 0 and y % 3 == 0) else ramp(ROOFS["reed_thatch"][0], 0.5 + 0.3 * ((x + y) % 2)))
-    def px(x, y):
-        if y in (4, 11):
-            return hexc("#4a3a22")
-        return ramp(ROOFS["reed_thatch"][0], 0.3 + 0.45 * (x % 2) + 0.1 * ((y * 3 + x) % 4 == 0))
-    return paint(px)
+        g = pk.grid(0)
+        for cy in range(0, N, 3):
+            for cx in range(0, N, 3):
+                ox = 1 if (cy // 3) % 2 else 0
+                pk.fleck(g, cx + ox, cy, ["43", "21"], {"4": 4, "3": 3, "2": 2, "1": 60})
+        return pk.colour(g, rampr, {60: "#3a3420"})
+    g = pk.grid(2)
+    rnd = random.Random("reedb2")
+    nodes = [rnd.randrange(7) for _ in range(8)]
+    for y in range(N):
+        for x in range(N):
+            r = x // 2
+            v = 3 if x % 2 == 0 else 1
+            if (y + nodes[r]) % 7 == 0:
+                v = 4 if x % 2 == 0 else 2
+            g[y][x] = v
+    for y in (4, 11):
+        for x in range(N):
+            g[y][x] = 60 if x % 3 else 61
+            g[y + 1][x] = 0
+    return pk.colour(g, rampr, {60: "#4a3a22", 61: "#6e5a3a"})
 
 
 def phase5_textures():
@@ -1370,34 +1651,60 @@ def skull_rows(sid):
     return ["." * N] * top + rows + ["." * N] * (N - top - len(rows))
 
 
-def skull_sprite(sid, bone=BONE_RAMP, outline="#3a3226", hole="#2a241c", base=None):
-    """The skull drawn over base (or on transparency): bone shaded with noise, lit at the top."""
-    cv = copy(base) if base else Canvas()
-    n = Noise("skull" + sid, periods=(4, 8), weights=(0.6, 0.4))
-    for y, row in enumerate(skull_rows(sid)):
-        for x, ch in enumerate(row):
+def skull_grid(sid, g=None, bone0=0, outline=10, hole=11):
+    """The skull as tone indices over g (or transparency).  Bone is shaded like a lit object: the top row and the
+    pixels under a hole edge catch the light, the lower jaw line and the pixels above holes are in shade, teeth
+    are the brightest tone; a couple of suture lines break up the big flat areas."""
+    rows = skull_rows(sid)
+    out = [row[:] for row in g] if g else pk.grid(CLEAR)
+    solid = lambda x, y: 0 <= x < N and 0 <= y < N and rows[y][x] in "blt"  # noqa: E731
+    n = pk.clusters("skull2" + sid, [0.3, 0.5, 0.2], periods=(4, 8))
+    for y in range(N):
+        for x in range(N):
+            ch = rows[y][x]
             if ch == "o":
-                cv.set(x, y, hexc(outline))
+                out[y][x] = outline
             elif ch == "e":
-                cv.set(x, y, hexc(hole))
+                out[y][x] = hole
             elif ch == "t":
-                cv.set(x, y, ramp(bone, 0.95))
+                out[y][x] = bone0 + 4
             elif ch in "bl":
-                cv.set(x, y, ramp(bone, (0.55 if ch == "b" else 0.85) - 0.03 * y / 2 + 0.25 * (n(x, y) - 0.5)))
-    return cv
+                v = 2 + (1 if ch == "l" else 0) + (n[y][x] - 1) * (1 if ch == "b" else 0)
+                if y == 0 or (not solid(x, y - 1) and rows[y - 1][x] != "e"):
+                    v = 4  # top edge in the light
+                elif not solid(x, y + 1):
+                    v = 1  # underside in shade
+                if y > 0 and rows[y - 1][x] == "e":
+                    v = 1  # shadow cast inside the lower lip of an opening
+                if y < N - 1 and rows[y + 1][x] == "e":
+                    v = min(4, v + 1)  # lit brow above an opening
+                out[y][x] = bone0 + max(0, min(4, v))
+    return out
+
+
+def skull_sprite(sid, bone=BONE_RAMP, outline="#3a3226", hole="#2a241c", base=None):
+    g = skull_grid(sid, bone0=20, outline=30, hole=31)
+    ex = {20 + i: c for i, c in enumerate(bone)}
+    ex.update({30: outline, 31: hole})
+    return pk.colour(g, bone, ex)
 
 
 def skull_fossil(sid):
-    """Skull still in the rock: mineralised brown bone, a dark groove where the matrix was dug out around it."""
-    rock = rock_base(SKULL_ERA_ROCK.get(sid, "limestone"))
+    """Skull still in the rock: mineralised brown bone, a dark groove where the matrix was dug out around it,
+    the rim of the groove lit along its lower edge."""
+    rid = SKULL_ERA_ROCK.get(sid, "limestone")
+    g = base_grid(rid)
     rows = skull_rows(sid)
-    cv = copy(rock)
     for y in range(N):
         for x in range(N):
             if rows[y][x] == "." and any(0 <= y + dy < N and 0 <= x + dx < N and rows[y + dy][x + dx] != "."
                                          for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
-                cv.set(x, y, shade(rock.get(x, y), 0.7))
-    return skull_sprite(sid, FOSSIL_BONE, "#2e251b", "#241d16", base=cv)
+                g[y][x] = GAP
+    g = skull_grid(sid, g, bone0=20, outline=30, hole=31)
+    ex = extra_for(rid)
+    ex.update({20 + i: c for i, c in enumerate(FOSSIL_BONE)})
+    ex.update({30: "#2e251b", 31: "#241d16"})
+    return pk.colour(g, ROCKS[rid]["ramp"], ex)
 
 
 def species_ramp(sid):
@@ -1424,62 +1731,125 @@ HIDE_PATTERN = {  # rug pattern of each species (scales by default)
 }
 
 
-def hide_pattern(seed, colors, pattern):
-    """Tileable skin: scales (Voronoi), osteoderms (big raised cells), stripes, spots, feathers or fuzz."""
-    n = Noise(seed, periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
+def hide_grid(seed, pattern):
+    """Tileable skin as tone indices (0..4 of the species ramp): scales and osteoderms are raised cells in relief
+    (lit top/left, shaded bottom/right, dark creases), stripes and spots are darker markings over mottled skin,
+    feathers overlap like shingles with a light quill, fuzz is short soft strands."""
+    rnd = random.Random(seed + "hide2")
     if pattern in ("scales", "big_scales", "fine_scales", "osteoderms"):
-        count = {"scales": 22, "big_scales": 12, "fine_scales": 40, "osteoderms": 8}[pattern]
-        cells = Cells(seed, count)
-        rnd = random.Random(seed)
-        tone = [rnd.uniform(-0.12, 0.12) for _ in cells.seeds]
-
-        def px(x, y):
-            e = cells.edge[y][x]
-            if e < (0.9 if pattern != "osteoderms" else 1.2):
-                return ramp(colors, 0.12)
-            lit = 0.08 if pattern == "osteoderms" and e > 2.4 else 0.0
-            return ramp(colors, 0.5 + tone[cells.at(x, y)] + 0.3 * (n(x, y) - 0.5) + lit)
-        return paint(px)
+        count = {"scales": 20, "big_scales": 10, "fine_scales": 26, "osteoderms": 7}[pattern]
+        owner = pk.regions_from_cells(seed, count, gap=0.7 if pattern != "osteoderms" else 1.1)
+        cnt = max(max(r) for r in owner) + 1
+        g = pk.clusters(seed + "s", [0.5, 0.5], periods=(8, 16))
+        g = [[v + 1 for v in row] for row in g]
+        g = pk.per_region(g, owner, cnt, seed + "t", spread=(0, 0, 1), hi=3)
+        # each scale: lit along its top only, shaded underneath, dark creases between scales
+        for y in range(N):
+            for x in range(N):
+                o = owner[y][x]
+                if o < 0:
+                    continue
+                if at(owner, x, y + 1) != o:
+                    g[y][x] = max(1, g[y][x] - 1)
+                elif at(owner, x, y - 1) != o:
+                    g[y][x] = min(4, g[y][x] + 1)
+                g[y][x] = g[y][x]
+        g = [[0 if owner[y][x] < 0 else g[y][x] for x in range(N)] for y in range(N)]
+        if pattern == "osteoderms":  # a bony keel in the middle of each plate
+            for y in range(N):
+                for x in range(N):
+                    o = owner[y][x]
+                    if o >= 0 and all(at(owner, x + dx, y + dy) == o for dx in (-2, 0, 2) for dy in (-2, 0, 2)):
+                        g[y][x] = 4 if at(owner, x, y - 3) != o or at(owner, x - 3, y) != o else 3
+        return g
     if pattern == "stripes":
-        return paint(lambda x, y: ramp(colors, 0.62 + 0.25 * (n(x, y) - 0.5)
-                                        - (0.38 if (x + round(2 * math.sin(y / N * 2 * math.pi))) % 8 < 2 else 0)))
+        g = pk.despeckle(pk.clusters(seed + "m", [0.45, 0.55], periods=(4, 8, 16)))
+        g = [[v + 1 for v in row] for row in g]
+        for y in range(N):
+            off = round(2 * math.sin(y / N * 2 * math.pi))
+            for x in range(N):
+                k = (x + off) % 8
+                if k < 2:
+                    g[y][x] = 0 if k == 0 else 1
+                elif k == 2:
+                    g[y][x] = min(4, g[y][x] + 1)  # the pale edge of the stripe
+        return g
     if pattern == "spots":
+        g = pk.despeckle(pk.clusters(seed + "m", [0.45, 0.55], periods=(4, 8, 16)))
+        g = [[v + 1 for v in row] for row in g]
         cells = Cells(seed, 6)
-        return paint(lambda x, y: ramp(colors, 0.62 + 0.25 * (n(x, y) - 0.5)
-                                        - (0.4 if cells.edge[y][x] > 3.2 else 0)))
-    if pattern == "feathers":  # overlapping contour feathers: long cells, shadow under each, light quill
-        cells = Cells(seed, 14, sx=1.5, sy=0.75)
-        rnd = random.Random(seed)
-        tone = [rnd.uniform(-0.1, 0.1) for _ in cells.seeds]
+        for y in range(N):
+            for x in range(N):
+                e = cells.edge[y][x]
+                if e > 3.0:
+                    g[y][x] = 0
+                elif e > 2.4:
+                    g[y][x] = min(g[y][x], 1)
+        return g
+    if pattern == "feathers":  # overlapping contour feathers: long narrow cells, a light quill down each,
+        # the lower tip of every feather casting a shadow on the one below
+        owner = pk.regions_from_cells(seed + "fe", 11, gap=0.0, sx=1.15, sy=0.85)
+        cnt = max(max(r) for r in owner) + 1
+        g = pk.clusters(seed + "fm", [0.3, 0.5, 0.2], periods=(8, 16))
+        g = [[v + 1 for v in row] for row in g]
+        g = pk.per_region(g, owner, cnt, seed + "ft", spread=(-1, 0, 0, 1), hi=4)
+        cols = {}
+        for y in range(N):
+            for x in range(N):
+                cols.setdefault(owner[y][x], []).append(x)
+        for y in range(N):
+            for x in range(N):
+                o = owner[y][x]
+                if at(owner, x, y + 1) != o:
+                    g[y][x] = 0 if at(owner, x - 1, y) == o and at(owner, x + 1, y) == o else 1
+                elif at(owner, x - 1, y) != o:
+                    g[y][x] = max(0, g[y][x] - 1)
+                elif at(owner, x, y - 1) != o:
+                    g[y][x] = min(4, g[y][x] + 1)
+                xs = sorted(cols[o])
+                if x == xs[len(xs) // 2] and at(owner, x, y + 1) == o:
+                    g[y][x] = 3  # quill
+        return g
+    # fuzz (pterosaur pycnofibres): short soft strands combed one way
+    g = pk.despeckle(pk.clusters(seed + "fz", [0.19, 0.62, 0.19], periods=(2, 4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for _ in range(18):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        t = rnd.choice((1, 3, 3))
+        put(g, x, y, t); put(g, x + 1, y + 1, max(0, t - 1) if t else 1)
+    return g
 
-        def px(x, y):
-            o = cells.at(x, y)
-            if cells.at(x, y + 1) != o:
-                return ramp(colors, 0.1)
-            if cells.at(x - 1, y) != o:
-                return ramp(colors, 0.3 + tone[o])
-            sx, sy = cells.seeds[o]
-            quill = abs(((x + 0.5 - sx + N / 2) % N) - N / 2) < 0.5
-            return ramp(colors, 0.55 + tone[o] + (0.2 if quill else 0) + 0.2 * (n(x, y) - 0.5))
-        return paint(px)
-    # fuzz (pterosaur pycnofibres): fine noise, soft
-    m = Noise(seed + "f", periods=(8, 16), weights=(0.5, 0.5))
-    return paint(lambda x, y: ramp(colors, 0.45 + 0.35 * (m(x, y) - 0.5) + 0.25 * (n(x, y) - 0.5)))
+
+def muted(colors, k=0.35):
+    """The ramp pulled k of the way towards grey: tanned skin is duller than the living animal."""
+    out = []
+    for c in colors:
+        r, g_, b, _ = hexc(c)
+        lum = 0.3 * r + 0.59 * g_ + 0.11 * b
+        out.append("#%02x%02x%02x" % tuple(int(v + (lum - v) * k) for v in (r, g_, b)))
+    return out
+
+
+def hide_pattern(seed, colors, pattern):
+    return pk.colour(hide_grid(seed, pattern), muted(colors))
 
 
 def framed(cv, sides=True, top=True):
-    """Stretched on a stick frame and laced to it: posts at the sides (and the rails at top and bottom)."""
+    """Stretched on a stick frame and laced to it: round stick posts in relief (lit, mid, shaded), and pairs of
+    rawhide laces wrapping the edge of the hide every three pixels."""
     out = copy(cv)
+    st = [hexc(c) for c in STICK_RAMP]
+    lace, lace_d = hexc("#d8c9a4"), hexc("#a8946c")
     for i in range(N):
         if sides:
-            out.set(0, i, ramp(STICK_RAMP, 0.7)); out.set(15, i, ramp(STICK_RAMP, 0.3))
+            out.set(0, i, st[3]); out.set(15, i, st[1])
         if top:
-            out.set(i, 0, ramp(STICK_RAMP, 0.8)); out.set(i, 15, ramp(STICK_RAMP, 0.25))
+            out.set(i, 0, st[3]); out.set(i, 15, st[0])
     for i in range(2, N - 1, 3):
         if sides:
-            out.set(1, i, hexc("#d8c9a4")); out.set(14, i, hexc("#d8c9a4"))
+            out.set(1, i, lace); out.set(1, i + 1, lace_d); out.set(14, i, lace); out.set(14, i + 1, lace_d)
         if top:
-            out.set(i, 1, hexc("#d8c9a4")); out.set(i, 14, hexc("#d8c9a4"))
+            out.set(i, 1, lace); out.set(i + 1, 1, lace_d); out.set(i, 14, lace); out.set(i + 1, 14, lace_d)
     return out
 
 
@@ -1495,97 +1865,144 @@ GENERIC_HIDES = {  # hide id: (colour source: ramp or species, pattern)
 def generic_hide(hid):
     src, pattern = GENERIC_HIDES[hid]
     colors = species_ramp(src) if isinstance(src, str) else src
-    if pattern == "plain":
-        n = Noise(hid, periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
-        rnd = random.Random(hid)
-        cv = paint(lambda x, y: ramp(colors, contrast(n(x, y), 1.2)))
-        x, y = rnd.randrange(N), 1
-        for _ in range(12):  # a vein of the animal
-            cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.85))
-            x += rnd.choice((-1, 0, 1)); y += 1
-        return cv
+    if pattern == "plain":  # scraped hide: uneven thickness in soft patches, a vein, the odd scrape mark
+        rnd = random.Random(hid + "2")
+        g = pk.despeckle(pk.clusters(hid, [0.05, 0.15, 0.55, 0.18, 0.07], periods=(2, 4, 8)), passes=2)
+        x, y = rnd.randrange(N), 0
+        for _ in range(16):
+            if at(g, x, y) > 1:
+                put(g, x, y, at(g, x, y) - 1)
+            x += rnd.choice((-1, 0, 0, 1)); y += 1
+        for _ in range(3):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            pk.fleck(g, x, y, ["44.", ".44"], {"4": 4})
+        return pk.colour(g, colors)
     return hide_pattern(hid, colors, pattern)
 
 
+def bone_cyl(g, x0, y0, length, horizontal=True, b=20, profile=(4, 3, 1)):
+    """A long bone lying along an axis (profile = tones across it: lit edge ... shaded edge); knobbed ends."""
+    th = len(profile)
+    for i in range(length):
+        for j, t in enumerate(profile):
+            x, y = (x0 + i, y0 + j) if horizontal else (x0 + j, y0 + i)
+            put(g, x, y, b + t)
+    for end in (0, length - 1):
+        for j, t in ((-1, 4), (th, 1)):
+            x, y = (x0 + end, y0 + j) if horizontal else (x0 + j, y0 + end)
+            put(g, x, y, b + t)
+
+
 def ossuary():
-    """Ossuary wall: skulls and long bones stacked in rows in dark niches, like a charnel wall."""
-    cv = paint(lambda x, y: hexc("#2a241c"))
-    n = Noise("ossuary", periods=(4, 8), weights=(0.6, 0.4))
-    skull = ["..ooo..", ".obbbo.", "obebebo", "obbbbbo", ".obtbo.", "..ooo.."]
-    for oy, ox in ((1, 0), (1, 8), (9, 4), (9, 12)):  # two skulls per row, offset like bricks
-        for y, row in enumerate(skull):
+    """Ossuary wall: skulls and long bones stacked in dark niches, like a charnel wall.  Each skull is lit on
+    the crown, has dark eye sockets and nasal hole, and teeth catching the light."""
+    g = pk.grid(10)
+    sk = [".1222.", "133332", "300300", "322223", ".2442."]
+    for oy, ox in ((1, 0), (1, 8), (9, 4), (9, 12)):
+        for y, row in enumerate(sk):
             for x, ch in enumerate(row):
-                c = {"o": hexc("#5a5040"), "e": hexc("#1a1612"), "t": ramp(BONE_RAMP, 0.9),
-                     "b": ramp(BONE_RAMP, 0.45 + 0.4 * (n((ox + x) % N, oy + y) - 0.3))}.get(ch)
-                cv.set((ox + x) % N, oy + y, c)
-    for y0 in (7, 15):  # long bones lying between the rows
+                if ch == "0":
+                    put(g, ox + 1 + x, oy + y, 11)
+                elif ch != ".":
+                    put(g, ox + 1 + x, oy + y, 20 + int(ch) + (1 if y == 0 else 0))
+        for x in range(1, 7):
+            put(g, ox + x, oy + 5, 11)  # shadow under the skull
+    for y0 in (6, 14):
         for x in range(N):
-            cv.set(x, y0, ramp(BONE_RAMP, 0.55 + 0.2 * (n(x, y0) - 0.5)))
-            if x % 5 == 0:  # knuckle ends
-                cv.set(x, y0, ramp(BONE_RAMP, 0.9))
-    return cv
+            put(g, x, y0, 23 if x % 5 else 24)
+            put(g, x, y0 + 1, 21 if x % 5 else 22)
+    ex = {10: "#2a241c", 11: "#16120e"}
+    ex.update({20 + i: c for i, c in enumerate(BONE_RAMP)})
+    return pk.colour(g, BONE_RAMP, ex)
 
 
 def rib_bone():
-    """Rib bone (arch): smooth, curving grain along the bone, darker at the edges."""
-    n = Noise("rib", periods=(2, 8), weights=(0.5, 0.5), stretch=(0.5, 2.0))
-    return paint(lambda x, y: ramp(BONE_RAMP, 0.25 + 0.55 * (1 - abs(x % 8 - 3.5) / 4.5) + 0.2 * (n(x, y) - 0.5)))
+    """Rib bone (arch): two curved ribs side by side, each a lit edge, body and shaded edge, porous here and there."""
+    g = pk.grid(0)
+    rnd = random.Random("rib2")
+    for y in range(N):
+        for x in range(N):
+            k = x % 8
+            g[y][x] = (1, 3, 4, 4, 3, 3, 2, 1)[k]
+    for _ in range(7):
+        put(g, rnd.randrange(N), rnd.randrange(N), 1)
+    return pk.colour(g, BONE_RAMP)
 
 
 def tooth_totem(top):
     """A post wrapped in rings of big teeth tied with sinew; the top is the post's cut end."""
     if top:
-        return paint(lambda x, y: ramp(STICK_RAMP, 0.35 + 0.4 * (((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5 % 3 < 1)))
-    cv = paint(lambda x, y: ramp(STICK_RAMP, 0.3 + 0.3 * ((x * 7 + y) % 5 == 0)))
+        g = pk.grid(2)
+        for y in range(N):
+            for x in range(N):
+                d = math.hypot(x - 7.5, y - 7.5)
+                g[y][x] = 1 if (d + 0.5) % 2.5 < 0.9 else 2
+                if max(abs(x - 7.5), abs(y - 7.5)) > 6.6:
+                    g[y][x] = 0
+        return pk.colour(g, STICK_RAMP)
+    g = pk.despeckle(pk.clusters("totempost", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(2.0, 0.25)), passes=2)
+    g = [[v for v in row] for row in g]
     for y0 in (0, 8):
-        for x0 in range(0, N, 4):  # a row of teeth pointing down
-            for dy, w in enumerate((3, 3, 2, 1, 1)):
+        for x0 in range(0, N, 4):  # a ring of teeth hanging point-down: each tooth lit on its left flank
+            for dy, (w, lit) in enumerate(((3, 1), (3, 1), (2, 1), (2, 0), (1, 0))):
                 for dx in range(w):
-                    cv.set(x0 + dx + (3 - w) // 2, y0 + 1 + dy, ramp(BONE_RAMP, 0.9 - 0.1 * dy - 0.15 * (dx == w - 1)))
+                    t = 24 if dx < lit else (22 if dx == w - 1 and w > 1 else 23)
+                    put(g, x0 + dx + (3 - w + 1) // 2, y0 + 1 + dy, t)
+            put(g, x0 + 2, y0 + 6, 0)  # shadow under the tip
         for x in range(N):
-            cv.set(x, y0, mixc(hexc("#5e3a20"), hexc("#8a5a34"), (x % 3) / 3))
-    return cv
+            put(g, x, y0, 30 if x % 3 else 31)
+    ex = {20 + i: c for i, c in enumerate(BONE_RAMP)}
+    ex.update({30: "#5e3a20", 31: "#8a5a34"})
+    return pk.colour(g, STICK_RAMP, ex)
 
 
 def bone_pile():
-    """Loose bones on bare earth: long bones with knobbed ends, each with its shadow."""
-    rnd = random.Random("bonepile")
-    n = Noise("bonepile", periods=(4, 8), weights=(0.6, 0.4))
-    cv = paint(lambda x, y: ramp(EARTH_RAMP, 0.3 + 0.4 * n(x, y)))
-    for x, y, horizontal, length in ((1, 2, True, 9), (9, 6, False, 8), (2, 10, True, 6), (12, 1, False, 4),
-                                     (5, 13, True, 8)):
-        for i in range(length):
-            px, py = (x + i, y) if horizontal else (x, y + i)
-            cv.set(px % N, (py + 1) % N if horizontal else py % N, ramp(EARTH_RAMP, 0.05)) if horizontal else \
-                cv.set((px + 1) % N, py % N, ramp(EARTH_RAMP, 0.05))
-            cv.set(px % N, py % N, ramp(BONE_RAMP, 0.55 + 0.3 * (rnd.random() < 0.3)))
-        for end in (0, length - 1):  # knobs
-            px, py = (x + end, y) if horizontal else (x, y + end)
-            for d in (-1, 1):
-                q = (px % N, (py + d) % N) if horizontal else ((px + d) % N, py % N)
-                cv.set(*q, ramp(BONE_RAMP, 0.8 if d < 0 else 0.45))
-    return cv
+    """Loose bones on bare earth: long bones with knobbed ends, each casting a shadow on the soil."""
+    g = pk.despeckle(pk.clusters("bonepile2", [0.19, 0.62, 0.19], periods=(2, 4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for x, y, horizontal, length in ((1, 1, True, 8), (11, 5, False, 8), (2, 9, True, 6), (13, 0, False, 3),
+                                     (5, 13, True, 7)):
+        if (x, y) == (13, 0):
+            continue
+        for i in range(length + 1):  # shadow on the soil, under and right of the bone
+            xx, yy = (x + i, y + 2) if horizontal else (x + 2, y + i)
+            put(g, xx, yy, 0)
+        bone_cyl(g, x, y, length, horizontal, profile=(4, 2))
+    ex = {20 + i: c for i, c in enumerate(BONE_RAMP)}
+    return pk.colour(g, EARTH_RAMP, ex)
 
 
 FEATHER_RAMP = ["#2a2420", "#4a3a2c", "#6e5a42", "#9c8466", "#c8b496"]
 
 
 def feather_bundle(top):
-    """Long feathers bundled upright: a light quill in each, barbs slanting down from it, sinew bands."""
+    """Long feathers bundled upright: each feather 4 px wide with a light quill, barbs slanting down from it
+    (lit above the quill side, shaded on the outer edge), held by two sinew bands."""
     if top:  # the cut quill ends inside the bundle
-        n = Noise("feathertop", periods=(4, 8), weights=(0.5, 0.5))
-        return paint(lambda x, y: ramp(FEATHER_RAMP, 0.2 + 0.4 * n(x, y) + (0.35 if (x % 4, y % 4) == (2, 1) else 0)))
-    n = Noise("feathers", periods=(2, 8), weights=(0.4, 0.6))
-
-    def px(x, y):
-        if y in (4, 12):
-            return mixc(hexc("#5e3a20"), hexc("#8a5a34"), (x % 3) / 3)
-        cx = x % 4
-        if cx == 2:
-            return ramp(FEATHER_RAMP, 0.9)
-        barb = (y + abs(cx - 2)) % 2 == 0
-        return ramp(FEATHER_RAMP, 0.35 + (0.15 if barb else 0) - (0.2 if cx == 0 else 0) + 0.3 * (n(x, y) - 0.5))
-    return paint(px)
+        g = pk.despeckle(pk.clusters("feathertop2", [0.19, 0.62, 0.19], periods=(4, 8)), passes=2)
+        g = [[v + 1 for v in row] for row in g]
+        for y in range(1, N, 4):
+            for x in range(2 if (y // 4) % 2 else 0, N, 4):
+                pk.fleck(g, x, y, ["4", "0"], {"4": 4, "0": 0})
+        return pk.colour(g, FEATHER_RAMP)
+    rnd = random.Random("feather2")
+    tone = [rnd.choice((-1, 0, 0, 1)) for _ in range(4)]
+    g = pk.grid(2)
+    for y in range(N):
+        for x in range(N):
+            f, cx = x // 4, x % 4
+            if cx == 2:
+                v = 4
+            else:
+                barb = (y + (2 - cx if cx < 2 else cx - 2)) % 3 == 0
+                v = (1 if cx == 0 else 3 if cx == 1 else 2) + (1 if barb and cx else 0) - (1 if barb and not cx else 0)
+                v += tone[f]
+            g[y][x] = max(0, min(4, v))
+    for y in (4, 12):
+        for x in range(N):
+            g[y][x] = 30 if x % 3 else 31
+            g[y + 1][x] = max(0, g[y + 1][x] - 2)
+    return pk.colour(g, FEATHER_RAMP, {30: "#5e3a20", 31: "#8a5a34"})
 
 
 def phase6_textures():
@@ -1643,26 +2060,49 @@ def small_flame():
 
 
 def fat_top():
-    """Rendered fat in a stone bowl: soft, waxy, a dark burnt ring around the wick."""
-    n = Noise("fat", periods=(2, 4), weights=(0.6, 0.4))
-    return paint(lambda x, y: ramp(["#8a7a50", "#a8966a", "#c4b384", "#d8c99c"], 0.4 + 0.5 * n(x, y))
-                 if abs(x - 7.5) + abs(y - 7.5) > 2 else hexc("#3a2e1c"))
+    """Rendered fat in a stone bowl: waxy, in three soft tones, a burnt ring and the black wick in the middle."""
+    g = pk.despeckle(pk.clusters("fat2", [0.19, 0.62, 0.19], periods=(4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for y in range(N):
+        for x in range(N):
+            d = abs(x - 7.5) + abs(y - 7.5)
+            if d < 1.5:
+                g[y][x] = 10
+            elif d < 3:
+                g[y][x] = 0
+    return pk.colour(g, ["#6e6040", "#8a7a50", "#a8966a", "#c4b384", "#d8c99c"], {10: "#1e1610"})
 
 
 def ash():
-    n = Noise("ash", periods=(4, 8), weights=(0.5, 0.5))
-    rnd = random.Random("ash")
-    cv = paint(lambda x, y: ramp(["#2a2622", "#3e3934", "#57514a", "#76706a"], n(x, y)))
-    for _ in range(6):  # embers
-        cv.set(rnd.randrange(N), rnd.randrange(N), hexc(rnd.choice(("#c4501a", "#e07a24", "#8a2e10"))))
-    return cv
+    """Hearth ash: grey flakes in clumps, charcoal bits, a few glowing embers."""
+    rnd = random.Random("ash2")
+    g = pk.despeckle(pk.clusters("ash2", [0.1, 0.2, 0.55, 0.15], periods=(2, 4, 8)), passes=2)
+    for _ in range(6):  # charcoal
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        pk.fleck(g, x, y, ["01"], {"0": 10, "1": 0})
+    for _ in range(5):  # embers: hot core with a dull rim
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        pk.fleck(g, x, y, ["ab"] if rnd.random() < 0.5 else ["a"], {"a": 12, "b": 11})
+    return pk.colour(g, ["#2a2622", "#3e3934", "#57514a", "#76706a"], {10: "#141210", 11: "#8a2e10", 12: "#e07a24"})
 
 
 def dried_meat():
-    """Strips of dried meat: dark red with fat streaks and a crust."""
-    n = Noise("jerky", periods=(2, 8), weights=(0.5, 0.5), stretch=(0.5, 2.0))
-    return paint(lambda x, y: ramp(["#3a1210", "#5a1c16", "#74281e", "#8e3a2a", "#c49a7a"],
-                                   0.35 + 0.4 * n(x, y) + (0.4 if (x + y // 5) % 6 == 0 else 0)))
+    """Strips of dried meat hung side by side: dark red flesh, a lit edge on each strip, white fat marbling."""
+    rnd = random.Random("jerky2")
+    g = pk.grid(2)
+    grain = pk.clusters("jerkyg", [0.3, 0.45, 0.25], periods=(4, 8, 16), stretch=(2.0, 0.25))
+    for y in range(N):
+        for x in range(N):
+            k = x % 4
+            g[y][x] = max(0, min(3, grain[y][x] + (1 if k == 0 else 0) - (1 if k == 3 else 0) + 1))
+            if k == 3 and (y + x) % 5 == 0:
+                g[y][x] = 0
+    for _ in range(9):  # fat streaks running along the strips
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        if x % 4 in (1, 2):
+            for i in range(rnd.randint(2, 4)):
+                put(g, x, y + i, 4)
+    return pk.colour(g, ["#3a1210", "#5a1c16", "#74281e", "#8e3a2a", "#c49a7a"])
 
 
 CLAY_RAW = ["#6e5a48", "#86705c", "#9c8670", "#b09a84", "#c2ad97"]
@@ -1670,39 +2110,76 @@ CLAY_FIRED = ["#5e2c18", "#7a3a20", "#96502e", "#ae663e", "#c27c50"]
 
 
 def clay_pot(fired, top=False):
-    """Hand-built pot: coil lines around it; the fired one is red-brown with soot clouds from the open fire."""
+    """Hand-built pot: coils of clay round the body (each coil lit on top, a shadow line under it); the fired one
+    is red-brown with soot clouds from the open fire.  Top: thick rim round the dark inside."""
     colors = CLAY_FIRED if fired else CLAY_RAW
-    n = Noise("pot" + str(fired), periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
-    if top:  # rim around the dark inside (the rim box shows only the middle 8x8 of this texture)
-        return paint(lambda x, y: ramp(colors, 0.6 + 0.1 * (y < 8)) if max(abs(x - 7.5), abs(y - 7.5)) > 2.5
-                     else hexc("#1e1712"))
-    soot = Noise("soot", periods=(2, 4), weights=(0.6, 0.4))
-
-    def px(x, y):
-        c = ramp(colors, 0.45 + 0.3 * (n(x, y) - 0.5) - (0.12 if y % 3 == 0 else 0))
-        if fired and soot(x, y) > 0.68:
-            c = mixc(c, hexc("#1e1712"), 0.35)
-        return c
-    return paint(px)
+    if top:
+        g = pk.grid(2)
+        for y in range(N):
+            for x in range(N):
+                d = max(abs(x - 7.5), abs(y - 7.5))
+                if d < 2.5:
+                    g[y][x] = 10 if d < 1.5 else 11
+                elif d < 3.5:
+                    g[y][x] = 4 if (x < 8 and y < 8) else 1  # lit rim edge
+                else:
+                    g[y][x] = 3 if y < 8 else 2
+        return pk.colour(g, colors, {10: "#140f0b", 11: "#2a1f17"})
+    rnd = random.Random("pot2" + str(fired))
+    g = pk.despeckle(pk.clusters("pot2" + str(fired), [0.19, 0.62, 0.19], periods=(2, 4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for y in range(N):
+        for x in range(N):
+            if y % 3 == 0:
+                g[y][x] = min(4, g[y][x] + 1)  # top of the coil
+            elif y % 3 == 2:
+                g[y][x] = max(0, g[y][x] - 1)  # under the coil
+    for _ in range(4):  # finger smoothing marks
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        put(g, x, y, 0); put(g, x + 1, y, 0)
+    if fired:
+        soot = pk.Noise("soot2", periods=(2, 4), weights=(0.6, 0.4))
+        for y in range(N):
+            for x in range(N):
+                if soot(x, y) > 0.66:
+                    g[y][x] = 20 + min(2, g[y][x] // 2)
+    return pk.colour(g, colors, {20: "#1e1712", 21: "#2e2018", 22: "#40281c"})
 
 
 def basin_water():
-    n = Noise("water", periods=(2, 4), weights=(0.6, 0.4), stretch=(1.5, 1.0))
-    return paint(lambda x, y: ramp(["#1e3a5a", "#28507a", "#346694", "#4a80aa"], 0.4 + 0.5 * n(x, y)))
+    """Still water in a stone basin: deep blue in three tones with soft ripple lines and two glints."""
+    g = pk.despeckle(pk.clusters("water2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(1.5, 1.0)), passes=2)
+    rnd = random.Random("water2")
+    for _ in range(5):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for i in range(rnd.randint(3, 5)):
+            put(g, x + i, y, 3)
+    for _ in range(2):
+        put(g, rnd.randrange(N), rnd.randrange(N), 4)
+    return pk.colour(g, ["#1e3a5a", "#28507a", "#346694", "#4a80aa", "#8ab4d0"])
 
 
 def hide_bedroll():
-    """Furred hide bedroll: thick hair in short strokes, brown and tan."""
-    n = Noise("bedroll", periods=(4, 16), weights=(0.5, 0.5), stretch=(1.0, 2.0))
-    return paint(lambda x, y: ramp(["#3a2618", "#55392a", "#70503a", "#8a6a4e", "#a6866a"],
-                                   0.3 + 0.6 * n(x, y) - (0.15 if (x * 3 + y) % 5 == 0 else 0)))
+    """Furred hide bedroll: thick hair lying in short tufts, each tuft lit at its root and dark at its tip."""
+    rnd = random.Random("bedroll2")
+    g = pk.despeckle(pk.clusters("bedroll2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(1.0, 2.0)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for _ in range(28):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        put(g, x, y, 4); put(g, x, y + 1, 3); put(g, x + 1, y + 2, 0)
+    return pk.colour(g, ["#3a2618", "#55392a", "#70503a", "#8a6a4e", "#a6866a"])
 
 
 def hammock_cloth():
-    """Bark-cloth hammock: beaten fibre, faint stripes of the weave, darker cords along the edges."""
-    n = Noise("hammock", periods=(2, 8), weights=(0.5, 0.5), stretch=(2.0, 0.5))
-    return paint(lambda x, y: ramp(["#6a5638", "#86704c", "#a08a62", "#b8a278"],
-                                   (0.2 if x in (0, 15) else 0.55 + 0.3 * (n(x, y) - 0.5) - 0.1 * (x % 3 == 0))))
+    """Bark-cloth hammock: beaten fibre in soft vertical bands, the faint weave of the beating, cords at the edges."""
+    g = pk.despeckle(pk.clusters("hammock2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(2.0, 0.5)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for y in range(N):
+        for x in range(N):
+            if x % 3 == 0 and y % 2 == 0:
+                g[y][x] = max(1, g[y][x] - 1)
+        g[y][0], g[y][1], g[y][15] = 0, 3, 0
+    return pk.colour(g, ["#4e3e28", "#6a5638", "#86704c", "#a08a62", "#b8a278"])
 
 
 def stakes(bone):
@@ -1722,23 +2199,39 @@ def stakes(bone):
 
 
 def pit_cover():
-    """Brush laid over a pit: leaves and twigs on crossed sticks, the dark hole showing through gaps."""
-    n = Noise("pit", periods=(4, 8), weights=(0.5, 0.5))
-    rnd = random.Random("pit")
-    cv = paint(lambda x, y: ramp(OLIVE, 0.2 + 0.7 * n(x, y)) if n(x, y) > 0.28 else hexc("#120e0a"))
-    for _ in range(5):
+    """Brush laid over a pit: leafy twigs on crossed sticks, the dark hole showing through the gaps."""
+    rnd = random.Random("pit2")
+    g = pk.despeckle(pk.clusters("pit2", [0.05, 0.15, 0.55, 0.18, 0.07], periods=(2, 4, 8)), passes=2)
+    g = [[10 if v == 0 else v - 1 for v in row] for row in g]
+    for _ in range(5):  # sticks: lit top, shaded under
         x, y = rnd.randrange(N), rnd.randrange(N)
-        for i in range(rnd.randint(4, 8)):
-            cv.set((x + i) % N, (y + i // 2) % N, ramp(STICK_RAMP, 0.6))
-    return cv
+        for i in range(rnd.randint(5, 9)):
+            put(g, x + i, y + i // 2, 21); put(g, x + i, y + i // 2 + 1, 20)
+    for _ in range(10):  # leaves catching the light
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        pk.fleck(g, x, y, ["43", ".2"], {"4": 4, "3": 3, "2": 2})
+    return pk.colour(g, OLIVE, {10: "#120e0a", 20: "#3a2814", 21: "#87623a"})
 
 
 def menhir(top):
-    """Weathered standing stone: grey gneiss-like grain, patches of yellow lichen, smoothed by rain."""
-    n = Noise("menhir" + str(top), periods=(2, 4, 8), weights=(0.5, 0.3, 0.2), stretch=(0.6, 1.4))
-    lic = Noise("menhirlichen", periods=(4, 8), weights=(0.5, 0.5))
-    return paint(lambda x, y: ramp(["#8a8a6a", "#a8a47a", "#c4bc84"], lic(x, y))
-                 if lic(x, y) > 0.76 else ramp(["#4a4a4c", "#5e5e60", "#727274", "#88888a", "#9c9c9c"], n(x, y)))
+    """Weathered standing stone: grey grain running up the stone, rain-smoothed, patches of crusty yellow lichen
+    (each patch with a lit rim) and a few dark pits."""
+    rnd = random.Random("menhir2" + str(top))
+    g = pk.despeckle(pk.clusters("menhir2" + str(top), [0.05, 0.15, 0.55, 0.18, 0.07], periods=(2, 4, 8),
+                                 stretch=(2.0, 0.5) if not top else (1.0, 1.0)))
+    lic = pk.Noise("menhirlichen", periods=(4, 8), weights=(0.5, 0.5))
+    for y in range(N):
+        for x in range(N):
+            v = lic(x, y)
+            if v > 0.74:
+                g[y][x] = 20 + (2 if v > 0.82 else 1)
+            elif v > 0.71:
+                g[y][x] = 20
+    for _ in range(4):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        pk.fleck(g, x, y, ["0", "4"], {"0": 0, "4": 4})
+    return pk.colour(g, ["#4a4a4c", "#5e5e60", "#727274", "#88888a", "#9c9c9c"],
+                     {20: "#6e6c50", 21: "#a8a47a", 22: "#c4bc84"})
 
 
 TOTEM_FACES = {  # carved face on the front of a totem post: d deep cut, l lit edge, p red ochre paint
@@ -1757,58 +2250,117 @@ TOTEM_FACES = {  # carved face on the front of a totem post: d deep cut, l lit e
 }
 
 
+TOTEM_WOOD = ["#4a3220", "#5e4029", "#765236", "#8c6444", "#a27852"]
+
+
 def totem(face):
-    """A carved post: bark-free wood with vertical grain and, on the front, the carved and ochre-painted face."""
-    n = Noise("totem", periods=(2, 8), weights=(0.4, 0.6), stretch=(2.0, 0.5))
-    cv = paint(lambda x, y: ramp(["#4a3220", "#5e4029", "#765236", "#8c6444", "#a27852"], 0.3 + 0.5 * n(x, y)))
+    """A carved post: bark-free wood with vertical grain and, on the front, the carved face: deep cuts dark,
+    the carved ridges lit, ochre paint in two tones."""
+    g = pk.despeckle(pk.clusters("totem2", [0.1, 0.2, 0.55, 0.15], periods=(2, 4, 8), stretch=(2.0, 0.25)), passes=2)
+    g = [[v for v in row] for row in g]
+    rnd = random.Random("totemcuts")
+    for _ in range(4):  # adze facets on the post
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        put(g, x, y, 4); put(g, x, y + 1, 3)
     if face:
         for y, row in enumerate(TOTEM_FACES[face]):
             for x, ch in enumerate(row):
                 if ch == "d":
-                    cv.set(x, y, hexc("#2a1c12"))
+                    g[y][x] = 10
                 elif ch == "l":
-                    cv.set(x, y, shade(cv.get(x, y), 1.25))
+                    g[y][x] = 4 if y > 0 and TOTEM_FACES[face][y - 1][x] == "d" else 3
                 elif ch == "p":
-                    cv.set(x, y, hexc("#8e3420"))
-    return cv
+                    g[y][x] = 11 if y > 0 and TOTEM_FACES[face][y - 1][x] == "d" else 12
+    return pk.colour(g, TOTEM_WOOD, {10: "#2a1c12", 11: "#6e2818", 12: "#8e3420"})
 
 
 def totem_top():
-    return paint(lambda x, y: ramp(["#4a3220", "#765236", "#a27852"],
-                                   0.3 + 0.5 * ((((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5) % 3 < 1.2)))
+    g = pk.grid(2)
+    for y in range(N):
+        for x in range(N):
+            d = 0.6 * max(abs(x - 7.5), abs(y - 7.5)) + 0.4 * math.hypot(x - 7.5, y - 7.5)
+            g[y][x] = 1 if (d + 0.6) % 2.5 < 0.9 else 3
+            if max(abs(x - 7.5), abs(y - 7.5)) > 6.6:
+                g[y][x] = 0
+    put(g, 7, 7, 0)
+    return pk.colour(g, TOTEM_WOOD)
 
 
 def drum(part):
-    """Drum: a hollowed log laced with sinew from rim to rim; the head is stretched rawhide."""
+    """Drum: a hollowed log laced with sinew from rim to rim (the laces zig-zag, each lit on one side); the head
+    is stretched rawhide, pale in the middle where it is beaten, pegged round the rim."""
     if part == "head":
-        n = Noise("drumhead", periods=(2, 4), weights=(0.6, 0.4))
-        return paint(lambda x, y: ramp(RAWHIDE_RAMP, 0.4 + 0.5 * n(x, y)) if max(abs(x - 7.5), abs(y - 7.5)) < 7
-                     else ramp(STICK_RAMP, 0.4))
-    n = Noise("drumside", periods=(2, 8), weights=(0.4, 0.6), stretch=(0.5, 2.0))
-
-    def px(x, y):
-        if y < 2:
-            return ramp(RAWHIDE_RAMP, 0.5)
-        lace = (x + y) % 6 == 0 or (x - y) % 6 == 0
-        return hexc("#d8c9a4") if lace and y < 12 else ramp(STICK_RAMP, 0.3 + 0.5 * n(x, y))
-    return paint(px)
+        g = pk.despeckle(pk.clusters("drumhead2", [0.19, 0.62, 0.19], periods=(4, 8)), passes=2)
+        g = [[v + 1 for v in row] for row in g]
+        for y in range(N):
+            for x in range(N):
+                d = max(abs(x - 7.5), abs(y - 7.5))
+                if d >= 7:
+                    g[y][x] = 20 if (x + y) % 3 else 21
+                elif d >= 6:
+                    g[y][x] = 0 if (x + y) % 4 == 0 else 1
+                elif d < 2.5:
+                    g[y][x] = min(4, g[y][x] + 1)
+        return pk.colour(g, RAWHIDE_RAMP, {20: "#54391d", 21: "#3a2814"})
+    g = pk.despeckle(pk.clusters("drumside2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(0.5, 2.0)), passes=2)
+    g = [[20 + v for v in row] for row in g]
+    for y in range(N):
+        for x in range(N):
+            if y < 2:
+                g[y][x] = 3 if y == 0 else 1
+            elif y < 12:
+                a, b = (x + y) % 6, (x - y) % 6
+                if a == 0 or b == 0:
+                    g[y][x] = 4 if a == 0 else 2
+                elif a == 1 or b == 5:
+                    g[y][x] = 20
+            elif y == 12:
+                g[y][x] = 0
+    return pk.colour(g, ["#3a2814", "#8a7356", "#a68c6a", "#bba07c", "#d8c9a4"],
+                     {20: "#3a2814", 21: "#54391d", 22: "#6e4d2a"})
 
 
 def basket_lid():
-    """Woven lid seen from above: a spiral of coiled reed."""
-    return paint(lambda x, y: ramp(WICKER_RAMP, 0.3 + 0.6 * (((math.atan2(y - 7.5, x - 7.5) / math.pi + 1) * 2
-                                                             + (((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5) / 2) % 1)))
+    """Woven lid seen from above: a spiral of coiled reed, each coil lit on its outer side, a knot in the middle."""
+    g = pk.grid(2)
+    for y in range(N):
+        for x in range(N):
+            ang = math.atan2(y - 7.5, x - 7.5)
+            r = math.hypot(x - 7.5, y - 7.5) + ang / math.tau * 2.0
+            ph = r % 2.0
+            stitch = int((ang + math.pi) / math.tau * 16) % 4 == 0
+            g[y][x] = 0 if ph < 0.45 else (4 if ph < 1.0 else 3 if ph < 1.5 else 2)
+            if stitch and ph >= 0.45:
+                g[y][x] = 1
+    pk.fleck(g, 7, 7, ["43", "21"], {"4": 4, "3": 3, "2": 2, "1": 1})
+    return pk.colour(g, WICKER_RAMP)
 
 
 def firewood(end):
-    """Split firewood stacked crosswise: the ends of the pieces (rings and bark), or the long sides."""
+    """Split firewood stacked crosswise: the split ends (rings, bark rim, a lit top-left edge), or the long sides
+    (bark-covered pieces in rows, dark gaps between)."""
     if end:
-        cells = Cells("firewood", 9)
-        return paint(lambda x, y: ramp(STICK_RAMP, 0.1) if cells.border(x, y, 0.9)
-                     else ramp(["#8a6438", "#a47a48", "#bc9058"], 0.3 + 0.5 * ((cells.edge[y][x] % 2) > 1)))
-    n = Noise("firewoodside", periods=(2, 8), weights=(0.4, 0.6), stretch=(2.0, 0.5))
-    return paint(lambda x, y: ramp(STICK_RAMP, 0.05) if y % 4 == 3
-                 else ramp(["#4a3220", "#6a4a2c", "#8a6438", "#a47a48"], 0.3 + 0.5 * n(x, y)))
+        owner = pk.regions_from_cells("firewood2", 9, gap=0.7)
+        cnt = max(max(r) for r in owner) + 1
+        cells = Cells("firewood2", 9)
+        g = pk.grid(0)
+        for y in range(N):
+            for x in range(N):
+                o = owner[y][x]
+                if o < 0:
+                    g[y][x] = 10
+                    continue
+                e = cells.edge[y][x]
+                g[y][x] = 20 if e < 1.3 else (2 if int(e) % 2 else 3)
+        g = pk.relief(g, owner, 4, joint=10, light=1, dark=-1, corner=False)
+        return pk.colour(g, ["#6e4c2a", "#8a6438", "#a47a48", "#bc9058", "#d0a46a"],
+                         {10: "#1e140c", 19: "#2e2014", 20: "#46321f", 21: "#5e452c"})
+    g = pk.despeckle(pk.clusters("firewoodside2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(0.25, 2.0)), passes=2)
+    for y in range(N):
+        for x in range(N):
+            k = y % 4
+            g[y][x] = 0 if k == 3 else max(0, min(4, g[y][x] + (2 if k == 0 else 1 if k == 1 else 0)))
+    return pk.colour(g, ["#1e140c", "#4a3220", "#6a4a2c", "#8a6438", "#a47a48"])
 
 
 def phase7_textures():
@@ -1832,23 +2384,37 @@ def phase7_textures():
 AMBER_RAMP = ["#4a2006", "#7a3c0e", "#a85a16", "#cc7c22", "#e8a238", "#f6c860"]
 
 
-def amber(kind):
-    """Fossil tree resin: deep orange-gold with clouds and bubbles inside (block), a smooth surface with a long
-    light streak (polished), or polished pieces set in dark resin (mosaic)."""
-    rnd = random.Random("amber" + kind)
-    n = Noise("amber" + kind, periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
-    if kind == "mosaic":
-        cells = Cells("ambermosaic", 10)
-        tones = [rnd.uniform(0.3, 0.85) for _ in cells.seeds]
-        return paint(lambda x, y: ramp(AMBER_RAMP, 0.05) if cells.border(x, y, 0.9)
-                     else ramp(AMBER_RAMP, tones[cells.at(x, y)] + 0.15 * (n(x, y) - 0.5)))
-    if kind == "polished":
-        return paint(lambda x, y: ramp(AMBER_RAMP, 0.35 + 0.35 * n(x, y) + (0.25 if (x + y) % 16 in (3, 4) else 0)))
-    cv = paint(lambda x, y: ramp(AMBER_RAMP, contrast(n(x, y), 1.4)))
-    for _ in range(5):  # bubbles caught in the resin
+def amber_grid(kind):
+    """Amber as tone indices of AMBER_RAMP (0..5)."""
+    rnd = random.Random("amber2" + kind)
+    if kind == "mosaic":  # polished pieces set in dark resin, each with its own tone and a glint
+        owner = pk.regions_from_cells("ambermosaic2", 10, gap=0.8)
+        cnt = max(max(r) for r in owner) + 1
+        g = pk.clusters("ambm", [0.4, 0.6], periods=(8, 16))
+        g = [[v + 2 for v in row] for row in g]
+        g = pk.per_region(g, owner, cnt, "ambmt", spread=(-1, 0, 1, 1), hi=5)
+        g = pk.relief(g, owner, 5, joint=0, light=1, dark=-1, corner=False)
+        return g
+    if kind == "polished":  # smooth deep amber, a long diagonal light streak and a softer reflection
+        g = pk.despeckle(pk.clusters("ambp", [0.19, 0.62, 0.19], periods=(4, 8)), passes=2)
+        g = [[v + 2 for v in row] for row in g]
+        for y in range(N):
+            for x in range(N):
+                k = (x + y) % 16
+                if k in (3, 4):
+                    g[y][x] = 5 if k == 3 else 4
+                elif k == 5:
+                    g[y][x] = max(1, g[y][x] - 1)
+        return g
+    g = pk.despeckle(pk.clusters("ambraw", [0.04, 0.1, 0.2, 0.45, 0.15, 0.06], periods=(2, 4, 8)), passes=2)
+    for _ in range(6):  # bubbles caught in the resin: bright top-left, dark lower edge
         x, y = rnd.randrange(N), rnd.randrange(N)
-        cv.set(x, y, hexc(AMBER_RAMP[5])); cv.set((x + 1) % N, (y + 1) % N, hexc(AMBER_RAMP[1]))
-    return cv
+        pk.fleck(g, x, y, ["5.", ".1"], {"5": 5, "1": 1})
+    return g
+
+
+def amber(kind):
+    return pk.colour(amber_grid(kind), AMBER_RAMP)
 
 
 INCLUSIONS = {  # what got caught in the resin: d dark body, l light part
@@ -1868,32 +2434,55 @@ INCLUSIONS = {  # what got caught in the resin: d dark body, l light part
 
 
 def amber_inclusion(kind):
-    cv = amber("polished")
+    """Polished amber with something caught inside: the body seen through the resin is a darker amber, not black,
+    and its light parts keep a hint of their own colour."""
+    g = amber_grid("polished")
     for y, row in enumerate(INCLUSIONS[kind]):
         for x, ch in enumerate(row):
             if ch == "d":
-                cv.set(x, y, mixc(hexc("#1e120a"), cv.get(x, y), 0.25))
+                g[y][x] = 10
             elif ch == "l":
-                cv.set(x, y, mixc(hexc("#5a3a1a" if kind != "leaf" else "#3a4a1a"), cv.get(x, y), 0.35))
-    return cv
+                g[y][x] = 11
+    ex = {10: "#2e1a0a", 11: "#6a4a1a" if kind != "leaf" else "#4a5220"}
+    return pk.colour(g, AMBER_RAMP, ex)
 
 
 def resin_block():
-    """Fresh resin set hard: paler, cloudy, with drips running down."""
-    n = Noise("resin", periods=(2, 4), weights=(0.6, 0.4), stretch=(1.0, 0.5))
-    return paint(lambda x, y: ramp(["#7a5a1e", "#a07a2c", "#c49c40", "#dcb85a", "#ecd07c"],
-                                   0.3 + 0.5 * n(x, y) + (0.15 if (x * 5) % 7 == 0 and y > 4 else 0)))
+    """Fresh resin set hard: paler and cloudy, drips running down, each drip lit on the left and fat at the end."""
+    rnd = random.Random("resin2")
+    g = pk.despeckle(pk.clusters("resin2", [0.19, 0.62, 0.19], periods=(2, 4, 8), stretch=(1.0, 0.5)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for _ in range(4):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        ln = rnd.randint(4, 8)
+        for i in range(ln):
+            put(g, x, y + i, 4); put(g, x + 1, y + i, 2)
+        put(g, x, y + ln, 3); put(g, x + 1, y + ln, 1); put(g, x, y + ln + 1, 0)
+    return pk.colour(g, ["#7a5a1e", "#a07a2c", "#c49c40", "#dcb85a", "#ecd07c"])
 
 
 def amber_lantern(top):
-    """Lantern: polished amber panes held in a bone frame; the light shows through the amber."""
+    """Lantern: polished amber panes held in a bone frame; the light glows brightest in the middle of each pane."""
     if top:
-        return paint(lambda x, y: ramp(BONE_RAMP, 0.45 + 0.2 * ((x + y) % 3 == 0)))
-    def px(x, y):
-        if x in (0, 15, 7, 8) or y in (0, 1, 14, 15):
-            return ramp(BONE_RAMP, 0.6 if x != 15 and y > 1 else 0.35)
-        return ramp(AMBER_RAMP, 0.95 - abs(x - 7.5) / 12 - abs(y - 7.5) / 14)
-    return paint(px)
+        g = pk.grid(2)
+        for y in range(N):
+            for x in range(N):
+                g[y][x] = 4 if (x in (0, 1) or y in (0, 1)) else 1 if (x in (14, 15) or y in (14, 15)) else \
+                    (3 if (x + y) % 4 else 2)
+        return pk.colour(g, BONE_RAMP)
+    g = pk.grid(0)
+    for y in range(N):
+        for x in range(N):
+            if x in (0, 7) or y in (0, 1):
+                g[y][x] = 13
+            elif x in (8, 15) or y in (14, 15):
+                g[y][x] = 11 if x == 15 or y == 15 else 12
+            else:
+                px_ = x - 1 if x < 7 else x - 9  # 0..5 inside the pane
+                d = max(abs(px_ - 2.5), abs(y - 7.5) / 2.2)
+                g[y][x] = 5 if d < 1 else 4 if d < 2 else 3 if d < 2.8 else 2
+    ex = {11: BONE_RAMP[0], 12: BONE_RAMP[2], 13: BONE_RAMP[3]}
+    return pk.colour(g, AMBER_RAMP, ex)
 
 
 def amber_textures():
@@ -1909,68 +2498,95 @@ SOIL_RAMP = ["#3a2a1c", "#4e3a28", "#634a34", "#785c42", "#8c6e52"]
 
 
 def litter(kind, side):
-    """Forest floor: fallen fern fronds (brown and a few still green) or conifer needles over dark soil;
-    the side shows the soil with the litter only along the top."""
-    rnd = random.Random("litter" + kind + str(side))
-    n = Noise("litter" + kind, periods=(4, 8), weights=(0.5, 0.5))
-    soil = paint(lambda x, y: ramp(SOIL_RAMP, 0.25 + 0.5 * n(x, y)))
-    colors = (["#5a3e1e", "#7a5428", "#94683a", "#4a6a2a", "#6a8a38"] if kind == "fern"
-              else ["#6a3a1a", "#8a4e22", "#a8642c", "#c47c3a", "#7a4a20"])
-    rows = range(0, 4) if side else range(N)
-    for _ in range(40 if not side else 14):
+    """Forest floor: fallen fern fronds (brown and a few still green) or conifer needles over dark soil; each bit
+    lit along its top and casting a one-pixel shadow.  The side shows soil with the litter only along the top."""
+    rnd = random.Random("litter2" + kind + str(side))
+    g = pk.despeckle(pk.clusters("litter2" + kind, [0.19, 0.62, 0.19], periods=(2, 4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    cols = ([20, 21, 22, 23, 24] if kind == "fern" else [30, 31, 32, 33])
+    rows = range(0, 3) if side else range(N)
+    for _ in range(36 if not side else 12):
         x, y = rnd.randrange(N), rnd.choice(list(rows))
-        length = rnd.randint(2, 5)
+        length = rnd.randint(2, 4)
         dx = rnd.choice((1, -1))
+        c = rnd.choice(cols)
         for i in range(length):
             yy = y + (i // 2 if kind == "fern" else i % 2)
             if side and yy > 3:
                 break
-            soil.set((x + dx * i) % N, yy % N, hexc(rnd.choice(colors)))
+            put(g, x + dx * i, yy, c)
+            if not side and at(g, x + dx * i, yy + 1) < 10:
+                put(g, x + dx * i, yy + 1, 0)
     if side:
         for x in range(N):
-            if rnd.random() < 0.6:
-                soil.set(x, 0, hexc(colors[rnd.randrange(3)]))
-    return soil
+            if rnd.random() < 0.7:
+                put(g, x, 0, rnd.choice(cols[:3]))
+        for y in range(4, N):
+            for x in range(N):
+                if g[y][x] >= 10:
+                    g[y][x] = 2
+    ex = {20: "#5a3e1e", 21: "#7a5428", 22: "#94683a", 23: "#4a6a2a", 24: "#6a8a38",
+          30: "#6a3a1a", 31: "#8a4e22", 32: "#a8642c", 33: "#c47c3a"}
+    return pk.colour(g, SOIL_RAMP, ex)
 
 
 def cracked_mud():
-    """Mud dried in the sun: pale polygons curling at the edges, deep dark cracks between them."""
-    cells = Cells("mudcracks", 7)
-    n = Noise("mudcracks", periods=(4, 8), weights=(0.5, 0.5))
-    return paint(lambda x, y: ramp(SOIL_RAMP, 0.0) if cells.border(x, y, 0.4)
-                 else ramp(["#6a5a46", "#7e6c56", "#928066", "#a69478", "#b8a68a"],
-                           0.35 + 0.35 * n(x, y) + (0.2 if cells.border(x, y, 1.2) else 0)))
+    """Mud dried in the sun: pale polygons curling up at the edges (lit rims), deep dark cracks between them."""
+    owner = pk.regions_from_cells("mudcracks2", 7, gap=0.5)
+    g = pk.despeckle(pk.clusters("mudc", [0.19, 0.62, 0.19], periods=(4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    g = pk.relief(g, owner, 4, joint=10, light=1, dark=-1, corner=False)
+    return pk.colour(g, ["#5e4e3c", "#7e6c56", "#928066", "#a69478", "#b8a68a"], {10: "#2e2218"})
 
 
 def volcanic_ash(layer=False):
-    n = Noise("ash" + str(layer), periods=(4, 8, 16), weights=(0.4, 0.3, 0.3))
-    return paint(lambda x, y: ramp(["#6e6a66", "#827e78", "#96928c", "#aaa6a0", "#bcb8b2"], 0.2 + 0.7 * n(x, y)))
+    """Fine grey volcanic ash: soft drifts, a few dark cinders and glassy specks."""
+    rnd = random.Random("vash2" + str(layer))
+    g = pk.despeckle(pk.clusters("ash2" + str(layer), [0.1, 0.2, 0.55, 0.15], periods=(2, 4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
+    for _ in range(6):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        pk.fleck(g, x, y, ["0"] if rnd.random() < 0.6 else ["4"], {"0": 0, "4": 4})
+    return pk.colour(g, ["#5e5a56", "#6e6a66", "#827e78", "#96928c", "#aaa6a0"])
 
 
 def peat():
-    """Peat: dark, wet, half-rotten plant fibres."""
-    n = Noise("peat", periods=(2, 8, 16), weights=(0.3, 0.4, 0.3), stretch=(2.0, 0.5))
-    return paint(lambda x, y: ramp(["#1a120c", "#2a1e14", "#3a2a1c", "#4a3826", "#5e4a32"], 0.15 + 0.75 * n(x, y)))
+    """Peat: dark, wet, half-rotten plant fibres lying flat, a few paler root threads."""
+    rnd = random.Random("peat2")
+    g = pk.despeckle(pk.clusters("peat2", [0.1, 0.2, 0.55, 0.15], periods=(2, 4, 8), stretch=(0.5, 2.0)), passes=2)
+    for _ in range(6):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for i in range(rnd.randint(3, 5)):
+            put(g, x + i, y + (i // 3), 4)
+    return pk.colour(g, ["#2a1e14", "#3a2a1c", "#4a3826", "#5a4630", "#7a6244"])
 
 
 def lateritic_soil():
-    """Red tropical soil rich in iron, with small hard nodules."""
-    rnd = random.Random("latsoil")
-    n = Noise("latsoil", periods=(4, 8), weights=(0.5, 0.5))
-    cv = paint(lambda x, y: ramp(["#5a2414", "#74301c", "#8c3e24", "#a24e2e", "#b4603a"], 0.25 + 0.55 * n(x, y)))
+    """Red tropical soil rich in iron, in crumbs, with small hard nodules (dark, lit on top)."""
+    rnd = random.Random("latsoil2")
+    g = pk.despeckle(pk.clusters("latsoil2", [0.1, 0.2, 0.55, 0.15], periods=(2, 4, 8)), passes=2)
+    g = [[v + 1 for v in row] for row in g]
     for _ in range(8):
         x, y = rnd.randrange(N), rnd.randrange(N)
-        cv.set(x, y, hexc("#3a1a10")); cv.set((x + 1) % N, y, hexc("#c47850"))
-    return cv
+        pk.fleck(g, x, y, ["a", "0"], {"a": 10, "0": 0})
+    return pk.colour(g, ["#4a1e10", "#5a2414", "#74301c", "#8c3e24", "#a24e2e"], {10: "#c47850"})
 
 
 def salt_crust():
     """Salt left by an evaporated lagoon: white crystalline polygons with raised rims over grey sand."""
-    cells = Cells("salt", 9)
-    n = Noise("salt", periods=(4, 8), weights=(0.5, 0.5))
-    return paint(lambda x, y: ramp(["#e8e4dc", "#f4f2ec", "#ffffff"], 0.6 + 0.4 * n(x, y))
-                 if cells.border(x, y, 0.5)
-                 else ramp(["#a8a294", "#bcb6a8", "#d0cabc", "#dedad0"], 0.3 + 0.6 * n(x, y)))
+    owner = pk.regions_from_cells("salt2", 9, gap=0.0)
+    cells = Cells("salt2", 9)
+    g = pk.despeckle(pk.clusters("salt2n", [0.19, 0.62, 0.19], periods=(4, 8)), passes=2)
+    for y in range(N):
+        for x in range(N):
+            e = cells.edge[y][x]
+            if e < 0.6:
+                g[y][x] = 10 + (1 if at(owner, x, y - 1) == owner[y][x] else 2)  # raised rim, lit side
+            elif e < 1.2:
+                g[y][x] = 0  # shadow beside the rim
+            else:
+                g[y][x] = g[y][x] + 1
+    return pk.colour(g, ["#9a9486", "#a8a294", "#bcb6a8", "#d0cabc"], {11: "#e8e4dc", 12: "#ffffff"})
 
 
 def soil_textures():
@@ -1987,11 +2603,20 @@ OTHER = {
 }
 
 
+# textures whose subject is a strong light/dark motif may keep more contrast (vanilla: cobblestone 84, oak leaves 86,
+# hay 97); everything else is held to 68, near the vanilla median of 64 (see pixelkit.tame)
+TAME_CAPS = (("ossuary_wall", 120), ("flint", 120), ("mossy_", 80), ("cave_painting_", 120), ("_skull_fossil", 100),
+             ("amber_with_", 96), ("_totem_front", 96), ("_leaves", 84), ("thatch", 84), ("salt_crust", 84))
+
+
+def tame_cap(name):
+    return next((cap for key, cap in TAME_CAPS if key in name), 68.0)
+
+
 def build():
     out = {}
     for rid in ROCKS:
         out.update(rock_textures(rid))
-        out[f"{rid}_pebbles"] = pebbles(rid)
     for name, fn in OTHER.items():
         out[name] = fn()
     for tid in WOODS:
@@ -2002,6 +2627,7 @@ def build():
     out.update(phase7_textures())
     out.update(amber_textures())
     out.update(soil_textures())
+    out = {name: pk.tame(cv, tame_cap(name)) for name, cv in out.items()}  # vanilla-like contrast
     for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
     for tid in WOODS:
