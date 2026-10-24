@@ -6,7 +6,7 @@ license = "All-Rights-Reserved"
 modId = "terrassic"
 version = "${version}"
 displayName = "Terrassic"
-authors = "Rodrigo Gomes (Grupo Permaneo)"
+authors = "Rodrigo Gomes"
 logoFile = "assets/terrassic/icon.png"
 description = '''
 Real dinosaurs rebuilt from fossil references: 12 species from the tiny Compsognathus to the giant Brachiosaurus, males and females, eggs that hatch, taming, riding and archaic weapons.

@@ -8,7 +8,11 @@
 
 Mod de dinossauros para **Minecraft 1.20.1** que roda em **Fabric e Forge** (multi-loader com Architectury). Os modelos 3D são animados no estilo do Cobblemon (cubos low-poly e animações GeckoLib) e foram reconstruídos a partir de medidas reais de fósseis.
 
-Autor: **Rodrigo Gomes (Grupo Permaneo)**. Modelos, texturas, sprites e código são autorais, gerados pelas ferramentas em `tools/`.
+Autor: **Rodrigo Gomes**. Modelos, texturas, sprites e código são autorais, gerados pelas ferramentas em `tools/`.
+
+Projeto pessoal, sem vínculo empresarial. Para colaborar entre sessões de IA, leia
+[`AGENTS.md`](AGENTS.md) e o [quadro de coordenação](docs/COORDENACAO.md).
+Verificação de integridade sem gerar arquivos: `python3 -B tools/validation/check_project.py`.
 
 ![Elenco v0.2](art/preview_sheet.png)
 

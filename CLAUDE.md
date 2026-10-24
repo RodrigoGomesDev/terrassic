@@ -1,7 +1,17 @@
 # Terrassic — contexto para continuar em qualquer sessão do Claude
 
-Leia este arquivo e o README.md antes de começar. Responda em português.
-Autor do projeto: Rodrigo Gomes (Grupo Permaneo). Faça os commits no nome dele.
+Leia `AGENTS.md`, `docs/COORDENACAO.md`, este arquivo e o README.md antes de começar. Responda em português.
+Autor do projeto: Rodrigo Gomes. Faça os commits no nome dele.
+
+## Coordenação atual (24/10/2026)
+
+Projeto pessoal do Rodrigo, sem vínculo com qualquer empresa. A entrega consolidada fica na **main**.
+Claude principal: features complexas na main. Claude secundário: features isoladas em `paralelo/*` com checkout
+separado. Codex: integração, validação, estabilidade e desempenho. A frente de identidade visual continua própria.
+Consulte `docs/COORDENACAO.md` antes de reservar arquivos ou iniciar uma fase; não execute a fila inteira por conta
+da instrução de autonomia histórica abaixo. A v0.9 foi integrada na main até `3023eae`.
+Validação de integridade sem regenerar assets: `python3 -B tools/validation/check_project.py`.
+Build não equivale a teste no jogo; os estados e as evidências atuais ficam no quadro de coordenação.
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.

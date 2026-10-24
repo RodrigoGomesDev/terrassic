@@ -46,12 +46,17 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 
 ## 3. Como trabalhamos
 
+- **Coordenação atual (Rodrigo, 24/10/2026):** entrega consolidada na `main`; Claude principal nas features complexas,
+  Claude secundário em `paralelo/*` com checkout separado, Codex na integração e qualidade técnica, identidade visual
+  em frente própria. Reservas, evidências e próximas entregas em `COORDENACAO.md`, lido antes de iniciar uma fase.
+  A autonomia abaixo se aplica ao escopo atribuído à sessão; não autoriza sobrepor o trabalho de outra frente.
 - **Autonomia (Rodrigo, 24/10/2026):** implementar todas as fases possíveis sem esperar aprovação. Quando o limite de
   uso acabar, esperar voltar e continuar de onde parou, começando pelos **modelos 3D** (a fila da era atual) e depois
   as outras fases desta lista. O que só um humano consegue testar no jogo vai para `docs/TESTES_V03.md` (e listas
   parecidas nas próximas versões) e o trabalho segue.
-- **Git com um escritor só.** A nuvem não tem git: cada frente entrega uma lista de arquivos e uma mensagem de commit;
-  só a sessão no Mac do Rodrigo faz commit e push em `main`, uma fase por vez, compilando cada commit num clone limpo.
+- **Git com um escritor de integração por vez.** Cada frente entrega uma lista de arquivos e uma mensagem de commit;
+  a sessão de integração no Mac do Rodrigo consolida em `main`, uma fase por vez, validando a build. Branches paralelas
+  usam checkout separado. Não trocar a branch de uma pasta em uso por outra sessão.
   Pacote e listas em `sync/`; a numeração das fases e `docs/COMMITS_PENDENTES.md` ficam com a frente de sistemas.
 - **Arquivos compartilhados.** Quem entregou uma fase congela os arquivos dela até o commit ser confirmado. Os pontos de
   conflito mais comuns são `tools/javagen/gen_species.py`, `tools/javagen/lore.py`, `tools/javagen/gen_resources.py`
@@ -265,7 +270,7 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 | v0.6 | Planícies, manadas e titãs | 🔄 conteúdo completo (15 espécies, fases 48-62; 7 sistemas, fases 63-69); falta testar no jogo |
 | v0.7 | Predadores ápice e nocaute | ○ |
 | v0.8 | Mundo Terrassic: biomas, estruturas, menu do Minecraft, HUD, ambientação, pacote de texturas | 🔄 biomas, estruturas, menu e HUD na main (9da2414); faltam mundo-ilha, ambientação e pacote de texturas |
-| v0.9 | O Fim: Altar do Salto e chefe | ○ |
+| v0.9 | O Fim: Altar do Salto e chefe | 🔄 código integrado na main até `3023eae`; testes no jogo pendentes (`TESTES_V09.md`) |
 | **v1.0** | **Capítulo 1 "Ecos do Fim" completo**, testado no Fabric e no Forge, 3 idiomas, lançamento | ○ |
 | v2.0 | Penas e Cinzas | ○ |
 | v3.0 | O Reino dos Gigantes | ○ |
