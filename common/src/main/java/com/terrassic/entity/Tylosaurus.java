@@ -76,6 +76,11 @@ public class Tylosaurus extends SwimmingDinosaur {
     }
 
     @Override
+    protected boolean liveYoung() {
+        return true;
+    }
+
+    @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
         if (hit && target instanceof LivingEntity living) {

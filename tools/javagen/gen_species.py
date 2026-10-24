@@ -50,6 +50,8 @@ SIZES = {
     "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
     # Tylosaurus proriger: 12-13 m (the "Bunker" specimen KUVP 5033 ~13 m; Everhart 2005). Sleeker than the Mosasaurus.
     "tylosaurus":         dict(real=13.0, scale=1.58, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
+    # Elasmosaurus platyurus: ~10.3 m, of which ~7 m of neck (Sachs 2005). "real" is the total length.
+    "elasmosaurus":       dict(real=10.3, scale=1.42, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -74,6 +76,7 @@ GUIDE = {
     "ichthyornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "tylosaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=3),
+    "elasmosaurus":       dict(era="late_cretaceous", diet="piscivore", fossil=3),
 }
 
 # Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
@@ -100,6 +103,7 @@ WORLD = {
     "ichthyornis":        dict(biomes=("coast",), weight=10, group=(3, 6), track=8),                            # flocks on the shore
     "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
     "tylosaurus":         dict(biomes=("deep_sea", "ocean"), weight=3, group=(1, 1), track=12),  # also the shallower open sea
+    "elasmosaurus":       dict(biomes=("ocean", "deep_sea"), weight=4, group=(1, 2), track=12),  # fishes the open sea in pairs
 }
 
 # biome predicate -> (Java expression in ModSpawns, description for the doc comment)
@@ -230,12 +234,13 @@ SPECIES = [
       prey="e instanceof AbstractFish && e.getBbWidth() < 0.6F", prey_interval=100, shoulder=True, fisher=True),
  # ---- marine reptiles (SwimmingDinosaur: smooth swimming, wild only for now)
  dict(id="mosasaurus", cls="Mosasaurus", base="SwimmingDinosaur",
-      doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Wild only in this version.",
+      doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Gives birth to live calves, and only a calf can be tamed (fed fish); grown and saddled it is the giant aquatic mount.",
       attrs=dict(MAX_HEALTH=180, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=1.0, ARMOR=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=32),
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.45, 2.0, 400), xp=40, run=0.04,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof Pteranodon",
-      prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"]),
+      prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
+      tame="baby", live_young=True, rideable=True, ride_offset=0.95, ride_forward=-0.1, ride_speed=1.0, dive=1.0),
  dict(id="tylosaurus", cls="Tylosaurus", base="SwimmingDinosaur",
       doc="Tylosaurus proriger - the top predator of the Western Interior Seaway before the Mosasaurus: slender, 13 m, small flippers and a toothless reinforced rostrum it rams prey with (the hit slows and dazes). Wild only for now (knockout taming in v0.7).",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=1.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=4, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
@@ -243,7 +248,14 @@ SPECIES = [
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.6, 2.0, 380), xp=36, run=0.05,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof FlyingDinosaur || e instanceof Mosasaurus && e.isBaby()",
       prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
-      hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 100, 2), ("MobEffects.CONFUSION", 100, 0)]),
+      hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 100, 2), ("MobEffects.CONFUSION", 100, 0)], live_young=True),
+ dict(id="elasmosaurus", cls="Elasmosaurus", base="SwimmingDinosaur",
+      doc="Elasmosaurus platyurus - plesiosaur with a 7 m neck on a 10 m body, flying under water on four long paddles and snapping fish with needle teeth. Hand-tamed with fish; the first aquatic mount (look down to dive, up to surface; the rider never drowns). Gives birth to live young.",
+      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=5, ARMOR=2, KNOCKBACK_RESISTANCE=0.5, FOLLOW_RANGE=28),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      sounds=("DOLPHIN_AMBIENT_WATER", "DOLPHIN_HURT", "DOLPHIN_DEATH", 0.55, 1.6, 320), xp=18, run=0.05,
+      prey="e instanceof AbstractFish",
+      tame="feeding", live_young=True, rideable=True, ride_offset=0.95, ride_forward=0.0, ride_speed=1.1, dive=1.2),
 ]
 
 
@@ -340,6 +352,16 @@ def gen(s, bounds):
         body.append("    @Override\n    public boolean canPerch() {\n        return true;\n    }\n")
     if s.get("fisher"):
         body.append("    @Override\n    protected boolean perchFishes() {\n        return true;\n    }\n")
+    if base == "SwimmingDinosaur":
+        # tame = None (wild until knockout taming) | "feeding" (hand-fed) | "baby" (live-bearers: only calves take food)
+        if s.get("tame"):
+            body.append("    @Override\n    protected boolean tameable() {\n        return true;\n    }\n")
+        if s.get("tame") == "baby":
+            body.append("    @Override\n    public TameMethod tameMethod() {\n        return TameMethod.BABY_FEEDING;\n    }\n")
+        if s.get("live_young"):
+            body.append("    @Override\n    protected boolean liveYoung() {\n        return true;\n    }\n")
+        if "dive" in s:
+            body.append(f"    @Override\n    protected double diveSpeed() {{\n        return {s['dive']}D;\n    }}\n")
     if s.get("fights") is False:
         body.append("    @Override\n    protected boolean fightsBack() {\n        return false;\n    }\n")
     if s.get("hit_effects"):
@@ -543,7 +565,7 @@ def gen_guide(bounds):
         k = size["scale"] / 16.0
         biggest = max((z1 - z0) * k, (y1 - y0) * k, (x1 - x0) * k)
         gui = round(100.0 / biggest, 2)  # pixels per block so the adult fits a ~100 px box in the notebook
-        egg_only = s.get("egg_only", s["base"] == "PredatorDinosaur" and not s.get("feeding_tame"))
+        egg_only = s.get("egg_only", (s["base"] == "PredatorDinosaur" and not s.get("feeding_tame")) or s.get("tame") == "baby")
         rows.append(f'            new GuideSpecies("{sid}", "{g["era"]}", "{g["diet"]}", {size["real"]}F, {str(bool(s.get("rideable"))).lower()}, '
                     f'{str(egg_only).lower()}, {g["fossil"]}, {gui}F)')
     src = f"""package com.terrassic.research;

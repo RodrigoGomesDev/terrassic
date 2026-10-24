@@ -5,6 +5,7 @@ import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Dilophosaurus;
+import com.terrassic.entity.Elasmosaurus;
 import com.terrassic.entity.Gallimimus;
 import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Ichthyornis;
@@ -57,6 +58,7 @@ public final class TerrassicClient {
         renderer(ModEntities.ICHTHYORNIS, "ichthyornis", Ichthyornis.MODEL_SCALE, Ichthyornis.SHADOW);
         renderer(ModEntities.MOSASAURUS, "mosasaurus", Mosasaurus.MODEL_SCALE, Mosasaurus.SHADOW);
         renderer(ModEntities.TYLOSAURUS, "tylosaurus", Tylosaurus.MODEL_SCALE, Tylosaurus.SHADOW);
+        renderer(ModEntities.ELASMOSAURUS, "elasmosaurus", Elasmosaurus.MODEL_SCALE, Elasmosaurus.SHADOW);
         // END GENERATED renderers
         EntityRendererRegistry.register(ModEntities.SPEAR, ThrownSpearRenderer::new);
         ClientHooks.init();

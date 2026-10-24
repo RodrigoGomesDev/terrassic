@@ -646,5 +646,38 @@
    "animation.tylosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "elasmosaurus": {
+  "bones": 19,
+  "cubes": 21,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -22.143281730245217,
+    0.0,
+    -83.00001269751886
+   ],
+   [
+    22.143281730245217,
+    16.50002731710368,
+    33.11502362923445
+   ]
+  ],
+  "animations": [
+   "animation.elasmosaurus.idle",
+   "animation.elasmosaurus.walk",
+   "animation.elasmosaurus.run",
+   "animation.elasmosaurus.sit",
+   "animation.elasmosaurus.attack",
+   "animation.elasmosaurus.knocked_out",
+   "animation.elasmosaurus.wake",
+   "animation.elasmosaurus.eat",
+   "animation.elasmosaurus.beg",
+   "animation.elasmosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

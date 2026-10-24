@@ -1,23 +1,33 @@
 package com.terrassic.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.player.Player;
@@ -27,18 +37,28 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.EnumSet;
+
 /**
- * Marine reptiles. They live in the water like dolphins (smooth swimming, water-bound navigation), breathe
- * underwater, and dry out when stranded on land for too long. Wild only for now: they cannot be tamed or bred
- * (the aquatic mount and saddle come in a later version). Hungry adults hunt sea animals and anyone swimming or
- * rowing near them; out of the water they only defend themselves.
+ * Marine reptiles (and later the big fish). They live in the water like dolphins (smooth swimming, water-bound
+ * navigation), breathe underwater, and dry out when stranded on land for too long. Hungry wild adults hunt sea
+ * animals and anyone swimming or rowing near them; out of the water they only defend themselves.
+ *
+ * <p>Species that return true from {@link #tameable()} are tamed like the land animals (hand-feeding, or only as
+ * babies for the live-bearing predators), follow their owner through the water without ever teleporting onto
+ * land, rest in place when told to sit (they hover instead of sinking), and the rideable ones take a saddle:
+ * the rider steers with the keys, dives and surfaces by looking down or up, and never drowns while mounted.
+ * Live-bearers ({@link #liveYoung()}) spawn with the odd calf in the wild, which is how they are tamed.
  */
 public abstract class SwimmingDinosaur extends DinosaurEntity {
     /** Ticks on land before it starts to dry out (then 1 damage every 2 s). */
     private static final int STRANDED_TICKS = 1200;
+    /** Share of natural spawns of a live-bearing species that are calves. */
+    private static final float CALF_CHANCE = 0.15F;
 
     private int strandedTicks;
 
@@ -49,11 +69,26 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
-    /** Favourite food. Unused while the species is wild only; kept for the future taming. */
+    /** Favourite food (taming, healing). */
     protected abstract Ingredient food();
 
     /** What a wild adult hunts in the water. */
     protected abstract boolean isPrey(LivingEntity entity);
+
+    /** Whether the species can be tamed at all (the untameable ones wait for knockout taming). */
+    protected boolean tameable() {
+        return false;
+    }
+
+    /** Whether the species gives birth to live young: some wild spawns are calves. */
+    protected boolean liveYoung() {
+        return false;
+    }
+
+    /** Vertical speed factor when the rider looks up or down. */
+    protected double diveSpeed() {
+        return 1.0D;
+    }
 
     @Override
     protected PathNavigation createNavigation(Level level) {
@@ -63,33 +98,47 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+        if (this.tameable()) {
+            this.goalSelector.addGoal(1, new RestInWaterGoal(this));
+        }
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.3D, true));
+        if (this.tameable()) {
+            this.goalSelector.addGoal(3, new FollowOwnerSwimGoal(this, 1.2D, 10.0F, Math.max(3.0F, this.getBbWidth() * 1.5F)));
+            this.goalSelector.addGoal(4, new TemptGoal(this, 1.1D, this.food(), false));
+        }
         this.goalSelector.addGoal(5, new RandomSwimmingGoal(this, 1.0D, 30));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 20, true, false,
+        if (this.tameable()) {
+            this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+            this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+        }
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 20, true, false,
                 e -> this.canHunt() && (e.isInWaterOrBubble() || e.getVehicle() instanceof Boat)));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 80, true, false,
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 80, true, false,
                 e -> this.canHunt() && e.isInWaterOrBubble() && this.isPrey(e)));
     }
 
     @Override
     public boolean isFood(ItemStack stack) {
-        return false;
+        return this.tameable() && this.food().test(stack);
     }
 
     @Override
     protected boolean canBeTamedNow() {
-        return false;
+        return this.tameable() && super.canBeTamedNow();
     }
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        // wild only: no feeding, sitting or riding yet
-        return InteractionResult.PASS;
+        if (!this.tameable()) {
+            // wild only until knockout taming (v0.7)
+            return InteractionResult.PASS;
+        }
+        return super.mobInteract(player, hand);
     }
 
-    /** Only hunts while in the water. */
+    /** Only hunts while in the water; tamed ones only defend. */
     @Override
     protected boolean canHunt() {
         return super.canHunt() && this.isInWaterOrBubble();
@@ -132,18 +181,66 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     }
 
     @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
+                                        SpawnGroupData spawnData, CompoundTag tag) {
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+        if (this.liveYoung() && reason == MobSpawnType.NATURAL && this.random.nextFloat() < CALF_CHANCE) {
+            this.setAge(-24000);
+        }
+        return data;
+    }
+
+    // ------------------------------------------------------------------ swimming / ridden swimming
+
+    @Override
     public void travel(Vec3 input) {
         if (this.isControlledByLocalInstance() && this.isInWater()) {
             this.moveRelative(this.getSpeed(), input);
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
-            if (this.getTarget() == null) {
+            if (this.isInSittingPose() || this.isVehicle()) {
+                // resting or ridden: hover, no slow sinking
+                this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, 0.8D, 1.0D));
+            } else if (this.getTarget() == null) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
             }
             this.calculateEntityAnimation(false);
         } else {
             super.travel(input);
         }
+    }
+
+    @Override
+    protected Vec3 getRiddenInput(Player player, Vec3 input) {
+        Vec3 flat = super.getRiddenInput(player, input);
+        if (!this.isInWater()) {
+            return flat;
+        }
+        // look down to dive, up to surface; a little lift when idling so it does not sink under the rider
+        double forward = Math.abs(flat.z);
+        double dive = forward > 0.01D ? -Mth.sin(player.getXRot() * Mth.DEG_TO_RAD) * forward * this.diveSpeed() : 0.0D;
+        return new Vec3(flat.x, dive, flat.z);
+    }
+
+    @Override
+    protected void tickRidden(Player player, Vec3 input) {
+        super.tickRidden(player, input);
+        if (this.isInWater()) {
+            // in the water it always turns with the rider
+            this.setRot(player.getYRot(), player.getXRot() * 0.5F);
+            this.yRotO = this.getYRot();
+            this.yBodyRot = this.getYRot();
+            this.yHeadRot = this.getYRot();
+            if (!this.level().isClientSide() && player.isUnderWater()) {
+                // the mount keeps its rider breathing
+                player.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 60, 0, true, false, false));
+            }
+        }
+    }
+
+    @Override
+    public boolean canJump() {
+        return false;
     }
 
     @Override
@@ -159,6 +256,98 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     @Override
     public boolean checkSpawnObstruction(LevelReader level) {
         return level.isUnobstructed(this);
+    }
+
+    // ------------------------------------------------------------------ goals
+
+    /** The vanilla sit goal refuses to work in water; this one lets a tamed swimmer rest in place when told to. */
+    static class RestInWaterGoal extends Goal {
+        private final SwimmingDinosaur mob;
+
+        RestInWaterGoal(SwimmingDinosaur mob) {
+            this.mob = mob;
+            this.setFlags(EnumSet.of(Goal.Flag.JUMP, Goal.Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            return this.mob.isTame() && !this.mob.isVehicle() && this.mob.isOrderedToSit();
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.canUse();
+        }
+
+        @Override
+        public void start() {
+            this.mob.getNavigation().stop();
+            this.mob.setInSittingPose(true);
+            this.mob.setTarget(null);
+        }
+
+        @Override
+        public void stop() {
+            this.mob.setInSittingPose(false);
+        }
+    }
+
+    /**
+     * Follows the owner through the water. Unlike the vanilla goal it never teleports (which would drop a marine
+     * reptile onto the land next to its owner) and gives up while the owner is far from any water.
+     */
+    static class FollowOwnerSwimGoal extends Goal {
+        private final SwimmingDinosaur mob;
+        private final double speed;
+        private final float start;
+        private final float stop;
+        private LivingEntity owner;
+        private int recalc;
+
+        FollowOwnerSwimGoal(SwimmingDinosaur mob, double speed, float start, float stop) {
+            this.mob = mob;
+            this.speed = speed;
+            this.start = start;
+            this.stop = stop;
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            LivingEntity o = this.mob.getOwner();
+            if (o == null || o.isSpectator() || this.mob.isOrderedToSit() || !this.mob.isInWater()
+                    || this.mob.distanceToSqr(o) < (double) (this.start * this.start)) {
+                return false;
+            }
+            this.owner = o;
+            return true;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return !this.mob.getNavigation().isDone() && !this.mob.isOrderedToSit()
+                    && this.mob.distanceToSqr(this.owner) > (double) (this.stop * this.stop);
+        }
+
+        @Override
+        public void start() {
+            this.recalc = 0;
+        }
+
+        @Override
+        public void stop() {
+            this.owner = null;
+            this.mob.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            this.mob.getLookControl().setLookAt(this.owner, 10.0F, (float) this.mob.getMaxHeadXRot());
+            if (--this.recalc <= 0) {
+                this.recalc = this.adjustedTickDelay(10);
+                this.mob.getNavigation().moveTo(this.owner, this.speed);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ spawning

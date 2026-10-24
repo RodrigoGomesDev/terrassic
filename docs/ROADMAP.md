@@ -91,7 +91,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | 2 | v0.3 | Pteranodon, Mosasaurus, Maiasaura | pterossauro, réptil marinho, hadrossauro | ✅ (`knocked_out` completo desde a fase 40) |
 | 3 | revisão | As 12 da v0.2: deixar cada uma única e detalhada, sem clone, com o conjunto completo de animações | terópode grande ✅, hadrossauro ✅ | ⏭ |
 | 4 | v0.4 céus | Quetzalcoatlus, Hatzegopteryx (azdarquídeos), Ichthyornis (ave de ombro) | pterossauro ✅, ave ✅ | ✅ modelos, animações, Java e Guia prontos (fases 36 e 39); falta testar no jogo |
-| 5 | v0.5 Mar Interior | Mosasaurus montável, Tylosaurus, Elasmosaurus, Xiphactinus, Archelon, Hesperornis, Deinosuchus, Baurusuchus | réptil marinho, plesiossauro, peixe, tartaruga, ave mergulhadora, crocodilo | ○ |
+| 5 | v0.5 Mar Interior | Mosasaurus montável, Tylosaurus, Elasmosaurus, Xiphactinus, Archelon, Hesperornis, Deinosuchus, Baurusuchus | réptil marinho ✅, plesiossauro ✅, peixe, tartaruga, ave mergulhadora, crocodilo | 🔄 Tylosaurus (41), Elasmosaurus + Mosasaurus montável (42) |
 | 6 | v0.6 planícies e titãs | Edmontosaurus, Corythosaurus, Styracosaurus, Euoplocephalus, Protoceratops, Struthiomimus, Thescelosaurus, Pachyrhinosaurus, Therizinosaurus, Deinocheirus, Alamosaurus, Saltasaurus, Argentinosaurus, Opisthocoelicaudia, Dreadnoughtus | hadrossauro, ceratopsiano, anquilossauro, ornitomimossauro, saurópode (titanossauro) | ○ |
 | 7 | v0.7 predadores ápice | Giganotosaurus, Carcharodontosaurus, Carnotaurus, Tarbosaurus, Daspletosaurus, Albertosaurus, Majungasaurus, Dakotaraptor, Troodon, Oviraptor, Citipati, Mononykus, Didelphodon | terópode grande, abelissaurídeo, terópode pequeno, oviraptorossauro, mamífero pequeno | ○ |
 | 8 | depois da v1.0 | O resto das 327 criaturas do Cretáceo Superior no bestiário, em levas | os mesmos | ○ |
@@ -103,7 +103,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | v0.3 | Caderno de Campo (Diário, Guia, Katarina, Relatório), tela de abertura, níveis do Guia, Rocha Fossilífera, pincel e cinzel, Mesa de Pesquisa, Carvão de Esboço, Lente de Âmbar, Frasco de Argila, Âmbar Bruto, Amostra de Sangue, voo simples, pulo na montaria, tesoura tira a sela, configuração de spawn, registros por tabela, Guia com filtros e páginas | ✅ (falta teste no jogo) |
 | v0.3 | Árvore de conquistas nova: aba por capítulo + aba Caderno de Campo, trava só o salto (`CONQUISTAS.md`) | 🔄 |
 | v0.4 | Voo completo com stamina, sela por espécie (couro, osso, fibra), criaturas de ombro com bônus, temperamentos | ○ |
-| v0.5 | Nado montado (mergulhar sem afogar), sela aquática, filhotes de quem nasce vivo | ○ |
+| v0.5 | Nado montado (mergulhar sem afogar), sela aquática, filhotes de quem nasce vivo | ✅ fase 42: domar/sentar/seguir/montar na água com a sela comum (olhar para baixo mergulha), Respiração Aquática no jogador, 15% dos spawns vivíparos nascem filhotes; sela aquática própria fica para o crafting da v0.8 |
 | v0.6 | Cadeia alimentar, carcaças, bandos, fome e sono, ninhos selvagens, migração, procriação de selvagens, inventário de carga, coleta automática, sela de plataforma | ○ |
 | v0.7 | Nocaute completo: torpor, barras de torpor e domesticação, eficiência, comer desmaiado, punho, zarabatana e dardo, boleadeira, erva sonífera (`DOMESTICACAO.md`); territórios; ferramentas de osso e sílex completas | ○ |
 | v0.8 | Tipo de mundo "Terrassic" + mundo normal, Tempestades da Fenda e criaturas "da Fenda", páginas da Katarina por jogador | ○ |

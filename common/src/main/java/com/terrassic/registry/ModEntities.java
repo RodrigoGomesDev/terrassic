@@ -6,6 +6,7 @@ import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Dilophosaurus;
+import com.terrassic.entity.Elasmosaurus;
 import com.terrassic.entity.Gallimimus;
 import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Ichthyornis;
@@ -84,6 +85,8 @@ public final class ModEntities {
             mob("mosasaurus", Mosasaurus::new, MobCategory.WATER_CREATURE, Mosasaurus.WIDTH, Mosasaurus.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Tylosaurus>> TYLOSAURUS =
             mob("tylosaurus", Tylosaurus::new, MobCategory.WATER_CREATURE, Tylosaurus.WIDTH, Tylosaurus.HEIGHT, 12);
+    public static final RegistrySupplier<EntityType<Elasmosaurus>> ELASMOSAURUS =
+            mob("elasmosaurus", Elasmosaurus::new, MobCategory.WATER_CREATURE, Elasmosaurus.WIDTH, Elasmosaurus.HEIGHT, 12);
     // END GENERATED species
 
     // ---- projectiles
@@ -122,6 +125,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(ICHTHYORNIS, Ichthyornis::createAttributes);
         EntityAttributeRegistry.register(MOSASAURUS, Mosasaurus::createAttributes);
         EntityAttributeRegistry.register(TYLOSAURUS, Tylosaurus::createAttributes);
+        EntityAttributeRegistry.register(ELASMOSAURUS, Elasmosaurus::createAttributes);
         // END GENERATED attributes
     }
 }

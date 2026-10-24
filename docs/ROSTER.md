@@ -88,7 +88,7 @@ Sistemas: voo montado completo (subir, descer, planar, stamina), criaturas de om
 
 Sistemas: montaria aquática (nadar e mergulhar sem se afogar), sela aquática, criaturas de rio, mar e pântano. O Mosasaurus fica montável (não conta como espécie nova).
 
-Progresso: Tylosaurus ✅ (fase 41: modelo no arquétipo marinho, Java e Guia; selvagem até o nocaute da v0.7).
+Progresso: Tylosaurus ✅ (fase 41: modelo no arquétipo marinho, Java e Guia; selvagem até o nocaute da v0.7). Elasmosaurus ✅ e sistema aquático (fase 42: domar na água, descansar boiando, montar e mergulhar sem se afogar, filhotes de quem nasce vivo; Mosasaurus montável pelo filhote).
 
 | Espécie | Tipo | Dieta | Domar | Montaria | Utilidade | Tamanho |
 |---|---|---|---|---|---|---|

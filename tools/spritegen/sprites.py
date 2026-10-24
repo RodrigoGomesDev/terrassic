@@ -375,6 +375,20 @@ def spawn_eggs():
     eye(cv, 9, 6, "#d8b85a")
     eggs["tylosaurus"] = cv
 
+    # Elasmosaurus: dark teal egg with leopard spots and a long pale neck line curling over the top (live-bearer: spawn egg only)
+    cv = base_egg(None, "#2a4a4a", "#9ab4ae")
+    rnd = random.Random("elasmosaurus")
+    for _ in range(10):
+        x, y = rnd.randrange(3, 13), rnd.randrange(5, 14)
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#1c3232"))
+    for x, y in ((5, 9), (5, 8), (5, 7), (6, 6), (7, 5), (8, 4), (9, 4), (10, 4)):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#dfe3d8"))
+    cv.set(11, 4, hexc("#2a4a4a")); cv.set(11, 5, hexc("#2a4a4a"))
+    eye(cv, 10, 5, "#d8c060")
+    eggs["elasmosaurus"] = cv
+
     # species with a front-view 32x32 design (egg_designs.py) use it; the rest keep the 16x16 sketch above
     import egg_designs
     for name, cv in eggs.items():

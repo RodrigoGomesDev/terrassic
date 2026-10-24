@@ -43,6 +43,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Ichthyornis         beach, stony shore              10      3-6
  *  Mosasaurus          deep ocean (not frozen)         2       1
  *  Tylosaurus          deep ocean (not frozen), ocean (not frozen) 3       1
+ *  Elasmosaurus        ocean (not frozen), deep ocean (not frozen) 4       1-2
  *  END GENERATED table
  *  (*desert only where there is sand to stand on)
  * Weights can be scaled or turned off per species in config/terrassic.json (SpawnConfig).
@@ -77,6 +78,8 @@ public final class ModSpawns {
         SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.TYLOSAURUS, SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.ELASMOSAURUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         // END GENERATED placements
 
@@ -153,6 +156,9 @@ public final class ModSpawns {
             }
             if (deepSea || ocean) {
                 add(props, MobCategory.WATER_CREATURE, ModEntities.TYLOSAURUS.get(), 3, 1, 1);
+            }
+            if (ocean || deepSea) {
+                add(props, MobCategory.WATER_CREATURE, ModEntities.ELASMOSAURUS.get(), 4, 1, 2);
             }
             // END GENERATED biomes
         }));
