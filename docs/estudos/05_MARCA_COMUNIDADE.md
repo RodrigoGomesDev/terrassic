@@ -1,5 +1,6 @@
 # Terrassic: marca, comunidade e limites legais
 
+> Atualização de coordenação (24/10/2026): titularidade pessoal definida pelo Rodrigo. As propostas empresariais do estudo não se aplicam; decisões e cronograma posteriores constam de `../PLANO_MESTRE.md` e `../COORDENACAO.md`.
 > Pesquisa feita em **24/10/2026**. Números de downloads, seguidores e membros foram lidos nessa data nas APIs públicas do Modrinth (`api.modrinth.com/v2/project/<slug>`) e do Discord (`discord.com/api/v9/invites/<código>?with_counts=true`). Quando não consegui ler um número, o texto diz "não verificado". Nada aqui é parecer jurídico: os pontos de marca e licença precisam passar por um advogado de propriedade intelectual antes do lançamento público.
 >
 > Limitações desta rodada: a busca na web estava desligada. Instagram, X, TikTok e Reddit bloquearam a leitura automática, e o registro de domínios .com.br e .gg não respondeu. Esses pontos ficam marcados como "conferir à mão".
@@ -12,7 +13,7 @@
 2. **Monetizar é permitido, dentro de limites:** doações, Patreon sem vantagem exclusiva de jogo, anúncios no site e os programas do Modrinth e do CurseForge. **Vender o mod ou travar conteúdo atrás de pagamento, não.**
 3. **Nada que lembre Jurassic Park/World:** a Universal e a Amblin têm "JURASSIC WORLD" registrada justamente nas classes de jogos (9), brinquedos (28) e entretenimento (41).
 4. **O modelo que funciona:** um mod grande vira marca com **Discord como centro**, **trailer a cada versão grande**, **wiki própria**, **site com disclaimer** e **parceria com hospedagem**. O Cobblemon tem **350.342 membros no Discord** e **67 pessoas no time**, uma delas com o cargo de Marketing Lead.
-5. **Para fazer agora, antes de ir a público:** garantir os domínios e os @ nas redes, depositar a marca no INPI, definir a licença e quem é o dono da propriedade intelectual (Rodrigo ou Grupo Permaneo), montar o press kit, abrir o Discord fechado para os beta testers e planejar o trailer da v1.0.
+5. **Para fazer agora, antes de ir a público:** garantir os domínios e os @ nas redes, depositar a marca no INPI, definir a licença e quem é o dono da propriedade intelectual (titular já definido: Rodrigo Gomes, pessoa física), montar o press kit, abrir o Discord fechado para os beta testers e planejar o trailer da v1.0.
 
 ---
 
@@ -38,7 +39,7 @@ Fontes: API do Modrinth e convites do Discord citados no topo. O número de segu
 
 - **Cobblemon, a referência de "mod como estúdio".** Saiu no Modrinth em **06/11/2022**. Tem site próprio (cobblemon.com, com páginas de guias e de servidores), wiki própria, canal oficial no YouTube (youtube.com/@cobblemon), com trailer oficial a cada versão grande (por exemplo, *"Official Trailer for Cobblemon 1.8 – Make Your Move Update"*), modpack oficial no Modrinth e no CurseForge e link de afiliado da BisectHosting na página do mod. O time listado no Modrinth tem **67 pessoas**: 12 programadores, 12 construtores, 7 engenheiros, modeladores e animadores, VFX, compositor, **1 Marketing Lead, 1 Web Developer e 1 Wiki Writer**, além de diretores de estúdio, de conteúdo e de arte (https://api.modrinth.com/v2/project/cobblemon/members). A página traz o disclaimer *"Cobblemon is not affiliated with Pokémon nor Minecraft"*. A lição é tratar marketing, wiki e site como funções do time desde cedo, cada uma com um dono.
 - **Create, autor forte e licença dividida.** O código é MIT (qualquer um pode fazer addon ou porte) e a arte é ARR (ninguém copia o visual). Isso gerou um ecossistema enorme de addons sem diluir a identidade. Tem Patreon e PayPal e wiki própria em domínio próprio.
-- **Alex's Mobs, Alex's Caves e Ice and Fire, a marca pessoal.** O mesmo autor tem vários mods sob o nome "Alex's" e um Discord por guarda-chuva. O código é aberto (GPL ou LGPL). O Alex's Caves usa wiki.gg. A lição: o nome do criador ou do estúdio também é marca. Vale pensar em **"Grupo Permaneo" ou num selo de estúdio** que assine o Terrassic e os mods complementares.
+- **Alex's Mobs, Alex's Caves e Ice and Fire, a marca pessoal.** O mesmo autor tem vários mods sob o nome "Alex's" e um Discord por guarda-chuva. O código é aberto (GPL ou LGPL). O Alex's Caves usa wiki.gg. A lição: o nome do criador ou do estúdio também é marca. No Terrassic, a assinatura é de **Rodrigo Gomes**, pessoa física, também nos mods complementares.
 - **The Aether, marca antiga e bem protegida.** O código é LGPL-3.0, os assets são ARR, e o README pede *"please don't advertise using our brand (our specific logo assets, team name, official social media posts)"*. Exige um CLA (docs/AGREEMENT.md) em que o colaborador cede o uso sob as licenças do projeto. É o modelo mais próximo do que o Terrassic precisa.
 - **Mowzie's Mobs.** Criaturas com animação de alto nível, Patreon e licença própria. Mostra que **animação boa é o melhor material de divulgação**: cada criatura nova rende um clipe curto.
 - **Twilight Forest.** Discord de 35 mil membros, traduções pelo **Crowdin**, builds experimentais só no Discord (#faq) e conta no X (@teamtwilightdev). Usar o Discord como "acesso antecipado gratuito" segura a comunidade entre uma versão e outra.
@@ -67,7 +68,7 @@ O Pixelmon (desde 2012/2013) foi um dos mods mais populares do Minecraft e **foi
 - Cosméticos pagos são permitidos, **exceto capas** ou itens que imitem capa. A regra está escrita para servidores. Para um mod, o caminho seguro é **não vender nada dentro do jogo**.
 - Anúncios são permitidos se não atrapalham o jogo. Marcas de terceiros dentro do jogo exigem aprovação por escrito da Mojang.
 - **Nome "Minecraft":** pode aparecer no título só para descrever ("Terrassic: um mod de dinossauros para Minecraft"), nunca como a parte dominante, e **nunca ao lado do logo ou de assets da marca Minecraft**. Em domínio, só se não parecer oficial e não for usado principalmente para lucro. **Recomendação: não usar "minecraft" ou "mc" no domínio principal.**
-- **Disclaimer obrigatório** em produtos, listagens e sites: *"NOT AN OFFICIAL MINECRAFT [PRODUCT]. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT."*, além de identificar o responsável (Grupo Permaneo ou Rodrigo) e **um contato que não seja chat ou fórum**, como um e-mail.
+- **Disclaimer obrigatório** em produtos, listagens e sites: *"NOT AN OFFICIAL MINECRAFT [PRODUCT]. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT."*, além de identificar o responsável (Rodrigo Gomes) e **um contato que não seja chat ou fórum**, como um e-mail.
 - A "marca" da Mojang inclui **fontes e texturas**: o letreiro do Terrassic usa fonte de blocos própria (bom), mas não pode imitar o logo do Minecraft nem usar a fonte Minecraft Ten.
 
 **O que isso permite ao Terrassic, na prática:**
@@ -88,7 +89,7 @@ O Pixelmon (desde 2012/2013) foi um dos mods mais populares do Minecraft e **foi
 
 ### 2.3 Brasil: emissão e impostos
 
-Se a receita entrar pelo **Grupo Permaneo** (PJ), a contabilidade fica mais simples e a empresa vira dona formal da marca. Nesse caso, **assinar uma cessão de direitos autorais do Rodrigo (autor) para a empresa** ou uma licença exclusiva. Também é preciso uma política de privacidade compatível com a **LGPD** para o site e o Discord, por causa de cookies, newsletter e analytics.
+**Decisão posterior do Rodrigo:** o Terrassic é um projeto pessoal de Rodrigo Gomes, sem vínculo empresarial nem cessão de autoria para empresa. A hipótese empresarial deste estudo não se aplica ao projeto. Também é preciso uma política de privacidade compatível com a **LGPD** para o site e o Discord, por causa de cookies, newsletter e analytics.
 
 ### 2.4 Jurassic Park e Jurassic World: o que evitar
 
@@ -123,7 +124,7 @@ Hoje o `fabric.mod.json` declara **All-Rights-Reserved**. Estas são as opções
 
 Isso combina com o plano de mods complementares e com a "API pública" prevista no `docs/ESCOPO.md`. Abrir o código também permite o Crowdin gratuito para open source, que exige licença aprovada pela OSI e código público (https://crowdin.com/page/open-source-project-setup-request). Atenção: esse plano também exige "nenhum produto comercial ligado ao projeto", e merch pode conflitar. Se a decisão for ficar fechado, manter ARR e publicar só as permissões acima.
 
-**CLA (acordo de contribuição):** antes do primeiro pull request de terceiros. O Aether só concede uso sob as licenças do projeto, sem cláusula de relicenciamento. Para o Terrassic, que quer ser marca, recomendo um CLA que dê ao **Grupo Permaneo uma licença ampla, perpétua e com direito de relicenciar** (modelo Apache ICLA adaptado), assinado pelo bot gratuito **CLA Assistant** no GitHub. Isso inclui a "segunda conta" mencionada no ROADMAP (pergunta 4).
+**CLA (acordo de contribuição):** antes do primeiro pull request de terceiros. O Aether só concede uso sob as licenças do projeto, sem cláusula de relicenciamento. Para o Terrassic, que quer ser marca, recomendo um CLA que dê ao **titular Rodrigo Gomes uma licença ampla, perpétua e com direito de relicenciar** (modelo Apache ICLA adaptado), assinado pelo bot gratuito **CLA Assistant** no GitHub. Isso inclui a "segunda conta" mencionada no ROADMAP (pergunta 4).
 
 ---
 
@@ -286,7 +287,7 @@ Hoje os 3 idiomas são feitos dentro do repositório, pelos geradores, e devem c
 7. **Comunidade:** Discord, redes, servidores parceiros e criadores.
 8. **Press kit:** logos (SVG e PNG, fundo claro e escuro), ícone, paleta, banners, 10 prints 1920x1080, trailer em MP4, textos curtos e longos nos 3 idiomas (já existem no `docs/RESUMO.md`), ficha técnica e contato de imprensa.
 9. **Apoie:** Ko-fi ou Patreon e merch (no futuro).
-10. **Rodapé:** disclaimer Mojang/Microsoft, "Terrassic é uma marca do Grupo Permaneo", e-mail de contato, política de privacidade (LGPD) e seletor pt/en/es.
+10. **Rodapé:** disclaimer Mojang/Microsoft, "Terrassic é um projeto de Rodrigo Gomes", e-mail de contato, política de privacidade (LGPD) e seletor pt/en/es.
 
 ### 6.2 Tecnologia
 
@@ -325,7 +326,7 @@ As datas das versões do mod são **estimativas**: o `ROADMAP.md` não marca dat
 
 1. **Registrar domínios:** terrassic.net + terrassic.gg (se livre) + terrassic.dev, e conferir terrassic.com.br no registro.br.
 2. **Garantir os @** (mesmo que fiquem parados): YouTube @terrassic, TikTok, Instagram, X, Bluesky, Reddit (u/ e r/terrassic), GitHub (organização "terrassic"), Twitch, além dos slugs **modrinth.com/mod/terrassic** e **curseforge.com/minecraft/mc-mods/terrassic** (criar o projeto como rascunho), mais um e-mail contato@ e imprensa@ no domínio.
-3. **Definir quem é dono** da marca e da propriedade intelectual (Grupo Permaneo, com cessão do Rodrigo) e **depositar no INPI** nas classes 9 e 41. Falar com um advogado sobre o registro americano da PSP.
+3. **Titular definido:** Rodrigo Gomes, pessoa física. Registro e consulta de marca ficam para o marco de lançamento conforme o plano aprovado; nenhuma cessão para empresa.
 4. **Decidir a licença** (recomendação na seção 2.5), o texto de permissões e o CLA, e trocar o campo `license` do `fabric.mod.json` quando a decisão sair.
 5. **Pôr o disclaimer da Mojang** no README, na futura página do mod e no site.
 6. **Press kit v0:** logo em SVG, ícone, paleta, os textos do `docs/RESUMO.md` e as cenas do `docs/CAPA.md` capturadas no jogo.

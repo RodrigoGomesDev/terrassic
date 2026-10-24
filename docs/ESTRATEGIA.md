@@ -84,8 +84,8 @@ O Rodrigo deixou a frente decidir (24/10/2026). Ficam valendo até alguém regis
 | D10 | **Nomes de versão:** capítulo nas grandes (v1.0 "Ecos do Fim"...), tema nas médias, **"Leva"** nas expansões de bestiário depois da v1.0, builds de teste **"Ensaio"** (`1.0.0-ensaio.3`), revelação de espécie como **"Ficha nº 027"**. Mascote: **Sílex**, um Compsognathus curioso (já no mod) | 05 §4.4-4.5 |
 | D11 | **Desempenho é requisito de produto:** cada versão sai com um perfil do spark num mundo de teste e um número de MSPT por jogadores, publicado no changelog | 01 §5.2 item 1, 03 §2 |
 
-**Só o Rodrigo pode decidir** (são atos jurídicos ou compras):
-1. **Titular da marca e dos direitos:** Rodrigo pessoa física ou Grupo Permaneo (com cessão do autor para a empresa).
+**Decisões e pendências do estudo** (o plano recebido e `COORDENACAO.md` registram as decisões posteriores):
+1. **Titular da marca e dos direitos:** **Definido: Rodrigo Gomes, pessoa física, sem vínculo empresarial.**
 2. **Registro no INPI** de "TERRASSIC" nas classes 9 e 41 (depois 25 e 28). Atenção: **"TERRASSIC" já é marca
    registrada nos EUA** por uma empresa de produtos de terrário para répteis (reg. 7724465 e 7733103, mar/2025), fora do
    ramo de jogos; e terrassic.com é de uma loja de paisagismo na Índia. Para um mod grátis o risco parece baixo; para

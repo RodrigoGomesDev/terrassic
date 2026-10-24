@@ -356,8 +356,8 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 3. **Testes no jogo** (só um humano faz): `docs/TESTES_V03.md`, tamanhos reais, ouvir os sons, conferir os 3 idiomas.
 4. **Guia CONTRIBUTING** para a segunda conta: escrevo?
 5. **Renascer na era** em que o jogador morreu (cama da era ou Altar), em vez de voltar ao mundo normal?
-6. **Titular da marca** (Rodrigo ou Grupo Permaneo), **registro no INPI** e consulta a um advogado sobre a marca
-   "TERRASSIC" já registrada nos EUA para produtos de terrário (`ESTRATEGIA.md` §4).
+6. **Titular definido:** Rodrigo Gomes, pessoa física, sem vínculo empresarial. Registro e consulta de marca ficam
+   para o marco de lançamento, conforme o plano recebido (`PLANO_MESTRE.md`).
 7. **Licença** do código e dos assets e as permissões para modpacks (recomendação em `ESTRATEGIA.md` §4).
 8. **Domínios e @** (sugestão: terrassic.net ou terrassic.gg como principal).
 

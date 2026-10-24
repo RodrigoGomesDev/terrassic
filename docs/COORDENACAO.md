@@ -110,11 +110,23 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | 6 | Reduzir buscas de IA e medir custo | Saídas antecipadas implementadas; falta medir MSPT e confirmar comportamento com jogadores |
 | 7 | Tags/datapacks e integrações opcionais | Alinhar contrato com o Claude principal antes de mudar geradores |
 
-## Entregas externas ainda ausentes daqui
+## Estado das entregas de outras frentes
 
 O plano mestre anexado pelo Rodrigo cita `docs/estudos/`, `docs/IDENTIDADE.md`, licença LGPL do código e documentos
-de permissões dos assets. Esses arquivos não estavam neste checkout na conferência inicial. Não recriar o trabalho
-dessas frentes nem anunciar as licenças como aplicadas antes de receber e integrar os arquivos correspondentes.
+de permissões dos assets. Estudos e identidade não estavam na conferência inicial e foram recebidos durante esta
+sessão, como registrado abaixo. Os arquivos de licença/permissões anunciados no plano ainda precisam ser entregues;
+esta frente não os recriou nem declarou uma licença diferente da que existe nos metadados.
 
 O plano mestre também define o projeto como pessoal. As referências empresariais foram removidas dos arquivos
 atuais nesta entrega; o histórico Git permanece preservado.
+
+### Integrações recebidas durante a validação de rede
+
+- A outra frente incorporou `8ca5aae` e `6f0e6af`: continente, remasterizações, texpack/filtro de era, ajustes do
+  Tirano, paleta/componentes de interface, estratégia e estudos. `IDENTIDADE.md`, `ESTRATEGIA.md` e `estudos/`
+  agora estão presentes; o inventário antigo acima descreve a primeira conferência, não uma ausência atual.
+- `a483f1b` entregou o menu "Névoa". Foi integrado com os testes de rede em `e5bc18d`.
+- A build Fabric/Forge conjunta passou em 34 s, com as regressões do Caderno. O validador passou com 53 espécies,
+  4.153 JSONs e 1.516 chaves por idioma. Teste visual do novo menu continua com a frente correspondente.
+- Referências empresariais reapareceram nos estudos recebidos; foram ajustadas à decisão de titularidade pessoal
+  do Rodrigo, inclusive as hipóteses de cessão para empresa. Não foram criados documentos de licença por esta frente.
