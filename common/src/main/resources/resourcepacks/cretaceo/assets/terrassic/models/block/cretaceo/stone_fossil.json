@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "minecraft:block/stone",
+    "down": "minecraft:block/stone",
+    "up": "minecraft:block/stone",
+    "north": "terrassic:block/cretaceo/stone_fossil",
+    "south": "minecraft:block/stone",
+    "east": "minecraft:block/stone",
+    "west": "minecraft:block/stone"
+  }
+}

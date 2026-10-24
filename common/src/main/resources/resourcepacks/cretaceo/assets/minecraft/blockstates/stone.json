@@ -1,0 +1,71 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "minecraft:block/stone",
+        "weight": 25
+      },
+      {
+        "model": "minecraft:block/stone",
+        "weight": 25,
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/stone_mirrored",
+        "weight": 25
+      },
+      {
+        "model": "minecraft:block/stone_mirrored",
+        "weight": 25,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_2",
+        "weight": 10
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_2",
+        "weight": 10,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_2",
+        "weight": 10,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_2",
+        "weight": 10,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_3",
+        "weight": 10
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_3",
+        "weight": 10,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_3",
+        "weight": 10,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_3",
+        "weight": 10,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_fossil",
+        "weight": 1
+      },
+      {
+        "model": "terrassic:block/cretaceo/stone_fossil",
+        "weight": 1,
+        "y": 180
+      }
+    ]
+  }
+}

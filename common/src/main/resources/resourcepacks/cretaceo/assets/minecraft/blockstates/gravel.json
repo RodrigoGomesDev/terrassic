@@ -1,0 +1,44 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "minecraft:block/gravel",
+        "weight": 3
+      },
+      {
+        "model": "minecraft:block/gravel",
+        "weight": 3,
+        "y": 90
+      },
+      {
+        "model": "minecraft:block/gravel",
+        "weight": 3,
+        "y": 180
+      },
+      {
+        "model": "minecraft:block/gravel",
+        "weight": 3,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/cretaceo/gravel_2",
+        "weight": 2
+      },
+      {
+        "model": "terrassic:block/cretaceo/gravel_2",
+        "weight": 2,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cretaceo/gravel_2",
+        "weight": 2,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cretaceo/gravel_2",
+        "weight": 2,
+        "y": 270
+      }
+    ]
+  }
+}

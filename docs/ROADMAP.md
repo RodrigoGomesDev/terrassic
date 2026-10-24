@@ -94,6 +94,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | 5 | v0.5 Mar Interior | Mosasaurus montável, Tylosaurus, Elasmosaurus, Xiphactinus, Archelon, Hesperornis, Deinosuchus, Baurusuchus | réptil marinho ✅, plesiossauro ✅, peixe ✅, tartaruga ✅, ave mergulhadora ✅, crocodilo ✅ | ✅ Tylosaurus (41), Elasmosaurus + Mosasaurus montável (42), Xiphactinus (43), Archelon (44), Hesperornis (45), Deinosuchus (46), Baurusuchus (47) |
 | 6 | v0.6 planícies e titãs | Edmontosaurus, Corythosaurus, Styracosaurus, Euoplocephalus, Protoceratops, Struthiomimus, Thescelosaurus, Pachyrhinosaurus, Therizinosaurus, Deinocheirus, Alamosaurus, Saltasaurus, Argentinosaurus, Opisthocoelicaudia, Dreadnoughtus | hadrossauro ✅, ceratopsiano ✅, anquilossauro ✅, ornitomimossauro ✅, saurópode (titanossauro) ✅ | 🔄 Edmontosaurus (48), Corythosaurus (49), Styracosaurus (50), Euoplocephalus (51), Protoceratops (52), Struthiomimus (53), Thescelosaurus (54), Pachyrhinosaurus (55), Therizinosaurus (56), Deinocheirus (57), Alamosaurus (58), Saltasaurus (59), Argentinosaurus (60), Opisthocoelicaudia (61), Dreadnoughtus (62); 15/15 espécies ✅ |
 | 7 | v0.7 predadores ápice | Giganotosaurus, Carcharodontosaurus, Carnotaurus, Tarbosaurus, Daspletosaurus, Albertosaurus, Majungasaurus, Dakotaraptor, Troodon, Oviraptor, Citipati, Mononykus, Didelphodon | terópode grande ✅, abelissaurídeo ✅, terópode pequeno ✅, oviraptorossauro ✅, mamífero pequeno ✅ | 🔄 Giganotosaurus (70), Carcharodontosaurus (71), Carnotaurus (72), Tarbosaurus (73), Daspletosaurus (74), Albertosaurus (75), Majungasaurus (76), Dakotaraptor (77), Troodon (78), Oviraptor (80), Citipati (82), Mononykus (84), Didelphodon (85) |
+| 7b | v0.7 fauna de caça | Leptoceratops ("porco": carne e couro, bandos pequenos), Vegavis (ave de água: penas, ovos, carne), Mesodma (multituberculado, "coelho"), Basilemys (tartaruga terrestre: carne e casco), Enchodus (peixe marinho, substitui o bacalhau), Lepisosteus (peixe de rio, substitui o salmão) + itens de carne de dinossauro crua/assada no lugar de beef/mutton/chicken nos loots | ceratopsiano ✅, ave ✅, mamífero pequeno ✅, tartaruga ✅, peixe ✅ | ○ pedido do Rodrigo 24/10: nada de animal vanilla no mundo Terrassic; comida e recursos iniciais vêm de fauna pré-histórica. Ordem: carne → Leptoceratops → Vegavis → Mesodma → Basilemys → Enchodus → Lepisosteus, antes do nocaute |
 | 8 | depois da v1.0 | O resto das 327 criaturas do Cretáceo Superior no bestiário, em levas | os mesmos | ○ |
 
 #### Sistemas que estreiam nesta era (servem às próximas)
@@ -106,7 +107,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | v0.5 | Nado montado (mergulhar sem afogar), sela aquática, filhotes de quem nasce vivo | ✅ fase 42: domar/sentar/seguir/montar na água com a sela comum (olhar para baixo mergulha), Respiração Aquática no jogador, 15% dos spawns vivíparos nascem filhotes; sela aquática própria fica para o crafting da v0.8 |
 | v0.6 | Cadeia alimentar, carcaças, bandos, fome e sono, ninhos selvagens, migração, procriação de selvagens, inventário de carga, coleta automática, sela de plataforma | 🔄 fase 63: inventário de carga + coleta automática; fase 64: sela de plataforma (quatro a bordo nos titãs, qualquer um sobe, o dono conduz; `CARGA.md`); fase 65: carcaças + carniceiros saciados (`CARCACAS.md`); fase 66: fome e sono + cadeia alimentar (`FOME_E_SONO.md`); fase 67: bandos, manadas e matilhas (`BANDOS.md`); fase 68: ninhos selvagens + procriação de selvagens (`NINHOS.md`); fase 69: migração (`MIGRACAO.md`). Sistemas v0.6 completos; faltam os testes no jogo |
 | v0.7 | Nocaute completo: torpor, barras de torpor e domesticação, eficiência, comer desmaiado, punho, zarabatana e dardo, boleadeira, erva sonífera (`DOMESTICACAO.md`); territórios; ferramentas de osso e sílex completas | ○ |
-| v0.8 | Tipo de mundo "Terrassic" + mundo normal, Tempestades da Fenda e criaturas "da Fenda", páginas da Katarina por jogador | ○ |
+| v0.8 | Tipo de mundo "Terrassic" + mundo normal, Tempestades da Fenda e criaturas "da Fenda", páginas da Katarina por jogador | ✅ main 9da2414 (24/10, frente paralela "Mundo Terrassic", `docs/MUNDO.md`): tipo de mundo Terrassic com 11 biomas do Cretáceo e sem animais nem monstros vanilla na superfície (M1), tela de título e dicas (M2), Cratera de Chegada, acampamentos, Sítio Fossilífero, Ossuário, Casa do Rio com o "Mate" e Colônia de Ninhos (M3), Tempestades da Fenda com `/terrassic tempestade` (M4), HUD (M5); páginas da Katarina nos baús. Falta: mundo-ilha (Pangeia pequena cercada de mar, tipo Terrassic automático), criaturas "da Fenda", biomas no mundo normal (`MUNDO.md` §9) |
 | v0.9 | Fragmentos de âmbar, Altar do Salto, ritual dos meteoros, Salto Instável, modos Normal/Rápido/Livre, `/terrassic capitulo` | ○ |
 | depois | DNA e clonagem a partir das amostras | ○ |
 
@@ -118,19 +119,19 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | Madeiras II e plantas | Taxodium (cipreste do pântano), feto arbóreo, 19 plantas | ⏭ |
 | Flora que falta | Magnólia (as primeiras flores), palmeira, sequoia, cicas, samambaias, grama rala | ○ |
 | Blocos base restantes | Terra, reboco, pinturas rupestres, palha e trançados (57); couro, osso, troféus e fósseis por espécie (53); utilidades primitivas (33) | ○ |
-| Biomas (v0.8) | Planície dos Hadrossauros, Floresta de Magnólias, Pântano de Ciprestes, Floresta de Sequoias, Terras Secas, Delta do Rio, Mar Interior | ○ |
-| Estruturas (v0.8) | Cratera de Chegada, Acampamentos da Katarina, Casa do Rio (Refúgio, com o Parasaurolophus "Mate"), Sítio Fossilífero, Colônia de Ninhos de Maiasaura, praia de desova de Archelon, Ilhas do Tempo, Ossuário | ○ |
-| Eventos (v0.8) | Migração de hadrossauros, estrelas cadentes cada vez mais frequentes, Tempestades da Fenda | ○ |
+| Biomas (v0.8) | Planície dos Hadrossauros, Floresta de Magnólias, Pântano de Ciprestes, Floresta de Sequoias, Terras Secas, Delta do Rio, Mar Interior e fundo, Rio, Praia, Planaltos | ✅ M1 (9da2414); pedido do Rodrigo 24/10: mundo menor, uma Pangeia cercada de mar, escolhido automaticamente (thread de mundo) |
+| Estruturas (v0.8) | Cratera de Chegada, Acampamentos da Katarina, Casa do Rio (Refúgio, com o Parasaurolophus "Mate"), Sítio Fossilífero, Colônia de Ninhos de Maiasaura, praia de desova de Archelon, Ilhas do Tempo, Ossuário | ✅ M3 (todas menos a praia de desova e as Ilhas do Tempo, que ficam para a v0.8 seguinte) |
+| Eventos (v0.8) | Migração de hadrossauros, estrelas cadentes cada vez mais frequentes, Tempestades da Fenda | 🔄 migração (v0.6) e Tempestades da Fenda (M4, rolagem diária, vazamentos, `terrassic-world.json`) prontas; estrelas cadentes com a v0.9 |
 
 #### História, sons e arte da era
 | Fase | O que entra | Estado |
 |---|---|---|
 | História | "O Salto", versão mundial, lore com a Katarina Usha | ✅ (lore aguarda commit) |
-| Páginas | ~44 páginas da Katarina por jogador, nos baús das estruturas | ○ (v0.8) |
+| Páginas | ~44 páginas da Katarina por jogador, nos baús das estruturas | 🔄 baús das estruturas da v0.8 já entregam páginas por jogador (M3); o conjunto completo de textos segue com a história |
 | Chefe e final | Tirano da Fenda; ritual dos meteoros; salto com o clarão do impacto (o mundo não é destruído) | ○ (v0.9) |
 | Vozes | Piloto (T. rex, Parasaurolophus, Pteranodon) com gravações PD/CC0; cisnes e gansos | ✅ (aguarda commit) |
 | Vozes | Um conjunto de voz para cada espécie da fila, junto com o modelo dela | ⏭ |
-| Ambiente | Sons de fundo e música do Cretáceo; céu, névoa e partículas da era | ○ (v0.8) |
+| Ambiente | Sons de fundo e música do Cretáceo; céu, névoa e partículas da era | ○ (v0.8 M6, thread de sons) |
 | Ovos | 15 ovos no estilo v5 aprovado | ✅ (aguarda commit) |
 | Ovos | Um ovo v5 para cada espécie da fila, com prévia para o Rodrigo | contínuo |
 | Galeria | 9 imagens dentro do jogo pelo "modo estúdio" (`CAPA.md`), depois do pacote de texturas, do mundo, das estruturas e de bem mais criaturas | ○ |
@@ -195,8 +196,8 @@ Dunkleosteus, Megalodon (opcional) e as versões "da Fenda" de criaturas de outr
 ### T3. Interface: menu do Minecraft, HUD e visual
 | Fase | O que entra | Versão | Estado |
 |---|---|---|---|
-| T3.1 | **Menu principal do Minecraft com a cara do Terrassic** (pedido do Rodrigo): reaproveita a capa em `tools/capagen` para combinar com a página do mod, com o letreiro de pedra TERRASSIC (`logo.py`/`font.py`) e o céu de entardecer com a Fenda (`scene.py`). O panorama sai do `capagen` como as 6 faces do cubo, com a mesma cena e os nossos modelos. Botões e fundo em couro, osso e pedra; dicas de carregamento com curiosidades reais nos 3 idiomas | v0.8 | ○ |
-| T3.2 | HUD próprio com retratos dos nossos modelos: montaria (vida, stamina, carga), bando, nova espécie, nome da era, temperatura, alerta da Fenda, objetivos; tudo configurável | v0.8 | ○ |
+| T3.1 | **Menu principal do Minecraft com a cara do Terrassic** (pedido do Rodrigo): reaproveita a capa em `tools/capagen` para combinar com a página do mod, com o letreiro de pedra TERRASSIC (`logo.py`/`font.py`) e o céu de entardecer com a Fenda (`scene.py`). O panorama sai do `capagen` como as 6 faces do cubo, com a mesma cena e os nossos modelos. Botões e fundo em couro, osso e pedra; dicas de carregamento com curiosidades reais nos 3 idiomas | v0.8 | ✅ M2 (9da2414): panorama em cubo e letreiro TERRASSIC, splashes e dicas nos 3 idiomas |
+| T3.2 | HUD próprio com retratos dos nossos modelos: montaria (vida, stamina, carga), bando, nova espécie, nome da era, temperatura, alerta da Fenda, objetivos; tudo configurável | v0.8 | ✅ M5 (9da2414): montaria, bando, toast de espécie nova, título da era, alerta da Fenda (`terrassic-client.json`) |
 | T3.3 | Pacote de texturas próprio embutido e opcional (vanilla mais rústico, menus e inventários em couro, osso e pedra, fonte do Caderno) | v0.8 | ○ |
 | T3.4 | Motor de céu, névoa, partículas e música por era (o conteúdo de cada era fica na seção da era) | v0.8 | ○ |
 
@@ -262,7 +263,7 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 | v0.5 | O Mar Interior | ○ |
 | v0.6 | Planícies, manadas e titãs | 🔄 conteúdo completo (15 espécies, fases 48-62; 7 sistemas, fases 63-69); falta testar no jogo |
 | v0.7 | Predadores ápice e nocaute | ○ |
-| v0.8 | Mundo Terrassic: biomas, estruturas, menu do Minecraft, HUD, ambientação, pacote de texturas | ○ |
+| v0.8 | Mundo Terrassic: biomas, estruturas, menu do Minecraft, HUD, ambientação, pacote de texturas | 🔄 biomas, estruturas, menu e HUD na main (9da2414); faltam mundo-ilha, ambientação e pacote de texturas |
 | v0.9 | O Fim: Altar do Salto e chefe | ○ |
 | **v1.0** | **Capítulo 1 "Ecos do Fim" completo**, testado no Fabric e no Forge, 3 idiomas, lançamento | ○ |
 | v2.0 | Penas e Cinzas | ○ |

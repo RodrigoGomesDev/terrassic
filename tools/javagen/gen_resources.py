@@ -216,10 +216,13 @@ def main():
     gen_science.main()
     import gen_world  # v0.8: Cretaceous biomes, "Terrassic" world types, biome tags
     gen_world.main()
+    sys.path.insert(0, os.path.join(ROOT, "tools", "texpack"))
+    from pack_lang import LANG as TEXPACK_LANG  # built-in era resource packs: their names and descriptions
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
         lang[code].update(gen_world.LANG[code])
+        lang[code].update(TEXPACK_LANG[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")

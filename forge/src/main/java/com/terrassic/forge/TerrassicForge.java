@@ -11,5 +11,7 @@ public final class TerrassicForge {
         // Submit our event bus to let Architectury API register our content at the right time.
         EventBuses.registerModEventBus(Terrassic.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
         Terrassic.init();
+        // built-in era resource packs (forge/EraPacks): found before options.txt is applied
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(EraPacks::onAddPackFinders);
     }
 }

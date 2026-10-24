@@ -94,6 +94,19 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   loot, receitas de bancada e cortador de pedra, tags, veios de rocha, lang pt/en/es e o Java `BuildingBlocks.java`),
   chamado por gen_resources.py. Bloco novo: linha/família em gen_blocks.py + textura em blocks.py; material novo,
   case em `ModBlocks.material()`. Não editar BuildingBlocks.java à mão.
+- Mundo Terrassic (v0.8, main 9da2414, `docs/MUNDO.md`): tipo de mundo "Terrassic" com os 11 biomas do Cretáceo
+  (`world/CretaceousBiomes`, `CretaceousSurface`, `ModWorldgen`; JSON de biomas, tags e tipos de mundo gerados por
+  `tools/javagen/gen_world.py`, chamado por gen_resources.py, e estruturas por `gen_structures.py`), sem animais nem
+  monstros vanilla na superfície; estruturas (Cratera de Chegada, acampamentos, Sítio Fossilífero, Ossuário, Casa do Rio
+  com o "Mate", Colônia de Ninhos: `world/ArrivalCrater`, `KatarinaRefuge`), Tempestades da Fenda (`world/RiftStorm`,
+  `/terrassic tempestade`, `config/terrassic-world.json`), tela de título e dicas (`tools/capagen`, `menu_texts.py`) e HUD
+  (`terrassic-client.json`). Espécie nova entra nos biomas pela tabela WORLD de gen_species.py (tag `terrassic:habitat/<palavra>`).
+  Pedidos do Rodrigo em aberto: mundo menor tipo Pangeia cercada de mar e escolhido automaticamente; menu mais elaborado.
+- Pacote de texturas por era (`docs/TEXTURAS_ERA.md`): `tools/texpack` gera o pacote embutido
+  `common/src/main/resources/resourcepacks/<era>/` (Cretáceo: 21 texturas vanilla redesenhadas, formato 15); Fabric o registra
+  ligado por padrão (`TerrassicFabric.registerEraPacks`), Forge via `forge/EraPacks` (`AddPackFindersEvent`, ligado uma vez na
+  primeira execução, `config/terrassic-packs.json`). As chaves de lang do pacote vêm de `tools/texpack/pack_lang.py`, mescladas por
+  gen_resources.py. Propostas de progressão (sete eixos, aguardam o Rodrigo): `docs/PROGRESSAO.md`.
 - Tudo é autoral e gerado por código; referências só de medidas (Wikipedia). Não copiar arte de terceiros.
 
 ## Espécies (12)
