@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "terrassic:block/tree_fern_leaves"
+  }
+}

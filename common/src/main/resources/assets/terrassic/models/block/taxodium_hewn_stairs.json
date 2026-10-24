@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "terrassic:block/taxodium_hewn_planks",
+    "top": "terrassic:block/taxodium_hewn_planks",
+    "side": "terrassic:block/taxodium_hewn_planks"
+  }
+}

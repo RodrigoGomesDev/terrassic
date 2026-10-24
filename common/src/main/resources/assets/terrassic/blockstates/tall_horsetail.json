@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "terrassic:block/tall_horsetail_top"
+    },
+    "half=lower": {
+      "model": "terrassic:block/tall_horsetail_bottom"
+    }
+  }
+}

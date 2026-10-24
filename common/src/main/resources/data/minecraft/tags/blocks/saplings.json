@@ -3,6 +3,8 @@
   "values": [
     "terrassic:araucaria_sapling",
     "terrassic:ginkgo_sapling",
-    "terrassic:metasequoia_sapling"
+    "terrassic:metasequoia_sapling",
+    "terrassic:taxodium_sapling",
+    "terrassic:tree_fern_sapling"
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "terrassic:block/tall_bracken_top"
+    },
+    "half=lower": {
+      "model": "terrassic:block/tall_bracken_bottom"
+    }
+  }
+}

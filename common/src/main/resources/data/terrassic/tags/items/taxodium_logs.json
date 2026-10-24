@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:taxodium_log",
+    "terrassic:stripped_taxodium_log",
+    "terrassic:taxodium_wood",
+    "terrassic:stripped_taxodium_wood"
+  ]
+}

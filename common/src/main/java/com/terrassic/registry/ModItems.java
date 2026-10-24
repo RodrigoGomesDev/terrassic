@@ -133,9 +133,15 @@ public final class ModItems {
 
     // ---- primitive building block items (own creative tab)
     static {
+        java.util.Set<String> onWater = java.util.Set.of(BuildingBlocks.ON_WATER);
         for (Map.Entry<String, RegistrySupplier<Block>> e : ModBlocks.BUILDING.entrySet()) {
             RegistrySupplier<Block> block = e.getValue();
-            ITEMS.register(e.getKey(), () -> new BlockItem(block.get(), new Item.Properties().arch$tab(ModTabs.BUILDING)));
+            if (onWater.contains(e.getKey())) {
+                ITEMS.register(e.getKey(), () -> new net.minecraft.world.item.PlaceOnWaterBlockItem(block.get(),
+                        new Item.Properties().arch$tab(ModTabs.BUILDING)));
+            } else {
+                ITEMS.register(e.getKey(), () -> new BlockItem(block.get(), new Item.Properties().arch$tab(ModTabs.BUILDING)));
+            }
         }
     }
 

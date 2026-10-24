@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " F ",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "L": {
+      "item": "terrassic:taxodium_log"
+    }
+  },
+  "result": {
+    "item": "terrassic:taxodium_palisade",
+    "count": 6
+  }
+}

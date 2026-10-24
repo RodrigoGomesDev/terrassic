@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "terrassic:item/tree_fern_lashed_door"
+  }
+}

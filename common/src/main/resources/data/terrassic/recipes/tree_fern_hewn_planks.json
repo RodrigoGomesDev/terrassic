@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "terrassic:tree_fern_logs"
+    }
+  ],
+  "result": {
+    "item": "terrassic:tree_fern_hewn_planks",
+    "count": 4
+  }
+}

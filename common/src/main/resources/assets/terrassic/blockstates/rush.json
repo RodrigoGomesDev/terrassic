@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "terrassic:block/rush_top"
+    },
+    "half=lower": {
+      "model": "terrassic:block/rush_bottom"
+    }
+  }
+}

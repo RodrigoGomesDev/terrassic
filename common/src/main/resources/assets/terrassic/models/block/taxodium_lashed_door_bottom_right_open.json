@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right_open",
+  "textures": {
+    "top": "terrassic:block/taxodium_lashed_door_top",
+    "bottom": "terrassic:block/taxodium_lashed_door_bottom"
+  }
+}

@@ -7,6 +7,27 @@
     "terrassic:straw_mat",
     "terrassic:araucaria_leaves",
     "terrassic:ginkgo_leaves",
-    "terrassic:metasequoia_leaves"
+    "terrassic:metasequoia_leaves",
+    "terrassic:taxodium_leaves",
+    "terrassic:tree_fern_leaves",
+    "terrassic:horsetail",
+    "terrassic:tall_horsetail",
+    "terrassic:calamites",
+    "terrassic:bracken",
+    "terrassic:tall_bracken",
+    "terrassic:royal_fern",
+    "terrassic:young_cycad",
+    "terrassic:cycad",
+    "terrassic:williamsonia",
+    "terrassic:archaefructus",
+    "terrassic:cretaceous_water_lily",
+    "terrassic:cretaceous_grass",
+    "terrassic:clubmoss",
+    "terrassic:spikemoss",
+    "terrassic:liverwort",
+    "terrassic:lichen",
+    "terrassic:rush",
+    "terrassic:swamp_algae",
+    "terrassic:shelf_fungus"
   ]
 }

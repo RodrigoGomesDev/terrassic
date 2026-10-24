@@ -3,6 +3,8 @@
   "values": [
     "terrassic:araucaria_branch_fence",
     "terrassic:ginkgo_branch_fence",
-    "terrassic:metasequoia_branch_fence"
+    "terrassic:metasequoia_branch_fence",
+    "terrassic:taxodium_branch_fence",
+    "terrassic:tree_fern_branch_fence"
   ]
 }

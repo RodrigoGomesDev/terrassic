@@ -12,10 +12,13 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.GlowLichenBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
@@ -25,6 +28,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -122,6 +126,12 @@ public final class ModBlocks {
                     .ignitedByLava().pushReaction(PushReaction.DESTROY);
             case "sapling" -> p.noCollission().randomTicks().instabreak().sound(SoundType.GRASS)
                     .pushReaction(PushReaction.DESTROY);
+            case "plant" -> p.noCollission().instabreak().sound(SoundType.GRASS).offsetType(BlockBehaviour.OffsetType.XZ)
+                    .ignitedByLava().pushReaction(PushReaction.DESTROY);
+            case "plant_cover" -> p.strength(0.1F).sound(SoundType.MOSS_CARPET).pushReaction(PushReaction.DESTROY);
+            case "water_plant" -> p.instabreak().sound(SoundType.LILY_PAD).noOcclusion().pushReaction(PushReaction.DESTROY);
+            case "multiface" -> p.noCollission().strength(0.2F).sound(SoundType.GLOW_LICHEN).replaceable()
+                    .ignitedByLava().pushReaction(PushReaction.DESTROY);
             case "bone" -> p.strength(2.0F).requiresCorrectToolForDrops().sound(SoundType.BONE_BLOCK);
             case "hide" -> p.strength(0.8F).sound(SoundType.WOOL).ignitedByLava();
             default -> throw new IllegalArgumentException("unknown building material " + material);
@@ -172,6 +182,26 @@ public final class ModBlocks {
     /** Sapling that grows into the configured feature terrassic:&lt;tree&gt;. */
     static void sapling(String id, String tree, BlockBehaviour.Properties p) {
         building(id, () -> new SaplingBlock(new PrehistoricTreeGrower(tree), p) {});
+    }
+
+    /** Small plant on dirt or grass (cross model). */
+    static void plant(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new BushBlock(p) {});
+    }
+
+    /** Two blocks tall plant. */
+    static void tallPlant(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new DoublePlantBlock(p));
+    }
+
+    /** Floats on still water like a lily pad (item: PlaceOnWaterBlockItem, see BuildingBlocks.ON_WATER). */
+    static void waterPlant(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new WaterlilyBlock(p) {});
+    }
+
+    /** Grows flat on the faces of other blocks, like glow lichen but without light. */
+    static void multiface(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new GlowLichenBlock(p) {});
     }
 
     static void fenceGate(String id, BlockBehaviour.Properties p) {

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:multiface_growth",
+  "config": {
+    "block": "terrassic:shelf_fungus",
+    "search_range": 6,
+    "chance_of_spreading": 0.5,
+    "can_place_on_floor": false,
+    "can_place_on_ceiling": false,
+    "can_place_on_wall": true,
+    "can_be_placed_on": [
+      "terrassic:araucaria_log",
+      "terrassic:ginkgo_log",
+      "terrassic:metasequoia_log",
+      "terrassic:taxodium_log",
+      "terrassic:tree_fern_log",
+      "minecraft:oak_log",
+      "minecraft:birch_log",
+      "minecraft:spruce_log",
+      "minecraft:dark_oak_log",
+      "minecraft:jungle_log"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "terrassic:block/taxodium_log",
+    "end": "terrassic:block/taxodium_log_top"
+  }
+}

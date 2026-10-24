@@ -45,7 +45,10 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   rios e savana) + fase 3 (madeiras Araucária, Ginkgo, Metassequoia: tronco, descascado, lenho, folhas, muda,
   tábuas lavradas com escada/laje, cerca e portão de galhos, paliçada, porta e alçapão de troncos; árvores nascem em
   floresta/savana/taiga/rio e as mudas crescem via `block/PrehistoricTreeGrower`). 153 blocos. A paliçada genérica
-  saiu (cada madeira tem a sua). Próxima: fase 4 (Taxodium, feto arbóreo e 19 plantas).
+  saiu (cada madeira tem a sua) + fase 4 (Cipreste-do-pântano em pântano/rio, Feto Arbóreo na selva, e 19 plantas do
+  Mesozoico: cavalinhas, Calamites, samambaias, cicadáceas, Williamsonia, Archaefructus, nenúfar, capim, licopódio,
+  selaginela, hepática, líquen nas pedras da montanha, junco, alga de pântano, fungo-prateleira nos troncos; todas nascem
+  no mundo). 200 blocos. Próxima: fase 5 (terra, reboco, pinturas rupestres, telhados e trançados).
 - `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.

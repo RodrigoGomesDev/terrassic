@@ -12,6 +12,14 @@
     "terrassic:metasequoia_log",
     "terrassic:stripped_metasequoia_log",
     "terrassic:metasequoia_wood",
-    "terrassic:stripped_metasequoia_wood"
+    "terrassic:stripped_metasequoia_wood",
+    "terrassic:taxodium_log",
+    "terrassic:stripped_taxodium_log",
+    "terrassic:taxodium_wood",
+    "terrassic:stripped_taxodium_wood",
+    "terrassic:tree_fern_log",
+    "terrassic:stripped_tree_fern_log",
+    "terrassic:tree_fern_wood",
+    "terrassic:stripped_tree_fern_wood"
   ]
 }

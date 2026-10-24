@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "terrassic:block/tree_fern_hewn_planks"
+  }
+}

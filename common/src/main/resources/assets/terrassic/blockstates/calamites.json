@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "terrassic:block/calamites_top"
+    },
+    "half=lower": {
+      "model": "terrassic:block/calamites_bottom"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:multiface_growth",
+  "config": {
+    "block": "terrassic:lichen",
+    "search_range": 20,
+    "chance_of_spreading": 0.5,
+    "can_place_on_floor": true,
+    "can_place_on_ceiling": false,
+    "can_place_on_wall": true,
+    "can_be_placed_on": [
+      "terrassic:limestone",
+      "terrassic:shale",
+      "terrassic:chalk",
+      "terrassic:flint_nodules",
+      "terrassic:laterite",
+      "terrassic:quartzite",
+      "terrassic:gneiss",
+      "terrassic:conglomerate",
+      "minecraft:stone",
+      "minecraft:andesite",
+      "minecraft:granite",
+      "minecraft:diorite",
+      "minecraft:cobblestone",
+      "minecraft:mossy_cobblestone"
+    ]
+  }
+}

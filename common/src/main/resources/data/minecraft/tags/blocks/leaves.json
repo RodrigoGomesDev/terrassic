@@ -3,6 +3,8 @@
   "values": [
     "terrassic:araucaria_leaves",
     "terrassic:ginkgo_leaves",
-    "terrassic:metasequoia_leaves"
+    "terrassic:metasequoia_leaves",
+    "terrassic:taxodium_leaves",
+    "terrassic:tree_fern_leaves"
   ]
 }

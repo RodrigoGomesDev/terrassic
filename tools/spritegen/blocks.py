@@ -452,6 +452,14 @@ WOODS = {
     "metasequoia": {"bark": ["#3a1c10", "#55291a", "#723a25", "#8f4c32", "#a86142"], "bark_style": "fibres",
                     "wood": ["#8e5a42", "#a86d52", "#bf8266", "#cf977b", "#dcab91"],
                     "leaf": ["#2b4a22", "#3d632c", "#517c36", "#679444", "#7fab55"], "leaf_style": "feathery"},
+    # Taxodium (swamp / bald cypress): grey-brown stringy bark, light brown wood, soft flat sprays of needles
+    "taxodium": {"bark": ["#2c2621", "#433a32", "#5b5045", "#736659", "#8a7c6d"], "bark_style": "fibres",
+                 "wood": ["#9a7650", "#b08b62", "#c49f75", "#d4b289", "#e0c39e"],
+                 "leaf": ["#2a3f1e", "#3a5428", "#4c6b31", "#5f823c", "#739848"], "leaf_style": "feathery"},
+    # Tree fern: trunk wrapped in old frond bases and roots (no bark), fibrous dark wood, big arching fronds
+    "tree_fern": {"bark": ["#1e150d", "#2f2215", "#43321f", "#58432b", "#6d5537"], "bark_style": "frond_bases",
+                  "wood": ["#5a4128", "#6e5233", "#83623e", "#98744b", "#aa8659"],
+                  "leaf": ["#24401a", "#335a22", "#46732c", "#5b8c38", "#73a447"], "leaf_style": "fronds"},
 }
 LASHING = ["#4a3a22", "#6e5a3a", "#8f7a55", "#b39d74"]
 
@@ -471,6 +479,14 @@ def bark(tid):
         n = Noise(tid + "b", periods=(8, 16), weights=(0.6, 0.4), stretch=(1.0, 0.25))
         fine = Noise(tid + "f", periods=(16,), weights=(1.0,))
         return paint(lambda x, y: ramp(w["bark"], contrast(n(x, y) * 0.8 + fine(x, y) * 0.2, 1.7)))
+    if style == "frond_bases":  # tree fern: diamond pattern of old frond stalks and hairy roots
+        n = Noise(tid + "b", periods=(4, 16), weights=(0.5, 0.5))
+        cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.2) * 0.8))
+        for y in range(N):
+            for x in range(N):
+                if (x + y) % 6 == 0 or (x - y) % 6 == 0:
+                    cv.set(x, y, hexc(w["bark"][4]) if (x + 2 * y) % 4 else hexc(w["bark"][3]))
+        return cv
     # fibres: long stringy strips, some peeling (lighter edge)
     n = Noise(tid + "b", periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
     cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.5)))
@@ -565,6 +581,12 @@ def leaves(tid):
             for dx in (-1, 0, 1):
                 cv.set((x + dx) % N, y, hexc(w["leaf"][4]))
             cv.set(x, (y + 1) % N, hexc(w["leaf"][3]))
+    elif style == "fronds":  # tree fern: long fronds with paired leaflets
+        for _ in range(4):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            for i in range(7):
+                cv.set((x + i) % N, (y + i // 2) % N, hexc(w["leaf"][1]))
+                cv.set((x + i) % N, (y + i // 2 - 1) % N, hexc(w["leaf"][4]))
     else:  # feathery: rows of tiny needles along twigs
         for _ in range(5):
             x, y = rnd.randrange(N), rnd.randrange(N)
@@ -600,6 +622,15 @@ def sapling(tid):
             cv.set(cx, cy + 2, leaf(1))
         for y in range(4, 16):
             cv.set(7, y, stem)
+    elif style == "fronds":  # tree fern: a short shaggy stem with a crown of arching fronds
+        for y in range(9, 16):
+            cv.set(7, y, stem); cv.set(8, y, hexc(w["bark"][2]))
+        for dx, dy, length in ((-1, 0, 6), (1, 0, 6), (-1, -1, 4), (1, -1, 4), (0, -1, 3)):
+            x, y = 7.5, 8.5
+            for i in range(length):
+                x += dx * 1.0; y += dy * 0.8 + (0.35 * i if dx else -0.6)
+                cv.set(int(x), int(y), leaf(3 if i % 2 else 2))
+                cv.set(int(x), int(y) + 1, leaf(1))
     else:  # metasequoia: soft cone of feathery needles
         for y in range(1, 12):
             half = max(0, (y - 1) // 2)
@@ -688,6 +719,213 @@ def wood_items(tid):
     return {f"{tid}_lashed_door": door_item(tid)}
 
 
+# ------------------------------------------------------------------ prehistoric plants (cross sprites, transparent)
+GREEN = ["#1f3417", "#2e4a1f", "#40632a", "#557d35", "#6c9641", "#88b052"]
+OLIVE = ["#2f3a1c", "#435127", "#5a6a33", "#728440", "#8c9c50"]
+
+
+def stalk(cv, x, y0, y1, colors, joint=None):
+    for y in range(y0, y1):
+        cv.set(x, y, hexc(colors[3]) if (joint and (y - y0) % joint == 0) else hexc(colors[2]))
+
+
+def horsetail(tall=False, giant=False, part="single"):
+    """Equisetum: jointed upright stems with whorls of thin branches (Calamites: a thick ribbed trunk)."""
+    cv = Canvas()
+    rnd = random.Random("horsetail" + part + str(tall) + str(giant))
+    stems = (3, 7, 11, 13) if not giant else (7,)
+    for i, x in enumerate(stems):
+        top = 0 if part != "single" and part == "lower" else (2 + (i * 3) % 6 if part != "upper" else 3 + i * 2)
+        for y in range(top if part != "lower" else 0, 16):
+            c = GREEN[3] if (y % 3) else "#3a2e1c"
+            cv.set(x, y, hexc(c))
+            if giant:
+                cv.set(x + 1, y, hexc(GREEN[2] if y % 3 else "#2a2214")); cv.set(x - 1, y, hexc(GREEN[4] if y % 3 else "#3a2e1c"))
+            if y % 3 == 1 and y > top + 1:  # whorl of branches
+                span = 3 if giant else 2
+                for d in range(1, span + 1):
+                    cv.set(x - d - (1 if giant else 0), y - d // 2, hexc(GREEN[4])); cv.set(x + d + (1 if giant else 0), y - d // 2, hexc(GREEN[4]))
+        if part in ("single", "upper"):
+            cv.set(x, top - 1, hexc("#7a6a3a"))  # spore cone
+            cv.set(x, top - 2, hexc("#9a8a4a"))
+    return cv
+
+
+def fern(kind="bracken", part="single"):
+    """Fern fronds: arching midribs with paired leaflets; royal fern has upright fronds with rusty fertile tips."""
+    cv = Canvas()
+    fronds = ((-1, 5), (1, 5), (-1, 3), (1, 3), (0, 6)) if kind != "royal" else ((-1, 4), (1, 4), (0, 6), (-1, 6), (1, 6))
+    base_y = 15
+    for dx, length in fronds:
+        x, y = 7.5, base_y
+        for i in range(length * 2 if part != "single" else length + 3):
+            x += dx * (0.55 if kind != "royal" else 0.3)
+            y -= 1.0 - (0.08 * i * abs(dx) if kind != "royal" else 0)
+            ix, iy = int(x), int(y)
+            cv.set(ix, iy, hexc(GREEN[2]))
+            if i > 1:
+                cv.set(ix - 1, iy, hexc(GREEN[4])); cv.set(ix + 1, iy, hexc(GREEN[3]))
+                if i % 2 == 0:
+                    cv.set(ix - 2, iy + 1, hexc(GREEN[5])); cv.set(ix + 2, iy + 1, hexc(GREEN[4]))
+        if kind == "royal":
+            cv.set(int(x), int(y), hexc("#9a5a2a")); cv.set(int(x), int(y) + 1, hexc("#7a4a22"))
+    return cv
+
+
+def cycad(young=True, part="single"):
+    """Cycad: a squat scaly trunk with a crown of stiff, glossy pinnate leaves."""
+    cv = Canvas()
+    trunk_top = 12 if young else (6 if part != "upper" else 99)
+    if part != "upper":
+        for y in range(trunk_top, 16):
+            for x in range(6, 10):
+                cv.set(x, y, hexc("#5a4630" if (x + y) % 2 else "#7a6040"))
+    if part == "lower":
+        return cv
+    crown_y = trunk_top if young else 14
+    for dx in (-1, -0.5, 0.5, 1, 0):
+        x, y = 7.5, crown_y
+        for i in range(7 if young else 9):
+            x += dx * 1.0; y -= 1.0 - 0.12 * i * abs(dx)
+            ix, iy = int(x), int(y)
+            cv.set(ix, iy, hexc(OLIVE[1]))
+            cv.set(ix, iy - 1, hexc(OLIVE[3])); cv.set(ix + (1 if dx >= 0 else -1), iy, hexc(OLIVE[4]))
+    return cv
+
+
+def flower(petal, center, kind="williamsonia"):
+    """Early flowers: Williamsonia (cycad-like plant with a cone flower), Archaefructus (stems with tiny flowers)."""
+    cv = Canvas()
+    if kind == "williamsonia":
+        for y in range(8, 16):
+            cv.set(7, y, hexc(OLIVE[2]))
+        for dx in (-3, -2, -1, 1, 2, 3):
+            cv.set(7 + dx, 12 - abs(dx) // 2, hexc(OLIVE[3]))
+        for (x, y) in ((6, 5), (8, 5), (5, 6), (9, 6), (6, 7), (8, 7), (7, 4)):
+            cv.set(x, y, hexc(petal))
+        cv.set(7, 6, hexc(center)); cv.set(7, 5, hexc(center))
+    else:
+        for x0 in (4, 8, 11):
+            for y in range(6 + x0 % 3, 16):
+                cv.set(x0 + (y % 4 == 0), y, hexc(GREEN[3]))
+            cv.set(x0, 5 + x0 % 3, hexc(petal)); cv.set(x0 + 1, 5 + x0 % 3, hexc(center))
+    return cv
+
+
+def pad(kind):
+    """Floating leaves seen from above: Cretaceous water lily, Archaefructus rosette, swamp algae mat."""
+    cv = Canvas()
+    rnd = random.Random("pad" + kind)
+    if kind == "algae":
+        n = Noise("algae", periods=(4, 8), weights=(0.6, 0.4))
+        for y in range(N):
+            for x in range(N):
+                v = n(x, y)
+                if v > 0.42:
+                    cv.set(x, y, ramp(["#2c3a14", "#3f5219", "#566c22", "#6e862c"], (v - 0.42) * 2.2))
+        return cv
+    pads = ((5, 6, 4.2), (11, 11, 3.4)) if kind == "lily" else ((8, 8, 5.5),)
+    for cx, cy, r in pads:
+        for y in range(N):
+            for x in range(N):
+                d = math.hypot(x + 0.5 - cx, y + 0.5 - cy)
+                ang = math.atan2(y + 0.5 - cy, x + 0.5 - cx)
+                if d <= r and not (kind == "lily" and -0.35 < ang < 0.05):
+                    cv.set(x, y, ramp(GREEN[1:], 0.25 + 0.5 * (1 - d / r) + 0.1 * rnd.random()))
+    if kind == "lily":
+        for (x, y) in ((4, 5), (5, 4), (6, 5), (5, 6)):
+            cv.set(x, y, hexc("#e8dcc0"))
+        cv.set(5, 5, hexc("#d8b040"))
+    else:
+        for (x, y) in ((8, 8), (6, 7), (10, 9), (7, 10)):
+            cv.set(x, y, hexc("#f0e6c8"))
+    return cv
+
+
+def grass(kind):
+    """Low plants: Cretaceous grass tufts, clubmoss (upright scaly shoots), spikemoss (flat fronds)."""
+    cv = Canvas()
+    rnd = random.Random("grass" + kind)
+    if kind == "grass":
+        for i in range(9):
+            x = rnd.randrange(2, 14); h = rnd.randint(6, 12); lean = rnd.choice((-1, 0, 1))
+            for k in range(h):
+                cv.set(x + (lean if k > h * 0.6 else 0), 15 - k, hexc(OLIVE[2 + (k > h // 2)]))
+    elif kind == "clubmoss":
+        for x in (3, 6, 9, 12):
+            h = rnd.randint(7, 11)
+            for k in range(h):
+                cv.set(x, 15 - k, hexc(GREEN[3])); cv.set(x + (1 if k % 2 else -1), 15 - k, hexc(GREEN[4]))
+            cv.set(x, 15 - h, hexc("#a8a050"))
+    else:  # spikemoss
+        for y in range(9, 16):
+            for x in range(1, 15):
+                if (x * 7 + y * 3) % 5 < 3 and abs(x - 7.5) < (y - 7):
+                    cv.set(x, y, hexc(GREEN[2 + (x + y) % 3]))
+    return cv
+
+
+def rush(part):
+    """Rushes: dense round green stems with brown flower tufts near the top."""
+    cv = Canvas()
+    for i, x in enumerate((2, 4, 5, 7, 9, 10, 12, 13)):
+        top = 0 if part == "lower" else 2 + (i * 5) % 7
+        for y in range(top, 16):
+            cv.set(x, y, hexc(GREEN[2 + i % 3]))
+        if part == "upper":
+            cv.set(x + 1, top + 3, hexc("#6a4a26")); cv.set(x + 1, top + 4, hexc("#7a5a30"))
+    return cv
+
+
+def liverwort():
+    """Liverwort: flat forking lobes forming a wet green crust on the ground."""
+    n = Noise("liverwort", periods=(4, 8, 16), weights=(0.4, 0.35, 0.25))
+    return paint(lambda x, y: ramp(["#1d3214", "#2a461b", "#3b5e24", "#4f772e", "#679340"], contrast(n(x, y), 1.4)))
+
+
+def lichen():
+    """Crusty lichen patches (sage, grey-green and orange) on a transparent background."""
+    cv = Canvas()
+    n = Noise("lichen", periods=(4, 8), weights=(0.6, 0.4))
+    rnd = random.Random("lichen")
+    for y in range(N):
+        for x in range(N):
+            v = n(x, y)
+            if v > 0.52:
+                cv.set(x, y, ramp(["#6f7a5a", "#8d9874", "#a9b38e"], (v - 0.52) * 3))
+    for _ in range(6):
+        cv.set(rnd.randrange(N), rnd.randrange(N), hexc("#c8812e"))
+    return cv
+
+
+def shelf_fungus():
+    """Bracket fungus growing out of bark: tiers of fan-shaped brackets with pale growth rings."""
+    cv = Canvas()
+    for cx, cy, r in ((5, 5, 4), (10, 10, 5), (4, 12, 3)):
+        for y in range(cy - r, cy + 1):
+            for x in range(cx - r, cx + r + 1):
+                d = math.hypot(x - cx, (y - cy) * 1.6)
+                if d <= r:
+                    band = int(d) % 2
+                    cv.set(x, y, hexc(["#5a3a1e", "#7a5228", "#a87a40", "#d8b880"][min(3, int(d * 4 / r)) if not band else 1]))
+    return cv
+
+
+def plant_textures():
+    out = {
+        "horsetail": horsetail(), "tall_horsetail_bottom": horsetail(True, part="lower"),
+        "tall_horsetail_top": horsetail(True, part="upper"), "calamites_bottom": horsetail(giant=True, part="lower"),
+        "calamites_top": horsetail(giant=True, part="upper"), "bracken": fern(), "tall_bracken_bottom": fern(part="lower"),
+        "tall_bracken_top": fern(part="upper"), "royal_fern": fern("royal"), "young_cycad": cycad(),
+        "cycad_bottom": cycad(False, "lower"), "cycad_top": cycad(False, "upper"),
+        "williamsonia": flower("#d9c27a", "#8a5a2a"), "archaefructus": pad("archaefructus"),
+        "cretaceous_water_lily": pad("lily"), "cretaceous_grass": grass("grass"), "clubmoss": grass("clubmoss"),
+        "spikemoss": grass("spikemoss"), "liverwort": liverwort(), "lichen": lichen(), "rush_bottom": rush("lower"),
+        "rush_top": rush("upper"), "swamp_algae": pad("algae"), "shelf_fungus": shelf_fungus(),
+    }
+    return out
+
+
 OTHER = {
     "thatch": thatch, "thatch_top": thatch_top, "straw_mat": straw_mat, "wattle_and_daub": wattle_daub,
     "bone_fence": bone_fence,
@@ -704,6 +942,7 @@ def build():
         out[name] = fn()
     for tid in WOODS:
         out.update(wood_textures(tid))
+    out.update(plant_textures())
     for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
     for tid in WOODS:

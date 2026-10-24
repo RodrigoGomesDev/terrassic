@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/lily_pad",
+  "textures": {
+    "texture": "terrassic:block/swamp_algae"
+  }
+}

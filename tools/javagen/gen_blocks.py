@@ -19,9 +19,9 @@ NS = "terrassic"
 JAVA = os.path.join(ROOT, "common", "src", "main", "java", "com", "terrassic", "registry", "BuildingBlocks.java")
 
 # kinds: cube | column | log | leaves | sapling | stairs | slab | wall | fence | fence_gate | door | trapdoor | pane |
-#        carpet | palisade
+#        carpet | palisade | plant | tall_plant | water_plant | multiface
 # material (Java ModBlocks.material): stone | soft_stone | hard_stone | pebbles | thatch | mud | wood | leaves | sapling |
-#        bone | hide
+#        plant | plant_cover | water_plant | multiface | bone | hide
 BLOCKS = {}
 
 
@@ -102,7 +102,8 @@ for rid, (_, (sen, spt, ses), _, _, color, _) in ROCKS.items():  # pebbles last,
     add(f"{rid}_pebbles", (f"{sen} Pebbles", f"Seixos de {spt}", f"Guijarros de {ses}"), "carpet", f"{rid}_pebbles",
         "shovel", "pebbles", color)
 
-# ------------------------------------------------------------- family: prehistoric woods (phase 3)
+# ------------------------------------------------------------- family: prehistoric woods (phase 3 and 4)
+SWAMP = "minecraft:has_structure/swamp_hut"  # 1.20.1 has no is_swamp biome tag
 # tree id: names (en, pt, es), map colour of the wood, bark map colour,
 #          tree feature (minecraft:tree config parts), biome tags, rarity (1 tree in N chunks per placement)
 WOODS = {
@@ -128,6 +129,18 @@ WOODS = {
                                         "trunk_height": {"type": "minecraft:uniform", "value": {"min_inclusive": 2, "max_inclusive": 4}}},
                      "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 2, "lower_size": 0, "upper_size": 2}},
                     ("minecraft:is_taiga", "minecraft:is_river"), 4),
+    # Taxodium / bald cypress: swamp tree, straight trunk and a flattened, layered crown
+    "taxodium": (("Bald Cypress", "Cipreste-do-pântano", "Ciprés Calvo"), "TERRACOTTA_LIGHT_GRAY", "TERRACOTTA_GRAY",
+                 {"trunk_placer": {"type": "minecraft:straight_trunk_placer", "base_height": 10, "height_rand_a": 4, "height_rand_b": 1},
+                  "foliage_placer": {"type": "minecraft:blob_foliage_placer", "radius": 3, "offset": 0, "height": 3},
+                  "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 1, "lower_size": 0, "upper_size": 1}},
+                 (SWAMP, "minecraft:is_river"), 3),
+    # Tree fern: short shaggy trunk with an umbrella of fronds, under the jungle canopy
+    "tree_fern": (("Tree Fern", "Feto Arbóreo", "Helecho Arborescente"), "TERRACOTTA_BROWN", "COLOR_BROWN",
+                  {"trunk_placer": {"type": "minecraft:straight_trunk_placer", "base_height": 4, "height_rand_a": 2, "height_rand_b": 0},
+                   "foliage_placer": {"type": "minecraft:acacia_foliage_placer", "radius": 2, "offset": 0},
+                   "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 1, "lower_size": 0, "upper_size": 1}},
+                  ("minecraft:is_jungle",), 2),
 }
 STRIPPABLES = []  # (log, stripped log)
 for tid, ((en, pt, es), wood_color, bark_color, _, _, _) in WOODS.items():
@@ -159,6 +172,36 @@ for tid, ((en, pt, es), wood_color, bark_color, _, _, _) in WOODS.items():
     add(f"{tid}_lashed_trapdoor", (f"Lashed {en} Trapdoor", f"Alçapão de Troncos de {pt}", f"Trampilla de Troncos de {es}"),
         "trapdoor", f"{tid}_lashed_trapdoor", "axe", "wood", wood_color, tags=("wooden_trapdoors",))
     STRIPPABLES += [(f"{tid}_log", f"stripped_{tid}_log"), (f"{tid}_wood", f"stripped_{tid}_wood")]
+
+# ------------------------------------------------------------- family: prehistoric plants (phase 4)
+# plant id: names, kind, texture (tall plants: <id>_bottom / <id>_top), worldgen patch (biome tags, 1 patch in N chunks)
+PLANTS = {
+    "horsetail": (("Horsetail", "Cavalinha", "Cola de Caballo"), "plant", ("minecraft:is_river", "minecraft:is_forest"), 4),
+    "tall_horsetail": (("Tall Horsetail", "Cavalinha Alta", "Cola de Caballo Alta"), "tall_plant", ("minecraft:is_river",), 6),
+    "calamites": (("Calamites", "Calamites", "Calamites"), "tall_plant", (SWAMP, "minecraft:is_river"), 8),
+    "bracken": (("Bracken", "Samambaia", "Helecho Común"), "plant", ("minecraft:is_forest", "minecraft:is_taiga"), 3),
+    "tall_bracken": (("Tall Bracken", "Samambaia Alta", "Helecho Común Alto"), "tall_plant", ("minecraft:is_forest",), 6),
+    "royal_fern": (("Royal Fern", "Samambaia-real", "Helecho Real"), "plant", ("minecraft:is_jungle", SWAMP), 5),
+    "young_cycad": (("Young Cycad", "Cicadácea Jovem", "Cícada Joven"), "plant", ("minecraft:is_savanna", "minecraft:is_jungle"), 5),
+    "cycad": (("Cycad", "Cicadácea", "Cícada"), "tall_plant", ("minecraft:is_savanna", "minecraft:is_jungle"), 8),
+    "williamsonia": (("Williamsonia", "Williamsonia", "Williamsonia"), "plant", ("minecraft:is_savanna", "minecraft:is_forest"), 8),
+    "archaefructus": (("Archaefructus", "Archaefructus", "Archaefructus"), "water_plant", ("minecraft:is_river",), 6),
+    "cretaceous_water_lily": (("Cretaceous Water Lily", "Nenúfar do Cretáceo", "Nenúfar del Cretácico"), "water_plant",
+                              (SWAMP, "minecraft:is_river"), 4),
+    "cretaceous_grass": (("Cretaceous Grass", "Capim do Cretáceo", "Hierba del Cretácico"), "plant", ("minecraft:is_savanna",), 2),
+    "clubmoss": (("Clubmoss", "Licopódio", "Licopodio"), "plant", ("minecraft:is_taiga", "minecraft:is_forest"), 5),
+    "spikemoss": (("Spikemoss", "Selaginela", "Selaginela"), "plant", ("minecraft:is_jungle",), 4),
+    "liverwort": (("Liverwort", "Hepática", "Hepática"), "carpet", (SWAMP, "minecraft:is_river"), 6),
+    "lichen": (("Lichen", "Líquen", "Liquen"), "multiface", ("minecraft:is_mountain",), 1),
+    "rush": (("Rush", "Junco", "Junco"), "tall_plant", (SWAMP, "minecraft:is_river"), 4),
+    "swamp_algae": (("Swamp Algae", "Alga de Pântano", "Alga de Pantano"), "water_plant", (SWAMP,), 3),
+    "shelf_fungus": (("Shelf Fungus", "Fungo-prateleira", "Hongo Repisa"), "multiface", ("minecraft:is_forest", "minecraft:is_taiga"), 1),
+}
+PLANT_MATERIAL = {"plant": "plant", "tall_plant": "plant", "water_plant": "water_plant", "carpet": "plant_cover",
+                  "multiface": "multiface"}
+for pid, (names, kind, _, _) in PLANTS.items():
+    tex = (f"{pid}_top", f"{pid}_bottom") if kind == "tall_plant" else pid
+    add(pid, names, kind, tex, "hoe", PLANT_MATERIAL[kind], "PLANT")
 
 LANG = {"en_us": {}, "pt_br": {}, "es_es": {}}
 for _bid, _row in BLOCKS.items():
@@ -389,7 +432,44 @@ def gen_trapdoor(bid, tex):
     return m(f"{bid}_bottom")
 
 
-GEN = {"cube": gen_cube, "column": gen_column, "stairs": gen_stairs, "wall": gen_wall, "fence": gen_fence,
+def gen_plant(bid, tex):
+    model(bid, "minecraft:block/cross", cross=t(tex))
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"": variant(bid)}})
+    return None
+
+
+def gen_tall_plant(bid, tex):
+    top, bottom = tex
+    model(f"{bid}_top", "minecraft:block/cross", cross=t(top))
+    model(f"{bid}_bottom", "minecraft:block/cross", cross=t(bottom))
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"half=upper": variant(f"{bid}_top"),
+                                                       "half=lower": variant(f"{bid}_bottom")}})
+    return None
+
+
+def gen_water_plant(bid, tex):
+    model(bid, "minecraft:block/lily_pad", texture=t(tex))
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"": variant(bid)}})
+    return None
+
+
+def gen_multiface(bid, tex):
+    """Grows flat on any face of a block, like glow lichen: one thin face model, rotated per direction."""
+    write(f"{A}/models/block/{bid}.json", {
+        "parent": "minecraft:block/block", "ambientocclusion": False,
+        "textures": {"texture": t(tex), "particle": t(tex)},
+        "elements": [{"from": [0, 0, 0.1], "to": [16, 16, 0.1], "shade": False, "faces": {
+            "north": {"uv": [16, 0, 0, 16], "texture": "#texture"}, "south": {"uv": [0, 0, 16, 16], "texture": "#texture"}}}]})
+    rot = {"north": {}, "east": {"y": 90}, "south": {"y": 180}, "west": {"y": 270}, "up": {"x": 270}, "down": {"x": 90}}
+    parts = []
+    for face, r in rot.items():
+        parts.append({"when": {face: "true"}, "apply": variant(bid, r.get("x", 0), r.get("y", 0), uvlock=True)})
+    write(f"{A}/blockstates/{bid}.json", {"multipart": parts})
+    return None
+
+
+GEN = {"plant": gen_plant, "tall_plant": gen_tall_plant, "water_plant": gen_water_plant, "multiface": gen_multiface,
+       "cube": gen_cube, "column": gen_column, "stairs": gen_stairs, "wall": gen_wall, "fence": gen_fence,
        "pane": gen_pane, "carpet": gen_carpet, "palisade": gen_palisade, "log": gen_log, "leaves": gen_leaves,
        "sapling": gen_sapling, "fence_gate": gen_fence_gate, "door": gen_door, "trapdoor": gen_trapdoor}
 
@@ -434,7 +514,7 @@ def loot_leaves(bid, sapling):
 
 
 def loot_door(bid):
-    """Only the lower half drops the door."""
+    """Only the lower half drops the block (doors, tall plants)."""
     write(f"{D}/loot_tables/blocks/{bid}.json", {"type": "minecraft:block", "pools": [{
         "rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": f"{NS}:{bid}", "conditions": [
             {"condition": "minecraft:block_state_property", "block": f"{NS}:{bid}", "properties": {"half": "lower"}}]}],
@@ -615,15 +695,55 @@ def worldgen():
                 "Name": f"{NS}:{tid}_sapling", "Properties": {"stage": "0"}}}}]})
         for biome in biomes:
             features.append((f"{tid}_tree", "vegetal_decoration", biome))
+    for pid, (_, kind, biomes, rarity) in PLANTS.items():
+        state = {"Name": f"{NS}:{pid}"}
+        if kind == "multiface":  # lichen on mountain rock, shelf fungus on tree trunks
+            hosts = ([f"{NS}:{ROCK_VARIANTS[r]['natural']}" for r in ROCKS] + ["minecraft:stone", "minecraft:andesite",
+                     "minecraft:granite", "minecraft:diorite", "minecraft:cobblestone", "minecraft:mossy_cobblestone"]
+                     if pid == "lichen" else
+                     [f"{NS}:{w}_log" for w in WOODS] + [f"minecraft:{w}_log" for w in ("oak", "birch", "spruce", "dark_oak", "jungle")])
+            write(f"{D}/worldgen/configured_feature/{pid}.json", {"type": "minecraft:multiface_growth", "config": {
+                "block": f"{NS}:{pid}", "search_range": 20 if pid == "lichen" else 6, "chance_of_spreading": 0.5,
+                "can_place_on_floor": pid == "lichen", "can_place_on_ceiling": False, "can_place_on_wall": True,
+                "can_be_placed_on": hosts}})
+            placement = ([{"type": "minecraft:count", "count": 12}, {"type": "minecraft:in_square"},
+                          {"type": "minecraft:height_range", "height": {"type": "minecraft:uniform",
+                           "min_inclusive": {"absolute": 70}, "max_inclusive": {"absolute": 220}}}]
+                         if pid == "lichen" else
+                         [{"type": "minecraft:count", "count": 4}, {"type": "minecraft:in_square"},
+                          {"type": "minecraft:heightmap", "heightmap": "MOTION_BLOCKING_NO_LEAVES"}])
+            write(f"{D}/worldgen/placed_feature/{pid}.json", {"feature": f"{NS}:{pid}",
+                                                             "placement": placement + [{"type": "minecraft:biome"}]})
+        else:
+            if kind == "water_plant":
+                where = [{"type": "minecraft:matching_blocks", "blocks": "minecraft:air"},
+                         {"type": "minecraft:matching_fluids", "offset": [0, -1, 0], "fluids": "minecraft:water"}]
+            else:
+                if kind == "tall_plant":
+                    state["Properties"] = {"half": "lower"}
+                where = [{"type": "minecraft:matching_blocks", "blocks": "minecraft:air"},
+                         {"type": "minecraft:would_survive", "state": state}]
+            write(f"{D}/worldgen/configured_feature/{pid}.json", {"type": "minecraft:random_patch", "config": {
+                "tries": 32 if kind != "tall_plant" else 16, "xz_spread": 6, "y_spread": 2, "feature": {
+                    "feature": {"type": "minecraft:simple_block", "config": {"to_place": {
+                        "type": "minecraft:simple_state_provider", "state": state}}},
+                    "placement": [{"type": "minecraft:block_predicate_filter", "predicate": {
+                        "type": "minecraft:all_of", "predicates": where}}]}}})
+            write(f"{D}/worldgen/placed_feature/{pid}.json", {"feature": f"{NS}:{pid}", "placement": [
+                {"type": "minecraft:rarity_filter", "chance": rarity}, {"type": "minecraft:in_square"},
+                {"type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG"}, {"type": "minecraft:biome"}]})
+        for biome in biomes:
+            features.append((pid, "vegetal_decoration", biome))
     return features
 
 
 # ------------------------------------------------------------- Java
 JAVA_KIND = {"cube": "cube", "column": "cube", "palisade": "palisade", "stairs": "stairs", "slab": "slab",
              "wall": "wall", "fence": "fence", "pane": "pane", "carpet": "carpet", "log": "log", "leaves": "leaves",
-             "sapling": "sapling", "fence_gate": "fenceGate", "door": "door", "trapdoor": "trapdoor"}
+             "sapling": "sapling", "fence_gate": "fenceGate", "door": "door", "trapdoor": "trapdoor", "plant": "plant",
+             "tall_plant": "tallPlant", "water_plant": "waterPlant", "multiface": "multiface"}
 # drawn with transparent pixels: rendered as cutout on the client (BuildingBlocksClient)
-CUTOUT_KINDS = ("leaves", "sapling", "door", "trapdoor")
+CUTOUT_KINDS = ("leaves", "sapling", "door", "trapdoor", "plant", "tall_plant", "water_plant", "multiface")
 
 
 def gen_java(features):
@@ -637,6 +757,7 @@ def gen_java(features):
             lines.append(f'        ModBlocks.{kind}("{bid}", {props});')
     strip = "\n".join(f'            {{"{a}", "{b}"}},' for a, b in STRIPPABLES)
     cutout = ", ".join(f'"{b}"' for b, row in BLOCKS.items() if row["kind"] in CUTOUT_KINDS)
+    on_water = ", ".join(f'"{b}"' for b, row in BLOCKS.items() if row["kind"] == "water_plant")
     feats = "\n".join(f'            {{"{f}", "{step}", "{biome}"}},' for f, step, biome in features)
     src = f"""package com.terrassic.registry;
 
@@ -662,6 +783,9 @@ public final class BuildingBlocks {{
     /** Blocks drawn with transparent pixels, rendered as cutout. */
     public static final String[] CUTOUT = {{{cutout}}};
 
+    /** Blocks that float on water: their item places them on the water surface. */
+    public static final String[] ON_WATER = {{{on_water}}};
+
     private BuildingBlocks() {{
     }}
 
@@ -684,7 +808,7 @@ def main():
             item_model = GEN[kind](bid, tex)
         if kind == "door":
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{bid}"}})
-        elif kind == "sapling":
+        elif kind in ("sapling", "plant", "water_plant", "multiface"):
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": t(tex)}})
         elif item_model is None:
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": t(tex[0])}})
@@ -694,7 +818,7 @@ def main():
             loot_slab(bid)
         elif kind == "leaves":
             loot_leaves(bid, bid.replace("_leaves", "_sapling"))
-        elif kind == "door":
+        elif kind in ("door", "tall_plant"):
             loot_door(bid)
         else:
             loot_self(bid, FLINT_BONUS if bid == "flint_nodules" else None)

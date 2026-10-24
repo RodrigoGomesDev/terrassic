@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "LL",
+    "LL"
+  ],
+  "key": {
+    "L": {
+      "item": "terrassic:taxodium_log"
+    }
+  },
+  "result": {
+    "item": "terrassic:taxodium_wood",
+    "count": 3
+  }
+}

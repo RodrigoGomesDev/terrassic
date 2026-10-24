@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PPP",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "terrassic:tree_fern_hewn_planks"
+    }
+  },
+  "result": {
+    "item": "terrassic:tree_fern_lashed_trapdoor",
+    "count": 2
+  }
+}
