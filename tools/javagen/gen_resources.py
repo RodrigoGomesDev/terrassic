@@ -1,60 +1,75 @@
-"""Generates the JSON resources: item/block models, blockstates, lang (en_us, pt_br), recipes and loot tables."""
+"""Generates the JSON resources: item/block models, blockstates, lang (en_us, pt_br, es_es + other Spanish
+variants), recipes and loot tables."""
 import json
 import os
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 RES = os.path.join(ROOT, "common", "src", "main", "resources")
-A = os.path.join(RES, "assets", "primalera")
-D = os.path.join(RES, "data", "primalera")
+A = os.path.join(RES, "assets", "terrassic")
+D = os.path.join(RES, "data", "terrassic")
 
-SPECIES = {  # id: (en, pt, large egg)
-    "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", True),
-    "spinosaurus": ("Spinosaurus", "Espinossauro", True),
-    "dilophosaurus": ("Dilophosaurus", "Dilofossauro", False),
-    "velociraptor": ("Velociraptor", "Velociraptor", False),
-    "compsognathus": ("Compsognathus", "Compsognato", False),
-    "triceratops": ("Triceratops", "Tricerátops", True),
-    "stegosaurus": ("Stegosaurus", "Estegossauro", True),
-    "ankylosaurus": ("Ankylosaurus", "Anquilossauro", True),
-    "brachiosaurus": ("Brachiosaurus", "Braquiossauro", True),
-    "parasaurolophus": ("Parasaurolophus", "Parassaurolofo", True),
-    "pachycephalosaurus": ("Pachycephalosaurus", "Paquicefalossauro", False),
-    "gallimimus": ("Gallimimus", "Galimimo", False),
+SPECIES = {  # id: (en, pt, es, large egg)
+    "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
+    "spinosaurus": ("Spinosaurus", "Espinossauro", "Espinosaurio", True),
+    "dilophosaurus": ("Dilophosaurus", "Dilofossauro", "Dilofosaurio", False),
+    "velociraptor": ("Velociraptor", "Velociraptor", "Velociraptor", False),
+    "compsognathus": ("Compsognathus", "Compsognato", "Compsognathus", False),
+    "triceratops": ("Triceratops", "Tricerátops", "Triceratops", True),
+    "stegosaurus": ("Stegosaurus", "Estegossauro", "Estegosaurio", True),
+    "ankylosaurus": ("Ankylosaurus", "Anquilossauro", "Anquilosaurio", True),
+    "brachiosaurus": ("Brachiosaurus", "Braquiossauro", "Braquiosaurio", True),
+    "parasaurolophus": ("Parasaurolophus", "Parassaurolofo", "Parasaurolophus", True),
+    "pachycephalosaurus": ("Pachycephalosaurus", "Paquicefalossauro", "Paquicefalosaurio", False),
+    "gallimimus": ("Gallimimus", "Galimimo", "Gallimimus", False),
+    "pteranodon": ("Pteranodon", "Pteranodonte", "Pteranodonte", False),
 }
 
-ITEMS = {  # id: (en, pt, model parent)
-    "rex_tooth": ("T. rex Tooth", "Dente de Tiranossauro", "item/generated"),
-    "triceratops_horn": ("Triceratops Horn", "Chifre de Tricerátops", "item/generated"),
-    "ankylosaurus_club": ("Ankylosaurus Tail Club", "Clava Caudal de Anquilossauro", "item/generated"),
-    "flint_knife": ("Flint Knife", "Faca de Sílex", "item/handheld"),
-    "flint_hatchet": ("Flint Hatchet", "Machadinha de Sílex", "item/handheld"),
-    "bone_club": ("Bone Club", "Clava de Osso", "item/handheld"),
-    "flint_spear": ("Flint Spear", "Lança de Sílex", "item/handheld"),
-    "horn_spear": ("Horn Spear", "Lança de Chifre", "item/handheld"),
-    "rex_tooth_dagger": ("T. rex Tooth Dagger", "Adaga de Dente de Tiranossauro", "item/handheld"),
-    "tail_club": ("Tail Club", "Clava de Cauda", "item/handheld"),
+ITEMS = {  # id: (en, pt, es, model parent)
+    "rex_tooth": ("T. rex Tooth", "Dente de Tiranossauro", "Diente de Tiranosaurio", "item/generated"),
+    "triceratops_horn": ("Triceratops Horn", "Chifre de Tricerátops", "Cuerno de Triceratops", "item/generated"),
+    "ankylosaurus_club": ("Ankylosaurus Tail Club", "Clava Caudal de Anquilossauro", "Maza Caudal de Anquilosaurio", "item/generated"),
+    "flint_knife": ("Flint Knife", "Faca de Sílex", "Cuchillo de Sílex", "item/handheld"),
+    "flint_hatchet": ("Flint Hatchet", "Machadinha de Sílex", "Hacha de Mano de Sílex", "item/handheld"),
+    "bone_club": ("Bone Club", "Clava de Osso", "Garrote de Hueso", "item/handheld"),
+    "flint_spear": ("Flint Spear", "Lança de Sílex", "Lanza de Sílex", "item/handheld"),
+    "horn_spear": ("Horn Spear", "Lança de Chifre", "Lanza de Cuerno", "item/handheld"),
+    "rex_tooth_dagger": ("T. rex Tooth Dagger", "Adaga de Dente de Tiranossauro", "Daga de Diente de Tiranosaurio", "item/handheld"),
+    "tail_club": ("Tail Club", "Clava de Cauda", "Garrote de Cola", "item/handheld"),
 }
 
 LANG_EXTRA = {
     "en_us": {
-        "itemGroup.primalera.main": "PrimalEra",
-        "entity.primalera.spear": "Spear",
-        "message.primalera.sit": "%s is resting",
-        "message.primalera.follow": "%s is following you",
-        "message.primalera.tamed": "You tamed %s (%s)!",
-        "sex.primalera.male": "male",
-        "sex.primalera.female": "female",
+        "itemGroup.terrassic.main": "Terrassic",
+        "entity.terrassic.spear": "Spear",
+        "message.terrassic.sit": "%s is resting",
+        "message.terrassic.follow": "%s is following you",
+        "message.terrassic.tamed": "You tamed %s (%s)!",
+        "sex.terrassic.male": "male",
+        "sex.terrassic.female": "female",
     },
     "pt_br": {
-        "itemGroup.primalera.main": "PrimalEra",
-        "entity.primalera.spear": "Lança",
-        "message.primalera.sit": "%s está descansando",
-        "message.primalera.follow": "%s está te seguindo",
-        "message.primalera.tamed": "Você domesticou %s (%s)!",
-        "sex.primalera.male": "macho",
-        "sex.primalera.female": "fêmea",
+        "itemGroup.terrassic.main": "Terrassic",
+        "entity.terrassic.spear": "Lança",
+        "message.terrassic.sit": "%s está descansando",
+        "message.terrassic.follow": "%s está te seguindo",
+        "message.terrassic.tamed": "Você domesticou %s (%s)!",
+        "sex.terrassic.male": "macho",
+        "sex.terrassic.female": "fêmea",
+    },
+    "es_es": {
+        "itemGroup.terrassic.main": "Terrassic",
+        "entity.terrassic.spear": "Lanza",
+        "message.terrassic.sit": "%s está descansando",
+        "message.terrassic.follow": "%s te está siguiendo",
+        "message.terrassic.tamed": "¡Has domesticado a %s (%s)!",
+        "sex.terrassic.male": "macho",
+        "sex.terrassic.female": "hembra",
     },
 }
+
+# Minecraft treats every Spanish locale as its own language and falls back to English when one is missing,
+# so the es_es file is copied to the other Spanish variants.
+SPANISH_VARIANTS = ("es_ar", "es_cl", "es_ec", "es_mx", "es_uy", "es_ve")
 
 
 def write(path, data):
@@ -65,7 +80,7 @@ def write(path, data):
 
 
 def egg_model(sid, stage, large):
-    tex = f"primalera:block/{sid}_egg_{stage}"
+    tex = f"terrassic:block/{sid}_egg_{stage}"
     if large:
         els = [([4, 0, 4], [12, 9, 12]), ([5, 9, 5], [11, 12, 11]), ([6, 12, 6], [10, 13, 10])]
     else:
@@ -82,29 +97,44 @@ def egg_model(sid, stage, large):
 
 
 def main():
-    lang = {"en_us": dict(LANG_EXTRA["en_us"]), "pt_br": dict(LANG_EXTRA["pt_br"])}
-    for sid, (en, pt, large) in SPECIES.items():
-        lang["en_us"][f"entity.primalera.{sid}"] = en
-        lang["pt_br"][f"entity.primalera.{sid}"] = pt
-        lang["en_us"][f"item.primalera.{sid}_spawn_egg"] = f"{en} Spawn Egg"
-        lang["pt_br"][f"item.primalera.{sid}_spawn_egg"] = f"Ovo Gerador de {pt}"
-        lang["en_us"][f"block.primalera.{sid}_egg"] = f"{en} Egg"
-        lang["pt_br"][f"block.primalera.{sid}_egg"] = f"Ovo de {pt}"
+    lang = {code: dict(entries) for code, entries in LANG_EXTRA.items()}
+    for sid, (en, pt, es, large) in SPECIES.items():
+        lang["en_us"][f"entity.terrassic.{sid}"] = en
+        lang["pt_br"][f"entity.terrassic.{sid}"] = pt
+        lang["es_es"][f"entity.terrassic.{sid}"] = es
+        lang["en_us"][f"item.terrassic.{sid}_spawn_egg"] = f"{en} Spawn Egg"
+        lang["pt_br"][f"item.terrassic.{sid}_spawn_egg"] = f"Ovo Gerador de {pt}"
+        lang["es_es"][f"item.terrassic.{sid}_spawn_egg"] = f"Huevo Generador de {es}"
+        lang["en_us"][f"block.terrassic.{sid}_egg"] = f"{en} Egg"
+        lang["pt_br"][f"block.terrassic.{sid}_egg"] = f"Ovo de {pt}"
+        lang["es_es"][f"block.terrassic.{sid}_egg"] = f"Huevo de {es}"
         # unique spawn egg sprite (layer0 only; tint colours are white)
-        write(f"{A}/models/item/{sid}_spawn_egg.json", {"parent": "item/generated", "textures": {"layer0": f"primalera:item/{sid}_spawn_egg"}})
+        write(f"{A}/models/item/{sid}_spawn_egg.json", {"parent": "item/generated", "textures": {"layer0": f"terrassic:item/{sid}_spawn_egg"}})
         # egg block: 3 hatch stages
         for st in range(3):
             write(f"{A}/models/block/{sid}_egg_{st}.json", egg_model(sid, st, large))
-        write(f"{A}/blockstates/{sid}_egg.json", {"variants": {f"hatch={st}": {"model": f"primalera:block/{sid}_egg_{st}"} for st in range(3)}})
-        write(f"{A}/models/item/{sid}_egg.json", {"parent": f"primalera:block/{sid}_egg_0"})
+        write(f"{A}/blockstates/{sid}_egg.json", {"variants": {f"hatch={st}": {"model": f"terrassic:block/{sid}_egg_{st}"} for st in range(3)}})
+        write(f"{A}/models/item/{sid}_egg.json", {"parent": f"terrassic:block/{sid}_egg_0"})
         write(f"{D}/loot_tables/blocks/{sid}_egg.json", {"type": "minecraft:block", "pools": [{
-            "rolls": 1, "entries": [{"type": "minecraft:item", "name": f"primalera:{sid}_egg"}],
-            "conditions": [{"condition": "minecraft:block_state_property", "block": f"primalera:{sid}_egg",
+            "rolls": 1, "entries": [{"type": "minecraft:item", "name": f"terrassic:{sid}_egg"}],
+            "conditions": [{"condition": "minecraft:block_state_property", "block": f"terrassic:{sid}_egg",
                             "properties": {"hatch": "0"}}, {"condition": "minecraft:survives_explosion"}]}]})
-    for iid, (en, pt, parent) in ITEMS.items():
-        lang["en_us"][f"item.primalera.{iid}"] = en
-        lang["pt_br"][f"item.primalera.{iid}"] = pt
-        write(f"{A}/models/item/{iid}.json", {"parent": parent, "textures": {"layer0": f"primalera:item/{iid}"}})
+    for iid, (en, pt, es, parent) in ITEMS.items():
+        lang["en_us"][f"item.terrassic.{iid}"] = en
+        lang["pt_br"][f"item.terrassic.{iid}"] = pt
+        lang["es_es"][f"item.terrassic.{iid}"] = es
+        write(f"{A}/models/item/{iid}.json", {"parent": parent, "textures": {"layer0": f"terrassic:item/{iid}"}})
+    import gen_blocks  # primitive building blocks: their JSON + lang entries
+    gen_blocks.main()
+    import gen_science  # fossils, field tools, research table, advancements, story and Field Guide texts
+    gen_science.main()
+    for code in lang:
+        lang[code].update(gen_blocks.LANG[code])
+        lang[code].update(gen_science.LANG[code])
+    missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
+    if missing:
+        raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")
+    lang.update({code: lang["es_es"] for code in SPANISH_VARIANTS})
     for code, data in lang.items():
         write(f"{A}/lang/{code}.json", dict(sorted(data.items())))
 
@@ -113,13 +143,13 @@ def main():
         write(f"{D}/recipes/{name}.json", {"type": "minecraft:crafting_shaped", "category": "equipment", "pattern": pattern,
                                          "key": {k: {"item": v} for k, v in key.items()},
                                          "result": {"item": result, "count": count}})
-    shaped("flint_knife", ["F", "S"], {"F": "minecraft:flint", "S": "minecraft:stick"}, "primalera:flint_knife")
-    shaped("flint_hatchet", ["FF", "FS", " S"], {"F": "minecraft:flint", "S": "minecraft:stick"}, "primalera:flint_hatchet")
-    shaped("bone_club", [" X", "B "], {"X": "minecraft:bone_block", "B": "minecraft:bone"}, "primalera:bone_club")
-    shaped("flint_spear", ["  F", " T ", "S  "], {"F": "minecraft:flint", "T": "minecraft:string", "S": "minecraft:stick"}, "primalera:flint_spear")
-    shaped("horn_spear", ["  H", " T ", "S  "], {"H": "primalera:triceratops_horn", "T": "minecraft:string", "S": "minecraft:stick"}, "primalera:horn_spear")
-    shaped("rex_tooth_dagger", ["T", "L"], {"T": "primalera:rex_tooth", "L": "minecraft:leather"}, "primalera:rex_tooth_dagger")
-    shaped("tail_club", [" C", "S "], {"C": "primalera:ankylosaurus_club", "S": "minecraft:stick"}, "primalera:tail_club")
+    shaped("flint_knife", ["F", "S"], {"F": "minecraft:flint", "S": "minecraft:stick"}, "terrassic:flint_knife")
+    shaped("flint_hatchet", ["FF", "FS", " S"], {"F": "minecraft:flint", "S": "minecraft:stick"}, "terrassic:flint_hatchet")
+    shaped("bone_club", [" X", "B "], {"X": "minecraft:bone_block", "B": "minecraft:bone"}, "terrassic:bone_club")
+    shaped("flint_spear", ["  F", " T ", "S  "], {"F": "minecraft:flint", "T": "minecraft:string", "S": "minecraft:stick"}, "terrassic:flint_spear")
+    shaped("horn_spear", ["  H", " T ", "S  "], {"H": "terrassic:triceratops_horn", "T": "minecraft:string", "S": "minecraft:stick"}, "terrassic:horn_spear")
+    shaped("rex_tooth_dagger", ["T", "L"], {"T": "terrassic:rex_tooth", "L": "minecraft:leather"}, "terrassic:rex_tooth_dagger")
+    shaped("tail_club", [" C", "S "], {"C": "terrassic:ankylosaurus_club", "S": "minecraft:stick"}, "terrassic:tail_club")
 
     # ------------------------------------------------------------- entity loot
     def item(name, lo, hi, smelt=False, chance=None):
@@ -134,18 +164,19 @@ def main():
                                   {"condition": "minecraft:random_chance_with_looting", "chance": chance, "looting_multiplier": 0.1}]
         return pool
     loot = {
-        "tyrannosaurus": [item("minecraft:beef", 4, 8, True), item("minecraft:bone", 2, 5), item("primalera:rex_tooth", 1, 2, chance=0.6)],
+        "tyrannosaurus": [item("minecraft:beef", 4, 8, True), item("minecraft:bone", 2, 5), item("terrassic:rex_tooth", 1, 2, chance=0.6)],
         "spinosaurus": [item("minecraft:beef", 3, 7, True), item("minecraft:bone", 2, 4), item("minecraft:cod", 1, 3, True)],
         "dilophosaurus": [item("minecraft:mutton", 1, 3, True), item("minecraft:bone", 1, 2)],
         "velociraptor": [item("minecraft:chicken", 1, 2, True), item("minecraft:feather", 1, 3)],
         "compsognathus": [item("minecraft:chicken", 0, 1, True), item("minecraft:feather", 0, 2)],
-        "triceratops": [item("minecraft:beef", 3, 6, True), item("minecraft:leather", 2, 4), item("primalera:triceratops_horn", 1, 2, chance=0.5)],
+        "triceratops": [item("minecraft:beef", 3, 6, True), item("minecraft:leather", 2, 4), item("terrassic:triceratops_horn", 1, 2, chance=0.5)],
         "stegosaurus": [item("minecraft:beef", 2, 5, True), item("minecraft:leather", 1, 3)],
-        "ankylosaurus": [item("minecraft:beef", 2, 5, True), item("minecraft:leather", 2, 4), item("primalera:ankylosaurus_club", 1, 1, chance=0.4)],
+        "ankylosaurus": [item("minecraft:beef", 2, 5, True), item("minecraft:leather", 2, 4), item("terrassic:ankylosaurus_club", 1, 1, chance=0.4)],
         "brachiosaurus": [item("minecraft:beef", 8, 14, True), item("minecraft:leather", 4, 8), item("minecraft:bone", 4, 8)],
         "parasaurolophus": [item("minecraft:beef", 2, 5, True), item("minecraft:leather", 1, 3)],
         "pachycephalosaurus": [item("minecraft:mutton", 1, 3, True), item("minecraft:bone", 1, 2)],
         "gallimimus": [item("minecraft:chicken", 1, 3, True), item("minecraft:feather", 2, 4)],
+        "pteranodon": [item("minecraft:chicken", 1, 2, True), item("minecraft:leather", 0, 2), item("minecraft:cod", 0, 2, True)],
     }
     for sid, pools in loot.items():
         write(f"{D}/loot_tables/entities/{sid}.json", {"type": "minecraft:entity", "pools": pools})
