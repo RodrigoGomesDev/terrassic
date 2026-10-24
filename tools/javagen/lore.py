@@ -535,6 +535,22 @@ GUIDE = {
         note=("Achei que era um tronco e amarrei o barco nele. O tronco abriu a boca.",
               "I thought it was a log and tied the boat to it. The log opened its mouth.",
               "Pensé que era un tronco y até el bote a él. El tronco abrió la boca.")),
+    "baurusuchus": dict(
+        sci=("Viveu há cerca de 90 a 83 milhões de anos nas planícies quentes do interior do que hoje é o Brasil (Grupo Bauru). Crocodilomorfo terrestre de uns 3,5 m, de pernas eretas sob o corpo como as de um cão, crânio alto e estreito com dentes em lâmina serrilhada, dois deles enormes como caninos, e narinas abertas para os lados. Corria atrás da presa em vez de esperar na água.",
+             "Lived about 90 to 83 million years ago on the hot inland plains of what is now Brazil (Bauru Group). A land crocodylomorph of about 3.5 m, with upright legs under the body like a dog's, a tall narrow skull with serrated blade teeth, two of them huge like canines, and nostrils opening to the sides. It ran its prey down instead of waiting in the water.",
+             "Vivió hace unos 90 a 83 millones de años en las llanuras cálidas del interior de lo que hoy es Brasil (Grupo Bauru). Crocodilomorfo terrestre de unos 3,5 m, de patas erguidas bajo el cuerpo como las de un perro, cráneo alto y estrecho con dientes en hoja aserrada, dos de ellos enormes como caninos, y fosas nasales abiertas a los lados. Corría tras la presa en vez de esperar en el agua."),
+        behavior=("Ronda as savanas e planícies secas sozinho ou aos pares, rápido e persistente: caça tudo que é menor do que ele, inclusive quem está de pé olhando o pôr do sol.",
+                  "Roams the savannas and dry plains alone or in pairs, fast and persistent: it hunts anything smaller than itself, including whoever is standing there watching the sunset.",
+                  "Ronda las sabanas y llanuras secas solo o en parejas, rápido y persistente: caza todo lo que es menor que él, incluso a quien está de pie mirando el atardecer."),
+        taming=("Só pelo ovo, por enquanto: o filhote que nasce perto de você é seu. O nocaute do adulto chega na v0.7.",
+                "Only through the egg for now: the hatchling born near you is yours. Knocking out an adult arrives in v0.7.",
+                "Solo por el huevo, por ahora: la cría que nace cerca de usted es suya. El noqueo del adulto llega en la v0.7."),
+        utility=("O cão de guarda da base: rápido, resistente e nunca distraído. Come carne de qualquer bicho.",
+                 "The base's guard dog: fast, tough and never distracted. Eats meat from any animal.",
+                 "El perro guardián de la base: rápido, resistente y nunca distraído. Come carne de cualquier animal."),
+        note=("Pensei que crocodilo não corria. Esse corre. Descobri na subida.",
+              "I thought crocodiles could not run. This one runs. I found out on the uphill.",
+              "Pensé que los cocodrilos no corrían. Este corre. Lo descubrí en la subida.")),
 }
 
 ERAS = {

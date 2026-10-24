@@ -4,6 +4,7 @@ import com.terrassic.Terrassic;
 // BEGIN GENERATED imports
 import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Archelon;
+import com.terrassic.entity.Baurusuchus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Deinosuchus;
@@ -100,6 +101,8 @@ public final class ModEntities {
     // ---- predators
     public static final RegistrySupplier<EntityType<Deinosuchus>> DEINOSUCHUS =
             mob("deinosuchus", Deinosuchus::new, MobCategory.CREATURE, Deinosuchus.WIDTH, Deinosuchus.HEIGHT, 10);
+    public static final RegistrySupplier<EntityType<Baurusuchus>> BAURUSUCHUS =
+            mob("baurusuchus", Baurusuchus::new, MobCategory.CREATURE, Baurusuchus.WIDTH, Baurusuchus.HEIGHT, 10);
     // END GENERATED species
 
     // ---- projectiles
@@ -143,6 +146,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(ARCHELON, Archelon::createAttributes);
         EntityAttributeRegistry.register(HESPERORNIS, Hesperornis::createAttributes);
         EntityAttributeRegistry.register(DEINOSUCHUS, Deinosuchus::createAttributes);
+        EntityAttributeRegistry.register(BAURUSUCHUS, Baurusuchus::createAttributes);
         // END GENERATED attributes
     }
 }

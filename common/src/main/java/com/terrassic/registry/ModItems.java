@@ -65,6 +65,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> ARCHELON_SPAWN_EGG = egg("archelon", ModEntities.ARCHELON);
     public static final RegistrySupplier<Item> HESPERORNIS_SPAWN_EGG = egg("hesperornis", ModEntities.HESPERORNIS);
     public static final RegistrySupplier<Item> DEINOSUCHUS_SPAWN_EGG = egg("deinosuchus", ModEntities.DEINOSUCHUS);
+    public static final RegistrySupplier<Item> BAURUSUCHUS_SPAWN_EGG = egg("baurusuchus", ModEntities.BAURUSUCHUS);
     // END GENERATED spawn eggs
 
     // ---- hides: one per species, dropped by the animal (1-3, more with Looting); raw material for hide blocks
@@ -93,6 +94,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> ARCHELON_HIDE = hide("archelon");
     public static final RegistrySupplier<Item> HESPERORNIS_HIDE = hide("hesperornis");
     public static final RegistrySupplier<Item> DEINOSUCHUS_HIDE = hide("deinosuchus");
+    public static final RegistrySupplier<Item> BAURUSUCHUS_HIDE = hide("baurusuchus");
     // END GENERATED hides
 
     // ---- materials dropped by dinosaurs

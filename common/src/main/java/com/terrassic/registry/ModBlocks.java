@@ -70,6 +70,7 @@ public final class ModBlocks {
         egg("archelon", ModEntities.ARCHELON, true);
         egg("hesperornis", ModEntities.HESPERORNIS, false);
         egg("deinosuchus", ModEntities.DEINOSUCHUS, true);
+        egg("baurusuchus", ModEntities.BAURUSUCHUS, false);
         // END GENERATED eggs
     }
 

@@ -60,6 +60,8 @@ SIZES = {
     "hesperornis":        dict(real=1.8, scale=0.39, w=0.6, h=0.6, baby=0.4,  shadow=0.4),
     # Deinosuchus riograndensis: 10.6 m well measured (Cossette & Brochu 2020), up to 12 m in older estimates (Schwimmer 2002).
     "deinosuchus":        dict(real=12.0, scale=1.64, w=2.6, h=1.4, baby=0.2,  shadow=2.2),
+    # Baurusuchus salgadoensis: ~3.5 m (Carvalho, Campos & Nobre 2005), a land crocodylomorph on upright legs.
+    "baurusuchus":        dict(real=3.5, scale=0.78, w=1.0, h=1.0, baby=0.3,  shadow=0.9),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -89,6 +91,7 @@ GUIDE = {
     "archelon":           dict(era="late_cretaceous", diet="omnivore", fossil=3),
     "hesperornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
     "deinosuchus":        dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "baurusuchus":        dict(era="late_cretaceous", diet="carnivore", fossil=3),
 }
 
 # Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
@@ -120,6 +123,7 @@ WORLD = {
     "archelon":           dict(biomes=("ocean", "coast"), weight=4, group=(1, 2), track=12),      # cruises near the shore
     "hesperornis":        dict(biomes=("coast", "ocean"), weight=8, group=(2, 5), track=10),      # rafts of divers
     "deinosuchus":        dict(biomes=("river", "swamp", "coast"), weight=3, group=(1, 1), track=10),  # ambush at the water's edge
+    "baurusuchus":        dict(biomes=("savanna", "badlands", "plains"), weight=4, group=(1, 2), track=10),  # hot dry plains
 }
 
 # biome predicate -> (Java expression in ModSpawns, description for the doc comment)
@@ -300,6 +304,13 @@ SPECIES = [
       xp=38, step_height=1.0, head=(40, 20),
       prey="e.isInWaterOrBubble() || e.getBbWidth() < 1.6F && !(e instanceof Deinosuchus)", prey_interval=140, fish=True,
       amphibious=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 1)]),
+ dict(id="baurusuchus", cls="Baurusuchus", base="PredatorDinosaur",
+      doc="Baurusuchus salgadoensis - 3.5 m land crocodylomorph on upright legs with a deep dog-like skull and blade teeth: a fast runner of the hot plains that hunts anything smaller than itself, alone or in pairs. Egg taming only until the knockout (v0.7); a tamed one is a base guard.",
+      attrs=dict(MAX_HEALTH=55, MOVEMENT_SPEED=0.3, ATTACK_DAMAGE=9, ARMOR=5, KNOCKBACK_RESISTANCE=0.5, FOLLOW_RANGE=24),
+      food="Items.BEEF, Items.PORKCHOP, Items.CHICKEN, Items.MUTTON",
+      sounds=("HOGLIN_AMBIENT", "HOGLIN_HURT", "HOGLIN_DEATH", 0.8, 1.4, 260), step=("RAVAGER_STEP", 0.5, 1.0),
+      xp=16, step_height=1.0, head=(45, 25),
+      prey="e.getBbWidth() < 1.4F && !(e instanceof Baurusuchus)", prey_interval=100),
 ]
 
 

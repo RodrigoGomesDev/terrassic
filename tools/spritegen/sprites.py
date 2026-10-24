@@ -441,6 +441,19 @@ def spawn_eggs():
     eye(cv, 10, 6, "#c8a040")
     eggs["deinosuchus"] = cv
 
+    # Baurusuchus: sandy egg with narrow dark bands and the two canines showing in a grin
+    cv = base_egg(None, "#8a6a3c", "#e2d2a8")
+    for y in (4, 7, 10):
+        for x in range(3, 13):
+            if inside(cv, x, y) and x % 3 != 0:
+                cv.set(x, y, hexc("#3e2a18"))
+    for x in range(6, 11):
+        if inside(cv, x, 12):
+            cv.set(x, 12, hexc("#8a3844"))
+    cv.set(6, 11, hexc("#efe8d2")); cv.set(10, 11, hexc("#efe8d2"))
+    eye(cv, 10, 6, "#c89a30")
+    eggs["baurusuchus"] = cv
+
     # species with a front-view 32x32 design (egg_designs.py) use it; the rest keep the 16x16 sketch above
     import egg_designs
     for name, cv in eggs.items():
@@ -464,6 +477,7 @@ EGG_BLOCK = {
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "gallimimus": ("#f0ece0", "#9c917c"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),
     "hesperornis": ("#9aa49c", "#4a5048"), "deinosuchus": ("#d8d4b0", "#3a4a2c"),
+    "baurusuchus": ("#e6dcc0", "#8a6a3c"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
     "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),
     "ichthyornis": ("#e4ebe8", "#4a4a4c"),

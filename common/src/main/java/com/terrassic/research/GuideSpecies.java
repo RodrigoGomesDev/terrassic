@@ -35,7 +35,8 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("xiphactinus", "late_cretaceous", "carnivore", 6.0F, false, false, 3, 16.7F),
             new GuideSpecies("archelon", "late_cretaceous", "omnivore", 4.6F, true, false, 3, 19.79F),
             new GuideSpecies("hesperornis", "late_cretaceous", "piscivore", 1.8F, false, false, 4, 55.44F),
-            new GuideSpecies("deinosuchus", "late_cretaceous", "carnivore", 12.0F, false, true, 2, 8.33F));
+            new GuideSpecies("deinosuchus", "late_cretaceous", "carnivore", 12.0F, false, true, 2, 8.33F),
+            new GuideSpecies("baurusuchus", "late_cretaceous", "carnivore", 3.5F, false, true, 3, 28.5F));
 
     public static GuideSpecies byId(String id) {
         for (GuideSpecies s : ALL) {

@@ -811,5 +811,38 @@
    "animation.deinosuchus.tame"
   ],
   "render_scale": 1.0
+ },
+ "baurusuchus": {
+  "bones": 17,
+  "cubes": 40,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -9.894141003279682,
+    0.36184427528454927,
+    -32.000037347491265
+   ],
+   [
+    9.894141003279682,
+    20.00000383434762,
+    39.97380005493274
+   ]
+  ],
+  "animations": [
+   "animation.baurusuchus.idle",
+   "animation.baurusuchus.walk",
+   "animation.baurusuchus.run",
+   "animation.baurusuchus.sit",
+   "animation.baurusuchus.attack",
+   "animation.baurusuchus.knocked_out",
+   "animation.baurusuchus.wake",
+   "animation.baurusuchus.eat",
+   "animation.baurusuchus.beg",
+   "animation.baurusuchus.tame"
+  ],
+  "render_scale": 1.0
  }
 }
