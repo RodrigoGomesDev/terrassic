@@ -914,5 +914,39 @@
    "animation.corythosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "styracosaurus": {
+  "bones": 26,
+  "cubes": 63,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.672704294697937,
+    -0.024965530763392252,
+    -42.43890223828912
+   ],
+   [
+    9.672704294697937,
+    42.33364372984092,
+    38.03842230142147
+   ]
+  ],
+  "animations": [
+   "animation.styracosaurus.idle",
+   "animation.styracosaurus.walk",
+   "animation.styracosaurus.run",
+   "animation.styracosaurus.attack",
+   "animation.styracosaurus.sit",
+   "animation.styracosaurus.graze",
+   "animation.styracosaurus.knocked_out",
+   "animation.styracosaurus.wake",
+   "animation.styracosaurus.eat",
+   "animation.styracosaurus.beg",
+   "animation.styracosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

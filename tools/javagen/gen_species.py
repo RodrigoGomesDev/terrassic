@@ -29,6 +29,8 @@ SIZES = {
     "velociraptor":       dict(real=2.07, scale=0.48,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
     "compsognathus":      dict(real=1.25, scale=0.31,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
     "triceratops":        dict(real=9.0,  scale=1.63, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
+    # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
+    "styracosaurus":      dict(real=5.5,  scale=1.1,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
     "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
     "ankylosaurus":       dict(real=8.0,  scale=1.83, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
@@ -77,6 +79,7 @@ GUIDE = {
     "velociraptor":       dict(era="late_cretaceous", diet="carnivore", fossil=4),
     "compsognathus":      dict(era="jurassic",        diet="carnivore", fossil=3),
     "triceratops":        dict(era="late_cretaceous", diet="herbivore", fossil=5),
+    "styracosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "stegosaurus":        dict(era="jurassic",        diet="herbivore", fossil=5),
     "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
@@ -111,6 +114,7 @@ WORLD = {
     "velociraptor":       dict(biomes=("savanna", "badlands", "desert"), weight=6, group=(2, 4), track=8),
     "compsognathus":      dict(biomes=("forest", "jungle"), weight=8, group=(3, 6), track=8),
     "triceratops":        dict(biomes=("savanna", "plains"), weight=6, group=(2, 4), track=10),
+    "styracosaurus":      dict(biomes=("savanna", "plains", "forest"), weight=5, group=(2, 5), track=10),  # herds at the forest edge
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
     "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
     "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
@@ -193,6 +197,12 @@ SPECIES = [
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.25, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
       xp=20, rideable=True, jump=0.45, ride_offset=1.55, ride_speed=1.05),
+ dict(id="styracosaurus", cls="Styracosaurus", base="HerbivoreDinosaur",
+      doc="Styracosaurus albertensis - 5.5 m horned herbivore with a spiked frill and one long nose horn. Territorial: fights back with the horn. Tamed with plants; ridden or charging at an enemy it breaks the leaves and bushes in its way.",
+      attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=2.0, ARMOR=7, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=20),
+      food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.4, 0.9, 280), step=("RAVAGER_STEP", 0.5, 0.9),
+      xp=16, rideable=True, jump=0.5, ride_offset=1.5, ride_speed=1.1, trample=True),
  dict(id="stegosaurus", cls="Stegosaurus", base="HerbivoreDinosaur",
       doc="Stegosaurus stenops - slow herbivore that defends itself with the spiked tail (thagomizer).",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.20, ATTACK_DAMAGE=10, ATTACK_KNOCKBACK=1.2, ARMOR=8, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=20),
@@ -574,6 +584,30 @@ def gen(s, bounds):
                 other.setTarget(null);
                 other.getNavigation().stop();
                 other.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0));
+            }
+        }
+    }
+""")
+    if s.get("trample"):
+        # the charge: moving fast after a target or under a rider, it clears the leaves and plants in its way
+        imports.update({"net.minecraft.core.BlockPos", "net.minecraft.tags.BlockTags", "net.minecraft.world.level.GameRules",
+                        "net.minecraft.world.level.block.Blocks", "net.minecraft.world.level.block.state.BlockState", "net.minecraft.world.phys.AABB"})
+        body.append("""    /** The charge: moving fast with a target or a rider, it breaks the leaves and plants in its way. */
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (!this.level().isClientSide() && !this.isBaby() && (this.getTarget() != null || this.isVehicle())
+                && this.getDeltaMovement().horizontalDistanceSqr() > 0.01D
+                && this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            AABB box = this.getBoundingBox().inflate(0.4D, 0.0D, 0.4D);
+            for (BlockPos pos : BlockPos.betweenClosed((int) Math.floor(box.minX), (int) Math.floor(box.minY), (int) Math.floor(box.minZ),
+                    (int) Math.floor(box.maxX), (int) Math.floor(box.maxY), (int) Math.floor(box.maxZ))) {
+                BlockState state = this.level().getBlockState(pos);
+                if (state.is(BlockTags.LEAVES) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.SAPLINGS)
+                        || state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)
+                        || state.is(Blocks.DEAD_BUSH) || state.is(Blocks.SWEET_BERRY_BUSH)) {
+                    this.level().destroyBlock(pos, true, this);
+                }
             }
         }
     }

@@ -583,6 +583,22 @@ GUIDE = {
         note=("Ouvi o chamado antes do trovão. Depois do trovão, a manada inteira já estava parada, pastando.",
               "I heard the call before the thunder. After the thunder, the whole herd was already standing still, grazing.",
               "Oí el llamado antes del trueno. Después del trueno, toda la manada ya estaba quieta, pastando.")),
+    "styracosaurus": dict(
+        sci=("Viveu há cerca de 75 milhões de anos em Alberta, no Canadá. Ceratopsiano de 5 a 5,5 m e umas 2,7 toneladas, com um único chifre nasal de até 57 cm, só protuberâncias no lugar dos chifres das sobrancelhas, e um escudo coroado por quatro a seis espinhos compridos, os dois maiores apontando para trás. Bico de papagaio fundo; mais leve que o Triceratops. Leitos de ossos mostram que vivia em manadas.",
+             "Lived about 75 million years ago in Alberta, Canada. A ceratopsian of 5 to 5.5 m and some 2.7 tonnes, with a single nose horn up to 57 cm, mere bumps where the brow horns would be, and a frill crowned with four to six long spikes, the two biggest pointing back. A deep parrot beak; lighter than the Triceratops. Bone beds show it lived in herds.",
+             "Vivió hace unos 75 millones de años en Alberta, Canadá. Ceratopsiano de 5 a 5,5 m y unas 2,7 toneladas, con un único cuerno nasal de hasta 57 cm, solo protuberancias en lugar de los cuernos de las cejas, y una gola coronada por cuatro a seis púas largas, las dos mayores apuntando hacia atrás. Pico de loro profundo; más ligero que el Triceratops. Lechos de huesos muestran que vivía en manadas."),
+        behavior=("Pasta em manadas na beira das matas e defende o grupo de frente: baixa a cabeça e arremessa o chifre. Quando investe, o mato e a folhagem no caminho voam.",
+                  "Grazes in herds at the forest edge and defends the group head-on: it lowers the head and flings the horn. When it charges, the brush and leaves in its way go flying.",
+                  "Pasta en manadas al borde del bosque y defiende al grupo de frente: baja la cabeza y lanza el cuerno. Cuando embiste, la maleza y las hojas en su camino salen volando."),
+        taming=("Doma-se na mão com trigo ou samambaia. Os pares põem um ovo grande.",
+                "Hand-tamed with wheat or ferns. Pairs lay a large egg.",
+                "Se doma a mano con trigo o helecho. Las parejas ponen un huevo grande."),
+        utility=("Montaria que abre caminho na mata fechada: cavalgue para a folhagem e ela some. Bom guarda-costas.",
+                 "A mount that opens a path through thick forest: ride into the foliage and it is gone. A good bodyguard.",
+                 "Montura que abre camino en el bosque cerrado: cabalgue hacia el follaje y desaparece. Buen guardaespaldas."),
+        note=("Entrei na mata montado nele e saí do outro lado com uma trilha atrás de mim. E três maçãs.",
+              "I rode him into the forest and came out the other side with a trail behind me. And three apples.",
+              "Entré al bosque montado en él y salí del otro lado con un sendero detrás de mí. Y tres manzanas.")),
 }
 
 ERAS = {

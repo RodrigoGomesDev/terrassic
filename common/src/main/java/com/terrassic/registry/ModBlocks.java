@@ -56,6 +56,7 @@ public final class ModBlocks {
         egg("velociraptor", ModEntities.VELOCIRAPTOR, false);
         egg("compsognathus", ModEntities.COMPSOGNATHUS, false);
         egg("triceratops", ModEntities.TRICERATOPS, true);
+        egg("styracosaurus", ModEntities.STYRACOSAURUS, true);
         egg("stegosaurus", ModEntities.STEGOSAURUS, true);
         egg("ankylosaurus", ModEntities.ANKYLOSAURUS, true);
         egg("brachiosaurus", ModEntities.BRACHIOSAURUS, true);

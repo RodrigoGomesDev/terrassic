@@ -28,6 +28,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Baurusuchus (v0.5) | ~3,5 m (Carvalho, Campos & Nobre 2005), crocodilomorfo terrestre de pernas eretas | novo | **3,5 x 1,0** | 1,0 x 1,0 | 30% |
 | Edmontosaurus (v0.6) | 12 m, ~4 t (E. annectens; Campione & Evans 2011; espécimes maiores reivindicados) | novo | **12,0 x 3,6** | 2,4 x 3,6 | 20% |
 | Corythosaurus (v0.6) | 9 m, 3-4 t (Evans et al. 2009), crista em elmo | novo | **9,0 x 3,3** | 2,0 x 3,3 | 20% |
+| Styracosaurus (v0.6) | 5-5,5 m, ~2,7 t (Ryan et al. 2007), chifre nasal 57 cm | novo | **5,5 x 2,9** (com espinhos) | 1,6 x 2,9 | 30% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

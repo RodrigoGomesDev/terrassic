@@ -24,6 +24,7 @@ import com.terrassic.entity.Pteranodon;
 import com.terrassic.entity.Quetzalcoatlus;
 import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
+import com.terrassic.entity.Styracosaurus;
 import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
@@ -64,6 +65,8 @@ public final class ModEntities {
     // ---- herbivores
     public static final RegistrySupplier<EntityType<Triceratops>> TRICERATOPS =
             mob("triceratops", Triceratops::new, MobCategory.CREATURE, Triceratops.WIDTH, Triceratops.HEIGHT, 10);
+    public static final RegistrySupplier<EntityType<Styracosaurus>> STYRACOSAURUS =
+            mob("styracosaurus", Styracosaurus::new, MobCategory.CREATURE, Styracosaurus.WIDTH, Styracosaurus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Stegosaurus>> STEGOSAURUS =
             mob("stegosaurus", Stegosaurus::new, MobCategory.CREATURE, Stegosaurus.WIDTH, Stegosaurus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Ankylosaurus>> ANKYLOSAURUS =
@@ -134,6 +137,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(VELOCIRAPTOR, Velociraptor::createAttributes);
         EntityAttributeRegistry.register(COMPSOGNATHUS, Compsognathus::createAttributes);
         EntityAttributeRegistry.register(TRICERATOPS, Triceratops::createAttributes);
+        EntityAttributeRegistry.register(STYRACOSAURUS, Styracosaurus::createAttributes);
         EntityAttributeRegistry.register(STEGOSAURUS, Stegosaurus::createAttributes);
         EntityAttributeRegistry.register(ANKYLOSAURUS, Ankylosaurus::createAttributes);
         EntityAttributeRegistry.register(BRACHIOSAURUS, Brachiosaurus::createAttributes);
