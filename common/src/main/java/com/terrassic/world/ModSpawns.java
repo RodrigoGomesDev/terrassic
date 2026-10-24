@@ -37,6 +37,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Gallimimus          savanna, plains, desert*        6       3-6
  *  Maiasaura           plains, savanna                 4       3-6
+ *  Edmontosaurus       plains, forest, savanna         6       4-8
  *  Pteranodon          beach, stony shore              8       2-4
  *  Quetzalcoatlus      plains, savanna, badlands       3       1-2
  *  Hatzegopteryx       hills, forest                   2       1
@@ -72,6 +73,7 @@ public final class ModSpawns {
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.GALLIMIMUS);
         placement(ModEntities.MAIASAURA);
+        placement(ModEntities.EDMONTOSAURUS);
         SpawnPlacementsRegistry.register(ModEntities.PTERANODON, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.QUETZALCOATLUS, SpawnPlacements.Type.ON_GROUND,
@@ -151,6 +153,9 @@ public final class ModSpawns {
             }
             if (plains || savanna) {
                 add(props, ModEntities.MAIASAURA.get(), 4, 3, 6);
+            }
+            if (plains || forest || savanna) {
+                add(props, ModEntities.EDMONTOSAURUS.get(), 6, 4, 8);
             }
             if (coast) {
                 add(props, ModEntities.PTERANODON.get(), 8, 2, 4);

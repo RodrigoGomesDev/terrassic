@@ -11,7 +11,10 @@ Spec keys (head boxes are relative to the head anchor: x, y, z with -z = forward
   crest            list of crest boxes: (x0, y0, z0, x1, y1, z1) or (box, rot_x) tilted around crest_origin
   male_crest       extra crest boxes shown only on males (male_display bone), same format
   crest_origin     (y, z) pivot of tilted crest boxes, relative to the head anchor
-  pattern          "stripes" (bands across the back) or "blotches" (irregular dark spots)
+  pattern          "stripes" (bands across the back), "blotches" (irregular dark spots) or a callable
+                   (model, tx, rgb, region) -> rgb of the species' own
+  head_extra(m, R, ay, az)   optional hook: more boxes on the skull / jaw (R(x0,y0,z0,x1,y1,z1) is head-relative)
+  body_extra(m)    optional hook: more boxes on the body / tail bones (a dorsal frill, humps...)
 """
 import math
 from rig import Model, track, keys, add_saddle
@@ -32,6 +35,7 @@ def build(species_id, spec):
     m.box("body", (-bw, by, -12), (bw, 27, 4), name="belly")
     m.box("body", (-5.5, 12, -20), (5.5, 24, -11), name="chest")
     m.box("body", (-4, 27, -10), (4, 29, 12), name="back")
+    spec.get("body_extra", lambda m: None)(m)
 
     neck = m.chain(["neck1", "neck2"], "body", 0, [(21, -19), (24, -25), (25.5, -29)], "-z",
                    [(8, 8), (7, 7)], overlap=(1.5, 1.0))
@@ -58,6 +62,7 @@ def build(species_id, spec):
     crest("male_display", spec["male_crest"], "crest_tip")
     m.bone("jaw", "skull", (0, ay - 3, az - 3))
     m.box("jaw", *R(*spec["jaw"]), name="jaw", paint={"faces": {"up": "mouth"}})
+    spec.get("head_extra", lambda m, R, ay, az: None)(m, R, ay, az)
     m.decals += [
         {"kind": "eye", "bones": ["skull"], "pos": (3.5, ay + 1.0, az - 3.0), "r": 1.0, "side": 1},
         {"kind": "eye", "bones": ["skull"], "pos": (-3.5, ay + 1.0, az - 3.0), "r": 1.0, "side": -1},
@@ -69,7 +74,7 @@ def build(species_id, spec):
     m.chain(["tail1", "tail2", "tail3", "tail4"], "body", 0, [(24, 15), (23, 26), (21.5, 37), (20, 47), (19, 55)], "+z",
             [(10, 10), (8, 8), (6, 6), (3, 3)], overlap=(1.0, 1.0))
     add_saddle(m, "body", 29, -6, 4, 8, 7, flap=6)
-    m.pattern = PATTERNS[spec["pattern"]]
+    m.pattern = spec["pattern"] if callable(spec["pattern"]) else PATTERNS[spec["pattern"]]
 
     call = {
         "neck1": track(rot=keys([(0, 0, 0, 0), (0.35, 16, 0, 0), (1.3, 16, 0, 0), (1.6, 0, 0, 0)])),

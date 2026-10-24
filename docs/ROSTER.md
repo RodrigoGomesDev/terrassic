@@ -123,6 +123,8 @@ Sistemas: **ecossistema** (cadeia alimentar por tamanho, carcaças, bandos, ninh
 | **Opisthocoelicaudia** | 🦖 | Herbívoro | Comida | ✅ | Titanossauro da Mongólia; carga média | 12 m |
 | **Dreadnoughtus** | 🦖 | Herbívoro | Comida | 🪑 | Titanossauro da Patagônia; plataforma | 26 m |
 
+Progresso: Edmontosaurus ✅ (fase 48: hadrossauro de cabeça chata com bico largo, crista carnuda nos machos e fileira de nós no dorso; manadas de 4-8, montaria; carga chega com os sistemas).
+
 ## v0.7 Predadores ápice
 
 Sistemas: **nocaute** (zarabatana com dardo de narcótico, boleadeira e ervas soníferas), territórios, ninhos selvagens com ovos para roubar.

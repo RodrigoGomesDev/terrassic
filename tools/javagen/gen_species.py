@@ -38,6 +38,8 @@ SIZES = {
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
+    # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
+    "edmontosaurus":      dict(real=12.0, scale=1.93, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). The body is small (hitbox ~ folded on the ground).
     "pteranodon":         dict(real=7.25, scale=1.07, w=1.3, h=1.7, baby=0.3,  shadow=1.0),
     # Azhdarchids: "real" is the wingspan. Quetzalcoatlus northropi 10-11 m (Witton & Habib 2010; Andres & Langston
@@ -80,6 +82,7 @@ GUIDE = {
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "maiasaura":          dict(era="late_cretaceous", diet="herbivore", fossil=5),
+    "edmontosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
     "quetzalcoatlus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "hatzegopteryx":      dict(era="late_cretaceous", diet="carnivore", fossil=1),
@@ -112,6 +115,7 @@ WORLD = {
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
     "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
+    "edmontosaurus":      dict(biomes=("plains", "forest", "savanna"), weight=6, group=(4, 8), track=10),  # big herds
     "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
     "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
@@ -224,6 +228,12 @@ SPECIES = [
       food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
       rideable=True, jump=0.6, ride_offset=1.45, ride_speed=1.05, call=True, nurse=True),
+ dict(id="edmontosaurus", cls="Edmontosaurus", base="HerbivoreDinosaur",
+      doc="Edmontosaurus annectens - 12 m flat-headed duckbill, the biggest of the hadrosaurs, grazing in large herds on the plains. Tamed with plants; a steady riding and pack mount (the cargo inventory arrives with the v0.6 systems).",
+      attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),
+      food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
+      sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.5, 1.8, 280), xp=14,
+      rideable=True, jump=0.5, ride_offset=1.55, ride_speed=1.0, call=True),
  # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
       doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",

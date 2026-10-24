@@ -551,6 +551,22 @@ GUIDE = {
         note=("Pensei que crocodilo não corria. Esse corre. Descobri na subida.",
               "I thought crocodiles could not run. This one runs. I found out on the uphill.",
               "Pensé que los cocodrilos no corrían. Este corre. Lo descubrí en la subida.")),
+    "edmontosaurus": dict(
+        sci=("Viveu há 68 a 66 milhões de anos no oeste da América do Norte, até o fim do Cretáceo. Um dos maiores hadrossauros: 12 m e umas 4 toneladas, cabeça chata sem crista óssea, focinho comprido terminando num bico largo e achatado de pato, e baterias de centenas de dentes. As \"múmias\" fósseis guardam a pele: tubérculos miúdos, uma fileira de nós escamosos pelo dorso e, num espécime, uma crista carnuda no alto da cabeça.",
+             "Lived 68 to 66 million years ago in western North America, to the very end of the Cretaceous. One of the largest hadrosaurs: 12 m and some 4 tonnes, a flat head with no bony crest, a long snout ending in a broad flat duck bill, and batteries of hundreds of teeth. The fossil \"mummies\" preserve the skin: tiny tubercles, a row of scaly knobs down the back and, on one specimen, a fleshy comb on top of the head.",
+             "Vivió hace 68 a 66 millones de años en el oeste de América del Norte, hasta el final del Cretácico. Uno de los mayores hadrosaurios: 12 m y unas 4 toneladas, cabeza plana sin cresta ósea, hocico largo que termina en un pico ancho y aplanado de pato, y baterías de cientos de dientes. Las \"momias\" fósiles conservan la piel: tubérculos diminutos, una fila de nudos escamosos por el lomo y, en un ejemplar, una cresta carnosa en lo alto de la cabeza."),
+        behavior=("Pasta em manadas grandes nas planícies e bordas de floresta, de quatro, e levanta nas patas de trás para correr. Foge primeiro e briga só encurralado; era o prato principal do Tyrannosaurus.",
+                  "Grazes in large herds on the plains and forest edges, on all fours, and rises onto its hind legs to run. Flees first and fights only when cornered; it was the Tyrannosaurus's staple dish.",
+                  "Pasta en manadas grandes en las llanuras y bordes de bosque, a cuatro patas, y se alza sobre las traseras para correr. Huye primero y pelea solo acorralado; era el plato principal del Tyrannosaurus."),
+        taming=("Doma-se na mão com trigo, samambaia, maçã ou frutas silvestres. Os pares põem um ovo grande.",
+                "Hand-tamed with wheat, ferns, apples or sweet berries. Pairs lay a large egg.",
+                "Se doma a mano con trigo, helecho, manzana o bayas dulces. Las parejas ponen un huevo grande."),
+        utility=("Montaria firme e tranquila, feita para carregar: o inventário de carga chega com os sistemas da v0.6. Rende carne e couro de sobra.",
+                 "A steady, calm mount built for carrying: the cargo inventory arrives with the v0.6 systems. Yields plenty of meat and hide.",
+                 "Montura firme y tranquila, hecha para cargar: el inventario de carga llega con los sistemas de la v0.6. Rinde carne y cuero de sobra."),
+        note=("A manada passou a tarde inteira. Quando o último sumiu no horizonte, a planície estava pastada até a raiz.",
+              "The herd took the whole afternoon to pass. When the last one vanished over the horizon, the plain was grazed to the root.",
+              "La manada tardó toda la tarde en pasar. Cuando el último desapareció en el horizonte, la llanura estaba pastada hasta la raíz.")),
 }
 
 ERAS = {

@@ -844,5 +844,40 @@
    "animation.baurusuchus.tame"
   ],
   "render_scale": 1.0
+ },
+ "edmontosaurus": {
+  "bones": 27,
+  "cubes": 63,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.5,
+    2.3649910577258316e-05,
+    -45.42059613641414
+   ],
+   [
+    9.5,
+    32.90937026250869,
+    56.11652063190722
+   ]
+  ],
+  "animations": [
+   "animation.edmontosaurus.idle",
+   "animation.edmontosaurus.walk",
+   "animation.edmontosaurus.run",
+   "animation.edmontosaurus.attack",
+   "animation.edmontosaurus.sit",
+   "animation.edmontosaurus.graze",
+   "animation.edmontosaurus.call",
+   "animation.edmontosaurus.knocked_out",
+   "animation.edmontosaurus.wake",
+   "animation.edmontosaurus.eat",
+   "animation.edmontosaurus.beg",
+   "animation.edmontosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }
