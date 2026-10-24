@@ -10,7 +10,8 @@ the vanilla blockstates, so every block of stone, dirt, sand and gravel picks on
 Batch 2 adds the eight woods (bark, rings, stripped, planks, with rare log variants: amber resin on spruce,
 lichen on oak, moss on jungle), the leaves, the ground plants (horsetails and ferns), the crafting table, the
 furnace and the torch. Batch 3 adds the vanilla rocks (granite, diorite, andesite, tuff, deepslate, calcite)
-and the sixteen ores, in natural veins on the pack's own stone and deepslate.
+and the sixteen ores, in natural veins on the pack's own stone and deepslate, plus the chest. Batch 3b adds the
+building and ground blocks (stone bricks, bricks, moss, farmland, path, hay, snow, sugar cane, lily pad).
 The pack name and description are lang keys of the mod (pack.terrassic.<era>), so they read in all three languages.
 """
 import json
@@ -25,6 +26,7 @@ import cretaceo as C  # noqa: E402
 import preview as P  # noqa: E402
 import leaves as LV  # noqa: E402
 import plants as PL  # noqa: E402
+import masonry as MS  # noqa: E402
 import rocks as RK  # noqa: E402
 import tex as T  # noqa: E402
 import woods as WD  # noqa: E402
@@ -76,6 +78,9 @@ for _name, _img in list(LV.ALL.items()) + list(PL.ALL.items()) + list(WS.ALL.ite
 # batch 3: rocks and ores
 for _name, _img in RK.ALL.items():
     CRETACEO[_name] = (_img, True)
+# batch 3b: building and ground (cutouts and the path side are not seamless tiles)
+for _name, _img in MS.ALL.items():
+    CRETACEO[_name] = (_img, _name not in ("sugar_cane", "lily_pad", "dirt_path_side", "chiseled_stone_bricks"))
 
 # entity textures (64x64 atlases): path under assets/minecraft/textures/ -> image
 CRETACEO_ENTITY = {f"entity/chest/{k}": v for k, v in WS.CHESTS.items()}
@@ -366,6 +371,10 @@ def preview_batch3(era, table):
     save_png(P.sheet_images([("chest", chest_preview()), ("entity/chest/normal", P.big(WS.CHESTS["normal"], 2))],
                             f"Terrassic: pacote {NAMES[era]}, baú", cols=2), os.path.join(PREVIEWS, f"{era}_bau.png"))
     save_png(P.sheet(items, f"Terrassic: pacote {NAMES[era]}, rochas e minérios", cols=8), os.path.join(PREVIEWS, f"{era}_rochas_minerios.png"))
+    tints = {"sugar_cane": GRASS_TINT, "lily_pad": (32, 128, 48)}
+    items = [(n, P.tint(table[n][0], tints[n]) if n in tints else table[n][0]) for n in MS.ALL]
+    save_png(P.sheet(items, f"Terrassic: pacote {NAMES[era]}, construção e chão", cols=8),
+             os.path.join(PREVIEWS, f"{era}_construcao_chao.png"))
 
 
 def build(era, table, extra):

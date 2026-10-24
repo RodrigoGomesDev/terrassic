@@ -136,6 +136,7 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 | TX1 | **Terreno:** pedra (+3 variantes), pedregulho, pedregulho com musgo, terra (+2), terra grossa, grama (topo, lado, lado com neve), podzol, cascalho (+1), areia (+1), arenito (topo, lado, base, entalhado, liso), argila, lama, terra enraizada. Mais o registro do pacote no Fabric e no Forge | ✓ |
 | TX2 | **Madeiras** das 8 árvores (casca própria de cada uma, anéis fora do centro com rachadura, descascado, tábuas lascadas com cavilha) com variantes raras de tronco (resina âmbar no abeto, líquen no carvalho, musgo na selva); **folhas** por formato de folha da espécie; **plantas** do Cretáceo (o capim vira cavalinhas com samambaias baixas, a samambaia grande vira samambaia-arborescente, o cipó vira samambaia trepadeira); **bancada** de tronco com ferramentas de pedra, sílex e osso; **fornalha** de pedras e barro com fuligem e brasas; **tocha** de resina. Baú no lote 3; a fogueira fica para depois (o desenho depende do mapeamento do modelo) | ✓ |
 | TX3 | **Rochas do vanilla** desenhadas pelo que são feitas (granito e diorito em cristais entrelaçados, andesito fino com fenocristais, tufo com lapilli, ardósia em lâminas, calcita com clivagem) e os **16 minérios** em veios naturais sobre a pedra e a ardósia do próprio pacote: carvão em camada, limonita enferrujada, malaquita com cobre nativo, ouro em veio de quartzo, cinábrio, lazurita com pirita, diamante em bolsão de kimberlito, esmeralda em veio de calcita | ✓ |
+| TX3b | **Construção e chão:** tijolos de pedra em fiadas lavradas à mão (com musgo, rachados e um entalhado com amonite), tijolos queimados em argamassa de cal, bloco de musgo, terra arada (seca e molhada), caminho batido com uma pegada de terópode, fardo de palha amarrado, neve; a cana-de-açúcar vira cavalinha gigante e a vitória-régia ganha folha entalhada com nervuras | ✓ |
 | TX4 | Interface: botões, inventário, baús, fornalha, fundo dos menus, barra de itens, em couro, osso e pedra | ○ |
 | TX5 | Filtro da era (camada D) | ○ |
 | TX6 | Refazer os blocos do mod com o motor novo: a thread de blocos usa `tools/texpack/api.py` e `materials.py` (decisão do Rodrigo, 24/10) | 🔄 |
@@ -156,3 +157,5 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 - Lote 3: numa caverna, cada minério se reconhece de longe pela cor do mineral; a ardósia deitada e em pé fica
   coerente; granito, diorito e andesito ao lado da pedra do pacote não destoam; o baú simples e o duplo fecham
   sem costura, a trava de osso fica na frente e o interior aparece ao abrir.
+- Lote 3b: o caminho mostra as pegadas em sequência como uma trilha; a terra arada lê como sulcos, seca e
+  molhada; a cana (cavalinha) e a vitória-régia recebem a cor do bioma.
