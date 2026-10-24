@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.block.DinoEggBlock;
+import com.terrassic.config.Rule;
+import com.terrassic.config.Rules;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModItems;
 import com.terrassic.research.Objective;
@@ -113,6 +115,9 @@ import java.util.UUID;
  *       size; health grows with its square and bite damage with it. Saved as "Size" and "BirthSize".</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
  *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
+ *   <li><b>World rules</b> (docs/REGRAS.md): damage, resistance, wild strength, taming, XP, hunger, hatching,
+ *       growth, mating and nests follow the world's {@link Rules}. Animals placed by the ecosystem spawner
+ *       ({@link #isRoamer()}) despawn once every player is far away, unless tamed or named.</li>
  * </ul>
  */
 public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity, PlayerRideableJumping, HasCustomInventoryScreen {
@@ -150,6 +155,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public static final int HUNTS_BELOW = 85;
     /** Riders a platform saddle seats (the owner drives, the rest sit along the back). */
     public static final int PLATFORM_SEATS = 4;
+    /** Squared distance to the nearest player beyond which a wild roamer may despawn. */
+    private static final double ROAMER_DESPAWN_SQR = 96.0D * 96.0D;
 
     /** How a wild animal of this species can be tamed (eggs always work). */
     public enum TameMethod {
@@ -185,6 +192,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private int hungryMessageCooldown;
     /** Where the herd is migrating to (MigrateGoal), or null; not saved: a reloaded herd settles where it is. */
     private BlockPos migrationTarget;
+    /** Placed by the ecosystem spawner (EcoSpawner): despawns when far from every player while wild and unnamed. */
+    private boolean roamer;
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -548,6 +557,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.set(DATA_PLATFORM, platform);
     }
 
+    public boolean isRoamer() {
+        return this.roamer;
+    }
+
+    public void setRoamer(boolean roamer) {
+        this.roamer = roamer;
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
@@ -560,6 +577,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         tag.putBoolean("Platform", this.isPlatform());
         tag.putInt("Sated", this.sated);
         tag.putInt("Hunger", this.getHunger());
+        tag.putBoolean("Roamer", this.roamer);
         tag.putFloat("Size", this.getAdultSize());
         tag.putFloat("BirthSize", this.entityData.get(DATA_BIRTH_SIZE));
         if (this.cargo != null) {
@@ -588,6 +606,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setChested(tag.getBoolean("Chested"));
         this.setPlatform(tag.getBoolean("Platform"));
         this.sated = tag.getInt("Sated");
+        this.roamer = tag.getBoolean("Roamer");
         if (tag.contains("Hunger")) {
             this.setHunger(tag.getInt("Hunger"));
         }
@@ -616,9 +635,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                                         SpawnGroupData spawnData, CompoundTag tag) {
         this.setFemale(this.random.nextBoolean());
         SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
-        // one herd in five spawns with a nest already laid next to a grown female (docs/NINHOS.md)
+        // one herd in five spawns with a nest already laid next to a grown female (docs/NINHOS.md); one in twenty for
+        // the ecosystem's roamers, and the Wild nests rule scales both
+        float nest = (this.roamer ? 0.05F : 0.2F) * (float) Rules.of(level.getLevel()).get(Rule.NEST_FREQUENCY);
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && this.wildNests() && !this.isBaby()
-                && this.isFemale() && this.random.nextInt(5) == 0) {
+                && this.isFemale() && this.random.nextFloat() < nest) {
             if (level instanceof WorldGenRegion) {
                 this.pendingNest = true;  // nothing can be placed while the chunk generates: lay it on the first tick
             } else {
@@ -671,27 +692,55 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     // ------------------------------------------------------------------ combat / misc
 
-    /** Players who studied the species know its weak spots: +20% damage. */
+    /** Players who studied the species know its weak spots: +20% damage. The world rules scale the rest
+     *  (player and creature damage, creature resistance, wild strength; docs/REGRAS.md). */
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player && Research.isStudied(player, this.speciesId())) {
             amount *= 1.2F;
         }
+        if (!this.level().isClientSide()) {
+            amount = Rules.damageTaken(this, source, amount);
+        }
         return super.hurt(source, amount);
     }
 
+    /** The bite or blow, scaled by the world rules when the target is not a creature (a creature target scales it
+     *  in its own {@link #hurt}): creature damage, wild strength, player resistance. */
     @Override
     public boolean doHurtTarget(Entity target) {
-        boolean hit = super.doHurtTarget(target);
+        AttributeInstance attack = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        double base = attack != null ? attack.getBaseValue() : 0.0D;
+        double factor = !this.level().isClientSide() && attack != null && !(target instanceof DinosaurEntity)
+                ? Rules.damageDealt(this, target) : 1.0D;
+        boolean hit;
+        if (factor != 1.0D) {
+            attack.setBaseValue(base * factor);
+            try {
+                hit = super.doHurtTarget(target);
+            } finally {
+                attack.setBaseValue(base);
+            }
+        } else {
+            hit = super.doHurtTarget(target);
+        }
         if (hit && !this.level().isClientSide()) {
             triggerAnim(ACTION_CONTROLLER, "attack");
         }
         return hit;
     }
 
+    /** Experience of the species (its xpReward, which Animal would ignore) times the XP multiplier rule. */
+    @Override
+    public int getExperienceReward() {
+        int base = this.isBaby() ? 1 + this.random.nextInt(3) : Math.max(1, this.xpReward);
+        return (int) Math.round(base * Rules.of(this.level()).get(Rule.XP_MULTIPLIER));
+    }
+
+    /** Animals live on like cows; only the ecosystem's wild, unnamed roamers leave once every player is far away. */
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false;
+        return this.roamer && !this.isTame() && !this.hasCustomName() && distanceToClosestPlayer > ROAMER_DESPAWN_SQR;
     }
 
     @Override
@@ -942,9 +991,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (!this.isTame() && this.isFood(stack) && this.canBeTamedNow()) {
             if (!client) {
                 this.usePlayerItem(player, hand, stack);
-                // studying the species (Field Guide "studied") makes taming faster
+                // studying the species (Field Guide "studied") makes taming faster, and so does the Taming speed rule
                 int chance = Research.isStudied(player, this.speciesId()) ? Math.max(2, tameChance() - 1) : tameChance();
-                if (this.random.nextInt(chance) == 0) {
+                if (this.random.nextDouble() < Rules.of(this.level()).get(Rule.TAMING_SPEED) / chance) {
                     this.tameBy(player);
                 } else {
                     this.level().broadcastEntityEvent(this, (byte) 6);
@@ -1003,6 +1052,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (!this.level().isClientSide() && this.isAlive()) {
             this.growthTick();
             this.hungerTick();
+            if (this.isBaby() && this.tickCount % 20 == 0) {
+                this.maturationTick();
+            }
             if (this.tickCount % 200 == 0) {
                 this.wildBreedingTick();
             }
@@ -1015,12 +1067,28 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     // ------------------------------------------------------------------ hunger (docs/FOME_E_SONO.md)
 
+    /** The Maturation speed rule (docs/REGRAS.md): babies grow 20 ticks of age per second; this adds or takes the rest. */
+    private void maturationTick() {
+        double speed = Rules.of(this.level()).get(Rule.MATURATION_SPEED);
+        int extra = (int) Math.round(20.0D * (speed - 1.0D));
+        if (extra != 0) {
+            this.setAge(Math.min(0, this.getAge() + extra));
+        }
+    }
+
     private void hungerTick() {
-        // the gauge empties with time (twice as fast for a growing baby)
+        // the gauge empties with time (twice as fast for a growing baby), at the pace of the Food drain rule
         if (--this.hungerTimer <= 0) {
-            this.hungerTimer = this.isBaby() ? this.hungerInterval() / 2 : this.hungerInterval();
-            // a wild animal out of sight finds something to eat now and then, so the wild never starves offscreen
-            if (!this.isTame() && this.random.nextInt(4) == 0) {
+            int base = this.isBaby() ? this.hungerInterval() / 2 : this.hungerInterval();
+            double drain = Rules.of(this.level()).get(Rule.FOOD_DRAIN);
+            this.hungerTimer = drain <= 0.0D ? base : Math.max(1, (int) Math.round(base / drain));
+            if (drain <= 0.0D) {
+                // never hungry: the gauge stays where it is
+                if (this.getHunger() < MAX_HUNGER) {
+                    this.feed(1);
+                }
+            } else if (!this.isTame() && this.random.nextInt(4) == 0) {
+                // a wild animal out of sight finds something to eat now and then, so the wild never starves offscreen
                 this.feed(1);
             } else {
                 this.setHunger(this.getHunger() - 1);
@@ -1273,14 +1341,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     /**
-     * Wild breeding (docs/NINHOS.md), checked every ten seconds with a one in twelve chance: a wild, grown, well
-     * fed (gauge 80+), awake, idle animal whose species has room nearby looks for a wild mate of the other sex in the
-     * same state within 16 blocks, and both fall in love; the vanilla BreedGoal does the rest.
+     * Wild breeding (docs/NINHOS.md), checked every ten seconds with a one in twelve chance (times the Wild nests
+     * rule): a wild, grown, well fed (gauge 80+), awake, idle animal whose species has room nearby looks for a wild
+     * mate of the other sex in the same state within 16 blocks, and both fall in love; the vanilla BreedGoal does the
+     * rest.
      */
     private void wildBreedingTick() {
         if (this.isTame() || this.isBaby() || !this.wildNests() || !this.canFallInLove() || this.getAge() != 0
                 || this.getHunger() < 80 || this.isSleeping() || this.getTarget() != null || this.isVehicle()
-                || this.random.nextInt(12) != 0 || !(this.level() instanceof ServerLevel level)) {
+                || this.random.nextDouble() >= Rules.of(this.level()).get(Rule.NEST_FREQUENCY) / 12.0D
+                || !(this.level() instanceof ServerLevel level)) {
             return;
         }
         if (level.getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(32.0D), e -> !e.isTame()).size()
@@ -1362,13 +1432,18 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             cause.awardStat(Stats.ANIMALS_BRED);
             CriteriaTriggers.BRED_ANIMALS.trigger(cause, this, partner, null);
         }
-        this.setAge(6000);
-        partner.setAge(6000);
+        // the wait before mating again follows the Mating interval rule
+        int wait = (int) Math.round(6000 * Rules.of(level).get(Rule.MATING_INTERVAL));
+        this.setAge(wait);
+        partner.setAge(wait);
         this.resetLove();
         partner.resetLove();
         level.broadcastEntityEvent(this, (byte) 18);
         if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
-            level.addFreshEntity(new ExperienceOrb(level, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
+            int xp = (int) Math.round((this.getRandom().nextInt(7) + 1) * Rules.of(level).get(Rule.XP_MULTIPLIER));
+            if (xp > 0) {
+                level.addFreshEntity(new ExperienceOrb(level, this.getX(), this.getY(), this.getZ(), xp));
+            }
         }
     }
 

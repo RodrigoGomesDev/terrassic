@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.ai.SoarGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvent;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -55,6 +57,9 @@ import software.bernie.geckolib.core.object.PlayState;
  * Animations: besides the usual ones the model needs "fly" (flapping) and "glide" (wings held open).
  * Ridden movement runs on the rider's client (vanilla vehicles do), so the flying state is derived from
  * {@code onGround()} instead of being synced.
+ *
+ * <p>Wild adults soar high over the land in flocks for a few minutes at a time, then glide down and rest
+ * ({@link SoarGoal}); the ecosystem spawner places new flocks already in the air (docs/REGRAS.md).
  */
 public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAnimal {
     /** Ridden flight: acceleration along the look direction per tick at FLYING_SPEED 0.6, and air drag. */
@@ -72,6 +77,12 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     private float pendingJump;
     /** Ticks since the last flap, for the fly/glide animation choice. */
     private int flapTicks;
+    /** Ticks left of the current soaring flight (0 = not soaring), and of the rest after it (SoarGoal). */
+    private int soarTicks;
+    private int restTicks;
+    /** Where the soaring flight heads now, and where the animal first took off (it does not stray far from it). */
+    private Vec3 soarTarget;
+    private Vec3 soarHome;
 
     protected FlyingDinosaur(EntityType<? extends FlyingDinosaur> type, Level level) {
         super(type, level);
@@ -102,9 +113,10 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
-        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 16.0F));
-        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new SoarGoal(this));
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 16.0F));
+        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
@@ -142,11 +154,76 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         if (this.flapTicks < 100) {
             this.flapTicks++;
         }
+        if (!this.level().isClientSide()) {
+            this.soarTick();
+        }
         // wing beats while flapping (not while gliding), about once per cycle of the fly animation
         SoundEvent flap = this.flapSound();
         if (flap != null && !this.level().isClientSide() && this.isFlying() && this.tickCount % 16 == 0
                 && (this.flapTicks < 15 || this.getDeltaMovement().y > -0.03D)) {
             this.playSound(flap, 0.8F, 0.9F + this.random.nextFloat() * 0.2F);
+        }
+    }
+
+    // ------------------------------------------------------------------ soaring (SoarGoal)
+
+    public boolean isSoaring() {
+        return this.soarTicks > 0;
+    }
+
+    public boolean isResting() {
+        return this.restTicks > 0;
+    }
+
+    public int soarTicksLeft() {
+        return this.soarTicks;
+    }
+
+    /** Starts a soaring flight of one to three minutes. */
+    public void beginSoar() {
+        this.soarTicks = 1200 + this.random.nextInt(2400);
+        if (this.soarHome == null) {
+            this.soarHome = this.position();
+        }
+    }
+
+    /** Placed in mid-air by the ecosystem spawner: already soaring, gliding along the flock's heading. */
+    public void startSoaring(Vec3 heading) {
+        this.beginSoar();
+        this.soarTicks += 1200;
+        this.soarHome = this.position();
+        this.setDeltaMovement(heading.scale(0.3D));
+    }
+
+    /** The flight is over: glide down and rest for half a minute to a minute and a half. */
+    public void endSoar() {
+        this.soarTicks = 0;
+        this.restTicks = 600 + this.random.nextInt(1200);
+        this.soarTarget = null;
+    }
+
+    public Vec3 getSoarTarget() {
+        return this.soarTarget;
+    }
+
+    public void setSoarTarget(Vec3 target) {
+        this.soarTarget = target;
+    }
+
+    public Vec3 getSoarHome() {
+        return this.soarHome;
+    }
+
+    private void soarTick() {
+        if (this.soarTicks > 0) {
+            // never come down over open water: keep flying until there is land below
+            if (this.soarTicks == 1 && !this.level().getFluidState(
+                    this.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, this.blockPosition()).below()).isEmpty()) {
+                this.soarTicks += 200;
+            }
+            this.soarTicks--;
+        } else if (this.restTicks > 0) {
+            this.restTicks--;
         }
     }
 

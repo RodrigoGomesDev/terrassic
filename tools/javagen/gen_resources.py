@@ -223,11 +223,14 @@ def main():
     gen_world.main()
     sys.path.insert(0, os.path.join(ROOT, "tools", "texpack"))
     from pack_lang import LANG as TEXPACK_LANG  # built-in era resource packs: their names and descriptions
+    import gen_rules  # world rules (docs/REGRAS.md): Rule.java + the Rules screen texts
+    gen_rules.main()
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
         lang[code].update(gen_world.LANG[code])
         lang[code].update(TEXPACK_LANG[code])
+        lang[code].update(gen_rules.LANG[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")
@@ -353,6 +356,17 @@ def main():
     missing = [sid for sid in SPECIES if sid not in loot]
     assert set(PRIME) <= set(loot), sorted(set(PRIME) - set(loot))
     assert not missing, f"species without loot table: {missing}"
+    # every item model must point at a texture that exists (the Mac found 38 fossil icons without one, 24/10)
+    bad = []
+    for name in sorted(os.listdir(f"{A}/models/item")):
+        with open(f"{A}/models/item/{name}") as f:
+            model = json.load(f)
+        for key, tex in model.get("textures", {}).items():
+            ns, _, path = tex.partition(":")
+            if ns == "terrassic" and not os.path.exists(f"{A}/textures/{path}.png"):
+                bad.append(f"{name}: {tex}")
+    if bad:
+        raise SystemExit("item models without texture (run tools/spritegen/sprites.py, science.py or blocks.py):\n  " + "\n  ".join(bad))
     print("resources written")
 
 

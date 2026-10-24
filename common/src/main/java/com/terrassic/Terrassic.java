@@ -2,6 +2,8 @@ package com.terrassic;
 
 import com.terrassic.client.TerrassicClient;
 import com.terrassic.client.TerrassicWorldClient;
+import com.terrassic.config.Rules;
+import com.terrassic.network.RulesNetwork;
 import com.terrassic.registry.ModBlockEntities;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
@@ -11,6 +13,7 @@ import com.terrassic.registry.ModTabs;
 import com.terrassic.research.Research;
 import com.terrassic.world.ArrivalCrater;
 import com.terrassic.world.CretaceousBiomes;
+import com.terrassic.world.EcoSpawner;
 import com.terrassic.world.KatarinaRefuge;
 import com.terrassic.world.RiftStorm;
 import com.terrassic.world.ModSpawns;
@@ -45,6 +48,9 @@ public final class Terrassic {
         RiftStorm.init(); // v0.8: Rift Storms
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicWorldClient::init); // v0.8: storm effects, HUD
         Research.init();
+        Rules.init(); // world rules in the style of ARK (docs/REGRAS.md)
+        RulesNetwork.init();
+        EcoSpawner.init(); // the living ecosystem around every player
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }
 

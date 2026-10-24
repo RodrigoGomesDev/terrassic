@@ -172,8 +172,9 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        // wild ones come and go like dolphins, so the oceans do not fill up with them
-        return !this.isTame() && !this.hasCustomName();
+        // wild ones come and go like dolphins, so the oceans do not fill up with them; only out of sight (64+ blocks),
+        // so the pods and schools the ecosystem keeps around the player do not blink out (docs/REGRAS.md)
+        return !this.isTame() && !this.hasCustomName() && distanceToClosestPlayer > 64.0D * 64.0D;
     }
 
     @Override

@@ -1159,8 +1159,10 @@ def gen(s, bounds):
     if s.get("trample"):
         # the charge: moving fast after a target or under a rider, it clears the leaves and plants in its way
         imports.update({"net.minecraft.core.BlockPos", "net.minecraft.tags.BlockTags", "net.minecraft.world.level.GameRules",
-                        "net.minecraft.world.level.block.Blocks", "net.minecraft.world.level.block.state.BlockState", "net.minecraft.world.phys.AABB"})
-        body.append("""    /** The charge: moving fast with a target or a rider, it breaks the leaves and plants in its way. */
+                        "net.minecraft.world.level.block.Blocks", "net.minecraft.world.level.block.state.BlockState", "net.minecraft.world.phys.AABB",
+                        "com.terrassic.config.Rules"})
+        body.append("""    /** The charge: moving fast with a target or a rider, it breaks the leaves and plants in its way (as often as the
+     *  structure damage and resistance rules allow, docs/REGRAS.md). */
     @Override
     public void aiStep() {
         super.aiStep();
@@ -1174,7 +1176,9 @@ def gen(s, bounds):
                 if (state.is(BlockTags.LEAVES) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.SAPLINGS)
                         || state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)
                         || state.is(Blocks.DEAD_BUSH) || state.is(Blocks.SWEET_BERRY_BUSH)) {
-                    this.level().destroyBlock(pos, true, this);
+                    if (Rules.breaksBlock(this.level(), this.random)) {
+                        this.level().destroyBlock(pos, true, this);
+                    }
                 }
             }
         }

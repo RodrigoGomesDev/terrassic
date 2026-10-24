@@ -200,6 +200,7 @@ Dunkleosteus, Megalodon (opcional) e as versões "da Fenda" de criaturas de outr
 | T3.2 | HUD próprio com retratos dos nossos modelos: montaria (vida, stamina, carga), bando, nova espécie, nome da era, temperatura, alerta da Fenda, objetivos; tudo configurável | v0.8 | ✅ M5 (9da2414): montaria, bando, toast de espécie nova, título da era, alerta da Fenda (`terrassic-client.json`) |
 | T3.3 | Pacote de texturas próprio embutido e opcional (vanilla mais rústico, menus e inventários em couro, osso e pedra, fonte do Caderno) | v0.8 | ○ |
 | T3.4 | Motor de céu, névoa, partículas e música por era (o conteúdo de cada era fica na seção da era) | v0.8 | ○ |
+| T3.5 | **Regras do mundo estilo ARK + ecossistema denso** (pedido do Rodrigo): tela "Regras do Terrassic" com 21 regras por mundo (dificuldade, dano, resistências, XP, domesticação, chocagem, crescimento, fome, ninhos, migração, densidade por terrestres/voadores/marinhos); spawner próprio que mantém rebanhos, bandos no céu e o mar cheio ao redor de cada jogador (`docs/REGRAS.md`) | v0.8 | ✅ código; teste no jogo pendente |
 
 ### T4. Idiomas
 | Fase | O que entra | Estado |

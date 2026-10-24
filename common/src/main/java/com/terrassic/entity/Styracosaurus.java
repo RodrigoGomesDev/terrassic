@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.config.Rules;
 import com.terrassic.registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -100,7 +101,8 @@ public class Styracosaurus extends HerbivoreDinosaur {
         return 800;
     }
 
-    /** The charge: moving fast with a target or a rider, it breaks the leaves and plants in its way. */
+    /** The charge: moving fast with a target or a rider, it breaks the leaves and plants in its way (as often as the
+     *  structure damage and resistance rules allow, docs/REGRAS.md). */
     @Override
     public void aiStep() {
         super.aiStep();
@@ -114,7 +116,9 @@ public class Styracosaurus extends HerbivoreDinosaur {
                 if (state.is(BlockTags.LEAVES) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.SAPLINGS)
                         || state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)
                         || state.is(Blocks.DEAD_BUSH) || state.is(Blocks.SWEET_BERRY_BUSH)) {
-                    this.level().destroyBlock(pos, true, this);
+                    if (Rules.breaksBlock(this.level(), this.random)) {
+                        this.level().destroyBlock(pos, true, this);
+                    }
                 }
             }
         }

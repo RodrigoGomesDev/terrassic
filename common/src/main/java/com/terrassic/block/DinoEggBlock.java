@@ -1,5 +1,7 @@
 package com.terrassic.block;
 
+import com.terrassic.config.Rule;
+import com.terrassic.config.Rules;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.research.Objective;
 import com.terrassic.research.Research;
@@ -65,15 +67,20 @@ public class DinoEggBlock extends Block {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (random.nextInt(2) != 0) {
-            return;
-        }
+        // one in two random ticks advances a stage at hatch speed 1; the Hatching speed rule scales that (docs/REGRAS.md)
+        int stages = Rules.scaled(random, 0.5D, Rule.HATCH_SPEED, level);
         int hatch = state.getValue(HATCH);
-        if (hatch < 2) {
+        for (int i = 0; i < stages; i++) {
+            if (hatch < 2) {
+                hatch++;
+            } else {
+                hatchEgg(level, pos, random, state.getValue(WILD));
+                return;
+            }
+        }
+        if (hatch != state.getValue(HATCH)) {
             level.playSound(null, pos, SoundEvents.TURTLE_EGG_CRACK, SoundSource.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
-            level.setBlock(pos, state.setValue(HATCH, hatch + 1), Block.UPDATE_CLIENTS);
-        } else {
-            hatchEgg(level, pos, random, state.getValue(WILD));
+            level.setBlock(pos, state.setValue(HATCH, hatch), Block.UPDATE_CLIENTS);
         }
     }
 

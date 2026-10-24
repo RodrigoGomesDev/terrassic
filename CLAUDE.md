@@ -26,6 +26,12 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
 - `SwimmingDinosaur` (à mão): répteis marinhos. Nado como golfinho (SmoothSwimming + WaterBoundPathNavigation), respira na água, seca após 60 s encalhado, some longe do jogador como golfinho, por enquanto só selvagem (sem domar, sem cria). Categoria WATER_CREATURE; spawn por `checkSeaSpawnRules`. Em `gen_resources.SPECIES` o 4º campo `None` = espécie sem bloco de ovo.
 - Mixins: `common/src/main/resources/terrassic.mixins.json` (pacote `com.terrassic.mixin`), ligado em `fabric.mod.json` ("mixins") e em `forge/build.gradle` (`loom.forge.mixinConfig`). Hoje só `PlayerMixin`: a Lente de Âmbar conta como luneta (`isScoping`).
 - Configuração: `config/terrassic.json` (`config/SpawnConfig.java`), lida uma vez na inicialização; multiplicador global e por espécie (`enabled`, `weight_multiplier`). Todo spawn em `ModSpawns` passa por ela.
+- Regras do mundo estilo ARK (docs/REGRAS.md): `config/Rules` + `RulesData` (salvas por mundo, padrão no objeto `"rules"`
+  de `config/terrassic-world.json`), enum `config/Rule` GERADO por `tools/javagen/gen_rules.py` (tabela RULES: chave, faixa,
+  aba e textos nos 3 idiomas). Tela `client/RulesScreen` (botão no menu de pausa, `/terrassic regras`, Config do Forge),
+  pacotes em `network/RulesNetwork`. Use `Rules.of(level).get(Rule.X)`. Ecossistema denso: `world/EcoSpawner` mantém
+  terrestres, voadores e marinhos ao redor de cada jogador usando a lista de spawn do bioma; os que ele põe são "errantes"
+  (`DinosaurEntity.isRoamer`, somem a 96+ blocos se selvagens e sem nome). Voadores selvagens voam em bandos (`ai/SoarGoal`).
 - 15 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
 - REGRA (Rodrigo, 24/10/2026): toda espécie nova usa o tamanho real dos fósseis (topo das estimativas publicadas
   para adultos, 1 bloco = 1 metro), com a fonte anotada em `docs/TAMANHOS.md`.

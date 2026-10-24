@@ -1,5 +1,7 @@
 package com.terrassic.entity.ai;
 
+import com.terrassic.config.Rule;
+import com.terrassic.config.Rules;
 import com.terrassic.entity.DinosaurEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -43,7 +45,9 @@ public class MigrateGoal extends Goal {
             this.destination = this.mob.getMigrationTarget();
             return true;
         }
-        if (this.mob.getRandom().nextInt(reducedTickDelay(1200)) != 0) {
+        // the Migration rule scales how often a herd thinks about it (0 = never, docs/REGRAS.md)
+        int every = Rules.interval(reducedTickDelay(1200), Rule.MIGRATION, this.mob.level());
+        if (every == Integer.MAX_VALUE || this.mob.getRandom().nextInt(every) != 0) {
             return false;
         }
         // the grass is gone and the gauge is low, or the season simply calls (once in twenty rolls, ~20 min)
