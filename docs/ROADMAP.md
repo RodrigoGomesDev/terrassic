@@ -104,7 +104,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | v0.3 | Árvore de conquistas nova: aba por capítulo + aba Caderno de Campo, trava só o salto (`CONQUISTAS.md`) | 🔄 |
 | v0.4 | Voo completo com stamina, sela por espécie (couro, osso, fibra), criaturas de ombro com bônus, temperamentos | ○ |
 | v0.5 | Nado montado (mergulhar sem afogar), sela aquática, filhotes de quem nasce vivo | ✅ fase 42: domar/sentar/seguir/montar na água com a sela comum (olhar para baixo mergulha), Respiração Aquática no jogador, 15% dos spawns vivíparos nascem filhotes; sela aquática própria fica para o crafting da v0.8 |
-| v0.6 | Cadeia alimentar, carcaças, bandos, fome e sono, ninhos selvagens, migração, procriação de selvagens, inventário de carga, coleta automática, sela de plataforma | ○ |
+| v0.6 | Cadeia alimentar, carcaças, bandos, fome e sono, ninhos selvagens, migração, procriação de selvagens, inventário de carga, coleta automática, sela de plataforma | 🔄 fase 63: inventário de carga + coleta automática (baú nas costas de toda montaria, fileiras pelo tamanho; `CARGA.md`) |
 | v0.7 | Nocaute completo: torpor, barras de torpor e domesticação, eficiência, comer desmaiado, punho, zarabatana e dardo, boleadeira, erva sonífera (`DOMESTICACAO.md`); territórios; ferramentas de osso e sílex completas | ○ |
 | v0.8 | Tipo de mundo "Terrassic" + mundo normal, Tempestades da Fenda e criaturas "da Fenda", páginas da Katarina por jogador | ○ |
 | v0.9 | Fragmentos de âmbar, Altar do Salto, ritual dos meteoros, Salto Instável, modos Normal/Rápido/Livre, `/terrassic capitulo` | ○ |

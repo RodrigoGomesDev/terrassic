@@ -90,6 +90,11 @@ public class Styracosaurus extends HerbivoreDinosaur {
         return 0.5D;
     }
 
+    @Override
+    public int cargoRows() {
+        return 2;
+    }
+
     /** The charge: moving fast with a target or a rider, it breaks the leaves and plants in its way. */
     @Override
     public void aiStep() {

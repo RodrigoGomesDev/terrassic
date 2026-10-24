@@ -103,6 +103,11 @@ public class Brachiosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 5;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.BRACHIOSAURUS.get().create(level);
     }

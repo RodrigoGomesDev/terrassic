@@ -91,6 +91,11 @@ public class Corythosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 4;
+    }
+
+    @Override
     protected boolean fightsBack() {
         return false;
     }

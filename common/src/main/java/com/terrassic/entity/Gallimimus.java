@@ -92,6 +92,11 @@ public class Gallimimus extends HerbivoreDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 3;
+    }
+
+    @Override
     protected boolean fightsBack() {
         return false;
     }

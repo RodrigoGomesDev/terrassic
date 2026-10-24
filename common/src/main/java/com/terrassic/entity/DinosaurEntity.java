@@ -7,6 +7,8 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -22,13 +24,17 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.Containers;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PlayerRideableJumping;
@@ -39,6 +45,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
@@ -72,14 +80,19 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  *   <li><b>Riding</b>: species that return true from {@link #isRideable()} accept a saddle once tamed. Space
  *       jumps (hold it for a higher jump, like a horse); shears take the saddle off.</li>
  *   <li><b>Eggs</b>: breeding lays a dinosaur egg block next to the female, which hatches after a few minutes.</li>
+ *   <li><b>Cargo</b>: species with {@link #cargoRows()} &gt; 0 take a chest once tamed and grown; the chest is a
+ *       cargo inventory of that many rows (sneak + use opens it, or the inventory key while riding), and the animal
+ *       picks up the drops around its feet while it is up and about (docs/CARGA.md).</li>
  * </ul>
  */
-public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity, PlayerRideableJumping {
+public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity, PlayerRideableJumping, HasCustomInventoryScreen {
     public static final String ACTION_CONTROLLER = "action";
 
     private static final EntityDataAccessor<Boolean> DATA_FEMALE =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_SADDLED =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_CHESTED =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
 
     /** How a wild animal of this species can be tamed (eggs always work). */
@@ -91,6 +104,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+    /** The cargo inventory (null when the species carries none); only reachable once a chest is strapped on. */
+    private final SimpleContainer cargo;
     private RawAnimation idleAnim;
     private RawAnimation walkAnim;
     private RawAnimation runAnim;
@@ -105,6 +120,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
         this.entityData.set(DATA_FEMALE, this.random.nextBoolean());
+        this.cargo = this.cargoRows() > 0 ? new SimpleContainer(this.cargoRows() * 9) : null;
     }
 
     // ------------------------------------------------------------------ species hooks
@@ -129,6 +145,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Whether a tamed adult accepts a saddle and can be ridden. */
     public boolean isRideable() {
         return false;
+    }
+
+    /** Rows of nine cargo slots a tamed adult carries once a chest is strapped on; 0 = carries no cargo. */
+    public int cargoRows() {
+        return 0;
     }
 
     /** Whether a tamed adult hops onto its owner's shoulder when they sneak and right-click it with an empty hand. */
@@ -192,6 +213,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         super.defineSynchedData();
         this.entityData.define(DATA_FEMALE, false);
         this.entityData.define(DATA_SADDLED, false);
+        this.entityData.define(DATA_CHESTED, false);
     }
 
     public boolean isFemale() {
@@ -210,11 +232,34 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.set(DATA_SADDLED, saddled);
     }
 
+    /** True once a chest is strapped on (the cargo inventory is open for business). */
+    public boolean isChested() {
+        return this.entityData.get(DATA_CHESTED);
+    }
+
+    public void setChested(boolean chested) {
+        this.entityData.set(DATA_CHESTED, chested);
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Female", this.isFemale());
         tag.putBoolean("Saddled", this.isSaddled());
+        tag.putBoolean("Chested", this.isChested());
+        if (this.cargo != null) {
+            ListTag list = new ListTag();
+            for (int i = 0; i < this.cargo.getContainerSize(); i++) {
+                ItemStack stack = this.cargo.getItem(i);
+                if (!stack.isEmpty()) {
+                    CompoundTag item = new CompoundTag();
+                    item.putByte("Slot", (byte) i);
+                    stack.save(item);
+                    list.add(item);
+                }
+            }
+            tag.put("Cargo", list);
+        }
     }
 
     @Override
@@ -224,6 +269,17 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.setFemale(tag.getBoolean("Female"));
         }
         this.setSaddled(tag.getBoolean("Saddled"));
+        this.setChested(tag.getBoolean("Chested"));
+        if (this.cargo != null && tag.contains("Cargo", Tag.TAG_LIST)) {
+            ListTag list = tag.getList("Cargo", Tag.TAG_COMPOUND);
+            for (int i = 0; i < list.size(); i++) {
+                CompoundTag item = list.getCompound(i);
+                int slot = item.getByte("Slot") & 255;
+                if (slot < this.cargo.getContainerSize()) {
+                    this.cargo.setItem(slot, ItemStack.of(item));
+                }
+            }
+        }
     }
 
     @Override
@@ -304,6 +360,74 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.isSaddled()) {
             this.spawnAtLocation(Items.SADDLE);
         }
+        this.dropCargo();
+    }
+
+    // ------------------------------------------------------------------ cargo
+
+    /** Takes the chest off and drops it with everything in it. */
+    protected void dropCargo() {
+        if (!this.isChested()) {
+            return;
+        }
+        this.setChested(false);
+        this.spawnAtLocation(Items.CHEST);
+        if (this.cargo != null && !this.level().isClientSide()) {
+            Containers.dropContents(this.level(), this, this.cargo);
+        }
+    }
+
+    /** Opens the cargo as a plain chest screen of {@link #cargoRows()} rows. */
+    protected void openCargo(Player player) {
+        if (this.cargo == null) {
+            return;
+        }
+        int rows = this.cargoRows();
+        MenuType<ChestMenu> type = cargoMenuType(rows);
+        player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new ChestMenu(type, id, inventory, this.cargo, rows),
+                this.getDisplayName()));
+        this.playSound(SoundEvents.DONKEY_CHEST, 0.5F, 1.2F);
+    }
+
+    /** Vanilla only has container-backed factories for 3 and 6 rows, so the other sizes use the ChestMenu constructor. */
+    private static MenuType<ChestMenu> cargoMenuType(int rows) {
+        return switch (rows) {
+            case 1 -> MenuType.GENERIC_9x1;
+            case 2 -> MenuType.GENERIC_9x2;
+            case 3 -> MenuType.GENERIC_9x3;
+            case 4 -> MenuType.GENERIC_9x4;
+            case 5 -> MenuType.GENERIC_9x5;
+            default -> MenuType.GENERIC_9x6;
+        };
+    }
+
+    /** The inventory key while riding opens the cargo (vanilla sends OPEN_INVENTORY for a HasCustomInventoryScreen vehicle). */
+    @Override
+    public void openCustomInventoryScreen(Player player) {
+        if (!this.level().isClientSide() && this.isChested() && this.isTame() && this.isOwnedBy(player)) {
+            this.openCargo(player);
+        }
+    }
+
+    /** A pack animal up and about picks up the drops around its feet: what it, or its owner, harvested. */
+    private void collectCargo() {
+        for (ItemEntity item : this.level().getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1.0D, 0.5D, 1.0D))) {
+            if (!item.isAlive() || item.hasPickUpDelay()) {
+                continue;
+            }
+            ItemStack stack = item.getItem();
+            int before = stack.getCount();
+            ItemStack rest = this.cargo.addItem(stack);
+            if (rest.getCount() < before) {
+                this.take(item, before - rest.getCount());
+                if (rest.isEmpty()) {
+                    item.discard();
+                } else {
+                    item.setItem(rest);
+                }
+                this.playSound(SoundEvents.ITEM_PICKUP, 0.3F, 1.0F + (this.random.nextFloat() - 0.5F) * 0.4F);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ taming / interaction
@@ -335,6 +459,24 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 }
                 return InteractionResult.sidedSuccess(client);
             }
+            // a chest strapped on makes a pack animal of it (the cargo inventory, docs/CARGA.md)
+            if (this.cargo != null && !this.isBaby() && !this.isChested() && stack.is(Items.CHEST)) {
+                if (!client) {
+                    this.usePlayerItem(player, hand, stack);
+                    this.setChested(true);
+                    this.playSound(SoundEvents.DONKEY_CHEST, 1.0F, 1.0F);
+                    player.displayClientMessage(Component.translatable(this.isRideable() ? "message.terrassic.cargo_chest_ride"
+                            : "message.terrassic.cargo_chest", this.getDisplayName()), true);
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
+            // without a saddle, sneak + empty hand opens the cargo (saddled: mount it and press the inventory key)
+            if (this.isChested() && !this.isSaddled() && stack.isEmpty() && player.isSecondaryUseActive()) {
+                if (!client) {
+                    this.openCargo(player);
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
             // saddle
             if (this.isRideable() && !this.isBaby() && !this.isSaddled() && stack.is(Items.SADDLE)) {
                 if (!client) {
@@ -351,6 +493,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     this.spawnAtLocation(Items.SADDLE);
                     this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
+            // shears again take the chest off (with its contents)
+            if (this.isChested() && !this.isSaddled() && stack.is(Items.SHEARS)) {
+                if (!client) {
+                    this.dropCargo();
+                    this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
+                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+                    player.displayClientMessage(Component.translatable("message.terrassic.cargo_off", this.getDisplayName()), true);
                 }
                 return InteractionResult.sidedSuccess(client);
             }
@@ -429,6 +581,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         super.tick();
         if (this.isPerched()) {
             this.perchedTick((Player) this.getVehicle());
+        }
+        if (!this.level().isClientSide() && this.cargo != null && this.isChested() && this.isTame() && this.isAlive()
+                && !this.isInSittingPose() && this.tickCount % 10 == 0) {
+            this.collectCargo();
         }
     }
 

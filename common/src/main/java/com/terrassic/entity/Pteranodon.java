@@ -91,6 +91,11 @@ public class Pteranodon extends FlyingDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 3;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return e instanceof AbstractFish;
     }

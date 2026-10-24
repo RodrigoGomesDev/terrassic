@@ -103,6 +103,11 @@ public class Therizinosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 4;
+    }
+
+    @Override
     public TameMethod tameMethod() {
         return TameMethod.BABY_FEEDING;
     }

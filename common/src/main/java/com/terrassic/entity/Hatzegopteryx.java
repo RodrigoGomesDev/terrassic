@@ -89,6 +89,11 @@ public class Hatzegopteryx extends FlyingDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 4;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return e.getBbWidth() < 1.6F && !(e instanceof FlyingDinosaur) && !e.isBaby();
     }

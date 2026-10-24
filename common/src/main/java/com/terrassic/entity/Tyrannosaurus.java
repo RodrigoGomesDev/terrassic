@@ -106,6 +106,11 @@ public class Tyrannosaurus extends PredatorDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 4;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return !(e instanceof Tyrannosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby();
     }

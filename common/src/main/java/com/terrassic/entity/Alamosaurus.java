@@ -103,6 +103,11 @@ public class Alamosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 6;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.ALAMOSAURUS.get().create(level);
     }

@@ -561,6 +561,13 @@ def gen(s, bounds):
             body.append(f"    @Override\n    protected double jumpStrength() {{\n        return {s['jump']}D;\n    }}\n")
         if s.get("ride_forward"):
             body.append(f"    @Override\n    protected double riderForwardOffset() {{\n        return {round(s['ride_forward'] * size['scale'], 2)}D;\n    }}\n")
+    # cargo (docs/CARGA.md): every rideable species carries a chest, rows by real size; cargo=N overrides (0 = none)
+    rows = s.get("cargo")
+    if rows is None and s.get("rideable"):
+        real = size["real"]
+        rows = 6 if real >= 25 else 5 if real >= 15 else 4 if real >= 9 else 3 if real >= 6 else 2 if real >= 3.5 else 1
+    if rows:
+        body.append(f"    @Override\n    public int cargoRows() {{\n        return {rows};\n    }}\n")
     if s.get("shoulder"):
         body.append("    @Override\n    public boolean canPerch() {\n        return true;\n    }\n")
     if s.get("fisher"):

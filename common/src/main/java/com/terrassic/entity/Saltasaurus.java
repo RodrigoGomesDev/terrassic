@@ -104,6 +104,11 @@ public class Saltasaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 4;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.SALTASAURUS.get().create(level);
     }

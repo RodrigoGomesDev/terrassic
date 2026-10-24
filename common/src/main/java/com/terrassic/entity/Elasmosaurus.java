@@ -86,6 +86,11 @@ public class Elasmosaurus extends SwimmingDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 4;
+    }
+
+    @Override
     protected boolean tameable() {
         return true;
     }

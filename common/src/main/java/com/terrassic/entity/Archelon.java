@@ -92,6 +92,11 @@ public class Archelon extends SwimmingDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 2;
+    }
+
+    @Override
     protected boolean tameable() {
         return true;
     }

@@ -94,6 +94,11 @@ public class Mosasaurus extends SwimmingDinosaur {
     }
 
     @Override
+    public int cargoRows() {
+        return 5;
+    }
+
+    @Override
     protected boolean tameable() {
         return true;
     }
