@@ -26,6 +26,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("gallimimus", "late_cretaceous", "omnivore", 6.0F, true, false, 4, 16.65F),
             new GuideSpecies("maiasaura", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 11.17F),
             new GuideSpecies("edmontosaurus", "late_cretaceous", "herbivore", 12.0F, true, false, 5, 8.16F),
+            new GuideSpecies("corythosaurus", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 11.08F),
             new GuideSpecies("pteranodon", "late_cretaceous", "piscivore", 7.25F, true, false, 3, 13.85F),
             new GuideSpecies("quetzalcoatlus", "late_cretaceous", "carnivore", 11.0F, true, true, 2, 9.07F),
             new GuideSpecies("hatzegopteryx", "late_cretaceous", "carnivore", 12.0F, true, true, 1, 8.35F),

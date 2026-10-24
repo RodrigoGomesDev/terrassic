@@ -40,6 +40,8 @@ SIZES = {
     "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
     "edmontosaurus":      dict(real=12.0, scale=1.93, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
+    # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
+    "corythosaurus":      dict(real=9.0,  scale=1.45, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). The body is small (hitbox ~ folded on the ground).
     "pteranodon":         dict(real=7.25, scale=1.07, w=1.3, h=1.7, baby=0.3,  shadow=1.0),
     # Azhdarchids: "real" is the wingspan. Quetzalcoatlus northropi 10-11 m (Witton & Habib 2010; Andres & Langston
@@ -83,6 +85,7 @@ GUIDE = {
     "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "maiasaura":          dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "edmontosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=5),
+    "corythosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
     "quetzalcoatlus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "hatzegopteryx":      dict(era="late_cretaceous", diet="carnivore", fossil=1),
@@ -116,6 +119,7 @@ WORLD = {
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
     "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
     "edmontosaurus":      dict(biomes=("plains", "forest", "savanna"), weight=6, group=(4, 8), track=10),  # big herds
+    "corythosaurus":      dict(biomes=("forest", "plains"), weight=5, group=(3, 6), track=10),            # wooded floodplains
     "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
     "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
@@ -234,6 +238,12 @@ SPECIES = [
       food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.5, 1.8, 280), xp=14,
       rideable=True, jump=0.5, ride_offset=1.55, ride_speed=1.0, call=True),
+ dict(id="corythosaurus", cls="Corythosaurus", base="HerbivoreDinosaur",
+      doc="Corythosaurus casuarius - 9 m helmet-crested duckbill of the wooded floodplains. Its deep call calms every herbivore around it (they stop panicking and heal a little). Tamed with plants; rideable.",
+      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
+      food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
+      sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
+      fights=False, rideable=True, jump=0.6, ride_offset=1.55, ride_speed=1.1, call=True, calm=True),
  # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
       doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",
@@ -532,20 +542,39 @@ def gen(s, bounds):
 """)
     if s.get("call"):
         imports.add("net.minecraft.world.damagesource.DamageSource")
-        body.append("""    @Override
-    public boolean hurt(DamageSource source, float amount) {
+        call = "this.callOut()" if s.get("calm") else 'triggerAnim(ACTION_CONTROLLER, "call")'
+        body.append(f"""    @Override
+    public boolean hurt(DamageSource source, float amount) {{
         boolean hurt = super.hurt(source, amount);
-        if (hurt && !this.level().isClientSide() && this.random.nextInt(3) == 0) {
-            triggerAnim(ACTION_CONTROLLER, "call");
-        }
+        if (hurt && !this.level().isClientSide() && this.random.nextInt(3) == 0) {{
+            {call};
+        }}
         return hurt;
-    }
+    }}
 
     @Override
-    public void playAmbientSound() {
+    public void playAmbientSound() {{
         super.playAmbientSound();
-        if (!this.level().isClientSide() && this.random.nextInt(3) == 0) {
-            triggerAnim(ACTION_CONTROLLER, "call");
+        if (!this.level().isClientSide() && this.random.nextInt(3) == 0) {{
+            {call};
+        }}
+    }}
+""")
+        if s.get("calm"):
+            # the calming call: herbivores within 12 blocks stop panicking, drop their target and heal a little
+            imports.add("net.minecraft.server.level.ServerLevel")
+            imports.add("net.minecraft.world.effect.MobEffectInstance")
+            imports.add("net.minecraft.world.effect.MobEffects")
+            body.append("""    /** The crest call: every herbivore within 12 blocks calms down (panic and target cleared) and regenerates briefly. */
+    private void callOut() {
+        triggerAnim(ACTION_CONTROLLER, "call");
+        if (this.level() instanceof ServerLevel server) {
+            for (HerbivoreDinosaur other : server.getEntitiesOfClass(HerbivoreDinosaur.class, this.getBoundingBox().inflate(12.0D), e -> e != this)) {
+                other.setLastHurtByMob(null);
+                other.setTarget(null);
+                other.getNavigation().stop();
+                other.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0));
+            }
         }
     }
 """)

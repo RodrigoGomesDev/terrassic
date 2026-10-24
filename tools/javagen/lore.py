@@ -567,6 +567,22 @@ GUIDE = {
         note=("A manada passou a tarde inteira. Quando o último sumiu no horizonte, a planície estava pastada até a raiz.",
               "The herd took the whole afternoon to pass. When the last one vanished over the horizon, the plain was grazed to the root.",
               "La manada tardó toda la tarde en pasar. Cuando el último desapareció en el horizonte, la llanura estaba pastada hasta la raíz.")),
+    "corythosaurus": dict(
+        sci=("Viveu há cerca de 77 a 75 milhões de anos em Alberta, no Canadá. Hadrossauro de 9 m e 3 a 4 toneladas com uma crista alta e arredondada no alto da cabeça, como um elmo coríntio, oca por dentro: as passagens nasais davam voltas lá dentro e faziam dela uma câmara de ressonância para chamados graves. A pele fóssil mostra tubérculos miúdos com fileiras de tubérculos maiores nos flancos.",
+             "Lived about 77 to 75 million years ago in Alberta, Canada. A 9 m, 3 to 4 tonne hadrosaur with a tall rounded crest on top of the head, like a Corinthian helmet, hollow inside: the nasal passages looped through it and made it a resonating chamber for deep calls. Fossil skin shows tiny tubercles with rows of bigger ones along the flanks.",
+             "Vivió hace unos 77 a 75 millones de años en Alberta, Canadá. Hadrosaurio de 9 m y 3 a 4 toneladas con una cresta alta y redondeada en lo alto de la cabeza, como un yelmo corintio, hueca por dentro: los conductos nasales daban vueltas allí y la convertían en una cámara de resonancia para llamados graves. La piel fósil muestra tubérculos diminutos con filas de tubérculos mayores en los flancos."),
+        behavior=("Anda em manadas pelas florestas de várzea e planícies, sem brigar: foge e chama. O chamado da crista acalma todos os herbívoros em volta, que param de correr e se recuperam um pouco.",
+                  "Moves in herds through the floodplain forests and plains, never fighting: it flees and calls. The crest call calms every herbivore around, which stops running and recovers a little.",
+                  "Anda en manadas por los bosques de llanura aluvial y las praderas, sin pelear: huye y llama. El llamado de la cresta calma a todos los herbívoros alrededor, que dejan de correr y se recuperan un poco."),
+        taming=("Doma-se na mão com trigo, samambaia, maçã ou frutas silvestres. Os pares põem ovo.",
+                "Hand-tamed with wheat, ferns, apples or sweet berries. Pairs lay eggs.",
+                "Se doma a mano con trigo, helecho, manzana o bayas dulces. Las parejas ponen huevos."),
+        utility=("A paz da manada: com um Corythosaurus no curral, os outros herbívoros param de entrar em pânico. Montaria tranquila.",
+                 "The herd's peace: with a Corythosaurus in the pen, the other herbivores stop panicking. A calm mount.",
+                 "La paz de la manada: con un Corythosaurus en el corral, los demás herbívoros dejan de entrar en pánico. Montura tranquila."),
+        note=("Ouvi o chamado antes do trovão. Depois do trovão, a manada inteira já estava parada, pastando.",
+              "I heard the call before the thunder. After the thunder, the whole herd was already standing still, grazing.",
+              "Oí el llamado antes del trueno. Después del trueno, toda la manada ya estaba quieta, pastando.")),
 }
 
 ERAS = {

@@ -879,5 +879,40 @@
    "animation.edmontosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "corythosaurus": {
+  "bones": 27,
+  "cubes": 58,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.5,
+    2.3649910577258316e-05,
+    -43.46430020920079
+   ],
+   [
+    9.5,
+    37.029872100563196,
+    56.11652063190722
+   ]
+  ],
+  "animations": [
+   "animation.corythosaurus.idle",
+   "animation.corythosaurus.walk",
+   "animation.corythosaurus.run",
+   "animation.corythosaurus.attack",
+   "animation.corythosaurus.sit",
+   "animation.corythosaurus.graze",
+   "animation.corythosaurus.call",
+   "animation.corythosaurus.knocked_out",
+   "animation.corythosaurus.wake",
+   "animation.corythosaurus.eat",
+   "animation.corythosaurus.beg",
+   "animation.corythosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

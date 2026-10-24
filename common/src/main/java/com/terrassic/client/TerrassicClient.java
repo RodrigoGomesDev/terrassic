@@ -6,6 +6,7 @@ import com.terrassic.entity.Archelon;
 import com.terrassic.entity.Baurusuchus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
+import com.terrassic.entity.Corythosaurus;
 import com.terrassic.entity.Deinosuchus;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Edmontosaurus;
@@ -59,6 +60,7 @@ public final class TerrassicClient {
         renderer(ModEntities.GALLIMIMUS, "gallimimus", Gallimimus.MODEL_SCALE, Gallimimus.SHADOW);
         renderer(ModEntities.MAIASAURA, "maiasaura", Maiasaura.MODEL_SCALE, Maiasaura.SHADOW);
         renderer(ModEntities.EDMONTOSAURUS, "edmontosaurus", Edmontosaurus.MODEL_SCALE, Edmontosaurus.SHADOW);
+        renderer(ModEntities.CORYTHOSAURUS, "corythosaurus", Corythosaurus.MODEL_SCALE, Corythosaurus.SHADOW);
         renderer(ModEntities.PTERANODON, "pteranodon", Pteranodon.MODEL_SCALE, Pteranodon.SHADOW);
         renderer(ModEntities.QUETZALCOATLUS, "quetzalcoatlus", Quetzalcoatlus.MODEL_SCALE, Quetzalcoatlus.SHADOW);
         renderer(ModEntities.HATZEGOPTERYX, "hatzegopteryx", Hatzegopteryx.MODEL_SCALE, Hatzegopteryx.SHADOW);
