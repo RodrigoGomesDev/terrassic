@@ -4,6 +4,7 @@ sets numbers, food, sounds and a few overrides. Re-run after editing SPECIES:  p
 """
 import json
 import os
+import re
 import sys
 OUT = os.path.join(os.path.dirname(__file__), "..", "..", "common", "src", "main", "java", "com", "terrassic", "entity")
 GUIDE_OUT = os.path.join(os.path.dirname(OUT), "research", "GuideSpecies.java")
@@ -61,6 +62,44 @@ GUIDE = {
     "maiasaura":          dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
+}
+
+# Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
+# biomes: any of BIOMES below. weight and group (min, max) as in vanilla spawn entries; weights can be scaled or
+# turned off per species in config/terrassic.json (SpawnConfig). The spawn category and placement rule follow the
+# base class: SwimmingDinosaur -> WATER_CREATURE in water, FlyingDinosaur -> flyer rule, others -> on the ground.
+WORLD = {
+    "tyrannosaurus":      dict(biomes=("savanna", "jungle"), weight=1, group=(1, 1), track=10),
+    "spinosaurus":        dict(biomes=("river", "swamp"), weight=2, group=(1, 1), track=10),
+    "dilophosaurus":      dict(biomes=("forest", "jungle"), weight=3, group=(1, 2), track=8),
+    "velociraptor":       dict(biomes=("savanna", "badlands", "desert"), weight=6, group=(2, 4), track=8),
+    "compsognathus":      dict(biomes=("forest", "jungle"), weight=8, group=(3, 6), track=8),
+    "triceratops":        dict(biomes=("savanna", "plains"), weight=6, group=(2, 4), track=10),
+    "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
+    "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
+    "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
+    "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
+    "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
+    "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
+    "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
+    "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
+    "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
+}
+
+# biome predicate -> (Java expression in ModSpawns, description for the doc comment)
+BIOMES = {
+    "forest": ("ctx.hasTag(BiomeTags.IS_FOREST)", "forest"),
+    "jungle": ("ctx.hasTag(BiomeTags.IS_JUNGLE)", "jungle"),
+    "savanna": ("ctx.hasTag(BiomeTags.IS_SAVANNA)", "savanna"),
+    "badlands": ("ctx.hasTag(BiomeTags.IS_BADLANDS)", "badlands"),
+    "taiga": ("ctx.hasTag(BiomeTags.IS_TAIGA)", "taiga"),
+    "hill": ("ctx.hasTag(BiomeTags.IS_HILL)", "hills"),
+    "river": ("ctx.hasTag(BiomeTags.IS_RIVER)", "river"),
+    "plains": ('key.equals("minecraft:plains") || key.equals("minecraft:sunflower_plains")', "plains"),
+    "desert": ('key.equals("minecraft:desert")', "desert*"),
+    "swamp": ('key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp")', "swamp, mangrove"),
+    "coast": ('ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore")', "beach, stony shore"),
+    "deep_sea": ('ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen")', "deep ocean (not frozen)"),
 }
 
 SPECIES = [
@@ -476,9 +515,99 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
         f.write(src)
 
 
+# ---- per-species registrations, written between "BEGIN GENERATED <tag>" / "END GENERATED <tag>" marker lines in
+# the hand-written registry classes, so adding a species never needs Java edits by hand.
+JAVA = os.path.join(os.path.dirname(OUT))
+GROUP_TITLE = {"PredatorDinosaur": "predators", "HerbivoreDinosaur": "herbivores", "FlyingDinosaur": "flyers",
+               "SwimmingDinosaur": "marine reptiles"}
+
+
+def fill(path, tag, lines):
+    """Replaces the lines between the BEGIN/END GENERATED <tag> markers (markers kept)."""
+    with open(path, encoding="utf-8") as f:
+        src = f.read().split("\n")
+    mark = lambda word: re.compile(rf"{word} GENERATED {re.escape(tag)}( \(|$)")  # noqa: E731
+    begin = [i for i, l in enumerate(src) if mark("BEGIN").search(l.rstrip())]
+    end = [i for i, l in enumerate(src) if mark("END").search(l.rstrip())]
+    if len(begin) != 1 or len(end) != 1 or end[0] < begin[0]:
+        raise SystemExit(f"{path}: markers for '{tag}' missing or broken")
+    src[begin[0] + 1:end[0]] = lines
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(src))
+
+
+def gen_registrations():
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from gen_resources import SPECIES as NAMES  # (en, pt, es, large egg or None)
+
+    reg = os.path.join(JAVA, "registry")
+    up = lambda s: s["id"].upper()  # noqa: E731
+    imports = [f"import com.terrassic.entity.{s['cls']};" for s in sorted(SPECIES, key=lambda s: s["cls"])]
+
+    fields, group = [], None
+    for s in SPECIES:
+        if s["base"] != group:
+            group = s["base"]
+            fields.append(f"    // ---- {GROUP_TITLE[group]}")
+        cat = "WATER_CREATURE" if s["base"] == "SwimmingDinosaur" else "CREATURE"
+        fields.append(f"    public static final RegistrySupplier<EntityType<{s['cls']}>> {up(s)} =")
+        fields.append(f"            mob(\"{s['id']}\", {s['cls']}::new, MobCategory.{cat}, {s['cls']}.WIDTH, {s['cls']}.HEIGHT, "
+                      f"{WORLD[s['id']]['track']});")
+    attrs = [f"        EntityAttributeRegistry.register({up(s)}, {s['cls']}::createAttributes);" for s in SPECIES]
+    path = os.path.join(reg, "ModEntities.java")
+    fill(path, "imports", imports)
+    fill(path, "species", fields)
+    fill(path, "attributes", attrs)
+
+    fill(os.path.join(reg, "ModItems.java"), "spawn eggs",
+         [f"    public static final RegistrySupplier<Item> {up(s)}_SPAWN_EGG = egg(\"{s['id']}\", ModEntities.{up(s)});"
+          for s in SPECIES])
+    fill(os.path.join(reg, "ModBlocks.java"), "eggs",
+         [f"        egg(\"{s['id']}\", ModEntities.{up(s)}, {str(NAMES[s['id']][3]).lower()});"
+          for s in SPECIES if NAMES[s["id"]][3] is not None])
+
+    path = os.path.join(JAVA, "client", "TerrassicClient.java")
+    fill(path, "imports", imports)
+    fill(path, "renderers", [f"        renderer(ModEntities.{up(s)}, \"{s['id']}\", {s['cls']}.MODEL_SCALE, {s['cls']}.SHADOW);"
+                             for s in SPECIES])
+
+    path = os.path.join(JAVA, "world", "ModSpawns.java")
+    table = [" *  %-19s %-31s %-7s %s" % ("Species", "Biomes", "weight", "group")]
+    placements, preds, adds = [], [], []
+    used = [b for b in BIOMES if any(b in WORLD[s["id"]]["biomes"] for s in SPECIES)]
+    for s in SPECIES:
+        w = WORLD[s["id"]]
+        lo, hi = w["group"]
+        table.append(" *  %-19s %-31s %-7s %s" % (s["cls"], ", ".join(BIOMES[b][1] for b in w["biomes"]), w["weight"],
+                                                 f"{lo}-{hi}" if lo != hi else lo))
+        if s["base"] == "FlyingDinosaur":
+            placements.append(f"        SpawnPlacementsRegistry.register(ModEntities.{up(s)}, SpawnPlacements.Type.ON_GROUND,")
+            placements.append("                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);")
+        elif s["base"] == "SwimmingDinosaur":
+            placements.append(f"        SpawnPlacementsRegistry.register(ModEntities.{up(s)}, SpawnPlacements.Type.IN_WATER,")
+            placements.append("                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);")
+        else:
+            placements.append(f"        placement(ModEntities.{up(s)});")
+        cat = "MobCategory.WATER_CREATURE, " if s["base"] == "SwimmingDinosaur" else ""
+        adds.append(f"            if ({' || '.join(_camel(b) for b in w['biomes'])}) {{")
+        adds.append(f"                add(props, {cat}ModEntities.{up(s)}.get(), {w['weight']}, {lo}, {hi});")
+        adds.append("            }")
+    for b in used:
+        preds.append(f"            boolean {_camel(b)} = {BIOMES[b][0]};")
+    fill(path, "table", table)
+    fill(path, "placements", placements)
+    fill(path, "biomes", preds + [""] + adds)
+
+
+def _camel(name):
+    head, *rest = name.split("_")
+    return head + "".join(r.capitalize() for r in rest)
+
+
 if __name__ == "__main__":
     bounds = model_bounds()
     for s in SPECIES:
         gen(s, bounds)
     gen_guide(bounds)
+    gen_registrations()
     print("generated", len(SPECIES))

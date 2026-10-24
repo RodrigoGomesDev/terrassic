@@ -40,6 +40,7 @@ public final class ModItems {
     public static final List<RegistrySupplier<Item>> SPAWN_EGGS = new ArrayList<>();
 
     // ---- spawn eggs (each has its own sprite, so the tint colours are plain white)
+    // BEGIN GENERATED spawn eggs (tools/javagen/gen_species.py)
     public static final RegistrySupplier<Item> TYRANNOSAURUS_SPAWN_EGG = egg("tyrannosaurus", ModEntities.TYRANNOSAURUS);
     public static final RegistrySupplier<Item> SPINOSAURUS_SPAWN_EGG = egg("spinosaurus", ModEntities.SPINOSAURUS);
     public static final RegistrySupplier<Item> DILOPHOSAURUS_SPAWN_EGG = egg("dilophosaurus", ModEntities.DILOPHOSAURUS);
@@ -55,6 +56,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MAIASAURA_SPAWN_EGG = egg("maiasaura", ModEntities.MAIASAURA);
     public static final RegistrySupplier<Item> PTERANODON_SPAWN_EGG = egg("pteranodon", ModEntities.PTERANODON);
     public static final RegistrySupplier<Item> MOSASAURUS_SPAWN_EGG = egg("mosasaurus", ModEntities.MOSASAURUS);
+    // END GENERATED spawn eggs
 
     // ---- materials dropped by dinosaurs
     public static final RegistrySupplier<Item> REX_TOOTH = ITEMS.register("rex_tooth",

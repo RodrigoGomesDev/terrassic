@@ -1,10 +1,10 @@
 package com.terrassic.client;
 
+// BEGIN GENERATED imports
 import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Dilophosaurus;
-import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.Gallimimus;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Mosasaurus;
@@ -16,6 +16,8 @@ import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Tyrannosaurus;
 import com.terrassic.entity.Velociraptor;
+// END GENERATED imports
+import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.registry.ModEntities;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -31,6 +33,7 @@ public final class TerrassicClient {
     }
 
     public static void init() {
+        // BEGIN GENERATED renderers (tools/javagen/gen_species.py)
         renderer(ModEntities.TYRANNOSAURUS, "tyrannosaurus", Tyrannosaurus.MODEL_SCALE, Tyrannosaurus.SHADOW);
         renderer(ModEntities.SPINOSAURUS, "spinosaurus", Spinosaurus.MODEL_SCALE, Spinosaurus.SHADOW);
         renderer(ModEntities.DILOPHOSAURUS, "dilophosaurus", Dilophosaurus.MODEL_SCALE, Dilophosaurus.SHADOW);
@@ -46,6 +49,7 @@ public final class TerrassicClient {
         renderer(ModEntities.MAIASAURA, "maiasaura", Maiasaura.MODEL_SCALE, Maiasaura.SHADOW);
         renderer(ModEntities.PTERANODON, "pteranodon", Pteranodon.MODEL_SCALE, Pteranodon.SHADOW);
         renderer(ModEntities.MOSASAURUS, "mosasaurus", Mosasaurus.MODEL_SCALE, Mosasaurus.SHADOW);
+        // END GENERATED renderers
         EntityRendererRegistry.register(ModEntities.SPEAR, ThrownSpearRenderer::new);
         ClientHooks.init();
     }
