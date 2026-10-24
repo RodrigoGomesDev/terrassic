@@ -266,7 +266,7 @@ SPECIES = [
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
       sounds=("COD_AMBIENT", "COD_HURT", "COD_DEATH", 0.5, 1.6, 300), xp=14, run=0.06,
       prey="e instanceof AbstractFish || e instanceof Squid || e instanceof Ichthyornis && e.isInWater()",
-      prey_imports=["net.minecraft.world.entity.animal.Squid"], prey_interval=80),
+      prey_imports=["net.minecraft.world.entity.animal.AbstractFish", "net.minecraft.world.entity.animal.Squid"], prey_interval=80),
 ]
 
 
