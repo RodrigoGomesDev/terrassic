@@ -11,13 +11,20 @@ as diferenças entre suas declarações de entrega e o checkout verificado.
 
 | Frente | Responsável | Escopo | Próxima entrega |
 |---|---|---|---|
-| Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Retomar sua fase corrente; registrar aqui arquivos em uso antes de editar |
-| Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; escolher próxima fase livre e registrar escopo |
+| Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Após a fauna 108-113: nocaute v0.7 (`DOMESTICACAO.md`); reservar base de entidades, itens, rede e geradores antes de implementar |
+| Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; próxima frente independente: roteiros e validação funcional da fauna v0.7 (dietas, loot, reprodução e habitats), sem disputar os arquivos do nocaute |
 | Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores, persistência, Caderno, dimensões e respawn validados; CI e integração da fauna concluídas; ampliar perfil de carga estacionária gradualmente |
 | Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entregar documentação e lista de arquivos; preservar trabalho existente |
 | Aprovação visual e experiência | Rodrigo | Aparência, som, sensação de jogo e prioridades de produto | Validar os roteiros de jogo após as entregas técnicas |
 
 As atribuições organizam o trabalho; não significam que outras sessões já leram ou confirmaram este quadro.
+
+Handoff após a fauna: o sistema de torpor/nocaute ainda não está em `DinosaurEntity`; o plano e os critérios estão
+em `DOMESTICACAO.md`. A frente principal pode seguir por esse pacote complexo. A paralela começa conferindo os
+seis animais recém-entregues contra `FAUNA.md`, registra resultados e só reserva código se encontrar um problema.
+Codex continua com integração, dados, rede e desempenho. Identidade mantém a arte e o acabamento das interfaces.
+Todas as frentes fazem fetch, leem este quadro e conferem a CI antes de abrir trabalho; não recriar sistemas já
+entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e testes).
 
 ## Regras de integração
 
@@ -47,6 +54,7 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Codex | `.github/workflows/validation.yml`, `tools/validation/README.md`, documentação | Concluído: CI passou na main com a nova fauna, run `40140246290`; sem deploy ou publicação de release |
 | Codex | `tools/validation/check_project.py`, `test_check_project.py`, documentação | Concluído: 481 vínculos de áudio e legendas conferidos; 18 testes passaram. Sem editar sons ou geradores |
 | Codex | `tools/validation/load_profile.py`, documentação | Em uso: medir 32, 64 e até 100 conexões estacionárias em Fabric, com limite de média de 35 ms; não valida jogadores ativos |
+| Codex | `CLAUDE.md`, linha da fauna em `ROADMAP.md`, documentação de contexto | Em uso: atualizar contagem de espécies e estados verificados de entrega, sem mudar a estratégia ou a fila de produto |
 | Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Concluído; arquivos liberados (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 

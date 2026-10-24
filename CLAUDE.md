@@ -15,17 +15,24 @@ Build não equivale a teste no jogo; os estados e as evidências atuais ficam no
 Segunda entrega Codex: `docs/TESTES_SERVIDOR.md` registra inicialização dedicada e persistência de entidades
 validadas em Fabric e Forge. Errantes selvagens sem nome são temporários e não deixam ninhos; os filhotes de
 ovos selvagens também são errantes. Domados/nomeados e ovos colocados pelo jogador continuam persistentes.
-Spawner e classes-base de IA receberam escalonamento e checagens antecipadas. Falta perfil de carga e teste
-de comportamento com jogadores; não anunciar desempenho para 100 jogadores com base nesses testes.
+Spawner e classes-base de IA receberam escalonamento e checagens antecipadas. Faltam testes de comportamento
+com jogadores completos e a validação da meta de 100 jogadores ativos; não anunciar essa capacidade com base nos smoke tests.
 Terceira entrega Codex: Caderno salvo em arquivos `terrassic_research_<uuid>.dat`, migração preguiçosa do arquivo
 global antigo preservado, dirty tracking automático em `Knowledge` e sincronização incremental com fallback para
 o snapshot completo. Leia `docs/CADERNO_DADOS.md` antes de alterar o conhecimento; `pages()` é somente leitura,
 use `addPage()`. Regressões de dados/protocolo fazem parte da build (`:common:researchRegression`).
+Entregas seguintes: clientes locais de protocolo passaram em Fabric e Forge com páginas por UUID, snapshot/delta,
+troca de dimensão, morte/respawn, reconexão e reinício (`CADERNO_DADOS.md`). Perfis JFR locais passaram até
+16 conexões nos dois loaders e 32 no Fabric (`PERFIL_LOCAL.md`); são clientes estacionários sem renderização,
+não uma validação de 100 jogadores ativos. A CI no GitHub valida integridade, fixtures, orçamento e build dos dois
+loaders, incluindo regressões de pesquisa. `tools/validation/README.md` reúne os comandos.
+Fauna 108-113 integrada: 59 espécies; próximo sistema complexo previsto é o nocaute v0.7 (`DOMESTICACAO.md`).
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
 Versão atual: **v0.2.0** (tags git v0.1.0 e v0.2.0). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
-A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; Forge ainda não testado.
+A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; o cliente gráfico Forge ainda não foi validado.
+Os servidores dedicados Fabric e Forge foram validados posteriormente pelos roteiros de entidades e Caderno.
 Nome: o projeto se chamava **PrimalEra** e foi renomeado para **Terrassic** em 23/10/2026: mod id `terrassic`,
 pacote `com.terrassic`, classe principal `Terrassic`, namespace `assets/terrassic` e `data/terrassic`.
 Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o id antigo `primalera:` não existe mais).
@@ -51,7 +58,7 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   pacotes em `network/RulesNetwork`. Use `Rules.of(level).get(Rule.X)`. Ecossistema denso: `world/EcoSpawner` mantém
   terrestres, voadores e marinhos ao redor de cada jogador usando a lista de spawn do bioma; os que ele põe são "errantes"
   (`DinosaurEntity.isRoamer`, somem a 96+ blocos se selvagens e sem nome). Voadores selvagens voam em bandos (`ai/SoarGoal`).
-- 53 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
+- 59 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
 - REGRA (Rodrigo, 24/10/2026): toda espécie nova usa o tamanho real dos fósseis (topo das estimativas publicadas
   para adultos, 1 bloco = 1 metro), com a fonte anotada em `docs/TAMANHOS.md`.
 - Tamanhos: tabela `SIZES` em `gen_species.py` (1 bloco = 1 metro; escala do modelo, hitbox, filhote, sombra).
