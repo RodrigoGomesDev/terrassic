@@ -45,3 +45,11 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] Sítio Fossilífero: a parede mostra Rocha Fossilífera e crânios fósseis; o pincel tira fósseis dela.
 - [ ] Ossuário: esqueleto de titanossauro, ossos espalhados e três Compsognathus.
 - [ ] Nenhuma estrutura nasce dentro d'água.
+
+## 4. Refúgio e ninhos (M3b)
+- [ ] `/locate structure terrassic:river_house` acha **uma** Casa do Rio, perto de um rio, a umas 220-420 quadras da origem.
+- [ ] A casa fica de pé sobre as palafitas (na água ou na margem), telhado inteiro, porta funcionando, cestos com páginas.
+- [ ] **Mate** está sentado no deque, com o nome "Mate". Clique de mão vazia: aparece a mensagem e ele passa a ser seu (senta/segue como os outros domados).
+- [ ] Agachado, usar a Lente de Âmbar mostra a distância e a direção do Refúgio; perto dele, "Você está no Refúgio da Katarina".
+- [ ] Sem agachar, a Lente continua funcionando como luneta.
+- [ ] `/locate structure terrassic:nest_colony`: montes com ninhos e ovos de Maiasaura e quatro adultas por perto.

@@ -70,7 +70,10 @@ class Template:
         if name.startswith("terrassic:"):
             allowed = _terrassic_states(name.split(":", 1)[1])
             for k, v in props.items():
-                if k not in allowed or str(v).lower() not in allowed[k]:
+                values = allowed.get(k, set())
+                if values and values <= {"true", "false"}:
+                    values = {"true", "false"}  # multipart files only name the "true" case of a boolean
+                if str(v).lower() not in values:
                     raise ValueError(f"{name}: bad property {k}={v} (allowed {allowed})")
         state = (name, tuple(sorted((k, str(v).lower()) for k, v in props.items())))
         self.blocks[(x, y, z)] = (state, nbt)

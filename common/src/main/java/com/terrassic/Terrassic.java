@@ -10,6 +10,7 @@ import com.terrassic.registry.ModTabs;
 import com.terrassic.research.Research;
 import com.terrassic.world.ArrivalCrater;
 import com.terrassic.world.CretaceousBiomes;
+import com.terrassic.world.KatarinaRefuge;
 import com.terrassic.world.ModSpawns;
 import com.terrassic.world.ModWorldgen;
 import dev.architectury.utils.Env;
@@ -38,6 +39,7 @@ public final class Terrassic {
         ModWorldgen.init();
         CretaceousBiomes.init(); // v0.8: Cretaceous biomes of the "Terrassic" world type
         ArrivalCrater.init(); // v0.8: the arrival crater next to the world spawn
+        KatarinaRefuge.init(); // v0.8: Mate at the River House, the Amber Lens pointing to it
         Research.init();
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }

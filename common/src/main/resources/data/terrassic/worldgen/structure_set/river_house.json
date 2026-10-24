@@ -1,0 +1,16 @@
+{
+  "structures": [
+    {
+      "structure": "terrassic:river_house",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:concentric_rings",
+    "distance": 5,
+    "spread": 1,
+    "count": 1,
+    "preferred_biomes": "#terrassic:refuge_preferred",
+    "salt": 1958241311
+  }
+}

@@ -92,8 +92,8 @@ Arquivos compartilhados que esta frente tocou (só o mínimo; M2 só acrescentou
 | M1 | Biomas do Cretáceo + tipo de mundo Terrassic | ✅ (falta testar no jogo, `TESTES_V08.md`) |
 | M2 | Tela de título: panorama do Cretáceo, logo de pedra, frases e dicas de carregamento com curiosidades reais | ✅ (falta ver no jogo) |
 | M3a | Estruturas I: Cratera de Chegada, Acampamentos da Katarina (3 variantes), Sítio Fossilífero, Ossuário | ✅ (falta ver no jogo) |
-| M3b | Estruturas II: Casa do Rio (Refúgio, com o "Mate"), Colônia de Ninhos de Maiasaura, Lente de Âmbar apontando o Refúgio | ⏭ |
-| M4 | Tempestades da Fenda (céu âmbar, criaturas fora de época) | ○ |
+| M3b | Estruturas II: Casa do Rio (Refúgio, com o "Mate"), Colônia de Ninhos de Maiasaura, Lente de Âmbar apontando o Refúgio | ✅ (falta ver no jogo) |
+| M4 | Tempestades da Fenda (céu âmbar, criaturas fora de época) | ⏭ |
 | M5 | HUD: montaria, bando, nova espécie, nome da era | ○ |
 | M6 | Música e sons de fundo por bioma (gravações PD/CC0, no Mac) | ○ |
 
@@ -129,10 +129,21 @@ biomas vanilla equivalentes, então a história também anda num mundo normal.
 | **Acampamento da Katarina** | Barraca de palha com cumeeira, cama, esteiras, cesto, fogueira de pedras apagada, troncos de sentar, varal ou estaleiro de couro, pedra de giz com as marcas dela | 3 variantes: junco (planícies, pântano, delta), samambaia (florestas), cicadácea com couro (Terras Secas, serras, savana, deserto) | 1 a cada ~30 chunks |
 | **Sítio Fossilífero** | Barranco de folhelho, calcário e giz cortado a prumo, com Rocha Fossilífera e crânios fósseis na parede, andaime de galhos, bancada de lascar sílex e cesto de ferramentas | Terras Secas, serras, planícies; badlands, savana, deserto, colinas | 1 a cada ~26 chunks |
 | **Ossuário** | Leito de ossos com o esqueleto de um titanossauro (coluna, costelas, crânio), lama rachada, crânios fósseis e três Compsognathus carniceiros | Terras Secas, delta, planícies; badlands, savana, deserto | 1 a cada ~40 chunks |
+| **Casa do Rio** (Refúgio da Katarina) | Casa de troncos de cipreste em palafitas, telhado de junco, deque com parapeito, horta em canteiros de serrapilheira; dentro, a cama de couro dela, a Mesa de Pesquisa, dois cestos com páginas, lamparina, estaleiro, tambor, pinturas e um troféu de Parasaurolophus. No deque, **Mate**, o Parasaurolophus dela, sentado | Uma por mundo, a 220-420 blocos da origem, puxada para um rio (anel concêntrico, como as fortalezas) | 1 |
+| **Colônia de Ninhos** | Montes de terra com ninhos de palha e ovos de Maiasaura (chocam e os filhotes marcam quem estiver perto), quatro Maiasauras adultas | Planície dos Hadrossauros; planícies, campina, savana | 1 a cada ~36 chunks |
 
 Loot: `loot_tables/chests/katarina_camp.json` traz sempre uma Página Solta, que vira uma página que **aquele** jogador ainda
 não tem (`LoosePageItem`), mais comida, sílex, linha, osso, papel, às vezes âmbar bruto e uma ferramenta simples.
 `fossil_site.json` traz pincel ou cinzel, 1 ou 2 fósseis de espécies e às vezes uma página.
+`katarina_refuge.json` traz duas páginas, metade das vezes uma Lente de Âmbar, frascos, carvão de esboço, âmbar bruto e papel.
+
+**Mate** (`world/KatarinaRefuge`): o molde cria o Parasaurolophus já domado pela Katarina (UUID fixo, ela nunca está online),
+então ele fica sentado no deque. O primeiro jogador que tocar nele de mão vazia vira o dono ("Mate cheira as suas mãos,
+sente o cheiro da Katarina em você e aceita você"). Conta como domar para o Diário.
+
+**A Lente de Âmbar aponta o Refúgio:** agachado, use a lente. Aparece a distância e a direção ("Refúgio da Katarina: uns 340
+blocos, direção noroeste"), com o som de cristal de ametista. Usa a tag de estrutura `terrassic:katarina_refuge`, então
+`/locate structure #terrassic:katarina_refuge` também acha.
 
 ## 7. Perguntas abertas para o Rodrigo
 

@@ -738,6 +738,8 @@ def main():
 
     import gen_structures  # Katarina's camps, fossil sites, bone beds (phase M3)
     gen_structures.main()
+    for code, entries in gen_structures.LANG.items():
+        LANG[code].update(entries)
 
     import menu_texts  # title screen and loading tips (phase M2)
     for code, entries in menu_texts.lang().items():
