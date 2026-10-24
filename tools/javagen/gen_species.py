@@ -50,6 +50,8 @@ SIZES = {
     "alamosaurus":        dict(real=30.0, scale=3.02, w=5.0, h=9.0, baby=0.1,  shadow=5.5),
     # Saltasaurus loricatus: 12-13 m, ~7 t (Paul 2010), the armoured titanosaur; back at ~4 blocks.
     "saltasaurus":        dict(real=12.0, scale=1.81, w=2.8, h=3.8, baby=0.15, shadow=3.0),
+    # Argentinosaurus huinculensis: 30-35 m, 65-75 t (Sellers et al. 2013; Paul 2019); head ~15 blocks up.
+    "argentinosaurus":    dict(real=35.0, scale=3.08, w=6.0, h=10.0, baby=0.08, shadow=6.5),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -108,6 +110,7 @@ GUIDE = {
     "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
     "alamosaurus":        dict(era="late_cretaceous", diet="herbivore", fossil=2),
     "saltasaurus":        dict(era="late_cretaceous", diet="herbivore", fossil=3),
+    "argentinosaurus":    dict(era="late_cretaceous", diet="herbivore", fossil=1),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -152,6 +155,7 @@ WORLD = {
     "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
     "alamosaurus":        dict(biomes=("badlands", "savanna", "desert"), weight=1, group=(1, 2), track=16),  # the dry southwest
     "saltasaurus":        dict(biomes=("savanna", "plains", "river"), weight=2, group=(2, 4), track=14),  # the Patagonian floodplain
+    "argentinosaurus":    dict(biomes=("savanna", "plains"), weight=1, group=(1, 1), track=18),  # one at a time, and rarely
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -296,6 +300,13 @@ SPECIES = [
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.55, 2.4, 340), step=("RAVAGER_STEP", 1.0, 0.6),
       xp=40, step_height=1.5, head=(30, 30), rideable=True, jump=0.0, ride_offset=2.3, ride_forward=0.2, ride_speed=1.0),
+ dict(id="argentinosaurus", cls="Argentinosaurus", base="HerbivoreDinosaur",
+      doc="Argentinosaurus huinculensis - 35 m titanosaur, the largest land animal of the mod: a house that walks. Clears the brush in its path when it moves with purpose; hurt, it lifts a forefoot and treads, and the ground shakes (slowness). Egg-tamed for now (knockout taming comes in v0.7); rideable, the platform saddle comes with the v0.6 systems.",
+      attrs=dict(MAX_HEALTH=600, MOVEMENT_SPEED=0.15, ATTACK_DAMAGE=28, ATTACK_KNOCKBACK=3.0, ARMOR=12, ARMOR_TOUGHNESS=4, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
+      food_tag="ItemTags.LEAVES",
+      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.3, 3.5, 420), step=("RAVAGER_STEP", 1.6, 0.4),
+      xp=80, step_height=2.0, head=(20, 25), rideable=True, jump=0.0, ride_offset=3.7, ride_forward=0.4, ride_speed=0.9,
+      egg_only=True, trample=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 2)]),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -571,9 +582,10 @@ def gen(s, bounds):
             body.append("    @Override\n    protected boolean huntsPlayers() {\n        return false;\n    }\n")
         if s.get("feeding_tame"):
             body.append("    @Override\n    public TameMethod tameMethod() {\n        return TameMethod.FEEDING;\n    }\n")
-        if s.get("egg_only") and s["base"] != "PredatorDinosaur":
-            # egg / baby taming only (knockout taming later): adults ignore food offered by hand
-            body.append("    @Override\n    public TameMethod tameMethod() {\n        return TameMethod.BABY_FEEDING;\n    }\n")
+    if s.get("egg_only") and base != "PredatorDinosaur":
+        # egg / baby taming only (knockout taming later): adults ignore food offered by hand
+        # (top level: this used to sit inside the predator branch, where its own condition made it dead code)
+        body.append("    @Override\n    public TameMethod tameMethod() {\n        return TameMethod.BABY_FEEDING;\n    }\n")
     # extra goals
     goals = []
     if s.get("leap"):

@@ -5,6 +5,7 @@ import com.terrassic.Terrassic;
 import com.terrassic.entity.Alamosaurus;
 import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Archelon;
+import com.terrassic.entity.Argentinosaurus;
 import com.terrassic.entity.Baurusuchus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
@@ -96,6 +97,8 @@ public final class ModEntities {
             mob("alamosaurus", Alamosaurus::new, MobCategory.CREATURE, Alamosaurus.WIDTH, Alamosaurus.HEIGHT, 16);
     public static final RegistrySupplier<EntityType<Saltasaurus>> SALTASAURUS =
             mob("saltasaurus", Saltasaurus::new, MobCategory.CREATURE, Saltasaurus.WIDTH, Saltasaurus.HEIGHT, 14);
+    public static final RegistrySupplier<EntityType<Argentinosaurus>> ARGENTINOSAURUS =
+            mob("argentinosaurus", Argentinosaurus::new, MobCategory.CREATURE, Argentinosaurus.WIDTH, Argentinosaurus.HEIGHT, 18);
     public static final RegistrySupplier<EntityType<Parasaurolophus>> PARASAUROLOPHUS =
             mob("parasaurolophus", Parasaurolophus::new, MobCategory.CREATURE, Parasaurolophus.WIDTH, Parasaurolophus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Pachycephalosaurus>> PACHYCEPHALOSAURUS =
@@ -175,6 +178,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(BRACHIOSAURUS, Brachiosaurus::createAttributes);
         EntityAttributeRegistry.register(ALAMOSAURUS, Alamosaurus::createAttributes);
         EntityAttributeRegistry.register(SALTASAURUS, Saltasaurus::createAttributes);
+        EntityAttributeRegistry.register(ARGENTINOSAURUS, Argentinosaurus::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
         EntityAttributeRegistry.register(THESCELOSAURUS, Thescelosaurus::createAttributes);

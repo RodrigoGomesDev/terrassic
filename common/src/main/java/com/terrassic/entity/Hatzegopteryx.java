@@ -94,6 +94,11 @@ public class Hatzegopteryx extends FlyingDinosaur {
     }
 
     @Override
+    public TameMethod tameMethod() {
+        return TameMethod.BABY_FEEDING;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.HATZEGOPTERYX.get().create(level);
     }

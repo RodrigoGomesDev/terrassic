@@ -1260,5 +1260,39 @@
    "animation.saltasaurus.attack"
   ],
   "render_scale": 1.0
+ },
+ "argentinosaurus": {
+  "bones": 33,
+  "cubes": 73,
+  "texture": [
+   256,
+   256
+  ],
+  "bounds_px": [
+   [
+    -17.5,
+    2.360664580584399e-05,
+    -82.57393068657683
+   ],
+   [
+    17.5,
+    78.30270961325834,
+    98.97385426945903
+   ]
+  ],
+  "animations": [
+   "animation.argentinosaurus.idle",
+   "animation.argentinosaurus.walk",
+   "animation.argentinosaurus.run",
+   "animation.argentinosaurus.sit",
+   "animation.argentinosaurus.graze",
+   "animation.argentinosaurus.knocked_out",
+   "animation.argentinosaurus.wake",
+   "animation.argentinosaurus.eat",
+   "animation.argentinosaurus.beg",
+   "animation.argentinosaurus.tame",
+   "animation.argentinosaurus.attack"
+  ],
+  "render_scale": 1.0
  }
 }

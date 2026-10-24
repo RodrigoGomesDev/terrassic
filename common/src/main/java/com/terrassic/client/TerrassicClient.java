@@ -4,6 +4,7 @@ package com.terrassic.client;
 import com.terrassic.entity.Alamosaurus;
 import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Archelon;
+import com.terrassic.entity.Argentinosaurus;
 import com.terrassic.entity.Baurusuchus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
@@ -73,6 +74,7 @@ public final class TerrassicClient {
         renderer(ModEntities.BRACHIOSAURUS, "brachiosaurus", Brachiosaurus.MODEL_SCALE, Brachiosaurus.SHADOW);
         renderer(ModEntities.ALAMOSAURUS, "alamosaurus", Alamosaurus.MODEL_SCALE, Alamosaurus.SHADOW);
         renderer(ModEntities.SALTASAURUS, "saltasaurus", Saltasaurus.MODEL_SCALE, Saltasaurus.SHADOW);
+        renderer(ModEntities.ARGENTINOSAURUS, "argentinosaurus", Argentinosaurus.MODEL_SCALE, Argentinosaurus.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

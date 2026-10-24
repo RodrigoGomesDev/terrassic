@@ -102,6 +102,11 @@ public class Therizinosaurus extends HerbivoreDinosaur {
         return 0.5D;
     }
 
+    @Override
+    public TameMethod tameMethod() {
+        return TameMethod.BABY_FEEDING;
+    }
+
     /** Browsing: idle under a tree, or now and then with a rider, it hooks a leaf block down with the claws and breaks it
      *  (the leaves drop their usual saplings, sticks and apples). Respects mobGriefing. */
     @Override

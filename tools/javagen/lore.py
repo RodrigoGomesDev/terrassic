@@ -743,6 +743,22 @@ GUIDE = {
         note=("Tentei contar os ossículos. Desisti nos quatrocentos. Ela nem percebeu.",
               "I tried to count the ossicles. Gave up at four hundred. She never noticed.",
               "Intenté contar los osículos. Me rendí en los cuatrocientos. Ni se dio cuenta.")),
+    "argentinosaurus": dict(
+        sci=("Viveu há 96 a 92 milhões de anos na Patagônia argentina. Conhecido por poucas vértebras, costelas e um fêmur, e mesmo assim um dos maiores animais terrestres que já existiram: 30 a 35 m e 65 a 75 toneladas. Reconstruído pelos primos mais completos (Patagotitan): barril colossal sobre patas em coluna bem abertas, quadris mais altos que os ombros, pescoço longo erguido, cabeça minúscula, cauda longa e grossa. Um modelo biomecânico o fez andar a 2 m/s.",
+             "Lived 96 to 92 million years ago in Argentine Patagonia. Known from a few vertebrae, ribs and a femur, yet among the largest land animals that ever existed: 30 to 35 m and 65 to 75 tonnes. Reconstructed after its more complete cousins (Patagotitan): a colossal barrel on wide-set column legs, hips higher than the shoulders, a long raised neck, a tiny head, a long thick tail. A biomechanical model walked it at 2 m/s.",
+             "Vivió hace 96 a 92 millones de años en la Patagonia argentina. Conocido por pocas vértebras, costillas y un fémur, y aun así uno de los mayores animales terrestres que han existido: 30 a 35 m y 65 a 75 toneladas. Reconstruido por sus primos más completos (Patagotitan): barril colosal sobre patas en columna bien abiertas, caderas más altas que los hombros, cuello largo erguido, cabeza diminuta, cola larga y gruesa. Un modelo biomecánico lo hizo andar a 2 m/s."),
+        behavior=("Sozinho, raro, em savanas e planícies: uma casa que anda. Quando anda com propósito, abre caminho pela mata. Ferido, ergue uma pata dianteira e pisa: o chão treme e quem está perto fica lento.",
+                  "Alone, rare, in savannas and plains: a house that walks. Moving with purpose, it clears a path through the brush. Hurt, it lifts a forefoot and treads: the ground shakes and whoever is near is slowed.",
+                  "Solo, raro, en sabanas y llanuras: una casa que camina. Cuando anda con propósito, abre camino por el monte. Herido, levanta una pata delantera y pisa: el suelo tiembla y quien está cerca queda lento."),
+        taming=("Só se doma criando o filhote do ovo: o adulto ignora a comida na mão (nocaute na v0.7). Os pares põem um ovo grande.",
+                "Tamed only by raising a hatchling from the egg: the adult ignores food held out (knockout taming in v0.7). Pairs lay a large egg.",
+                "Solo se doma criando a la cría desde el huevo: el adulto ignora la comida en la mano (noqueo en la v0.7). Las parejas ponen un huevo grande."),
+        utility=("A maior montaria do mod, a 15 blocos de altura. A sela de plataforma, para construir uma casa nas costas dele, chega com os sistemas da v0.6.",
+                 "The largest mount of the mod, 15 blocks up. The platform saddle, for building a house on its back, arrives with the v0.6 systems.",
+                 "La mayor montura del mod, a 15 bloques de altura. La silla de plataforma, para construir una casa en su lomo, llega con los sistemas de la v0.6."),
+        note=("Achei que era uma colina. A colina respirou.",
+              "I thought it was a hill. The hill breathed.",
+              "Pensé que era una colina. La colina respiró.")),
 }
 
 ERAS = {

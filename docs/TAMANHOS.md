@@ -38,6 +38,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Deinocheirus (v0.6) | 11 m, ~6,4 t (Lee et al. 2014), braços de 2,4 m | novo | **11,0 x 6,1** (pescoço erguido) | 2,4 x 4,8 | 20% |
 | Alamosaurus (v0.6) | 26-30 m, 30-80 t (Fowler & Sullivan 2011) | novo | **30,0 x 13,4** (cabeça erguida) | 5,0 x 9,0 | 10% |
 | Saltasaurus (v0.6) | 12-13 m, ~7 t (Paul 2010; Bonaparte & Powell 1980) | novo | **12,0 x 4,8** (cabeça erguida) | 2,8 x 3,8 | 15% |
+| Argentinosaurus (v0.6) | 30-35 m, 65-75 t (Sellers et al. 2013; Paul 2019) | novo | **35,0 x 15,1** (cabeça erguida) | 6,0 x 10,0 | 8% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |
