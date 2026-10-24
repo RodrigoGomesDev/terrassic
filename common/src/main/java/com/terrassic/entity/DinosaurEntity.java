@@ -89,6 +89,10 @@ import java.util.List;
  *       picks up the drops around its feet while it is up and about (docs/CARGA.md).</li>
  *   <li><b>Carcass</b>: a dead dinosaur leaves a {@link CarcassEntity} holding its death loot (docs/CARCACAS.md);
  *       meat eaters scavenge it ({@link #scavenges()}) and are sated for a while afterwards.</li>
+ *   <li><b>Hunger and sleep</b> (docs/FOME_E_SONO.md): every animal has a hunger gauge 0-100 that empties with
+ *       time; herbivores graze it back, meat eaters eat carrion and kills, tame animals eat what they are fed (or
+ *       their own cargo). Well fed animals heal; starving ones take damage; a fed predator does not hunt. Wild
+ *       animals sleep through their resting hours ({@link #nocturnal()}).</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
  *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
  * </ul>
@@ -104,6 +108,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_PLATFORM =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DATA_HUNGER =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DATA_SLEEPING =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final int MAX_HUNGER = 100;
+    /** Below this a wild predator hunts; at or above it, it lets prey and players be. */
+    public static final int HUNTS_BELOW = 85;
     /** Riders a platform saddle seats (the owner drives, the rest sit along the back). */
     public static final int PLATFORM_SEATS = 4;
 
@@ -132,6 +143,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private List<ItemStack> capturedLoot;
     /** Ticks a meat eater stays full after a meal (it does not hunt while sated). */
     private int sated;
+    /** Ticks until the hunger gauge drops by one. */
+    private int hungerTimer;
+    /** Cooldown of the "is hungry" message to the owner. */
+    private int hungryMessageCooldown;
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -168,6 +183,56 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return 0;
     }
 
+    /** Ticks per point of hunger lost (the generator scales it with the species' size). */
+    protected int hungerInterval() {
+        return 600;
+    }
+
+    /** Whether the species rests by day and is up at night. */
+    protected boolean nocturnal() {
+        return false;
+    }
+
+    /** Whether it feeds itself from the ground: grass, ferns, leaves within reach (herbivores). */
+    protected boolean grazes() {
+        return false;
+    }
+
+    public int getHunger() {
+        return this.entityData.get(DATA_HUNGER);
+    }
+
+    public void setHunger(int hunger) {
+        this.entityData.set(DATA_HUNGER, Mth.clamp(hunger, 0, MAX_HUNGER));
+    }
+
+    /** Eats: the gauge goes up (never past full). */
+    public void feed(int amount) {
+        this.setHunger(this.getHunger() + amount);
+    }
+
+    public boolean isHungry() {
+        return this.getHunger() < 50;
+    }
+
+    public boolean isStarving() {
+        return this.getHunger() <= 0;
+    }
+
+    public boolean isSleeping() {
+        return this.entityData.get(DATA_SLEEPING);
+    }
+
+    public void setSleeping(boolean sleeping) {
+        this.entityData.set(DATA_SLEEPING, sleeping);
+    }
+
+    /** The species' resting hours: night for most, day for the nocturnal ones (never in the rain of a thunderstorm). */
+    public boolean isSleepTime() {
+        boolean day = this.level().isDay();
+        return (this.nocturnal() ? day : !day) && !this.level().isThundering();
+    }
+
     /** Whether this animal eats carcasses (meat eaters). */
     protected boolean scavenges() {
         return false;
@@ -186,9 +251,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.sated = ticks;
     }
 
-    /** Called when it bites a carcass: the eating animation. */
+    /** Called when it bites a carcass: the eating animation, and a good share of the gauge. */
     public void onAteCarrion() {
         triggerAnim(ACTION_CONTROLLER, "eat");
+        this.feed(20);
     }
 
     /** Whether the species takes the platform saddle (the titans): four riders, anyone may climb on. */
@@ -245,9 +311,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return "animation." + speciesId() + "." + name;
     }
 
-    /** Wild predators only hunt when grown up, hungry (not sated by a recent meal) and when the world is not on Peaceful. */
+    /** Wild predators only hunt when grown up, awake, hungry (not sated, gauge below HUNTS_BELOW) and off Peaceful. */
     protected boolean canHunt() {
-        return !this.isBaby() && !this.isTame() && !this.isSated() && this.level().getDifficulty() != Difficulty.PEACEFUL;
+        return !this.isBaby() && !this.isTame() && !this.isSated() && !this.isSleeping() && this.getHunger() < HUNTS_BELOW
+                && this.level().getDifficulty() != Difficulty.PEACEFUL;
     }
 
     // ------------------------------------------------------------------ synced data / save
@@ -259,6 +326,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_SADDLED, false);
         this.entityData.define(DATA_CHESTED, false);
         this.entityData.define(DATA_PLATFORM, false);
+        this.entityData.define(DATA_HUNGER, 70);
+        this.entityData.define(DATA_SLEEPING, false);
     }
 
     public boolean isFemale() {
@@ -303,6 +372,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         tag.putBoolean("Chested", this.isChested());
         tag.putBoolean("Platform", this.isPlatform());
         tag.putInt("Sated", this.sated);
+        tag.putInt("Hunger", this.getHunger());
         if (this.cargo != null) {
             ListTag list = new ListTag();
             for (int i = 0; i < this.cargo.getContainerSize(); i++) {
@@ -328,6 +398,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setChested(tag.getBoolean("Chested"));
         this.setPlatform(tag.getBoolean("Platform"));
         this.sated = tag.getInt("Sated");
+        if (tag.contains("Hunger")) {
+            this.setHunger(tag.getInt("Hunger"));
+        }
         if (this.cargo != null && tag.contains("Cargo", Tag.TAG_LIST)) {
             ListTag list = tag.getList("Cargo", Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
@@ -361,6 +434,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         AnimationController<DinosaurEntity> action = new AnimationController<>(this, ACTION_CONTROLLER, 3, state -> PlayState.STOP);
         action.triggerableAnim("attack", RawAnimation.begin().thenPlay(anim("attack")));
         action.triggerableAnim("eat", RawAnimation.begin().thenPlay(anim("eat")));
+        action.triggerableAnim("beg", RawAnimation.begin().thenPlay(anim("beg")));
         for (String extra : extraActions()) {
             action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
         }
@@ -368,7 +442,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
-        if (this.isPerched() || (this.isInSittingPose() && !this.isVehicle())) {
+        if (this.isPerched() || this.isSleeping() || (this.isInSittingPose() && !this.isVehicle())) {
             return state.setAndContinue(this.sitAnim);
         }
         if (state.isMoving()) {
@@ -545,11 +619,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
 
         if (this.isTame() && this.isOwnedBy(player)) {
-            // heal with food
-            if (this.isFood(stack) && this.getHealth() < this.getMaxHealth()) {
+            // feed: food heals and fills the hunger gauge
+            if (this.isFood(stack) && (this.getHealth() < this.getMaxHealth() || this.getHunger() < MAX_HUNGER - 10)) {
                 if (!client) {
                     this.usePlayerItem(player, hand, stack);
                     this.heal(Math.max(2.0F, this.getMaxHealth() * 0.1F));
+                    this.feed(25);
+                    triggerAnim(ACTION_CONTROLLER, "eat");
                 }
                 return InteractionResult.sidedSuccess(client);
             }
@@ -708,6 +784,70 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (!this.level().isClientSide() && this.sated > 0) {
             this.sated--;
         }
+        if (!this.level().isClientSide() && this.isAlive()) {
+            this.hungerTick();
+        }
+    }
+
+    // ------------------------------------------------------------------ hunger (docs/FOME_E_SONO.md)
+
+    private void hungerTick() {
+        // the gauge empties with time (twice as fast for a growing baby)
+        if (--this.hungerTimer <= 0) {
+            this.hungerTimer = this.isBaby() ? this.hungerInterval() / 2 : this.hungerInterval();
+            // a wild animal out of sight finds something to eat now and then, so the wild never starves offscreen
+            if (!this.isTame() && this.random.nextInt(4) == 0) {
+                this.feed(1);
+            } else {
+                this.setHunger(this.getHunger() - 1);
+            }
+        }
+        // a chested animal helps itself to its own cargo when hungry
+        if (this.isHungry() && this.cargo != null && this.isChested() && this.tickCount % 100 == 0) {
+            for (int i = 0; i < this.cargo.getContainerSize(); i++) {
+                ItemStack stack = this.cargo.getItem(i);
+                if (!stack.isEmpty() && this.isFood(stack)) {
+                    stack.shrink(1);
+                    this.feed(25);
+                    triggerAnim(ACTION_CONTROLLER, "eat");
+                    this.playSound(SoundEvents.GENERIC_EAT, 1.0F, 1.0F);
+                    break;
+                }
+            }
+        }
+        // well fed: it heals; starving: it suffers
+        if (this.getHunger() > 60 && this.getHealth() < this.getMaxHealth() && this.tickCount % 400 == 0) {
+            this.heal(1.0F);
+        }
+        if (this.isStarving() && this.tickCount % 400 == 0) {
+            this.hurt(this.damageSources().starve(), 1.0F);
+        }
+        // a hungry tame animal begs its owner
+        if (this.hungryMessageCooldown > 0) {
+            this.hungryMessageCooldown--;
+        }
+        if (this.isTame() && this.getHunger() < 30 && this.tickCount % 200 == 0 && this.getOwner() instanceof Player owner
+                && owner.distanceToSqr(this) < 64.0D) {
+            triggerAnim(ACTION_CONTROLLER, "beg");
+            if (this.hungryMessageCooldown == 0) {
+                this.hungryMessageCooldown = 2400;
+                owner.displayClientMessage(Component.translatable("message.terrassic.hungry", this.getDisplayName()), true);
+            }
+        }
+    }
+
+    /** Grazing animals eat what grows within reach: grass, ferns, leaves, the grass block itself. */
+    protected boolean grazeNearby() {
+        BlockPos centre = this.blockPosition();
+        int r = Math.max(1, Math.round(this.getBbWidth() * 0.6F));
+        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-r, -1, -r), centre.offset(r, 2, r))) {
+            BlockState state = this.level().getBlockState(pos);
+            if (state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN)
+                    || state.is(Blocks.LARGE_FERN) || state.is(BlockTags.LEAVES) || state.is(BlockTags.SAPLINGS) || state.is(Blocks.MOSS_BLOCK)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void perchedTick(Player owner) {

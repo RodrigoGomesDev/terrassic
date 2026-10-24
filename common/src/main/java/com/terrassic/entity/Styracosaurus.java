@@ -95,6 +95,11 @@ public class Styracosaurus extends HerbivoreDinosaur {
         return 2;
     }
 
+    @Override
+    protected int hungerInterval() {
+        return 800;
+    }
+
     /** The charge: moving fast with a target or a rider, it breaks the leaves and plants in its way. */
     @Override
     public void aiStep() {

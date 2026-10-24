@@ -108,6 +108,11 @@ public class Therizinosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1000;
+    }
+
+    @Override
     public TameMethod tameMethod() {
         return TameMethod.BABY_FEEDING;
     }

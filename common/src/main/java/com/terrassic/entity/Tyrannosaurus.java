@@ -111,6 +111,11 @@ public class Tyrannosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1200;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return !(e instanceof Tyrannosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby();
     }

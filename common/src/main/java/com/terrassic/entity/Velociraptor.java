@@ -71,6 +71,11 @@ public class Velociraptor extends PredatorDinosaur {
     }
 
     @Override
+    protected boolean nocturnal() {
+        return true;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return e.getBbWidth() < 1.0F && !(e instanceof Velociraptor);
     }

@@ -68,6 +68,11 @@ public class Ankylosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 900;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.ANKYLOSAURUS.get().create(level);
     }

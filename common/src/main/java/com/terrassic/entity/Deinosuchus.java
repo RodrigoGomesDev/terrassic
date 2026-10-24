@@ -88,6 +88,11 @@ public class Deinosuchus extends PredatorDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1100;
+    }
+
+    @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
         if (hit && target instanceof LivingEntity living) {

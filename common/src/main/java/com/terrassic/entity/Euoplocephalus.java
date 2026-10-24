@@ -72,6 +72,11 @@ public class Euoplocephalus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 800;
+    }
+
+    @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
         if (hit && target instanceof LivingEntity living) {

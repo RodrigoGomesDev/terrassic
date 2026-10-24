@@ -226,13 +226,13 @@ SPECIES = [
       food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP",
       sounds=("HOGLIN_AMBIENT", "HOGLIN_HURT", "HOGLIN_DEATH", 1.25, 1.2, 220),
       xp=12, step_height=1.0, head=(45, 30),
-      prey="e.getBbWidth() < 1.0F && !(e instanceof DinosaurEntity)", display=True, prey_interval=100),
+      prey="e.getBbWidth() < 1.0F && !(e instanceof DinosaurEntity)", display=True, prey_interval=100, nocturnal=True),
  dict(id="velociraptor", cls="Velociraptor", base="PredatorDinosaur",
       doc="Velociraptor mongoliensis - fast feathered pack hunter. When one raptor picks a target, the rest of the pack nearby joins in. Leaps at its prey and avoids T. rex.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=5, FOLLOW_RANGE=24),
       food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP",
       sounds=("FOX_SCREECH", "FOX_HURT", "FOX_DEATH", 0.8, 1.0, 200),
-      xp=8, run=0.03, prey="e.getBbWidth() < 1.0F && !(e instanceof Velociraptor)", prey_interval=80, pack=True, leap=True),
+      xp=8, run=0.03, prey="e.getBbWidth() < 1.0F && !(e instanceof Velociraptor)", prey_interval=80, pack=True, leap=True, nocturnal=True),
  dict(id="compsognathus", cls="Compsognathus", base="PredatorDinosaur",
       doc="Compsognathus longipes - tiny skittish scavenger living in groups. Avoids players but the group swarms whoever hurts one of them. Can be tamed with fish, like a cat.",
       attrs=dict(MAX_HEALTH=6, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=1.5),
@@ -570,6 +570,12 @@ def gen(s, bounds):
         body.append(f"    @Override\n    public int cargoRows() {{\n        return {rows};\n    }}\n")
     if s.get("platform"):
         body.append("    @Override\n    protected boolean platformSpecies() {\n        return true;\n    }\n")
+    # hunger (docs/FOME_E_SONO.md): ticks per point lost, 600 for a 3 m animal, slower for the big ones; hunger=N overrides
+    interval = s.get("hunger", int(round(600 * (1 + max(0.0, size["real"] - 3) / 10) / 100.0) * 100))
+    if interval != 600:
+        body.append(f"    @Override\n    protected int hungerInterval() {{\n        return {interval};\n    }}\n")
+    if s.get("nocturnal"):
+        body.append("    @Override\n    protected boolean nocturnal() {\n        return true;\n    }\n")
     if s.get("shoulder"):
         body.append("    @Override\n    public boolean canPerch() {\n        return true;\n    }\n")
     if s.get("fisher"):

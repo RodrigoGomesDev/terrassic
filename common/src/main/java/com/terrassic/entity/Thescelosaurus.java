@@ -81,6 +81,11 @@ public class Thescelosaurus extends HerbivoreDinosaur {
         return 0.02D;
     }
 
+    @Override
+    protected int hungerInterval() {
+        return 700;
+    }
+
     /** Digging: idle on dirt, sand, gravel or clay it scrapes with the forefeet now and then; a tame one turns up
      *  roots and tubers (dropped at its feet). */
     @Override

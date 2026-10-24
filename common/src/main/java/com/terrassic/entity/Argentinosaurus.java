@@ -122,6 +122,11 @@ public class Argentinosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 2500;
+    }
+
+    @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
         if (hit && target instanceof LivingEntity living) {

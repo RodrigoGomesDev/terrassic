@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.ai.DinoSleepGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
@@ -55,6 +56,11 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     }
 
     @Override
+    protected boolean grazes() {
+        return true;
+    }
+
+    @Override
     protected double cullingInflate() {
         return 2.5D;
     }
@@ -63,6 +69,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(1, new DinoSleepGoal(this));
         this.goalSelector.addGoal(2, new PanicGoal(this, 1.6D) {
             @Override
             public boolean canUse() {
@@ -91,12 +98,16 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
     }
 
+    /** Grazing: now and then, more often when hungry; if something edible grows within reach, it is a real meal. */
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        if (this.getTarget() == null && !this.isVehicle() && !this.isInSittingPose()
-                && this.getNavigation().isDone() && this.random.nextInt(700) == 0) {
+        if (this.getTarget() == null && !this.isVehicle() && !this.isInSittingPose() && !this.isSleeping()
+                && this.getNavigation().isDone() && this.random.nextInt(this.isHungry() ? 150 : 700) == 0) {
             triggerAnim(ACTION_CONTROLLER, "graze");
+            if (this.grazeNearby()) {
+                this.feed(8);
+            }
         }
     }
 

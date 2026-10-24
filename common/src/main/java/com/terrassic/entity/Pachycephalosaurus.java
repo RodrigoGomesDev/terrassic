@@ -70,6 +70,11 @@ public class Pachycephalosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 700;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.PACHYCEPHALOSAURUS.get().create(level);
     }

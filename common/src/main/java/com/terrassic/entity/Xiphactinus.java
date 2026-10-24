@@ -72,6 +72,11 @@ public class Xiphactinus extends SwimmingDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 800;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return e instanceof AbstractFish || e instanceof Squid || e instanceof Ichthyornis && e.isInWater();
     }

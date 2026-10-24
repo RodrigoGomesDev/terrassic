@@ -99,6 +99,11 @@ public class Mosasaurus extends SwimmingDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1400;
+    }
+
+    @Override
     protected boolean tameable() {
         return true;
     }

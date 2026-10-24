@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.ai.DinoSleepGoal;
 import com.terrassic.entity.ai.EatCarcassGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -71,6 +72,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(1, new DinoSleepGoal(this));
         this.goalSelector.addGoal(2, new EatCarcassGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, attackSpeed(), true));
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.2D, 10.0F, Math.max(2.0F, this.getBbWidth() * 1.5F), false));

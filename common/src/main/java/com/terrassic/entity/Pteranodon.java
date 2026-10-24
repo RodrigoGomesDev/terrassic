@@ -96,6 +96,11 @@ public class Pteranodon extends FlyingDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 900;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return e instanceof AbstractFish;
     }

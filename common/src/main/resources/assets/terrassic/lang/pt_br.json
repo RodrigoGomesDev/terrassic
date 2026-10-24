@@ -777,6 +777,7 @@
   "message.terrassic.guide.2": "Guia de Campo: %s avistado",
   "message.terrassic.guide.3": "Guia de Campo: %s estudado",
   "message.terrassic.guide.4": "Guia de Campo: %s domesticado",
+  "message.terrassic.hungry": "%s está com fome",
   "message.terrassic.lens_seen": "%s a %s blocos",
   "message.terrassic.no_resin": "Esta árvore não dá resina. Tente abeto ou árvore da selva.",
   "message.terrassic.page_found": "Página da Katarina guardada no Caderno: %s",

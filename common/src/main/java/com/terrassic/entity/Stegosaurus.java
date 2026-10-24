@@ -67,6 +67,11 @@ public class Stegosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1000;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.STEGOSAURUS.get().create(level);
     }

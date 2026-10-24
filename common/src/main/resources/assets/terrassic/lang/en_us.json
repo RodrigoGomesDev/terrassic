@@ -777,6 +777,7 @@
   "message.terrassic.guide.2": "Field Guide: %s sighted",
   "message.terrassic.guide.3": "Field Guide: %s studied",
   "message.terrassic.guide.4": "Field Guide: %s tamed",
+  "message.terrassic.hungry": "%s is hungry",
   "message.terrassic.lens_seen": "%s, %s blocks away",
   "message.terrassic.no_resin": "This tree gives no resin. Try spruce or jungle.",
   "message.terrassic.page_found": "Katarina's page added to the Notebook: %s",

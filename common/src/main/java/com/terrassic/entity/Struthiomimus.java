@@ -97,6 +97,11 @@ public class Struthiomimus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 700;
+    }
+
+    @Override
     protected boolean fightsBack() {
         return false;
     }

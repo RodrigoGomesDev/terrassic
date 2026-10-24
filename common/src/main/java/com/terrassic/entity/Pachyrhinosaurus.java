@@ -104,6 +104,11 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 900;
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         boolean hurt = super.hurt(source, amount);
         if (hurt && !this.level().isClientSide() && this.random.nextInt(2) == 0) {

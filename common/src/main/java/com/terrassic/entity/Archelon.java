@@ -97,6 +97,11 @@ public class Archelon extends SwimmingDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 700;
+    }
+
+    @Override
     protected boolean tameable() {
         return true;
     }

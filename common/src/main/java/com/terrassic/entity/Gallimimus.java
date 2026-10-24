@@ -97,6 +97,11 @@ public class Gallimimus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 800;
+    }
+
+    @Override
     protected boolean fightsBack() {
         return false;
     }

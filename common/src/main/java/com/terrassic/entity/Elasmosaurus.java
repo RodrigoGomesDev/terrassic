@@ -91,6 +91,11 @@ public class Elasmosaurus extends SwimmingDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1000;
+    }
+
+    @Override
     protected boolean tameable() {
         return true;
     }

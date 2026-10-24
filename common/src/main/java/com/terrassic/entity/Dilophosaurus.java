@@ -81,6 +81,16 @@ public class Dilophosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 800;
+    }
+
+    @Override
+    protected boolean nocturnal() {
+        return true;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return e.getBbWidth() < 1.0F && !(e instanceof DinosaurEntity);
     }

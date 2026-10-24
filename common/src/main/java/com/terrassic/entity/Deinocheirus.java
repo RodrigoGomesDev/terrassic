@@ -110,6 +110,11 @@ public class Deinocheirus extends HerbivoreDinosaur {
         return 4;
     }
 
+    @Override
+    protected int hungerInterval() {
+        return 1100;
+    }
+
     /** Fishing: idle within two blocks of water it scoops with both arms now and then (splash); a tame one brings up a
      *  cod, a salmon, kelp or seagrass and drops it at its feet. */
     @Override

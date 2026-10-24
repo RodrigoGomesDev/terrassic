@@ -92,6 +92,11 @@ public class Triceratops extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1000;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.TRICERATOPS.get().create(level);
     }

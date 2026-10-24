@@ -112,6 +112,11 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
         return 4;
     }
 
+    @Override
+    protected int hungerInterval() {
+        return 1100;
+    }
+
     /** Browsing: idle under a tree, or now and then with a rider, it hooks a leaf block down with the claws and breaks it
      *  (the leaves drop their usual saplings, sticks and apples). Respects mobGriefing. */
     @Override

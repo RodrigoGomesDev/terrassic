@@ -87,6 +87,11 @@ public class Spinosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1300;
+    }
+
+    @Override
     protected boolean isPrey(LivingEntity e) {
         return !(e instanceof DinosaurEntity) && e.isInWaterOrBubble();
     }

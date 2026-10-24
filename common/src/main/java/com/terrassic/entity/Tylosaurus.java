@@ -77,6 +77,11 @@ public class Tylosaurus extends SwimmingDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1200;
+    }
+
+    @Override
     protected boolean liveYoung() {
         return true;
     }

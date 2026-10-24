@@ -113,6 +113,11 @@ public class Brachiosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1700;
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ModEntities.BRACHIOSAURUS.get().create(level);
     }

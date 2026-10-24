@@ -96,6 +96,11 @@ public class Corythosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected int hungerInterval() {
+        return 1000;
+    }
+
+    @Override
     protected boolean fightsBack() {
         return false;
     }
