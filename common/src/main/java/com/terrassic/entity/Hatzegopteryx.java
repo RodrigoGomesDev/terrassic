@@ -115,22 +115,22 @@ public class Hatzegopteryx extends FlyingDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_AMBIENT.get();
+        return ModSounds.HATZEGOPTERYX_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.SQUAWK_PTEROSAUR_HURT.get();
+        return ModSounds.HATZEGOPTERYX_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_DEATH.get();
+        return ModSounds.HATZEGOPTERYX_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.55F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -145,6 +145,6 @@ public class Hatzegopteryx extends FlyingDinosaur {
 
     @Override
     protected SoundEvent flapSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_FLAP.get();
+        return ModSounds.HATZEGOPTERYX_FLAP.get();
     }
 }

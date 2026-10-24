@@ -1,10 +1,10 @@
 """
-Builds the mod's own sounds from recipes.py:
+Builds the mod's own sounds from recipes.py (all procedural, see synth.py):
   assets/terrassic/sounds/voice/<set>/<event>_<n>.ogg   (mono OGG Vorbis, loudness normalised)
   assets/terrassic/sounds.json
   common/src/main/java/com/terrassic/registry/ModSounds.java
 Unchanged sounds are not rewritten (git sees no diff). Needs numpy and ffmpeg (with libvorbis).
-Recordings come from art/sounds/src (python3 fetch.py downloads them); without them the procedural fallbacks are used.
+Old recipes could cut recordings from art/sounds/src (fetch.py); no voice set uses them any more.
 usage: python3 build.py
 """
 import glob
@@ -171,6 +171,14 @@ def main():
             if (vset, ev) in SUBTITLES:
                 entry["subtitle"] = f"subtitles.terrassic.{sound_id(vset, ev)}"
             sounds_json[sound_id(vset, ev)] = entry
+    # files of sounds that no recipe makes any more (a set or a variant was removed)
+    made = {os.path.join(ASSETS, "sounds", n["name"].split(":", 1)[1] + ".ogg")
+            for e in sounds_json.values() for n in e["sounds"]}
+    removed = 0
+    for old in glob.glob(os.path.join(ASSETS, "sounds", "voice", "*", "*.ogg")):
+        if old not in made:
+            os.remove(old)
+            removed += 1
     with open(os.path.join(ASSETS, "sounds.json"), "w", encoding="utf-8") as f:
         json.dump(sounds_json, f, indent=2)
         f.write("\n")
@@ -207,7 +215,8 @@ public final class ModSounds {{
 """
     with open(JAVA, "w") as f:
         f.write(src)
-    print(f"sounds: {sum(len(v[2]) for e in VOICE_SETS.values() for v in e.values())} files ({recorded} from recordings), {changed} changed")
+    print(f"sounds: {sum(len(v[2]) for e in VOICE_SETS.values() for v in e.values())} files ({recorded} from recordings), "
+          f"{changed} changed, {removed} removed")
 
 
 if __name__ == "__main__":

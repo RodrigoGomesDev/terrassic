@@ -156,7 +156,7 @@ Montáveis: T. rex, Triceratops, Brachiosaurus, Parasaurolophus, Gallimimus.
 - Testar v0.2 no Forge e conferir a build depois da renomeação para Terrassic.
 - Tamanhos novos (24/10/2026, escala real, aprovados) ainda não compilados/testados no jogo: conferir caminho na floresta,
   altura da sela, pés deslizando na caminhada dos gigantes e filhotes.
-- Sons ainda são vanilla (placeholders).
+- Vozes próprias por espécie (v3, sintetizadas em `tools/soundgen`, ver `docs/SONS.md`); ainda não ouvidas dentro do jogo.
 - Montaria pula com espaço (barra de pulo do cavalo, força por espécie em `jump` no gen_species); tesoura tira a sela.
 - Herbívoros selvagens só procriam depois de domesticados.
 - Na pasta podem sobrar arquivos antigos da v0.1 (texturas <especie>.png sem _male/_female, GIFs): podem ser apagados.

@@ -142,7 +142,7 @@ public class Tyrannosaurus extends PredatorDinosaur {
         if (!this.level().isClientSide() && target != null && previous == null && this.displayCooldown <= 0 && !this.isVehicle()) {
             this.displayCooldown = 400;
             triggerAnim(ACTION_CONTROLLER, "roar");
-            this.playSound(ModSounds.BOOM_LARGE_THREAT.get(), 3.0F, 1.0F);
+            this.playSound(ModSounds.TYRANNOSAURUS_THREAT.get(), 3.0F, 1.0F);
         }
     }
 
@@ -161,17 +161,17 @@ public class Tyrannosaurus extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.BOOM_LARGE_AMBIENT.get();
+        return ModSounds.TYRANNOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.BOOM_LARGE_HURT.get();
+        return ModSounds.TYRANNOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.BOOM_LARGE_DEATH.get();
+        return ModSounds.TYRANNOSAURUS_DEATH.get();
     }
 
     @Override
@@ -191,6 +191,6 @@ public class Tyrannosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.BOOM_LARGE_STEP.get(), 0.9F, 1.0F);
+        this.playSound(ModSounds.TYRANNOSAURUS_STEP.get(), 0.9F, 1.0F);
     }
 }

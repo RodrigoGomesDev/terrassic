@@ -112,17 +112,17 @@ public class Pteranodon extends FlyingDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_AMBIENT.get();
+        return ModSounds.PTERANODON_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.SQUAWK_PTEROSAUR_HURT.get();
+        return ModSounds.PTERANODON_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_DEATH.get();
+        return ModSounds.PTERANODON_DEATH.get();
     }
 
     @Override
@@ -142,6 +142,6 @@ public class Pteranodon extends FlyingDinosaur {
 
     @Override
     protected SoundEvent flapSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_FLAP.get();
+        return ModSounds.PTERANODON_FLAP.get();
     }
 }

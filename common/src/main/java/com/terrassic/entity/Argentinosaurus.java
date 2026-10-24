@@ -2,6 +2,7 @@ package com.terrassic.entity;
 
 import com.terrassic.config.Rules;
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -171,22 +172,22 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SNIFFER_IDLE;
+        return ModSounds.ARGENTINOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SNIFFER_HURT;
+        return ModSounds.ARGENTINOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SNIFFER_DEATH;
+        return ModSounds.ARGENTINOSAURUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.3F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -201,6 +202,6 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 1.6F, 0.4F);
+        this.playSound(ModSounds.ARGENTINOSAURUS_STEP.get(), 1.6F, 1.0F);
     }
 }

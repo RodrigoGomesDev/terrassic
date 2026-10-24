@@ -2,6 +2,7 @@ package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import dev.architectury.registry.registries.RegistrySupplier;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,22 +136,22 @@ public class Protoceratops extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.TURTLE_AMBIENT_LAND;
+        return ModSounds.PROTOCERATOPS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.TURTLE_HURT;
+        return ModSounds.PROTOCERATOPS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.TURTLE_DEATH;
+        return ModSounds.PROTOCERATOPS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 1.1F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
