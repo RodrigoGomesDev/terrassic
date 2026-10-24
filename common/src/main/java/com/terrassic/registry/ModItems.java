@@ -61,6 +61,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MOSASAURUS_SPAWN_EGG = egg("mosasaurus", ModEntities.MOSASAURUS);
     public static final RegistrySupplier<Item> TYLOSAURUS_SPAWN_EGG = egg("tylosaurus", ModEntities.TYLOSAURUS);
     public static final RegistrySupplier<Item> ELASMOSAURUS_SPAWN_EGG = egg("elasmosaurus", ModEntities.ELASMOSAURUS);
+    public static final RegistrySupplier<Item> XIPHACTINUS_SPAWN_EGG = egg("xiphactinus", ModEntities.XIPHACTINUS);
     // END GENERATED spawn eggs
 
     // ---- hides: one per species, dropped by the animal (1-3, more with Looting); raw material for hide blocks
@@ -85,6 +86,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MOSASAURUS_HIDE = hide("mosasaurus");
     public static final RegistrySupplier<Item> TYLOSAURUS_HIDE = hide("tylosaurus");
     public static final RegistrySupplier<Item> ELASMOSAURUS_HIDE = hide("elasmosaurus");
+    public static final RegistrySupplier<Item> XIPHACTINUS_HIDE = hide("xiphactinus");
     // END GENERATED hides
 
     // ---- materials dropped by dinosaurs

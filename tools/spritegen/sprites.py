@@ -389,6 +389,21 @@ def spawn_eggs():
     eye(cv, 10, 5, "#d8c060")
     eggs["elasmosaurus"] = cv
 
+    # Xiphactinus: slate-blue egg with silver scale checks, a dark eye stripe and the fanged grin (fish: spawn egg only)
+    cv = base_egg(None, "#3a5068", "#aab4b8")
+    for x in range(3, 13):
+        for y in range(6, 14):
+            if inside(cv, x, y) and (x + y) % 2 == 0:
+                cv.set(x, y, hexc("#c4ccce"))
+    for x in range(4, 12):
+        if inside(cv, x, 5):
+            cv.set(x, 5, hexc("#1e2630"))
+    for x in range(5, 12):
+        if inside(cv, x, 9):
+            cv.set(x, 9, hexc("#f4f0e4" if x % 2 else "#8a3844"))
+    eye(cv, 10, 5, "#d8c060")
+    eggs["xiphactinus"] = cv
+
     # species with a front-view 32x32 design (egg_designs.py) use it; the rest keep the 16x16 sketch above
     import egg_designs
     for name, cv in eggs.items():

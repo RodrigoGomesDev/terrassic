@@ -21,6 +21,7 @@ import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
 import com.terrassic.entity.Velociraptor;
+import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.registry.ModEntities;
@@ -59,6 +60,7 @@ public final class TerrassicClient {
         renderer(ModEntities.MOSASAURUS, "mosasaurus", Mosasaurus.MODEL_SCALE, Mosasaurus.SHADOW);
         renderer(ModEntities.TYLOSAURUS, "tylosaurus", Tylosaurus.MODEL_SCALE, Tylosaurus.SHADOW);
         renderer(ModEntities.ELASMOSAURUS, "elasmosaurus", Elasmosaurus.MODEL_SCALE, Elasmosaurus.SHADOW);
+        renderer(ModEntities.XIPHACTINUS, "xiphactinus", Xiphactinus.MODEL_SCALE, Xiphactinus.SHADOW);
         // END GENERATED renderers
         EntityRendererRegistry.register(ModEntities.SPEAR, ThrownSpearRenderer::new);
         ClientHooks.init();

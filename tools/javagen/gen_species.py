@@ -52,6 +52,8 @@ SIZES = {
     "tylosaurus":         dict(real=13.0, scale=1.58, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
     # Elasmosaurus platyurus: ~10.3 m, of which ~7 m of neck (Sachs 2005). "real" is the total length.
     "elasmosaurus":       dict(real=10.3, scale=1.42, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
+    # Xiphactinus audax: 4.5-6 m, the biggest of its family (Everhart 2005; the "fish within a fish" FHSM VP-333 is ~4 m).
+    "xiphactinus":        dict(real=6.0, scale=1.16, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -77,6 +79,7 @@ GUIDE = {
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "tylosaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "elasmosaurus":       dict(era="late_cretaceous", diet="piscivore", fossil=3),
+    "xiphactinus":        dict(era="late_cretaceous", diet="carnivore", fossil=3),
 }
 
 # Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
@@ -104,6 +107,7 @@ WORLD = {
     "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
     "tylosaurus":         dict(biomes=("deep_sea", "ocean"), weight=3, group=(1, 1), track=12),  # also the shallower open sea
     "elasmosaurus":       dict(biomes=("ocean", "deep_sea"), weight=4, group=(1, 2), track=12),  # fishes the open sea in pairs
+    "xiphactinus":        dict(biomes=("ocean", "deep_sea"), weight=6, group=(1, 3), track=12),  # small hunting packs
 }
 
 # biome predicate -> (Java expression in ModSpawns, description for the doc comment)
@@ -256,6 +260,13 @@ SPECIES = [
       sounds=("DOLPHIN_AMBIENT_WATER", "DOLPHIN_HURT", "DOLPHIN_DEATH", 0.55, 1.6, 320), xp=18, run=0.05,
       prey="e instanceof AbstractFish",
       tame="feeding", live_young=True, rideable=True, ride_offset=0.95, ride_forward=0.0, ride_speed=1.1, dive=1.2),
+ dict(id="xiphactinus", cls="Xiphactinus", base="SwimmingDinosaur",
+      doc="Xiphactinus audax - a 6 m predatory bony fish with a bulldog face and fangs, fast and always hungry: it swallows fish whole and lunges at anything that enters its water. Wild only (cannot be tamed).",
+      attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=1.35, ATTACK_DAMAGE=7, ARMOR=1, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=24),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      sounds=("COD_AMBIENT", "COD_HURT", "COD_DEATH", 0.5, 1.6, 300), xp=14, run=0.06,
+      prey="e instanceof AbstractFish || e instanceof Squid || e instanceof Ichthyornis && e.isInWater()",
+      prey_imports=["net.minecraft.world.entity.animal.Squid"], prey_interval=80),
 ]
 
 

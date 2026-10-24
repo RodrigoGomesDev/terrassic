@@ -31,7 +31,8 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("ichthyornis", "late_cretaceous", "piscivore", 0.66F, false, false, 4, 151.87F),
             new GuideSpecies("mosasaurus", "late_cretaceous", "carnivore", 17.0F, true, true, 2, 5.89F),
             new GuideSpecies("tylosaurus", "late_cretaceous", "carnivore", 13.0F, false, false, 3, 7.71F),
-            new GuideSpecies("elasmosaurus", "late_cretaceous", "piscivore", 10.3F, true, false, 3, 9.7F));
+            new GuideSpecies("elasmosaurus", "late_cretaceous", "piscivore", 10.3F, true, false, 3, 9.7F),
+            new GuideSpecies("xiphactinus", "late_cretaceous", "carnivore", 6.0F, false, false, 3, 16.7F));
 
     public static GuideSpecies byId(String id) {
         for (GuideSpecies s : ALL) {

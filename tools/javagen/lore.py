@@ -471,6 +471,22 @@ GUIDE = {
         note=("A cabeça apareceu do lado do barco, me olhou e sumiu. O corpo só passou meio minuto depois.",
               "The head came up beside the boat, looked at me and vanished. The body only went past half a minute later.",
               "La cabeza asomó junto al barco, me miró y desapareció. El cuerpo recién pasó medio minuto después.")),
+    "xiphactinus": dict(
+        sci=("Viveu há cerca de 85 milhões de anos no Mar Interior Ocidental, na América do Norte. Peixe ósseo predador de 4,5 a 6 m, o maior da sua família: corpo alto como o de um tarpão, boca de buldogue virada para cima com presas longas na frente, cauda bifurcada, nadadeiras peitorais compridas e pontudas. O fóssil mais famoso guarda um peixe de 1,8 m engolido inteiro.",
+             "Lived about 85 million years ago in the Western Interior Seaway, in North America. A predatory bony fish of 4.5 to 6 m, the biggest of its family: a deep tarpon-like body, an upturned bulldog mouth with long fangs at the front, a forked tail, long pointed pectoral fins. Its most famous fossil holds a 1.8 m fish swallowed whole.",
+             "Vivió hace unos 85 millones de años en el Mar Interior Occidental, en América del Norte. Pez óseo depredador de 4,5 a 6 m, el mayor de su familia: cuerpo alto como el de un tarpón, boca de bulldog vuelta hacia arriba con colmillos largos al frente, cola bifurcada, aletas pectorales largas y puntiagudas. Su fósil más famoso guarda un pez de 1,8 m tragado entero."),
+        behavior=("Caça em grupos pequenos no mar aberto, rápido e sempre com fome: engole peixes e lulas inteiros, arranca aves da superfície e investe contra quem entra na água dele. Morre fácil para os répteis marinhos grandes.",
+                  "Hunts in small packs in the open sea, fast and always hungry: it swallows fish and squid whole, snatches birds off the surface and lunges at whoever enters its water. Easy prey for the big marine reptiles.",
+                  "Caza en grupos pequeños en mar abierto, rápido y siempre con hambre: traga peces y calamares enteros, arranca aves de la superficie y embiste a quien entra en su agua. Presa fácil para los grandes reptiles marinos."),
+        taming=("Não se doma. É um peixe: não há cérebro para convencer, só a fome.",
+                "Cannot be tamed. It is a fish: there is no mind to win over, only hunger.",
+                "No se doma. Es un pez: no hay mente que convencer, solo hambre."),
+        utility=("Rende bacalhau de sobra e ossos. Um cardume deles limpa um recife de peixes em minutos.",
+                 "Yields plenty of cod and bones. A pack of them strips a reef of fish in minutes.",
+                 "Rinde bacalao de sobra y huesos. Un grupo de ellos limpia un arrecife de peces en minutos."),
+        note=("Abri um para ver o que comia. Tinha outro peixe inteiro dentro, e dentro desse, outro.",
+              "I opened one up to see what it ate. There was another whole fish inside, and inside that one, another.",
+              "Abrí uno para ver qué comía. Tenía otro pez entero dentro, y dentro de ese, otro.")),
 }
 
 ERAS = {

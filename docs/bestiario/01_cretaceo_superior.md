@@ -391,7 +391,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 281 | Squalicorax | Tubarão/raia | 🌊 | Carnívoro | 5 m | Predador grande | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 282 | Scapanorhynchus | Tubarão/raia | 🌊 | Carnívoro | 3 m | Predador médio | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 283 | Bonnerichthys | Peixe | 🌊 | Filtrador | 6 m | Filtrador | Pacífico | — | — | Recurso: carne, couro, osso e amostras |  |
-| 284 | **Xiphactinus** | Peixe | 🌊 | Carnívoro | 5 m | Predador grande | Agressivo | — | — | Peixe predador gigante; comida e amostras | v0.5 |
+| 284 | **Xiphactinus** | Peixe | 🌊 | Carnívoro | 6 m | Predador grande | Agressivo | — | — | Peixe predador gigante; comida e amostras | v0.5 |
 | 285 | Protosphyraena | Peixe | 🌊 | Carnívoro | 3 m | Predador médio | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 286 | Ichthyodectes | Peixe | 🌊 | Carnívoro | 3 m | Predador médio | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 287 | Gillicus | Peixe | 🌊 | Piscívoro | 2 m | Pescador | Territorial | — | — | Recurso: carne, couro, osso e amostras |  |

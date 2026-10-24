@@ -679,5 +679,38 @@
    "animation.elasmosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "xiphactinus": {
+  "bones": 14,
+  "cubes": 21,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -13.659829230394967,
+    1.0,
+    -35.0
+   ],
+   [
+    13.659829230394967,
+    26.0,
+    47.615281492747975
+   ]
+  ],
+  "animations": [
+   "animation.xiphactinus.idle",
+   "animation.xiphactinus.walk",
+   "animation.xiphactinus.run",
+   "animation.xiphactinus.sit",
+   "animation.xiphactinus.attack",
+   "animation.xiphactinus.knocked_out",
+   "animation.xiphactinus.wake",
+   "animation.xiphactinus.eat",
+   "animation.xiphactinus.beg",
+   "animation.xiphactinus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

@@ -22,6 +22,7 @@ import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
 import com.terrassic.entity.Velociraptor;
+import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
 import com.terrassic.entity.ThrownSpear;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
@@ -87,6 +88,8 @@ public final class ModEntities {
             mob("tylosaurus", Tylosaurus::new, MobCategory.WATER_CREATURE, Tylosaurus.WIDTH, Tylosaurus.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Elasmosaurus>> ELASMOSAURUS =
             mob("elasmosaurus", Elasmosaurus::new, MobCategory.WATER_CREATURE, Elasmosaurus.WIDTH, Elasmosaurus.HEIGHT, 12);
+    public static final RegistrySupplier<EntityType<Xiphactinus>> XIPHACTINUS =
+            mob("xiphactinus", Xiphactinus::new, MobCategory.WATER_CREATURE, Xiphactinus.WIDTH, Xiphactinus.HEIGHT, 12);
     // END GENERATED species
 
     // ---- projectiles
@@ -126,6 +129,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(MOSASAURUS, Mosasaurus::createAttributes);
         EntityAttributeRegistry.register(TYLOSAURUS, Tylosaurus::createAttributes);
         EntityAttributeRegistry.register(ELASMOSAURUS, Elasmosaurus::createAttributes);
+        EntityAttributeRegistry.register(XIPHACTINUS, Xiphactinus::createAttributes);
         // END GENERATED attributes
     }
 }
