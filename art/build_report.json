@@ -1500,5 +1500,39 @@
    "animation.tarbosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "daspletosaurus": {
+  "bones": 24,
+  "cubes": 54,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.5,
+    3.429439676861542e-05,
+    -44.241158739519015
+   ],
+   [
+    9.5,
+    41.279722673311916,
+    52.09549263034484
+   ]
+  ],
+  "animations": [
+   "animation.daspletosaurus.idle",
+   "animation.daspletosaurus.walk",
+   "animation.daspletosaurus.run",
+   "animation.daspletosaurus.attack",
+   "animation.daspletosaurus.roar",
+   "animation.daspletosaurus.sit",
+   "animation.daspletosaurus.knocked_out",
+   "animation.daspletosaurus.wake",
+   "animation.daspletosaurus.eat",
+   "animation.daspletosaurus.beg",
+   "animation.daspletosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

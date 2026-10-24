@@ -61,6 +61,7 @@ SIZES = {
     "carcharodontosaurus": dict(real=12.5, scale=1.80, w=2.4, h=4.6, baby=0.25, shadow=2.3),
     "carnotaurus":        dict(real=8.0,  scale=1.30, w=1.8, h=3.4, baby=0.3,  shadow=1.6),
     "tarbosaurus":        dict(real=12.0, scale=1.79, w=2.5, h=4.3, baby=0.25, shadow=2.3),
+    "daspletosaurus":     dict(real=9.0,  scale=1.49, w=2.1, h=3.8, baby=0.28, shadow=2.0),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -126,6 +127,7 @@ GUIDE = {
     "carcharodontosaurus": dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "carnotaurus":        dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "tarbosaurus":        dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "daspletosaurus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -177,6 +179,7 @@ WORLD = {
     "carcharodontosaurus": dict(biomes=("savanna", "river", "badlands"), weight=1, group=(1, 1), track=10),  # Saharan river plains
     "carnotaurus":        dict(biomes=("savanna", "plains", "badlands"), weight=2, group=(1, 2), track=10),  # Patagonian plains
     "tarbosaurus":        dict(biomes=("desert", "river", "badlands"), weight=1, group=(1, 1), track=10),  # the Nemegt river plains and the Gobi
+    "daspletosaurus":     dict(biomes=("forest", "river", "plains"), weight=2, group=(2, 2), track=10),  # Alberta's river forests, in pairs
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -372,6 +375,14 @@ SPECIES = [
       xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.45, ride_offset=2.0, ride_speed=1.05,
       prey="!(e instanceof Tarbosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, prey_interval=200),
+ dict(id="daspletosaurus", cls="Daspletosaurus", base="PredatorDinosaur",
+      doc="Daspletosaurus torosus - 9 m tyrannosaur of the river forests, the 'frightful lizard': a massive deep skull for its size with horned bosses behind the eyes and the biggest teeth of the family. Hunts in pairs (the pair shares a target). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
+      attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.3, ARMOR=6, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=30),
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.8, 1.8, 240), step=("RAVAGER_STEP", 0.8, 0.7),
+      xp=32, step_height=1.3, head=(38, 28), rideable=True, jump=0.5, ride_offset=2.0, ride_speed=1.15,
+      prey="e.getBbWidth() < 3.0F && !(e instanceof Daspletosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
+      roar=True, pack=True, prey_interval=180),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),

@@ -855,6 +855,22 @@ GUIDE = {
         note=("Acertei três lanças nele. Ele olhou para mim como quem espera a quarta.",
               "I landed three spears on it. It looked at me like it was waiting for the fourth.",
               "Le acerté tres lanzas. Me miró como quien espera la cuarta.")),
+    "daspletosaurus": dict(
+        sci=("Viveu há 77 a 75 milhões de anos em Alberta e Montana, nas florestas de rio do Parque dos Dinossauros. 8,5 a 9 m e até 3,8 toneladas; crânio de 1 m, maciço para o tamanho, com bossas chifrudas atrás dos olhos e os maiores dentes da família. Leitos de ossos com vários indivíduos sugerem que andava em grupo.",
+             "Lived 77 to 75 million years ago in Alberta and Montana, in the river forests of Dinosaur Park. 8.5 to 9 m and up to 3.8 tonnes; a 1 m skull, massive for its size, with horned bosses behind the eyes and the biggest teeth of the family. Bonebeds with several individuals suggest it moved in groups.",
+             "Vivió hace 77 a 75 millones de años en Alberta y Montana, en los bosques fluviales del Parque de los Dinosaurios. 8,5 a 9 m y hasta 3,8 toneladas; cráneo de 1 m, macizo para su tamaño, con protuberancias cornudas detrás de los ojos y los dientes más grandes de la familia. Lechos de huesos con varios individuos sugieren que andaba en grupo."),
+        behavior=("Florestas, rios e planícies, sempre em casal: quando um escolhe a presa, o outro vem junto. Ruge ao travar o alvo. Caça o que é menor que ele.",
+                  "Forests, rivers and plains, always as a pair: when one picks the prey, the other comes along. It roars when it locks on. It hunts what is smaller than itself.",
+                  "Bosques, ríos y llanuras, siempre en pareja: cuando uno elige la presa, el otro viene también. Ruge al fijar el objetivo. Caza lo que es más pequeño que él."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem, com o casal por perto, e criar o filhote com carne crua.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest, the pair nearby, and raise the baby on raw meat.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje, con la pareja cerca, y criar a la cría con carne cruda."),
+        utility=("Montaria de combate média: mais rápida que o T. rex e dois domados caçam como o casal selvagem.",
+                 "A mid-sized combat mount: faster than the T. rex, and two tame ones hunt like the wild pair.",
+                 "Montura de combate mediana: más rápida que el T. rex, y dos domados cazan como la pareja salvaje."),
+        note=("Nunca é um. Quando você vê um, o outro já te viu.",
+              "It is never one. When you see one, the other has already seen you.",
+              "Nunca es uno. Cuando ves uno, el otro ya te vio.")),
 }
 
 ERAS = {
