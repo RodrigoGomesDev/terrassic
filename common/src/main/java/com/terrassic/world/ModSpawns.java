@@ -52,6 +52,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Albertosaurus       taiga, forest, plains           2       2-4
  *  Majungasaurus       jungle, savanna, river          2       1-2
  *  Dakotaraptor        plains, forest, river           3       2-3
+ *  Troodon             forest, taiga, plains           5       1-3
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -110,6 +111,7 @@ public final class ModSpawns {
         placement(ModEntities.ALBERTOSAURUS);
         placement(ModEntities.MAJUNGASAURUS);
         placement(ModEntities.DAKOTARAPTOR);
+        placement(ModEntities.TROODON);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -242,6 +244,9 @@ public final class ModSpawns {
             }
             if (plains || forest || river) {
                 add(props, ModEntities.DAKOTARAPTOR.get(), 3, 2, 3);
+            }
+            if (forest || taiga || plains) {
+                add(props, ModEntities.TROODON.get(), 5, 1, 3);
             }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);

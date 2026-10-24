@@ -36,7 +36,7 @@ ALL = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsog
        "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "tylosaurus", "elasmosaurus",
        "xiphactinus", "archelon", "hesperornis", "deinosuchus", "baurusuchus",
        "edmontosaurus", "corythosaurus", "styracosaurus", "euoplocephalus", "protoceratops", "struthiomimus", "thescelosaurus", "pachyrhinosaurus", "therizinosaurus", "deinocheirus", "alamosaurus", "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus",
-       "giganotosaurus", "carcharodontosaurus", "carnotaurus", "tarbosaurus", "daspletosaurus", "albertosaurus", "majungasaurus", "dakotaraptor"]
+       "giganotosaurus", "carcharodontosaurus", "carnotaurus", "tarbosaurus", "daspletosaurus", "albertosaurus", "majungasaurus", "dakotaraptor", "troodon"]
 
 
 def clean_anim(anim_json):

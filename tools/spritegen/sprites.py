@@ -503,6 +503,18 @@ def spawn_eggs():
     eye(cv, 10, 5, "#e8c040")
     eggs["dakotaraptor"] = cv
 
+    # Troodon: pale grey-green egg (the Egg Mountain clutches) with fine dark speckles and one big golden eye
+    cv = base_egg(None, "#8a8a70", "#e4e2cc")
+    for y in range(2, 14):
+        for x in range(2, 14):
+            if inside(cv, x, y) and (x * 5 + y * 3) % 7 == 0:
+                cv.set(x, y, hexc("#4a4a3a"))
+    for x, y in ((7, 1), (8, 1), (8, 0)):
+        cv.set(x, y, hexc("#6a4a30"))
+    eye(cv, 9, 6, "#f0c850")
+    cv.set(8, 6, hexc("#f0c850")); cv.set(9, 5, hexc("#f0c850")); cv.set(9, 7, hexc("#f0c850"))
+    eggs["troodon"] = cv
+
     # Parasaurolophus: teal egg with the long red crest sweeping back from the top
     cv = base_egg(None, "#46584c", "#d8d4b0")
     for i, (x, y) in enumerate(((7, 4), (6, 3), (5, 2), (4, 1), (3, 0))):
@@ -814,7 +826,7 @@ EGG_BLOCK = {
     "euoplocephalus": ("#d4d2b0", "#4a4e3a"),
     "therizinosaurus": ("#c8b898", "#4e4034"),
     "deinocheirus": ("#d8d0bc", "#4a423a"),
-    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#dcc8ac", "#7a4a34"), "carnotaurus": ("#d0ccb4", "#55503f"), "tarbosaurus": ("#d8d0b8", "#5f5648"), "daspletosaurus": ("#ccd0b0", "#4a5038"), "albertosaurus": ("#d4d4c8", "#4e5560"), "majungasaurus": ("#dcc4a8", "#7a3f2c"), "dakotaraptor": ("#b8ac98", "#3a3640"), "parasaurolophus": ("#dfe6d8", "#46584c"),
+    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#dcc8ac", "#7a4a34"), "carnotaurus": ("#d0ccb4", "#55503f"), "tarbosaurus": ("#d8d0b8", "#5f5648"), "daspletosaurus": ("#ccd0b0", "#4a5038"), "albertosaurus": ("#d4d4c8", "#4e5560"), "majungasaurus": ("#dcc4a8", "#7a3f2c"), "dakotaraptor": ("#b8ac98", "#3a3640"), "troodon": ("#e4e2cc", "#8a8a70"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "thescelosaurus": ("#d8d0a8", "#5c5a3a"), "gallimimus": ("#f0ece0", "#9c917c"),
     "struthiomimus": ("#f0e6d0", "#8a5a3a"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),
@@ -1046,7 +1058,7 @@ def weapons():
 
 
 # ------------------------------------------------------------------ hides
-FUZZY = {"velociraptor", "dakotaraptor", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "hesperornis"}  # feathers / pycnofibres
+FUZZY = {"velociraptor", "dakotaraptor", "troodon", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "hesperornis"}  # feathers / pycnofibres
 HIDE_ROWS = {2: ((4, 5), (10, 11)), 3: ((3, 12),), 4: ((2, 13),), 5: ((2, 13),), 6: ((2, 13),), 7: ((2, 13),),
              8: ((2, 13),), 9: ((2, 13),), 10: ((2, 13),), 11: ((3, 12),), 12: ((4, 5), (10, 11))}
 

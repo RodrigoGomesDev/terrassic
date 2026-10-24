@@ -65,6 +65,7 @@ SIZES = {
     "albertosaurus":      dict(real=9.5,  scale=1.43, w=1.9, h=3.6, baby=0.28, shadow=1.8),
     "majungasaurus":      dict(real=7.5,  scale=1.26, w=1.6, h=3.0, baby=0.3,  shadow=1.5),
     "dakotaraptor":       dict(real=5.5,  scale=1.14, w=1.0, h=2.0, baby=0.4,  shadow=0.8),
+    "troodon":            dict(real=2.4,  scale=0.55, w=0.6, h=1.1, baby=0.5,  shadow=0.4),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -134,6 +135,7 @@ GUIDE = {
     "albertosaurus":      dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "majungasaurus":      dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "dakotaraptor":       dict(era="late_cretaceous", diet="carnivore", fossil=3),
+    "troodon":            dict(era="late_cretaceous", diet="carnivore", fossil=4),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -189,6 +191,7 @@ WORLD = {
     "albertosaurus":      dict(biomes=("taiga", "forest", "plains"), weight=2, group=(2, 4), track=10),  # the Dry Island pack
     "majungasaurus":      dict(biomes=("jungle", "savanna", "river"), weight=2, group=(1, 2), track=10),  # Madagascar's seasonal floodplain
     "dakotaraptor":       dict(biomes=("plains", "forest", "river"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain, small packs
+    "troodon":            dict(biomes=("forest", "taiga", "plains"), weight=5, group=(1, 3), track=8),   # Judith River woodland, pairs
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -416,6 +419,14 @@ SPECIES = [
       xp=18, step_height=1.1, head=(45, 35), run=0.02, rideable=True, jump=1.0, ride_offset=1.55, ride_speed=1.35,
       prey="e.getBbWidth() < 1.6F && !(e instanceof Dakotaraptor) && !(e instanceof Velociraptor) && !e.isBaby()",
       pack=True, leap=True, prey_interval=100),
+ dict(id="troodon", cls="Troodon", base="PredatorDinosaur",
+      doc="Troodon formosus - 2.4 m gracile troodontid with the biggest eyes of any dinosaur for its size: a nocturnal hunter of small prey that sleeps through the day and wakes at dusk. Avoids the big predators. Only tameable from a stolen wild egg until the knockout (v0.7); a tame one is the night guard: it attacks hostile mobs around it after dark and its owner nearby sees in the dark while it watches.",
+      attrs=dict(MAX_HEALTH=20, MOVEMENT_SPEED=0.33, ATTACK_DAMAGE=4, FOLLOW_RANGE=28),
+      food="Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON",
+      sounds=("PARROT_AMBIENT", "FOX_HURT", "FOX_DEATH", 0.7, 0.8, 160), step=("WOLF_STEP", 0.3, 1.2),
+      xp=10, head=(50, 40), run=0.03,
+      prey="e.getBbWidth() < 0.9F && !(e instanceof Troodon)",
+      nocturnal=True, night_guard=True, leap=True, prey_interval=80),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -721,6 +732,34 @@ def gen(s, bounds):
     if s.get("leap"):
         imports.add("net.minecraft.world.entity.ai.goal.LeapAtTargetGoal")
         goals.append("        this.goalSelector.addGoal(2, new LeapAtTargetGoal(this, 0.4F));")
+    if s.get("night_guard"):
+        # the night guard (docs/GUARDA.md): a tame adult, awake and standing at night, goes for hostile mobs within ten
+        # blocks (never a creeper, like the wolf); its owner within twelve blocks sees in the dark while it watches.
+        # Owns customServerAiStep: incompatible with roar/display/scoop.
+        assert not (s.get("roar") or s.get("display") or s.get("scoop")), s["id"] + ": night_guard owns customServerAiStep"
+        imports.update({"net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal", "net.minecraft.world.entity.monster.Monster",
+                        "net.minecraft.world.entity.monster.Creeper", "net.minecraft.world.entity.player.Player",
+                        "net.minecraft.world.effect.MobEffectInstance", "net.minecraft.world.effect.MobEffects"})
+        goals.append("        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Monster.class, 10, true, false,\n"
+                     "                e -> this.guardsNow() && !this.isInSittingPose() && !(e instanceof Creeper)));")
+        body.append("""    /** The night guard (docs/GUARDA.md): tame, grown, awake and it is night. */
+    private boolean guardsNow() {
+        return this.isTame() && !this.isBaby() && !this.isSleeping() && this.level().isNight();
+    }
+
+    /** Its owner within twelve blocks sees in the dark while it watches (ambient Night Vision, renewed every two seconds). */
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.tickCount % 40 == 0 && this.guardsNow() && this.getOwner() instanceof Player owner
+                && owner.distanceToSqr(this) < 144.0D) {
+            owner.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 300, 0, true, false, true));
+        }
+    }
+""")
+    if s["id"] == "troodon":
+        imports.add("net.minecraft.world.entity.ai.goal.AvoidEntityGoal")
+        goals.append("        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PredatorDinosaur.class, 12.0F, 1.2D, 1.5D, e -> !this.isTame() && e.getBbWidth() > 1.5F));")
     if s["id"] in ("velociraptor", "dakotaraptor"):
         imports.add("net.minecraft.world.entity.ai.goal.AvoidEntityGoal")
         goals.append("        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Tyrannosaurus.class, 14.0F, 1.2D, 1.5D, e -> !this.isTame()));")

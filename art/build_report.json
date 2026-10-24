@@ -1636,5 +1636,38 @@
    "animation.dakotaraptor.tame"
   ],
   "render_scale": 1.0
+ },
+ "troodon": {
+  "bones": 23,
+  "cubes": 37,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -4.0,
+    -0.08926980155029218,
+    -29.544275353219643
+   ],
+   [
+    4.0,
+    32.1871564961978,
+    39.99998109612815
+   ]
+  ],
+  "animations": [
+   "animation.troodon.idle",
+   "animation.troodon.walk",
+   "animation.troodon.run",
+   "animation.troodon.sit",
+   "animation.troodon.attack",
+   "animation.troodon.knocked_out",
+   "animation.troodon.wake",
+   "animation.troodon.eat",
+   "animation.troodon.beg",
+   "animation.troodon.tame"
+  ],
+  "render_scale": 1.0
  }
 }

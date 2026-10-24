@@ -919,6 +919,22 @@ GUIDE = {
         note=("Pensei que era um Velociraptor longe. Era um Dakotaraptor perto.",
               "I thought it was a Velociraptor far away. It was a Dakotaraptor up close.",
               "Pensé que era un Velociraptor lejos. Era un Dakotaraptor cerca.")),
+    "troodon": dict(
+        sci=("Viveu há 77 a 74 milhões de anos em Montana (Judith River e Two Medicine). Cerca de 2,4 m e 50 kg: pernas muito longas e finas, focinho estreito com muitos dentes pequenos serrilhados, cérebro grande para o porte e os maiores olhos de qualquer dinossauro em proporção, voltados em parte para a frente. Caçador do crepúsculo e da noite. Ninhos com até 24 ovos em pé, meio enterrados, chocados pelo adulto (Egg Mountain).",
+             "Lived 77 to 74 million years ago in Montana (Judith River and Two Medicine). About 2.4 m and 50 kg: very long thin legs, a narrow snout with many small serrated teeth, a big brain for its size and the largest eyes of any dinosaur in proportion, set partly forward. A hunter of dusk and night. Nests of up to 24 eggs standing half-buried, brooded by the adult (Egg Mountain).",
+             "Vivió hace 77 a 74 millones de años en Montana (Judith River y Two Medicine). Unos 2,4 m y 50 kg: patas muy largas y finas, hocico estrecho con muchos dientes pequeños aserrados, cerebro grande para su tamaño y los ojos más grandes de cualquier dinosaurio en proporción, mirando en parte al frente. Cazador del crepúsculo y de la noche. Nidos de hasta 24 huevos de pie, medio enterrados, incubados por el adulto (Egg Mountain)."),
+        behavior=("Floresta, taiga e planície, sozinho ou em trio. Dorme de dia e acorda ao anoitecer; caça o que é pequeno (galinha, coelho, filhotes) e salta sobre a presa. Foge dos predadores grandes.",
+                  "Forest, taiga and plains, alone or in a trio. It sleeps by day and wakes at dusk; it hunts what is small (chicken, rabbit, babies) and leaps onto its prey. It keeps clear of the big predators.",
+                  "Bosque, taiga y llanura, solo o en trío. Duerme de día y despierta al anochecer; caza lo pequeño (gallina, conejo, crías) y salta sobre la presa. Huye de los depredadores grandes."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem e criar o filhote com frango, coelho ou ovo.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest and raise the baby on chicken, rabbit or egg.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje y criar a la cría con pollo, conejo o huevo."),
+        utility=("O guarda noturno: domado e acordado à noite, ataca os monstros em volta (menos creepers) e quem está perto dele enxerga no escuro enquanto ele vigia.",
+                 "The night guard: tame and awake at night, it attacks the monsters around it (not creepers) and whoever stands near it sees in the dark while it watches.",
+                 "El guardia nocturno: domado y despierto de noche, ataca a los monstruos alrededor (menos creepers) y quien está cerca de él ve en la oscuridad mientras vigila."),
+        note=("Os olhos dele acenderam antes da lanterna. Dormi bem pela primeira vez.",
+              "Its eyes lit up before the lantern did. I slept well for the first time.",
+              "Sus ojos se encendieron antes que la linterna. Dormí bien por primera vez.")),
 }
 
 ERAS = {

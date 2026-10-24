@@ -45,6 +45,7 @@ import com.terrassic.entity.Tarbosaurus;
 import com.terrassic.entity.Therizinosaurus;
 import com.terrassic.entity.Thescelosaurus;
 import com.terrassic.entity.Triceratops;
+import com.terrassic.entity.Troodon;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
 import com.terrassic.entity.Velociraptor;
@@ -101,6 +102,7 @@ public final class TerrassicClient {
         renderer(ModEntities.ALBERTOSAURUS, "albertosaurus", Albertosaurus.MODEL_SCALE, Albertosaurus.SHADOW);
         renderer(ModEntities.MAJUNGASAURUS, "majungasaurus", Majungasaurus.MODEL_SCALE, Majungasaurus.SHADOW);
         renderer(ModEntities.DAKOTARAPTOR, "dakotaraptor", Dakotaraptor.MODEL_SCALE, Dakotaraptor.SHADOW);
+        renderer(ModEntities.TROODON, "troodon", Troodon.MODEL_SCALE, Troodon.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

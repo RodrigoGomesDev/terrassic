@@ -107,7 +107,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Comportamento | Domar | Montaria | Uso no jogo | Versão |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 74 | Latenivenatrix | Troodontídeo | 🦖 | Carnívoro | 3,5 m | Predador médio | Agressivo | Ovo | — | Guarda da base |  |
-| 75 | **Troodon** | Troodontídeo | 🦖 | Carnívoro | 2,4 m | Predador médio | Territorial | Ovo | — | Caçador noturno, enxerga no escuro; bom guarda à noite | v0.7 |
+| 75 | **Troodon** | Troodontídeo | 🦖 | Carnívoro | 2,4 m | Predador médio | Territorial | Ovo | ✅ | Caçador noturno, enxerga no escuro; bom guarda à noite | v0.7 |
 | 76 | Zanabazar | Troodontídeo | 🦖 | Carnívoro | 2,3 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 77 | Saurornithoides | Troodontídeo | 🦖 | Carnívoro | 2 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 78 | Talos | Troodontídeo | 🦖 | Carnívoro | 2 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |

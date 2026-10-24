@@ -69,6 +69,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> ALBERTOSAURUS_SPAWN_EGG = egg("albertosaurus", ModEntities.ALBERTOSAURUS);
     public static final RegistrySupplier<Item> MAJUNGASAURUS_SPAWN_EGG = egg("majungasaurus", ModEntities.MAJUNGASAURUS);
     public static final RegistrySupplier<Item> DAKOTARAPTOR_SPAWN_EGG = egg("dakotaraptor", ModEntities.DAKOTARAPTOR);
+    public static final RegistrySupplier<Item> TROODON_SPAWN_EGG = egg("troodon", ModEntities.TROODON);
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_SPAWN_EGG = egg("parasaurolophus", ModEntities.PARASAUROLOPHUS);
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_SPAWN_EGG = egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS);
     public static final RegistrySupplier<Item> THESCELOSAURUS_SPAWN_EGG = egg("thescelosaurus", ModEntities.THESCELOSAURUS);
@@ -121,6 +122,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> ALBERTOSAURUS_HIDE = hide("albertosaurus");
     public static final RegistrySupplier<Item> MAJUNGASAURUS_HIDE = hide("majungasaurus");
     public static final RegistrySupplier<Item> DAKOTARAPTOR_HIDE = hide("dakotaraptor");
+    public static final RegistrySupplier<Item> TROODON_HIDE = hide("troodon");
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_HIDE = hide("parasaurolophus");
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_HIDE = hide("pachycephalosaurus");
     public static final RegistrySupplier<Item> THESCELOSAURUS_HIDE = hide("thescelosaurus");
