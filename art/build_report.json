@@ -168,22 +168,22 @@
   "render_scale": 0.3
  },
  "triceratops": {
-  "bones": 25,
-  "cubes": 56,
+  "bones": 30,
+  "cubes": 139,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -11.0,
-    -0.24848177044797914,
-    -44.25544161496309
+    -22.0,
+    4.6530449083981296e-05,
+    -88.27812892663317
    ],
    [
-    11.0,
-    36.224082217454594,
-    44.2066357550258
+    22.0,
+    69.90795507224422,
+    65.57767463509177
    ]
   ],
   "animations": [
@@ -199,7 +199,7 @@
    "animation.triceratops.beg",
    "animation.triceratops.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "stegosaurus": {
   "bones": 25,

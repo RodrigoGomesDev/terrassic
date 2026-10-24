@@ -32,7 +32,8 @@ SIZES = {
     "dilophosaurus":      dict(real=7.0,  scale=1.53, w=1.2, h=2.6, baby=0.35, shadow=1.0),
     "velociraptor":       dict(real=2.07, scale=0.48,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
     "compsognathus":      dict(real=1.25, scale=0.31,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
-    "triceratops":        dict(real=9.0,  scale=1.63, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
+    # Triceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "triceratops":        dict(real=9.0,  scale=0.94, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
     "styracosaurus":      dict(real=5.5,  scale=1.1,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
     # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
@@ -290,7 +291,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.22, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.25, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=20, rideable=True, jump=0.45, ride_offset=1.55, ride_speed=1.05),
+      xp=20, rideable=True, jump=0.45, ride_offset=2.75, ride_speed=1.05),
  dict(id="styracosaurus", cls="Styracosaurus", base="HerbivoreDinosaur",
       doc="Styracosaurus albertensis - 5.5 m horned herbivore with a spiked frill and one long nose horn. Territorial: fights back with the horn. Tamed with plants; ridden or charging at an enemy it breaks the leaves and bushes in its way.",
       attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=2.0, ARMOR=7, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=20),
