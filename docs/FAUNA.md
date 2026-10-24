@@ -43,7 +43,8 @@ o jogador e os cães do Minecraft; os dinossauros ainda comem bife vanilla.
 Checklist por espécie: modelo e animações no padrão 2x (textura 1 px = 1 px do jogo, anatomia pesquisada, como o
 T. rex v3 da thread de tamanhos), `SIZES/GUIDE/WORLD/SPECIES` em `gen_species.py`, nomes e loot em `gen_resources.py`,
 ovo v5 em `egg_designs.py` (+ `NEW_SPECIES`), linha `SKULLS` e `HIDE_PATTERN` em `blocks.py`, lore nos 3 idiomas,
-`TAMANHOS/ROSTER/ROADMAP/bestiário`. Os geradores de mundo (`gen_world.py`) entram com a tag `terrassic:habitat/<palavra>`
+`TAMANHOS/ROSTER/ROADMAP/bestiário`, motivo do fóssil em `FOSSIL_MOTIF` (`tools/spritegen/science.py`; sem ele o gerador usa um
+motivo pela dieta e `gen_resources.py` falha se algum modelo de item apontar para textura inexistente). Os geradores de mundo (`gen_world.py`) entram com a tag `terrassic:habitat/<palavra>`
 pela tabela WORLD, então a fauna nasce nos biomas do Cretáceo sem mexer na frente de mundo. A densidade "estilo ARK"
 é da frente config-ark (`docs/REGRAS.md`).
 
