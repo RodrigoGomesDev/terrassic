@@ -30,6 +30,7 @@ O `build.py` falha se uma textura ficar a mais de 14 de brilho ou 20 de contrast
 | `plants.py`, `plantart.py` | Plantas em pixel art à mão (grades de texto) pintadas pelo ajuste: cavalinhas, samambaias, cipó |
 | `workshop.py` | Bancada, fornalha e tocha |
 | `masonry.py` | Construção e chão: fiadas de pedra (musgo, rachaduras, amonite entalhada), tijolos, musgo, terra arada, caminho com pegada, palha, neve, cana, vitória-régia |
+| `flowers.py` | As 12 flores pequenas em formas de angiosperma primitiva (taça de magnólia, aberta, sininhos, umbela, estrela, tulipa), mantendo a cor do corante |
 | `rocks.py` | Rochas do vanilla (cristais, lapilli, lâminas) e os 16 minérios em veios sobre a pedra e a ardósia do pacote |
 | `build.py` | Tabela textura do vanilla -> desenho, blockstates com variantes sorteadas, `pack.mcmeta`, `pack.png` e conferências |
 | `pack_lang.py` | Nome e descrição de cada pacote nos 3 idiomas (o `gen_resources.py` junta no lang do mod) |

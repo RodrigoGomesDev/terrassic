@@ -11,7 +11,8 @@ Batch 2 adds the eight woods (bark, rings, stripped, planks, with rare log varia
 lichen on oak, moss on jungle), the leaves, the ground plants (horsetails and ferns), the crafting table, the
 furnace and the torch. Batch 3 adds the vanilla rocks (granite, diorite, andesite, tuff, deepslate, calcite)
 and the sixteen ores, in natural veins on the pack's own stone and deepslate, plus the chest. Batch 3b adds the
-building and ground blocks (stone bricks, bricks, moss, farmland, path, hay, snow, sugar cane, lily pad).
+building and ground blocks (stone bricks, bricks, moss, farmland, path, hay, snow, sugar cane, lily pad);
+batch 3c the twelve small flowers in early-angiosperm shapes.
 The pack name and description are lang keys of the mod (pack.terrassic.<era>), so they read in all three languages.
 """
 import json
@@ -26,6 +27,7 @@ import cretaceo as C  # noqa: E402
 import preview as P  # noqa: E402
 import leaves as LV  # noqa: E402
 import plants as PL  # noqa: E402
+import flowers as FL  # noqa: E402
 import masonry as MS  # noqa: E402
 import rocks as RK  # noqa: E402
 import tex as T  # noqa: E402
@@ -78,6 +80,9 @@ for _name, _img in list(LV.ALL.items()) + list(PL.ALL.items()) + list(WS.ALL.ite
 # batch 3: rocks and ores
 for _name, _img in RK.ALL.items():
     CRETACEO[_name] = (_img, True)
+# batch 3c: flowers (cutouts)
+for _name, _img in FL.ALL.items():
+    CRETACEO[_name] = (_img, False)
 # batch 3b: building and ground (cutouts and the path side are not seamless tiles)
 for _name, _img in MS.ALL.items():
     CRETACEO[_name] = (_img, _name not in ("sugar_cane", "lily_pad", "dirt_path_side", "chiseled_stone_bricks"))
@@ -181,7 +186,8 @@ def check(name, img, natural):
 # the workshop faces are drawings (tools on wood, a lit kiln, a torch), judged by eye rather than by the numbers
 # deep coal and iron: our deepslate holds fewer, smaller blebs than vanilla's big spots, by design
 OFF_TARGET = {"grass_block_side", "crafting_table_side", "crafting_table_front", "furnace_front_on", "torch",
-              "deepslate_coal_ore", "deepslate_iron_ore"}
+              "deepslate_coal_ore", "deepslate_iron_ore"} | set(FL.ALL)
+# flowers are small drawings whose colour is their dye: judged by eye, like the workshop
 
 
 def run_checks(table, extra):
@@ -375,6 +381,12 @@ def preview_batch3(era, table):
     items = [(n, P.tint(table[n][0], tints[n]) if n in tints else table[n][0]) for n in MS.ALL]
     save_png(P.sheet(items, f"Terrassic: pacote {NAMES[era]}, construção e chão", cols=8),
              os.path.join(PREVIEWS, f"{era}_construcao_chao.png"))
+    meadow = []
+    for n in FL.ALL:
+        bg = Image.new("RGBA", (16, 16), (110, 150, 80, 255))
+        bg.alpha_composite(table[n][0])
+        meadow.append((n, bg))
+    save_png(P.sheet(meadow, f"Terrassic: pacote {NAMES[era]}, flores", cols=6), os.path.join(PREVIEWS, f"{era}_flores.png"))
 
 
 def build(era, table, extra):
