@@ -2613,7 +2613,39 @@ def tame_cap(name):
     return next((cap for key, cap in TAME_CAPS if key in name), 68.0)
 
 
+def from_image(img):
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            c = img.getpixel((x, y))
+            if c[3] > 0:
+                cv.set(x, y, tuple(c))
+    return cv
+
+
+def seed_of(name):
+    return sum((i + 1) * ord(ch) for i, ch in enumerate(name)) % 9973
+
+
+def fossil_on_rock(sid, rock_img, old):
+    """The skull and its dug-out groove from the old drawing, laid into the new rock face of its era."""
+    rows = skull_rows(sid)
+    out = from_image(rock_img)
+    for y in range(N):
+        for x in range(N):
+            near = any(0 <= y + dy < N and 0 <= x + dx < N and rows[y + dy][x + dx] != "."
+                       for dx in (-1, 0, 1) for dy in (-1, 0, 1))
+            if near:
+                out.set(x, y, old.get(x, y))
+    return out
+
+
 def build():
+    """Surfaces (rocks, woods, thatch, daub, plaster, earth, soils, amber, hides) come from the texpack engine
+    (tools/texpack/blocos.py), fitted to the vanilla block of the same role; the drawn motifs (skulls, totems,
+    paintings, doors, pots, plants...) are drawn here and tamed to vanilla contrast."""
+    sys.path.insert(0, os.path.join(ROOT, "tools", "texpack"))
+    import blocos as BL  # noqa: E402
     out = {}
     for rid in ROCKS:
         out.update(rock_textures(rid))
@@ -2628,6 +2660,23 @@ def build():
     out.update(amber_textures())
     out.update(soil_textures())
     out = {name: pk.tame(cv, tame_cap(name)) for name, cv in out.items()}  # vanilla-like contrast
+    engine = BL.textures(inclusions=INCLUSIONS)
+    for sid in SPECIES:
+        engine[f"{sid}_hide_rug"] = BL.hide(HIDE_PATTERN.get(sid, "scales"), species_ramp(sid)[2], seed_of(sid))
+        rock = SKULL_ERA_ROCK.get(sid, "limestone")
+        out[f"{sid}_skull_fossil"] = fossil_on_rock(sid, engine[rock], out[f"{sid}_skull_fossil"])
+    for hid, (src, pattern) in GENERIC_HIDES.items():
+        colour = species_ramp(src)[2] if isinstance(src, str) else src[2]
+        skin = from_image(BL.hide(pattern, colour, seed_of(hid), muted=0 if pattern == "plain" else 0.35))
+        out[f"{hid}_frame"] = framed(skin)
+        if hid != "rawhide":
+            out[f"{hid}_panel"] = framed(skin, top=False)
+    for name, img in engine.items():
+        if name not in out:
+            raise SystemExit(f"texpack drew {name}, which no block uses")
+        out[name] = from_image(img)
+    for name, msg in BL.drift(engine).items():
+        print("  off vanilla:", name, msg)
     for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
     for tid in WOODS:
