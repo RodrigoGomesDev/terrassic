@@ -2,6 +2,7 @@
 Behaviour that is shared lives in DinosaurEntity / HerbivoreDinosaur / PredatorDinosaur; here each species only
 sets numbers, food, sounds and a few overrides. Re-run after editing SPECIES:  python3 gen_species.py
 """
+import hashlib
 import json
 import os
 import re
@@ -56,6 +57,7 @@ SIZES = {
     "opisthocoelicaudia": dict(real=12.0, scale=1.56, w=2.6, h=3.6, baby=0.15, shadow=2.8),
     # Dreadnoughtus schrani: 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015); the 11 m neck carried high.
     "dreadnoughtus":      dict(real=26.0, scale=2.69, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
+    "giganotosaurus":     dict(real=13.0, scale=1.75, w=2.4, h=4.4, baby=0.25, shadow=2.3),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -117,6 +119,7 @@ GUIDE = {
     "argentinosaurus":    dict(era="late_cretaceous", diet="herbivore", fossil=1),
     "opisthocoelicaudia": dict(era="late_cretaceous", diet="herbivore", fossil=3),
     "dreadnoughtus":      dict(era="late_cretaceous", diet="herbivore", fossil=2),
+    "giganotosaurus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -164,6 +167,7 @@ WORLD = {
     "argentinosaurus":    dict(biomes=("savanna", "plains"), weight=1, group=(1, 1), track=18),  # one at a time, and rarely
     "opisthocoelicaudia": dict(biomes=("desert", "badlands", "savanna"), weight=2, group=(1, 3), track=14),  # the Gobi
     "dreadnoughtus":      dict(biomes=("plains", "forest", "savanna"), weight=1, group=(1, 2), track=16),  # temperate Patagonia
+    "giganotosaurus":     dict(biomes=("badlands", "savanna", "desert"), weight=1, group=(1, 2), track=10),  # the dry lands (HISTORIA)
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -327,6 +331,14 @@ SPECIES = [
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 400), step=("RAVAGER_STEP", 1.3, 0.45),
       xp=56, step_height=1.8, head=(20, 30), rideable=True, platform=True, jump=0.0, ride_offset=3.4, ride_forward=0.2, ride_speed=0.95, call=True),
+ dict(id="giganotosaurus", cls="Giganotosaurus", base="PredatorDinosaur",
+      doc="Giganotosaurus carolinii - 13 m carcharodontosaur of the dry lands, as long as the T. rex and leaner, with a long low skull and blade teeth. Hunts in loose pairs; the more it bleeds the harder it bites (rage). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
+      attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.2, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.7, 1.9, 240), step=("RAVAGER_STEP", 0.9, 0.65),
+      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.15,
+      prey="!(e instanceof Giganotosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
+      roar=True, rage=True, pack=True, prey_interval=200),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -504,6 +516,8 @@ def gen(s, bounds):
         body.append(f"    private static final Ingredient FOOD = Ingredient.of({s['food']});")
     if s.get("roar") or s.get("display"):
         body.append("    private int displayCooldown;")
+    if s.get("rage"):
+        body.append('    private static final UUID RAGE_ID = UUID.fromString("7c1e5a3e-6b8d-4b1f-9a2e-%s");' % hashlib.md5(s["id"].encode()).hexdigest()[:12])
     body.append("")
     body.append(f"    public {cls}(EntityType<? extends {cls}> type, Level level) {{")
     body.append("        super(type, level);")
@@ -673,6 +687,23 @@ def gen(s, bounds):
 """)
     if s.get("pack"):
         body.append("    @Override\n    protected boolean packHunter() {\n        return true;\n    }\n")
+    if s.get("rage"):
+        imports.update(["java.util.UUID", "net.minecraft.util.Mth", "net.minecraft.world.entity.ai.attributes.AttributeInstance",
+                        "net.minecraft.world.entity.ai.attributes.AttributeModifier"])
+        body.append("""    /** Rage: the attack grows with the missing health, up to +60% at death's door (recomputed with every change). */
+    @Override
+    public void setHealth(float health) {
+        super.setHealth(health);
+        AttributeInstance attack = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (attack != null) {
+            attack.removeModifier(RAGE_ID);
+            float missing = 1.0F - Mth.clamp(health / this.getMaxHealth(), 0.0F, 1.0F);
+            if (missing > 0.05F) {
+                attack.addTransientModifier(new AttributeModifier(RAGE_ID, "Rage", 0.6D * missing, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            }
+        }
+    }
+""")
     if s.get("call"):
         imports.add("net.minecraft.world.damagesource.DamageSource")
         call = "this.callOut()" if s.get("calm") else 'triggerAnim(ACTION_CONTROLLER, "call")'

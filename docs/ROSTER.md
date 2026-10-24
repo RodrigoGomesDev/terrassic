@@ -145,6 +145,8 @@ Sistemas: **nocaute** (zarabatana com dardo de narcótico, boleadeira e ervas so
 | **Mononykus** | 🦖 | Insetívoro | Comida | 🦜 | Cava cupinzeiros; acha insetos para isca | 1 m |
 | **Didelphodon** | 🐾 | Onívoro | Comida | — | Mamífero que rouba ovos; domesticado, acha ovos perdidos | 0,8 m |
 
+Progresso: Giganotosaurus ✅ (fase 70: carcarodontossauro de 13 m no rig dos grandes terópodes, crânio baixo com cristas, três garras, pele ocre mosqueada e cauda em faixas; terras secas em pares (matilha), ruge ao escolher a presa, fúria (mordida até +60% conforme perde vida); só pelo ovo roubado até o nocaute; montaria).
+
 ## v0.8 Mundo Terrassic
 
 Sem criaturas novas. Sistemas: tipo de mundo "Terrassic" (sem vilas e sem animais vanilla) e suporte ao mundo normal; biomas e flora do Cretáceo; estruturas (Cratera de Chegada, Acampamentos e Refúgio da Katarina com o Mate, Sítio Fossilífero, Colônia de Ninhos, Ilhas do Tempo, Ossuário); páginas da Katarina por jogador; Tempestades da Fenda; céu, névoa, partículas, sons e música; HUD próprio; tela de título; pacote de texturas embutido.

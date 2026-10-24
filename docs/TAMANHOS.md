@@ -41,6 +41,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Argentinosaurus (v0.6) | 30-35 m, 65-75 t (Sellers et al. 2013; Paul 2019) | novo | **35,0 x 15,1** (cabeça erguida) | 6,0 x 10,0 | 8% |
 | Opisthocoelicaudia (v0.6) | 11-12 m, ~8,5 t (Borsuk-Bialynicka 1977; Paul 2010) | novo | **12,0 x 3,6** (pescoço baixo; 8,2 empinado) | 2,6 x 3,6 | 15% |
 | Dreadnoughtus (v0.6) | 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015) | novo | **26,0 x 15,0** (pescoço de 11 m erguido) | 4,5 x 9,0 | 10% |
+| Giganotosaurus (v0.7) | 12-13 m, 6-8 t (Coria & Salgado 1995; Calvo & Coria 1998, dentário MUCPv-95) | novo | **13,0 x 4,6** | 2,4 x 4,4 | 25% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

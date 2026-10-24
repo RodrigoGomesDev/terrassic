@@ -791,6 +791,22 @@ GUIDE = {
         note=("O berro dele faz o vidro do laboratório vibrar. A três quilômetros.",
               "Its bellow makes the lab windows hum. From three kilometres away.",
               "Su bramido hace vibrar los vidrios del laboratorio. A tres kilómetros.")),
+    "giganotosaurus": dict(
+        sci=("Viveu há 99 a 95 milhões de anos na Patagônia argentina. Uns 13 m e 6 a 8 toneladas, tão comprido quanto o T. rex e mais esguio; crânio baixo e estreito de 1,8 m com cristas rugosas sobre o focinho e dentes em lâmina, feitos para cortar, não para esmagar. Braços de três dedos.",
+             "Lived 99 to 95 million years ago in Argentine Patagonia. About 13 m and 6 to 8 tonnes, as long as the T. rex and leaner; a low narrow 1.8 m skull with rugose ridges over the snout and blade-like teeth made for slicing, not crushing. Three-fingered arms.",
+             "Vivió hace 99 a 95 millones de años en la Patagonia argentina. Unos 13 m y 6 a 8 toneladas, tan largo como el T. rex y más esbelto; cráneo bajo y estrecho de 1,8 m con crestas rugosas sobre el hocico y dientes en hoja, hechos para cortar, no para triturar. Brazos de tres dedos."),
+        behavior=("O senhor das terras secas: cerrado, savana e deserto, sozinho ou em pares que caçam juntos. Ruge ao escolher a presa. Quanto mais sangra, mais forte morde: um Giganotossauro ferido é o mais perigoso.",
+                  "The lord of the dry lands: badlands, savanna and desert, alone or in pairs that hunt together. It roars when it picks its prey. The more it bleeds, the harder it bites: a wounded Giganotosaurus is the most dangerous one.",
+                  "El señor de las tierras secas: tierras baldías, sabana y desierto, solo o en parejas que cazan juntas. Ruge al elegir la presa. Cuanto más sangra, más fuerte muerde: un Giganotosaurio herido es el más peligroso."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, o caminho é roubar um ovo do ninho selvagem, com os pais por perto, e criar o filhote com carne crua.",
+                "Grown, only by knockout (coming). Until then the way is to steal an egg from the wild nest, parents nearby, and raise the baby on raw meat.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces el camino es robar un huevo del nido salvaje, con los padres cerca, y criar a la cría con carne cruda."),
+        utility=("Montaria de guerra das terras secas, mais rápida que o T. rex e mais perigosa quando ferida.",
+                 "War mount of the dry lands, faster than the T. rex and more dangerous when hurt.",
+                 "Montura de guerra de las tierras secas, más rápida que el T. rex y más peligrosa cuando está herida."),
+        note=("Feri um com a lança e ele ficou mais rápido. Não repito.",
+              "I wounded one with the spear and it got faster. Not doing that again.",
+              "Herí a uno con la lanza y se volvió más rápido. No lo repito.")),
 }
 
 ERAS = {
