@@ -2,6 +2,8 @@
 
 Este é o plano de todas as criaturas do mod e em que versão cada uma entra. O mod é organizado **por era**, seguindo a história em `docs/HISTORIA.md`: cada era vira um capítulo jogável do começo ao fim antes de começar a próxima (ver `docs/ESCOPO.md`). O estilo é o do ARK: mundo primitivo, criaturas selvagens perigosas, domesticação, montarias e criaturas com utilidade. Tudo com cara de época antiga: madeira, pedra, osso, couro e sílex, sem tecnologia moderna.
 
+**Bestiário completo:** a lista de tudo o que pode entrar no mod, com 200 a mais de 300 criaturas por era (1.207 no total, incluindo animais pré-históricos que não são dinossauros), está em `docs/bestiario/`. Este arquivo continua sendo o plano de versões: quando uma criatura do bestiário ganhar versão, ela entra aqui.
+
 Para mudar a lista, edite este arquivo. Quando uma espécie for implementada, marque-a como ✅ e adicione-a em `tools/javagen/gen_species.py`.
 
 ## Legenda

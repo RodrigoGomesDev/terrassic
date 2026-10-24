@@ -35,9 +35,12 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   Comparação visual: `art/tamanhos/comparacao_tamanhos.png`. A `render_scale` dos arquivos de tools/modelgen
   é só a escala de autoria (o "In game: scale ~..." nos comentários de lá está desatualizado).
 - `block/DinoEggBlock` (choca em 3 estágios, filhote "marca" o jogador mais próximo).
-- Blocos de construção primitivos em `ModBlocks.BUILDING` (aba própria `ModTabs.BUILDING`): palha (+escada, laje),
-  esteira de palha, tapete de pele, pau a pique, paliçada de troncos, pedra empilhada (+escada, laje, muro),
-  cerca de osso, painel de couro. Só materiais da época primitiva: nada de vidro, tijolo cozido ou metal.
+- Blocos de construção primitivos em `ModBlocks.BUILDING` (aba própria `ModTabs.BUILDING`), registrados pela lista
+  GERADA `registry/BuildingBlocks.java`. Meta: catálogo de 336 blocos em 7 fases (doc "Terrassic — Catálogo de blocos
+  primitivos"). Regras do Rodrigo: realistas, só materiais da época, e NUNCA cópia de bloco vanilla (por isso a
+  pedra empilhada de pedregulho e o tapete de pele genérico saíram). Feito: lote 1 (palha, esteira, pau a pique,
+  paliçada, cerca de osso, painel de couro) + fase 1 de pedras (calcário, folhelho, giz, sílex: natural, empilhada,
+  lajeado, empilhada com musgo, com escada/laje/muro), com veios no mundo (sílex nasce dentro do giz).
 - `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.
@@ -61,9 +64,11 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
 - Ciência: `tools/javagen/gen_science.py` (itens, Rocha Fossilífera, Mesa, receitas, worldgen, conquistas, `Lore.java`) e
   `tools/javagen/lore.py` (TODO o texto de história, Guia, objetivos e tela, nos 3 idiomas). Sprites em `tools/spritegen/science.py`.
   Espécie nova precisa de entrada em `GUIDE` (gen_species.py), em `lore.GUIDE` e um motivo em `FOSSIL_MOTIF` (science.py).
-- Blocos de construção: texturas em `tools/spritegen/blocks.py`; JSON (modelos, blockstates, loot, receitas, tags
-  minecraft:mineable/walls/fences/stairs/slabs) em `tools/javagen/gen_blocks.py`, chamado por gen_resources.py
-  (que também junta o lang). Para um bloco novo: tabela BLOCKS em gen_blocks.py + textura em blocks.py + registro em ModBlocks.
+- Blocos de construção: texturas em `tools/spritegen/blocks.py` (ruído e Voronoi tileáveis, paleta do material real,
+  luz de cima à esquerda); tudo o resto vem da tabela BLOCKS de `tools/javagen/gen_blocks.py` (modelos, blockstates,
+  loot, receitas de bancada e cortador de pedra, tags, veios de rocha, lang pt/en/es e o Java `BuildingBlocks.java`),
+  chamado por gen_resources.py. Bloco novo: linha/família em gen_blocks.py + textura em blocks.py; material novo,
+  case em `ModBlocks.material()`. Não editar BuildingBlocks.java à mão.
 - Tudo é autoral e gerado por código; referências só de medidas (Wikipedia). Não copiar arte de terceiros.
 
 ## Espécies (12)
@@ -82,6 +87,8 @@ Montáveis: T. rex, Triceratops, Brachiosaurus, Parasaurolophus, Gallimimus.
 
 ## Roadmap e lista de criaturas
 A lista completa das criaturas (152, organizadas POR ERA, seguindo a história) e a versão de cada uma estão em `docs/ROSTER.md`.
+O bestiário completo (1.207 criaturas, 200-300+ por era, com animais pré-históricos que não são dinossauros) fica em
+`docs/bestiario/`, gerado por `tools/roster/gen_roster.py` a partir de `tools/roster/roster_data.py` (não edite os .md à mão).
 Consulte e atualize esse arquivo antes de adicionar uma espécie. Cada era é fechada jogável antes da próxima:
 - v0.3–v0.9: Capítulo 1 (Cretáceo Superior, Overworld). v0.3 história + cientista (Caderno de Campo, fósseis, Mesa de Pesquisa,
   Lente de Âmbar, es_es, sons, pulo/tirar sela) + Pteranodon, Mosasaurus, Maiasaura; v0.4 céus; v0.5 Mar Interior; v0.6 manadas,
