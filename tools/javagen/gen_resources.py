@@ -23,6 +23,7 @@ SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearin
     "vegavis": ("Vegavis", "Vegavis", "Vegavis", False),
     "mesodma": ("Mesodma", "Mesodma", "Mesodma", False),
     "basilemys": ("Basilemys", "Basilemys", "Basilemys", False),
+    "enchodus": ("Enchodus", "Enchodus", "Enchodus", None),
     "stegosaurus": ("Stegosaurus", "Estegossauro", "Estegosaurio", True),
     "ankylosaurus": ("Ankylosaurus", "Anquilossauro", "Anquilosaurio", True),
     "euoplocephalus": ("Euoplocephalus", "Euoplocéfalo", "Euoplocephalus", True),
@@ -87,6 +88,9 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "cooked_dino_meat": ("Cooked Dino Meat", "Carne de Dinossauro Assada", "Carne de Dinosaurio Asada", "item/generated"),
     "raw_prime_meat": ("Raw Prime Meat", "Carne Nobre Crua", "Carne Selecta Cruda", "item/generated"),
     "cooked_prime_meat": ("Cooked Prime Meat", "Carne Nobre Assada", "Carne Selecta Asada", "item/generated"),
+    # the fish of the Cretaceous waters (docs/FAUNA.md): Enchodus in the sea (the cod's seat)
+    "enchodus": ("Raw Enchodus", "Enchodus Cru", "Enchodus Crudo", "item/generated"),
+    "cooked_enchodus": ("Cooked Enchodus", "Enchodus Assado", "Enchodus Asado", "item/generated"),
 }
 
 LANG_EXTRA = {
@@ -266,6 +270,7 @@ def main():
         write(f"{D}/recipes/{result}_from_campfire_cooking.json", dict(base, type="minecraft:campfire_cooking", cookingtime=600))
     cooked("raw_dino_meat", "cooked_dino_meat")
     cooked("raw_prime_meat", "cooked_prime_meat")
+    cooked("enchodus", "cooked_enchodus")
 
     # ------------------------------------------------------------- entity loot
     # Cretaceous food (docs/FAUNA.md): there are no cattle, sheep or chickens in the Terrassic world, so every animal
@@ -273,6 +278,7 @@ def main():
     MEAT = {"minecraft:beef": "terrassic:raw_dino_meat", "minecraft:mutton": "terrassic:raw_dino_meat",
             "minecraft:chicken": "terrassic:raw_dino_meat", "minecraft:porkchop": "terrassic:raw_dino_meat"}
     SEA_MEAT = {"mosasaurus", "tylosaurus", "elasmosaurus", "deinosuchus"}  # their "cod" below is their own flesh
+    FISH = {"minecraft:cod": "terrassic:enchodus"}  # the fish the others had in the belly is the Cretaceous one
     PRIME = {  # species: (min, max) prime cuts
         "brachiosaurus": (3, 6), "alamosaurus": (3, 6), "argentinosaurus": (4, 8), "dreadnoughtus": (3, 6), "saltasaurus": (2, 4),
         "opisthocoelicaudia": (2, 4), "tyrannosaurus": (1, 3), "spinosaurus": (1, 3), "giganotosaurus": (1, 3),
@@ -353,6 +359,7 @@ def main():
         "vegavis": [item("terrassic:raw_dino_meat", 1, 1, True), item("minecraft:feather", 1, 3), item("minecraft:bone", 0, 1)],
         "mesodma": [item("terrassic:raw_dino_meat", 0, 1, True), item("minecraft:rabbit_hide", 0, 1), item("minecraft:bone", 0, 1)],
         "basilemys": [item("terrassic:raw_dino_meat", 1, 2, True), item("minecraft:scute", 1, 3), item("minecraft:bone", 1, 2)],
+        "enchodus": [item("terrassic:enchodus", 1, 1, True), item("minecraft:bone", 0, 1)],
     }
     for sid, pools in loot.items():
         if sid in SEA_MEAT:
@@ -360,6 +367,10 @@ def main():
                 for entry in pool["entries"]:
                     if entry["name"] == "minecraft:cod":
                         entry["name"] = "terrassic:raw_dino_meat"
+        else:
+            for pool in pools:
+                for entry in pool["entries"]:
+                    entry["name"] = FISH.get(entry["name"], entry["name"])
         if sid in PRIME:
             pools = pools + [item("terrassic:raw_prime_meat", *PRIME[sid], True)]
         # every species drops its own hide (last pool, so the pools above stay as they are)

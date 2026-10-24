@@ -80,6 +80,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> DIDELPHODON_SPAWN_EGG = egg("didelphodon", ModEntities.DIDELPHODON);
     public static final RegistrySupplier<Item> MESODMA_SPAWN_EGG = egg("mesodma", ModEntities.MESODMA);
     public static final RegistrySupplier<Item> BASILEMYS_SPAWN_EGG = egg("basilemys", ModEntities.BASILEMYS);
+    public static final RegistrySupplier<Item> ENCHODUS_SPAWN_EGG = egg("enchodus", ModEntities.ENCHODUS);
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_SPAWN_EGG = egg("parasaurolophus", ModEntities.PARASAUROLOPHUS);
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_SPAWN_EGG = egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS);
     public static final RegistrySupplier<Item> THESCELOSAURUS_SPAWN_EGG = egg("thescelosaurus", ModEntities.THESCELOSAURUS);
@@ -141,6 +142,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> DIDELPHODON_HIDE = hide("didelphodon");
     public static final RegistrySupplier<Item> MESODMA_HIDE = hide("mesodma");
     public static final RegistrySupplier<Item> BASILEMYS_HIDE = hide("basilemys");
+    public static final RegistrySupplier<Item> ENCHODUS_HIDE = hide("enchodus");
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_HIDE = hide("parasaurolophus");
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_HIDE = hide("pachycephalosaurus");
     public static final RegistrySupplier<Item> THESCELOSAURUS_HIDE = hide("thescelosaurus");
@@ -189,6 +191,13 @@ public final class ModItems {
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
                     .food(new FoodProperties.Builder().nutrition(10).saturationMod(0.9F).meat()
                             .effect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0), 1.0F).build())));
+    // The fish of the Cretaceous waters: Enchodus in the sea (the cod's seat; raw and cooked like cod).
+    public static final RegistrySupplier<Item> ENCHODUS = ITEMS.register("enchodus",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).build())));
+    public static final RegistrySupplier<Item> COOKED_ENCHODUS = ITEMS.register("cooked_enchodus",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build())));
 
     // ---- archaic weapons
     public static final RegistrySupplier<Item> FLINT_KNIFE = ITEMS.register("flint_knife",

@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -31,7 +32,7 @@ public class Vegavis extends FlyingDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.33F;
     public static final float SHADOW = 0.2F;
-    private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.SWEET_BERRIES, Items.COD);
+    private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.SWEET_BERRIES, Items.COD, ModItems.ENCHODUS.get());
 
     public Vegavis(EntityType<? extends Vegavis> type, Level level) {
         super(type, level);

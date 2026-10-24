@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,7 +33,7 @@ public class Deinocheirus extends HerbivoreDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.72F;
     public static final float SHADOW = 2.2F;
-    private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES);
+    private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES, ModItems.ENCHODUS.get());
 
     public Deinocheirus(EntityType<? extends Deinocheirus> type, Level level) {
         super(type, level);

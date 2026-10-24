@@ -1951,5 +1951,38 @@
    "animation.basilemys.tame"
   ],
   "render_scale": 0.5
+ },
+ "enchodus": {
+  "bones": 18,
+  "cubes": 63,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.459852265398013,
+    1.8734519168502461,
+    -42.0
+   ],
+   [
+    9.459852265398013,
+    34.0,
+    51.44398377718777
+   ]
+  ],
+  "animations": [
+   "animation.enchodus.idle",
+   "animation.enchodus.walk",
+   "animation.enchodus.run",
+   "animation.enchodus.sit",
+   "animation.enchodus.attack",
+   "animation.enchodus.knocked_out",
+   "animation.enchodus.wake",
+   "animation.enchodus.eat",
+   "animation.enchodus.beg",
+   "animation.enchodus.tame"
+  ],
+  "render_scale": 0.2
  }
 }

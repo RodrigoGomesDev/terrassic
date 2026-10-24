@@ -590,6 +590,15 @@ def spawn_eggs():
     eye(cv, 10, 12, "#3a2a14")
     eggs["basilemys"] = cv
 
+    # Enchodus: silver egg with a blue-green cap, a gold eye and the fangs over the lip (16x16 fallback)
+    cv = base_egg(None, "#3c6a6e", "#eef0ea")
+    for x in range(4, 12):
+        if inside(cv, x, 9):
+            cv.set(x, 9, hexc("#f6f2e6" if x % 2 else "#8a3844"))
+    cv.set(6, 10, hexc("#f6f2e6")); cv.set(9, 10, hexc("#f6f2e6"))
+    eye(cv, 10, 5, "#e0c060")
+    eggs["enchodus"] = cv
+
     # Parasaurolophus: teal egg with the long red crest sweeping back from the top
     cv = base_egg(None, "#46584c", "#d8d4b0")
     for i, (x, y) in enumerate(((7, 4), (6, 3), (5, 2), (4, 1), (3, 0))):
@@ -940,7 +949,7 @@ EGG_BLOCK = {
     "pachyrhinosaurus": ("#c8c4b8", "#3c4044"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
     "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),
-    "ichthyornis": ("#e4ebe8", "#4a4a4c"), "vegavis": ("#e8e0c8", "#7a4a2e"), "mesodma": ("#e2d8c0", "#6a5a44"), "basilemys": ("#c8b878", "#4e4a30"),
+    "ichthyornis": ("#e4ebe8", "#4a4a4c"), "vegavis": ("#e8e0c8", "#7a4a2e"), "mesodma": ("#e2d8c0", "#6a5a44"), "basilemys": ("#c8b878", "#4e4a30"), "enchodus": ("#eef0ea", "#3c6a6e"),
 }
 
 
@@ -1226,6 +1235,53 @@ def meats():
     return out
 
 
+# ------------------------------------------------------------------ the fish of the Cretaceous waters (docs/FAUNA.md)
+FISH_ROWS = {  # 16x16, side view, head to the right; . empty, b body, d back, c belly, f fin, e eye, p pupil, t tooth, m mouth
+    "enchodus": [
+        "................",
+        "................",
+        "........ff......",
+        ".......fff......",
+        "f....ddddddddd..",
+        "ff.dddddddddddd.",
+        "fffbbbbbbbbbdeed",
+        "ffbbbbbbbbbbbbpe",
+        "ffbccccccccccbmm",
+        "f.cccccccccccmtt",
+        "f...ccccccccc.t.",
+        "......ff........",
+        "......ff........",
+        "................",
+        "................",
+        "................",
+    ],
+}
+
+
+def fish_sprite(rows, pal):
+    cv = Canvas()
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch != ".":
+                cv.set(x, y, pal[ch])
+    return cv
+
+
+def fishes():
+    """raw and cooked Enchodus (and the river fish later): the item sprites of the Cretaceous fish."""
+    out = {}
+    raw = {"b": hexc("#b8c4c0"), "d": hexc("#3c6a6e"), "c": hexc("#eef0ea"), "f": hexc("#5a7a7c"),
+           "e": hexc("#e0c060"), "p": hexc("#0f0c0a"), "t": hexc("#f6f2e6"), "m": hexc("#8a3844")}
+    out["enchodus"] = fish_sprite(FISH_ROWS["enchodus"], raw)
+    ckd = {"b": hexc("#c09058"), "d": hexc("#8a5a30"), "c": hexc("#e0c090"), "f": hexc("#6e4a28"),
+           "e": hexc("#f0e0b0"), "p": hexc("#3a2a18"), "t": hexc("#f6f2e6"), "m": hexc("#5a3517")}
+    out["cooked_enchodus"] = fish_sprite(FISH_ROWS["enchodus"], ckd)
+    for name, cv in out.items():
+        cv.outline(0.42)
+        cv.save(os.path.join(TEX, "item", f"{name}.png"))
+    return out
+
+
 # ------------------------------------------------------------------ hides
 FUZZY = {"velociraptor", "dakotaraptor", "troodon", "oviraptor", "citipati", "mononykus", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "hesperornis"}  # feathers / pycnofibres
 HIDE_ROWS = {2: ((4, 5), (10, 11)), 3: ((3, 12),), 4: ((2, 13),), 5: ((2, 13),), 6: ((2, 13),), 7: ((2, 13),),
@@ -1298,6 +1354,7 @@ if __name__ == "__main__":
     egg_blocks()
     weapons()
     meats()
+    fishes()
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)

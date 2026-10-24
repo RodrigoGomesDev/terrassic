@@ -25,6 +25,7 @@ import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Dreadnoughtus;
 import com.terrassic.entity.Edmontosaurus;
 import com.terrassic.entity.Elasmosaurus;
+import com.terrassic.entity.Enchodus;
 import com.terrassic.entity.Euoplocephalus;
 import com.terrassic.entity.Gallimimus;
 import com.terrassic.entity.Giganotosaurus;
@@ -120,6 +121,7 @@ public final class TerrassicClient {
         renderer(ModEntities.DIDELPHODON, "didelphodon", Didelphodon.MODEL_SCALE, Didelphodon.SHADOW);
         renderer(ModEntities.MESODMA, "mesodma", Mesodma.MODEL_SCALE, Mesodma.SHADOW);
         renderer(ModEntities.BASILEMYS, "basilemys", Basilemys.MODEL_SCALE, Basilemys.SHADOW);
+        renderer(ModEntities.ENCHODUS, "enchodus", Enchodus.MODEL_SCALE, Enchodus.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

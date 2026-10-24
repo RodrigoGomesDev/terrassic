@@ -395,7 +395,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 285 | Protosphyraena | Peixe | 🌊 | Carnívoro | 3 m | Predador médio | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 286 | Ichthyodectes | Peixe | 🌊 | Carnívoro | 3 m | Predador médio | Agressivo | — | — | Recurso: carne, couro, osso e amostras |  |
 | 287 | Gillicus | Peixe | 🌊 | Piscívoro | 2 m | Pescador | Territorial | — | — | Recurso: carne, couro, osso e amostras |  |
-| 288 | Enchodus | Peixe | 🌊 | Piscívoro | 1,5 m | Pescador | Pacífico | — | — | Recurso: carne, couro, osso e amostras; o "arenque dente-de-sabre" |  |
+| 288 | **Enchodus** | Peixe | 🐟 | Piscívoro | 0,8 m | Pescador | Atrevido (morde quem nada perto) | Comida | — | O peixe do mar: solta o próprio Enchodus, o "bacalhau" do Terrassic | v0.7 |
 
 ## Crocodilos
 

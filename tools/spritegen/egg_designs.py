@@ -678,6 +678,24 @@ def basilemys():
     return e
 
 
+def enchodus():
+    """The sabre-toothed herring: a silver egg with a blue-green cap, big gold eyes and the fangs over the lip."""
+    e = Egg("enchodus", {"b": "#b8c4c0", "c": "#eef0ea", "d": "#3c6a6e", "n": "#243236",
+                         "f": "#5a7a7c", "g": "#e0c060", "R": MOUTH})
+    e.poly([(13, 6), (15, 1), (18, 1), (18, 6)], "f")
+    _side(e, [(4, 20), (0, 23), (1, 25), (5, 23)], "f")
+    cap(e, "d", (5, 3, 26, 17), None)
+    e.ell((8, 19, 23, 36), "c", clip=True)
+    for cx in (11, 20):
+        e.ell((cx - 2, 12, cx + 2, 16), "g")
+        e.px([(cx, 14)], "n")
+    e.poly([(9, 23), (22, 23), (20, 27), (11, 27)], "R")
+    e.pal["W"] = TOOTH
+    e.px(e.mirror([(11, 21), (11, 22), (11, 23)]), "W")               # the palatine fangs
+    e.px(e.mirror([(13, 27), (13, 28), (13, 29)]), "W")               # the lower fangs outside the lip
+    return e
+
+
 def therizinosaurus():
     e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
                                    "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
@@ -917,7 +935,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma", "basilemys"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma", "basilemys", "enchodus"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

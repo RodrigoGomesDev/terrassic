@@ -60,6 +60,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Didelphodon         river, swamp, mangrove, forest, plains 6       1-2
  *  Mesodma             forest, plains, swamp, mangrove, river, taiga 10      2-4
  *  Basilemys           plains, river, swamp, mangrove, beach, stony shore 7       1-3
+ *  Enchodus            ocean (not frozen), deep ocean (not frozen), beach, stony shore 12      3-7
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -127,6 +128,8 @@ public final class ModSpawns {
         placement(ModEntities.DIDELPHODON);
         placement(ModEntities.MESODMA);
         placement(ModEntities.BASILEMYS);
+        SpawnPlacementsRegistry.register(ModEntities.ENCHODUS, SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -285,6 +288,9 @@ public final class ModSpawns {
             }
             if (plains || river || swamp || coast) {
                 add(props, ModEntities.BASILEMYS.get(), 7, 1, 3);
+            }
+            if (ocean || deepSea || coast) {
+                add(props, MobCategory.WATER_CREATURE, ModEntities.ENCHODUS.get(), 12, 3, 7);
             }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);

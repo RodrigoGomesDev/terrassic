@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -30,7 +31,7 @@ public class Archelon extends SwimmingDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.18F;
     public static final float SHADOW = 1.6F;
-    private static final Ingredient FOOD = Ingredient.of(Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON);
+    private static final Ingredient FOOD = Ingredient.of(Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON, ModItems.ENCHODUS.get());
 
     public Archelon(EntityType<? extends Archelon> type, Level level) {
         super(type, level);

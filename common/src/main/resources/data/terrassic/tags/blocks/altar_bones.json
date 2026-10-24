@@ -54,6 +54,10 @@
       "required": false
     },
     {
+      "id": "terrassic:enchodus_skull_trophy",
+      "required": false
+    },
+    {
       "id": "terrassic:stegosaurus_skull_trophy",
       "required": false
     },

@@ -498,7 +498,7 @@ FOSSIL_MOTIF = {
     "pteranodon": "ptero_skull", "quetzalcoatlus": "ptero_skull", "hatzegopteryx": "ptero_skull",
     "ichthyornis": "bird_skull", "hesperornis": "bird_skull", "vegavis": "bird_skull",
     # sea
-    "mosasaurus": "mosa_jaw", "tylosaurus": "mosa_jaw", "elasmosaurus": "paddle", "xiphactinus": "fish",
+    "mosasaurus": "mosa_jaw", "tylosaurus": "mosa_jaw", "elasmosaurus": "paddle", "xiphactinus": "fish", "enchodus": "fish",
     "archelon": "shell",
     "basilemys": "shell",
     # crocodylomorphs and the mammal

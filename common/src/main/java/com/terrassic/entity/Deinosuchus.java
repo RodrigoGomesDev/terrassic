@@ -39,7 +39,7 @@ public class Deinosuchus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.64F;
     public static final float SHADOW = 2.2F;
-    private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
+    private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get(), ModItems.ENCHODUS.get());
 
     public Deinosuchus(EntityType<? extends Deinosuchus> type, Level level) {
         super(type, level);
