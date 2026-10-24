@@ -759,6 +759,22 @@ GUIDE = {
         note=("Achei que era uma colina. A colina respirou.",
               "I thought it was a hill. The hill breathed.",
               "Pensé que era una colina. La colina respiró.")),
+    "opisthocoelicaudia": dict(
+        sci=("Viveu há 70 milhões de anos no deserto de Gobi, na Mongólia. Titanossauro pequeno e atarracado, de 11 a 12 m e 8 toneladas, conhecido por um esqueleto quase completo sem pescoço nem cabeça (levados por carniceiros, que deixaram marcas de dentes nos ossos). O nome vem das vértebras da cauda, convexas atrás, que a travam numa haste rígida: um apoio para empinar nas patas traseiras, um tripé, e pastar a copa das árvores.",
+             "Lived 70 million years ago in the Gobi Desert of Mongolia. A small, stocky titanosaur of 11 to 12 m and 8 tonnes, known from a nearly complete skeleton missing only the neck and head (carried off by scavengers, who left tooth marks on the bones). The name is for its tail vertebrae, convex behind, which lock the tail into a stiff rod: a prop for rearing on the hind legs, a tripod, to browse the treetops.",
+             "Vivió hace 70 millones de años en el desierto de Gobi, en Mongolia. Titanosaurio pequeño y rechoncho, de 11 a 12 m y 8 toneladas, conocido por un esqueleto casi completo sin cuello ni cabeza (llevados por carroñeros, que dejaron marcas de dientes en los huesos). El nombre viene de las vértebras de la cola, convexas por detrás, que la bloquean en una vara rígida: un apoyo para encabritarse sobre las patas traseras, un trípode, y ramonear las copas."),
+        behavior=("Grupos de um a três em desertos, badlands e savanas. Apoia a cauda no chão, empina e puxa folhas da copa; perto de árvores, come as folhas de verdade. Pacífico; ferido, empurra com a anca e desce uma pata dianteira.",
+                  "Groups of one to three in deserts, badlands and savannas. It props its tail on the ground, rears and pulls leaves from the canopy; near trees it really eats the leaves. Peaceful; hurt, it shoves with the hips and slams a forefoot.",
+                  "Grupos de uno a tres en desiertos, badlands y sabanas. Apoya la cola en el suelo, se encabrita y arranca hojas de la copa; cerca de árboles, se come las hojas de verdad. Pacífico; herido, empuja con la cadera y baja una pata delantera."),
+        taming=("Doma-se na mão com folhas de qualquer árvore. Os pares põem um ovo grande.",
+                "Hand-tamed with leaves of any tree. Pairs lay a large egg.",
+                "Se doma a mano con hojas de cualquier árbol. Las parejas ponen un huevo grande."),
+        utility=("Montaria firme e sem pressa, feita para carga: o inventário de carga chega com os sistemas da v0.6. Montado perto de árvores, limpa a copa.",
+                 "A steady, unhurried mount made for freight: the cargo inventory arrives with the v0.6 systems. Ridden near trees, it clears the canopy.",
+                 "Montura firme y sin prisa, hecha para carga: el inventario de carga llega con los sistemas de la v0.6. Montada cerca de árboles, limpia la copa."),
+        note=("Ela se levanta em três apoios e come o topo da árvore. Eu fico embaixo recolhendo o que cai.",
+              "She stands up on three legs and eats the top of the tree. I stand underneath collecting what falls.",
+              "Se levanta sobre tres apoyos y se come la copa del árbol. Yo me quedo debajo recogiendo lo que cae.")),
 }
 
 ERAS = {

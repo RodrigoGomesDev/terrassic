@@ -21,6 +21,7 @@ import com.terrassic.entity.Hesperornis;
 import com.terrassic.entity.Ichthyornis;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Mosasaurus;
+import com.terrassic.entity.Opisthocoelicaudia;
 import com.terrassic.entity.Pachycephalosaurus;
 import com.terrassic.entity.Pachyrhinosaurus;
 import com.terrassic.entity.Parasaurolophus;
@@ -75,6 +76,7 @@ public final class TerrassicClient {
         renderer(ModEntities.ALAMOSAURUS, "alamosaurus", Alamosaurus.MODEL_SCALE, Alamosaurus.SHADOW);
         renderer(ModEntities.SALTASAURUS, "saltasaurus", Saltasaurus.MODEL_SCALE, Saltasaurus.SHADOW);
         renderer(ModEntities.ARGENTINOSAURUS, "argentinosaurus", Argentinosaurus.MODEL_SCALE, Argentinosaurus.SHADOW);
+        renderer(ModEntities.OPISTHOCOELICAUDIA, "opisthocoelicaudia", Opisthocoelicaudia.MODEL_SCALE, Opisthocoelicaudia.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);
