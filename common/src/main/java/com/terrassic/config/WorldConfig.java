@@ -25,7 +25,10 @@ import java.nio.file.Path;
  *   "storm_min_days": 3,          // in-game days between two storms
  *   "storm_minutes_min": 3,       // length of a storm, in real minutes
  *   "storm_minutes_max": 5,
- *   "storm_creatures": 3          // creatures from other eras that can be around each player at once
+ *   "storm_creatures": 3,         // creatures from other eras that can be around each player at once
+ *   "mundo_padrao": true,         // "Criar novo mundo" opens on the Terrassic world type (docs/MUNDO.md, 10.3)
+ *   "borda": true,                // a new continent world gets a world border around its sea (10.2)
+ *   "borda_em_raios": 2.0         // distance from the middle of the continent to the border, in continent radii
  * }
  * </pre>
  */
@@ -65,6 +68,30 @@ public final class WorldConfig {
         return Math.max(0, (int) number("storm_creatures", 3));
     }
 
+    /** "Criar novo mundo" opens on the Terrassic world type. */
+    public static boolean defaultWorldType() {
+        return bool("mundo_padrao", true);
+    }
+
+    /** A new continent world gets a square world border around its sea. */
+    public static boolean continentBorder() {
+        return bool("borda", true);
+    }
+
+    /** Distance from the middle of the continent to the world border, in continent radii (at least 1.1). */
+    public static double continentBorderRadii() {
+        return Math.max(1.1D, number("borda_em_raios", 2.0D));
+    }
+
+    /** A boolean from the file, or the default when the value is missing or not a boolean (never throws). */
+    private static boolean bool(String key, boolean fallback) {
+        try {
+            return get().get(key).getAsBoolean();
+        } catch (RuntimeException e) {
+            return fallback;
+        }
+    }
+
     /** A number from the file, or the default when the value is missing or not a number (never throws). */
     private static double number(String key, double fallback) {
         try {
@@ -98,6 +125,9 @@ public final class WorldConfig {
         changed |= def(cfg, "storm_minutes_min", 3);
         changed |= def(cfg, "storm_minutes_max", 5);
         changed |= def(cfg, "storm_creatures", 3);
+        changed |= def(cfg, "mundo_padrao", true);
+        changed |= def(cfg, "borda", true);
+        changed |= def(cfg, "borda_em_raios", 2.0D);
         if (changed) {
             try {
                 Files.createDirectories(file.getParent());

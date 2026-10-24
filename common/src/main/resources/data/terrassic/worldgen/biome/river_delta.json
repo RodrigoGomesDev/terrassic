@@ -58,29 +58,9 @@
     "creature": [],
     "ambient": [],
     "axolotls": [],
-    "underground_water_creature": [
-      {
-        "type": "minecraft:glow_squid",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 6
-      }
-    ],
+    "underground_water_creature": [],
     "water_creature": [],
-    "water_ambient": [
-      {
-        "type": "minecraft:tropical_fish",
-        "weight": 6,
-        "minCount": 2,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:salmon",
-        "weight": 4,
-        "minCount": 1,
-        "maxCount": 4
-      }
-    ],
+    "water_ambient": [],
     "misc": []
   },
   "spawn_costs": {},

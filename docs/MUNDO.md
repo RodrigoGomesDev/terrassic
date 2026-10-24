@@ -5,15 +5,16 @@
 
 ## 1. O tipo de mundo "Terrassic"
 
-Ao criar o mundo: **Mais opções do mundo → Tipo de mundo → Terrassic** (ou **Terrassic: Biomas Grandes**).
+Ao criar um mundo, o tipo **Terrassic** já vem escolhido (§10.3). Em **Mais opções do mundo → Tipo de mundo** também
+estão **Terrassic: Ilha Pequena** e **Terrassic: Continente Grande**, e os tipos do Minecraft.
 
-- O relevo é o do Minecraft (montanhas, cavernas, rios e oceanos no mesmo lugar). Só o **mapa de biomas** muda:
-  em vez dos biomas vanilla, o Overworld inteiro é feito dos 11 biomas do Cretáceo Superior.
+- O mundo é **um continente só**, como uma Pangeia, com mar em volta e a borda do mundo fechando o mar (§10). O
+  relevo dentro dele é o do Minecraft (montanhas, cavernas, rios). Os biomas são os 11 do Cretáceo Superior.
 - **Sem vilas e sem estruturas modernas:** as estruturas vanilla só nascem nos biomas vanilla. Ficam as fortalezas
   do End, que são subterrâneas, para o jogador ainda poder ir ao End (Regra 0: o Minecraft é livre). Também ficam
   masmorras, geodos, fósseis de osso e cavernas.
-- **Sem animais vanilla.** Ficam os que já existiam no Cretáceo: peixes, lulas, tartarugas-marinhas nas praias e sapos
-  no pântano. Não há vacas, porcos, ovelhas, cavalos, golfinhos nem morcegos.
+- **Nenhum animal vanilla** (§10.4): nem vacas, porcos, ovelhas, cavalos, golfinhos e morcegos, nem peixes, lulas,
+  tartarugas e sapos. A comida e os recursos vêm da fauna pré-histórica.
 - **À noite, na superfície, não aparecem zumbis nem esqueletos** (`world/CretaceousBiomes`). Nas cavernas eles continuam.
   Bruxas, aldeões-zumbi, afogados, phantoms, patrulhas de saqueadores, cercos de zumbis e o mercador ambulante não
   aparecem em nenhum bioma do Cretáceo. Aranhas, creepers, slimes e endermen continuam (as aranhas dão a linha das lanças).
@@ -188,3 +189,73 @@ Liga e desliga em `config/terrassic-client.json` (`hud_mount`, `hud_pack`, `hud_
 3. **Zumbis e esqueletos nas cavernas:** ficaram, por causa dos ossos e das flechas. Se preferir trocar por criaturas
    da era também no subsolo, isso entra junto com as anomalias da Fenda.
 4. **Tela de título:** o panorama e o logo agradam? Dá para trocar a cena (manhã em vez de entardecer, outras espécies).
+
+## 10. Continente Terrassic (pedido do Rodrigo, 24/10/2026)
+
+Depois de testar a v0.8, o Rodrigo pediu: o mundo Terrassic tem que ser **bem menor** que o do Minecraft, um
+continente só "como uma Pangeia", com **o resto só mar** (a ideia de mundo fechado do skyblock); esse tipo de mundo
+tem que vir **sozinho** ao criar um mundo; e **nenhum animal do Minecraft** (comida e recursos do começo vêm de animais
+pré-históricos).
+
+### 10.1 Formato
+
+- **Um continente** centrado em 0,0, um pouco comprido (1,35 : 1), com **costa recortada**.
+- O **Mar Interior** entra por uma das costas como um golfo largo e curvo até perto do centro: o continente fica em
+  forma de **"C"**, como a Pangeia em volta do mar de Tétis (e como a Laramídia, cortada pelo Mar Interior do Oeste,
+  no Cretáceo Superior de verdade). O centro é sempre terra firme: o jogador nasce ali.
+- Um anel de **ilhotas** no mar raso em volta (futuras Ilhas do Tempo e praias de desova do Archelon).
+- Fora disso, **oceano fundo** até a **borda do mundo**.
+- A direção do golfo e o recorte da costa vêm da **semente**: cada mundo tem um continente diferente.
+- Prévia do formato: `/mnt/project-files/mundo/previas/continente_formato.png` (mesma matemática do Java).
+
+| Tipo de mundo | Raio | Terra (aprox.) | Borda do mundo |
+|---|---|---|---|
+| Terrassic (padrão) | 1 200 blocos | ~5 km² | 4 800 × 4 800 |
+| Terrassic: Ilha Pequena | 800 blocos | ~2,4 km² | 3 200 × 3 200 |
+| Terrassic: Continente Grande (biomas grandes) | 2 000 blocos | ~13 km² | 8 000 × 8 000 |
+
+Para comparar: atravessar o continente padrão correndo leva uns 7 minutos; a pé, uns 10.
+
+### 10.2 Como funciona (técnico)
+
+O terreno do Minecraft decide altura, profundidade do mar e bioma a partir da **continentalidade**. O mod troca só
+esse valor; o resto (cavernas, aquíferos, minérios, regras de superfície) continua o do Minecraft.
+
+- Os tipos de mundo (`data/terrassic/worldgen/world_preset/terrassic*.json`, gerados por `tools/javagen/gen_world.py`,
+  tabela `WORLD_TYPES`) usam as configurações de ruído normais do Minecraft e embrulham o mapa de biomas na fonte de
+  biomas `terrassic:continente` (`world/continent/ContinentBiomeSource.java`), que guarda o **raio** (`"raio"`). O raio
+  fica salvo no próprio mundo: mudar a config depois não muda um mundo que já existe.
+- Quando um mundo assim abre, `mixin/ChunkMapMixin` passa o roteador de ruído por `world/continent/ContinentRouter`
+  logo antes de ele ser ligado à semente: toda leitura da continentalidade vanilla (a do bioma e a das funções de
+  relevo offset, factor, jaggedness, depth...) vira `ContinentDensity` (tipo de função de densidade
+  `terrassic:continente`): terra no meio (com a variação vanilla por cima, para ter planícies, morros e planaltos),
+  costa perto do raio, mar raso no golfo e nas ilhotas, oceano fundo fora. Nada do Minecraft é copiado.
+- **Borda do mundo** (`world/continent/ModContinent`): num mundo novo, ao abrir, a borda é centrada em 0,0 com lado
+  de 4 raios (config `borda_em_raios`, padrão 2,0 a partir do centro). Uma borda que alguém já mudou não é tocada;
+  `/worldborder` continua valendo; `"borda": false` desliga.
+- Nada disso muda os tipos de mundo do Minecraft ("Padrão" etc.).
+
+### 10.3 Mundo Terrassic como padrão
+
+- Em **Criar novo mundo**, o tipo já vem em **Terrassic** (`mixin/client/WorldCreationUiStateMixin`). O jogador pode
+  escolher qualquer outro tipo na lista.
+- Desligar: `"mundo_padrao": false` em `config/terrassic-world.json`.
+- **Servidor dedicado**: em `server.properties`, `level-type=terrassic\:terrassic` (ou `terrassic\:terrassic_small`,
+  `terrassic\:terrassic_large`).
+
+### 10.4 Sem animais do Minecraft
+
+- Os biomas do Cretáceo não têm mais nenhum animal vanilla: saíram também peixes, lulas, lulas-brilhantes das cavernas,
+  tartarugas e sapos (`gen_world.py`). Monstros das cavernas continuam como na M1.
+- Se outra coisa tentar pôr um animal vanilla num bioma do Cretáceo (outro mod, um pacote de dados, o cavalo-esqueleto
+  das tempestades), `world/CretaceousBiomes` recusa. Ovos de spawn e geradores continuam funcionando.
+- A comida e os recursos do começo vêm dos **dinossauros pequenos** (Protoceratops, Thescelosaurus, Oviraptor,
+  Mononykus, Didelphodon, Gallimimus...), que já deixam carne, couro, penas, ossos e ovos, e o ecossistema da config
+  ARK (`world/EcoSpawner`) mantém terra, céu e mar cheios em volta do jogador.
+- **Fauna de caça** pedida para a fila de espécies (v0.3): Leptoceratops (o "porco": carne e couro), Vegavis (a
+  "galinha/pato": penas, ovos, carne de ave), Mesodma (o "coelho"), Basilemys (tartaruga terrestre: carne e casco),
+  Enchodus (peixe do mar) e Lepisosteus (peixe-agulha de rio). Todos do Cretáceo Superior.
+
+### 10.5 Testes no jogo
+
+Veja `docs/TESTES_V08.md`, seção 7 ("Continente").

@@ -13,7 +13,7 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] Depois `./gradlew :fabric:runClient` e `./gradlew :forge:runClient`.
 
 ## 1. Mundo Terrassic (M1)
-- [ ] Criar Mundo → Mais opções → Tipo de mundo: aparecem **Terrassic** e **Terrassic: Biomas Grandes** (nome traduzido nos 3 idiomas).
+- [ ] Criar Mundo → Mais opções → Tipo de mundo: aparecem **Terrassic**, **Terrassic: Ilha Pequena** e **Terrassic: Continente Grande** (nome traduzido nos 3 idiomas).
 - [ ] O mundo cria sem erro. Se aparecer "Feature order cycle found", mande o log.
 - [ ] `F3` mostra os biomas `terrassic:...`. Com `/locate biome terrassic:dry_lands` (e os outros 10), todos são encontrados.
 - [ ] Superfícies: areia nas praias e no Mar Interior, laterita e solo laterítico vermelho nas Terras Secas, serrapilheira nas florestas,
@@ -21,7 +21,7 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] Árvores: magnólias na Floresta de Magnólias, metassequoias e araucárias na Floresta de Sequoias, ciprestes na água do Pântano,
       palmeiras e fetos no Delta.
 - [ ] Nenhuma vila, posto de saqueadores, portal em ruínas ou naufrágio. Masmorras e geodos continuam.
-- [ ] Nenhuma vaca, porco, ovelha, cavalo, golfinho ou morcego. Peixes, lulas, tartarugas nas praias e sapos no Pântano, sim.
+- [ ] Nenhum animal vanilla: nem vaca, porco, ovelha, cavalo, golfinho, morcego, nem peixe, lula, tartaruga ou sapo (§7).
 - [ ] Dinossauros nascem nos biomas certos (raptores e Giganotosaurus nas Terras Secas, hadrossauros na Planície, Spinosaurus e
       Deinosuchus no Delta, mosassauros no Mar Interior Profundo).
 - [ ] À noite, na superfície: nada de zumbis e esqueletos (aranhas e creepers podem aparecer). Numa caverna, zumbis e esqueletos aparecem.
@@ -72,3 +72,23 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] Durante uma tempestade: fragmento de âmbar pulsando no topo.
 - [ ] F1 esconde tudo; cada opção `hud_*` em `config/terrassic-client.json` desliga a sua parte.
 - [ ] Desempenho: com 6 dinossauros no bando, o FPS não cai visivelmente.
+
+## 7. Continente (MUNDO.md §10)
+Compilação: atenção a `mixin/ChunkMapMixin` (`@ModifyArg` em `RandomState.create` dentro do construtor de `ChunkMap`) e
+`mixin/client/WorldCreationUiStateMixin` (`@Inject` no fim do construtor). No log, procure
+"Terrassic continent of radius 1200 blocks (N reads of the continentalness replaced)": N tem que ser maior que 0.
+"no vanilla continentalness found" quer dizer que o mundo saiu vanilla: mande o log.
+- [ ] **Criar novo mundo** já abre com o tipo **Terrassic** escolhido (Fabric e Forge). Trocar para "Padrão" funciona.
+- [ ] Mundo novo Terrassic: nasce em terra, perto do centro. Mapa (ou voar alto) mostra **um continente** cercado de mar,
+      com um golfo grande (o Mar Interior) entrando por um lado e ilhotas em volta. Compare com
+      `mundo/previas/continente_formato.png`.
+- [ ] `/worldborder get` dá **4800**; andando ~2400 blocos do centro em linha reta, você chega à borda no meio do mar.
+- [ ] Os biomas seguem o continente: Mar Interior e Mar Interior Profundo no mar, praias na costa, serras e florestas no meio.
+- [ ] **Terrassic: Ilha Pequena** (borda 3200) e **Terrassic: Continente Grande** (borda 8000, biomas grandes) criam sem erro.
+- [ ] Sair e entrar de novo no mundo: o continente continua igual (mesma costa) e a borda também.
+- [ ] Dois mundos com sementes diferentes têm continentes diferentes (o golfo aponta para outro lado).
+- [ ] Mundo **Padrão** (vanilla) continua igual ao Minecraft, sem borda nova.
+- [ ] Nenhum animal vanilla nos biomas do Cretáceo depois de 10 min andando (nem peixes, lulas ou lulas-brilhantes nas
+      cavernas). Ovo de spawn de vaca ainda funciona.
+- [ ] Servidor dedicado com `level-type=terrassic\:terrassic` cria o continente.
+- [ ] Desempenho: gerar chunks novos não fica visivelmente mais lento que no mundo Terrassic da v0.8.

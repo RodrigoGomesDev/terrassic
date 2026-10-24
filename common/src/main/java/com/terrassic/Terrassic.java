@@ -16,6 +16,7 @@ import com.terrassic.world.CretaceousBiomes;
 import com.terrassic.world.EcoSpawner;
 import com.terrassic.world.KatarinaRefuge;
 import com.terrassic.world.RiftStorm;
+import com.terrassic.world.continent.ModContinent;
 import com.terrassic.world.ModSpawns;
 import com.terrassic.world.ModWorldgen;
 import dev.architectury.utils.Env;
@@ -46,6 +47,7 @@ public final class Terrassic {
         ArrivalCrater.init(); // v0.8: the arrival crater next to the world spawn
         KatarinaRefuge.init(); // v0.8: Mate at the River House, the Amber Lens pointing to it
         RiftStorm.init(); // v0.8: Rift Storms
+        ModContinent.init(); // v0.8: the Terrassic continent, its world border
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicWorldClient::init); // v0.8: storm effects, HUD
         Research.init();
         Rules.init(); // world rules in the style of ARK (docs/REGRAS.md)
