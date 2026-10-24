@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "axis=y": [
+      {
+        "model": "minecraft:block/oak_log",
+        "weight": 3
+      },
+      {
+        "model": "terrassic:block/cretaceo/oak_log_lichen",
+        "weight": 1
+      }
+    ],
+    "axis=z": [
+      {
+        "model": "minecraft:block/oak_log_horizontal",
+        "weight": 3,
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/cretaceo/oak_log_lichen_horizontal",
+        "weight": 1,
+        "x": 90
+      }
+    ],
+    "axis=x": [
+      {
+        "model": "minecraft:block/oak_log_horizontal",
+        "weight": 3,
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cretaceo/oak_log_lichen_horizontal",
+        "weight": 1,
+        "x": 90,
+        "y": 90
+      }
+    ]
+  }
+}

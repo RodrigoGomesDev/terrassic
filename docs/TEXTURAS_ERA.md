@@ -133,12 +133,12 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 
 | Lote | O que entra | Estado |
 |---|---|---|
-| TX1 | **Terreno:** pedra (+3 variantes), pedregulho, pedregulho com musgo, terra (+2), terra grossa, grama (topo, lado, lado com neve), podzol, cascalho (+1), areia (+1), arenito (topo, lado, base, entalhado, liso), argila, lama, terra enraizada. Mais o registro do pacote no Fabric e no Forge | 🔄 |
-| TX2 | Madeiras do vanilla (troncos e tábuas das 8 árvores), folhas, mesa de trabalho, fornalha, baú, tocha, fogueira | ○ |
+| TX1 | **Terreno:** pedra (+3 variantes), pedregulho, pedregulho com musgo, terra (+2), terra grossa, grama (topo, lado, lado com neve), podzol, cascalho (+1), areia (+1), arenito (topo, lado, base, entalhado, liso), argila, lama, terra enraizada. Mais o registro do pacote no Fabric e no Forge | ✓ |
+| TX2 | **Madeiras** das 8 árvores (casca própria de cada uma, anéis fora do centro com rachadura, descascado, tábuas lascadas com cavilha) com variantes raras de tronco (resina âmbar no abeto, líquen no carvalho, musgo na selva); **folhas** por formato de folha da espécie; **plantas** do Cretáceo (o capim vira cavalinhas com samambaias baixas, a samambaia grande vira samambaia-arborescente, o cipó vira samambaia trepadeira); **bancada** de tronco com ferramentas de pedra, sílex e osso; **fornalha** de pedras e barro com fuligem e brasas; **tocha** de resina. Baú e fogueira ficam para um lote próprio (o desenho deles depende do mapeamento do modelo) | ✓ |
 | TX3 | Minérios (veios naturais, sem cara de "loja"), pedras do vanilla (granito, diorito, andesito, tufo, ardósia) | ○ |
 | TX4 | Interface: botões, inventário, baús, fornalha, fundo dos menus, barra de itens, em couro, osso e pedra | ○ |
 | TX5 | Filtro da era (camada D) | ○ |
-| TX6 | Refazer os blocos do mod com o motor novo, junto com a frente de blocos | ○ |
+| TX6 | Refazer os blocos do mod com o motor novo: a thread de blocos usa `tools/texpack/api.py` e `materials.py` (decisão do Rodrigo, 24/10) | 🔄 |
 | TX7 | Camada C (troca por era sem recarregar) e os pacotes das outras eras | ○ (v2.0) |
 
 ## 6. Testes no jogo (só um humano consegue)
@@ -149,3 +149,7 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 - Pedra, terra, cascalho e areia em área grande não mostram repetição.
 - A grama recebe a cor dos biomas (planície, pântano, deserto do vanilla e os biomas do Cretáceo da v0.8).
 - Funciona com Sodium (Fabric) e Embeddium (Forge), com e sem shaderpack do Iris/Oculus.
+- Lote 2: troncos em pé e deitados (eixos x, y, z) mostram de vez em quando a variante (resina no abeto, líquen no
+  carvalho, musgo na selva) e o topo continua certo; folhas em gráficos "rápido" ficam escuras e cheias, sem
+  buracos pretos estranhos; cavalinhas e samambaias recebem a cor do bioma; a tocha aparece certa no chão e na
+  parede; a fornalha acesa mostra as brasas; a bancada lê como bancada (grade no topo, ferramentas nos lados).

@@ -112,3 +112,39 @@ def sheet(items, title, k=8, cols=6):
         img.alpha_composite(big(tiled(tex, 3), 4), (cx, cy + 16 * k + 4))
         d.text((cx, cy + 16 * k + 16 * 12 + 8), name, fill=(220, 220, 220, 255), font=f)
     return img
+
+
+def diorama_culled(blocks, S=32, pad=8, bg=BG):
+    """Like diorama(), but a face is left out when a block sits against it (as the game does), so leaves and
+    see-through blocks show only their outside."""
+    empty = Image.new("RGBA", (16, 16))
+    xs = [k[0] for k in blocks]
+    zs = [k[2] for k in blocks]
+    ys = [k[1] for k in blocks]
+    w = (max(xs) + max(zs) + 2) * S + 2 * pad
+    h = int((max(xs) + max(zs) + 2) * S / 2 + (max(ys) + 2) * S) + 2 * pad
+    img = Image.new("RGBA", (w, h), bg)
+    oy = (max(ys) + 1) * S + pad
+    ox = max(zs) * S + pad
+    for (x, y, z) in sorted(blocks, key=lambda k: (k[0] + k[2], k[1], k[0])):
+        top, left, right = blocks[(x, y, z)]
+        c = cube(empty if (x, y + 1, z) in blocks else top, empty if (x, y, z + 1) in blocks else left,
+                 empty if (x + 1, y, z) in blocks else right, S=S)
+        img.alpha_composite(c, (ox + (x - z) * S, oy + (x + z) * S // 2 - y * S))
+    return img
+
+
+def sheet_images(items, title, cols=4, pad=10):
+    """items: [(name, image of any size)] -> labelled sheet."""
+    w = max(im.width for _, im in items)
+    h = max(im.height for _, im in items)
+    rows = (len(items) + cols - 1) // cols
+    img = Image.new("RGBA", (cols * (w + pad) + pad, rows * (h + 24) + 44), BG)
+    d = ImageDraw.Draw(img)
+    d.text((10, 10), title, fill=(230, 230, 230, 255), font=font(18))
+    for n, (name, im) in enumerate(items):
+        x = pad + (n % cols) * (w + pad)
+        y = 40 + (n // cols) * (h + 24)
+        img.alpha_composite(im, (x, y))
+        d.text((x, y + h + 4), name, fill=(220, 220, 220, 255), font=font(13))
+    return img

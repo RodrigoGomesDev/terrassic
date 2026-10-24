@@ -21,8 +21,20 @@ O `build.py` falha se uma textura ficar a mais de 14 de brilho ou 20 de contrast
 | `targets.py` | A régua: brilho médio, contraste p95-p5 e salto entre vizinhos de cada bloco vanilla, medidos no Mac (só números; nenhum pixel do vanilla está no projeto) |
 | `cretaceo.py` | As receitas do Cretáceo Superior (pedra, pedregulho, terra, grama, cascalho, areia, arenito, argila, lama...) e as paletas |
 | `preview.py` | Folha de prévia (grande + mosaico 3x3) e diorama isométrico com a luz das faces do Minecraft |
+| `vanilla.py` | Os números de cada textura 16x16 do vanilla 1.20.1 medidos no Mac (só números): `target(nome)` |
+| `materials.py` | Materiais: nome -> referência vanilla + nosso matiz/saturação/desvio/ajuste da era. Vanilla e do mod (âmbar, resina, osso, giz, laterita, couros, palha...) |
+| `api.py` | O motor em quatro chamadas: `paint(tons, "amber", alpha=...)`, `palette`, `check`, `goal` |
+| `stamps.py`, `fit.py`, `targets.py` | Base calma + detalhes por ruído azul; paleta ajustada às metas; metas do lote 1 e `measure` |
+| `woods.py` | Cascas (8 estilos), anéis fora do centro, tronco descascado, tábuas lascadas; `plates`, `wave`, `draw_line` |
+| `leaves.py` | Copas por formas de folha da espécie, em duas camadas, com furos de verdade |
+| `plants.py`, `plantart.py` | Plantas em pixel art à mão (grades de texto) pintadas pelo ajuste: cavalinhas, samambaias, cipó |
+| `workshop.py` | Bancada, fornalha e tocha |
 | `build.py` | Tabela textura do vanilla -> desenho, blockstates com variantes sorteadas, `pack.mcmeta`, `pack.png` e conferências |
 | `pack_lang.py` | Nome e descrição de cada pacote nos 3 idiomas (o `gen_resources.py` junta no lang do mod) |
+
+Para os blocos do próprio mod (thread de blocos, `blocos.py`): desenhe o mapa de tons com `tex`/`stamps`/`woods`,
+pinte com `api.paint(tons, material)` e confira com `api.check`. Material novo = uma linha em `materials.py`
+apontando para o parente vanilla mais próximo. Os PNGs só são regravados quando os pixels mudam.
 
 Regras de arte (as mesmas para todas as eras):
 - 16x16, emenda sem costura, no máximo ~8 tons por material, aglomerados em vez de ruído pixel a pixel.

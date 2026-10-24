@@ -243,3 +243,16 @@ def stats(img):
     colours = len({tuple(p) for p in a.reshape(-1, 3).astype(int)})
     return {"mean": round(float(lum.mean()), 1), "std": round(float(lum.std()), 1), "colours": colours,
             "seam": round(seam_score(img), 2)}
+
+
+def seam_excess(img):
+    """How much the jump across the wrap edges exceeds the biggest jump between two neighbouring rows (or columns)
+    inside the texture. <= 1.2 means no seam: boards and courses have strong inner lines, so the wrap is compared
+    with the strongest of them, not with the average."""
+    a = np.asarray(img.convert("RGB"), float)
+    out = 0.0
+    for ax in (0, 1):
+        inner = np.abs(np.diff(a, axis=ax)).mean(axis=(1 - ax, 2))
+        edge = np.abs(np.take(a, 0, axis=ax) - np.take(a, -1, axis=ax)).mean()
+        out = max(out, edge / max(inner.max(), 1e-6))
+    return out
