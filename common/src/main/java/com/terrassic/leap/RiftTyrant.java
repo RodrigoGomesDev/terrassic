@@ -53,6 +53,7 @@ import java.util.List;
 public class RiftTyrant extends Tyrannosaurus {
     public static final float SIZE = 1.35F;
     private static final double LEASH = 48.0D;
+    private static final java.util.UUID PLAYERS_HEALTH_ID = java.util.UUID.fromString("6b1f0c52-8a3e-4d7f-b2c4-91e5a7d30f18");
     private static final DustParticleOptions SPARK = new DustParticleOptions(new Vector3f(1.0F, 0.55F, 0.12F), 2.0F);
     private final ServerBossEvent bossBar = new ServerBossEvent(Component.translatable("entity.terrassic.rift_tyrant"),
             BossEvent.BossBarColor.YELLOW, BossEvent.BossBarOverlay.NOTCHED_10);
@@ -90,6 +91,22 @@ public class RiftTyrant extends Tyrannosaurus {
 
     void bindToAltar(BlockPos pos) {
         this.altar = pos;
+    }
+
+    /** Multiplayer: +50% health for each player in the fight after the first, up to 8 players (x4.5). Saved with
+     *  the attributes, so a reload keeps it. */
+    void scaleForPlayers(int players) {
+        net.minecraft.world.entity.ai.attributes.AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        if (health == null) {
+            return;
+        }
+        health.removeModifier(PLAYERS_HEALTH_ID);
+        int extra = Math.max(0, Math.min(8, players) - 1);
+        if (extra > 0) {
+            health.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(PLAYERS_HEALTH_ID,
+                    "Rift Tyrant players", 0.5D * extra, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_BASE));
+        }
+        this.setHealth(this.getMaxHealth());
     }
 
     // ------------------------------------------------------------------ what a normal rex does and this one does not

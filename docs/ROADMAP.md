@@ -10,6 +10,10 @@
 lore, flora, blocos do material da era, biomas, estruturas, eventos, chefe) fica na seção da era, numa fila em ordem.
 O que serve a todas as eras (motor do mod, geradores, interface, idiomas, build) fica nas frentes transversais (seção 6).
 
+**Plano mestre:** `docs/ESTRATEGIA.md` junta os estudos de mercado, 3D, multiplayer, versões e marca (`docs/estudos/`)
+em decisões (D1-D11), metas medidas e um briefing em ordem para a sessão principal. Leia antes de abrir uma fase nova.
+Os marcos até a v1.0 estão na seção 8.
+
 ---
 
 ## 1. Visão
@@ -43,6 +47,10 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | 10 | **Só materiais da época:** madeira, pedra, osso, couro, fibra, sílex, argila, âmbar. Nos blocos de construção, nada de vidro, tijolo cozido ou metal. | `ESCOPO.md` |
 | 11 | **Uma era por vez, fechada e jogável**, antes da próxima (seção 4). | `ESCOPO.md`, Rodrigo 24/10 |
 | 12 | **Arte nova que troca um asset existente (ovos, capa) passa pelo Rodrigo antes.** O resto segue sem esperar. | Rodrigo 24/10 |
+| 13 | **Qualidade antes de quantidade.** Espécie só entra no jogo passando o checklist de modelo (`docs/estudos/02_3D_ANIMACAO.md` §7): densidade de texel 16 px/m (piso 8 acima de 15 m, teto 32 abaixo de 1 m), pé sem escorregar, animações completas | `ESTRATEGIA.md` D2-D3 |
+| 14 | **Desempenho é requisito:** meta de 100 jogadores por servidor com MSPT < 35 ms; cada versão sai com um perfil do spark | `ESTRATEGIA.md` D4, D11 |
+| 15 | **Identidade própria "Âmbar e Basalto"** em toda interface (`docs/IDENTIDADE.md`); nada de cara de ARK nem de Jurassic Park | Rodrigo 24/10, D7 |
+| 16 | **Aberto para modpacks:** números de espécie, dietas e spawns ajustáveis por dados; integrações sempre opcionais | `ESTRATEGIA.md` D5-D6 |
 
 ## 3. Como trabalhamos
 
@@ -113,7 +121,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | v0.6 | Cadeia alimentar, carcaças, bandos, fome e sono, ninhos selvagens, migração, procriação de selvagens, inventário de carga, coleta automática, sela de plataforma | 🔄 fase 63: inventário de carga + coleta automática; fase 64: sela de plataforma (quatro a bordo nos titãs, qualquer um sobe, o dono conduz; `CARGA.md`); fase 65: carcaças + carniceiros saciados (`CARCACAS.md`); fase 66: fome e sono + cadeia alimentar (`FOME_E_SONO.md`); fase 67: bandos, manadas e matilhas (`BANDOS.md`); fase 68: ninhos selvagens + procriação de selvagens (`NINHOS.md`); fase 69: migração (`MIGRACAO.md`). Sistemas v0.6 completos; faltam os testes no jogo |
 | v0.7 | Nocaute completo: torpor, barras de torpor e domesticação, eficiência, comer desmaiado, punho, zarabatana e dardo, boleadeira, erva sonífera (`DOMESTICACAO.md`); territórios; ferramentas de osso e sílex completas | ○ |
 | v0.8 | Tipo de mundo "Terrassic" + mundo normal, Tempestades da Fenda e criaturas "da Fenda", páginas da Katarina por jogador | ✅ main 9da2414 (24/10, frente paralela "Mundo Terrassic", `docs/MUNDO.md`): tipo de mundo Terrassic com 11 biomas do Cretáceo e sem animais nem monstros vanilla na superfície (M1), tela de título e dicas (M2), Cratera de Chegada, acampamentos, Sítio Fossilífero, Ossuário, Casa do Rio com o "Mate" e Colônia de Ninhos (M3), Tempestades da Fenda com `/terrassic tempestade` (M4), HUD (M5); páginas da Katarina nos baús. Falta: mundo-ilha (Pangeia pequena cercada de mar, tipo Terrassic automático), criaturas "da Fenda", biomas no mundo normal (`MUNDO.md` §9) |
-| v0.9 | Fragmentos de âmbar, Altar do Salto, ritual dos meteoros, Salto Instável, modos Normal/Rápido/Livre, `/terrassic capitulo` | ○ |
+| v0.9 | Fragmentos de âmbar, Altar do Salto, ritual dos meteoros, Salto Instável, modos Normal/Rápido/Livre, `/terrassic capitulo` | ✅ código na frente paralela (`paralelo/v0.9-salto`, `docs/SALTO.md`): Altar com anel de pedra e osso, modos, `/terrassic capitulo`, ritual dos meteoros, Tirano da Fenda (escala com os jogadores), Salto e Salto Instável (o destino chega com a v2.0), estrelas cadentes, criaturas da Fenda; falta testar no jogo |
 | depois | DNA e clonagem a partir das amostras | ○ |
 
 #### Mundo, flora e blocos da era
@@ -126,14 +134,14 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | Blocos base restantes | Terra, reboco, pinturas rupestres, palha e trançados (57); couro, osso, troféus e fósseis por espécie (53); utilidades primitivas (33) | ○ |
 | Biomas (v0.8) | Planície dos Hadrossauros, Floresta de Magnólias, Pântano de Ciprestes, Floresta de Sequoias, Terras Secas, Delta do Rio, Mar Interior e fundo, Rio, Praia, Planaltos | ✅ M1 (9da2414); pedido do Rodrigo 24/10: mundo menor, uma Pangeia cercada de mar, escolhido automaticamente (thread de mundo) |
 | Estruturas (v0.8) | Cratera de Chegada, Acampamentos da Katarina, Casa do Rio (Refúgio, com o Parasaurolophus "Mate"), Sítio Fossilífero, Colônia de Ninhos de Maiasaura, praia de desova de Archelon, Ilhas do Tempo, Ossuário | ✅ M3 (todas menos a praia de desova e as Ilhas do Tempo, que ficam para a v0.8 seguinte) |
-| Eventos (v0.8) | Migração de hadrossauros, estrelas cadentes cada vez mais frequentes, Tempestades da Fenda | 🔄 migração (v0.6) e Tempestades da Fenda (M4, rolagem diária, vazamentos, `terrassic-world.json`) prontas; estrelas cadentes com a v0.9 |
+| Eventos (v0.8) | Migração de hadrossauros, estrelas cadentes cada vez mais frequentes, Tempestades da Fenda | 🔄 migração (v0.6) e Tempestades da Fenda (M4, rolagem diária, vazamentos, `terrassic-world.json`) prontas; estrelas cadentes ✅ (v0.9, frente paralela) |
 
 #### História, sons e arte da era
 | Fase | O que entra | Estado |
 |---|---|---|
 | História | "O Salto", versão mundial, lore com a Katarina Usha | ✅ (lore aguarda commit) |
 | Páginas | ~44 páginas da Katarina por jogador, nos baús das estruturas | 🔄 baús das estruturas da v0.8 já entregam páginas por jogador (M3); o conjunto completo de textos segue com a história |
-| Chefe e final | Tirano da Fenda; ritual dos meteoros; salto com o clarão do impacto (o mundo não é destruído) | ○ (v0.9) |
+| Chefe e final | Tirano da Fenda; ritual dos meteoros; salto com o clarão do impacto (o mundo não é destruído) | 🔄 ritual e Tirano prontos (v0.9, `docs/SALTO.md`); o salto em si espera a dimensão do Capítulo 2 |
 | Vozes | Piloto (T. rex, Parasaurolophus, Pteranodon) com gravações PD/CC0; cisnes e gansos | ✅ (aguarda commit) |
 | Vozes | Um conjunto de voz para cada espécie da fila, junto com o modelo dela | ⏭ |
 | Ambiente | Sons de fundo e música do Cretáceo; céu, névoa e partículas da era | ○ (v0.8 M6, thread de sons) |
@@ -205,6 +213,7 @@ Dunkleosteus, Megalodon (opcional) e as versões "da Fenda" de criaturas de outr
 | T3.2 | HUD próprio com retratos dos nossos modelos: montaria (vida, stamina, carga), bando, nova espécie, nome da era, temperatura, alerta da Fenda, objetivos; tudo configurável | v0.8 | ✅ M5 (9da2414): montaria, bando, toast de espécie nova, título da era, alerta da Fenda (`terrassic-client.json`) |
 | T3.3 | Pacote de texturas próprio embutido e opcional (vanilla mais rústico, menus e inventários em couro, osso e pedra, fonte do Caderno) | v0.8 | ○ |
 | T3.4 | Motor de céu, névoa, partículas e música por era (o conteúdo de cada era fica na seção da era) | v0.8 | ○ |
+| T3.6 | **Identidade visual "Âmbar e Basalto"** (pedido do Rodrigo): paleta única (`client/ui/TerrassicPalette`) e componentes desenhados por código (`client/ui/TerrassicUi`: laje, poço, botão, aba, controle, divisor); Regras, toast, HUD e Caderno já convertidos (`docs/IDENTIDADE.md`) | v0.9 | 🔄 primeiras telas feitas (frente paralela); faltam abertura, Mesa, telas da v0.7 e o logo em 3 versões |
 | T3.5 | **Regras do mundo estilo ARK + ecossistema denso** (pedido do Rodrigo): tela "Regras do Terrassic" com 21 regras por mundo (dificuldade, dano, resistências, XP, domesticação, chocagem, crescimento, fome, ninhos, migração, densidade por terrestres/voadores/marinhos); spawner próprio que mantém rebanhos, bandos no céu e o mar cheio ao redor de cada jogador (`docs/REGRAS.md`) | v0.8 | ✅ código; teste no jogo pendente |
 
 ### T4. Idiomas
@@ -238,6 +247,55 @@ Dunkleosteus, Megalodon (opcional) e as versões "da Fenda" de criaturas de outr
 | T7.3 | Porte para 1.21.x | ○ |
 | T7.4 | Talvez uma versão Bedrock | ○ (só ideia) |
 
+### T8. Qualidade de criatura (o "Passe de Qualidade", `docs/estudos/02_3D_ANIMACAO.md`)
+| Fase | O que entra | Estado |
+|---|---|---|
+| T8.1 | Densidade de texel unificada (16 px/m; piso 8 acima de 15 m; teto 32 abaixo de 1 m) e re-autoria dos extremos (saurópodes, mosassauro, os menores de 2 m) | ⏭ (junto com a remodelagem) |
+| T8.2 | Passo casado com a velocidade: `stride_m`/`cycle_s` exportados pelo pipeline, controlador que acumula a fase pela distância, passadas com som e poeira | ⏭ |
+| T8.3 | Camada procedural: olhar distribuído pelo pescoço, cauda e pescoço com inércia, IK de pé (bípede e quadrúpede), respiração, ociosos aleatórios; contrato de rig por arquétipo | ○ |
+| T8.4 | Animações parciais (roar, eat, call, attack só no corpo de cima) e as que faltam: sleep, hatch, swim, hurt, death, turn, drink | ○ |
+| T8.5 | Filhote com geometria própria (`ontogeny`), morfos assados (2-3 + 1 raro), contrassombreamento | ○ |
+| T8.6 | LOD 0/1/2 gerado por tag, remoção de faces escondidas, orçamento de cubos no CI | ○ |
+| T8.7 | Hitbox multiparte acima de 8 m (servidor, mixin no Fabric), câmera de montaria pela altura, navegação de gigantes | ○ |
+| T8.8 | Camada de override de arte + plugin "Terrassic Check" do Blockbench + templates por arquétipo (contribuição da comunidade) | ○ (depois da v1.0) |
+
+### T9. Escala e servidor (`docs/estudos/03_MULTIPLAYER_INTEGRACAO.md`)
+| Fase | O que entra | Estado |
+|---|---|---|
+| T9.1 | Errantes efêmeros (não vão para o disco), despawn ligado à simulation distance, ovos selvagens sem população permanente | ⏭ |
+| T9.2 | Spawner orçado e justo (cota por jogador, rodízio, escalonamento, disjuntor por MSPT); metas de varredura baratas; tracking range 8 / 10-12; `Rules.of` sem lock | ⏭ |
+| T9.3 | LOD de IA em três faixas, com fome, sono e cria por tempo decorrido | ○ |
+| T9.4 | Dados por jogador em arquivo por UUID, sincronização delta do Conhecimento, pronto para rede Velocity | ○ |
+| T9.5 | Claims e permissões: quebra de blocos montada como do jogador, evento de mob griefing, nós de permissão, confiança de equipe, limite de domados, `/terrassic pets` | ○ |
+| T9.6 | Tempestades da Fenda regionais e pouso do salto espalhado | ○ |
+| T9.7 | Mundo de teste com bots e perfil do spark em cada versão; guia para donos de servidor | ○ |
+
+### T10. Dados e integração com modpacks
+| Fase | O que entra | Estado |
+|---|---|---|
+| T10.1 | Dietas por tag (`terrassic:diet/<espécie>`, `#c:foods/raw_meat`), carnes e lanças nas tags `c:`, tags de entidade (`terrassic:giants`, `predators`, `rideable`) | ⏭ |
+| T10.2 | Jade/WTHIT, EMI (+ JEI/REI), página dos IDs de conquista para FTB Quests, critério `terrassic:research_level` | ○ |
+| T10.3 | Espécies em JSON de datapack (números, dieta, habitat, loot), emitidos pelo `gen_species.py`, antes do port 1.21.1 | ○ |
+| T10.4 | API pública (`com.terrassic.api`): eventos (domado, pesquisa, salto, tempestade), registro de espécies; plugin KubeJS | ○ (depois da v1.0) |
+
+### T11. Plataforma e versões (`docs/estudos/04_VERSOES_PLATAFORMAS.md`)
+| Fase | O que entra | Estado |
+|---|---|---|
+| T11.1 | Camada de plataforma própria (`Services` por loader), registro centralizado, payloads tipados, estado de item como record + Codec, renderers que leem a entidade num ponto só | ⏭ |
+| T11.2 | **Port para 1.21.1 NeoForge + Fabric** (GeckoLib 4.9, Architectury API 13); 1.21.1 vira o branch principal, Forge fica só na 1.20.1 | ○ (fev-abr/2027) |
+| T11.3 | Escolha da 26.x-alvo (2º tri/2027) e spike de GeckoLib 5 com 2-3 espécies; port no 2º semestre/2027 | ○ |
+| T11.4 | Bedrock como projeto separado reaproveitando a arte, via publishing partner | ○ (2028+, só ideia) |
+
+### T12. Marca e comunidade (`docs/estudos/05_MARCA_COMUNIDADE.md`)
+| Fase | O que entra | Estado |
+|---|---|---|
+| T12.1 | Nome e direitos: titular, INPI (classes 9 e 41), consulta sobre a marca "TERRASSIC" registrada nos EUA (terrários), domínios e @ | ❓ (Rodrigo) |
+| T12.2 | Licença (código LGPL-3.0 ou MIT + assets ARR + permissões + CLA) e disclaimer da Mojang | ❓ (Rodrigo) |
+| T12.3 | Discord fechado com a estrutura do estudo, beta testers ("Ensaio"), moderação por idioma | ○ |
+| T12.4 | Site com bestiário gerado dos dados do mod (Astro, 3 idiomas), devlog, press kit; wiki.gg quando houver editores | ○ |
+| T12.5 | "Fichas de campo" semanais, devlog quinzenal, trailer em cada versão grande; mascote Sílex | ○ |
+| T12.6 | Early Access público e gratuito (mai/2027), modpack oficial, afiliado de hospedagem, parceria com criadores | ○ |
+
 ## 7. O que pode andar em paralelo agora
 
 Cada linha é uma frente que uma sessão pode tocar sem esbarrar nas outras (cuidado só com os arquivos da seção 3).
@@ -252,6 +310,10 @@ Todas trabalham na mesma fila, a da Era 1:
 | Vozes da Era 1 | Conjuntos de voz na ordem da fila | `tools/soundgen/` |
 | Ovos da Era 1 | Ovo v5 de cada espécie da fila | `tools/spritegen/egg_designs.py` |
 | Lore | Ficha curta por espécie, na ordem da fila | `tools/javagen/lore.py` |
+| Escala e servidor (T9) | Errantes efêmeros, spawner orçado, metas baratas, tracking range | `world/EcoSpawner.java`, `entity/` (IA) |
+| Qualidade de criatura (T8) | Densidade de texel e passo casado com a velocidade, junto com a remodelagem | `tools/modelgen/`, controladores em `DinosaurEntity` |
+| Dados e integração (T10) | Dietas por tag, tags `c:`, Jade/EMI opcionais | `gen_species.py`, `compat/` |
+| Identidade (T3.6) | Passar as telas restantes pela paleta | `client/`, `client/ui/` |
 
 **Dependências que seguram a ordem:** espécie nova no código só depois do modelo, do ovo, do tamanho e do texto;
 nado montado antes do mar (v0.5); carga e plataforma antes dos titãs (v0.6); nocaute precisa das animações de
@@ -270,13 +332,22 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 | v0.6 | Planícies, manadas e titãs | 🔄 conteúdo completo (15 espécies, fases 48-62; 7 sistemas, fases 63-69); falta testar no jogo |
 | v0.7 | Predadores ápice e nocaute | ○ |
 | v0.8 | Mundo Terrassic: biomas, estruturas, menu do Minecraft, HUD, ambientação, pacote de texturas | 🔄 biomas, estruturas, menu e HUD na main (9da2414); faltam mundo-ilha, ambientação e pacote de texturas |
-| v0.9 | O Fim: Altar do Salto e chefe | 🔄 código integrado na main até `3023eae`; testes no jogo pendentes (`TESTES_V09.md`) |
+| v0.9 | O Fim: Altar do Salto e chefe | 🔄 código integrado na main (com os ajustes de `6ceb3c9`); testes no jogo pendentes (`TESTES_V09.md`) |
 | **v1.0** | **Capítulo 1 "Ecos do Fim" completo**, testado no Fabric e no Forge, 3 idiomas, lançamento | ○ |
 | v2.0 | Penas e Cinzas | ○ |
 | v3.0 | O Reino dos Gigantes | ○ |
 | v4.0 | A Origem e os finais | ○ |
 | v5.0 | O Caminho de Volta | ○ |
 | depois | Encher cada era até o bestiário, mods complementares, 1.21.x, talvez Bedrock | ○ |
+
+### Marcos até a v1.0 (`ESTRATEGIA.md` §7; datas são estimativas)
+
+| Marco | Quando | Critério para passar |
+|---|---|---|
+| **Passe de escala** | nov/2026 | T9.1, T9.2 e T10.1 feitos; mundo de teste com spark mostra MSPT estável com o spawner cheio |
+| **Alpha fechada** ("Ensaio", Discord) | fev-abr/2027 | v0.3-v0.9 testadas no jogo; Passe de Qualidade (T8.1-T8.4) nas espécies do núcleo; licença e nome resolvidos (T12.1-T12.2); port 1.21.1 em andamento |
+| **Early Access público** (grátis) | mai-jun/2027 | 1.21.1 NeoForge + Fabric e 1.20.1; nenhum bug de persistência conhecido; integrações T10.2; site com bestiário e press kit |
+| **v1.0 "Ecos do Fim"** | out/2027 (alvo) | Capítulo 1 completo jogável do começo ao fim; T8.7 nos gigantes; perfil do spark publicado; trailer nos 3 idiomas |
 
 ## 9. Perguntas abertas para o Rodrigo
 
@@ -285,6 +356,10 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 3. **Testes no jogo** (só um humano faz): `docs/TESTES_V03.md`, tamanhos reais, ouvir os sons, conferir os 3 idiomas.
 4. **Guia CONTRIBUTING** para a segunda conta: escrevo?
 5. **Renascer na era** em que o jogador morreu (cama da era ou Altar), em vez de voltar ao mundo normal?
+6. **Titular da marca** (Rodrigo ou Grupo Permaneo), **registro no INPI** e consulta a um advogado sobre a marca
+   "TERRASSIC" já registrada nos EUA para produtos de terrário (`ESTRATEGIA.md` §4).
+7. **Licença** do código e dos assets e as permissões para modpacks (recomendação em `ESTRATEGIA.md` §4).
+8. **Domínios e @** (sugestão: terrassic.net ou terrassic.gg como principal).
 
 ## 10. Documentos de cada assunto
 
@@ -301,3 +376,7 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 | Capa e imagens | `docs/CAPA.md`, `docs/RESUMO.md` |
 | Testes da v0.3 | `docs/TESTES_V03.md` |
 | Modelos | `tools/modelgen/README.md` |
+| Plano mestre (estratégia, decisões, briefing) | `docs/ESTRATEGIA.md` |
+| Estudos (mercado, 3D, multiplayer, versões, marca) | `docs/estudos/01_MERCADO.md` a `05_MARCA_COMUNIDADE.md` |
+| Identidade visual | `docs/IDENTIDADE.md` |
+| O Fim (v0.9): Altar, ritual, Tirano, Salto | `docs/SALTO.md`, `docs/TESTES_V09.md` |

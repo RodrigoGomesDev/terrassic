@@ -2,6 +2,7 @@ package com.terrassic.client;
 
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
+import com.terrassic.client.ui.TerrassicUi;
 import com.terrassic.network.RulesNetwork;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
@@ -21,24 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.terrassic.client.ui.TerrassicPalette.*;
+
 /**
- * "Terrassic Rules" (docs/REGRAS.md): the world rules in a screen modelled on ARK's server settings, one tab per
- * {@link Rule.Tab}, every rule a row with its name, a number box and a slider; hovering the name explains it.
+ * "Terrassic Rules" (docs/REGRAS.md): the world rules, one tab per {@link Rule.Tab}, every rule a row with its name,
+ * a number box and a slider; hovering the name explains it.
  *
  * <p>Opened from the pause menu (or {@code /terrassic regras}) it edits the rules of the world being played: an
  * operator, or the owner of a single player world, saves them to the server; anyone else only reads them. Opened
  * with no world (the Forge mods list) it edits the defaults new worlds start from (config/terrassic-world.json).
- * Drawn with plain fills and text, no texture: a dark glass panel with cyan lines.
+ * Drawn with the Terrassic look (client/ui/TerrassicUi, docs/IDENTIDADE.md): a basalt slab with an amber inlay,
+ * carved stone buttons and amber sliders, no texture.
  */
 public class RulesScreen extends Screen {
-    private static final int GLASS = 0xE00B1620;
-    private static final int GLASS_LIGHT = 0xC0132634;
-    private static final int LINE = 0xFF3FB5CF;
-    private static final int LINE_SOFT = 0x803FB5CF;
-    private static final int TEXT = 0xFFD7F4FA;
-    private static final int TEXT_SOFT = 0xFF7FA9B5;
-    private static final int ACCENT = 0xFF8FE6F7;
     private static final int ROW_H = 34;
+    private static final int FIELD_W = 44;
 
     private static Rule.Tab lastTab = Rule.Tab.GENERAL;
 
@@ -83,8 +81,8 @@ public class RulesScreen extends Screen {
         int tabW = (this.panelW - 24) / tabs.length;
         for (int i = 0; i < tabs.length; i++) {
             Rule.Tab t = tabs[i];
-            this.addRenderableWidget(new GlassButton(this.left + 12 + i * tabW, this.top + 30, tabW - 4, 18,
-                    Component.translatable("rules.terrassic.tab." + t.id()), b -> this.select(t), t == this.tab, true));
+            this.addRenderableWidget(new StoneButton(this.left + 12 + i * tabW, this.top + 30, tabW - 4, 18,
+                    Component.translatable("rules.terrassic.tab." + t.id()), b -> this.select(t), t == this.tab, true, false));
         }
 
         int y = this.listTop;
@@ -101,14 +99,14 @@ public class RulesScreen extends Screen {
 
         int bw = (this.panelW - 32) / 3;
         int by = this.top + this.panelH - 26;
-        GlassButton reset = new GlassButton(this.left + 12, by, bw, 18, Component.translatable("rules.terrassic.ui.reset"),
-                b -> this.resetTab(), false, false);
+        StoneButton reset = new StoneButton(this.left + 12, by, bw, 18, Component.translatable("rules.terrassic.ui.reset"),
+                b -> this.resetTab(), false, false, false);
         reset.active = this.editable;
         this.addRenderableWidget(reset);
-        this.addRenderableWidget(new GlassButton(this.left + 16 + bw, by, bw, 18, Component.translatable("rules.terrassic.ui.cancel"),
-                b -> this.onClose(), false, false));
-        GlassButton save = new GlassButton(this.left + 20 + bw * 2, by, bw, 18, Component.translatable("rules.terrassic.ui.save"),
-                b -> this.save(), false, false);
+        this.addRenderableWidget(new StoneButton(this.left + 16 + bw, by, bw, 18, Component.translatable("rules.terrassic.ui.cancel"),
+                b -> this.onClose(), false, false, false));
+        StoneButton save = new StoneButton(this.left + 20 + bw * 2, by, bw, 18, Component.translatable("rules.terrassic.ui.save"),
+                b -> this.save(), false, false, true);
         save.active = this.editable;
         this.addRenderableWidget(save);
     }
@@ -176,22 +174,12 @@ public class RulesScreen extends Screen {
         this.renderBackground(g);
         int right = this.left + this.panelW;
         int bottom = this.top + this.panelH;
-        g.fill(this.left, this.top, right, bottom, GLASS);
-        // frame: full lines with a notch cut into the top left corner, like the ARK panels
-        g.fill(this.left + 10, this.top, right, this.top + 1, LINE);
-        g.fill(this.left, this.top + 10, this.left + 1, bottom, LINE);
-        g.fill(right - 1, this.top, right, bottom, LINE);
-        g.fill(this.left, bottom - 1, right, bottom, LINE);
-        for (int i = 0; i < 10; i++) {
-            g.fill(this.left + i, this.top + 10 - i, this.left + i + 1, this.top + 11 - i, LINE);
-        }
-        this.drawHexes(g, right, bottom);
-
-        g.drawString(this.font, this.title.getString().toUpperCase(Locale.ROOT), this.left + 14, this.top + 8, ACCENT);
+        TerrassicUi.slab(g, this.left, this.top, right, bottom);
+        g.drawString(this.font, this.title, this.left + 14, this.top + 9, rgb(AMBER_500));
         Component sub = Component.translatable(this.world ? "rules.terrassic.ui.world" : "rules.terrassic.ui.defaults");
-        g.drawString(this.font, sub, this.left + 14, this.top + 19, TEXT_SOFT, false);
-        g.fill(this.left + 12, this.listTop - 6, right - 12, this.listTop - 5, LINE_SOFT);
-        g.fill(this.left + 12, this.listBottom + 3, right - 12, this.listBottom + 4, LINE_SOFT);
+        g.drawString(this.font, sub, this.left + 14, this.top + 19, rgb(STONE_400), false);
+        TerrassicUi.divider(g, this.left + 12, right - 12, this.listTop - 6);
+        TerrassicUi.divider(g, this.left + 12, right - 12, this.listBottom + 3);
 
         g.enableScissor(this.left + 1, this.listTop - 4, right - 1, this.listBottom + 2);
         for (Row row : this.rows) {
@@ -204,40 +192,17 @@ public class RulesScreen extends Screen {
         if (contentH > viewH) {
             int barH = Math.max(16, viewH * viewH / contentH);
             int barY = this.listTop + (viewH - barH) * this.scroll / (contentH - viewH);
-            g.fill(right - 8, this.listTop, right - 6, this.listBottom, LINE_SOFT);
-            g.fill(right - 9, barY, right - 5, barY + barH, LINE);
+            TerrassicUi.scrollbar(g, right - 9, this.listTop, this.listBottom, barY, barH);
         }
         if (!this.editable) {
             g.drawCenteredString(this.font, Component.translatable("rules.terrassic.ui.read_only"), this.width / 2,
-                    this.listBottom - 10, 0xFFF0B060);
+                    this.listBottom - 10, rgb(AMBER_300));
         }
         super.render(g, mouseX, mouseY, partialTick);
 
         for (Row row : this.rows) {
             if (row.labelHovered(mouseX, mouseY)) {
                 g.renderTooltip(this.font, this.font.split(Component.translatable(row.rule.tipKey()), 220), mouseX, mouseY);
-            }
-        }
-    }
-
-    /** A faint honeycomb in the panel's corner. */
-    private void drawHexes(GuiGraphics g, int right, int bottom) {
-        int color = 0x143FB5CF;
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 5; col++) {
-                int cx = right - 20 - col * 18 - (row % 2) * 9;
-                int cy = bottom - 44 - row * 15;
-                if (cx < this.left + 10 || cy < this.top + 10) {
-                    continue;
-                }
-                g.fill(cx - 4, cy - 7, cx + 4, cy - 6, color);
-                g.fill(cx - 4, cy + 6, cx + 4, cy + 7, color);
-                g.fill(cx - 8, cy - 1, cx - 7, cy + 1, color);
-                g.fill(cx + 7, cy - 1, cx + 8, cy + 1, color);
-                g.fill(cx - 7, cy - 6, cx - 6, cy - 1, color);
-                g.fill(cx + 6, cy - 6, cx + 7, cy - 1, color);
-                g.fill(cx - 7, cy + 1, cx - 6, cy + 6, color);
-                g.fill(cx + 6, cy + 1, cx + 7, cy + 6, color);
             }
         }
     }
@@ -260,12 +225,14 @@ public class RulesScreen extends Screen {
             this.rule = rule;
             this.y = y;
             int x = RulesScreen.this.left + 14;
-            this.box = new EditBox(RulesScreen.this.font, x, y + 12, 44, 14, Component.translatable(rule.langKey()));
+            this.box = new EditBox(RulesScreen.this.font, x + 4, y + 15, FIELD_W - 7, 10, Component.translatable(rule.langKey()));
+            this.box.setBordered(false);
             this.box.setMaxLength(8);
             this.box.setFilter(s -> s.matches("[0-9.,]*"));
             this.box.setValue(format(rule, RulesScreen.this.edited.get(rule)));
             this.box.setEditable(RulesScreen.this.editable);
-            this.box.setTextColor(TEXT);
+            this.box.setTextColor(rgb(BONE_100));
+            this.box.setTextColorUneditable(rgb(STONE_400));
             int sx = x + 56;
             this.slider = new Slider(this, sx, y + 12, RulesScreen.this.left + RulesScreen.this.panelW - 18 - sx, 14);
             this.slider.active = RulesScreen.this.editable;
@@ -283,7 +250,7 @@ public class RulesScreen extends Screen {
 
         void place(int y) {
             this.y = y;
-            this.box.setY(y + 12);
+            this.box.setY(y + 15);
             this.slider.setY(y + 12);
             boolean shown = y >= RulesScreen.this.listTop - 2 && y + ROW_H <= RulesScreen.this.listBottom + 4;
             this.box.visible = shown;
@@ -304,13 +271,17 @@ public class RulesScreen extends Screen {
 
         void drawLabel(GuiGraphics g) {
             Font font = RulesScreen.this.font;
-            String name = Component.translatable(this.rule.langKey()).getString().toUpperCase(Locale.ROOT) + ":";
-            g.drawString(font, name, RulesScreen.this.left + 14, this.y + 1, TEXT, false);
-            if (this.rule.defaultValue != RulesScreen.this.edited.get(this.rule)) {
-                // changed from the default: a small mark after the name
-                int w = font.width(name);
-                g.fill(RulesScreen.this.left + 17 + w, this.y + 3, RulesScreen.this.left + 20 + w, this.y + 6, ACCENT);
+            int x = RulesScreen.this.left + 14;
+            if (!this.box.visible) {
+                return;
             }
+            String name = Component.translatable(this.rule.langKey()).getString();
+            g.drawString(font, name, x, this.y + 1, rgb(STONE_200), false);
+            if (this.rule.defaultValue != RulesScreen.this.edited.get(this.rule)) {
+                // changed from the default: a small amber mark after the name
+                TerrassicUi.mark(g, x + font.width(name) + 4, this.y + 3);
+            }
+            TerrassicUi.well(g, x, this.y + 12, x + FIELD_W, this.y + 26, this.box.isFocused());
         }
 
         boolean labelHovered(int mx, int my) {
@@ -339,7 +310,7 @@ public class RulesScreen extends Screen {
 
     // ------------------------------------------------------------------ widgets
 
-    /** A slider drawn as a thin cyan rail with a hexagonal knob. */
+    /** A slider: an amber-filled groove with an amber shard as the knob (TerrassicUi.slider). */
     private final class Slider extends AbstractWidget {
         private final Row row;
 
@@ -376,20 +347,9 @@ public class RulesScreen extends Screen {
 
         @Override
         protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-            int x = this.getX();
-            int y = this.getY();
-            int mid = y + this.height / 2;
-            int rail = this.active ? LINE : LINE_SOFT;
-            g.fill(x + 4, mid - 1, x + this.width - 4, mid + 1, rail);
-            // the default value: a tick under the rail
             Rule r = this.row.rule;
-            int def = x + 4 + (int) Math.round((r.defaultValue - r.min) / (r.max - r.min) * (this.width - 8));
-            g.fill(def, mid + 2, def + 1, mid + 5, LINE_SOFT);
-            int kx = x + 4 + (int) Math.round(this.fraction() * (this.width - 8));
-            int knob = this.isHoveredOrFocused() && this.active ? 0xFFFFFFFF : ACCENT;
-            g.fill(kx - 2, mid - 5, kx + 3, mid + 6, knob);
-            g.fill(kx - 4, mid - 3, kx + 5, mid + 4, knob);
-            g.fill(kx - 1, mid - 2, kx + 2, mid + 3, GLASS);
+            TerrassicUi.slider(g, this.getX(), this.getY(), this.width, this.height, this.fraction(),
+                    (r.defaultValue - r.min) / (r.max - r.min), this.active, this.isHoveredOrFocused());
         }
 
         @Override
@@ -399,15 +359,17 @@ public class RulesScreen extends Screen {
         }
     }
 
-    /** A flat glass button with a cyan outline (tabs and the bottom row). */
-    static final class GlassButton extends Button {
+    /** A carved stone button (tabs and the bottom row); the primary one (save) has an amber face. */
+    static final class StoneButton extends Button {
         private final boolean selected;
         private final boolean tab;
+        private final boolean primary;
 
-        GlassButton(int x, int y, int w, int h, Component message, OnPress onPress, boolean selected, boolean tab) {
+        StoneButton(int x, int y, int w, int h, Component message, OnPress onPress, boolean selected, boolean tab, boolean primary) {
             super(x, y, w, h, message, onPress, DEFAULT_NARRATION);
             this.selected = selected;
             this.tab = tab;
+            this.primary = primary;
         }
 
         @Override
@@ -419,24 +381,13 @@ public class RulesScreen extends Screen {
 
         @Override
         protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-            int x = this.getX();
-            int y = this.getY();
+            Font font = net.minecraft.client.Minecraft.getInstance().font;
             boolean hot = this.active && this.isHoveredOrFocused();
             if (this.tab) {
-                int color = this.selected ? ACCENT : hot ? TEXT : TEXT_SOFT;
-                Font font = net.minecraft.client.Minecraft.getInstance().font;
-                g.drawCenteredString(font, this.getMessage().getString().toUpperCase(Locale.ROOT), x + this.width / 2,
-                        y + (this.height - 8) / 2, color);
-                if (this.selected) {
-                    g.fill(x + 4, y + this.height - 2, x + this.width - 4, y + this.height, ACCENT);
-                }
-                return;
+                TerrassicUi.tab(g, font, this.getX(), this.getY(), this.width, this.height, this.getMessage(), this.selected, hot);
+            } else {
+                TerrassicUi.button(g, font, this.getX(), this.getY(), this.width, this.height, this.getMessage(), this.active, hot, this.primary);
             }
-            g.fill(x, y, x + this.width, y + this.height, hot ? GLASS_LIGHT : 0x900B1620);
-            g.renderOutline(x, y, this.width, this.height, this.active ? (hot ? ACCENT : LINE) : LINE_SOFT);
-            Font font = net.minecraft.client.Minecraft.getInstance().font;
-            g.drawCenteredString(font, this.getMessage(), x + this.width / 2, y + (this.height - 8) / 2,
-                    this.active ? (hot ? 0xFFFFFFFF : TEXT) : TEXT_SOFT);
         }
     }
 }

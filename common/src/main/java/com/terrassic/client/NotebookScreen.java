@@ -38,11 +38,12 @@ import java.util.Map;
 public class NotebookScreen extends Screen {
     private static final int W = 320;
     private static final int H = 210;
-    private static final int PAPER = 0xFFE9DCBC;
-    private static final int PAPER_DARK = 0xFFD8C79E;
-    private static final int LEATHER = 0xFF5A3620;
-    private static final int INK = 0xFF3B2A1A;
-    private static final int INK_SOFT = 0xFF7A6448;
+    // Katarina's notebook colours of the Terrassic palette (client/ui/TerrassicPalette, docs/IDENTIDADE.md)
+    private static final int PAPER = com.terrassic.client.ui.TerrassicPalette.PAPER;
+    private static final int PAPER_DARK = com.terrassic.client.ui.TerrassicPalette.PAPER_DARK;
+    private static final int LEATHER = com.terrassic.client.ui.TerrassicPalette.LEATHER;
+    private static final int INK = com.terrassic.client.ui.TerrassicPalette.INK;
+    private static final int INK_SOFT = com.terrassic.client.ui.TerrassicPalette.INK_SOFT;
     private static final int DONE = 0xFF3C7A2E;
     private static final int AMBER = 0xFFB86E10;
     private static final String[] TABS = {"journal", "guide", "katarina", "report"};

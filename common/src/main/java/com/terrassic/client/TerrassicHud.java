@@ -49,9 +49,9 @@ public final class TerrassicHud {
     private static final int CARGO = 4;
     private static final int HUNGER = 5;
     private static final int HEART = 6;
-    private static final int PANEL = 0xC0201620;
-    private static final int EDGE = 0xFF8A6A4A;
-    private static final int PAPER = 0xE8DCC0;
+    private static final int PANEL = com.terrassic.client.ui.TerrassicPalette.alpha(com.terrassic.client.ui.TerrassicPalette.BASALT_800, 0xD0);
+    private static final int EDGE = com.terrassic.client.ui.TerrassicPalette.AMBER_700;
+    private static final int PAPER = com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.BONE_100);
 
     private static Map<String, Integer> levels;
     private static Knowledge seenAtJoin;
@@ -114,20 +114,20 @@ public final class TerrassicHud {
     }
 
     private static void bar(GuiGraphics g, int x, int y, int width, float fraction, int colour) {
-        g.fill(x, y, x + width, y + 4, 0xFF2A1A1E);
+        g.fill(x, y, x + width, y + 4, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
         g.fill(x, y, x + Math.round(width * Mth.clamp(fraction, 0.0F, 1.0F)), y + 4, colour);
         g.fill(x, y, x + Math.round(width * Mth.clamp(fraction, 0.0F, 1.0F)), y + 1, (colour & 0x00FFFFFF) | 0x60FFFFFF);
     }
 
     private static void mountPanel(GuiGraphics g, Font font, DinosaurEntity d, int x, int y) {
         frame(g, x, y, x + 132, y + 46);
-        g.fill(x + 3, y + 3, x + 43, y + 43, 0xFF140E16);
+        g.fill(x + 3, y + 3, x + 43, y + 43, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
         portrait(g, d, x + 3, y + 3, 40);
         g.drawString(font, d.getDisplayName(), x + 47, y + 5, PAPER);
         icon(g, HEART, x + 47, y + 17);
-        bar(g, x + 58, y + 19, 70, d.getHealth() / d.getMaxHealth(), 0xFFC42E2E);
+        bar(g, x + 58, y + 19, 70, d.getHealth() / d.getMaxHealth(), com.terrassic.client.ui.TerrassicPalette.BLOOD_500);
         icon(g, HUNGER, x + 47, y + 27);
-        bar(g, x + 58, y + 29, 70, d.getHunger() / (float) DinosaurEntity.MAX_HUNGER, 0xFFE0661C);
+        bar(g, x + 58, y + 29, 70, d.getHunger() / (float) DinosaurEntity.MAX_HUNGER, com.terrassic.client.ui.TerrassicPalette.AMBER_600);
         int ix = x + 47;
         if (d.isChested()) {
             icon(g, CARGO, ix, y + 36);
@@ -141,7 +141,7 @@ public final class TerrassicHud {
     private static void packCard(GuiGraphics g, DinosaurEntity d, int x, int y) {
         frame(g, x, y, x + 28, y + 28);
         portrait(g, d, x + 2, y + 2, 24);
-        bar(g, x + 2, y + 23, 24, d.getHealth() / d.getMaxHealth(), 0xFFC42E2E);
+        bar(g, x + 2, y + 23, 24, d.getHealth() / d.getMaxHealth(), com.terrassic.client.ui.TerrassicPalette.BLOOD_500);
         int state = d.isSleeping() ? SLEEP : d.isAggressive() ? FIGHT : d.isInSittingPose() ? SIT : FOLLOW;
         icon(g, state, x + 19, y + 1);
     }
@@ -153,7 +153,7 @@ public final class TerrassicHud {
         g.blit(ICONS, width / 2 - 8, 3, 0.0F, 16.0F, 16, 16, 64, 32);
         g.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
-        g.drawCenteredString(font, Component.translatable("hud.terrassic.rift_storm"), width / 2, 21, 0xFFB63C);
+        g.drawCenteredString(font, Component.translatable("hud.terrassic.rift_storm"), width / 2, 21, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.RIFT_500));
     }
 
     /** The live entity, scaled to fit a size x size box (by the species' real length), seen three-quarters. */
