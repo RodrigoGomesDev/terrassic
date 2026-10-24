@@ -1,4 +1,4 @@
-"""Front-view 32x32 spawn-egg designs (v5), one function per species, drawn on eggfront.Egg."""
+"""Front-view 32x32 spawn-egg designs (v5 style), one function per species, drawn on eggfront.Egg."""
 from eggfront import Egg, in_egg, N
 
 K = "#16100c"
@@ -351,9 +351,464 @@ def mosasaurus():
     return e
 
 
+# ------------------------------------------------------------------ shared templates (v0.4+ species)
+def _side(e, pts, ch):
+    """polygon on the left side plus its mirror on the right"""
+    e.poly(pts, ch)
+    e.poly([(31 - x, y) for (x, y) in pts], ch)
+
+
+def _stripes(e, lines, ch="n"):
+    for (x0, y0, x1, y1) in lines:
+        e.line([(x0, y0), (x1, y1)], ch, 2, clip=True)
+        e.line([(31 - x0, y0), (31 - x1, y1)], ch, 2, clip=True)
+
+
+def theropod(name, pal, jaw="boxy", teeth=(9, 13), stripes=(), cap_top=(5, 2, 26, 18)):
+    e = Egg(name, {"R": MOUTH, **pal})
+    cap(e, "d", cap_top, None)
+    _stripes(e, stripes)
+    e.pal["W"] = TOOTH
+    if jaw == "boxy":
+        e.rect((6, 23, 25, 31), "c", clip=True)
+        e.line([(6, 22), (25, 22)], "R")
+        e.px(e.mirror([(6, 21)]), "R")
+        for x in teeth:
+            e.px(e.mirror([(x, 23), (x, 24), (x + 1, 23)]), "W")
+        e.px(e.mirror([(13, 19), (12, 19)]), "n")
+    else:
+        e.poly([(11, 17), (20, 17), (22, 31), (9, 31)], "c", clip=True)
+        e.line([(9, 25), (22, 25)], "R")
+        for x in teeth:
+            e.px(e.mirror([(x, 26)]), "W")
+        nostrils(e, 20, 13)
+    eyes(e, 14, 9)
+    return e
+
+
+def sauropod(name, pal, spots=()):
+    e = Egg(name, {"R": "#4a2a2a", **pal})
+    cap(e, "d", (6, 4, 25, 17), None)
+    e.ell((8, 20, 23, 34), "c", clip=True)
+    for p in spots:
+        e.px(e.mirror([p, (p[0] + 1, p[1]), (p[0], p[1] + 1), (p[0] + 1, p[1] + 1)]), "s")
+    eyes(e, 15, 8)
+    nostrils(e, 11, 14, "n")
+    e.line([(11, 26), (20, 26)], "R")
+    return e
+
+
+def hadrosaur(name, pal):
+    e = Egg(name, {"m": "#c09a68", "M": "#4a3e30", **pal})
+    cap(e, "d", (6, 5, 25, 17), None)
+    eyes(e, 14, 9)
+    e.ell((8, 21, 23, 36), "c", clip=True)
+    e.ell((7, 23, 24, 30), "m", clip=True)
+    e.line([(9, 27), (22, 27)], "M")
+    nostrils(e, 25, 12, "M")
+    return e
+
+
+def ceratopsian(name, pal, frill=(1, 0, 30, 22), knobs=(), brow=True, nose="horn"):
+    e = Egg(name, {"k": "#3e342a", **pal})
+    e.ell(frill, "w")
+    e.ell((frill[0] + 2, frill[1] + 2, frill[2] - 2, frill[3] - 2), "e")
+    for (cx, cy) in knobs:
+        e.px([(cx, cy - 1), (cx - 1, cy), (cx + 1, cy), (cx, cy + 1)], "w")
+        e.px([(cx, cy)], "D")
+    e.ell((6, 9, 25, 40), "b")
+    for y in range(N):
+        for x in range(N):
+            if y > 18 and not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((9, 9, 22, 20), "d", clip=True)
+    e.ell((9, 21, 22, 33), "c", clip=True)
+    if brow:
+        _side(e, [(10, 13), (12, 12), (9, 6), (8, 7)], "i")
+    eyes(e, 15, 9)
+    if nose == "horn":
+        e.poly([(14, 22), (17, 22), (16, 17), (15, 17)], "i")
+    elif nose == "boss":
+        e.ell((12, 17, 19, 22), "j")
+    e.poly([(13, 26), (18, 26), (17, 30), (14, 30)], "k")
+    nostrils(e, 24, 13)
+    return e
+
+
+def beaked(name, pal, beak=(13, 15, 18, 29)):
+    """ornithomimid / bird face: cap, pale throat, long beak down the middle (like the Gallimimus)."""
+    e = Egg(name, {"m": "#4e4844", "M": "#7a7268", **pal})
+    cap(e, "d", (6, 2, 25, 18), None)
+    e.ell((9, 18, 22, 34), "c", clip=True)
+    eyes(e, 13, 8)
+    x0, y0, x1, y1 = beak
+    e.poly([(x0, y0), (x1, y0), (x1 - 1, y1 - 2), (x1 - 2, y1), (x0 + 2, y1), (x0 + 1, y1 - 2)], "m")
+    e.line([(15, y0 + 2), (15, y1 - 3)], "M")
+    return e
+
+
+def pterosaur(name, pal, crest=((17, 8), (6, 0)), beak=(13, 15, 18, 30)):
+    e = Egg(name, {"w": "#5a4a3e", "m": "#d8bc84", "M": "#a88c5a", **pal})
+    _side(e, [(4, 15), (0, 19), (1, 22), (4, 21)], "w")
+    cap(e, "d", (6, 3, 25, 17), None)
+    if crest:
+        e.line(list(crest), "e", 3)
+    e.ell((9, 18, 22, 34), "c", clip=True)
+    eyes(e, 13, 9)
+    x0, y0, x1, y1 = beak
+    e.poly([(x0, y0), (x1, y0), (x1 - 1, y1 - 2), (x1 - 2, y1), (x0 + 2, y1), (x0 + 1, y1 - 2)], "m")
+    e.line([(15, y0 + 3), (15, y1 - 3)], "M")
+    return e
+
+
+def marine(name, pal, teeth=(8, 11, 14), fins=True):
+    e = Egg(name, {"R": MOUTH, **pal})
+    if fins:
+        _side(e, [(4, 21), (0, 25), (1, 27), (5, 24)], "f")
+    cap(e, "d", (6, 3, 25, 17), None)
+    e.rect((7, 22, 24, 31), "c", clip=True)
+    e.line([(7, 21), (24, 21)], "R")
+    e.pal["W"] = TOOTH
+    for x in teeth:
+        e.px(e.mirror([(x, 22), (x, 23)]), "W")
+    eyes(e, 14, 9)
+    nostrils(e, 18, 14)
+    return e
+
+
+def croc(name, pal, tall=False):
+    e = Egg(name, {"R": MOUTH, **pal})
+    cap(e, "d", (5, 3, 26, 18), None)
+    for p in ((10, 6), (14, 5), (8, 9), (12, 9)):
+        e.px(e.mirror([p, (p[0] + 1, p[1])]), "s")
+    top = 18 if tall else 20
+    e.rect((5, top, 26, 31), "c", clip=True)
+    e.line([(5, 24), (26, 24)], "R")
+    e.pal["W"] = TOOTH
+    for x in (6, 9, 12, 14):
+        e.px(e.mirror([(x, 25)]), "W")
+    for x in (7, 10, 13):
+        e.px(e.mirror([(x, 23)]), "W")
+    if tall:
+        e.px(e.mirror([(8, 25), (8, 26)]), "W")
+    e.px(e.mirror([(13, top + 1)]), "n")
+    eyes(e, 12, 9)
+    e.px(e.mirror([(8, 11), (9, 11), (10, 11), (11, 11)]), "d")
+    return e
+
+
+# ------------------------------------------------------------------ tyrannosaurs and other big theropods
+def tarbosaurus():
+    return theropod("tarbosaurus", {"b": "#8a7458", "c": "#d6c4a0", "d": "#4a3a2a", "n": "#33281c"},
+                    stripes=((4, 16, 7, 13),))
+
+
+def daspletosaurus():
+    e = theropod("daspletosaurus", {"b": "#6e7448", "c": "#d2c89c", "d": "#3e4428", "n": "#2c301a",
+                                    "e": "#b8402a"}, teeth=(8, 11, 14))
+    _side(e, [(8, 11), (11, 11), (10, 8)], "e")
+    return e
+
+
+def albertosaurus():
+    e = theropod("albertosaurus", {"b": "#8a8a78", "c": "#dcd8c4", "d": "#3a4458", "n": "#2a3242"},
+                 jaw="narrow", teeth=(10, 13), stripes=((4, 18, 7, 15),))
+    e.px(e.mirror([(9, 10), (10, 10)]), "n")
+    return e
+
+
+def giganotosaurus():
+    e = theropod("giganotosaurus", {"b": "#8e7e56", "c": "#dccc9c", "d": "#5a4c30", "n": "#3e3420",
+                                    "e": "#b84a2a"}, stripes=((4, 16, 7, 13), (4, 20, 7, 17)))
+    e.line([(11, 9), (20, 9)], "e", 2)
+    return e
+
+
+def carcharodontosaurus():
+    e = theropod("carcharodontosaurus", {"b": "#8e5a42", "c": "#dcc2a0", "d": "#5a3424", "n": "#3e2418"},
+                 teeth=(8, 10, 12, 14))
+    e.px(e.mirror([(9, 10), (10, 10), (11, 11)]), "n")
+    return e
+
+
+def carnotaurus():
+    e = theropod("carnotaurus", {"b": "#7a786a", "c": "#d0ccb8", "d": "#4a4a40", "n": "#30302a",
+                                 "e": "#8a2e22", "i": "#e8dcc0"}, jaw="narrow", teeth=(10, 13),
+                 cap_top=(5, 4, 26, 18))
+    # the two bull horns
+    _side(e, [(8, 9), (11, 9), (7, 3), (6, 4)], "i")
+    for p in ((7, 18), (6, 21), (8, 23)):
+        e.px(e.mirror([p]), "n")
+    return e
+
+
+def majungasaurus():
+    e = theropod("majungasaurus", {"b": "#9a5236", "c": "#e0c4a0", "d": "#5e2c1c", "n": "#3e1c12",
+                                   "f": "#e8a04a"}, jaw="narrow", teeth=(10, 13),
+                 stripes=((4, 17, 7, 14), (4, 22, 7, 19)))
+    e.poly([(14, 5), (15, 2), (16, 2), (17, 5)], "f")
+    return e
+
+
+def dakotaraptor():
+    e = theropod("dakotaraptor", {"b": "#6a5444", "c": "#e2d4bc", "d": "#2a2420", "n": "#1a1614",
+                                  "f": "#1e1a18", "F": "#f0ece2"}, jaw="narrow", teeth=(11, 14))
+    for (x, h) in ((11, 3), (13, 5), (15, 6), (17, 5), (19, 3)):
+        e.line([(x, 5 - h + 1), (x + (1 if x < 15 else -1 if x > 16 else 0), 6)], "f", 2)
+    for y in (17, 20, 23):
+        e.line([(4, y), (6, y)], "F", clip=True)
+        e.line([(25, y), (27, y)], "F", clip=True)
+    return e
+
+
+def troodon():
+    e = theropod("troodon", {"b": "#8a6a48", "c": "#e2d0aa", "d": "#4a3624", "n": "#2e2216",
+                             "f": "#5a4030"}, jaw="narrow", teeth=(12,), stripes=((4, 19, 7, 16),))
+    for (x, h) in ((13, 3), (15, 4), (17, 3)):
+        e.line([(x, 5 - h + 1), (x, 6)], "f", 2)
+    # big night eyes
+    e.pal["K"] = "#2a1e18"
+    e.rect((8, 13, 10, 15), "K")
+    e.rect((21, 13, 23, 15), "K")
+    return e
+
+
+# ------------------------------------------------------------------ feathered / beaked theropods
+def struthiomimus():
+    e = beaked("struthiomimus", {"b": "#a8825a", "c": "#efe4cc", "d": "#2e2620", "n": "#2e2620",
+                                 "m": "#3e3630"})
+    e.line([(15, 1), (14, 4)], "d", 2)
+    return e
+
+
+def oviraptor():
+    e = beaked("oviraptor", {"b": "#b07c4a", "c": "#ecdcbc", "d": "#3a2a1e", "n": "#2a1e14",
+                             "m": "#5a4a3c", "e": "#d2582a"}, beak=(12, 16, 19, 25))
+    e.ell((11, 0, 20, 9), "e")
+    e.px([(13, 2), (14, 1)], "f")
+    e.pal["f"] = "#f0a04a"
+    return e
+
+
+def therizinosaurus():
+    e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
+                                   "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
+    e.ell((9, 21, 22, 34), "e", clip=True)
+    e.ell((11, 24, 20, 35), "c", clip=True)
+    e.poly([(13, 18), (18, 18), (17, 24), (16, 26), (15, 26), (14, 24)], "m")
+    # the long scythe claws at the sides
+    for side in (0, 1):
+        pts = [(3, 22), (1, 26), (2, 29), (3, 27), (4, 24)]
+        if side:
+            pts = [(31 - x, y) for (x, y) in pts]
+        e.poly(pts, "I")
+    e.pal["I"] = "#ece2c4"
+    return e
+
+
+def deinocheirus():
+    e = beaked("deinocheirus", {"b": "#9a948a", "c": "#e4e0d6", "d": "#5a5650", "n": "#3e3a36",
+                                "m": "#6a5e50", "e": "#a8442c"}, beak=(11, 17, 20, 30))
+    e.poly([(10, 6), (12, 1), (19, 1), (21, 6)], "e")
+    e.line([(13, 2), (18, 2)], "E")
+    e.pal["E"] = "#d06a40"
+    return e
+
+
+def thescelosaurus():
+    e = beaked("thescelosaurus", {"b": "#6e7444", "c": "#dcd4a8", "d": "#3e4424", "n": "#2c301a",
+                                  "m": "#5a4a32", "e": "#c8642c"}, beak=(13, 22, 18, 28))
+    _side(e, [(5, 17), (8, 17), (8, 20), (5, 20)], "e")
+    return e
+
+
+# ------------------------------------------------------------------ hadrosaurs, ceratopsians, armour
+def edmontosaurus():
+    e = hadrosaur("edmontosaurus", {"b": "#7e7462", "c": "#d8d0b8", "d": "#4a4232", "n": "#2e2a20",
+                                    "e": "#b8442c"})
+    e.poly([(13, 7), (15, 3), (17, 3), (19, 7)], "e")
+    return e
+
+
+def corythosaurus():
+    e = hadrosaur("corythosaurus", {"b": "#5e7a4c", "c": "#d8d4ac", "d": "#344a2a", "n": "#22321a",
+                                    "e": "#c03c28", "y": "#f0b450"})
+    e.ell((9, 0, 22, 12), "e")
+    e.line([(10, 5), (21, 5)], "y")
+    for y in range(7, 13):
+        for x in range(N):
+            if e.get(x, y) in ("e", "y"):
+                e.set(x, y, "d" if in_egg(x, y) else "_")
+    return e
+
+
+def styracosaurus():
+    e = ceratopsian("styracosaurus", {"b": "#8a7a5e", "c": "#c4b48e", "e": "#b84a2c", "w": "#ece0c0",
+                                      "D": "#6e2414", "i": "#f2e8cc", "j": "#b8a87e", "d": "#6a5c44",
+                                      "n": "#4a3e30"}, frill=(3, 4, 28, 22), knobs=((8, 11), (23, 11)),
+                    brow=False)
+    # the long frill spikes
+    for (x0, y0, x1, y1) in ((7, 6, 4, 0), (10, 4, 9, -1), (13, 4, 13, -1)):
+        e.line([(x0, y0), (x1, y1)], "i", 2)
+        e.line([(31 - x0, y0), (31 - x1, y1)], "i", 2)
+    e.poly([(14, 22), (17, 22), (16, 14), (15, 14)], "i")
+    return e
+
+
+def pachyrhinosaurus():
+    e = ceratopsian("pachyrhinosaurus", {"b": "#5e646a", "c": "#b8bcb8", "e": "#a8462c", "w": "#e8e4d8",
+                                         "D": "#2e3236", "i": "#efe6cc", "j": "#c8c0a4", "d": "#44484e",
+                                         "n": "#2e3236"}, knobs=((7, 9), (24, 9)), brow=False, nose="boss")
+    e.line([(12, 4), (11, 0)], "i", 2)
+    e.line([(19, 4), (20, 0)], "i", 2)
+    return e
+
+
+def protoceratops():
+    e = ceratopsian("protoceratops", {"b": "#9a8460", "c": "#dccaa0", "e": "#a8483a", "w": "#e8d8b4",
+                                      "D": "#6e2a20", "i": "#f2e8cc", "j": "#c8b48c", "d": "#7a6648",
+                                      "n": "#4e3e2a"}, frill=(4, 2, 27, 20), knobs=((10, 7), (21, 7)),
+                    brow=False, nose=None)
+    return e
+
+
+def euoplocephalus():
+    e = ankylosaurus()
+    e.name = "euoplocephalus"
+    e.pal.update({"b": "#5e6c44", "c": "#c4c294", "o": "#6e8048", "O": "#b8483a", "d": "#3a4428",
+                  "I": "#d86a3a", "k": "#3a3428"})
+    return e
+
+
+# ------------------------------------------------------------------ titanosaurs
+def alamosaurus():
+    return sauropod("alamosaurus", {"b": "#8a6a4e", "c": "#dccaa8", "d": "#5a4230", "n": "#3a2a1e",
+                                    "s": "#4a3424"}, spots=((5, 19), (7, 23), (10, 7)))
+
+
+def saltasaurus():
+    return sauropod("saltasaurus", {"b": "#6a7a5e", "c": "#d0d0b4", "d": "#3e4a36", "n": "#2a3424",
+                                    "s": "#c8743a"}, spots=((6, 19), (8, 21), (6, 23), (10, 6), (13, 4)))
+
+
+def argentinosaurus():
+    return sauropod("argentinosaurus", {"b": "#6e6a60", "c": "#c8c4b4", "d": "#3e3a34", "n": "#2a2824",
+                                        "s": "#34302a"}, spots=((5, 18), (7, 22), (11, 6), (8, 9)))
+
+
+def opisthocoelicaudia():
+    return sauropod("opisthocoelicaudia", {"b": "#b49c72", "c": "#e6dcc0", "d": "#7a6244", "n": "#4e3e2a",
+                                           "s": "#6a4e34"}, spots=((6, 19), (8, 22), (5, 24), (11, 7)))
+
+
+def dreadnoughtus():
+    return sauropod("dreadnoughtus", {"b": "#5a6470", "c": "#c8ccd0", "d": "#2e343c", "n": "#1e2228",
+                                      "s": "#d8dce0"}, spots=((6, 18), (6, 21), (6, 24)))
+
+
+# ------------------------------------------------------------------ flyers and birds
+def quetzalcoatlus():
+    return pterosaur("quetzalcoatlus", {"b": "#d8d0bc", "c": "#f0ece2", "d": "#8a8270", "n": "#5a5446",
+                                        "e": "#c4402a", "m": "#d8c08a", "M": "#a88c5a"},
+                     crest=((15, 7), (12, 1)), beak=(13, 15, 18, 31))
+
+
+def hatzegopteryx():
+    return pterosaur("hatzegopteryx", {"b": "#7a5e4a", "c": "#d8c8b0", "d": "#3e2e24", "n": "#2a1e16",
+                                       "e": "#a8302a", "w": "#3e322a", "m": "#c8a87a", "M": "#7a6248"},
+                     crest=((16, 7), (10, 1)), beak=(11, 15, 20, 29))
+
+
+def hesperornis():
+    e = beaked("hesperornis", {"b": "#4e5864", "c": "#e8ecee", "d": "#1e2630", "n": "#1e2630",
+                               "m": "#3a3632", "f": "#2a3440"}, beak=(13, 15, 18, 30))
+    e.line([(8, 17), (8, 22)], "f")
+    e.line([(23, 17), (23, 22)], "f")
+    return e
+
+
+def ichthyornis():
+    e = beaked("ichthyornis", {"b": "#c8ccd0", "c": "#f4f4f2", "d": "#1e1e22", "n": "#1e1e22",
+                               "m": "#5a5a5e"}, beak=(13, 16, 18, 27))
+    e.pal["W"] = TOOTH
+    e.px([(13, 20), (13, 23), (18, 21), (18, 24)], "W")
+    return e
+
+
+# ------------------------------------------------------------------ sea and swamp
+def tylosaurus():
+    e = marine("tylosaurus", {"b": "#344a5a", "c": "#d2d8d4", "d": "#1e2c36", "n": "#141e26",
+                              "f": "#22323e", "s": "#5e7686"}, teeth=(9, 12))
+    e.ell((13, 26, 18, 32), "d", clip=True)
+    for p in ((8, 7), (11, 5)):
+        e.px(e.mirror([p]), "s")
+    return e
+
+
+def elasmosaurus():
+    e = marine("elasmosaurus", {"b": "#4a7a7e", "c": "#d6e0d8", "d": "#24484c", "n": "#183236",
+                                "f": "#2e5a5e"}, teeth=(9, 11, 13, 15))
+    for p in ((8, 8), (12, 6), (6, 12)):
+        e.px(e.mirror([p, (p[0] + 1, p[1])]), "c")
+    return e
+
+
+def xiphactinus():
+    e = Egg("xiphactinus", {"b": "#9aa6b0", "c": "#e8ecee", "d": "#2e4a6a", "n": "#1e3048",
+                            "f": "#5e7286", "R": MOUTH})
+    # fins: dorsal on top, pectorals at the sides
+    e.poly([(14, 5), (16, 0), (18, 0), (18, 5)], "f")
+    _side(e, [(4, 20), (0, 23), (1, 25), (5, 23)], "f")
+    cap(e, "d", (5, 3, 26, 17), None)
+    e.ell((8, 19, 23, 36), "c", clip=True)
+    # big upturned bulldog mouth
+    e.poly([(8, 21), (23, 21), (21, 26), (10, 26)], "R")
+    e.pal["W"] = TOOTH
+    e.px(e.mirror([(10, 21), (10, 22), (13, 21), (13, 22)]), "W")
+    e.px(e.mirror([(12, 25)]), "W")
+    eyes(e, 14, 8)
+    return e
+
+
+def archelon():
+    e = Egg("archelon", {"b": "#5e7a5a", "c": "#d6d2a8", "d": "#3a3424", "n": "#262014",
+                         "o": "#4e4a30", "O": "#6e6a46", "k": "#3a3428"})
+    # shell over the top, head below
+    e.ell((2, 0, 29, 18), "o", clip=True)
+    for (x, y) in ((10, 6), (15, 4), (20, 6), (12, 11), (18, 11)):
+        e.ell((x - 2, y - 2, x + 2, y + 2), "O", clip=True)
+    e.line([(4, 15), (27, 15)], "d")
+    _side(e, [(4, 20), (0, 24), (1, 26), (5, 23)], "o")
+    e.ell((8, 22, 23, 36), "c", clip=True)
+    eyes(e, 18, 9)
+    # hooked beak
+    e.poly([(12, 24), (19, 24), (17, 29), (16, 30), (15, 30), (14, 29)], "k")
+    e.line([(13, 26), (18, 26)], "n")
+    return e
+
+
+def deinosuchus():
+    return croc("deinosuchus", {"b": "#4e5e3e", "c": "#c8c49a", "d": "#2a3420", "n": "#1a2014",
+                                "s": "#6e7e52"})
+
+
+def baurusuchus():
+    return croc("baurusuchus", {"b": "#9a6e44", "c": "#e0cca4", "d": "#4e3420", "n": "#2e1e12",
+                                "s": "#b88a58"}, tall=True)
+
+
+NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus", "carcharodontosaurus",
+               "carnotaurus", "majungasaurus", "dakotaraptor", "troodon", "struthiomimus", "oviraptor",
+               "therizinosaurus", "deinocheirus", "thescelosaurus", "edmontosaurus", "corythosaurus",
+               "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
+               "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
+               "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
+               "archelon", "deinosuchus", "baurusuchus"]
+
+
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",
          "stegosaurus", "ankylosaurus", "brachiosaurus", "parasaurolophus", "pachycephalosaurus", "gallimimus",
-         "maiasaura", "pteranodon", "mosasaurus"]
+         "maiasaura", "pteranodon", "mosasaurus"] + NEW_SPECIES
 
 
 def render(name):
