@@ -85,9 +85,19 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
             }
         });
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Player.class, 10.0F, 1.2D, 1.5D,
-                e -> !this.fightsBack() && !this.isTame() && !e.isSpectator() && !((Player) e).isCreative()));
+                e -> !e.isSpectator() && !((Player) e).isCreative()) {
+            @Override
+            public boolean canUse() {
+                return !HerbivoreDinosaur.this.fightsBack() && !HerbivoreDinosaur.this.isTame() && super.canUse();
+            }
+        });
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, DinosaurEntity.class, 14.0F, 1.2D, 1.6D,
-                e -> !this.fightsBack() && e instanceof PredatorDinosaur p && !p.isTame() && !p.isBaby()));
+                e -> e instanceof PredatorDinosaur p && !p.isTame() && !p.isBaby()) {
+            @Override
+            public boolean canUse() {
+                return !HerbivoreDinosaur.this.fightsBack() && !HerbivoreDinosaur.this.isTame() && super.canUse();
+            }
+        });
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.4D, true) {
             @Override
             public boolean canUse() {

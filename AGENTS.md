@@ -30,8 +30,10 @@ Responda em português. Leia `docs/COORDENACAO.md`, `CLAUDE.md` e `docs/ROADMAP.
 
 ```sh
 python3 -B tools/validation/check_project.py
+python3 -B tools/validation/check_spawn_budget.py
 ./gradlew build --no-daemon
 ```
 
 Use `--offline` se todas as dependências já estiverem no cache. Validação de recursos e build não substituem
 testes de servidor, recarga do mundo, multiplayer e revisão visual no jogo.
+Regressão isolada de servidor e persistência: `docs/TESTES_SERVIDOR.md`.

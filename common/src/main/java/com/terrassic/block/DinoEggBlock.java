@@ -120,6 +120,8 @@ public class DinoEggBlock extends Block {
             return;
         }
         baby.setAge(-24000);
+        // A wild nest must not grow the saved population indefinitely. Stolen/player-placed eggs stay persistent.
+        baby.setRoamer(wild);
         baby.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, random.nextFloat() * 360.0F, 0.0F);
         // a wild egg hatches a wild baby: it follows the adults of its species (FollowParentGoal), no imprinting
         Player player = wild ? null : level.getNearestPlayer(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 12.0D, false);

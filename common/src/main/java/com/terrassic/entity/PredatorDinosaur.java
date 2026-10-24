@@ -88,9 +88,19 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
-                e -> this.huntsPlayers() && this.canHunt()));
+                e -> this.huntsPlayers() && this.canHunt()) {
+            @Override
+            public boolean canUse() {
+                return PredatorDinosaur.this.huntsPlayers() && PredatorDinosaur.this.canHunt() && super.canUse();
+            }
+        });
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Animal.class, preyInterval(), true, false,
-                e -> this.canHunt() && this.isPrey(e)));
+                e -> this.canHunt() && this.isPrey(e)) {
+            @Override
+            public boolean canUse() {
+                return PredatorDinosaur.this.canHunt() && super.canUse();
+            }
+        });
         addExtraGoals();
     }
 
@@ -106,7 +116,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
             this.setTarget(null);
         }
         // the pack: a wild hunter with a target brings the idle hunters of its species nearby onto it
-        if (this.packHunter() && !this.isTame() && this.getTarget() != null && this.tickCount % 20 == 0) {
+        if (this.packHunter() && !this.isTame() && this.getTarget() != null && (this.tickCount + this.getId()) % 20 == 0) {
             for (PredatorDinosaur other : this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(16.0D),
                     e -> e != this && !e.isTame() && !e.isBaby() && e.getTarget() == null && e.canHunt())) {
                 other.setTarget(this.getTarget());

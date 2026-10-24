@@ -38,7 +38,7 @@ import java.util.Map;
  * populated, the way ARK keeps its maps full, on top of the vanilla spawning (which mostly places animals once,
  * when chunks are generated).
  *
- * <p>Every two seconds, for each player, it counts the wild creatures within {@link #RADIUS} blocks in three kinds
+ * <p>Every two seconds per player, staggered by UUID, it counts wild creatures within {@link #RADIUS} blocks in three kinds
  * (land, flyers, sea) and, where a kind is below its target, spawns one group of it 36 to 80 blocks away:
  * <ul>
  *   <li>the species come from the biome's own spawn list (the WORLD table of gen_species.py, the Cretaceous biomes,
@@ -73,32 +73,41 @@ public final class EcoSpawner {
     private static final Map<EntityType<?>, Kind> KINDS = new HashMap<>();
     /** Wild creatures in the level, recounted every few rounds (cheap enough, and the cap does not need precision). */
     private static final Map<ServerLevel, Integer> WILD = new HashMap<>();
+    private static final Map<ServerLevel, Long> LAST_COUNT = new HashMap<>();
 
     private EcoSpawner() {
     }
 
     public static void init() {
         TickEvent.SERVER_LEVEL_POST.register(EcoSpawner::tick);
-        LifecycleEvent.SERVER_STOPPED.register(server -> WILD.clear());
+        LifecycleEvent.SERVER_STOPPED.register(server -> {
+            WILD.clear();
+            LAST_COUNT.clear();
+            KINDS.clear();
+        });
     }
 
     private static void tick(ServerLevel level) {
         long time = level.getGameTime();
-        if (time % PERIOD != 0 || !level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
+        if (!level.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING)) {
+            return;
+        }
+        List<ServerPlayer> players = new ArrayList<>();
+        for (ServerPlayer p : level.players()) {
+            if (!p.isSpectator() && SpawnBudget.isTurn(time, p.getUUID().hashCode(), PERIOD)) {
+                players.add(p);
+            }
+        }
+        if (players.isEmpty()) {
             return;
         }
         Rules rules = Rules.of(level);
         double density = rules.get(Rule.SPAWN_DENSITY);
-        List<ServerPlayer> players = new ArrayList<>();
-        for (ServerPlayer p : level.players()) {
-            if (!p.isSpectator()) {
-                players.add(p);
-            }
-        }
-        if (density <= 0.0D || players.isEmpty()) {
+        if (density <= 0.0D) {
             return;
         }
-        if (time % (PERIOD * 5) == 0 || !WILD.containsKey(level)) {
+        // The scheduled slot can be empty, so track recount time instead of requiring an exact modulo tick.
+        if (!WILD.containsKey(level) || time - LAST_COUNT.getOrDefault(level, time) >= PERIOD * 5) {
             int wild = 0;
             for (Entity e : level.getAllEntities()) {
                 if (e instanceof DinosaurEntity d && !d.isTame()) {
@@ -106,15 +115,19 @@ public final class EcoSpawner {
                 }
             }
             WILD.put(level, wild);
+            LAST_COUNT.put(level, time);
         }
         int cap = (int) rules.get(Rule.MAX_CREATURES);
         RandomSource random = level.getRandom();
-        for (ServerPlayer player : players) {
+        // Rotate priority among players assigned to the same tick, rather than always favoring login order.
+        int first = (int) Math.floorMod(time / PERIOD, players.size());
+        for (int index = 0; index < players.size(); index++) {
+            ServerPlayer player = players.get((first + index) % players.size());
             if (WILD.get(level) >= cap) {
                 return;
             }
-            AABB box = new AABB(player.getX() - RADIUS, level.getMinBuildHeight(), player.getZ() - RADIUS,
-                    player.getX() + RADIUS, level.getMaxBuildHeight(), player.getZ() + RADIUS);
+            AABB box = new AABB(player.getX() - RADIUS, Math.max(level.getMinBuildHeight(), player.getY() - RADIUS), player.getZ() - RADIUS,
+                    player.getX() + RADIUS, Math.min(level.getMaxBuildHeight(), player.getY() + RADIUS), player.getZ() + RADIUS);
             int land = 0;
             int flyers = 0;
             int sea = 0;
@@ -128,13 +141,16 @@ public final class EcoSpawner {
                 }
             }
             if (land < target(LAND_TARGET, density, rules.get(Rule.LAND_SPAWNS))) {
-                spawnRound(level, player, Kind.LAND, rules, random);
+                spawnRound(level, player, Kind.LAND, rules, random,
+                        SpawnBudget.allowance(target(LAND_TARGET, density, rules.get(Rule.LAND_SPAWNS)), land, cap, WILD.get(level)));
             }
             if (flyers < target(FLYER_TARGET, density, rules.get(Rule.FLYER_SPAWNS))) {
-                spawnRound(level, player, Kind.FLYER, rules, random);
+                spawnRound(level, player, Kind.FLYER, rules, random,
+                        SpawnBudget.allowance(target(FLYER_TARGET, density, rules.get(Rule.FLYER_SPAWNS)), flyers, cap, WILD.get(level)));
             }
             if (sea < target(SEA_TARGET, density, rules.get(Rule.SEA_SPAWNS))) {
-                spawnRound(level, player, Kind.SEA, rules, random);
+                spawnRound(level, player, Kind.SEA, rules, random,
+                        SpawnBudget.allowance(target(SEA_TARGET, density, rules.get(Rule.SEA_SPAWNS)), sea, cap, WILD.get(level)));
             }
         }
     }
@@ -143,7 +159,10 @@ public final class EcoSpawner {
         return (int) Math.round(base * density * kind);
     }
 
-    private static void spawnRound(ServerLevel level, ServerPlayer player, Kind kind, Rules rules, RandomSource random) {
+    private static void spawnRound(ServerLevel level, ServerPlayer player, Kind kind, Rules rules, RandomSource random, int budget) {
+        if (budget <= 0) {
+            return;
+        }
         for (int i = 0; i < TRIES; i++) {
             double angle = random.nextDouble() * Math.PI * 2.0D;
             double distance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
@@ -154,9 +173,9 @@ public final class EcoSpawner {
                 continue;
             }
             int spawned = switch (kind) {
-                case LAND -> spawnLand(level, x, z, rules, random);
-                case FLYER -> spawnFlock(level, x, z, rules, random);
-                case SEA -> spawnSea(level, x, z, rules, random);
+                case LAND -> spawnLand(level, x, z, rules, random, budget, player.getY());
+                case FLYER -> spawnFlock(level, x, z, rules, random, budget, player.getY());
+                case SEA -> spawnSea(level, x, z, rules, random, budget, player.getY());
                 default -> 0;
             };
             if (spawned > 0) {
@@ -168,16 +187,16 @@ public final class EcoSpawner {
 
     // ------------------------------------------------------------------ land
 
-    private static int spawnLand(ServerLevel level, int x, int z, Rules rules, RandomSource random) {
+    private static int spawnLand(ServerLevel level, int x, int z, Rules rules, RandomSource random, int budget, double playerY) {
         BlockPos pos = new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
-        if (!level.getFluidState(pos.below()).isEmpty() || !level.getFluidState(pos).isEmpty()) {
+        if (Math.abs(pos.getY() - playerY) > RADIUS || !level.getFluidState(pos.below()).isEmpty() || !level.getFluidState(pos).isEmpty()) {
             return 0;
         }
         MobSpawnSettings.SpawnerData data = pick(level, pos, MobCategory.CREATURE, Kind.LAND, random);
         if (data == null || !canStand(level, data.type, pos, random)) {
             return 0;
         }
-        int count = groupSize(data, random);
+        int count = Math.min(budget, groupSize(data, random));
         int spawned = 0;
         SpawnGroupData group = null;
         for (int i = 0; i < count; i++) {
@@ -185,8 +204,12 @@ public final class EcoSpawner {
             if (i > 0) {
                 int ax = x + random.nextInt(9) - 4;
                 int az = z + random.nextInt(9) - 4;
+                if (!level.isPositionEntityTicking(new BlockPos(ax, pos.getY(), az))) {
+                    continue;
+                }
                 at = new BlockPos(ax, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ax, az), az);
-                if (!level.getFluidState(at.below()).isEmpty() || !canStand(level, data.type, at, random)) {
+                if (Math.abs(at.getY() - playerY) > RADIUS || !level.getFluidState(at.below()).isEmpty()
+                        || !canStand(level, data.type, at, random)) {
                     continue;
                 }
             }
@@ -198,8 +221,9 @@ public final class EcoSpawner {
             if (i > 0) {
                 maybeBaby(dino, rules, random);
             }
-            level.addFreshEntity(dino);
-            spawned++;
+            if (level.addFreshEntity(dino)) {
+                spawned++;
+            }
         }
         return spawned;
     }
@@ -211,7 +235,7 @@ public final class EcoSpawner {
 
     // ------------------------------------------------------------------ sky
 
-    private static int spawnFlock(ServerLevel level, int x, int z, Rules rules, RandomSource random) {
+    private static int spawnFlock(ServerLevel level, int x, int z, Rules rules, RandomSource random, int budget, double playerY) {
         if (!level.isDay()) {
             // flocks take to the sky by day (SoarGoal); at night the flyers already around rest on the ground
             return 0;
@@ -223,8 +247,8 @@ public final class EcoSpawner {
             return 0;
         }
         int y = Math.min(ground + 16 + random.nextInt(25), level.getMaxBuildHeight() - 8);
-        // a flock of at least two, flying the same way
-        int count = Math.max(2, groupSize(data, random));
+        // Prefer at least two flying the same way, unless the remaining budget only allows one.
+        int count = Math.min(budget, Math.max(2, groupSize(data, random)));
         float heading = random.nextFloat() * 360.0F;
         Vec3 dir = Vec3.directionFromRotation(0.0F, heading);
         int spawned = 0;
@@ -232,6 +256,9 @@ public final class EcoSpawner {
             double px = x + 0.5D + (i == 0 ? 0.0D : random.nextGaussian() * 3.0D);
             double py = y + (i == 0 ? 0.0D : random.nextGaussian() * 1.5D);
             double pz = z + 0.5D + (i == 0 ? 0.0D : random.nextGaussian() * 3.0D);
+            if (Math.abs(py - playerY) > RADIUS || !level.isPositionEntityTicking(BlockPos.containing(px, py, pz))) {
+                continue;
+            }
             if (!level.noCollision(data.type.getAABB(px, py, pz))) {
                 continue;
             }
@@ -246,15 +273,16 @@ public final class EcoSpawner {
                 bird.setAge(0);
             }
             bird.startSoaring(dir);
-            level.addFreshEntity(bird);
-            spawned++;
+            if (level.addFreshEntity(bird)) {
+                spawned++;
+            }
         }
         return spawned;
     }
 
     // ------------------------------------------------------------------ sea
 
-    private static int spawnSea(ServerLevel level, int x, int z, Rules rules, RandomSource random) {
+    private static int spawnSea(ServerLevel level, int x, int z, Rules rules, RandomSource random, int budget, double playerY) {
         int top = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z) - 1;
         int floor = level.getHeight(Heightmap.Types.OCEAN_FLOOR, x, z);
         BlockPos surface = new BlockPos(x, top, z);
@@ -272,11 +300,14 @@ public final class EcoSpawner {
         if (data == null || !SpawnPlacements.checkSpawnRules(data.type, level, MobSpawnType.NATURAL, pos, random)) {
             return 0;
         }
-        int count = groupSize(data, random);
+        int count = Math.min(budget, groupSize(data, random));
         int spawned = 0;
         SpawnGroupData group = null;
         for (int i = 0; i < count; i++) {
             BlockPos at = i == 0 ? pos : pos.offset(random.nextInt(7) - 3, random.nextInt(3) - 1, random.nextInt(7) - 3);
+            if (Math.abs(at.getY() - playerY) > RADIUS || !level.isPositionEntityTicking(at)) {
+                continue;
+            }
             if (i > 0 && !level.getFluidState(at).is(FluidTags.WATER)) {
                 continue;
             }
@@ -288,8 +319,9 @@ public final class EcoSpawner {
                 continue;
             }
             group = dino.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.NATURAL, group, null);
-            level.addFreshEntity(dino);
-            spawned++;
+            if (level.addFreshEntity(dino)) {
+                spawned++;
+            }
         }
         return spawned;
     }

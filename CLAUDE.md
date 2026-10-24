@@ -12,6 +12,11 @@ Consulte `docs/COORDENACAO.md` antes de reservar arquivos ou iniciar uma fase; n
 da instrução de autonomia histórica abaixo. A v0.9 foi integrada na main até `3023eae`.
 Validação de integridade sem regenerar assets: `python3 -B tools/validation/check_project.py`.
 Build não equivale a teste no jogo; os estados e as evidências atuais ficam no quadro de coordenação.
+Segunda entrega Codex: `docs/TESTES_SERVIDOR.md` registra inicialização dedicada e persistência de entidades
+validadas em Fabric e Forge. Errantes selvagens sem nome são temporários e não deixam ninhos; os filhotes de
+ovos selvagens também são errantes. Domados/nomeados e ovos colocados pelo jogador continuam persistentes.
+Spawner e classes-base de IA receberam escalonamento e checagens antecipadas. Falta perfil de carga e teste
+de comportamento com jogadores; não anunciar desempenho para 100 jogadores com base nesses testes.
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
@@ -42,7 +47,7 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   pacotes em `network/RulesNetwork`. Use `Rules.of(level).get(Rule.X)`. Ecossistema denso: `world/EcoSpawner` mantém
   terrestres, voadores e marinhos ao redor de cada jogador usando a lista de spawn do bioma; os que ele põe são "errantes"
   (`DinosaurEntity.isRoamer`, somem a 96+ blocos se selvagens e sem nome). Voadores selvagens voam em bandos (`ai/SoarGoal`).
-- 15 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
+- 53 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
 - REGRA (Rodrigo, 24/10/2026): toda espécie nova usa o tamanho real dos fósseis (topo das estimativas publicadas
   para adultos, 1 bloco = 1 metro), com a fonte anotada em `docs/TAMANHOS.md`.
 - Tamanhos: tabela `SIZES` em `gen_species.py` (1 bloco = 1 metro; escala do modelo, hitbox, filhote, sombra).

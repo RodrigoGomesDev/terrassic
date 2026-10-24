@@ -28,3 +28,7 @@ e rejeição de arquivos ausentes, JSON duplicado, tabelas divergentes, traduç�
 e dimensões de textura incompatíveis. Não alteram o projeto real.
 
 Depois, compile Fabric e Forge com `./gradlew build --no-daemon` e siga os roteiros `docs/TESTES_V*.md`.
+
+Testes adicionais de orçamento e servidor real: [`docs/TESTES_SERVIDOR.md`](../../docs/TESTES_SERVIDOR.md).
+`check_spawn_budget.py` testa a classe Java de produção sem dependências; `server_regression.py` verifica estado
+de entidades após reiniciar um mundo temporário nos dois loaders.

@@ -569,6 +569,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.roamer = roamer;
     }
 
+    /** Disposable ecosystem population; taming or naming immediately makes it persistent again. */
+    public boolean isTransientRoamer() {
+        return this.roamer && !this.isTame() && !this.hasCustomName();
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return !this.isTransientRoamer() && super.shouldBeSaved();
+    }
+
     /** Whether it came through the Rift (Rift Storm leaks, the Rift Tyrant): drawn with glowing amber cracks. */
     public boolean isRift() {
         return this.entityData.get(DATA_RIFT);
@@ -652,10 +662,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                                         SpawnGroupData spawnData, CompoundTag tag) {
         this.setFemale(this.random.nextBoolean());
         SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
-        // one herd in five spawns with a nest already laid next to a grown female (docs/NINHOS.md); one in twenty for
-        // the ecosystem's roamers, and the Wild nests rule scales both
-        float nest = (this.roamer ? 0.05F : 0.2F) * (float) Rules.of(level.getLevel()).get(Rule.NEST_FREQUENCY);
-        if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && this.wildNests() && !this.isBaby()
+        // Permanent herds can leave nests; disposable ecosystem roamers must not leave permanent blocks behind.
+        float nest = 0.2F * (float) Rules.of(level.getLevel()).get(Rule.NEST_FREQUENCY);
+        if (!this.isTransientRoamer() && (reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && this.wildNests() && !this.isBaby()
                 && this.isFemale() && this.random.nextFloat() < nest) {
             if (level instanceof WorldGenRegion) {
                 this.pendingNest = true;  // nothing can be placed while the chunk generates: lay it on the first tick
@@ -757,7 +766,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Animals live on like cows; only the ecosystem's wild, unnamed roamers leave once every player is far away. */
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return this.roamer && !this.isTame() && !this.hasCustomName() && distanceToClosestPlayer > ROAMER_DESPAWN_SQR;
+        return this.isTransientRoamer() && distanceToClosestPlayer > ROAMER_DESPAWN_SQR;
     }
 
     @Override
@@ -1060,7 +1069,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.perchedTick((Player) this.getVehicle());
         }
         if (!this.level().isClientSide() && this.cargo != null && this.isChested() && this.isTame() && this.isAlive()
-                && !this.isInSittingPose() && this.tickCount % 10 == 0) {
+                && !this.isInSittingPose() && (this.tickCount + this.getId()) % 10 == 0) {
             this.collectCargo();
         }
         if (!this.level().isClientSide() && this.sated > 0) {
@@ -1069,10 +1078,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (!this.level().isClientSide() && this.isAlive()) {
             this.growthTick();
             this.hungerTick();
-            if (this.isBaby() && this.tickCount % 20 == 0) {
+            if (this.isBaby() && (this.tickCount + this.getId()) % 20 == 0) {
                 this.maturationTick();
             }
-            if (this.tickCount % 200 == 0) {
+            if ((this.tickCount + this.getId()) % 200 == 0) {
                 this.wildBreedingTick();
             }
             if (this.brooder() && this.tickCount % 160 == 0 && !this.isBaby() && (this.isInSittingPose() || this.isSleeping())
@@ -1364,7 +1373,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      * rest.
      */
     private void wildBreedingTick() {
-        if (this.isTame() || this.isBaby() || !this.wildNests() || !this.canFallInLove() || this.getAge() != 0
+        if (this.isTransientRoamer() || this.isTame() || this.isBaby() || !this.wildNests() || !this.canFallInLove() || this.getAge() != 0
                 || this.getHunger() < 80 || this.isSleeping() || this.getTarget() != null || this.isVehicle()
                 || this.random.nextDouble() >= Rules.of(this.level()).get(Rule.NEST_FREQUENCY) / 12.0D
                 || !(this.level() instanceof ServerLevel level)) {
@@ -1377,7 +1386,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         DinosaurEntity mate = null;
         double best = Double.MAX_VALUE;
         for (DinosaurEntity other : level.getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(16.0D),
-                e -> e != this && !e.isTame() && !e.isBaby() && e.isFemale() != this.isFemale() && e.canFallInLove()
+                e -> e != this && !e.isTransientRoamer() && !e.isTame() && !e.isBaby() && e.isFemale() != this.isFemale() && e.canFallInLove()
                         && e.getAge() == 0 && e.getHunger() >= 80 && !e.isSleeping() && e.getTarget() == null && !e.isVehicle())) {
             double d = this.distanceToSqr(other);
             if (d < best) {
@@ -1393,6 +1402,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Lays one wild egg next to the animal (a nest found with a herd, or a clutch). */
     protected boolean layWildEgg(LevelAccessor level) {
+        if (this.isTransientRoamer()) {
+            return false;
+        }
         Block egg = ModBlocks.eggFor(this.speciesId());
         if (egg == null) {
             return false;

@@ -13,7 +13,7 @@ as diferenças entre suas declarações de entrega e o checkout verificado.
 |---|---|---|---|
 | Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Retomar sua fase corrente; registrar aqui arquivos em uso antes de editar |
 | Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; escolher próxima fase livre e registrar escopo |
-| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Validador de integridade, diagnóstico de build e fila de multiplayer |
+| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores e persistência de entidades validados; próximos: Caderno/reconexão, comportamento com jogadores e perfil de carga |
 | Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entregar documentação e lista de arquivos; preservar trabalho existente |
 | Aprovação visual e experiência | Rodrigo | Aparência, som, sensação de jogo e prioridades de produto | Validar os roteiros de jogo após as entregas técnicas |
 
@@ -38,6 +38,7 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Responsável | Arquivos | Estado |
 |---|---|---|
 | Codex | `AGENTS.md`, `docs/COORDENACAO.md`, `docs/PLANO_MESTRE.md`, `tools/validation/`, autoria em README/CLAUDE/metadados, ponte no roadmap | Concluído; arquivos liberados; sem alteração de sistemas de gameplay |
+| Codex | Testes isolados de servidor; `tools/validation/`, `EcoSpawner.java`, `SpawnBudget.java`, classes-base de IA e persistência (`DinosaurEntity.java`, `HerbivoreDinosaur.java`, `PredatorDinosaur.java`, `DinoEggBlock.java`), docs e ponte de validação em AGENTS/CLAUDE | Concluído; arquivos liberados. Servidores/regressões Fabric e Forge, orçamento e build passaram; arte e tabelas de espécies preservadas |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
 ## Estado observado no checkout
@@ -55,18 +56,30 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
   zero erros de integridade). Sete testes do validador passaram com `python3 -B -m unittest discover -s
   tools/validation -p 'test_*.py'`.
 - Metadados de autoria conferidos também dentro dos dois JARs finais: apenas Rodrigo Gomes, sem referência empresarial.
-- Testes no jogo, servidor dedicado e medição de desempenho não executados; seguem pendentes.
+- Servidor dedicado em desenvolvimento e persistência de entidades após reinício **validados em Fabric e Forge**
+  nesta segunda entrega: dono, sela, baú, sexo, postura e carga preservados; nomeados/naturais preservados;
+  errantes selvagens sem nome ausentes do salvamento. Animal vanilla de controle preservado. Roteiro e evidências
+  em `TESTES_SERVIDOR.md`; logs em `build/server-regression/`.
+- População: errantes temporários não deixam ninhos; filhotes de ovos selvagens são errantes. Spawner distribui
+  jogadores por UUID, alterna prioridade dentro do mesmo tick e limita o tamanho dos grupos às vagas disponíveis.
+  A contagem global continua em cache, não é teto absoluto para outras fontes de spawn.
+- IA: fuga/caça checam o estado do animal antes de buscar alvos; carga, crescimento, reprodução e matilha têm
+  rotinas escalonadas por entidade. O custo em MSPT ainda não foi medido.
+- Testes do orçamento: passaram 1.000 hashes e 10.000 cenários com a classe Java de produção.
+- Build final da segunda entrega: `./gradlew build --offline --no-daemon` passou em 20 s, após as regressões
+  completas nos dois loaders. JARs gerados em `fabric/build/libs` e `forge/build/libs`.
+- Testes com jogador real, reconexão, Caderno, eclosão, caça/fuga e medição de desempenho seguem pendentes.
 
 ## Fila de engenharia, sem sobrepor as features
 
 | Prioridade | Trabalho | Condição de entrada / evidência esperada |
 |---|---|---|
-| 1 | Build dos dois loaders e integridade de recursos | Comando reproduzível, resultado e diagnóstico |
-| 2 | Inicialização de servidor dedicado Fabric e Forge | Logs de inicialização sem referências indevidas ao cliente |
-| 3 | Persistência de domados, carga e progresso | Recarregar mundo e reconectar preservando estado e dono |
-| 4 | Errantes efêmeros e controle de ninhos | Reservar `DinosaurEntity`/`DinoEggBlock` com o Claude principal; preservar animais nomeados e domados |
-| 5 | Spawner justo e distribuído no tempo | Reservar `EcoSpawner`; testar jogadores próximos/distantes e limites de população |
-| 6 | Reduzir buscas de IA e medir custo | Reservar classes-base; comparar perfil e comportamento antes/depois |
+| 1 | Build dos dois loaders e integridade de recursos | Primeira entrega validada; repetir após alterações de código/recursos |
+| 2 | Inicialização de servidor dedicado Fabric e Forge | Concluída no ambiente de desenvolvimento, com logs e roteiro automatizado |
+| 3 | Persistência de domados, carga e progresso | Entidades e carga validadas após reinício; faltam Caderno e reconexão de jogadores |
+| 4 | Errantes efêmeros e controle de ninhos | Implementado; persistência validada nos dois loaders. Eclosão/ninhos ainda exigem teste no jogo |
+| 5 | Spawner justo e distribuído no tempo | Implementados escalonamento e orçamento por grupo; testes aritméticos passaram. Falta simulação com jogadores/perfil e cota proporcional por jogador |
+| 6 | Reduzir buscas de IA e medir custo | Saídas antecipadas implementadas; falta medir MSPT e confirmar comportamento com jogadores |
 | 7 | Tags/datapacks e integrações opcionais | Alinhar contrato com o Claude principal antes de mudar geradores |
 
 ## Entregas externas ainda ausentes daqui
