@@ -9,7 +9,7 @@ Cada espécie é descrita em Python, em `species/<especie>.py`. A descrição te
 O `build_all.py` monta cada modelo **dentro do Blockbench de verdade** (headless, via Playwright), pinta a textura, cria as animações e exporta:
 
 - `art/<especie>/<especie>.bbmodel`, o projeto editável no Blockbench
-- `common/src/main/resources/assets/primalera/{geo,animations,textures}/entity/<especie>.*`
+- `common/src/main/resources/assets/terrassic/{geo,animations,textures}/entity/<especie>.*`
 - `art/<especie>/previews/*.png`, os renders de cada vista e das poses das animações
 
 ## Rodar
@@ -22,10 +22,21 @@ git clone --depth 1 https://github.com/JannisX11/blockbench.git ~/bb
 cd ~/bb && npm install --ignore-scripts && node build.js --target=web
 python3 -m http.server 8123 &           # serve o Blockbench em http://localhost:8123
 
-cd ~/projects/PrimalEra/tools/modelgen
+cd ~/projects/Terrassic/tools/modelgen
 python3 build_all.py                    # todos
 python3 build_all.py triceratops        # só um
 python3 contact.py ../../art/preview_sheet.png front34 side back34
+```
+
+### Sem Blockbench (backend Python)
+
+`pybench.py` faz o mesmo trabalho do Blockbench headless em Python puro (só precisa de `pillow` e `numpy`):
+monta os cubos, calcula o UV, exporta `.geo.json`, `.animation.json` e um `.bbmodel` que abre no Blockbench,
+e renderiza as prévias. O `build_all.py` usa ele sozinho quando não há Blockbench em `localhost:8123`, ou com `--py`:
+
+```bash
+python3 build_all.py --py pteranodon
+python3 checks.py        # confere que o backend Python reconstrói os 12 modelos da v0.2 igualzinho (geo, animações e textura)
 ```
 
 > Rodar o gerador **sobrescreve** os `.bbmodel` e os assets do mod. Se você editou algum modelo à mão no Blockbench, faça backup antes ou gere só as outras espécies.
@@ -50,4 +61,4 @@ python3 contact.py ../../art/preview_sheet.png front34 side back34
 1. Copie o arquivo mais parecido: `smalltheropod.py` + `velociraptor.py`/`gallimimus.py`/`dilophosaurus.py` para bípedes, `tyrannosaurus.py`/`spinosaurus.py` para terópodes grandes, ou `quadruped.py` + `parasaurolophus.py`/`brachiosaurus.py` para quadrúpedes.
 2. Ajuste as proporções a partir das medidas reais (comprimento, altura do quadril, crânio).
 3. Adicione o nome em `ALL`, no `build_all.py`, e rode o gerador.
-4. No mod: adicione a espécie na tabela de `tools/javagen/gen_species.py` e em `gen_resources.py`, rode os dois, registre em `ModEntities`, `ModItems`, `ModBlocks`, `PrimalEraClient` e `ModSpawns`, e desenhe o ovo gerador em `tools/spritegen/sprites.py`.
+4. No mod: adicione a espécie na tabela de `tools/javagen/gen_species.py` e em `gen_resources.py`, rode os dois, registre em `ModEntities`, `ModItems`, `ModBlocks`, `TerrassicClient` e `ModSpawns`, e desenhe o ovo gerador em `tools/spritegen/sprites.py`.

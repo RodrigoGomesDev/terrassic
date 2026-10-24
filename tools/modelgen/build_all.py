@@ -3,7 +3,11 @@ Build every dinosaur: geometry -> Blockbench -> painted texture -> animations ->
 export (.bbmodel for editing, .geo.json/.animation.json/.png for the mod) and
 preview renders.
 
-usage:  python3 build_all.py [species ...]
+usage:  python3 build_all.py [--py] [species ...]
+
+--py uses the pure Python backend (pybench.py) instead of the headless Blockbench. Without it the Python backend
+is also used when no Blockbench is served on localhost:8123. Both give the same geo, animation and texture files
+(checked for all v0.2 species); only the .bbmodel and the preview renders differ a little.
 """
 import asyncio
 import importlib
@@ -17,15 +21,15 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "species"))
 
 from paint import paint_model, make_shader  # noqa: E402
-from bbdriver import Blockbench  # noqa: E402
+from pybench import PyBench  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "primalera")
+ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
 ART = os.path.join(ROOT, "art")
 
 ALL = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus",
        "triceratops", "stegosaurus", "ankylosaurus", "brachiosaurus", "parasaurolophus",
-       "pachycephalosaurus", "gallimimus"]
+       "pachycephalosaurus", "gallimimus", "pteranodon"]
 
 
 def clean_anim(anim_json):
@@ -55,7 +59,7 @@ def bounds(dump):
 
 def cameras(lo, hi):
     cx, cy, cz = [(lo[i] + hi[i]) / 2 for i in range(3)]
-    L = max(hi[2] - lo[2], (hi[1] - lo[1]) * 1.2, 20)
+    L = max(hi[2] - lo[2], (hi[1] - lo[1]) * 1.2, (hi[0] - lo[0]) * 0.8, 20)
     d = L * 1.45
     return {
         "side": {"position": [d, cy + L * 0.05, cz], "target": [0, cy, cz], "fov": 40},
@@ -65,12 +69,33 @@ def cameras(lo, hi):
     }
 
 
-async def run(names):
+def blockbench_available(url="http://localhost:8123/index.html"):
+    import urllib.request
+    try:
+        urllib.request.urlopen(url, timeout=2)
+        return True
+    except Exception:
+        return False
+
+
+def backend(force_py):
+    if force_py or not blockbench_available():
+        print("using the Python backend (pybench.py)")
+        return PyBench()
+    from bbdriver import Blockbench
+    return Blockbench()
+
+
+async def run(names, force_py=False):
     os.makedirs(os.path.join(ASSETS, "geo", "entity"), exist_ok=True)
     os.makedirs(os.path.join(ASSETS, "animations", "entity"), exist_ok=True)
     os.makedirs(os.path.join(ASSETS, "textures", "entity"), exist_ok=True)
+    report_path = os.path.join(ART, "build_report.json")
     report = {}
-    async with Blockbench() as bb:
+    if os.path.exists(report_path):  # keep the species that are not rebuilt this time
+        with open(report_path) as f:
+            report = json.load(f)
+    async with backend(force_py) as bb:
         for name in names:
             mod = importlib.import_module(name)
             model = mod.build()
@@ -135,9 +160,10 @@ async def run(names):
             print(name, json.dumps(report[name]))
         if bb.errors:
             print("page errors:", bb.errors[:10])
-    with open(os.path.join(ART, "build_report.json"), "w") as f:
+    with open(report_path, "w") as f:
         json.dump(report, f, indent=1)
 
 
 if __name__ == "__main__":
-    asyncio.run(run(sys.argv[1:] or ALL))
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    asyncio.run(run(args or ALL, force_py="--py" in sys.argv))
