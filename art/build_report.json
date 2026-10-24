@@ -745,5 +745,38 @@
    "animation.archelon.tame"
   ],
   "render_scale": 1.0
+ },
+ "hesperornis": {
+  "bones": 16,
+  "cubes": 21,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -8.0,
+    5.0,
+    -43.00001531655216
+   ],
+   [
+    8.0,
+    24.99996833143976,
+    31.0
+   ]
+  ],
+  "animations": [
+   "animation.hesperornis.idle",
+   "animation.hesperornis.walk",
+   "animation.hesperornis.run",
+   "animation.hesperornis.sit",
+   "animation.hesperornis.attack",
+   "animation.hesperornis.knocked_out",
+   "animation.hesperornis.wake",
+   "animation.hesperornis.eat",
+   "animation.hesperornis.beg",
+   "animation.hesperornis.tame"
+  ],
+  "render_scale": 0.5
  }
 }

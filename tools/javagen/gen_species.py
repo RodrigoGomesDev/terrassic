@@ -56,6 +56,8 @@ SIZES = {
     "xiphactinus":        dict(real=6.0, scale=1.16, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
     # Archelon ischyros: 4.6 m long, 4 m flipper to flipper (Wieland 1896/1902; YPM 3000), the largest turtle ever.
     "archelon":           dict(real=4.6, scale=1.18, w=2.2, h=1.1, baby=0.25, shadow=1.6),
+    # Hesperornis regalis: up to 1.8 m long (Marsh 1880; Bell & Chiappe 2015). Modelled at 2x.
+    "hesperornis":        dict(real=1.8, scale=0.39, w=0.6, h=0.6, baby=0.4,  shadow=0.4),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -83,6 +85,7 @@ GUIDE = {
     "elasmosaurus":       dict(era="late_cretaceous", diet="piscivore", fossil=3),
     "xiphactinus":        dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "archelon":           dict(era="late_cretaceous", diet="omnivore", fossil=3),
+    "hesperornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
 }
 
 # Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
@@ -112,6 +115,7 @@ WORLD = {
     "elasmosaurus":       dict(biomes=("ocean", "deep_sea"), weight=4, group=(1, 2), track=12),  # fishes the open sea in pairs
     "xiphactinus":        dict(biomes=("ocean", "deep_sea"), weight=6, group=(1, 3), track=12),  # small hunting packs
     "archelon":           dict(biomes=("ocean", "coast"), weight=4, group=(1, 2), track=12),      # cruises near the shore
+    "hesperornis":        dict(biomes=("coast", "ocean"), weight=8, group=(2, 5), track=10),      # rafts of divers
 }
 
 # biome predicate -> (Java expression in ModSpawns, description for the doc comment)
@@ -278,6 +282,12 @@ SPECIES = [
       sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 0.5, 1.6, 400), xp=12, run=0.03,
       prey="e instanceof Squid", prey_imports=["net.minecraft.world.entity.animal.Squid"], hunts_players=False,
       tame="feeding", rideable=True, ride_offset=0.9, ride_forward=0.1, ride_speed=0.75, dive=0.8),
+ dict(id="hesperornis", cls="Hesperornis", base="SwimmingDinosaur",
+      doc="Hesperornis regalis - flightless toothed diving bird of the inland sea, 1.8 m, built like a loon: it kicks with lobed feet and spears fish under water. Rafts of them float off the coast; tamed with fish, lays small eggs. Never attacks players, only fights back.",
+      attrs=dict(MAX_HEALTH=14, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=2, FOLLOW_RANGE=16),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.7, 0.6, 200), xp=4, run=0.03,
+      prey="e instanceof AbstractFish && e.getBbWidth() < 0.8F", hunts_players=False, tame="feeding", dive=1.3),
 ]
 
 

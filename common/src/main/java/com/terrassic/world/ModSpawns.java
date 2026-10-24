@@ -46,6 +46,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Elasmosaurus        ocean (not frozen), deep ocean (not frozen) 4       1-2
  *  Xiphactinus         ocean (not frozen), deep ocean (not frozen) 6       1-3
  *  Archelon            ocean (not frozen), beach, stony shore 4       1-2
+ *  Hesperornis         beach, stony shore, ocean (not frozen) 8       2-5
  *  END GENERATED table
  *  (*desert only where there is sand to stand on)
  * Weights can be scaled or turned off per species in config/terrassic.json (SpawnConfig).
@@ -86,6 +87,8 @@ public final class ModSpawns {
         SpawnPlacementsRegistry.register(ModEntities.XIPHACTINUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.ARCHELON, SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.HESPERORNIS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         // END GENERATED placements
 
@@ -171,6 +174,9 @@ public final class ModSpawns {
             }
             if (ocean || coast) {
                 add(props, MobCategory.WATER_CREATURE, ModEntities.ARCHELON.get(), 4, 1, 2);
+            }
+            if (coast || ocean) {
+                add(props, MobCategory.WATER_CREATURE, ModEntities.HESPERORNIS.get(), 8, 2, 5);
             }
             // END GENERATED biomes
         }));

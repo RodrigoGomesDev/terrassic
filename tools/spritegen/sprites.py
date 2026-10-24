@@ -417,6 +417,18 @@ def spawn_eggs():
     eye(cv, 10, 6, "#a08040")
     eggs["archelon"] = cv
 
+    # Hesperornis: slate egg, white breast patch below, the long dark beak with a red loon's eye on top
+    cv = base_egg(None, "#262a30", "#8a8e90")
+    for x in range(5, 12):
+        for y in range(9, 14):
+            if inside(cv, x, y) and (x + y) % 3 != 0:
+                cv.set(x, y, hexc("#e6e8e2"))
+    for x in range(8, 14):
+        if inside(cv, x, 6):
+            cv.set(x, 6, hexc("#4a4038"))
+    eye(cv, 7, 5, "#b03838")
+    eggs["hesperornis"] = cv
+
     # species with a front-view 32x32 design (egg_designs.py) use it; the rest keep the 16x16 sketch above
     import egg_designs
     for name, cv in eggs.items():
@@ -439,6 +451,7 @@ EGG_BLOCK = {
     "brachiosaurus": ("#e2e2d6", "#7f8984"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "gallimimus": ("#f0ece0", "#9c917c"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),
+    "hesperornis": ("#9aa49c", "#4a5048"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
     "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),
     "ichthyornis": ("#e4ebe8", "#4a4a4c"),
@@ -641,7 +654,7 @@ def weapons():
 
 
 # ------------------------------------------------------------------ hides
-FUZZY = {"velociraptor", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis"}  # feathers / pycnofibres
+FUZZY = {"velociraptor", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "hesperornis"}  # feathers / pycnofibres
 HIDE_ROWS = {2: ((4, 5), (10, 11)), 3: ((3, 12),), 4: ((2, 13),), 5: ((2, 13),), 6: ((2, 13),), 7: ((2, 13),),
              8: ((2, 13),), 9: ((2, 13),), 10: ((2, 13),), 11: ((3, 12),), 12: ((4, 5), (10, 11))}
 

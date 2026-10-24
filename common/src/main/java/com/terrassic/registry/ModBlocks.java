@@ -68,6 +68,7 @@ public final class ModBlocks {
         egg("hatzegopteryx", ModEntities.HATZEGOPTERYX, false);
         egg("ichthyornis", ModEntities.ICHTHYORNIS, false);
         egg("archelon", ModEntities.ARCHELON, true);
+        egg("hesperornis", ModEntities.HESPERORNIS, false);
         // END GENERATED eggs
     }
 

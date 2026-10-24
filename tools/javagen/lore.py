@@ -503,6 +503,22 @@ GUIDE = {
         note=("Dormi em cima dela uma noite inteira, no meio do mar. De manhã ela nem tinha notado.",
               "I slept on top of her a whole night, in the middle of the sea. In the morning she had not even noticed.",
               "Dormí encima de ella una noche entera, en medio del mar. Por la mañana ni se había dado cuenta.")),
+    "hesperornis": dict(
+        sci=("Viveu há cerca de 83 milhões de anos no Mar Interior Ocidental, na América do Norte. Ave mergulhadora de até 1,8 m que não voava: asas reduzidas a um toco, pernas fortes tão recuadas que em terra mal se arrastava, pés com dedos lobulados como os de um mergulhão. Bico comprido e pontudo com dentes na mandíbula e no fundo do maxilar, para segurar peixe escorregadio.",
+             "Lived about 83 million years ago in the Western Interior Seaway, in North America. A flightless diving bird of up to 1.8 m: wings reduced to a stub, strong legs set so far back that on land it could barely shuffle, feet with lobed toes like a grebe's. A long pointed beak with teeth in the lower jaw and the back of the upper one, to hold slippery fish.",
+             "Vivió hace unos 83 millones de años en el Mar Interior Occidental, en América del Norte. Ave buceadora de hasta 1,8 m que no volaba: alas reducidas a un muñón, patas fuertes tan atrasadas que en tierra apenas se arrastraba, pies con dedos lobulados como los de un somormujo. Pico largo y puntiagudo con dientes en la mandíbula y al fondo del maxilar, para sujetar peces resbaladizos."),
+        behavior=("Boia em bandos perto da costa e mergulha fundo atrás de peixe, impulsionada só pelos pés. Não ataca ninguém maior que um peixe; ferida, dá bicadas e foge.",
+                  "Floats in rafts near the coast and dives deep after fish, driven by the feet alone. Attacks nothing bigger than a fish; hurt, it stabs back and flees.",
+                  "Flota en bandadas cerca de la costa y bucea hondo tras los peces, impulsada solo por las patas. No ataca a nada mayor que un pez; herida, picotea y huye."),
+        taming=("Doma-se na mão, com peixe. Os pares põem ovos pequenos na areia da praia.",
+                "Hand-tamed with fish. Pairs lay small eggs on the sand of the beach.",
+                "Se doma a mano, con pescado. Las parejas ponen huevos pequeños en la arena de la playa."),
+        utility=("Companheira de mergulho: segue o dono pela água e limpa os peixes do caminho. Dá penas e um bacalhau de vez em quando.",
+                 "A diving companion: it follows its owner through the water and clears the fish out of the way. Drops feathers and the odd cod.",
+                 "Compañera de buceo: sigue a su dueño por el agua y despeja los peces del camino. Da plumas y algún bacalao."),
+        note=("Contei doze segundos debaixo d'água e ela ainda não tinha subido. Subiu com um peixe maior que a minha mão.",
+              "I counted twelve seconds under water and it still had not come up. It came up with a fish bigger than my hand.",
+              "Conté doce segundos bajo el agua y todavía no había subido. Subió con un pez más grande que mi mano.")),
 }
 
 ERAS = {

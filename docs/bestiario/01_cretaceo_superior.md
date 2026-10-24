@@ -170,7 +170,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Comportamento | Domar | Montaria | Uso no jogo | Versão |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 112 | Gargantuavis | Ave | 🦖 | Herbívoro | 2 m | Herbívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra); ave grande que não voa |  |
-| 113 | **Hesperornis** | Ave | 🌊 | Piscívoro | 1,5 m | Pescador | Territorial | Comida (peixe) | — | Ave mergulhadora; traz peixe do fundo | v0.5 |
+| 113 | **Hesperornis** | Ave | 🌊 | Piscívoro | 1,8 m | Pescador | Territorial | Comida (peixe) | — | Ave mergulhadora; traz peixe do fundo | v0.5 |
 | 114 | Baptornis | Ave | 🌊 | Piscívoro | 1 m | Pescador | Arisco | Comida (peixe) | — | Guarda da base |  |
 | 115 | **Ichthyornis** | Ave | 🪽 | Piscívoro | 0,6 m env. | Pescador | Arisco | Comida (peixe) | 🦜 | Ave de ombro que pesca e traz peixe para o dono | v0.4 |
 | 116 | Vegavis | Ave | 🐊 | Onívoro | 0,6 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus); parente dos patos |  |
