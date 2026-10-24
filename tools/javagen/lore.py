@@ -6,15 +6,15 @@ Tone (docs/HISTORIA.md, section 9): short sentences, first person in Katarina's 
 
 # ------------------------------------------------------------------ intro screen (first time in the world)
 INTRO = [
-    ("Santa Maria, Rio Grande do Sul. Laboratório do Projeto Terrassic.",
-     "Santa Maria, Rio Grande do Sul, Brazil. Terrassic Project laboratory.",
-     "Santa Maria, Rio Grande do Sul, Brasil. Laboratorio del Proyecto Terrassic."),
+    ("Laboratório do Projeto Terrassic. Três andares abaixo de um sítio de fósseis do Triássico.",
+     "Terrassic Project laboratory. Three floors beneath a Triassic fossil site.",
+     "Laboratorio del Proyecto Terrassic. Tres pisos bajo un yacimiento de fósiles del Triásico."),
     ("A máquina foi feita só para olhar o passado. Ninguém deveria atravessar.",
      "The machine was built only to look at the past. No one was supposed to cross.",
      "La máquina se hizo solo para mirar el pasado. Nadie debía cruzar."),
-    ("Há nove dias, a Dra. Katarina Brandt atravessou. E não voltou.",
-     "Nine days ago, Dr. Katarina Brandt crossed. And she never came back.",
-     "Hace nueve días, la Dra. Katarina Brandt cruzó. Y no volvió."),
+    ("Há nove dias, a Dra. Katarina Usha atravessou. E não voltou.",
+     "Nine days ago, Dr. Katarina Usha crossed. And she never came back.",
+     "Hace nueve días, la Dra. Katarina Usha cruzó. Y no volvió."),
     ("O núcleo de âmbar ainda brilhava quando você entrou na câmara.",
      "The amber core was still glowing when you stepped into the chamber.",
      "El núcleo de ámbar todavía brillaba cuando entraste en la cámara."),
@@ -29,15 +29,15 @@ INTRO_ERA = ("Cretáceo Superior — 68 milhões de anos atrás",
 # ------------------------------------------------------------------ "Relatório do Incidente" (notebook, Report tab)
 REPORT = [
     dict(title=("O achado", "The find", "El hallazgo"),
-         text=("Março. Numa rocha do Triássico, perto de Santa Maria, a equipe achou um âmbar que brilhava sozinho. "
+         text=("Março. Numa rocha do Triássico, num sítio de escavação, a equipe achou um âmbar que brilhava sozinho. "
                "Não era resina comum: dentro dele, a luz se movia devagar, como água.\n\n"
-               "A Dra. Katarina Brandt passou a noite inteira olhando para ele. De manhã ela disse: \"Isto não guarda o passado. Isto mostra o passado.\"",
-               "March. In a Triassic rock near Santa Maria, the team found a piece of amber that glowed on its own. "
+               "A Dra. Katarina Usha passou a noite inteira olhando para ele. De manhã ela disse: \"Isto não guarda o passado. Isto mostra o passado.\"",
+               "March. In a Triassic rock at a dig site, the team found a piece of amber that glowed on its own. "
                "It was not ordinary resin: inside it, the light moved slowly, like water.\n\n"
-               "Dr. Katarina Brandt spent the whole night staring at it. In the morning she said: \"This does not keep the past. It shows the past.\"",
-               "Marzo. En una roca del Triásico, cerca de Santa Maria, el equipo encontró un ámbar que brillaba solo. "
+               "Dr. Katarina Usha spent the whole night staring at it. In the morning she said: \"This does not keep the past. It shows the past.\"",
+               "Marzo. En una roca del Triásico, en un sitio de excavación, el equipo encontró un ámbar que brillaba solo. "
                "No era resina común: dentro de él, la luz se movía despacio, como agua.\n\n"
-               "La Dra. Katarina Brandt pasó la noche entera mirándolo. Por la mañana dijo: \"Esto no guarda el pasado. Esto muestra el pasado.\"")),
+               "La Dra. Katarina Usha pasó la noche entera mirándolo. Por la mañana dijo: \"Esto no guarda el pasado. Esto muestra el pasado.\"")),
     dict(title=("Registros do laboratório", "Laboratory log", "Registros del laboratorio"),
          text=("Dia 1: a máquina mostra imagens de uma floresta de samambaias. Dia 3: as imagens ficam nítidas. Dia 5: um animal olha de volta para a câmera.\n\n"
                "Dia 6: a Katarina pede para desligar os limites de energia. A direção nega.\n\n"
@@ -424,8 +424,9 @@ OBJECTIVES = {
                       "Dig a fossil out of Fossil Rock with the Hair Brush or the Flint Chisel.",
                       "Excava un fósil de la Roca Fosilífera con el Pincel de Pelo o el Cincel de Sílex.")),
     "research_table": (("Mesa de trabalho", "At the table", "En la mesa"),
-                       ("Estude um fóssil ou um esboço na Mesa de Pesquisa.", "Study a fossil or a sketch at the Research Table.",
-                        "Estudia un fósil o un boceto en la Mesa de Investigación.")),
+                       ("Estude um fóssil, um esboço ou uma amostra na Mesa de Pesquisa.",
+                        "Study a fossil, a sketch or a sample at the Research Table.",
+                        "Estudia un fósil, un boceto o una muestra en la Mesa de Investigación.")),
     "tame_herbivore": (("Amizade", "Friendship", "Amistad"),
                        ("Domestique um herbívoro dando comida na mão.", "Tame a herbivore by hand-feeding it.", "Domestica un herbívoro dándole comida en la mano.")),
     "hatch_egg": (("Nasceu", "Hatched", "Nació"),
@@ -433,12 +434,12 @@ OBJECTIVES = {
                    "Quédate cerca de un huevo de dinosaurio cuando eclosione.")),
     "ride": (("Na sela", "In the saddle", "En la silla"),
              ("Monte uma criatura domesticada com sela.", "Ride a tamed creature with a saddle.", "Monta una criatura domesticada con silla.")),
-    "katarina_camps": (("Rastros dela", "Her tracks", "Sus rastros"),
-                       ("Ache 2 acampamentos da Katarina. Ainda não há acampamentos no mundo.", "Find 2 of Katarina's camps. There are no camps in the world yet.",
-                        "Encuentra 2 campamentos de Katarina. Todavía no hay campamentos en el mundo.")),
-    "rift_ruin": (("Ruína da Fenda", "Rift Ruin", "Ruina de la Grieta"),
-                  ("Ache uma Ruína da Fenda. Elas ainda não aparecem no mundo.", "Find a Rift Ruin. They do not appear in the world yet.",
-                   "Encuentra una Ruina de la Grieta. Todavía no aparecen en el mundo.")),
+    "katarina_pages": (("Rastros dela", "Her tracks", "Sus rastros"),
+                       ("Ache 3 páginas do caderno da Katarina.", "Find 3 pages from Katarina's notebook.",
+                        "Encuentra 3 páginas del cuaderno de Katarina.")),
+    "inland_sea": (("Mar Interior", "Inland Sea", "Mar Interior"),
+                   ("Aviste um réptil marinho e um pterossauro.", "Spot a marine reptile and a pterosaur.",
+                    "Avista un reptil marino y un pterosaurio.")),
     "migration": (("A grande fila", "The long line", "La gran fila"),
                   ("Veja uma migração de bicos-de-pato. Elas ainda não acontecem.", "Watch a duckbill migration. They do not happen yet.",
                    "Observa una migración de picos de pato. Todavía no ocurren.")),
@@ -458,9 +459,9 @@ UI = {
     "notebook.terrassic.tab.katarina": ("Katarina", "Katarina", "Katarina"),
     "notebook.terrassic.tab.report": ("Relatório", "Report", "Informe"),
     "notebook.terrassic.journal.header": ("Capítulo 1: Ecos do Fim", "Chapter 1: Echoes of the End", "Capítulo 1: Ecos del Fin"),
-    "notebook.terrassic.journal.intro": ("Complete 2 de 3 objetivos de cada tema. A ordem é sua.",
-                                         "Complete 2 of 3 objectives in each theme. Any order you like.",
-                                         "Completa 2 de 3 objetivos de cada tema. En el orden que quieras."),
+    "notebook.terrassic.journal.intro": ("Fragmentos de âmbar: %s de 4. Cada tema com 2 de 3 objetivos rende um. A ordem é sua.",
+                                         "Amber fragments: %s of 4. Each theme with 2 of 3 objectives gives one. Any order you like.",
+                                         "Fragmentos de ámbar: %s de 4. Cada tema con 2 de 3 objetivos da uno. En el orden que quieras."),
     "notebook.terrassic.journal.theme": ("%s (%s de 2)", "%s (%s of 2)", "%s (%s de 2)"),
     "notebook.terrassic.guide.count": ("%s de %s espécies registradas", "%s of %s species recorded", "%s de %s especies registradas"),
     "notebook.terrassic.guide.unknown": ("???", "???", "???"),
@@ -506,7 +507,7 @@ UI = {
     "message.terrassic.guide.2": ("Guia de Campo: %s avistado", "Field Guide: %s sighted", "Guía de Campo: %s avistado"),
     "message.terrassic.guide.3": ("Guia de Campo: %s estudado", "Field Guide: %s studied", "Guía de Campo: %s estudiado"),
     "message.terrassic.guide.4": ("Guia de Campo: %s domesticado", "Field Guide: %s tamed", "Guía de Campo: %s domesticado"),
-    "message.terrassic.theme_done": ("Diário de Campo: tema %s concluído", "Field Journal: %s theme complete", "Diario de Campo: tema %s completado"),
+    "message.terrassic.theme_done": ("Fragmento de âmbar recuperado: %s de 4", "Amber fragment recovered: %s of 4", "Fragmento de ámbar recuperado: %s de 4"),
     "message.terrassic.page_found": ("Página da Katarina guardada no Caderno: %s", "Katarina's page added to the Notebook: %s",
                                      "Página de Katarina guardada en el Cuaderno: %s"),
     "message.terrassic.fossil_broke": ("O fóssil rachou. Só sobrou um osso.", "The fossil cracked. Only a bone is left.", "El fósil se rompió. Solo quedó un hueso."),
@@ -519,6 +520,4 @@ UI = {
     "tooltip.terrassic.study_at_table": ("Estude na Mesa de Pesquisa", "Study it at the Research Table", "Estúdialo en la Mesa de Investigación"),
     "item.terrassic.sketch.of": ("Esboço de %s", "Sketch of %s", "Boceto de %s"),
     "itemGroup.terrassic.science": ("Terrassic: Ciência", "Terrassic: Science", "Terrassic: Ciencia"),
-    "advancements.terrassic.root.title": ("Terrassic", "Terrassic", "Terrassic"),
-    "advancements.terrassic.root.description": ("O Diário de Campo do Capítulo 1", "The Field Journal of Chapter 1", "El Diario de Campo del Capítulo 1"),
 }
