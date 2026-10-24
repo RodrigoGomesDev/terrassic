@@ -355,10 +355,10 @@
    "mount": "✅",
    "niche": "Predador grande",
    "mood": "Agressivo",
-   "use": "Montaria de combate",
+   "use": "Abelissaurídeo de Madagascar; arrancada curta muito rápida",
    "era": "cretaceo_superior",
    "group": "Ceratossauro/abelissauro",
-   "version": ""
+   "version": "v0.7"
   },
   {
    "name": "Rajasaurus",
@@ -409,10 +409,10 @@
    "mount": "✅",
    "niche": "Predador grande",
    "mood": "Agressivo",
-   "use": "Abelissaurídeo do Mato Grosso; arrancada curta muito rápida",
+   "use": "Montaria de combate",
    "era": "cretaceo_superior",
    "group": "Ceratossauro/abelissauro",
-   "version": "v0.7"
+   "version": ""
   },
   {
    "name": "Skorpiovenator",
@@ -2223,14 +2223,14 @@
    "hab": "T",
    "live": false,
    "note": "",
-   "tame": "Nocaute",
+   "tame": "Comida",
    "mount": "🪑",
    "niche": "Gigante",
    "mood": "Territorial",
-   "use": "Plataforma para construir em cima",
+   "use": "Titanossauro da Patagônia; plataforma",
    "era": "cretaceo_superior",
    "group": "Titanossauro",
-   "version": ""
+   "version": "v0.6"
   },
   {
    "name": "Futalognkosaurus",
@@ -2277,14 +2277,14 @@
    "hab": "T",
    "live": false,
    "note": "",
-   "tame": "Comida",
+   "tame": "Nocaute",
    "mount": "🪑",
    "niche": "Gigante",
    "mood": "Territorial",
-   "use": "Titanossauro de Uberaba; plataforma",
+   "use": "Plataforma para construir em cima",
    "era": "cretaceo_superior",
    "group": "Titanossauro",
-   "version": "v0.6"
+   "version": ""
   },
   {
    "name": "Austroposeidon",
@@ -2515,10 +2515,10 @@
    "mount": "✅",
    "niche": "Herbívoro grande",
    "mood": "Territorial",
-   "use": "Titanossauro de Minas Gerais; carga média",
+   "use": "Montaria de carga",
    "era": "cretaceo_superior",
    "group": "Titanossauro",
-   "version": "v0.6"
+   "version": ""
   },
   {
    "name": "Saltasaurus",
@@ -2569,10 +2569,10 @@
    "mount": "✅",
    "niche": "Herbívoro grande",
    "mood": "Territorial",
-   "use": "Montaria de carga",
+   "use": "Titanossauro da Mongólia; carga média",
    "era": "cretaceo_superior",
    "group": "Titanossauro",
-   "version": ""
+   "version": "v0.6"
   },
   {
    "name": "Sarmientosaurus",
@@ -6117,7 +6117,7 @@
    "mount": "—",
    "niche": "Pescador grande",
    "mood": "Agressivo",
-   "use": "Espinossaurídeo do Araripe; pescador de lagoa",
+   "use": "Espinossaurídeo de crânio comprido; pescador de lagoa",
    "era": "cretaceo_inferior",
    "group": "Espinossauro",
    "version": "v2.0"
@@ -6347,14 +6347,14 @@
    "hab": "T",
    "live": false,
    "note": "mordida venenosa (hipótese)",
-   "tame": "Comida",
-   "mount": "🦜",
+   "tame": "Ovo",
+   "mount": "—",
    "niche": "Caçador pequeno",
    "mood": "Arisco",
-   "use": "Vai no ombro (bônus); mordida venenosa (hipótese)",
+   "use": "Pequeno raptor com penas; guarda de base",
    "era": "cretaceo_inferior",
    "group": "Raptor",
-   "version": ""
+   "version": "v2.0"
   },
   {
    "name": "Microraptor",
@@ -6531,10 +6531,10 @@
    "mount": "🦜",
    "niche": "Caçador pequeno",
    "mood": "Arisco",
-   "use": "Vai no ombro (bônus); dorme enrolado como pássaro",
+   "use": "Troodontídeo minúsculo de ombro; dorme enrolado como pássaro e avisa de predadores",
    "era": "cretaceo_inferior",
    "group": "Troodontídeo",
-   "version": ""
+   "version": "v2.0"
   },
   {
    "name": "Sinocalliopteryx",
@@ -6563,14 +6563,14 @@
    "hab": "T",
    "live": false,
    "note": "",
-   "tame": "Comida",
-   "mount": "🦜",
+   "tame": "Ovo",
+   "mount": "—",
    "niche": "Predador médio",
    "mood": "Territorial",
-   "use": "Pequeno de ombro; avisa de predadores",
+   "use": "Guarda da base",
    "era": "cretaceo_inferior",
    "group": "Celurossauro pequeno",
-   "version": "v2.0"
+   "version": ""
   },
   {
    "name": "Huaxiagnathus",
@@ -6603,10 +6603,10 @@
    "mount": "—",
    "niche": "Predador médio",
    "mood": "Territorial",
-   "use": "Pequeno caçador; guarda de base",
+   "use": "Guarda da base",
    "era": "cretaceo_inferior",
    "group": "Celurossauro pequeno",
-   "version": "v2.0"
+   "version": ""
   },
   {
    "name": "Sinosauropteryx",
@@ -8619,10 +8619,10 @@
    "mount": "✅",
    "niche": "Herbívoro médio",
    "mood": "Defensivo",
-   "use": "Crista gigante; voa devagar mas é muito estável",
+   "use": "Montaria voadora",
    "era": "cretaceo_inferior",
    "group": "Pterossauro",
-   "version": "v2.0"
+   "version": ""
   },
   {
    "name": "Anhanguera",
@@ -8741,14 +8741,14 @@
    "hab": "V",
    "live": false,
    "note": "colônias enormes de ninhos",
-   "tame": "Ovo",
+   "tame": "Comida (peixe)",
    "mount": "—",
    "niche": "Pescador",
    "mood": "Agressivo",
-   "use": "Guarda da base; colônias enormes de ninhos",
+   "use": "Vive em colônias enormes com ninhos; pesca para o dono (pequeno demais para montar)",
    "era": "cretaceo_inferior",
    "group": "Pterossauro",
-   "version": ""
+   "version": "v2.0"
   },
   {
    "name": "Dsungaripterus",
@@ -9138,13 +9138,13 @@
    "live": false,
    "note": "",
    "tame": "Comida",
-   "mount": "—",
+   "mount": "🦜",
    "niche": "Caçador pequeno",
    "mood": "Arisco",
-   "use": "Crocodilo pequeno e terrestre; caça insetos e lagartos",
+   "use": "Vai no ombro (bônus)",
    "era": "cretaceo_inferior",
    "group": "Crocodiliforme terrestre",
-   "version": "v2.0"
+   "version": ""
   },
   {
    "name": "Anatosuchus",
@@ -9174,13 +9174,13 @@
    "live": false,
    "note": "",
    "tame": "Comida",
-   "mount": "🦜",
+   "mount": "—",
    "niche": "Onívoro pequeno",
    "mood": "Arisco",
-   "use": "Vai no ombro (bônus)",
+   "use": "Crocodilo pequeno; quebra conchas e caça lagartos",
    "era": "cretaceo_inferior",
    "group": "Crocodiliforme",
-   "version": ""
+   "version": "v2.0"
   },
   {
    "name": "Ikechosaurus",
@@ -13951,10 +13951,10 @@
    "mount": "✅",
    "niche": "Herbívoro grande",
    "mood": "Territorial",
-   "use": "Montaria de carga",
+   "use": "Um dos primeiros gigantes de pescoço longo; montaria de carga",
    "era": "triassico",
    "group": "Sauropodomorfo",
-   "version": ""
+   "version": "v4.0"
   },
   {
    "name": "Ingentia",
@@ -14146,13 +14146,13 @@
    "live": false,
    "note": "",
    "tame": "Ovo",
-   "mount": "✅",
+   "mount": "—",
    "niche": "Predador grande",
    "mood": "Agressivo",
-   "use": "Montaria de combate",
+   "use": "O maior predador dinossauro do Triássico Superior; guarda",
    "era": "triassico",
    "group": "Terópode",
-   "version": ""
+   "version": "v4.0"
   },
   {
    "name": "Zupaysaurus",
@@ -14203,10 +14203,10 @@
    "mount": "—",
    "niche": "Herbívoro médio",
    "mood": "Defensivo",
-   "use": "O primeiro dinossauro de pescoço longo; leva uma bolsa de carga leve, mas não aguenta o jogador",
+   "use": "Coleta (frutas, sementes, fibra)",
    "era": "triassico",
    "group": "Sauropodomorfo",
-   "version": "v4.0"
+   "version": ""
   },
   {
    "name": "Coelophysis",
@@ -14239,10 +14239,10 @@
    "mount": "—",
    "niche": "Predador médio",
    "mood": "Agressivo",
-   "use": "O maior dinossauro predador de Santa Maria; guarda",
+   "use": "Guarda da base",
    "era": "triassico",
    "group": "Dinossauro primitivo",
-   "version": "v4.0"
+   "version": ""
   },
   {
    "name": "Sanjuansaurus",
@@ -14275,10 +14275,10 @@
    "mount": "—",
    "niche": "Herbívoro médio",
    "mood": "Arisco",
-   "use": "Colhe folhas e frutos baixos",
+   "use": "Coleta (frutas, sementes, fibra)",
    "era": "triassico",
    "group": "Sauropodomorfo",
-   "version": "v4.0"
+   "version": ""
   },
   {
    "name": "Thecodontosaurus",
@@ -14293,10 +14293,10 @@
    "mount": "—",
    "niche": "Herbívoro médio",
    "mood": "Arisco",
-   "use": "Coleta (frutas, sementes, fibra)",
+   "use": "Colhe folhas e frutos baixos",
    "era": "triassico",
    "group": "Sauropodomorfo",
-   "version": ""
+   "version": "v4.0"
   },
   {
    "name": "Tawa",
@@ -14347,10 +14347,10 @@
    "mount": "—",
    "niche": "Predador médio",
    "mood": "Territorial",
-   "use": "Guarda da base",
+   "use": "Pequeno e rápido; foge e avisa de perigo",
    "era": "triassico",
    "group": "Dinossauro primitivo",
-   "version": ""
+   "version": "v4.0"
   },
   {
    "name": "Chromogisaurus",
@@ -14509,10 +14509,10 @@
    "mount": "—",
    "niche": "Onívoro pequeno",
    "mood": "Arisco",
-   "use": "Pequeno e rápido; foge e avisa de perigo",
+   "use": "Coleta (frutas, sementes, fibra)",
    "era": "triassico",
    "group": "Sauropodomorfo",
-   "version": "v4.0"
+   "version": ""
   },
   {
    "name": "Panphagia",
@@ -15679,7 +15679,7 @@
    "mount": "—",
    "niche": "Herbívoro pequeno",
    "mood": "Arisco",
-   "use": "Rincossauro; cava raízes. O fóssil mais comum de Santa Maria",
+   "use": "Rincossauro; cava raízes. Um dos fósseis mais comuns do Triássico",
    "era": "triassico",
    "group": "Rincossauro",
    "version": "v4.0"
@@ -17011,10 +17011,10 @@
    "mount": "✅",
    "niche": "Herbívoro grande",
    "mood": "Territorial",
-   "use": "Montaria de carga; dicinodonte do tamanho de um elefante",
+   "use": "Dicinodonte do tamanho de um elefante; carga pesada",
    "era": "triassico",
    "group": "Dicinodonte",
-   "version": ""
+   "version": "v4.0"
   },
   {
    "name": "Placerias",
@@ -17119,10 +17119,10 @@
    "mount": "✅",
    "niche": "Herbívoro grande",
    "mood": "Defensivo",
-   "use": "Dicinodonte (parente dos mamíferos); carga pesada",
+   "use": "Montaria rápida",
    "era": "triassico",
    "group": "Dicinodonte",
-   "version": "v4.0"
+   "version": ""
   },
   {
    "name": "Lystrosaurus",
@@ -18093,10 +18093,10 @@
    "mount": "✅",
    "niche": "Herbívoro grande",
    "mood": "Territorial",
-   "use": "Montaria de carga",
+   "use": "Mastodonte; carga pesada",
    "era": "era_do_gelo",
    "group": "Proboscídeo",
-   "version": ""
+   "version": "v5.0"
   },
   {
    "name": "Cuvieronius",
@@ -18129,10 +18129,10 @@
    "mount": "✅",
    "niche": "Herbívoro grande",
    "mood": "Territorial",
-   "use": "Mastodonte sul-americano; carga pesada",
+   "use": "Montaria de carga",
    "era": "era_do_gelo",
    "group": "Proboscídeo",
-   "version": "v5.0"
+   "version": ""
   },
   {
    "name": "Mamute-anão (Mammuthus exilis)",

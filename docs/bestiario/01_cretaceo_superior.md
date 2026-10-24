@@ -32,10 +32,10 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Comportamento | Domar | Montaria | Uso no jogo | Versão |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 19 | **Carnotaurus** | Ceratossauro/abelissauro | 🦖 | Carnívoro | 8 m | Predador grande | Agressivo | Nocaute | ✅ | Chifres; montaria de combate rápida | v0.7 |
-| 20 | Majungasaurus | Ceratossauro/abelissauro | 🦖 | Carnívoro | 8 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
+| 20 | **Majungasaurus** | Ceratossauro/abelissauro | 🦖 | Carnívoro | 8 m | Predador grande | Agressivo | Nocaute | ✅ | Abelissaurídeo de Madagascar; arrancada curta muito rápida | v0.7 |
 | 21 | Rajasaurus | Ceratossauro/abelissauro | 🦖 | Carnívoro | 8 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
 | 22 | Abelisaurus | Ceratossauro/abelissauro | 🦖 | Carnívoro | 9 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
-| 23 | **Pycnonemosaurus** | Ceratossauro/abelissauro | 🦖 | Carnívoro | 9 m | Predador grande | Agressivo | Nocaute | ✅ | Abelissaurídeo do Mato Grosso; arrancada curta muito rápida | v0.7 |
+| 23 | Pycnonemosaurus | Ceratossauro/abelissauro | 🦖 | Carnívoro | 9 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
 | 24 | Skorpiovenator | Ceratossauro/abelissauro | 🦖 | Carnívoro | 7 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
 | 25 | Ekrixinatosaurus | Ceratossauro/abelissauro | 🦖 | Carnívoro | 7 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
 | 26 | Rugops | Ceratossauro/abelissauro | 🦖 | Carnívoro | 6 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate; carniceiro, segue carcaças |  |
@@ -186,10 +186,10 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 121 | **Alamosaurus** | Titanossauro | 🦖 | Herbívoro | 30 m | Gigante | Territorial | Comida | 🪑 | Titanossauro; plataforma para construir em cima | v0.6 |
 | 122 | Puertasaurus | Titanossauro | 🦖 | Herbívoro | 30 m | Gigante | Territorial | Nocaute | 🪑 | Plataforma para construir em cima |  |
 | 123 | Notocolossus | Titanossauro | 🦖 | Herbívoro | 28 m | Gigante | Territorial | Nocaute | 🪑 | Plataforma para construir em cima |  |
-| 124 | Dreadnoughtus | Titanossauro | 🦖 | Herbívoro | 26 m | Gigante | Territorial | Nocaute | 🪑 | Plataforma para construir em cima |  |
+| 124 | **Dreadnoughtus** | Titanossauro | 🦖 | Herbívoro | 26 m | Gigante | Territorial | Comida | 🪑 | Titanossauro da Patagônia; plataforma | v0.6 |
 | 125 | Futalognkosaurus | Titanossauro | 🦖 | Herbívoro | 26 m | Gigante | Territorial | Nocaute | 🪑 | Plataforma para construir em cima |  |
 | 126 | Paralititan | Titanossauro | 🦖 | Herbívoro | 26 m | Gigante | Territorial | Nocaute | 🪑 | Plataforma para construir em cima |  |
-| 127 | **Uberabatitan** | Titanossauro | 🦖 | Herbívoro | 26 m | Gigante | Territorial | Comida | 🪑 | Titanossauro de Uberaba; plataforma | v0.6 |
+| 127 | Uberabatitan | Titanossauro | 🦖 | Herbívoro | 26 m | Gigante | Territorial | Nocaute | 🪑 | Plataforma para construir em cima |  |
 | 128 | Austroposeidon | Titanossauro | 🦖 | Herbívoro | 25 m | Gigante | Territorial | Nocaute | 🪑 | Plataforma para construir em cima |  |
 | 129 | Isisaurus | Titanossauro | 🦖 | Herbívoro | 18 m | Gigante | Territorial | Comida | 🪑 | Plataforma para construir em cima |  |
 | 130 | Ampelosaurus | Titanossauro | 🦖 | Herbívoro | 16 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
@@ -202,10 +202,10 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 137 | Atsinganosaurus | Titanossauro | 🦖 | Herbívoro | 9 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria de carga |  |
 | 138 | Lirainosaurus | Titanossauro | 🦖 | Herbívoro | 4 m | Herbívoro médio | Defensivo | Comida | ✅ | Montaria rápida |  |
 | 139 | Aeolosaurus | Titanossauro | 🦖 | Herbívoro | 15 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
-| 140 | **Maxakalisaurus** | Titanossauro | 🦖 | Herbívoro | 13 m | Herbívoro grande | Territorial | Comida | ✅ | Titanossauro de Minas Gerais; carga média | v0.6 |
+| 140 | Maxakalisaurus | Titanossauro | 🦖 | Herbívoro | 13 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
 | 141 | **Saltasaurus** | Titanossauro | 🦖 | Herbívoro | 12 m | Herbívoro grande | Territorial | Comida | ✅ | Titanossauro pequeno e blindado; montaria resistente | v0.6 |
 | 142 | Nemegtosaurus | Titanossauro | 🦖 | Herbívoro | 12 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
-| 143 | Opisthocoelicaudia | Titanossauro | 🦖 | Herbívoro | 12 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
+| 143 | **Opisthocoelicaudia** | Titanossauro | 🦖 | Herbívoro | 12 m | Herbívoro grande | Territorial | Comida | ✅ | Titanossauro da Mongólia; carga média | v0.6 |
 | 144 | Sarmientosaurus | Titanossauro | 🦖 | Herbívoro | 12 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
 | 145 | Rinconsaurus | Titanossauro | 🦖 | Herbívoro | 11 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
 | 146 | Mansourasaurus | Titanossauro | 🦖 | Herbívoro | 10 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |

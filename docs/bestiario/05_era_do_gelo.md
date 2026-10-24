@@ -16,9 +16,9 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 6 | Elefante-de-Recki (Palaeoloxodon recki) | Proboscídeo | 🐾 | Herbívoro | 4 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
 | 7 | Deinotério (Deinotherium bozasi) | Proboscídeo | 🐾 | Herbívoro | 4 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga; presas curvadas para baixo |  |
 | 8 | Stegodon | Proboscídeo | 🐾 | Herbívoro | 3,8 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
-| 9 | Mastodonte-americano (Mammut americanum) | Proboscídeo | 🐾 | Herbívoro | 3 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
+| 9 | **Mastodonte-americano (Mammut americanum)** | Proboscídeo | 🐾 | Herbívoro | 3 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Mastodonte; carga pesada | v5.0 |
 | 10 | Cuvieronius | Proboscídeo | 🐾 | Herbívoro | 2,8 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
-| 11 | **Notiomastodon** | Proboscídeo | 🐾 | Herbívoro | 2,5 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Mastodonte sul-americano; carga pesada | v5.0 |
+| 11 | Notiomastodon | Proboscídeo | 🐾 | Herbívoro | 2,5 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
 | 12 | Mamute-anão (Mammuthus exilis) | Proboscídeo | 🐾 | Herbívoro | 2 m alt. | Herbívoro grande | Territorial | Comida | ✅ | Montaria rápida; das ilhas da Califórnia |  |
 | 13 | Elefante-anão-da-Sicília (Palaeoloxodon falconeri) | Proboscídeo | 🐾 | Herbívoro | 1 m alt. | Herbívoro médio | Territorial | Comida | — | Coleta (frutas, sementes, fibra); do tamanho de um porco |  |
 

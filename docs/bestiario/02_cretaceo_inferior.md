@@ -1,6 +1,6 @@
 # Cretáceo Inferior
 
-**Capítulo 2: A Lagoa de Araripe** · 145 a 100 milhões de anos
+**Capítulo 2: Penas e Cinzas** · 145 a 100 milhões de anos
 
 Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (`docs/ROSTER.md`).
 
@@ -20,7 +20,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 10 | Riparovenator | Espinossauro | 🐊 | Piscívoro | 9 m | Pescador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
 | 11 | Siamosaurus | Espinossauro | 🐊 | Piscívoro | 9 m | Pescador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
 | 12 | Ceratosuchops | Espinossauro | 🐊 | Piscívoro | 8 m | Pescador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
-| 13 | **Irritator** | Espinossauro | 🐊 | Piscívoro | 8 m | Pescador grande | Agressivo | Ovo | — | Espinossaurídeo do Araripe; pescador de lagoa | v2.0 |
+| 13 | **Irritator** | Espinossauro | 🐊 | Piscívoro | 8 m | Pescador grande | Agressivo | Ovo | — | Espinossaurídeo de crânio comprido; pescador de lagoa | v2.0 |
 | 14 | Kryptops | Ceratossauro/abelissauro | 🦖 | Carnívoro | 6 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
 | 15 | **Yutyrannus** | Tiranossauro | 🦖 | Carnívoro | 9 m | Predador grande | Agressivo | Nocaute | ✅ | Tiranossauro com penas; não sente frio no Planalto Vulcânico | v2.0 |
 | 16 | Siamotyrannus | Tiranossauro | 🦖 | Carnívoro | 6 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |
@@ -38,7 +38,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 23 | Zhenyuanlong | Raptor | 🦖 | Carnívoro | 1,65 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 24 | Tianyuraptor | Raptor | 🦖 | Carnívoro | 1,6 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 25 | Changyuraptor | Raptor | 🦖 | Carnívoro | 1,3 m | Caçador pequeno | Arisco | Comida | — | Guarda da base |  |
-| 26 | Sinornithosaurus | Raptor | 🦖 | Carnívoro | 1 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus); mordida venenosa (hipótese) |  |
+| 26 | **Sinornithosaurus** | Raptor | 🦖 | Carnívoro | 1 m | Caçador pequeno | Arisco | Ovo | — | Pequeno raptor com penas; guarda de base | v2.0 |
 | 27 | **Microraptor** | Paraviano (planador) | 🪽 | Carnívoro | 0,8 m env. | Caçador pequeno | Arisco | Ovo | — | Planador de quatro asas; derruba o jogador da montaria | v2.0 |
 | 28 | Sinornithoides | Troodontídeo | 🦖 | Carnívoro | 1,1 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 29 | Jianianhualong | Troodontídeo | 🦖 | Carnívoro | 1,1 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
@@ -48,11 +48,11 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 33 | Yurgovuchia | Raptor | 🦖 | Carnívoro | 2,5 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 34 | Geminiraptor | Troodontídeo | 🦖 | Carnívoro | 2 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 35 | Jinfengopteryx | Troodontídeo | 🦖 | Carnívoro | 0,55 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
-| 36 | Mei | Troodontídeo | 🦖 | Carnívoro | 0,5 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus); dorme enrolado como pássaro |  |
+| 36 | **Mei** | Troodontídeo | 🦖 | Carnívoro | 0,5 m | Caçador pequeno | Arisco | Comida | 🦜 | Troodontídeo minúsculo de ombro; dorme enrolado como pássaro e avisa de predadores | v2.0 |
 | 37 | Sinocalliopteryx | Celurossauro pequeno | 🦖 | Carnívoro | 2,4 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
-| 38 | **Mirischia** | Celurossauro pequeno | 🦖 | Carnívoro | 2 m | Predador médio | Territorial | Comida | 🦜 | Pequeno de ombro; avisa de predadores | v2.0 |
+| 38 | Mirischia | Celurossauro pequeno | 🦖 | Carnívoro | 2 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 39 | Huaxiagnathus | Celurossauro pequeno | 🦖 | Carnívoro | 1,8 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
-| 40 | **Santanaraptor** | Celurossauro pequeno | 🦖 | Carnívoro | 1,5 m | Predador médio | Territorial | Ovo | — | Pequeno caçador; guarda de base | v2.0 |
+| 40 | Santanaraptor | Celurossauro pequeno | 🦖 | Carnívoro | 1,5 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 41 | **Sinosauropteryx** | Celurossauro pequeno | 🦖 | Carnívoro | 1 m | Caçador pequeno | Arisco | Comida | 🦜 | Pequeno com penas listradas; acha ovos e lagartos | v2.0 |
 | 42 | Nedcolbertia | Celurossauro pequeno | 🦖 | Carnívoro | 3 m | Predador médio | Agressivo | Ovo | — | Guarda da base |  |
 | 43 | Fukuivenator | Terópode | 🦖 | Onívoro | 2,5 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
@@ -199,14 +199,14 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 149 | Tupuxuara | Pterossauro | 🪽 | Onívoro | 5,4 m env. | Onívoro grande | Defensivo | Comida | ✅ | Montaria voadora |  |
 | 150 | **Ornithocheirus** | Pterossauro | 🪽 | Piscívoro | 5 m env. | Pescador grande | Agressivo | Nocaute | ✅ | Planador de longa distância; gasta pouca stamina | v2.0 |
 | 151 | Caulkicephalus | Pterossauro | 🪽 | Piscívoro | 5 m env. | Pescador grande | Agressivo | Ovo | ✅ | Montaria voadora |  |
-| 152 | **Tupandactylus** | Pterossauro | 🪽 | Herbívoro | 5 m env. | Herbívoro médio | Defensivo | Comida | ✅ | Crista gigante; voa devagar mas é muito estável | v2.0 |
+| 152 | Tupandactylus | Pterossauro | 🪽 | Herbívoro | 5 m env. | Herbívoro médio | Defensivo | Comida | ✅ | Montaria voadora |  |
 | 153 | **Anhanguera** | Pterossauro | 🪽 | Piscívoro | 4,5 m env. | Pescador | Agressivo | Comida (peixe) | ✅ | Pesca em voo rasante | v2.0 |
 | 154 | Thalassodromeus | Pterossauro | 🪽 | Piscívoro | 4,5 m env. | Pescador | Agressivo | Ovo | — | Guarda da base; crista gigante; pesca roçando a água |  |
 | 155 | Istiodactylus | Pterossauro | 🪽 | Carnívoro | 4,3 m env. | Predador médio | Agressivo | Ovo | — | Guarda da base; carniceiro, come carcaças |  |
 | 156 | Zhenyuanopterus | Pterossauro | 🪽 | Piscívoro | 4 m env. | Pescador | Agressivo | Ovo | — | Guarda da base |  |
 | 157 | Guidraco | Pterossauro | 🪽 | Piscívoro | 4 m env. | Pescador | Agressivo | Ovo | — | Guarda da base |  |
 | 158 | **Tapejara** | Pterossauro | 🪽 | Onívoro | 3,5 m env. | Onívoro médio | Defensivo | Comida | — | Crista colorida; voa junto com o dono e avisa de predadores (com 3,5 m de envergadura e uns 15 kg, não aguenta uma pessoa) | v2.0 |
-| 159 | Hamipterus | Pterossauro | 🪽 | Piscívoro | 3,5 m env. | Pescador | Agressivo | Ovo | — | Guarda da base; colônias enormes de ninhos |  |
+| 159 | **Hamipterus** | Pterossauro | 🪽 | Piscívoro | 3,5 m env. | Pescador | Agressivo | Comida (peixe) | — | Vive em colônias enormes com ninhos; pesca para o dono (pequeno demais para montar) | v2.0 |
 | 160 | Dsungaripterus | Pterossauro | 🪽 | Onívoro | 3 m env. | Onívoro médio | Defensivo | Comida | — | Coleta (frutas, sementes, fibra); bico curvo que quebra conchas |  |
 | 161 | Pterodaustro | Pterossauro | 🪽 | Filtrador | 3 m env. | Filtrador | Pacífico | Comida | — | Coleta (frutas, sementes, fibra); filtra a água como um flamingo |  |
 | 162 | Nurhachius | Pterossauro | 🪽 | Piscívoro | 2,5 m env. | Pescador | Territorial | Ovo | — | Guarda da base |  |
@@ -238,9 +238,9 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 178 | Pholidosaurus | Crocodiliforme | 🐊 | Piscívoro | 3 m | Pescador | Agressivo | Ovo | — | Guarda da base |  |
 | 179 | Isisfordia | Crocodiliforme | 🐊 | Carnívoro | 1,1 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 180 | Hylaeochampsa | Crocodiliforme | 🐊 | Carnívoro | 1 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
-| 181 | **Araripesuchus** | Crocodiliforme terrestre | 🦖 | Carnívoro | 1 m | Caçador pequeno | Arisco | Comida | — | Crocodilo pequeno e terrestre; caça insetos e lagartos | v2.0 |
+| 181 | Araripesuchus | Crocodiliforme terrestre | 🦖 | Carnívoro | 1 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 182 | Anatosuchus | Crocodiliforme terrestre | 🦖 | Insetívoro | 0,7 m | Comedor de insetos | Arisco | Comida | 🦜 | Vai no ombro (bônus); crocodilo de focinho de pato |  |
-| 183 | Bernissartia | Crocodiliforme | 🐊 | Onívoro | 0,6 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
+| 183 | **Bernissartia** | Crocodiliforme | 🐊 | Onívoro | 0,6 m | Onívoro pequeno | Arisco | Comida | — | Crocodilo pequeno; quebra conchas e caça lagartos | v2.0 |
 | 184 | Ikechosaurus | Coristodero | 🐊 | Piscívoro | 1,5 m | Pescador | Territorial | Comida (peixe) | — | Guarda da base |  |
 | 185 | Monjurosuchus | Coristodero | 🐊 | Piscívoro | 1 m | Pescador | Arisco | Comida (peixe) | 🦜 | Vai no ombro (bônus) |  |
 | 186 | Hyphalosaurus | Coristodero | 🐊 | Piscívoro | 0,8 m | Pescador | Arisco | Comida (peixe) | 🦜 | Vai no ombro (bônus); pescoço comprido, vive nos lagos |  |

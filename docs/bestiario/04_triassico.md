@@ -9,7 +9,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Comportamento | Domar | Montaria | Uso no jogo | Versão |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 1 | **Plateosaurus** | Sauropodomorfo | 🦖 | Herbívoro | 10 m | Herbívoro grande | Territorial | Comida | ✅ | A primeira montaria de carga do Triássico | v4.0 |
-| 2 | Riojasaurus | Sauropodomorfo | 🦖 | Herbívoro | 10 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
+| 2 | **Riojasaurus** | Sauropodomorfo | 🦖 | Herbívoro | 10 m | Herbívoro grande | Territorial | Comida | ✅ | Um dos primeiros gigantes de pescoço longo; montaria de carga | v4.0 |
 | 3 | Ingentia | Sauropodomorfo | 🦖 | Herbívoro | 10 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga |  |
 | 4 | Lessemsaurus | Sauropodomorfo | 🦖 | Herbívoro | 9 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria de carga |  |
 | 5 | Camelotia | Sauropodomorfo | 🦖 | Herbívoro | 9 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria de carga |  |
@@ -20,18 +20,18 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 10 | Ruehleia | Sauropodomorfo | 🦖 | Herbívoro | 8 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria de carga |  |
 | 11 | Efraasia | Sauropodomorfo | 🦖 | Herbívoro | 6 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria rápida |  |
 | 12 | **Herrerasaurus** | Dinossauro primitivo | 🦖 | Carnívoro | 6 m | Predador grande | Agressivo | Ovo | ✅ | Montaria de caça; o maior dinossauro carnívoro da era | v4.0 |
-| 13 | Liliensternus | Terópode | 🦖 | Carnívoro | 5,2 m | Predador grande | Agressivo | Ovo | ✅ | Montaria de combate |  |
+| 13 | **Liliensternus** | Terópode | 🦖 | Carnívoro | 5,2 m | Predador grande | Agressivo | Ovo | — | O maior predador dinossauro do Triássico Superior; guarda | v4.0 |
 | 14 | Zupaysaurus | Terópode | 🦖 | Carnívoro | 5 m | Predador grande | Agressivo | Ovo | ✅ | Montaria de combate |  |
 | 15 | Coloradisaurus | Sauropodomorfo | 🦖 | Herbívoro | 4 m | Herbívoro médio | Defensivo | Comida | — | Coleta (frutas, sementes, fibra) |  |
-| 16 | **Macrocollum** | Sauropodomorfo | 🦖 | Herbívoro | 3,5 m | Herbívoro médio | Defensivo | Comida | — | O primeiro dinossauro de pescoço longo; leva uma bolsa de carga leve, mas não aguenta o jogador | v4.0 |
+| 16 | Macrocollum | Sauropodomorfo | 🦖 | Herbívoro | 3,5 m | Herbívoro médio | Defensivo | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 17 | **Coelophysis** | Terópode | 🦖 | Carnívoro | 3 m | Predador médio | Agressivo | Ovo | — | Caça em bandos grandes | v4.0 |
-| 18 | **Gnathovorax** | Dinossauro primitivo | 🦖 | Carnívoro | 3 m | Predador médio | Agressivo | Ovo | — | O maior dinossauro predador de Santa Maria; guarda | v4.0 |
+| 18 | Gnathovorax | Dinossauro primitivo | 🦖 | Carnívoro | 3 m | Predador médio | Agressivo | Ovo | — | Guarda da base |  |
 | 19 | Sanjuansaurus | Dinossauro primitivo | 🦖 | Carnívoro | 3 m | Predador médio | Agressivo | Ovo | — | Guarda da base |  |
-| 20 | **Unaysaurus** | Sauropodomorfo | 🦖 | Herbívoro | 2,5 m | Herbívoro médio | Arisco | Comida | — | Colhe folhas e frutos baixos | v4.0 |
-| 21 | Thecodontosaurus | Sauropodomorfo | 🦖 | Herbívoro | 2,5 m | Herbívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
+| 20 | Unaysaurus | Sauropodomorfo | 🦖 | Herbívoro | 2,5 m | Herbívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
+| 21 | **Thecodontosaurus** | Sauropodomorfo | 🦖 | Herbívoro | 2,5 m | Herbívoro médio | Arisco | Comida | — | Colhe folhas e frutos baixos | v4.0 |
 | 22 | Tawa | Terópode | 🦖 | Carnívoro | 2,5 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 23 | **Staurikosaurus** | Dinossauro primitivo | 🦖 | Carnívoro | 2,25 m | Predador médio | Territorial | Ovo | — | Um dos primeiros dinossauros; caçador rápido | v4.0 |
-| 24 | Chindesaurus | Dinossauro primitivo | 🦖 | Carnívoro | 2 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
+| 24 | **Chindesaurus** | Dinossauro primitivo | 🦖 | Carnívoro | 2 m | Predador médio | Territorial | Ovo | — | Pequeno e rápido; foge e avisa de perigo | v4.0 |
 | 25 | Chromogisaurus | Sauropodomorfo | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 26 | Pantydraco | Sauropodomorfo | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 27 | Silesaurus | Dinossauro primitivo | 🦖 | Herbívoro | 2,3 m | Herbívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra); dinossauriforme de bico |  |
@@ -40,7 +40,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 30 | **Buriolestes** | Sauropodomorfo | 🦖 | Carnívoro | 1,5 m | Predador médio | Territorial | Comida | 🦜 | Pequeno de ombro; caça insetos e lagartos | v4.0 |
 | 31 | Daemonosaurus | Terópode | 🦖 | Carnívoro | 1,5 m | Predador médio | Territorial | Ovo | — | Guarda da base |  |
 | 32 | Asilisaurus | Dinossauro primitivo | 🦖 | Herbívoro | 1,5 m | Herbívoro pequeno | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
-| 33 | **Pampadromaeus** | Sauropodomorfo | 🦖 | Onívoro | 1,4 m | Onívoro pequeno | Arisco | Comida | — | Pequeno e rápido; foge e avisa de perigo | v4.0 |
+| 33 | Pampadromaeus | Sauropodomorfo | 🦖 | Onívoro | 1,4 m | Onívoro pequeno | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 34 | Panphagia | Sauropodomorfo | 🦖 | Onívoro | 1,3 m | Onívoro pequeno | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 35 | Eodromaeus | Dinossauro primitivo | 🦖 | Carnívoro | 1,2 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 36 | Procompsognathus | Terópode | 🦖 | Carnívoro | 1 m | Caçador pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
@@ -120,7 +120,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 95 | Trilophosaurus | Réptil | 🦖 | Herbívoro | 2,5 m | Herbívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 96 | Isalorhynchus | Rincossauro | 🦖 | Herbívoro | 2 m | Herbívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 97 | Stenaulorhynchus | Rincossauro | 🦖 | Herbívoro | 1,5 m | Herbívoro pequeno | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
-| 98 | **Hyperodapedon** | Rincossauro | 🦖 | Herbívoro | 1,5 m | Herbívoro pequeno | Arisco | Comida | — | Rincossauro; cava raízes. O fóssil mais comum de Santa Maria | v4.0 |
+| 98 | **Hyperodapedon** | Rincossauro | 🦖 | Herbívoro | 1,5 m | Herbívoro pequeno | Arisco | Comida | — | Rincossauro; cava raízes. Um dos fósseis mais comuns do Triássico | v4.0 |
 | 99 | Mesosuchus | Rincossauro | 🦖 | Onívoro | 1 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 100 | Rhynchosaurus | Rincossauro | 🦖 | Herbívoro | 1 m | Herbívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 101 | **Tanystropheus** | Réptil | 🐊 | Piscívoro | 6 m | Pescador grande | Agressivo | Comida | — | Pescoço gigante; pesca da margem | v4.0 |
@@ -219,13 +219,13 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 
 | # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Comportamento | Domar | Montaria | Uso no jogo | Versão |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 172 | Lisowicia | Dicinodonte | 🐾 | Herbívoro | 4,5 m | Herbívoro grande | Territorial | Comida | ✅ | Montaria de carga; dicinodonte do tamanho de um elefante |  |
+| 172 | **Lisowicia** | Dicinodonte | 🐾 | Herbívoro | 4,5 m | Herbívoro grande | Territorial | Comida | ✅ | Dicinodonte do tamanho de um elefante; carga pesada | v4.0 |
 | 173 | **Placerias** | Dicinodonte | 🐾 | Herbívoro | 3,5 m | Herbívoro grande | Defensivo | Comida | ✅ | Dicinodonte com presas; cava água no deserto | v4.0 |
 | 174 | Ischigualastia | Dicinodonte | 🐾 | Herbívoro | 3,5 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria de carga |  |
 | 175 | Stahleckeria | Dicinodonte | 🐾 | Herbívoro | 3 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria rápida |  |
 | 176 | Jachaleria | Dicinodonte | 🐾 | Herbívoro | 3 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria rápida |  |
 | 177 | Kannemeyeria | Dicinodonte | 🐾 | Herbívoro | 3 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria rápida |  |
-| 178 | **Dinodontosaurus** | Dicinodonte | 🐾 | Herbívoro | 2,4 m | Herbívoro grande | Defensivo | Comida | ✅ | Dicinodonte (parente dos mamíferos); carga pesada | v4.0 |
+| 178 | Dinodontosaurus | Dicinodonte | 🐾 | Herbívoro | 2,4 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria rápida |  |
 | 179 | Lystrosaurus | Dicinodonte | 🐾 | Herbívoro | 2,5 m | Herbívoro grande | Defensivo | Comida | ✅ | Montaria rápida; sobreviveu à maior extinção da Terra |  |
 | 180 | Sinokannemeyeria | Dicinodonte | 🐾 | Herbívoro | 2 m | Herbívoro médio | Defensivo | Comida | ✅ | Montaria rápida |  |
 | 181 | Cynognathus | Cinodonte | 🐾 | Carnívoro | 2 m | Predador grande | Agressivo | Nocaute | ✅ | Montaria de combate |  |

@@ -7,9 +7,9 @@ Este bestiário é a lista do que **pode** entrar. O plano de versões (o que en
 | Era | Capítulo | Criaturas | Domáveis | Montáveis | Plataforma | Ombro | Voadoras | Aquáticas | Mamíferos | No plano |
 |---|---|---|---|---|---|---|---|---|---|---|
 | [Cretáceo Superior](01_cretaceo_superior.md) | Capítulo 1: Ecos do Fim (Overworld) | 327 | 309 | 196 | 18 | 26 | 13 | 49 | 9 | 49 |
-| [Cretáceo Inferior](02_cretaceo_inferior.md) | Capítulo 2: A Lagoa de Araripe | 211 | 194 | 100 | 11 | 42 | 26 | 20 | 10 | 29 |
+| [Cretáceo Inferior](02_cretaceo_inferior.md) | Capítulo 2: Penas e Cinzas | 211 | 194 | 100 | 11 | 40 | 26 | 20 | 10 | 29 |
 | [Jurássico](03_jurassico.md) | Capítulo 3: O Reino dos Gigantes | 235 | 205 | 118 | 17 | 47 | 32 | 50 | 14 | 34 |
-| [Triássico](04_triassico.md) | Capítulo 4: A Origem | 223 | 196 | 78 | 3 | 51 | 15 | 56 | 21 | 24 |
+| [Triássico](04_triassico.md) | Capítulo 4: A Origem | 223 | 196 | 77 | 3 | 51 | 15 | 56 | 21 | 24 |
 | [Era do Gelo](05_era_do_gelo.md) | Epílogo: O Caminho de Volta | 205 | 201 | 124 | 1 | 27 | 11 | 9 | 160 | 14 |
 | [Anomalias da Fenda](06_anomalias.md) | Em qualquer era | 2 | 2 | 2 | 0 | 0 | 0 | 2 | 0 | 2 |
 

@@ -15,7 +15,7 @@ Rode `python3 gen_roster.py` depois de editar: ele escreve docs/bestiario/.
 
 ERAS = [
     ("cretaceo_superior", "Cretáceo Superior", "Capítulo 1: Ecos do Fim (Overworld)", "100 a 66 milhões de anos"),
-    ("cretaceo_inferior", "Cretáceo Inferior", "Capítulo 2: A Lagoa de Araripe", "145 a 100 milhões de anos"),
+    ("cretaceo_inferior", "Cretáceo Inferior", "Capítulo 2: Penas e Cinzas", "145 a 100 milhões de anos"),
     ("jurassico", "Jurássico", "Capítulo 3: O Reino dos Gigantes", "201 a 145 milhões de anos"),
     ("triassico", "Triássico", "Capítulo 4: A Origem", "252 a 201 milhões de anos"),
     ("era_do_gelo", "Era do Gelo", "Epílogo: O Caminho de Volta", "2,6 milhões a 11 mil anos (Pleistoceno)"),
