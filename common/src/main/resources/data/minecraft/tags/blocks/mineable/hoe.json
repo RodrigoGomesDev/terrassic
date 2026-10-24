@@ -28,6 +28,23 @@
     "terrassic:lichen",
     "terrassic:rush",
     "terrassic:swamp_algae",
-    "terrassic:shelf_fungus"
+    "terrassic:shelf_fungus",
+    "terrassic:thatch_eave",
+    "terrassic:reed_thatch",
+    "terrassic:reed_thatch_stairs",
+    "terrassic:reed_thatch_slab",
+    "terrassic:reed_thatch_eave",
+    "terrassic:cycad_thatch",
+    "terrassic:cycad_thatch_stairs",
+    "terrassic:cycad_thatch_slab",
+    "terrassic:cycad_thatch_eave",
+    "terrassic:fern_thatch",
+    "terrassic:fern_thatch_stairs",
+    "terrassic:fern_thatch_slab",
+    "terrassic:fern_thatch_eave",
+    "terrassic:reed_mat",
+    "terrassic:reed_bundle",
+    "terrassic:rope_coil",
+    "terrassic:fiber_net"
   ]
 }

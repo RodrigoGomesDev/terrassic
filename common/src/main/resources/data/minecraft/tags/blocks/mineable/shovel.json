@@ -8,6 +8,11 @@
     "terrassic:laterite_pebbles",
     "terrassic:quartzite_pebbles",
     "terrassic:gneiss_pebbles",
-    "terrassic:conglomerate_pebbles"
+    "terrassic:conglomerate_pebbles",
+    "terrassic:rammed_earth",
+    "terrassic:rammed_earth_stairs",
+    "terrassic:rammed_earth_slab",
+    "terrassic:rammed_earth_wall",
+    "terrassic:packed_earth_floor"
   ]
 }

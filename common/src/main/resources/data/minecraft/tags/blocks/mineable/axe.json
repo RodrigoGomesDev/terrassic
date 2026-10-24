@@ -67,6 +67,14 @@
     "terrassic:tree_fern_branch_fence_gate",
     "terrassic:tree_fern_palisade",
     "terrassic:tree_fern_lashed_door",
-    "terrassic:tree_fern_lashed_trapdoor"
+    "terrassic:tree_fern_lashed_trapdoor",
+    "terrassic:cross_braced_wattle",
+    "terrassic:timber_framed_wattle",
+    "terrassic:whitewashed_wattle",
+    "terrassic:wicker_block",
+    "terrassic:wicker_panel",
+    "terrassic:woven_fence",
+    "terrassic:wicker_door",
+    "terrassic:wicker_trapdoor"
   ]
 }
