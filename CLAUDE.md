@@ -27,6 +27,9 @@ troca de dimensão, morte/respawn, reconexão e reinício (`CADERNO_DADOS.md`). 
 não uma validação de 100 jogadores ativos. A CI no GitHub valida integridade, fixtures, orçamento e build dos dois
 loaders, incluindo regressões de pesquisa. `tools/validation/README.md` reúne os comandos.
 Fauna 108-113 integrada: 59 espécies; próximo sistema complexo previsto é o nocaute v0.7 (`DOMESTICACAO.md`).
+Licença: código LGPL-3.0 (`LICENSE` + `COPYING`), assets All Rights Reserved com permissões explícitas
+(`LICENSE-ASSETS.md`), contribuições pelo `CLA.md`. Commits: **Rodrigo Gomes <rodrigogomessims@gmail.com>**, sem linha
+de coautoria de IA (pedido do Rodrigo, 24/10/2026).
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.

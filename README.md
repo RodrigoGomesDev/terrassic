@@ -147,6 +147,18 @@ Use `git log` para ver o histórico.
 - **v0.4**: Ciclo de fome e sono, territórios, variantes de cor por bioma, ninhos.
 - **Portes**: 1.21.x. A lógica fica em `common/`; a principal mudança é a versão do GeckoLib e as APIs de item/registro.
 
+## Licença
+
+- **Código** (Java, scripts de `tools/`, build): **GNU LGPL 3.0** (`LICENSE` + `COPYING`).
+- **Assets** (modelos, animações, texturas, sons, fontes próprias, logo, história, textos e nomes): **All Rights
+  Reserved**, com permissões explícitas em `LICENSE-ASSETS.md`: **modpacks são livres** (baixando dos projetos oficiais
+  no Modrinth e no CurseForge), vídeos e lives são livres com monetização, addons são livres sem usar os assets nem o
+  logo. Ports não oficiais e reenvio do jar não são permitidos.
+- Contribuições seguem o acordo em `CLA.md`.
+- Autor e titular: Rodrigo Gomes.
+
+NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
+
 ## Referências
 
 Medidas e anatomia: Wikipedia (artigos de cada espécie) e a literatura citada neles. Nenhuma arte de terceiros foi copiada: as imagens serviram só como referência de proporção, e modelos, texturas e sprites foram gerados pelo código deste repositório.
