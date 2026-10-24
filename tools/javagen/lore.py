@@ -903,6 +903,22 @@ GUIDE = {
         note=("Achei um esqueleto da espécie com marcas de dente da espécie. Anotei e saí dali.",
               "I found a skeleton of the species with tooth marks of the species. I wrote it down and left.",
               "Encontré un esqueleto de la especie con marcas de dientes de la especie. Lo anoté y me fui.")),
+    "dakotaraptor": dict(
+        sci=("Viveu há 66 milhões de anos na Formação Hell Creek, na mesma planície do T. rex e do Triceratops. Cerca de 5,5 m: um dromeossauro quase três vezes o Velociraptor, de pernas longas, foice de 24 cm no segundo dedo e nós de penas na ulna, prova de asas largas em um animal que não voava. Preenchia o vazio entre os raptores pequenos e os tiranossauros: o caçador de meio porte de Hell Creek.",
+             "Lived 66 million years ago in the Hell Creek Formation, on the same floodplain as T. rex and Triceratops. About 5.5 m: a dromaeosaur nearly three times the Velociraptor, long-legged, with a 24 cm sickle on the second toe and quill knobs on the ulna, proof of broad wings on an animal that did not fly. It filled the gap between the small raptors and the tyrannosaurs: Hell Creek's mid-sized hunter.",
+             "Vivió hace 66 millones de años en la Formación Hell Creek, en la misma llanura que el T. rex y el Triceratops. Unos 5,5 m: un dromeosaurio casi tres veces el Velociraptor, de patas largas, hoz de 24 cm en el segundo dedo y nudos de plumas en el cúbito, prueba de alas anchas en un animal que no volaba. Llenaba el hueco entre los raptores pequeños y los tiranosaurios: el cazador mediano de Hell Creek."),
+        behavior=("Planície, floresta e beira de rio, em bandos de dois ou três. Um escolhe a presa e os outros vêm junto; salta sobre ela e corre atrás do que foge. Caça o que é de porte médio para baixo e dá a volta no T. rex.",
+                  "Plains, forest and riverbank, in packs of two or three. One picks the prey and the others come along; it leaps onto it and runs down what flees. It hunts mid-sized and smaller and keeps clear of T. rex.",
+                  "Llanura, bosque y orilla de río, en grupos de dos o tres. Uno elige la presa y los otros vienen con él; salta sobre ella y persigue lo que huye. Caza lo mediano para abajo y le da la vuelta al T. rex."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem e criar o filhote com frango ou coelho.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest and raise the baby on chicken or rabbit.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje y criar a la cría con pollo o conejo."),
+        utility=("Montaria de caça ágil: a que pula mais alto de todas, passa por cima de cercas e barrancos, e corre quase como o Struthiomimus.",
+                 "The agile hunting mount: it jumps higher than any other, clears fences and banks, and runs nearly as fast as the Struthiomimus.",
+                 "Montura de caza ágil: la que salta más alto de todas, pasa cercas y barrancos, y corre casi como el Struthiomimus."),
+        note=("Pensei que era um Velociraptor longe. Era um Dakotaraptor perto.",
+              "I thought it was a Velociraptor far away. It was a Dakotaraptor up close.",
+              "Pensé que era un Velociraptor lejos. Era un Dakotaraptor cerca.")),
 }
 
 ERAS = {

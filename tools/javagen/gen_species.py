@@ -64,6 +64,7 @@ SIZES = {
     "daspletosaurus":     dict(real=9.0,  scale=1.49, w=2.1, h=3.8, baby=0.28, shadow=2.0),
     "albertosaurus":      dict(real=9.5,  scale=1.43, w=1.9, h=3.6, baby=0.28, shadow=1.8),
     "majungasaurus":      dict(real=7.5,  scale=1.26, w=1.6, h=3.0, baby=0.3,  shadow=1.5),
+    "dakotaraptor":       dict(real=5.5,  scale=1.14, w=1.0, h=2.0, baby=0.4,  shadow=0.8),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -132,6 +133,7 @@ GUIDE = {
     "daspletosaurus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "albertosaurus":      dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "majungasaurus":      dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "dakotaraptor":       dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -186,6 +188,7 @@ WORLD = {
     "daspletosaurus":     dict(biomes=("forest", "river", "plains"), weight=2, group=(2, 2), track=10),  # Alberta's river forests, in pairs
     "albertosaurus":      dict(biomes=("taiga", "forest", "plains"), weight=2, group=(2, 4), track=10),  # the Dry Island pack
     "majungasaurus":      dict(biomes=("jungle", "savanna", "river"), weight=2, group=(1, 2), track=10),  # Madagascar's seasonal floodplain
+    "dakotaraptor":       dict(biomes=("plains", "forest", "river"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain, small packs
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -405,6 +408,14 @@ SPECIES = [
       xp=26, step_height=1.2, head=(40, 30), run=0.012, rideable=True, jump=0.55, ride_offset=1.7, ride_speed=1.3,
       prey="e.getBbWidth() < 2.2F && !(e instanceof Majungasaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
       roar=True, prey_interval=140),
+ dict(id="dakotaraptor", cls="Dakotaraptor", base="PredatorDinosaur",
+      doc="Dakotaraptor steini - 5.5 m dromaeosaur of Hell Creek, nearly three times the Velociraptor: long legs, broad feathered wings, a huge sickle claw. Hunts in small packs (one picks a target, the pack joins), leaps at its prey and runs down anything mid-sized; avoids T. rex like its small cousin. Only tameable from a stolen wild egg until the knockout (v0.7); when tamed it is the agile hunting mount that jumps highest of all.",
+      attrs=dict(MAX_HEALTH=50, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=0.6, ARMOR=2, FOLLOW_RANGE=28),
+      food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP",
+      sounds=("FOX_SCREECH", "FOX_HURT", "FOX_DEATH", 1.0, 0.7, 200), step=("WOLF_STEP", 0.5, 0.9),
+      xp=18, step_height=1.1, head=(45, 35), run=0.02, rideable=True, jump=1.0, ride_offset=1.55, ride_speed=1.35,
+      prey="e.getBbWidth() < 1.6F && !(e instanceof Dakotaraptor) && !(e instanceof Velociraptor) && !e.isBaby()",
+      pack=True, leap=True, prey_interval=100),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -710,7 +721,7 @@ def gen(s, bounds):
     if s.get("leap"):
         imports.add("net.minecraft.world.entity.ai.goal.LeapAtTargetGoal")
         goals.append("        this.goalSelector.addGoal(2, new LeapAtTargetGoal(this, 0.4F));")
-    if s["id"] == "velociraptor":
+    if s["id"] in ("velociraptor", "dakotaraptor"):
         imports.add("net.minecraft.world.entity.ai.goal.AvoidEntityGoal")
         goals.append("        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Tyrannosaurus.class, 14.0F, 1.2D, 1.5D, e -> !this.isTame()));")
     if s.get("skittish"):

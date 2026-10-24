@@ -1603,5 +1603,38 @@
    "animation.majungasaurus.charge"
   ],
   "render_scale": 1.0
+ },
+ "dakotaraptor": {
+  "bones": 24,
+  "cubes": 44,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -5.5,
+    -0.33734242529942415,
+    -33.040493188727666
+   ],
+   [
+    5.5,
+    29.19948902026209,
+    44.00004408120612
+   ]
+  ],
+  "animations": [
+   "animation.dakotaraptor.idle",
+   "animation.dakotaraptor.walk",
+   "animation.dakotaraptor.run",
+   "animation.dakotaraptor.sit",
+   "animation.dakotaraptor.attack",
+   "animation.dakotaraptor.knocked_out",
+   "animation.dakotaraptor.wake",
+   "animation.dakotaraptor.eat",
+   "animation.dakotaraptor.beg",
+   "animation.dakotaraptor.tame"
+  ],
+  "render_scale": 1.0
  }
 }
