@@ -31,6 +31,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("saltasaurus", "late_cretaceous", "herbivore", 12.0F, true, false, 3, 8.34F),
             new GuideSpecies("argentinosaurus", "late_cretaceous", "herbivore", 35.0F, true, true, 1, 2.86F),
             new GuideSpecies("opisthocoelicaudia", "late_cretaceous", "herbivore", 12.0F, true, false, 3, 8.35F),
+            new GuideSpecies("dreadnoughtus", "late_cretaceous", "herbivore", 26.0F, true, false, 2, 3.85F),
             new GuideSpecies("parasaurolophus", "late_cretaceous", "herbivore", 9.5F, true, false, 5, 10.52F),
             new GuideSpecies("pachycephalosaurus", "late_cretaceous", "herbivore", 4.5F, false, false, 4, 22.35F),
             new GuideSpecies("thescelosaurus", "late_cretaceous", "herbivore", 4.0F, false, false, 5, 24.91F),

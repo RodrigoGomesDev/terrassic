@@ -54,6 +54,8 @@ SIZES = {
     "argentinosaurus":    dict(real=35.0, scale=3.08, w=6.0, h=10.0, baby=0.08, shadow=6.5),
     # Opisthocoelicaudia skarzynskii: 11-12 m, ~8.5 t (Borsuk-Bialynicka 1977; Paul 2010); rears to 8 blocks.
     "opisthocoelicaudia": dict(real=12.0, scale=1.56, w=2.6, h=3.6, baby=0.15, shadow=2.8),
+    # Dreadnoughtus schrani: 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015); the 11 m neck carried high.
+    "dreadnoughtus":      dict(real=26.0, scale=2.69, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -114,6 +116,7 @@ GUIDE = {
     "saltasaurus":        dict(era="late_cretaceous", diet="herbivore", fossil=3),
     "argentinosaurus":    dict(era="late_cretaceous", diet="herbivore", fossil=1),
     "opisthocoelicaudia": dict(era="late_cretaceous", diet="herbivore", fossil=3),
+    "dreadnoughtus":      dict(era="late_cretaceous", diet="herbivore", fossil=2),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -160,6 +163,7 @@ WORLD = {
     "saltasaurus":        dict(biomes=("savanna", "plains", "river"), weight=2, group=(2, 4), track=14),  # the Patagonian floodplain
     "argentinosaurus":    dict(biomes=("savanna", "plains"), weight=1, group=(1, 1), track=18),  # one at a time, and rarely
     "opisthocoelicaudia": dict(biomes=("desert", "badlands", "savanna"), weight=2, group=(1, 3), track=14),  # the Gobi
+    "dreadnoughtus":      dict(biomes=("plains", "forest", "savanna"), weight=1, group=(1, 2), track=16),  # temperate Patagonia
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -317,6 +321,12 @@ SPECIES = [
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.6, 2.2, 320), step=("RAVAGER_STEP", 0.9, 0.65),
       xp=36, step_height=1.5, head=(30, 30), rideable=True, jump=0.0, ride_offset=2.2, ride_forward=0.1, ride_speed=1.0, forage=True),
+ dict(id="dreadnoughtus", cls="Dreadnoughtus", base="HerbivoreDinosaur",
+      doc="Dreadnoughtus schrani - 26 m titanosaur that fears nothing: an 11 m neck carried high over a huge shoulder. Hurt, it bellows and swings the neck like a crane boom, the head knocking whatever stands at its side. Hand-tamed with leaves; rideable (the building platform saddle comes with the v0.6 systems).",
+      attrs=dict(MAX_HEALTH=420, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
+      food_tag="ItemTags.LEAVES",
+      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 400), step=("RAVAGER_STEP", 1.3, 0.45),
+      xp=56, step_height=1.8, head=(20, 30), rideable=True, jump=0.0, ride_offset=3.4, ride_forward=0.2, ride_speed=0.95, call=True),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),

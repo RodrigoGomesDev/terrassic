@@ -775,6 +775,22 @@ GUIDE = {
         note=("Ela se levanta em três apoios e come o topo da árvore. Eu fico embaixo recolhendo o que cai.",
               "She stands up on three legs and eats the top of the tree. I stand underneath collecting what falls.",
               "Se levanta sobre tres apoyos y se come la copa del árbol. Yo me quedo debajo recogiendo lo que cae.")),
+    "dreadnoughtus": dict(
+        sci=("Viveu há 77 a 70 milhões de anos na Patagônia argentina. O titanossauro gigante mais completo que se conhece (70% do esqueleto): 26 m e entre 26 e 59 toneladas conforme a conta, e ainda crescia quando morreu. O nome diz 'não teme nada'. Pescoço de 11 m, mais de um terço do animal, erguido alto; uma omoplata de 1,7 m sobre um peito fundo; cauda de 9 m, mais curta que o pescoço.",
+             "Lived 77 to 70 million years ago in Argentine Patagonia. The most complete giant titanosaur known (70% of the skeleton): 26 m and between 26 and 59 tonnes depending on the estimate, and still growing when it died. The name means 'fears nothing'. An 11 m neck, more than a third of the animal, carried high; a 1.7 m shoulder blade over a deep chest; a 9 m tail, shorter than the neck.",
+             "Vivió hace 77 a 70 millones de años en la Patagonia argentina. El titanosaurio gigante más completo que se conoce (70% del esqueleto): 26 m y entre 26 y 59 toneladas según la estimación, y aún crecía cuando murió. El nombre dice 'no teme nada'. Cuello de 11 m, más de un tercio del animal, erguido alto; un omóplato de 1,7 m sobre un pecho profundo; cola de 9 m, más corta que el cuello."),
+        behavior=("Um ou dois em planícies, florestas e savanas, a cabeça acima das árvores. Não foge de nada. Ferido, berra com o pescoço reto para o céu e balança o pescoço como a lança de um guindaste: a cabeça derruba o que estiver ao lado.",
+                  "One or two in plains, forests and savannas, the head above the trees. It runs from nothing. Hurt, it bellows with the neck straight up and swings the neck like a crane boom: the head knocks down whatever stands at its side.",
+                  "Uno o dos en llanuras, bosques y sabanas, la cabeza por encima de los árboles. No huye de nada. Herido, brama con el cuello recto al cielo y balancea el cuello como la pluma de una grúa: la cabeza derriba lo que esté a su lado."),
+        taming=("Doma-se na mão com folhas de qualquer árvore. Os pares põem um ovo grande.",
+                "Hand-tamed with leaves of any tree. Pairs lay a large egg.",
+                "Se doma a mano con hojas de cualquier árbol. Las parejas ponen un huevo grande."),
+        utility=("Montaria-torre: do lombo dele se enxerga por cima da floresta. A sela de plataforma, para construir em cima, chega com os sistemas da v0.6.",
+                 "A tower mount: from its back you see over the forest. The platform saddle, for building on top, arrives with the v0.6 systems.",
+                 "Montura-torre: desde su lomo se ve por encima del bosque. La silla de plataforma, para construir encima, llega con los sistemas de la v0.6."),
+        note=("O berro dele faz o vidro do laboratório vibrar. A três quilômetros.",
+              "Its bellow makes the lab windows hum. From three kilometres away.",
+              "Su bramido hace vibrar los vidrios del laboratorio. A tres kilómetros.")),
 }
 
 ERAS = {

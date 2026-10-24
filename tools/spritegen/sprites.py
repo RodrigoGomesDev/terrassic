@@ -358,6 +358,21 @@ def spawn_eggs():
     eye(cv, 11, 3, "#8a6a2c")
     eggs["opisthocoelicaudia"] = cv
 
+    # Dreadnoughtus: slate blue-grey egg with broken pale bars and a white throat patch at the narrow end
+    cv = base_egg(None, "#4e5660", "#d0d0c4")
+    for y in range(2, 14):
+        for x in range(2, 14):
+            if inside(cv, x, y) and y % 3 == 0 and (x + y) % 2 == 0:
+                cv.set(x, y, hexc("#b8c0c4"))
+    for x, y in ((7, 2), (8, 2), (7, 3)):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#eef0ea"))
+    for x, y in ((5, 7), (10, 10), (6, 12)):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#404852"))
+    eye(cv, 11, 3, "#c0a050")
+    eggs["dreadnoughtus"] = cv
+
     # Parasaurolophus: teal egg with the long red crest sweeping back from the top
     cv = base_egg(None, "#46584c", "#d8d4b0")
     for i, (x, y) in enumerate(((7, 4), (6, 3), (5, 2), (4, 1), (3, 0))):
@@ -669,7 +684,7 @@ EGG_BLOCK = {
     "euoplocephalus": ("#d4d2b0", "#4a4e3a"),
     "therizinosaurus": ("#c8b898", "#4e4034"),
     "deinocheirus": ("#d8d0bc", "#4a423a"),
-    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "parasaurolophus": ("#dfe6d8", "#46584c"),
+    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "thescelosaurus": ("#d8d0a8", "#5c5a3a"), "gallimimus": ("#f0ece0", "#9c917c"),
     "struthiomimus": ("#f0e6d0", "#8a5a3a"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),

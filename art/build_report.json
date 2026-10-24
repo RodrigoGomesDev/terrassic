@@ -1328,5 +1328,40 @@
    "animation.opisthocoelicaudia.graze"
   ],
   "render_scale": 1.0
+ },
+ "dreadnoughtus": {
+  "bones": 34,
+  "cubes": 56,
+  "texture": [
+   256,
+   256
+  ],
+  "bounds_px": [
+   [
+    -15.0,
+    -2.666330614007943e-05,
+    -75.5262717786127
+   ],
+   [
+    15.0,
+    89.28868674903865,
+    79.10426327514207
+   ]
+  ],
+  "animations": [
+   "animation.dreadnoughtus.idle",
+   "animation.dreadnoughtus.walk",
+   "animation.dreadnoughtus.run",
+   "animation.dreadnoughtus.sit",
+   "animation.dreadnoughtus.graze",
+   "animation.dreadnoughtus.knocked_out",
+   "animation.dreadnoughtus.wake",
+   "animation.dreadnoughtus.eat",
+   "animation.dreadnoughtus.beg",
+   "animation.dreadnoughtus.tame",
+   "animation.dreadnoughtus.attack",
+   "animation.dreadnoughtus.call"
+  ],
+  "render_scale": 1.0
  }
 }
