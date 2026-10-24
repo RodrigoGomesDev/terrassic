@@ -506,6 +506,7 @@ UI = {
     "message.terrassic.page_found": ("Página da Katarina guardada no Caderno: %s", "Katarina's page added to the Notebook: %s",
                                      "Página de Katarina guardada en el Cuaderno: %s"),
     "message.terrassic.fossil_broke": ("O fóssil rachou. Só sobrou um osso.", "The fossil cracked. Only a bone is left.", "El fósil se rompió. Solo quedó un hueso."),
+    "message.terrassic.lens_seen": ("%s a %s blocos", "%s, %s blocks away", "%s a %s bloques"),
     "message.terrassic.sketch_done": ("Esboço pronto: %s", "Sketch done: %s", "Boceto listo: %s"),
     "message.terrassic.sketch_lost": ("Você perdeu o animal de vista.", "You lost sight of the animal.", "Perdiste de vista al animal."),
     "tooltip.terrassic.study_at_table": ("Estude na Mesa de Pesquisa", "Study it at the Research Table", "Estúdialo en la Mesa de Investigación"),

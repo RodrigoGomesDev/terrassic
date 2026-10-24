@@ -23,5 +23,8 @@
     "architectury": ">=9.2.0",
     "geckolib": ">=4.4.0",
     "fabric-api": "*"
-  }
+  },
+  "mixins": [
+    "terrassic.mixins.json"
+  ]
 }

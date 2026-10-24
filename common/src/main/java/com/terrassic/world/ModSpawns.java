@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import com.terrassic.config.SpawnConfig;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.entity.SwimmingDinosaur;
@@ -9,6 +10,7 @@ import dev.architectury.hooks.level.biome.BiomeProperties;
 import dev.architectury.registry.level.biome.BiomeModifications;
 import dev.architectury.registry.level.entity.SpawnPlacementsRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -37,6 +39,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Pteranodon          beach, stony shore              8       2-4
  *  Mosasaurus          deep ocean (not frozen)         2       1      (WATER_CREATURE, despawns like dolphins)
  *  (*desert only where there is sand to stand on)
+ * Weights can be scaled or turned off per species in config/terrassic.json (SpawnConfig).
  */
 public final class ModSpawns {
     private ModSpawns() {
@@ -119,8 +122,7 @@ public final class ModSpawns {
                 add(props, ModEntities.PTERANODON.get(), 8, 2, 4);
             }
             if (deepSea) {
-                props.getSpawnProperties().addSpawn(MobCategory.WATER_CREATURE,
-                        new MobSpawnSettings.SpawnerData(ModEntities.MOSASAURUS.get(), 2, 1, 1));
+                add(props, MobCategory.WATER_CREATURE, ModEntities.MOSASAURUS.get(), 2, 1, 1);
             }
         }));
     }
@@ -131,6 +133,14 @@ public final class ModSpawns {
     }
 
     private static void add(BiomeProperties.Mutable props, EntityType<?> type, int weight, int min, int max) {
-        props.getSpawnProperties().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(type, weight, min, max));
+        add(props, MobCategory.CREATURE, type, weight, min, max);
+    }
+
+    /** Adds the spawn with the weight from config/terrassic.json (see {@link SpawnConfig}); skipped when it is 0. */
+    private static void add(BiomeProperties.Mutable props, MobCategory category, EntityType<?> type, int weight, int min, int max) {
+        int w = SpawnConfig.weight(BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath(), weight);
+        if (w > 0) {
+            props.getSpawnProperties().addSpawn(category, new MobSpawnSettings.SpawnerData(type, w, min, max));
+        }
     }
 }

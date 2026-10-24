@@ -21,6 +21,7 @@ ITEMS = {
     "loose_page": ("Loose Page", "Página Solta", "Página Suelta", "item/generated"),
     "hair_brush": ("Hair Brush", "Pincel de Pelo", "Pincel de Pelo", "item/handheld"),
     "flint_chisel": ("Flint Chisel", "Cinzel de Sílex", "Cincel de Sílex", "item/handheld"),
+    "amber_lens": ("Amber Lens", "Lente de Âmbar", "Lente de Ámbar", "item/generated"),
     "sketching_charcoal": ("Sketching Charcoal", "Carvão de Esboço", "Carbón de Boceto", "item/handheld"),
     "sketch": ("Blank Sketch", "Esboço em Branco", "Boceto en Blanco", "item/generated"),
 }
@@ -130,6 +131,8 @@ def gen_data():
         write(f"{D}/recipes/{name}.json", {"type": "minecraft:crafting_shapeless", "category": "misc",
                                          "ingredients": [{"item": i} for i in items], "result": {"item": f"{NS}:{result}"}})
     shapeless("field_notebook", ["minecraft:leather", "minecraft:paper", "minecraft:string"], "field_notebook")
+    # amber is not in the game yet: honeycomb (hardened resin) stands in for it
+    shaped("amber_lens", [" H ", "BGB"], {"H": "minecraft:honeycomb", "B": "minecraft:bone", "G": "minecraft:glass_pane"}, "amber_lens")
     shapeless("sketching_charcoal", ["minecraft:charcoal", "minecraft:string"], "sketching_charcoal")
     shaped("hair_brush", ["H", "S"], {"H": ["minecraft:rabbit_hide", "#minecraft:wool"], "S": "minecraft:stick"}, "hair_brush")
     shaped("flint_chisel", ["F", "T", "S"], {"F": "minecraft:flint", "T": "minecraft:string", "S": "minecraft:stick"}, "flint_chisel")

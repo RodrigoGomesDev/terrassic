@@ -8,6 +8,7 @@ import com.terrassic.item.FlintHatchetItem;
 import com.terrassic.item.FossilItem;
 import com.terrassic.item.LoosePageItem;
 import com.terrassic.item.ModTiers;
+import com.terrassic.item.AmberLensItem;
 import com.terrassic.item.SketchCharcoalItem;
 import com.terrassic.item.SketchItem;
 import com.terrassic.item.SpearItem;
@@ -88,6 +89,8 @@ public final class ModItems {
             () -> new ExcavationToolItem(60, 0.0F, new Item.Properties().durability(48).arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> FLINT_CHISEL = ITEMS.register("flint_chisel",
             () -> new ExcavationToolItem(20, 0.35F, new Item.Properties().durability(32).arch$tab(ModTabs.SCIENCE)));
+    public static final RegistrySupplier<Item> AMBER_LENS = ITEMS.register("amber_lens",
+            () -> new AmberLensItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> SKETCHING_CHARCOAL = ITEMS.register("sketching_charcoal",
             () -> new SketchCharcoalItem(new Item.Properties().durability(16).arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> SKETCH = ITEMS.register("sketch",

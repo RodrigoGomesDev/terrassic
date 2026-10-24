@@ -64,6 +64,16 @@ Nada da v0.3 foi compilado: a nuvem não alcança o maven do Fabric, do Forge e 
 - [ ] Montado, segurar espaço mostra a barra de pulo; soltar pula (mais alto quanto mais carregado). Gallimimus pula mais alto, Tricerátops e Tiranossauro menos, Braquiossauro não pula.
 - [ ] Clique com tesoura numa montaria selada (sem ninguém em cima) tira a sela e devolve o item.
 
-## 8. Coisas que já existiam (regressão)
+## 8. Lente de Âmbar
+- [ ] Receita: favo de mel em cima, osso + painel de vidro + osso embaixo.
+- [ ] Segurar clique direito dá o zoom e a moldura da luneta vanilla (primeira pessoa), com o mouse mais lento.
+- [ ] Manter um dinossauro no centro por 2 s, a até 64 blocos, registra ele como "avistado" no Guia. Se já era conhecido, mostra o nome e a distância.
+- [ ] Este é o primeiro mixin do mod: se o jogo não abrir no Fabric ou no Forge, o erro vai citar `terrassic.mixins.json` ou `PlayerMixin`.
+
+## 9. Configuração de spawn
+- [ ] Depois da primeira abertura existe `config/terrassic.json` com `spawn_multiplier` e todas as espécies.
+- [ ] `"enabled": false` numa espécie (reiniciando o jogo) faz ela parar de aparecer em mundo novo; `"spawn_multiplier": 0` desliga todas.
+
+## 10. Coisas que já existiam (regressão)
 - [ ] As 12 espécies da v0.2 continuam aparecendo, domando e montando como antes.
 - [ ] Blocos primitivos (sapê, pedra seca etc.) continuam com textura e receita.
