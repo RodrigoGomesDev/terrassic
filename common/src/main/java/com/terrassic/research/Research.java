@@ -6,6 +6,7 @@ import com.terrassic.entity.HerbivoreDinosaur;
 import com.terrassic.item.SpearItem;
 import com.terrassic.network.ModNetwork;
 import com.terrassic.registry.ModBlocks;
+import com.terrassic.item.SketchItem;
 import com.terrassic.registry.ModItems;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.BlockEvent;
@@ -39,6 +40,7 @@ public final class Research {
     public static final int FOSSIL_POINTS = 1;
     public static final int SKETCH_POINTS = 2;
     public static final int DEFEAT_POINTS = 3;
+    public static final int SAMPLE_POINTS = 2;
 
     private Research() {
     }
@@ -49,6 +51,7 @@ public final class Research {
         EntityEvent.LIVING_DEATH.register((entity, source) -> {
             if (entity instanceof DinosaurEntity dino && source.getEntity() instanceof ServerPlayer player) {
                 defeated(player, dino.speciesId());
+                fillSample(player, dino.speciesId());
             }
             return EventResult.pass();
         });
@@ -157,6 +160,33 @@ public final class Research {
         checkStudied(player, k, species);
         objective(player, Objective.RESEARCH_TABLE);
         changed(player, k, true);
+    }
+
+    /** A Blood Sample studied at the Research Table. */
+    public static void studySample(ServerPlayer player, String species) {
+        Knowledge k = knowledge(player);
+        k.addPoints(species, SAMPLE_POINTS);
+        checkStudied(player, k, species);
+        objective(player, Objective.RESEARCH_TABLE);
+        changed(player, k, true);
+    }
+
+    /** An empty Clay Jar carried by the player is filled with the blood of the dinosaur they defeated. */
+    private static void fillSample(ServerPlayer player, String species) {
+        var inv = player.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack jar = inv.getItem(i);
+            if (jar.is(ModItems.CLAY_JAR.get())) {
+                jar.shrink(1);
+                ItemStack sample = SketchItem.of(ModItems.BLOOD_SAMPLE.get(), species);
+                if (!inv.add(sample)) {
+                    player.drop(sample, false);
+                }
+                player.displayClientMessage(Component.translatable("message.terrassic.sample_taken",
+                        Component.translatable("entity.terrassic." + species)), true);
+                return;
+            }
+        }
     }
 
     public static void defeated(ServerPlayer player, String species) {

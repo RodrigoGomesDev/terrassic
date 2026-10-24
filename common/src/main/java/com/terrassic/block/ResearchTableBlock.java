@@ -1,8 +1,10 @@
 package com.terrassic.block;
 
 import com.terrassic.client.ClientHooks;
+import com.terrassic.item.BloodSampleItem;
 import com.terrassic.item.FossilItem;
 import com.terrassic.item.SketchItem;
+import com.terrassic.registry.ModItems;
 import com.terrassic.research.Research;
 import dev.architectury.utils.Env;
 import dev.architectury.utils.EnvExecutor;
@@ -75,6 +77,21 @@ public class ResearchTableBlock extends HorizontalDirectionalBlock {
                 ItemStack bone = new ItemStack(Items.BONE);
                 if (!player.getInventory().add(bone)) {
                     player.drop(bone, false);
+                }
+                studied(level, pos);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        String sampled = SketchItem.species(stack);
+        if (stack.getItem() instanceof BloodSampleItem && sampled != null) {
+            if (!client && player instanceof ServerPlayer sp) {
+                Research.studySample(sp, sampled);
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
+                ItemStack jar = new ItemStack(ModItems.CLAY_JAR.get());
+                if (!player.getInventory().add(jar)) {
+                    player.drop(jar, false);
                 }
                 studied(level, pos);
             }

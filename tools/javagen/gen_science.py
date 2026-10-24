@@ -22,6 +22,10 @@ ITEMS = {
     "hair_brush": ("Hair Brush", "Pincel de Pelo", "Pincel de Pelo", "item/handheld"),
     "flint_chisel": ("Flint Chisel", "Cinzel de Sílex", "Cincel de Sílex", "item/handheld"),
     "amber_lens": ("Amber Lens", "Lente de Âmbar", "Lente de Ámbar", "item/generated"),
+    "clay_jar": ("Clay Jar", "Frasco de Argila", "Frasco de Arcilla", "item/generated"),
+    "resin_jar": ("Jar of Resin", "Frasco com Resina", "Frasco con Resina", "item/generated"),
+    "blood_sample": ("Blood Sample", "Amostra de Sangue", "Muestra de Sangre", "item/generated"),
+    "raw_amber": ("Raw Amber", "Âmbar Bruto", "Ámbar en Bruto", "item/generated"),
     "sketching_charcoal": ("Sketching Charcoal", "Carvão de Esboço", "Carbón de Boceto", "item/handheld"),
     "sketch": ("Blank Sketch", "Esboço em Branco", "Boceto en Blanco", "item/generated"),
 }
@@ -131,8 +135,10 @@ def gen_data():
         write(f"{D}/recipes/{name}.json", {"type": "minecraft:crafting_shapeless", "category": "misc",
                                          "ingredients": [{"item": i} for i in items], "result": {"item": f"{NS}:{result}"}})
     shapeless("field_notebook", ["minecraft:leather", "minecraft:paper", "minecraft:string"], "field_notebook")
-    # amber is not in the game yet: honeycomb (hardened resin) stands in for it
-    shaped("amber_lens", [" H ", "BGB"], {"H": "minecraft:honeycomb", "B": "minecraft:bone", "G": "minecraft:glass_pane"}, "amber_lens")
+    shaped("amber_lens", [" A ", "BGB"], {"A": f"{NS}:raw_amber", "B": "minecraft:bone", "G": "minecraft:glass_pane"}, "amber_lens")
+    shaped("clay_jar", ["B B", " B "], {"B": "minecraft:brick"}, "clay_jar")
+    # the resin hardens into amber; the jar comes back (craft remainder)
+    shapeless("raw_amber", [f"{NS}:resin_jar"], "raw_amber")
     shapeless("sketching_charcoal", ["minecraft:charcoal", "minecraft:string"], "sketching_charcoal")
     shaped("hair_brush", ["H", "S"], {"H": ["minecraft:rabbit_hide", "#minecraft:wool"], "S": "minecraft:stick"}, "hair_brush")
     shaped("flint_chisel", ["F", "T", "S"], {"F": "minecraft:flint", "T": "minecraft:string", "S": "minecraft:stick"}, "flint_chisel")

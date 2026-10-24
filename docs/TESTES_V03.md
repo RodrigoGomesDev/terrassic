@@ -65,10 +65,16 @@ Nada da v0.3 foi compilado: a nuvem não alcança o maven do Fabric, do Forge e 
 - [ ] Clique com tesoura numa montaria selada (sem ninguém em cima) tira a sela e devolve o item.
 
 ## 8. Lente de Âmbar
-- [ ] Receita: favo de mel em cima, osso + painel de vidro + osso embaixo.
+- [ ] Receita: Âmbar Bruto em cima, osso + painel de vidro + osso embaixo.
 - [ ] Segurar clique direito dá o zoom e a moldura da luneta vanilla (primeira pessoa), com o mouse mais lento.
 - [ ] Manter um dinossauro no centro por 2 s, a até 64 blocos, registra ele como "avistado" no Guia. Se já era conhecido, mostra o nome e a distância.
 - [ ] Este é o primeiro mixin do mod: se o jogo não abrir no Fabric ou no Forge, o erro vai citar `terrassic.mixins.json` ou `PlayerMixin`.
+
+## 8b. Frasco de Argila
+- [ ] Receita: 3 tijolos em V. Frasco no abeto ou na árvore da selva vira Frasco com Resina e deixa o tronco descascado (cada tronco dá resina uma vez). Em outras árvores aparece o aviso.
+- [ ] Frasco com Resina na mesa de trabalho vira Âmbar Bruto e o frasco volta vazio.
+- [ ] A Lente de Âmbar agora pede Âmbar Bruto (não mais favo de mel).
+- [ ] Com um frasco vazio no inventário, derrotar um dinossauro enche o frasco com "Amostra de Sangue de <espécie>". Na Mesa de Pesquisa dá +2 pontos e devolve o frasco.
 
 ## 9. Configuração de spawn
 - [ ] Depois da primeira abertura existe `config/terrassic.json` com `spawn_multiplier` e todas as espécies.

@@ -2,12 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "pattern": [
-    " H ",
+    " A ",
     "BGB"
   ],
   "key": {
-    "H": {
-      "item": "minecraft:honeycomb"
+    "A": {
+      "item": "terrassic:raw_amber"
     },
     "B": {
       "item": "minecraft:bone"

@@ -9,6 +9,8 @@ import com.terrassic.item.FossilItem;
 import com.terrassic.item.LoosePageItem;
 import com.terrassic.item.ModTiers;
 import com.terrassic.item.AmberLensItem;
+import com.terrassic.item.BloodSampleItem;
+import com.terrassic.item.ClayJarItem;
 import com.terrassic.item.SketchCharcoalItem;
 import com.terrassic.item.SketchItem;
 import com.terrassic.item.SpearItem;
@@ -91,6 +93,14 @@ public final class ModItems {
             () -> new ExcavationToolItem(20, 0.35F, new Item.Properties().durability(32).arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> AMBER_LENS = ITEMS.register("amber_lens",
             () -> new AmberLensItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.SCIENCE)));
+    public static final RegistrySupplier<Item> CLAY_JAR = ITEMS.register("clay_jar",
+            () -> new ClayJarItem(new Item.Properties().stacksTo(16).arch$tab(ModTabs.SCIENCE)));
+    public static final RegistrySupplier<Item> RESIN_JAR = ITEMS.register("resin_jar",
+            () -> new Item(new Item.Properties().stacksTo(16).craftRemainder(CLAY_JAR.get()).arch$tab(ModTabs.SCIENCE)));
+    public static final RegistrySupplier<Item> BLOOD_SAMPLE = ITEMS.register("blood_sample",
+            () -> new BloodSampleItem(new Item.Properties().stacksTo(16)));
+    public static final RegistrySupplier<Item> RAW_AMBER = ITEMS.register("raw_amber",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> SKETCHING_CHARCOAL = ITEMS.register("sketching_charcoal",
             () -> new SketchCharcoalItem(new Item.Properties().durability(16).arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> SKETCH = ITEMS.register("sketch",
