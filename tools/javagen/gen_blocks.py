@@ -13,15 +13,18 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from gen_resources import A, D, ROOT, write  # noqa: E402
+from gen_resources import A, D, ROOT, SPECIES, write  # noqa: E402
 
 NS = "terrassic"
 JAVA = os.path.join(ROOT, "common", "src", "main", "java", "com", "terrassic", "registry", "BuildingBlocks.java")
 
 # kinds: cube | column | log | leaves | sapling | stairs | slab | wall | fence | fence_gate | door | trapdoor | pane |
-#        carpet | palisade | plant | tall_plant | water_plant | multiface | facing | eave | climber
+#        carpet | palisade | plant | tall_plant | water_plant | multiface | facing | eave | climber | trophy | arch |
+#        torch | wall_torch | spikes | bed | prop | hearth | drum | chimes | basket (the last five: model from PROPS)
 # material (Java ModBlocks.material): stone | soft_stone | hard_stone | pebbles | thatch | mud | wood | leaves | sapling |
-#        plant | plant_cover | water_plant | multiface | bone | hide | earth | plaster | wicker | fiber | net
+#        plant | plant_cover | water_plant | multiface | bone | hide | earth | plaster | wicker | fiber | net |
+#        rug | trophy | bone_loose | feathers | torch | lamp | hearth | prop_wood | prop_stone | clay | bed | spikes |
+#        pit_cover | nest | sand_nest | chimes
 BLOCKS = {}
 
 
@@ -280,10 +283,172 @@ add("fiber_net", ("Fiber Net", "Rede de Fibra", "Red de Fibra"), "climber", "fib
     tags=("climbable",))
 BLOCK_ONLY_TAGS = ("climbable",)
 
+# ------------------------------------------------------------- family: hide, bone, trophies and fossils (phase 6)
+# hides come from the <species>_hide items of the species generator (one per species, dropped like cow leather)
+HIDES = {  # hide id: names (en, pt, es), source item of the frame and panel (None: rawhide from leather)
+    "rawhide": (("Rawhide", "Couro Cru", "Cuero Crudo"), None),
+    "tanned_hide": (("Tanned Hide", "Couro Curtido", "Cuero Curtido"), None),
+    "scaled_hide": (("Scaled Hide", "Couro Escamado", "Cuero Escamoso"), "ankylosaurus_hide"),
+    "feathered_hide": (("Feathered Hide", "Couro com Penas", "Cuero con Plumas"), "velociraptor_hide"),
+    "fuzzy_hide": (("Fuzzy Pterosaur Hide", "Couro Felpudo de Pterossauro", "Cuero Velloso de Pterosaurio"),
+                   "pteranodon_hide"),
+}
+for _hid, ((_en, _pt, _es), _) in HIDES.items():
+    add(f"{_hid}_frame", (f"{_en} Frame", f"{_pt} Esticado", f"{_es} Tensado"), "cube", f"{_hid}_frame", "axe",
+        "hide", "COLOR_BROWN")
+    if _hid != "rawhide":  # the rawhide panel is hide_screen (batch 1)
+        add(f"{_hid}_panel", (f"{_en} Panel", f"Painel de {_pt}", f"Panel de {_es}"), "pane",
+            (f"{_hid}_panel", "hide_screen_edge"), "axe", "hide", "COLOR_BROWN")
+SKULL_ROCK = {"brachiosaurus": "shale", "stegosaurus": "shale", "dilophosaurus": "shale",
+              "compsognathus": "shale"}  # Jurassic beds; the Cretaceous skulls come out of limestone
+for _sid, (_en, _pt, _es, _) in SPECIES.items():
+    add(f"{_sid}_hide_rug", (f"{_en} Hide Rug", f"Tapete de Couro de {_pt}", f"Alfombra de Piel de {_es}"), "carpet",
+        f"{_sid}_hide_rug", "axe", "rug", "COLOR_BROWN")
+for _sid, (_en, _pt, _es, _) in SPECIES.items():
+    add(f"{_sid}_skull_trophy", (f"{_en} Skull Trophy", f"Troféu de Crânio de {_pt}", f"Trofeo de Cráneo de {_es}"),
+        "trophy", f"{_sid}_skull_trophy", "pickaxe", "trophy", "SAND")
+for _sid, (_en, _pt, _es, _) in SPECIES.items():
+    add(f"{_sid}_skull_fossil", (f"{_en} Skull Fossil", f"Crânio Fóssil de {_pt}", f"Cráneo Fósil de {_es}"),
+        "facing", (f"{_sid}_skull_fossil", SKULL_ROCK.get(_sid, "limestone")), "pickaxe", "soft_stone", "SAND")
+add("bone_fence_gate", ("Bone Fence Gate", "Portão de Osso", "Puerta de Valla de Hueso"), "fence_gate", "bone_fence",
+    "pickaxe", "bone", "SAND")
+add("ossuary_wall", ("Ossuary Wall", "Parede de Ossuário", "Muro de Osario"), "cube", "ossuary_wall", "pickaxe", "bone",
+    "SAND")
+add("rib_arch", ("Rib Arch", "Arco de Costelas", "Arco de Costillas"), "arch", "rib_bone", "pickaxe", "bone", "SAND")
+add("tooth_totem", ("Tooth Totem", "Totem de Dentes", "Tótem de Dientes"), "log", ("tooth_totem", "tooth_totem_top"),
+    "axe", "wood", "WOOD")
+add("bone_pile", ("Bone Pile", "Monte de Ossos", "Montón de Huesos"), "carpet", "bone_pile", "shovel", "bone_loose",
+    "SAND")
+add("feather_bundle", ("Feather Bundle", "Feixe de Penas", "Haz de Plumas"), "log",
+    ("feather_bundle", "feather_bundle_top"), "hoe", "feathers", "COLOR_BROWN")
+
+# ------------------------------------------------------------- family: utilities (phase 7)
+def box(a, b, tex, collide=True, rotation=None, faces=None):
+    """One model element: tex is a texture or (side, top); collide=False keeps it out of the block's shape (flames,
+    ropes); faces limits the faces drawn (flat planes)."""
+    return {"from": a, "to": b, "tex": tex, "collide": collide, "rotation": rotation, "faces": faces}
+
+
+def fire_planes(y0, y1, tex="minecraft:block/campfire_fire"):
+    """Two crossed planes of flame, like the campfire's fire."""
+    return [box([0.8, y0, 8], [15.2, y1, 8], tex, False, {"origin": [8, 8, 8], "axis": "y", "angle": a, "rescale": True},
+                ("north", "south")) for a in (45, -45)]
+
+
+LOG, LOG_TOP, STRIPPED = "araucaria_log", "araucaria_log_top", "stripped_araucaria_log"
+PROPS = {}  # block id: model elements (north facing)
+for _tid, _names in (("bone", ("Bone Torch", "Tocha de Osso", "Antorcha de Hueso")),
+                     ("resin", ("Resin Torch", "Tocha de Resina", "Antorcha de Resina")),
+                     ("reed", ("Reed Torch", "Tocha de Junco", "Antorcha de Junco"))):
+    add(f"{_tid}_torch", _names, "torch", f"{_tid}_torch", "axe", "torch", "WOOD")
+    add(f"{_tid}_wall_torch", _names, "wall_torch", f"{_tid}_torch", "axe", "torch", "WOOD", f"{_tid}_torch")
+add("fat_lamp", ("Stone Fat Lamp", "Lamparina de Pedra com Gordura", "Lámpara de Piedra con Grasa"), "prop", None,
+    "pickaxe", "lamp", "STONE")
+PROPS["fat_lamp"] = [box([5, 0, 5], [11, 3, 11], ("limestone", "fat_lamp_top")),
+                     box([7.5, 3, 7.5], [8.5, 5, 8.5], "lamp_flame", False)]
+add("stone_hearth", ("Stone Ring Hearth", "Fogueira de Pedras", "Hogar de Piedras"), "hearth", None, "pickaxe",
+    "hearth", "STONE")
+PROPS["stone_hearth"] = [box([0, 0, 0], [16, 3, 3], "limestone"), box([0, 0, 13], [16, 3, 16], "limestone"),
+                         box([0, 0, 3], [3, 3, 13], "limestone"), box([13, 0, 3], [16, 3, 13], "limestone"),
+                         box([3, 0, 3], [13, 1, 13], "hearth_ash"), box([2, 1, 7], [14, 3, 9], (LOG, LOG_TOP)),
+                         box([7, 1, 2], [9, 3, 14], (LOG, LOG_TOP))] + fire_planes(1, 15)
+add("meat_drying_rack", ("Meat Drying Rack", "Varal de Secar Carne", "Secadero de Carne"), "prop", None, "axe",
+    "prop_wood", "WOOD")
+PROPS["meat_drying_rack"] = [box([1, 0, 7], [3, 14, 9], (STRIPPED, LOG_TOP)), box([13, 0, 7], [15, 14, 9], (STRIPPED, LOG_TOP)),
+                             box([3, 12, 7.5], [13, 13, 8.5], STRIPPED),
+                             box([4, 6, 7.5], [6, 12, 8.5], "dried_meat", False),
+                             box([7, 7, 7.5], [9, 12, 8.5], "dried_meat", False),
+                             box([10, 5, 7.5], [12, 12, 8.5], "dried_meat", False)]
+add("mortar_and_pestle", ("Mortar and Pestle", "Pilão", "Mortero"), "prop", None, "pickaxe", "prop_stone", "STONE")
+PROPS["mortar_and_pestle"] = [box([4, 0, 4], [12, 5, 12], ("limestone", "hearth_ash")),
+                              box([8, 4, 7], [10, 12, 9], STRIPPED, False,
+                                  {"origin": [9, 4, 8], "axis": "z", "angle": -22.5})]
+add("quern_stone", ("Quern Stone", "Mó de Pedra", "Molino de Piedra"), "prop", None, "pickaxe", "prop_stone", "STONE")
+PROPS["quern_stone"] = [box([1, 0, 1], [15, 4, 15], "quartzite"), box([3, 4, 3], [13, 7, 13], "quartzite"),
+                        box([11, 7, 7], [12, 11, 8], STRIPPED, False)]
+add("firewood_pile", ("Firewood Pile", "Pilha de Lenha", "Pila de Leña"), "log", ("firewood_pile", "firewood_pile_end"),
+    "axe", "wood", "WOOD")
+add("stone_basin", ("Stone Water Basin", "Bacia de Pedra", "Pila de Piedra"), "prop", None, "pickaxe", "prop_stone",
+    "STONE")
+PROPS["stone_basin"] = [box([1, 0, 1], [15, 2, 15], "limestone"), box([1, 2, 1], [15, 8, 3], "limestone"),
+                        box([1, 2, 13], [15, 8, 15], "limestone"), box([1, 2, 3], [3, 8, 13], "limestone"),
+                        box([13, 2, 3], [15, 8, 13], "limestone"),
+                        box([3, 6.5, 3], [13, 6.5, 13], "basin_water", False, faces=("up",))]
+BEDS = {  # bed id: names, material, foot elements, head elements (head toward north)
+    "straw_bed": (("Straw Bed", "Cama de Palha", "Cama de Paja"),
+                  [box([0, 0, 0], [16, 4, 16], ("thatch", "thatch_top"))],
+                  [box([0, 0, 0], [16, 4, 16], ("thatch", "thatch_top")),
+                   box([2, 4, 1], [14, 6, 6], ("thatch", "thatch_top"))]),
+    "hide_bed": (("Hide Bed", "Cama de Couro", "Cama de Cuero"),
+                 [box([0, 0, 0], [16, 3, 16], (STRIPPED, LOG_TOP)), box([1, 3, 0], [15, 5, 15], "hide_bedroll")],
+                 [box([0, 0, 0], [16, 3, 16], (STRIPPED, LOG_TOP)), box([1, 3, 1], [15, 5, 16], "hide_bedroll"),
+                  box([2, 5, 2], [14, 7, 6], "hide_bedroll")]),
+    "hammock": (("Hammock", "Rede de Dormir", "Hamaca"),
+                [box([7, 0, 14], [9, 10, 16], (STRIPPED, LOG_TOP)), box([1, 5, 0], [15, 6, 14], "hammock_cloth")],
+                [box([7, 0, 0], [9, 10, 2], (STRIPPED, LOG_TOP)), box([1, 5, 2], [15, 6, 16], "hammock_cloth")]),
+}
+for _bid, (_names, _foot, _head) in BEDS.items():
+    add(_bid, _names, "bed", None, "axe", "bed", "COLOR_BROWN")
+add("tanning_rack", ("Tanning Rack", "Cavalete de Curtir Couro", "Bastidor de Curtir"), "prop", None, "axe",
+    "prop_wood", "WOOD")
+PROPS["tanning_rack"] = [box([0, 0, 7], [2, 16, 9], (STRIPPED, LOG_TOP)), box([14, 0, 7], [16, 16, 9], (STRIPPED, LOG_TOP)),
+                         box([2, 14, 7], [14, 16, 9], STRIPPED), box([2, 1, 7], [14, 3, 9], STRIPPED),
+                         box([2, 3, 7.5], [14, 14, 8.5], "hide_screen")]
+add("flint_knapping_bench", ("Flint Knapping Bench", "Bancada de Lascar Sílex", "Banco de Tallar Sílex"), "prop", None,
+    "axe", "prop_wood", "WOOD")
+PROPS["flint_knapping_bench"] = [box([2, 0, 2], [14, 10, 14], (LOG, LOG_TOP)),
+                                 box([4, 10, 5], [7, 11, 8], "flint", False), box([9, 10, 8], [12, 12, 11], "quartzite", False)]
+for _fired, _names in ((False, ("Raw Clay Pot", "Pote de Barro Cru", "Vasija de Barro Crudo")),
+                       (True, ("Fired Clay Pot", "Pote de Barro Queimado", "Vasija de Barro Cocido"))):
+    _pid = "fired_clay_pot" if _fired else "raw_clay_pot"
+    add(_pid, _names, "prop", None, "pickaxe", "clay", "TERRACOTTA_ORANGE" if _fired else "CLAY")
+    PROPS[_pid] = [box([4, 0, 4], [12, 9, 12], (_pid, _pid)), box([5, 9, 5], [11, 11, 11], (_pid, _pid)),
+                   box([4, 11, 4], [12, 12, 12], (_pid, f"{_pid}_top"))]
+add("log_feeding_trough", ("Log Feeding Trough", "Cocho de Tronco", "Comedero de Tronco"), "prop", None, "axe",
+    "prop_wood", "WOOD")
+PROPS["log_feeding_trough"] = [box([0, 0, 2], [16, 2, 14], (LOG, STRIPPED)), box([0, 2, 2], [16, 7, 4], (LOG, STRIPPED)),
+                               box([0, 2, 12], [16, 7, 14], (LOG, STRIPPED)), box([0, 2, 4], [2, 7, 12], (LOG_TOP, STRIPPED)),
+                               box([14, 2, 4], [16, 7, 12], (LOG_TOP, STRIPPED))]
+for _nid, _names, _mat, _tex in (("straw_nest", ("Straw Nest", "Ninho de Palha", "Nido de Paja"), "nest",
+                                  ("thatch", "thatch_top")),
+                                 ("sand_nest", ("Sand Nest", "Ninho de Areia", "Nido de Arena"), "sand_nest",
+                                  "minecraft:block/sand")):
+    add(_nid, _names, "prop", None, "shovel" if _mat == "sand_nest" else "hoe", _mat, "SAND")
+    PROPS[_nid] = [box([1, 0, 1], [15, 1, 15], _tex), box([0, 1, 0], [16, 4, 3], _tex), box([0, 1, 13], [16, 4, 16], _tex),
+                   box([0, 1, 3], [3, 4, 13], _tex), box([13, 1, 3], [16, 4, 13], _tex)]
+add("sharpened_stakes", ("Sharpened Stakes", "Estacas Pontudas", "Estacas Afiladas"), "spikes", "sharpened_stakes",
+    "axe", "spikes", "WOOD")
+add("bone_spikes", ("Bone Spikes", "Espetos de Osso", "Púas de Hueso"), "spikes", "bone_spikes", "pickaxe", "spikes",
+    "SAND")
+add("pit_trap_cover", ("Pit Trap Cover", "Cobertura de Armadilha", "Cubierta de Trampa"), "prop", None, "hoe",
+    "pit_cover", "PLANT")
+PROPS["pit_trap_cover"] = [box([0, 14, 0], [16, 16, 16], "pit_trap_cover")]
+add("menhir", ("Menhir", "Menir", "Menhir"), "prop", None, "pickaxe", "prop_stone", "STONE")
+PROPS["menhir"] = [box([3, 0, 4], [13, 16, 12], ("menhir", "menhir_top"))]
+for _face, _names in (("raptor", ("Raptor Totem", "Totem de Raptor", "Tótem de Raptor")),
+                      ("rex", ("Tyrannosaurus Totem", "Totem de Tiranossauro", "Tótem de Tiranosaurio")),
+                      ("pterosaur", ("Pterosaur Totem", "Totem de Pterossauro", "Tótem de Pterosaurio"))):
+    add(f"{_face}_totem", _names, "facing", (f"{_face}_totem_front", "totem_side"), "axe", "prop_wood", "WOOD")
+add("hide_drum", ("Hide Drum", "Tambor de Couro", "Tambor de Cuero"), "drum", None, "axe", "prop_wood", "WOOD")
+PROPS["hide_drum"] = [box([3, 0, 3], [13, 10, 13], ("drum_side", "drum_head"))]
+add("bone_wind_chimes", ("Bone Wind Chimes", "Móbile de Ossos", "Carillón de Huesos"), "chimes", None, "pickaxe",
+    "chimes", "SAND")
+PROPS["bone_wind_chimes"] = [box([3, 15, 7.5], [13, 16, 8.5], STRIPPED)] + [
+    box([x, y0, 7.5], [x + 1, 15, 8.5], "fiber_net", False) for x, y0 in ((4, 13), (7, 12), (10, 13))] + [
+    box([x, y0, 7.5], [x + 1, y1, 8.5], "rib_bone", False) for x, y0, y1 in ((4, 6, 13), (7, 4, 12), (10, 7, 13))]
+add("hanging_basket", ("Hanging Basket", "Cesto Pendurado", "Cesta Colgante"), "prop", None, "axe", "wicker", "WOOD")
+PROPS["hanging_basket"] = [box([7.5, 10, 7.5], [8.5, 16, 8.5], STRIPPED, False), box([4, 2, 4], [12, 8, 12], "wicker_block"),
+                           box([5, 8, 5], [11, 10, 11], "bracken", False)]
+add("wicker_basket", ("Wicker Basket", "Cesto de Vime", "Cesto de Mimbre"), "basket", None, "axe", "wicker", "WOOD")
+PROPS["wicker_basket"] = [box([2, 0, 2], [14, 12, 14], ("wicker_block", "wicker_basket_top"))]
+NO_ITEM_KINDS = ("wall_torch",)
+
 LANG = {"en_us": {}, "pt_br": {}, "es_es": {}}
 for _bid, _row in BLOCKS.items():
     for _code, _name in zip(("en_us", "pt_br", "es_es"), _row["names"]):
         LANG[_code][f"block.{NS}.{_bid}"] = _name
+for _code, _name in zip(("en_us", "pt_br", "es_es"), BLOCKS["wicker_basket"]["names"]):
+    LANG[_code][f"container.{NS}.wicker_basket"] = _name
 LANG["en_us"][f"itemGroup.{NS}.building"] = "Terrassic: Building"
 LANG["pt_br"][f"itemGroup.{NS}.building"] = "Terrassic: Construção"
 LANG["es_es"][f"itemGroup.{NS}.building"] = "Terrassic: Construcción"
@@ -553,6 +718,100 @@ def gen_eave(bid, tex):
     return m(bid)
 
 
+def facing_states(bid):
+    write(f"{A}/blockstates/{bid}.json", {"variants": {
+        f"facing={f}": variant(bid, y=y) for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+
+
+def gen_trophy(bid, tex):
+    """A skull mounted on a hewn plank plaque, hung on the wall behind it (the skull is a cutout sprite)."""
+    write(f"{A}/models/block/{bid}.json", {
+        "parent": "minecraft:block/block",
+        "textures": {"skull": t(tex), "plaque": t("araucaria_hewn_planks"), "particle": t("araucaria_hewn_planks")},
+        "elements": [
+            {"from": [3, 3, 14], "to": [13, 13, 16], "faces": {
+                d: {"texture": "#plaque"} for d in ("north", "south", "east", "west", "up", "down")}},
+            {"from": [0, 0, 13.5], "to": [16, 16, 13.5], "shade": False, "faces": {
+                "north": {"uv": [0, 0, 16, 16], "texture": "#skull"},
+                "south": {"uv": [16, 0, 0, 16], "texture": "#skull"}}}]})
+    facing_states(bid)
+    return m(bid)
+
+
+def gen_arch(bid, tex):
+    """Two ribs standing up and meeting overhead: posts, a lintel and the curve of the corners."""
+    boxes = [([0, 0, 6], [3, 16, 10]), ([13, 0, 6], [16, 16, 10]), ([3, 13, 6], [13, 16, 10]),
+             ([3, 10, 6], [5, 13, 10]), ([11, 10, 6], [13, 13, 10])]
+    write(f"{A}/models/block/{bid}.json", {
+        "parent": "minecraft:block/block", "textures": {"t": t(tex), "particle": t(tex)},
+        "elements": [{"from": a, "to": b, "faces": {
+            d: {"texture": "#t"} for d in ("north", "south", "east", "west", "up", "down")}} for a, b in boxes]})
+    facing_states(bid)
+    return m(bid)
+
+
+def element_model(name, elements):
+    """A block model from PROPS-style elements; each texture gets a key (t0, t1...), the first is the particle."""
+    keys = {}
+
+    def key(tex):
+        ref = tex if ":" in tex else t(tex)
+        keys.setdefault(ref, f"t{len(keys)}")
+        return "#" + keys[ref]
+    out = []
+    for e in elements:
+        side, top = e["tex"] if isinstance(e["tex"], tuple) else (e["tex"], e["tex"])
+        faces = e["faces"] or ("north", "south", "east", "west", "up", "down")
+        el = {"from": e["from"], "to": e["to"],
+              "faces": {d: {"texture": key(top if d in ("up", "down") else side)} for d in faces}}
+        if e["rotation"]:
+            el["rotation"] = e["rotation"]
+        if e["faces"]:
+            el["shade"] = False
+        out.append(el)
+    textures = {k: ref for ref, k in keys.items()}
+    textures["particle"] = textures["t0"]
+    write(f"{A}/models/block/{name}.json", {"parent": "minecraft:block/block", "textures": textures, "elements": out})
+
+
+def gen_prop(bid, tex):
+    element_model(bid, PROPS[bid])
+    facing_states(bid)
+    return m(bid)
+
+
+def gen_torch(bid, tex):
+    model(bid, "minecraft:block/template_torch", torch=t(tex))
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"": variant(bid)}})
+    return None
+
+
+def gen_wall_torch(bid, tex):
+    model(bid, "minecraft:block/template_torch_wall", torch=t(tex))
+    write(f"{A}/blockstates/{bid}.json", {"variants": {
+        f"facing={f}": variant(bid, y=y) for f, y in (("east", 0), ("south", 90), ("west", 180), ("north", 270))}})
+    return None
+
+
+def gen_spikes(bid, tex):
+    model(bid, "minecraft:block/cross", cross=t(tex))
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"": variant(bid)}})
+    return None
+
+
+def gen_bed(bid, tex):
+    """Two parts, foot and head (the head lies towards the bed's facing), turned like the vanilla bed."""
+    _, foot, head = BEDS[bid]
+    element_model(f"{bid}_foot", foot)
+    element_model(f"{bid}_head", head)
+    variants = {}
+    for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
+        for part in ("foot", "head"):
+            variants[f"facing={f},part={part}"] = variant(f"{bid}_{part}", y=y)
+    write(f"{A}/blockstates/{bid}.json", {"variants": variants})
+    return m(f"{bid}_head")
+
+
 def gen_climber(bid, tex):
     """Hangs on the side of a block or under a ceiling like a vine, and can be climbed (nets)."""
     write(f"{A}/models/block/{bid}.json", {
@@ -586,7 +845,9 @@ GEN = {"plant": gen_plant, "tall_plant": gen_tall_plant, "water_plant": gen_wate
        "cube": gen_cube, "column": gen_column, "stairs": gen_stairs, "wall": gen_wall, "fence": gen_fence,
        "pane": gen_pane, "carpet": gen_carpet, "palisade": gen_palisade, "log": gen_log, "leaves": gen_leaves,
        "sapling": gen_sapling, "fence_gate": gen_fence_gate, "door": gen_door, "trapdoor": gen_trapdoor,
-       "facing": gen_facing, "eave": gen_eave, "climber": gen_climber}
+       "facing": gen_facing, "eave": gen_eave, "climber": gen_climber, "trophy": gen_trophy, "arch": gen_arch,
+       "torch": gen_torch, "wall_torch": gen_wall_torch, "spikes": gen_spikes, "bed": gen_bed, "prop": gen_prop,
+       "hearth": gen_prop, "drum": gen_prop, "chimes": gen_prop, "basket": gen_prop}
 
 
 # ------------------------------------------------------------- loot
@@ -626,6 +887,20 @@ def loot_leaves(bid, sapling):
              {"function": "minecraft:explosion_decay"}],
              "conditions": [{"condition": "minecraft:table_bonus", "enchantment": "minecraft:fortune",
                              "chances": [0.02, 0.022222223, 0.025, 0.033333335, 0.1]}]}]}]})
+
+
+def loot_part(bid, prop, value):
+    """Drops the block only from the part where prop = value (beds: the head)."""
+    write(f"{D}/loot_tables/blocks/{bid}.json", {"type": "minecraft:block", "pools": [{
+        "rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": f"{NS}:{bid}", "conditions": [
+            {"condition": "minecraft:block_state_property", "block": f"{NS}:{bid}", "properties": {prop: value}}]}],
+        "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+
+
+def loot_as(bid, item):
+    write(f"{D}/loot_tables/blocks/{bid}.json", {"type": "minecraft:block", "pools": [{
+        "rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": f"{NS}:{item}"}],
+        "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
 
 
 def loot_door(bid):
@@ -754,6 +1029,65 @@ def recipes():
     shaped("reed_bundle", ["RRR", "RRR", "RRR"], {"R": rush}, "reed_bundle")
     shaped("rope_coil", ["SSS", "SSS", "SSS"], {"S": "minecraft:string"}, "rope_coil")
     shaped("fiber_net", ["S S", " S ", "S S"], {"S": "minecraft:string"}, "fiber_net", 4)
+    # hide, bone, trophies and fossils
+    for hid, (_, source) in HIDES.items():
+        hide = f"{NS}:{source}" if source else "minecraft:leather"
+        if hid == "tanned_hide":  # tannin from bark
+            shapeless("tanned_hide_frame", [f"{NS}:rawhide_frame", "#minecraft:logs"], "tanned_hide_frame")
+            shapeless("tanned_hide_panel", [f"{NS}:hide_screen", "#minecraft:logs"], "tanned_hide_panel")
+            continue
+        shaped(f"{hid}_frame", ["SHS", "HHH", "SHS"], {"S": "minecraft:stick", "H": hide}, f"{hid}_frame", 2)
+        if f"{hid}_panel" in BLOCKS:
+            shaped(f"{hid}_panel", ["SHS", "SHS"], {"S": "minecraft:stick", "H": hide}, f"{hid}_panel", 4)
+    for sid in SPECIES:
+        shaped(f"{sid}_hide_rug", ["HH"], {"H": f"{NS}:{sid}_hide"}, f"{sid}_hide_rug", 2)
+        shapeless(f"{sid}_skull_trophy", [f"{NS}:{sid}_fossil", "#minecraft:planks"], f"{sid}_skull_trophy")
+        rock = ROCK_VARIANTS[SKULL_ROCK.get(sid, "limestone")]["natural"]
+        shapeless(f"{sid}_skull_fossil", [f"{NS}:{sid}_fossil", f"{NS}:{rock}"], f"{sid}_skull_fossil")
+    shaped("bone_fence_gate", ["BKB", "BKB"], {"B": "minecraft:bone", "K": "minecraft:bone_block"}, "bone_fence_gate")
+    shaped("ossuary_wall", ["KK", "KK"], {"K": "minecraft:bone_block"}, "ossuary_wall", 4)
+    shaped("rib_arch", ["BBB", "B B", "B B"], {"B": "minecraft:bone"}, "rib_arch", 2)
+    shaped("tooth_totem", ["T", "L", "L"], {"T": f"{NS}:rex_tooth", "L": "#minecraft:logs"}, "tooth_totem", 2)
+    shaped("bone_pile", ["BB"], {"B": "minecraft:bone"}, "bone_pile")
+    shaped("feather_bundle", ["FFF", "FFF", "FFF"], {"F": "minecraft:feather"}, "feather_bundle")
+    # utilities
+    charcoal, logs, stick = "minecraft:charcoal", "#minecraft:logs", "minecraft:stick"
+    shaped("bone_torch", ["L", "B"], {"L": "minecraft:leather", "B": "minecraft:bone"}, "bone_torch", 4)
+    shaped("resin_torch", ["C", "L", "S"], {"C": charcoal, "L": f"{NS}:araucaria_log", "S": stick}, "resin_torch", 4)
+    shaped("reed_torch", ["C", "R", "R"], {"C": charcoal, "R": f"{NS}:rush"}, "reed_torch", 4)
+    shapeless("fat_lamp", [f"{NS}:limestone", "minecraft:beef", "minecraft:string"], "fat_lamp")
+    shaped("stone_hearth", [" L ", "LFL", "SSS"], {"L": logs, "F": "minecraft:flint", "S": "minecraft:cobblestone"},
+           "stone_hearth")
+    shaped("meat_drying_rack", ["SSS", "STS", "S S"], {"S": stick, "T": "minecraft:string"}, "meat_drying_rack")
+    shaped("mortar_and_pestle", ["R S", "RRR"], {"R": f"{NS}:limestone", "S": stick}, "mortar_and_pestle")
+    shaped("quern_stone", ["S", "Q", "Q"], {"S": stick, "Q": f"{NS}:quartzite"}, "quern_stone")
+    shaped("firewood_pile", ["LLL"], {"L": logs}, "firewood_pile", 3)
+    shaped("stone_basin", ["R R", "RRR"], {"R": f"{NS}:limestone"}, "stone_basin")
+    shaped("straw_bed", ["TTT", "SSS"], {"T": f"{NS}:thatch", "S": stick}, "straw_bed")
+    shaped("hide_bed", ["HHH", "LLL"], {"H": "minecraft:leather", "L": logs}, "hide_bed")
+    shaped("hammock", ["S S", "NNN"], {"S": stick, "N": f"{NS}:fiber_net"}, "hammock")
+    shaped("tanning_rack", ["SSS", "SLS", "S S"], {"S": stick, "L": "minecraft:leather"}, "tanning_rack")
+    shaped("flint_knapping_bench", ["F", "L"], {"F": "minecraft:flint", "L": logs}, "flint_knapping_bench")
+    shaped("raw_clay_pot", ["C C", "C C", "CCC"], {"C": "minecraft:clay_ball"}, "raw_clay_pot")
+    write(f"{D}/recipes/fired_clay_pot.json", {
+        "type": "minecraft:smelting", "category": "blocks", "ingredient": {"item": f"{NS}:raw_clay_pot"},
+        "result": f"{NS}:fired_clay_pot", "experience": 0.1, "cookingtime": 200})
+    shaped("log_feeding_trough", ["L L", "LLL"], {"L": logs}, "log_feeding_trough")
+    shaped("straw_nest", ["T T", "TTT"], {"T": f"{NS}:thatch"}, "straw_nest")
+    shaped("sand_nest", ["S S", "SSS"], {"S": "minecraft:sand"}, "sand_nest")
+    shaped("sharpened_stakes", ["SFS"], {"S": stick, "F": "minecraft:flint"}, "sharpened_stakes", 2)
+    shaped("bone_spikes", ["BFB"], {"B": "minecraft:bone", "F": "minecraft:flint"}, "bone_spikes", 2)
+    shaped("pit_trap_cover", ["LSL"], {"L": "#minecraft:leaves", "S": stick}, "pit_trap_cover", 2)
+    shaped("menhir", ["G", "G"], {"G": f"{NS}:gneiss"}, "menhir")
+    shapeless("raptor_totem", [logs, "minecraft:flint"], "raptor_totem")
+    shapeless("rex_totem", [logs, f"{NS}:rex_tooth"], "rex_totem")
+    shapeless("pterosaur_totem", [logs, "minecraft:feather"], "pterosaur_totem")
+    shaped("hide_drum", ["H", "L"], {"H": "minecraft:leather", "L": logs}, "hide_drum")
+    shaped("bone_wind_chimes", ["SSS", "BTB"], {"S": stick, "B": "minecraft:bone", "T": "minecraft:string"},
+           "bone_wind_chimes")
+    shaped("hanging_basket", ["T", "W", "F"], {"T": "minecraft:string", "W": f"{NS}:wicker_block", "F": f"{NS}:bracken"},
+           "hanging_basket")
+    shaped("wicker_basket", ["R R", "RRR"], {"R": f"{NS}:rush"}, "wicker_basket")
     for bid in BLOCKS:
         shape_recipes(bid)
 
@@ -890,10 +1224,13 @@ JAVA_KIND = {"cube": "cube", "column": "cube", "palisade": "palisade", "stairs":
              "wall": "wall", "fence": "fence", "pane": "pane", "carpet": "carpet", "log": "log", "leaves": "leaves",
              "sapling": "sapling", "fence_gate": "fenceGate", "door": "door", "trapdoor": "trapdoor", "plant": "plant",
              "tall_plant": "tallPlant", "water_plant": "waterPlant", "multiface": "multiface", "facing": "facing",
-             "eave": "eave", "climber": "climber"}
+             "eave": "eave", "climber": "climber", "trophy": "trophy", "arch": "arch", "torch": "torch",
+             "wall_torch": "wallTorch", "spikes": "spikes", "bed": "bed", "prop": "prop", "hearth": "hearth",
+             "drum": "drum", "chimes": "chimes", "basket": "basket"}
+BOX_KINDS = ("prop", "hearth", "drum", "chimes", "basket")
 # drawn with transparent pixels: rendered as cutout on the client (BuildingBlocksClient)
 CUTOUT_KINDS = ("leaves", "sapling", "door", "trapdoor", "plant", "tall_plant", "water_plant", "multiface", "pane",
-                "climber")
+                "climber", "trophy", "torch", "wall_torch", "spikes", "hearth")
 
 
 def gen_java(features):
@@ -903,11 +1240,16 @@ def gen_java(features):
         kind = JAVA_KIND[row["kind"]]
         if kind in ("stairs", "sapling"):
             lines.append(f'        ModBlocks.{kind}("{bid}", "{row["base"]}", {props});')
+        elif row["kind"] in BOX_KINDS:
+            boxes = [e["from"] + e["to"] for e in PROPS[bid] if e["collide"]]
+            arr = ", ".join("{" + ", ".join(f"{v:g}" for v in b) + "}" for b in boxes)
+            lines.append(f'        ModBlocks.{kind}("{bid}", new double[][]{{{arr}}}, {props});')
         else:
             lines.append(f'        ModBlocks.{kind}("{bid}", {props});')
     strip = "\n".join(f'            {{"{a}", "{b}"}},' for a, b in STRIPPABLES)
     cutout = ", ".join(f'"{b}"' for b, row in BLOCKS.items() if row["kind"] in CUTOUT_KINDS)
     on_water = ", ".join(f'"{b}"' for b, row in BLOCKS.items() if row["kind"] == "water_plant")
+    torches = "\n".join(f'            {{"{row["base"]}", "{b}"}},' for b, row in BLOCKS.items() if row["kind"] == "wall_torch")
     feats = "\n".join(f'            {{"{f}", "{step}", "{biome}"}},' for f, step, biome in features)
     src = f"""package com.terrassic.registry;
 
@@ -936,6 +1278,11 @@ public final class BuildingBlocks {{
     /** Blocks that float on water: their item places them on the water surface. */
     public static final String[] ON_WATER = {{{on_water}}};
 
+    /** {{torch, wall torch}}: one item places either (the wall torch has no item of its own). */
+    public static final String[][] WALL_TORCHES = {{
+{torches}
+    }};
+
     private BuildingBlocks() {{
     }}
 
@@ -956,9 +1303,11 @@ def main():
             item_model = gen_slab(bid, tex, m(row["base"]))
         else:
             item_model = GEN[kind](bid, tex)
-        if kind == "door":
+        if kind in NO_ITEM_KINDS:
+            pass
+        elif kind == "door":
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{bid}"}})
-        elif kind in ("sapling", "plant", "water_plant", "multiface", "climber"):
+        elif kind in ("sapling", "plant", "water_plant", "multiface", "climber", "torch", "spikes"):
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": t(tex)}})
         elif item_model is None:
             write(f"{A}/models/item/{bid}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": t(tex[0])}})
@@ -970,6 +1319,10 @@ def main():
             loot_leaves(bid, bid.replace("_leaves", "_sapling"))
         elif kind in ("door", "tall_plant"):
             loot_door(bid)
+        elif kind == "bed":
+            loot_part(bid, "part", "head")
+        elif kind == "wall_torch":
+            loot_as(bid, row["base"])
         else:
             loot_self(bid, FLINT_BONUS if bid == "flint_nodules" else None)
     recipes()

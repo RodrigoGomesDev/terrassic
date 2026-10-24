@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/straw_nest"
+    },
+    "facing=east": {
+      "model": "terrassic:block/straw_nest",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/straw_nest",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/straw_nest",
+      "y": 270
+    }
+  }
+}

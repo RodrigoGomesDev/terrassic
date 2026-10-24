@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "t0": "terrassic:block/pit_trap_cover",
+    "particle": "terrassic:block/pit_trap_cover"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t0"
+        },
+        "south": {
+          "texture": "#t0"
+        },
+        "east": {
+          "texture": "#t0"
+        },
+        "west": {
+          "texture": "#t0"
+        },
+        "up": {
+          "texture": "#t0"
+        },
+        "down": {
+          "texture": "#t0"
+        }
+      }
+    }
+  ]
+}

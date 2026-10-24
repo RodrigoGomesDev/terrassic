@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "KK",
+    "KK"
+  ],
+  "key": {
+    "K": {
+      "item": "minecraft:bone_block"
+    }
+  },
+  "result": {
+    "item": "terrassic:ossuary_wall",
+    "count": 4
+  }
+}

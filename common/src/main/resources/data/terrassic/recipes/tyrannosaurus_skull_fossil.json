@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:tyrannosaurus_fossil"
+    },
+    {
+      "item": "terrassic:limestone"
+    }
+  ],
+  "result": {
+    "item": "terrassic:tyrannosaurus_skull_fossil",
+    "count": 1
+  }
+}

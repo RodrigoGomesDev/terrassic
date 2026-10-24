@@ -45,6 +45,9 @@
     "terrassic:reed_mat",
     "terrassic:reed_bundle",
     "terrassic:rope_coil",
-    "terrassic:fiber_net"
+    "terrassic:fiber_net",
+    "terrassic:feather_bundle",
+    "terrassic:straw_nest",
+    "terrassic:pit_trap_cover"
   ]
 }

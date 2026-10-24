@@ -1,6 +1,7 @@
 package com.terrassic;
 
 import com.terrassic.client.TerrassicClient;
+import com.terrassic.registry.ModBlockEntities;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
@@ -28,6 +29,7 @@ public final class Terrassic {
         ModTabs.TABS.register();
         ModEntities.ENTITY_TYPES.register();
         ModBlocks.BLOCKS.register();
+        ModBlockEntities.BLOCK_ENTITY_TYPES.register();
         ModItems.ITEMS.register();
         ModEntities.registerAttributes();
         ModSpawns.init();

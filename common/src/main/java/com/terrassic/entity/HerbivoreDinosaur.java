@@ -69,6 +69,10 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         return 2.5D;
     }
 
+    /** Hook for extra goals (avoid, flee...). Called at the end of {@link #registerGoals()}. */
+    protected void addExtraGoals() {
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -102,6 +106,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
+        addExtraGoals();
     }
 
     /** Grazing: now and then, more often when hungry; if something edible grows within reach, it is a real meal. */

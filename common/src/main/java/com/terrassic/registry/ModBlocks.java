@@ -2,7 +2,13 @@ package com.terrassic.registry;
 
 import com.terrassic.Terrassic;
 import com.terrassic.block.DinoEggBlock;
+import com.terrassic.block.BasketBlock;
+import com.terrassic.block.ChimesBlock;
+import com.terrassic.block.DrumBlock;
 import com.terrassic.block.FacingBlock;
+import com.terrassic.block.HearthBlock;
+import com.terrassic.block.PrimitiveBedBlock;
+import com.terrassic.block.SpikesBlock;
 import com.terrassic.block.PrehistoricTreeGrower;
 import com.terrassic.block.ResearchTableBlock;
 import com.terrassic.entity.DinosaurEntity;
@@ -10,6 +16,7 @@ import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.hooks.item.tool.AxeItemHooks;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
@@ -27,9 +34,11 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -79,6 +88,7 @@ public final class ModBlocks {
         egg("majungasaurus", ModEntities.MAJUNGASAURUS, true);
         egg("dakotaraptor", ModEntities.DAKOTARAPTOR, false);
         egg("troodon", ModEntities.TROODON, false);
+        egg("oviraptor", ModEntities.OVIRAPTOR, false);
         egg("parasaurolophus", ModEntities.PARASAUROLOPHUS, true);
         egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS, false);
         egg("thescelosaurus", ModEntities.THESCELOSAURUS, false);
@@ -173,6 +183,23 @@ public final class ModBlocks {
             case "fiber" -> p.strength(0.8F).sound(SoundType.WOOL).ignitedByLava();
             case "net" -> p.noCollission().strength(0.3F).sound(SoundType.WOOL).ignitedByLava()
                     .pushReaction(PushReaction.DESTROY);
+            case "rug" -> p.sound(SoundType.WOOL).ignitedByLava();
+            case "trophy" -> p.strength(1.0F).sound(SoundType.BONE_BLOCK).pushReaction(PushReaction.DESTROY);
+            case "bone_loose" -> p.strength(0.3F).sound(SoundType.BONE_BLOCK);
+            case "feathers" -> p.strength(0.4F).sound(SoundType.WOOL).ignitedByLava();
+            case "torch" -> p.noCollission().instabreak().lightLevel(s -> 14).sound(SoundType.WOOD)
+                    .pushReaction(PushReaction.DESTROY);
+            case "lamp" -> p.strength(0.5F).lightLevel(s -> 13).sound(SoundType.STONE).pushReaction(PushReaction.DESTROY);
+            case "hearth" -> p.strength(2.0F).lightLevel(s -> 15).sound(SoundType.STONE);
+            case "prop_wood" -> p.strength(1.5F).sound(SoundType.WOOD).ignitedByLava();
+            case "prop_stone" -> p.strength(1.5F, 6.0F).sound(SoundType.STONE);
+            case "clay" -> p.strength(0.6F).sound(SoundType.DECORATED_POT).pushReaction(PushReaction.DESTROY);
+            case "bed" -> p.strength(0.2F).sound(SoundType.WOOL).ignitedByLava().pushReaction(PushReaction.DESTROY);
+            case "spikes" -> p.noCollission().strength(1.0F).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY);
+            case "pit_cover" -> p.noCollission().strength(0.2F).sound(SoundType.GRASS).ignitedByLava();
+            case "nest" -> p.strength(0.5F).sound(SoundType.GRASS).ignitedByLava();
+            case "sand_nest" -> p.strength(0.5F).sound(SoundType.SAND);
+            case "chimes" -> p.noCollission().strength(0.3F).sound(SoundType.BONE_BLOCK).pushReaction(PushReaction.DESTROY);
             default -> throw new IllegalArgumentException("unknown building material " + material);
         };
     }
@@ -245,12 +272,61 @@ public final class ModBlocks {
 
     /** Full block with a picture on its front, turned towards the player who placed it (cave paintings). */
     static void facing(String id, BlockBehaviour.Properties p) {
-        building(id, () -> new FacingBlock(p, null));
+        building(id, () -> new FacingBlock(p, FacingBlock.FULL));
     }
 
     /** Tilted sheet of roofing hanging over the edge of a roof. */
     static void eave(String id, BlockBehaviour.Properties p) {
         building(id, () -> new FacingBlock(p.noOcclusion(), FacingBlock.EAVE));
+    }
+
+    /** A skull on a plaque, hung on the wall the player clicked. */
+    static void trophy(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new FacingBlock(p.noOcclusion(), FacingBlock.TROPHY));
+    }
+
+    /** Two ribs meeting overhead: walk-through arch. */
+    static void arch(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new FacingBlock(p.noOcclusion(), FacingBlock.ARCH));
+    }
+
+    static void torch(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new TorchBlock(p, ParticleTypes.FLAME) {});
+    }
+
+    /** The wall form of a torch; it has no item (the torch's item places either, see ModItems). */
+    static void wallTorch(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new WallTorchBlock(p, ParticleTypes.FLAME) {});
+    }
+
+    /** Stakes and spikes: hurt and slow whatever walks through them. */
+    static void spikes(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new SpikesBlock(p));
+    }
+
+    static void bed(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new PrimitiveBedBlock(p));
+    }
+
+    /** A decoration made of boxes (shape in pixels, north facing, generated from the model). */
+    static void prop(String id, double[][] boxes, BlockBehaviour.Properties p) {
+        building(id, () -> new FacingBlock(p.noOcclusion(), boxes));
+    }
+
+    static void hearth(String id, double[][] boxes, BlockBehaviour.Properties p) {
+        building(id, () -> new HearthBlock(p.noOcclusion(), boxes));
+    }
+
+    static void drum(String id, double[][] boxes, BlockBehaviour.Properties p) {
+        building(id, () -> new DrumBlock(p.noOcclusion(), boxes));
+    }
+
+    static void chimes(String id, double[][] boxes, BlockBehaviour.Properties p) {
+        building(id, () -> new ChimesBlock(p.noOcclusion(), boxes));
+    }
+
+    static void basket(String id, double[][] boxes, BlockBehaviour.Properties p) {
+        building(id, () -> new BasketBlock(p.noOcclusion(), boxes));
     }
 
     /** Hangs on walls and ceilings like a vine, without growing; climbable through the minecraft:climbable tag. */

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/tanning_rack"
+    },
+    "facing=east": {
+      "model": "terrassic:block/tanning_rack",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/tanning_rack",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/tanning_rack",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_side",
+  "textures": {
+    "pane": "terrassic:block/tanned_hide_panel",
+    "edge": "terrassic:block/hide_screen_edge"
+  }
+}

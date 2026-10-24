@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "SHS",
+    "HHH",
+    "SHS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "H": {
+      "item": "terrassic:velociraptor_hide"
+    }
+  },
+  "result": {
+    "item": "terrassic:feathered_hide_frame",
+    "count": 2
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "TTT",
+    "SSS"
+  ],
+  "key": {
+    "T": {
+      "item": "terrassic:thatch"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "terrassic:straw_bed",
+    "count": 1
+  }
+}

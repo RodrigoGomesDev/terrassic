@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/log_feeding_trough"
+    },
+    "facing=east": {
+      "model": "terrassic:block/log_feeding_trough",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/log_feeding_trough",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/log_feeding_trough",
+      "y": 270
+    }
+  }
+}

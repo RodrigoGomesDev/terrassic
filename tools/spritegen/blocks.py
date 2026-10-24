@@ -1197,6 +1197,528 @@ def phase5_items():
     return {"wicker_door": cv}
 
 
+# ------------------------------------------------------------------ hide, bone, trophies and fossils (phase 6)
+ENTITY_TEX = os.path.join(os.path.dirname(TEX), "entity")
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "javagen"))
+from gen_resources import SPECIES  # noqa: E402  (one rug, trophy and fossil per species)
+# side view of each skull, snout to the left: o outline, b bone, l lit bone, e opening (socket, fenestra), t tooth
+SKULLS = {
+    "tyrannosaurus": ["......ooooooo...", "....oobbbblllo..", "..oobbbbbbbbbbo.", ".obbbbeebbbbeebo",
+                      "obbbbbeeebbbeebo", "obbbbbbbbbbbbbbo", "ottttttbbbbbbboo", ".o.t.t.tobbbbo..",
+                      ".obbbbbbbbbbbo..", "..oooooooooooo.."],
+    "spinosaurus": ["..........oooo..", ".........obllbo.", "....ooooobbbeebo", "..oobbbbbbbbeebo",
+                    "oobbbbbbbbbbbbbo", "otttttttttbbbbbo", ".t.t.t.t.tobbbo.", "oobbbbbbbbbbbo..",
+                    "..ooooooooooo..."],
+    "dilophosaurus": ["......o.o.......", ".....oloolo.....", "....olbolbbo....", "...obbbbbbbbooo.",
+                      "..obbbbbbbbbeebo", ".obbbbbeebbbeebo", "obbbbbbbbbbbbbbo", "otttttttbbbbbbo.",
+                      ".o.t.t.tobbbbo..", ".obbbbbbbbbbo...", "..oooooooooo...."],
+    "velociraptor": ["........oooooo..", "....ooooblllbbo.", "..oobbbbbbbbeebo", ".obbbbbeebbbeebo",
+                     "obbbbbbbbbbbbbbo", "otttttttbbbbbbo.", ".t.t.t.tobbbbo..", ".obbbbbbbbbbo...",
+                     "..oooooooooo...."],
+    "compsognathus": [".......oooo.....", ".....oobllbo....", "...oobbbbeebo...", "..obbbeebeebo...",
+                      "..obbbbbbbbbo...", "..ottttbbbbo....", "...obbbbbbo.....", "....oooooo......"],
+    "triceratops": ["..............oo", "............oobo", "...o.......obbbo", "...lo.....obbbbo",
+                    "....lo...obbebbo", ".o...lo.obbbbbbo", ".lo...obbbbbbbbo", "..lo.obbbbbbbebo",
+                    ".olbbbbeebbbbbbo", "olbbbbbeebbbbbbo", "obbbbbbbbbbbbbo.", "obbbbbbbbbboooo.",
+                    ".obbbbbbbbbo....", "..ooooooooo....."],
+    "stegosaurus": [".......ooooo....", "....oobbbllbo...", "..oobbbbbbeebo..", ".obbbbbbbbeebo..",
+                    "obbbbbbbbbbbbo..", "ottttbbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "ankylosaurus": ["..o.o.o.o.o.o...", ".olololololollo.", ".obbbbbbbbbbbbbo", ".obbbbbbbbbeebbl",
+                     "obbbbbbbbbbeebbo", "obbbbbbbbbbbbbbl", "oobbbbbbbbbbbbbo", ".otttbbbbbbbbbo.",
+                     "..obbbbbbbbbbo..", "...oooooooooo..."],
+    "brachiosaurus": ["......oooo......", ".....obllbo.....", ".....obeebo.....", "....obbeebbo....",
+                      "...obbbbbbbbo...", "..obbbbbbbeebo..", ".obbbbbbbbeebo..", "obbbbbbbbbbbbo..",
+                      "otttttbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "parasaurolophus": ["..........ooooo.", "........oollllo.", "......oollbboo..", ".....olbbboo....",
+                        "....obbbbo......", "...obbbbeebo....", "..obbbbbeebo....", ".obbbbbbbbbbo...",
+                        "obbbbbbbbbbbo...", "oobbbbbbbbbo....", ".obbbbbbbbo.....", "..oooooooo......"],
+    "pachycephalosaurus": ["........oooooo..", "......ollllllloo", ".....olllbbbbllo", "....olbbbbbbbbbo",
+                           "..oobbbbbbeebbbo", ".obbbbbbbbeebbo.", "obbbbbbbbbbbbblo", "otttbbbbbbbbbo.l",
+                           ".obbbbbbbbbbo...", "..oooooooooo...."],
+    "gallimimus": [".........oooo...", ".......oobllbo..", ".....oobbbeeebo.", "...oobbbbbeeebo.",
+                   ".oobbbbbbbbbbbo.", "obbbbbbbbbbbbo..", ".oobbbbbbbbbo...", "...ooooooooo...."],
+    "maiasaura": ["..........o.....", ".........olo....", "........obbo....", "......oobbbboo..",
+                  "....oobbbbbeebo.", "..oobbbbbbbeebo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbbo.",
+                  "oobbbbbbbbbbbo..", ".obbbbbbbbbbo...", "..oooooooooo...."],
+    "pteranodon": [".............oo.", "...........oolo.", "..........olbo..", "........oobbo...",
+                   "......oobeebbo..", "..ooooobbeebbo..", "oobbbbbbbbbbo...", "..oooobbbbbo....",
+                   "......ooooo....."],
+    "quetzalcoatlus": ["............oo..", "..........oolo..", "........oobbbo..", "......oobeebbo..",
+                       "..ooooobbeebbo..", "oobbbbbbbbbbbo..", "..oooooobbbbo...", "........oooo...."],
+    "hatzegopteryx": ["...........ooo..", ".........oolllo.", ".......oobbbbbo.", ".....oobbbeebbo.",
+                      "...oobbbbbeebbo.", ".oobbbbbbbbbbbo.", "obbbbbbbbbbbbo..", ".ooobbbbbbbbo...",
+                      "....oooooooo...."],
+    "mosasaurus": ["........ooooo...", ".....oooblllbo..", "..oobbbbbbbeebo.", ".obbbbbbbbbeebbo",
+                   "obbbbbbbbbbbbbbo", "ottttttttttbbbbo", ".t.t.t.t.t.tbbbo", "obbbbbbbbbbbbbo.",
+                   ".ooooooooooooo.."],
+}
+SKULL_ERA_ROCK = {"brachiosaurus": "shale", "stegosaurus": "shale", "dilophosaurus": "shale",
+                  "compsognathus": "shale"}  # Jurassic beds; the Cretaceous skulls come out of limestone
+FOSSIL_BONE = ["#4a3a2a", "#6b5640", "#8a7256", "#a28a6a", "#b8a27f"]  # mineralised bone: brown-grey, not white
+
+
+def skull_rows(sid):
+    rows = SKULLS.get(sid, SKULLS["velociraptor"])
+    rows = [r.ljust(N, ".")[:N] for r in rows]
+    top = (N - len(rows)) // 2 + 1
+    return ["." * N] * top + rows + ["." * N] * (N - top - len(rows))
+
+
+def skull_sprite(sid, bone=BONE_RAMP, outline="#3a3226", hole="#2a241c", base=None):
+    """The skull drawn over base (or on transparency): bone shaded with noise, lit at the top."""
+    cv = copy(base) if base else Canvas()
+    n = Noise("skull" + sid, periods=(4, 8), weights=(0.6, 0.4))
+    for y, row in enumerate(skull_rows(sid)):
+        for x, ch in enumerate(row):
+            if ch == "o":
+                cv.set(x, y, hexc(outline))
+            elif ch == "e":
+                cv.set(x, y, hexc(hole))
+            elif ch == "t":
+                cv.set(x, y, ramp(bone, 0.95))
+            elif ch in "bl":
+                cv.set(x, y, ramp(bone, (0.55 if ch == "b" else 0.85) - 0.03 * y / 2 + 0.25 * (n(x, y) - 0.5)))
+    return cv
+
+
+def skull_fossil(sid):
+    """Skull still in the rock: mineralised brown bone, a dark groove where the matrix was dug out around it."""
+    rock = rock_base(SKULL_ERA_ROCK.get(sid, "limestone"))
+    rows = skull_rows(sid)
+    cv = copy(rock)
+    for y in range(N):
+        for x in range(N):
+            if rows[y][x] == "." and any(0 <= y + dy < N and 0 <= x + dx < N and rows[y + dy][x + dx] != "."
+                                         for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                cv.set(x, y, shade(rock.get(x, y), 0.7))
+    return skull_sprite(sid, FOSSIL_BONE, "#2e251b", "#241d16", base=cv)
+
+
+def species_ramp(sid):
+    """Five colours of the species' hide, from dark to light, read from its entity texture (male)."""
+    path = os.path.join(ENTITY_TEX, f"{sid}_male.png")
+    if not os.path.exists(path):  # species without its texture yet: a neutral brown hide
+        return HIDE_RAMP
+    im = Image.open(path).convert("RGBA")
+    data = im.load()
+    px = [data[x, y][:3] for y in range(im.size[1]) for x in range(im.size[0]) if data[x, y][3] > 200]
+    px.sort(key=lambda c: 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2])
+    return ["#%02x%02x%02x" % px[int(len(px) * q)] for q in (0.08, 0.25, 0.45, 0.65, 0.85)]
+
+
+HIDE_PATTERN = {  # rug pattern of each species (scales by default)
+    "spinosaurus": "stripes", "dilophosaurus": "stripes", "parasaurolophus": "stripes",
+    "velociraptor": "feathers", "compsognathus": "feathers", "gallimimus": "feathers",
+    "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots",
+    "ankylosaurus": "osteoderms", "triceratops": "big_scales", "mosasaurus": "fine_scales",
+    "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
+}
+
+
+def hide_pattern(seed, colors, pattern):
+    """Tileable skin: scales (Voronoi), osteoderms (big raised cells), stripes, spots, feathers or fuzz."""
+    n = Noise(seed, periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
+    if pattern in ("scales", "big_scales", "fine_scales", "osteoderms"):
+        count = {"scales": 22, "big_scales": 12, "fine_scales": 40, "osteoderms": 8}[pattern]
+        cells = Cells(seed, count)
+        rnd = random.Random(seed)
+        tone = [rnd.uniform(-0.12, 0.12) for _ in cells.seeds]
+
+        def px(x, y):
+            e = cells.edge[y][x]
+            if e < (0.9 if pattern != "osteoderms" else 1.2):
+                return ramp(colors, 0.12)
+            lit = 0.08 if pattern == "osteoderms" and e > 2.4 else 0.0
+            return ramp(colors, 0.5 + tone[cells.at(x, y)] + 0.3 * (n(x, y) - 0.5) + lit)
+        return paint(px)
+    if pattern == "stripes":
+        return paint(lambda x, y: ramp(colors, 0.62 + 0.25 * (n(x, y) - 0.5)
+                                        - (0.38 if (x + round(2 * math.sin(y / N * 2 * math.pi))) % 8 < 2 else 0)))
+    if pattern == "spots":
+        cells = Cells(seed, 6)
+        return paint(lambda x, y: ramp(colors, 0.62 + 0.25 * (n(x, y) - 0.5)
+                                        - (0.4 if cells.edge[y][x] > 3.2 else 0)))
+    if pattern == "feathers":  # overlapping contour feathers: long cells, shadow under each, light quill
+        cells = Cells(seed, 14, sx=1.5, sy=0.75)
+        rnd = random.Random(seed)
+        tone = [rnd.uniform(-0.1, 0.1) for _ in cells.seeds]
+
+        def px(x, y):
+            o = cells.at(x, y)
+            if cells.at(x, y + 1) != o:
+                return ramp(colors, 0.1)
+            if cells.at(x - 1, y) != o:
+                return ramp(colors, 0.3 + tone[o])
+            sx, sy = cells.seeds[o]
+            quill = abs(((x + 0.5 - sx + N / 2) % N) - N / 2) < 0.5
+            return ramp(colors, 0.55 + tone[o] + (0.2 if quill else 0) + 0.2 * (n(x, y) - 0.5))
+        return paint(px)
+    # fuzz (pterosaur pycnofibres): fine noise, soft
+    m = Noise(seed + "f", periods=(8, 16), weights=(0.5, 0.5))
+    return paint(lambda x, y: ramp(colors, 0.45 + 0.35 * (m(x, y) - 0.5) + 0.25 * (n(x, y) - 0.5)))
+
+
+def framed(cv, sides=True, top=True):
+    """Stretched on a stick frame and laced to it: posts at the sides (and the rails at top and bottom)."""
+    out = copy(cv)
+    for i in range(N):
+        if sides:
+            out.set(0, i, ramp(STICK_RAMP, 0.7)); out.set(15, i, ramp(STICK_RAMP, 0.3))
+        if top:
+            out.set(i, 0, ramp(STICK_RAMP, 0.8)); out.set(i, 15, ramp(STICK_RAMP, 0.25))
+    for i in range(2, N - 1, 3):
+        if sides:
+            out.set(1, i, hexc("#d8c9a4")); out.set(14, i, hexc("#d8c9a4"))
+        if top:
+            out.set(i, 1, hexc("#d8c9a4")); out.set(i, 14, hexc("#d8c9a4"))
+    return out
+
+
+RAWHIDE_RAMP = ["#8a7356", "#a68c6a", "#bba07c", "#cbb28e", "#d8c3a0"]
+TANNED_RAMP = ["#3a2414", "#4f321d", "#644128", "#775034", "#8a6142"]
+GENERIC_HIDES = {  # hide id: (colour source: ramp or species, pattern)
+    "rawhide": (RAWHIDE_RAMP, "plain"), "tanned_hide": (TANNED_RAMP, "plain"),
+    "scaled_hide": ("ankylosaurus", "osteoderms"), "feathered_hide": ("velociraptor", "feathers"),
+    "fuzzy_hide": ("pteranodon", "fuzz"),
+}
+
+
+def generic_hide(hid):
+    src, pattern = GENERIC_HIDES[hid]
+    colors = species_ramp(src) if isinstance(src, str) else src
+    if pattern == "plain":
+        n = Noise(hid, periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
+        rnd = random.Random(hid)
+        cv = paint(lambda x, y: ramp(colors, contrast(n(x, y), 1.2)))
+        x, y = rnd.randrange(N), 1
+        for _ in range(12):  # a vein of the animal
+            cv.set(x % N, y % N, shade(cv.get(x % N, y % N), 0.85))
+            x += rnd.choice((-1, 0, 1)); y += 1
+        return cv
+    return hide_pattern(hid, colors, pattern)
+
+
+def ossuary():
+    """Ossuary wall: skulls and long bones stacked in rows in dark niches, like a charnel wall."""
+    cv = paint(lambda x, y: hexc("#2a241c"))
+    n = Noise("ossuary", periods=(4, 8), weights=(0.6, 0.4))
+    skull = ["..ooo..", ".obbbo.", "obebebo", "obbbbbo", ".obtbo.", "..ooo.."]
+    for oy, ox in ((1, 0), (1, 8), (9, 4), (9, 12)):  # two skulls per row, offset like bricks
+        for y, row in enumerate(skull):
+            for x, ch in enumerate(row):
+                c = {"o": hexc("#5a5040"), "e": hexc("#1a1612"), "t": ramp(BONE_RAMP, 0.9),
+                     "b": ramp(BONE_RAMP, 0.45 + 0.4 * (n((ox + x) % N, oy + y) - 0.3))}.get(ch)
+                cv.set((ox + x) % N, oy + y, c)
+    for y0 in (7, 15):  # long bones lying between the rows
+        for x in range(N):
+            cv.set(x, y0, ramp(BONE_RAMP, 0.55 + 0.2 * (n(x, y0) - 0.5)))
+            if x % 5 == 0:  # knuckle ends
+                cv.set(x, y0, ramp(BONE_RAMP, 0.9))
+    return cv
+
+
+def rib_bone():
+    """Rib bone (arch): smooth, curving grain along the bone, darker at the edges."""
+    n = Noise("rib", periods=(2, 8), weights=(0.5, 0.5), stretch=(0.5, 2.0))
+    return paint(lambda x, y: ramp(BONE_RAMP, 0.25 + 0.55 * (1 - abs(x % 8 - 3.5) / 4.5) + 0.2 * (n(x, y) - 0.5)))
+
+
+def tooth_totem(top):
+    """A post wrapped in rings of big teeth tied with sinew; the top is the post's cut end."""
+    if top:
+        return paint(lambda x, y: ramp(STICK_RAMP, 0.35 + 0.4 * (((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5 % 3 < 1)))
+    cv = paint(lambda x, y: ramp(STICK_RAMP, 0.3 + 0.3 * ((x * 7 + y) % 5 == 0)))
+    for y0 in (0, 8):
+        for x0 in range(0, N, 4):  # a row of teeth pointing down
+            for dy, w in enumerate((3, 3, 2, 1, 1)):
+                for dx in range(w):
+                    cv.set(x0 + dx + (3 - w) // 2, y0 + 1 + dy, ramp(BONE_RAMP, 0.9 - 0.1 * dy - 0.15 * (dx == w - 1)))
+        for x in range(N):
+            cv.set(x, y0, mixc(hexc("#5e3a20"), hexc("#8a5a34"), (x % 3) / 3))
+    return cv
+
+
+def bone_pile():
+    """Loose bones on bare earth: long bones with knobbed ends, each with its shadow."""
+    rnd = random.Random("bonepile")
+    n = Noise("bonepile", periods=(4, 8), weights=(0.6, 0.4))
+    cv = paint(lambda x, y: ramp(EARTH_RAMP, 0.3 + 0.4 * n(x, y)))
+    for x, y, horizontal, length in ((1, 2, True, 9), (9, 6, False, 8), (2, 10, True, 6), (12, 1, False, 4),
+                                     (5, 13, True, 8)):
+        for i in range(length):
+            px, py = (x + i, y) if horizontal else (x, y + i)
+            cv.set(px % N, (py + 1) % N if horizontal else py % N, ramp(EARTH_RAMP, 0.05)) if horizontal else \
+                cv.set((px + 1) % N, py % N, ramp(EARTH_RAMP, 0.05))
+            cv.set(px % N, py % N, ramp(BONE_RAMP, 0.55 + 0.3 * (rnd.random() < 0.3)))
+        for end in (0, length - 1):  # knobs
+            px, py = (x + end, y) if horizontal else (x, y + end)
+            for d in (-1, 1):
+                q = (px % N, (py + d) % N) if horizontal else ((px + d) % N, py % N)
+                cv.set(*q, ramp(BONE_RAMP, 0.8 if d < 0 else 0.45))
+    return cv
+
+
+FEATHER_RAMP = ["#2a2420", "#4a3a2c", "#6e5a42", "#9c8466", "#c8b496"]
+
+
+def feather_bundle(top):
+    """Long feathers bundled upright: a light quill in each, barbs slanting down from it, sinew bands."""
+    if top:  # the cut quill ends inside the bundle
+        n = Noise("feathertop", periods=(4, 8), weights=(0.5, 0.5))
+        return paint(lambda x, y: ramp(FEATHER_RAMP, 0.2 + 0.4 * n(x, y) + (0.35 if (x % 4, y % 4) == (2, 1) else 0)))
+    n = Noise("feathers", periods=(2, 8), weights=(0.4, 0.6))
+
+    def px(x, y):
+        if y in (4, 12):
+            return mixc(hexc("#5e3a20"), hexc("#8a5a34"), (x % 3) / 3)
+        cx = x % 4
+        if cx == 2:
+            return ramp(FEATHER_RAMP, 0.9)
+        barb = (y + abs(cx - 2)) % 2 == 0
+        return ramp(FEATHER_RAMP, 0.35 + (0.15 if barb else 0) - (0.2 if cx == 0 else 0) + 0.3 * (n(x, y) - 0.5))
+    return paint(px)
+
+
+def phase6_textures():
+    out = {}
+    for sid in SPECIES:
+        out[f"{sid}_hide_rug"] = hide_pattern(sid, species_ramp(sid), HIDE_PATTERN.get(sid, "scales"))
+        out[f"{sid}_skull_trophy"] = skull_sprite(sid)
+        out[f"{sid}_skull_fossil"] = skull_fossil(sid)
+    for hid in GENERIC_HIDES:
+        out[f"{hid}_frame"] = framed(generic_hide(hid))
+        if hid != "rawhide":  # the raw hide panel is the hide_screen of batch 1
+            out[f"{hid}_panel"] = framed(generic_hide(hid), top=False)
+    out["ossuary_wall"] = ossuary()
+    out["rib_bone"] = rib_bone()
+    out["tooth_totem"] = tooth_totem(False)
+    out["tooth_totem_top"] = tooth_totem(True)
+    out["bone_pile"] = bone_pile()
+    out["feather_bundle"] = feather_bundle(False)
+    out["feather_bundle_top"] = feather_bundle(True)
+    return out
+
+
+# ------------------------------------------------------------------ utilities (phase 7)
+FLAME = ["#ffffff", "#fff3a0", "#ffd24a", "#f39a1e"]  # hot centre -> outer flame, like the vanilla torch
+
+
+def torch_sprite(kind):
+    """Like the vanilla torch sprite (stick in columns 7-8, rows 6-15, flame on rows 6-7), each in its material:
+    a bone wrapped in fat-soaked hide, a stick with a lump of burning resin, or a bundle of reeds tied with sinew."""
+    cv = Canvas()
+    for y in range(8, 16):
+        for x in (7, 8):
+            if kind == "bone":
+                c = ramp(BONE_RAMP, 0.75 if x == 7 else 0.4)
+            elif kind == "resin":
+                c = ramp(STICK_RAMP, 0.8 if x == 7 else 0.45)
+            else:
+                c = ramp(THATCH_RAMP, (0.85 if x == 7 else 0.5) - (0.35 if y in (11, 14) else 0))
+            cv.set(x, y, c)
+    if kind == "bone":  # fat-soaked wrapping below the flame, knob of the bone at the foot
+        for x in (7, 8):
+            cv.set(x, 8, hexc("#3a2a1a")); cv.set(x, 9, hexc("#5a3e24"))
+            cv.set(x, 15, ramp(BONE_RAMP, 0.9))
+    elif kind == "resin":  # amber resin lump
+        cv.set(7, 8, hexc("#e0a030")); cv.set(8, 8, hexc("#b0701c")); cv.set(7, 9, hexc("#c4841f"))
+        cv.set(8, 9, hexc("#8a5214"))
+    cv.set(7, 6, hexc(FLAME[1])); cv.set(8, 6, hexc(FLAME[2]))
+    cv.set(7, 7, hexc(FLAME[0])); cv.set(8, 7, hexc(FLAME[1]))
+    return cv
+
+
+def small_flame():
+    """Flame of the fat lamp (a tiny box): bright core, orange edge."""
+    return paint(lambda x, y: hexc(FLAME[min(3, int(abs(x - 7.5) / 3 + (15 - y) / 6))]))
+
+
+def fat_top():
+    """Rendered fat in a stone bowl: soft, waxy, a dark burnt ring around the wick."""
+    n = Noise("fat", periods=(2, 4), weights=(0.6, 0.4))
+    return paint(lambda x, y: ramp(["#8a7a50", "#a8966a", "#c4b384", "#d8c99c"], 0.4 + 0.5 * n(x, y))
+                 if abs(x - 7.5) + abs(y - 7.5) > 2 else hexc("#3a2e1c"))
+
+
+def ash():
+    n = Noise("ash", periods=(4, 8), weights=(0.5, 0.5))
+    rnd = random.Random("ash")
+    cv = paint(lambda x, y: ramp(["#2a2622", "#3e3934", "#57514a", "#76706a"], n(x, y)))
+    for _ in range(6):  # embers
+        cv.set(rnd.randrange(N), rnd.randrange(N), hexc(rnd.choice(("#c4501a", "#e07a24", "#8a2e10"))))
+    return cv
+
+
+def dried_meat():
+    """Strips of dried meat: dark red with fat streaks and a crust."""
+    n = Noise("jerky", periods=(2, 8), weights=(0.5, 0.5), stretch=(0.5, 2.0))
+    return paint(lambda x, y: ramp(["#3a1210", "#5a1c16", "#74281e", "#8e3a2a", "#c49a7a"],
+                                   0.35 + 0.4 * n(x, y) + (0.4 if (x + y // 5) % 6 == 0 else 0)))
+
+
+CLAY_RAW = ["#6e5a48", "#86705c", "#9c8670", "#b09a84", "#c2ad97"]
+CLAY_FIRED = ["#5e2c18", "#7a3a20", "#96502e", "#ae663e", "#c27c50"]
+
+
+def clay_pot(fired, top=False):
+    """Hand-built pot: coil lines around it; the fired one is red-brown with soot clouds from the open fire."""
+    colors = CLAY_FIRED if fired else CLAY_RAW
+    n = Noise("pot" + str(fired), periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
+    if top:  # rim around the dark inside (the rim box shows only the middle 8x8 of this texture)
+        return paint(lambda x, y: ramp(colors, 0.6 + 0.1 * (y < 8)) if max(abs(x - 7.5), abs(y - 7.5)) > 2.5
+                     else hexc("#1e1712"))
+    soot = Noise("soot", periods=(2, 4), weights=(0.6, 0.4))
+
+    def px(x, y):
+        c = ramp(colors, 0.45 + 0.3 * (n(x, y) - 0.5) - (0.12 if y % 3 == 0 else 0))
+        if fired and soot(x, y) > 0.68:
+            c = mixc(c, hexc("#1e1712"), 0.35)
+        return c
+    return paint(px)
+
+
+def basin_water():
+    n = Noise("water", periods=(2, 4), weights=(0.6, 0.4), stretch=(1.5, 1.0))
+    return paint(lambda x, y: ramp(["#1e3a5a", "#28507a", "#346694", "#4a80aa"], 0.4 + 0.5 * n(x, y)))
+
+
+def hide_bedroll():
+    """Furred hide bedroll: thick hair in short strokes, brown and tan."""
+    n = Noise("bedroll", periods=(4, 16), weights=(0.5, 0.5), stretch=(1.0, 2.0))
+    return paint(lambda x, y: ramp(["#3a2618", "#55392a", "#70503a", "#8a6a4e", "#a6866a"],
+                                   0.3 + 0.6 * n(x, y) - (0.15 if (x * 3 + y) % 5 == 0 else 0)))
+
+
+def hammock_cloth():
+    """Bark-cloth hammock: beaten fibre, faint stripes of the weave, darker cords along the edges."""
+    n = Noise("hammock", periods=(2, 8), weights=(0.5, 0.5), stretch=(2.0, 0.5))
+    return paint(lambda x, y: ramp(["#6a5638", "#86704c", "#a08a62", "#b8a278"],
+                                   (0.2 if x in (0, 15) else 0.55 + 0.3 * (n(x, y) - 0.5) - 0.1 * (x % 3 == 0))))
+
+
+def stakes(bone):
+    """Cross sprite: three sharpened stakes leaning out (wood, fire-hardened tips) or long bones."""
+    cv = Canvas()
+    for x0, lean, top in ((3, -1, 2), (8, 0, 0), (12, 1, 3)):
+        for y in range(top, 16):
+            x = x0 + (lean * (15 - y)) // 6
+            if bone:
+                c = ramp(BONE_RAMP, 0.85 - 0.3 * (y - top < 2))
+            else:
+                c = ramp(STICK_RAMP, 0.7) if y - top > 2 else hexc("#1e1610")
+            cv.set(x, y, c)
+            if y - top > 1:
+                cv.set(x + 1, y, shade(c, 0.75))
+    return cv
+
+
+def pit_cover():
+    """Brush laid over a pit: leaves and twigs on crossed sticks, the dark hole showing through gaps."""
+    n = Noise("pit", periods=(4, 8), weights=(0.5, 0.5))
+    rnd = random.Random("pit")
+    cv = paint(lambda x, y: ramp(OLIVE, 0.2 + 0.7 * n(x, y)) if n(x, y) > 0.28 else hexc("#120e0a"))
+    for _ in range(5):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for i in range(rnd.randint(4, 8)):
+            cv.set((x + i) % N, (y + i // 2) % N, ramp(STICK_RAMP, 0.6))
+    return cv
+
+
+def menhir(top):
+    """Weathered standing stone: grey gneiss-like grain, patches of yellow lichen, smoothed by rain."""
+    n = Noise("menhir" + str(top), periods=(2, 4, 8), weights=(0.5, 0.3, 0.2), stretch=(0.6, 1.4))
+    lic = Noise("menhirlichen", periods=(4, 8), weights=(0.5, 0.5))
+    return paint(lambda x, y: ramp(["#8a8a6a", "#a8a47a", "#c4bc84"], lic(x, y))
+                 if lic(x, y) > 0.76 else ramp(["#4a4a4c", "#5e5e60", "#727274", "#88888a", "#9c9c9c"], n(x, y)))
+
+
+TOTEM_FACES = {  # carved face on the front of a totem post: d deep cut, l lit edge, p red ochre paint
+    "raptor": ["................", "..dd........dd..", "..dld......dld..", "...dlddddddld...", "....dppppppd....",
+               "...dpdllllldpd..", "...dpl.dd.lpd...", "....ddd..ddd....", ".....dllllld....", "....dlpppppld...",
+               "...dlddddddldd..", "...dl.d.d.d.ld..", "....dllllllld...", ".....ddddddd....", "................",
+               "................"],
+    "rex": ["................", ".ddddddddddddd..", ".dllllllllllld..", ".dlddlllllddld..", ".dldpdllldpdld..",
+            ".dlddlllllddld..", ".dlllllllllll d.", ".ddddddddddddd..", ".dld.d.d.d.dld..", ".dlddddddddd.d..",
+            ".dl.d.d.d.d.ld..", ".dlllllllllld...", ".dppppppppppd...", ".ddddddddddddd..", "................",
+            "................"],
+    "pterosaur": ["......dd........", ".....dlld.......", "....dlppld......", "...dlllllld.....", "..dlldllldld....",
+                  ".dllldppdllld...", "dlllllddlllllddd", ".ddllllllllllll.", "...ddddddddddd..", "....dl....ld....",
+                  "...dlld..dlld...", "..dlpld..dlpld..", "..ddddd..ddddd..", "................", "................",
+                  "................"],
+}
+
+
+def totem(face):
+    """A carved post: bark-free wood with vertical grain and, on the front, the carved and ochre-painted face."""
+    n = Noise("totem", periods=(2, 8), weights=(0.4, 0.6), stretch=(2.0, 0.5))
+    cv = paint(lambda x, y: ramp(["#4a3220", "#5e4029", "#765236", "#8c6444", "#a27852"], 0.3 + 0.5 * n(x, y)))
+    if face:
+        for y, row in enumerate(TOTEM_FACES[face]):
+            for x, ch in enumerate(row):
+                if ch == "d":
+                    cv.set(x, y, hexc("#2a1c12"))
+                elif ch == "l":
+                    cv.set(x, y, shade(cv.get(x, y), 1.25))
+                elif ch == "p":
+                    cv.set(x, y, hexc("#8e3420"))
+    return cv
+
+
+def totem_top():
+    return paint(lambda x, y: ramp(["#4a3220", "#765236", "#a27852"],
+                                   0.3 + 0.5 * ((((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5) % 3 < 1.2)))
+
+
+def drum(part):
+    """Drum: a hollowed log laced with sinew from rim to rim; the head is stretched rawhide."""
+    if part == "head":
+        n = Noise("drumhead", periods=(2, 4), weights=(0.6, 0.4))
+        return paint(lambda x, y: ramp(RAWHIDE_RAMP, 0.4 + 0.5 * n(x, y)) if max(abs(x - 7.5), abs(y - 7.5)) < 7
+                     else ramp(STICK_RAMP, 0.4))
+    n = Noise("drumside", periods=(2, 8), weights=(0.4, 0.6), stretch=(0.5, 2.0))
+
+    def px(x, y):
+        if y < 2:
+            return ramp(RAWHIDE_RAMP, 0.5)
+        lace = (x + y) % 6 == 0 or (x - y) % 6 == 0
+        return hexc("#d8c9a4") if lace and y < 12 else ramp(STICK_RAMP, 0.3 + 0.5 * n(x, y))
+    return paint(px)
+
+
+def basket_lid():
+    """Woven lid seen from above: a spiral of coiled reed."""
+    return paint(lambda x, y: ramp(WICKER_RAMP, 0.3 + 0.6 * (((math.atan2(y - 7.5, x - 7.5) / math.pi + 1) * 2
+                                                             + (((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5) / 2) % 1)))
+
+
+def firewood(end):
+    """Split firewood stacked crosswise: the ends of the pieces (rings and bark), or the long sides."""
+    if end:
+        cells = Cells("firewood", 9)
+        return paint(lambda x, y: ramp(STICK_RAMP, 0.1) if cells.border(x, y, 0.9)
+                     else ramp(["#8a6438", "#a47a48", "#bc9058"], 0.3 + 0.5 * ((cells.edge[y][x] % 2) > 1)))
+    n = Noise("firewoodside", periods=(2, 8), weights=(0.4, 0.6), stretch=(2.0, 0.5))
+    return paint(lambda x, y: ramp(STICK_RAMP, 0.05) if y % 4 == 3
+                 else ramp(["#4a3220", "#6a4a2c", "#8a6438", "#a47a48"], 0.3 + 0.5 * n(x, y)))
+
+
+def phase7_textures():
+    out = {f"{k}_torch": torch_sprite(k) for k in ("bone", "resin", "reed")}
+    out.update({
+        "lamp_flame": small_flame(), "fat_lamp_top": fat_top(), "hearth_ash": ash(), "dried_meat": dried_meat(),
+        "raw_clay_pot": clay_pot(False), "raw_clay_pot_top": clay_pot(False, True),
+        "fired_clay_pot": clay_pot(True), "fired_clay_pot_top": clay_pot(True, True),
+        "basin_water": basin_water(), "hide_bedroll": hide_bedroll(), "hammock_cloth": hammock_cloth(),
+        "sharpened_stakes": stakes(False), "bone_spikes": stakes(True), "pit_trap_cover": pit_cover(),
+        "menhir": menhir(False), "menhir_top": menhir(True), "totem_side": totem(None), "totem_top": totem_top(),
+        "drum_head": drum("head"), "drum_side": drum("side"), "wicker_basket_top": basket_lid(),
+        "firewood_pile": firewood(False), "firewood_pile_end": firewood(True),
+    })
+    for face in TOTEM_FACES:
+        out[f"{face}_totem_front"] = totem(face)
+    return out
+
+
 OTHER = {
     "thatch": thatch, "thatch_top": thatch_top, "straw_mat": straw_mat, "wattle_and_daub": wattle_daub,
     "bone_fence": bone_fence,
@@ -1215,6 +1737,8 @@ def build():
         out.update(wood_textures(tid))
     out.update(plant_textures())
     out.update(phase5_textures())
+    out.update(phase6_textures())
+    out.update(phase7_textures())
     for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
     for tid in WOODS:

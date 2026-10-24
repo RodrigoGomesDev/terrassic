@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "side": "terrassic:block/firewood_pile",
+    "end": "terrassic:block/firewood_pile_end"
+  }
+}

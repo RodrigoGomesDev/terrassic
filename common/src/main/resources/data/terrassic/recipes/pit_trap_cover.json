@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "LSL"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:leaves"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "terrassic:pit_trap_cover",
+    "count": 2
+  }
+}

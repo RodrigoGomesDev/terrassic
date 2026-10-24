@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/quern_stone"
+    },
+    "facing=east": {
+      "model": "terrassic:block/quern_stone",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/quern_stone",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/quern_stone",
+      "y": 270
+    }
+  }
+}

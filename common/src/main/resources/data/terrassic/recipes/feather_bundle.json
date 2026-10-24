@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "FFF",
+    "FFF",
+    "FFF"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:feather"
+    }
+  },
+  "result": {
+    "item": "terrassic:feather_bundle",
+    "count": 1
+  }
+}

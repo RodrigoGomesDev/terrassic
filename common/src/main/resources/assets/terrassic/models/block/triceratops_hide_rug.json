@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/carpet",
+  "textures": {
+    "wool": "terrassic:block/triceratops_hide_rug"
+  }
+}

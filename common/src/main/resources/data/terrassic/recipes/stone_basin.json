@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "R R",
+    "RRR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:limestone"
+    }
+  },
+  "result": {
+    "item": "terrassic:stone_basin",
+    "count": 1
+  }
+}

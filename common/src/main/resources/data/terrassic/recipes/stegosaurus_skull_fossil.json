@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:stegosaurus_fossil"
+    },
+    {
+      "item": "terrassic:shale"
+    }
+  ],
+  "result": {
+    "item": "terrassic:stegosaurus_skull_fossil",
+    "count": 1
+  }
+}

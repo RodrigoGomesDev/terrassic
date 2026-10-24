@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/hanging_basket"
+    },
+    "facing=east": {
+      "model": "terrassic:block/hanging_basket",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/hanging_basket",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/hanging_basket",
+      "y": 270
+    }
+  }
+}

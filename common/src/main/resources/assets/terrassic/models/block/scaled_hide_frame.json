@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "terrassic:block/scaled_hide_frame"
+  }
+}

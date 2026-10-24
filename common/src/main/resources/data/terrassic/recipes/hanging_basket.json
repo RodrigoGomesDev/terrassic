@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "T",
+    "W",
+    "F"
+  ],
+  "key": {
+    "T": {
+      "item": "minecraft:string"
+    },
+    "W": {
+      "item": "terrassic:wicker_block"
+    },
+    "F": {
+      "item": "terrassic:bracken"
+    }
+  },
+  "result": {
+    "item": "terrassic:hanging_basket",
+    "count": 1
+  }
+}

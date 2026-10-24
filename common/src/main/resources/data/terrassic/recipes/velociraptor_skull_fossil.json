@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:velociraptor_fossil"
+    },
+    {
+      "item": "terrassic:limestone"
+    }
+  ],
+  "result": {
+    "item": "terrassic:velociraptor_skull_fossil",
+    "count": 1
+  }
+}

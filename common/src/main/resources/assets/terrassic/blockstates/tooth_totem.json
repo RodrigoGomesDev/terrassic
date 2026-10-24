@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "terrassic:block/tooth_totem"
+    },
+    "axis=z": {
+      "model": "terrassic:block/tooth_totem_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "terrassic:block/tooth_totem_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "t0": "terrassic:block/stripped_araucaria_log",
+    "t1": "terrassic:block/araucaria_log_top",
+    "t2": "terrassic:block/hide_bedroll",
+    "particle": "terrassic:block/stripped_araucaria_log"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t0"
+        },
+        "south": {
+          "texture": "#t0"
+        },
+        "east": {
+          "texture": "#t0"
+        },
+        "west": {
+          "texture": "#t0"
+        },
+        "up": {
+          "texture": "#t1"
+        },
+        "down": {
+          "texture": "#t1"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        3,
+        1
+      ],
+      "to": [
+        15,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t2"
+        },
+        "south": {
+          "texture": "#t2"
+        },
+        "east": {
+          "texture": "#t2"
+        },
+        "west": {
+          "texture": "#t2"
+        },
+        "up": {
+          "texture": "#t2"
+        },
+        "down": {
+          "texture": "#t2"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        5,
+        2
+      ],
+      "to": [
+        14,
+        7,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t2"
+        },
+        "south": {
+          "texture": "#t2"
+        },
+        "east": {
+          "texture": "#t2"
+        },
+        "west": {
+          "texture": "#t2"
+        },
+        "up": {
+          "texture": "#t2"
+        },
+        "down": {
+          "texture": "#t2"
+        }
+      }
+    }
+  ]
+}

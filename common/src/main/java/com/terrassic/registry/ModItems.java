@@ -70,6 +70,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MAJUNGASAURUS_SPAWN_EGG = egg("majungasaurus", ModEntities.MAJUNGASAURUS);
     public static final RegistrySupplier<Item> DAKOTARAPTOR_SPAWN_EGG = egg("dakotaraptor", ModEntities.DAKOTARAPTOR);
     public static final RegistrySupplier<Item> TROODON_SPAWN_EGG = egg("troodon", ModEntities.TROODON);
+    public static final RegistrySupplier<Item> OVIRAPTOR_SPAWN_EGG = egg("oviraptor", ModEntities.OVIRAPTOR);
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_SPAWN_EGG = egg("parasaurolophus", ModEntities.PARASAUROLOPHUS);
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_SPAWN_EGG = egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS);
     public static final RegistrySupplier<Item> THESCELOSAURUS_SPAWN_EGG = egg("thescelosaurus", ModEntities.THESCELOSAURUS);
@@ -123,6 +124,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MAJUNGASAURUS_HIDE = hide("majungasaurus");
     public static final RegistrySupplier<Item> DAKOTARAPTOR_HIDE = hide("dakotaraptor");
     public static final RegistrySupplier<Item> TROODON_HIDE = hide("troodon");
+    public static final RegistrySupplier<Item> OVIRAPTOR_HIDE = hide("oviraptor");
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_HIDE = hide("parasaurolophus");
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_HIDE = hide("pachycephalosaurus");
     public static final RegistrySupplier<Item> THESCELOSAURUS_HIDE = hide("thescelosaurus");
@@ -225,9 +227,20 @@ public final class ModItems {
     // ---- primitive building block items (own creative tab)
     static {
         java.util.Set<String> onWater = java.util.Set.of(BuildingBlocks.ON_WATER);
+        Map<String, String> wallTorches = new java.util.HashMap<>();  // torch -> wall torch
+        for (String[] pair : BuildingBlocks.WALL_TORCHES) {
+            wallTorches.put(pair[0], pair[1]);
+        }
         for (Map.Entry<String, RegistrySupplier<Block>> e : ModBlocks.BUILDING.entrySet()) {
             RegistrySupplier<Block> block = e.getValue();
-            if (onWater.contains(e.getKey())) {
+            if (wallTorches.containsValue(e.getKey())) {
+                continue;  // placed by the torch's item
+            }
+            if (wallTorches.containsKey(e.getKey())) {
+                RegistrySupplier<Block> wall = ModBlocks.BUILDING.get(wallTorches.get(e.getKey()));
+                ITEMS.register(e.getKey(), () -> new net.minecraft.world.item.StandingAndWallBlockItem(block.get(),
+                        wall.get(), new Item.Properties().arch$tab(ModTabs.BUILDING), net.minecraft.core.Direction.DOWN));
+            } else if (onWater.contains(e.getKey())) {
                 ITEMS.register(e.getKey(), () -> new net.minecraft.world.item.PlaceOnWaterBlockItem(block.get(),
                         new Item.Properties().arch$tab(ModTabs.BUILDING)));
             } else {

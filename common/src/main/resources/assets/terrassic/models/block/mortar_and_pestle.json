@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "t0": "terrassic:block/limestone",
+    "t1": "terrassic:block/hearth_ash",
+    "t2": "terrassic:block/stripped_araucaria_log",
+    "particle": "terrassic:block/limestone"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t0"
+        },
+        "south": {
+          "texture": "#t0"
+        },
+        "east": {
+          "texture": "#t0"
+        },
+        "west": {
+          "texture": "#t0"
+        },
+        "up": {
+          "texture": "#t1"
+        },
+        "down": {
+          "texture": "#t1"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        4,
+        7
+      ],
+      "to": [
+        10,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t2"
+        },
+        "south": {
+          "texture": "#t2"
+        },
+        "east": {
+          "texture": "#t2"
+        },
+        "west": {
+          "texture": "#t2"
+        },
+        "up": {
+          "texture": "#t2"
+        },
+        "down": {
+          "texture": "#t2"
+        }
+      },
+      "rotation": {
+        "origin": [
+          9,
+          4,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    }
+  ]
+}

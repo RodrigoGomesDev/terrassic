@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/sand_nest"
+    },
+    "facing=east": {
+      "model": "terrassic:block/sand_nest",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/sand_nest",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/sand_nest",
+      "y": 270
+    }
+  }
+}

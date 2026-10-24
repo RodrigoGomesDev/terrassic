@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "H",
+    "L"
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:leather"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "item": "terrassic:hide_drum",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:xiphactinus_fossil"
+    },
+    {
+      "item": "terrassic:limestone"
+    }
+  ],
+  "result": {
+    "item": "terrassic:xiphactinus_skull_fossil",
+    "count": 1
+  }
+}

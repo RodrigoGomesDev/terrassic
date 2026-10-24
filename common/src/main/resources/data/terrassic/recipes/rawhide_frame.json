@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "SHS",
+    "HHH",
+    "SHS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "H": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "terrassic:rawhide_frame",
+    "count": 2
+  }
+}

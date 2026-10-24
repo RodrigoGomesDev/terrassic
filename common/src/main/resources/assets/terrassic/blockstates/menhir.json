@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/menhir"
+    },
+    "facing=east": {
+      "model": "terrassic:block/menhir",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/menhir",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/menhir",
+      "y": 270
+    }
+  }
+}

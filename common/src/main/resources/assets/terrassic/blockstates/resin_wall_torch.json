@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "terrassic:block/resin_wall_torch"
+    },
+    "facing=south": {
+      "model": "terrassic:block/resin_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "terrassic:block/resin_wall_torch",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "terrassic:block/resin_wall_torch",
+      "y": 270
+    }
+  }
+}

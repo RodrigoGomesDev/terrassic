@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:limestone"
+    },
+    {
+      "item": "minecraft:beef"
+    },
+    {
+      "item": "minecraft:string"
+    }
+  ],
+  "result": {
+    "item": "terrassic:fat_lamp",
+    "count": 1
+  }
+}

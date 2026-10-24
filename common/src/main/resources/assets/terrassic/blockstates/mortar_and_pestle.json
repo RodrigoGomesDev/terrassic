@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/mortar_and_pestle"
+    },
+    "facing=east": {
+      "model": "terrassic:block/mortar_and_pestle",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/mortar_and_pestle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/mortar_and_pestle",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "C",
+    "R",
+    "R"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:charcoal"
+    },
+    "R": {
+      "item": "terrassic:rush"
+    }
+  },
+  "result": {
+    "item": "terrassic:reed_torch",
+    "count": 4
+  }
+}

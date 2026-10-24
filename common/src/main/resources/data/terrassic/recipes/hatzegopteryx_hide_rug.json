@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "HH"
+  ],
+  "key": {
+    "H": {
+      "item": "terrassic:hatzegopteryx_hide"
+    }
+  },
+  "result": {
+    "item": "terrassic:hatzegopteryx_hide_rug",
+    "count": 2
+  }
+}

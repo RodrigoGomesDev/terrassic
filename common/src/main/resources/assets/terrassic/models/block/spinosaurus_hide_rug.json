@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/carpet",
+  "textures": {
+    "wool": "terrassic:block/spinosaurus_hide_rug"
+  }
+}

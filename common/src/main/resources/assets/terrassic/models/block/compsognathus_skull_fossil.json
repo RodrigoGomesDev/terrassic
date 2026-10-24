@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "terrassic:block/compsognathus_skull_fossil",
+    "side": "terrassic:block/shale",
+    "top": "terrassic:block/shale"
+  }
+}

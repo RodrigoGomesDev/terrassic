@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "minecraft:logs"
+    },
+    {
+      "item": "terrassic:rex_tooth"
+    }
+  ],
+  "result": {
+    "item": "terrassic:rex_totem",
+    "count": 1
+  }
+}

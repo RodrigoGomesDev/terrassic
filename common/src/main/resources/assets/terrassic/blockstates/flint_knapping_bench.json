@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/flint_knapping_bench"
+    },
+    "facing=east": {
+      "model": "terrassic:block/flint_knapping_bench",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/flint_knapping_bench",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/flint_knapping_bench",
+      "y": 270
+    }
+  }
+}

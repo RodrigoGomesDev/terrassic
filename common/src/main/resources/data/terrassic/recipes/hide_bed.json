@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "HHH",
+    "LLL"
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:leather"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "item": "terrassic:hide_bed",
+    "count": 1
+  }
+}

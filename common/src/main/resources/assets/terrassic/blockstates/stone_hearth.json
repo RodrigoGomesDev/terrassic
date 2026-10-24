@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/stone_hearth"
+    },
+    "facing=east": {
+      "model": "terrassic:block/stone_hearth",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/stone_hearth",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/stone_hearth",
+      "y": 270
+    }
+  }
+}

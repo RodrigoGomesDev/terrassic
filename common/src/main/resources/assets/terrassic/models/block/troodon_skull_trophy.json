@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "skull": "terrassic:block/troodon_skull_trophy",
+    "plaque": "terrassic:block/araucaria_hewn_planks",
+    "particle": "terrassic:block/araucaria_hewn_planks"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        14
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#plaque"
+        },
+        "south": {
+          "texture": "#plaque"
+        },
+        "east": {
+          "texture": "#plaque"
+        },
+        "west": {
+          "texture": "#plaque"
+        },
+        "up": {
+          "texture": "#plaque"
+        },
+        "down": {
+          "texture": "#plaque"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        13.5
+      ],
+      "to": [
+        16,
+        16,
+        13.5
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#skull"
+        },
+        "south": {
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ],
+          "texture": "#skull"
+        }
+      }
+    }
+  ]
+}

@@ -13,6 +13,8 @@
     "terrassic:rammed_earth_stairs",
     "terrassic:rammed_earth_slab",
     "terrassic:rammed_earth_wall",
-    "terrassic:packed_earth_floor"
+    "terrassic:packed_earth_floor",
+    "terrassic:bone_pile",
+    "terrassic:sand_nest"
   ]
 }

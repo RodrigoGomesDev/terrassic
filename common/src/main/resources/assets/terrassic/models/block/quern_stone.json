@@ -1,0 +1,106 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "t0": "terrassic:block/quartzite",
+    "t1": "terrassic:block/stripped_araucaria_log",
+    "particle": "terrassic:block/quartzite"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t0"
+        },
+        "south": {
+          "texture": "#t0"
+        },
+        "east": {
+          "texture": "#t0"
+        },
+        "west": {
+          "texture": "#t0"
+        },
+        "up": {
+          "texture": "#t0"
+        },
+        "down": {
+          "texture": "#t0"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        3
+      ],
+      "to": [
+        13,
+        7,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t0"
+        },
+        "south": {
+          "texture": "#t0"
+        },
+        "east": {
+          "texture": "#t0"
+        },
+        "west": {
+          "texture": "#t0"
+        },
+        "up": {
+          "texture": "#t0"
+        },
+        "down": {
+          "texture": "#t0"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        7,
+        7
+      ],
+      "to": [
+        12,
+        11,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t1"
+        },
+        "south": {
+          "texture": "#t1"
+        },
+        "east": {
+          "texture": "#t1"
+        },
+        "west": {
+          "texture": "#t1"
+        },
+        "up": {
+          "texture": "#t1"
+        },
+        "down": {
+          "texture": "#t1"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/dreadnoughtus_skull_trophy"
+    },
+    "facing=east": {
+      "model": "terrassic:block/dreadnoughtus_skull_trophy",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/dreadnoughtus_skull_trophy",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/dreadnoughtus_skull_trophy",
+      "y": 270
+    }
+  }
+}

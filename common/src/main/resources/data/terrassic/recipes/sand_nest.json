@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "S S",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:sand"
+    }
+  },
+  "result": {
+    "item": "terrassic:sand_nest",
+    "count": 1
+  }
+}

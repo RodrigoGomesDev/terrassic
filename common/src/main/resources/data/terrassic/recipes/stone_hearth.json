@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " L ",
+    "LFL",
+    "SSS"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "S": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "item": "terrassic:stone_hearth",
+    "count": 1
+  }
+}

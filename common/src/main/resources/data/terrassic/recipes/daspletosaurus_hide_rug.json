@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "HH"
+  ],
+  "key": {
+    "H": {
+      "item": "terrassic:daspletosaurus_hide"
+    }
+  },
+  "result": {
+    "item": "terrassic:daspletosaurus_hide_rug",
+    "count": 2
+  }
+}

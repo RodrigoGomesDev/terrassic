@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "BKB",
+    "BKB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "K": {
+      "item": "minecraft:bone_block"
+    }
+  },
+  "result": {
+    "item": "terrassic:bone_fence_gate",
+    "count": 1
+  }
+}

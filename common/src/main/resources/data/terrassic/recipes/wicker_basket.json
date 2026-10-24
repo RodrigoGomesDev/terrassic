@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "R R",
+    "RRR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:rush"
+    }
+  },
+  "result": {
+    "item": "terrassic:wicker_basket",
+    "count": 1
+  }
+}

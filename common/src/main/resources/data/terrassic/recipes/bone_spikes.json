@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "BFB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "F": {
+      "item": "minecraft:flint"
+    }
+  },
+  "result": {
+    "item": "terrassic:bone_spikes",
+    "count": 2
+  }
+}

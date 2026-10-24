@@ -51,7 +51,13 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   no mundo). 200 blocos + fase 5 (pau a pique travado/com esteios/caiado, taipa de pilão, terra batida, 5 rebocos,
   16 pinturas rupestres viradas para o jogador via `block/FacingBlock`, coberturas de junco/cicadácea/samambaia com
   escada, laje e beiral inclinado, vime, cerca trançada, esteira e feixe de junco, rolo de corda, rede de fibra
-  escalável como trepadeira). 251 blocos. Próxima: fase 6 (couro, osso, troféus de crânio, fósseis na rocha).
+  escalável como trepadeira). 251 blocos + fase 6 (couros esticados e painéis, e por espécie: tapete de couro
+  `<espécie>_hide_rug`, troféu de crânio e crânio fóssil na rocha, gerados de `gen_resources.SPECIES`; crânio de
+  espécie sem desenho em `SKULLS` de blocks.py usa o do velociraptor; osso, feixe de penas) + fase 7 (tochas de
+  osso/resina/junco com versão de parede, lamparina, fogueira de pedras `block/HearthBlock`, varal, pilão, mó, bacia,
+  camas de palha/couro e rede `block/PrimitiveBedBlock`, potes cru e queimado, cocho, ninhos, estacas
+  `block/SpikesBlock`, armadilha, menir, totens, tambor `DrumBlock`, móbile `ChimesBlock`, cesto de 9 espaços
+  `BasketBlock` + `registry/ModBlockEntities`). Blocos de modelo próprio: tabela PROPS em gen_blocks.py.
 - `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.

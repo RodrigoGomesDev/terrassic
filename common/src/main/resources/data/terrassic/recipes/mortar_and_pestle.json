@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "R S",
+    "RRR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:limestone"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "terrassic:mortar_and_pestle",
+    "count": 1
+  }
+}

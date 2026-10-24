@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "SHS",
+    "HHH",
+    "SHS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "H": {
+      "item": "terrassic:pteranodon_hide"
+    }
+  },
+  "result": {
+    "item": "terrassic:fuzzy_hide_frame",
+    "count": 2
+  }
+}

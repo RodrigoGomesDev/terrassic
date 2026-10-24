@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "terrassic:block/firewood_pile"
+    },
+    "axis=z": {
+      "model": "terrassic:block/firewood_pile_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "terrassic:block/firewood_pile_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    }
+  },
+  "result": {
+    "item": "terrassic:bone_pile",
+    "count": 1
+  }
+}

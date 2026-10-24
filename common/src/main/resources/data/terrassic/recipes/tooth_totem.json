@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "T",
+    "L",
+    "L"
+  ],
+  "key": {
+    "T": {
+      "item": "terrassic:rex_tooth"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "item": "terrassic:tooth_totem",
+    "count": 2
+  }
+}

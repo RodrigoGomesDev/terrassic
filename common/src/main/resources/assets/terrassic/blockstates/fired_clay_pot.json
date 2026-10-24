@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/fired_clay_pot"
+    },
+    "facing=east": {
+      "model": "terrassic:block/fired_clay_pot",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/fired_clay_pot",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/fired_clay_pot",
+      "y": 270
+    }
+  }
+}

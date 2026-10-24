@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/pit_trap_cover"
+    },
+    "facing=east": {
+      "model": "terrassic:block/pit_trap_cover",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/pit_trap_cover",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/pit_trap_cover",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "C",
+    "L",
+    "S"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:charcoal"
+    },
+    "L": {
+      "item": "terrassic:araucaria_log"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "terrassic:resin_torch",
+    "count": 4
+  }
+}

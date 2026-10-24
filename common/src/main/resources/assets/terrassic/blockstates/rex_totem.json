@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "terrassic:block/rex_totem"
+    },
+    "facing=east": {
+      "model": "terrassic:block/rex_totem",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "terrassic:block/rex_totem",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "terrassic:block/rex_totem",
+      "y": 270
+    }
+  }
+}
