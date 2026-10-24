@@ -1775,5 +1775,40 @@
    "animation.mononykus.dig"
   ],
   "render_scale": 0.3
+ },
+ "didelphodon": {
+  "bones": 23,
+  "cubes": 41,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -4.5,
+    -4.24530995906339e-05,
+    -29.04782822708801
+   ],
+   [
+    4.5,
+    13.976834393745062,
+    32.01527833825798
+   ]
+  ],
+  "animations": [
+   "animation.didelphodon.idle",
+   "animation.didelphodon.walk",
+   "animation.didelphodon.run",
+   "animation.didelphodon.sit",
+   "animation.didelphodon.graze",
+   "animation.didelphodon.attack",
+   "animation.didelphodon.sniff",
+   "animation.didelphodon.knocked_out",
+   "animation.didelphodon.wake",
+   "animation.didelphodon.eat",
+   "animation.didelphodon.beg",
+   "animation.didelphodon.tame"
+  ],
+  "render_scale": 0.3
  }
 }

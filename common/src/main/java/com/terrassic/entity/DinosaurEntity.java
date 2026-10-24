@@ -100,7 +100,8 @@ import java.util.List;
  *   <li><b>Wild nests</b> (docs/NINHOS.md): a wild, well fed adult with a mate nearby and room in the herd
  *       ({@link #wildPopulationCap()}) breeds on its own and lays a clutch of wild eggs ({@link #clutchSize()});
  *       a herd may spawn with an egg already laid. Wild eggs hatch wild babies and the herd guards them.
- *       Brooders ({@link #brooder()}) sit on eggs they find and eggs beside a sitting one hatch fast.</li>
+ *       Brooders ({@link #brooder()}) sit on eggs they find and eggs beside a sitting one hatch fast; egg thieves
+ *       ({@link #eggThief()}) eat the wild clutches they find, and the herd turns on them.</li>
  *   <li><b>Migration</b> (docs/MIGRACAO.md): wild herbivore herds set off together for new grazing, 64 to 96
  *       blocks away in the season's direction (MigrateGoal, {@link #getMigrationTarget()}).</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
@@ -263,6 +264,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Whether it sits on eggs (docs/NINHOS.md): wild ones brood clutches they find (BroodGoal), it takes the "brood"
      *  pose sitting beside an egg, and eggs within two blocks of a sitting one hatch fast ({@link #broodEggs}). */
     protected boolean brooder() {
+        return false;
+    }
+
+    /** Whether wild ones eat the dinosaur eggs they find (EggThiefGoal, docs/NINHOS.md): the Didelphodon. */
+    protected boolean eggThief() {
         return false;
     }
 

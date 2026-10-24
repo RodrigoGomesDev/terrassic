@@ -68,6 +68,8 @@ SIZES = {
     "troodon":            dict(real=2.4,  scale=0.55, w=0.6, h=1.1, baby=0.5,  shadow=0.4),
     "oviraptor":          dict(real=2.0,  scale=0.65, w=0.7, h=1.4, baby=0.5,  shadow=0.45),
     "citipati":           dict(real=3.0,  scale=0.85, w=0.9, h=2.0, baby=0.4,  shadow=0.6),
+    "mononykus":          dict(real=1.0,  scale=0.24, w=0.4, h=0.5, baby=0.5,  shadow=0.2),
+    "didelphodon":        dict(real=1.0,  scale=0.26, w=0.5, h=0.4, baby=0.5,  shadow=0.3),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -140,6 +142,8 @@ GUIDE = {
     "troodon":            dict(era="late_cretaceous", diet="carnivore", fossil=4),
     "oviraptor":          dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "citipati":           dict(era="late_cretaceous", diet="omnivore",  fossil=3),
+    "mononykus":          dict(era="late_cretaceous", diet="carnivore", fossil=4),
+    "didelphodon":        dict(era="late_cretaceous", diet="omnivore",  fossil=5),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -198,6 +202,8 @@ WORLD = {
     "troodon":            dict(biomes=("forest", "taiga", "plains"), weight=5, group=(1, 3), track=8),   # Judith River woodland, pairs
     "oviraptor":          dict(biomes=("desert", "badlands", "savanna"), weight=5, group=(2, 4), track=8),  # the Djadochta dunes
     "citipati":           dict(biomes=("desert", "badlands", "savanna"), weight=3, group=(1, 2), track=8),  # Ukhaa Tolgod, pairs on the nest
+    "mononykus":          dict(biomes=("desert", "badlands", "savanna", "plains"), weight=6, group=(2, 4), track=6),  # Nemegt sands, small groups
+    "didelphodon":        dict(biomes=("river", "swamp", "forest", "plains"), weight=6, group=(1, 2), track=6),  # Hell Creek riverbanks
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -446,6 +452,19 @@ SPECIES = [
       food="Items.EGG, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
       sounds=("PARROT_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.9, 0.7, 220), xp=10, run=0.025,
       brooder=True),
+ dict(id="mononykus", cls="Mononykus", base="PredatorDinosaur",
+      doc="Mononykus olecranus - 1 m alvarezsaurid of the Gobi: a sprinter on stilt legs with stub arms ending in one huge thumb claw, the termite digger. Skittish, hunts nothing; tamed with spider eyes or seeds like a cat, and then rides on the shoulder. Digging on soft ground a tame one turns up insects and grubs: spider eyes, string, bone meal, now and then a honeycomb (docs/CAVAR.md).",
+      attrs=dict(MAX_HEALTH=8, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=1.5, FOLLOW_RANGE=16),
+      food="Items.SPIDER_EYE, Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.HONEYCOMB",
+      sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.1, 1.4, 140), step=("CHICKEN_STEP", 0.2, 1.3),
+      xp=3, run=0.03, prey="false", hunts_players=False, feeding_tame=True, skittish=True, shoulder=True, dig="insects"),
+ dict(id="didelphodon", cls="Didelphodon", base="PredatorDinosaur",
+      doc="Didelphodon vorax - badger-sized Hell Creek mammal with the strongest bite for its size of any mammal, the egg thief: wild ones eat the dinosaur eggs they find (and the herd turns on them), hunt small prey and keep clear of players. Tamed with eggs or meat like a cat; a tame one noses out lost eggs now and then (docs/NINHOS.md).",
+      attrs=dict(MAX_HEALTH=12, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=4, FOLLOW_RANGE=16),
+      food="Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD",
+      sounds=("FOX_AMBIENT", "FOX_HURT", "FOX_DEATH", 0.9, 0.9, 160), step=("WOLF_STEP", 0.2, 1.3),
+      xp=4, run=0.03, prey="e.getBbWidth() < 0.5F && !(e instanceof DinosaurEntity)", hunts_players=False, feeding_tame=True,
+      skittish=True, egg_thief=True, prey_interval=120),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -662,6 +681,8 @@ def gen(s, bounds):
         extras.append("call")
     if s.get("dig"):
         extras.append("dig")
+    if s.get("egg_thief"):
+        extras.append("sniff")
     if s.get("musk"):
         extras.append("scent")
     if s.get("scoop"):
@@ -775,6 +796,44 @@ def gen(s, bounds):
                 chicken.eggTime -= 100;
             }
         }
+    }
+""")
+    if s.get("egg_thief"):
+        # the egg thief (docs/NINHOS.md): wild ones eat the dinosaur eggs they find (EggThiefGoal); a tame one, idle on
+        # grass or dirt, now and then noses out a lost egg (a chicken egg, one in six a random dinosaur egg).
+        # Owns customServerAiStep: incompatible with roar/display/scoop/forage/dig/night_guard/egg_boost.
+        assert not any(s.get(k) for k in ("roar", "display", "scoop", "forage", "dig", "night_guard", "egg_boost")), s["id"] + ": egg_thief owns customServerAiStep"
+        imports.update({"com.terrassic.entity.ai.EggThiefGoal", "net.minecraft.server.level.ServerLevel", "net.minecraft.core.BlockPos",
+                        "net.minecraft.tags.BlockTags", "net.minecraft.world.item.ItemStack",
+                        "com.terrassic.registry.ModBlocks", "net.minecraft.world.level.block.Block", "dev.architectury.registry.registries.RegistrySupplier",
+                        "java.util.ArrayList", "java.util.List", "net.minecraft.world.level.block.state.BlockState"})
+        goals.append("        this.goalSelector.addGoal(6, new EggThiefGoal(this));")
+        body.append("""    @Override
+    protected boolean eggThief() {
+        return true;
+    }
+
+    /** The nose for eggs: a tame one idle on grass or dirt sniffs about now and then and turns up a lost egg (one in
+     *  six a dinosaur egg of some species), dropped at its feet. */
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (!this.isTame() || this.isBaby() || this.getTarget() != null || this.isInSittingPose() || !this.getNavigation().isDone()
+                || this.random.nextInt(1200) != 0 || !(this.level() instanceof ServerLevel server)) {
+            return;
+        }
+        BlockPos below = this.blockPosition().below();
+        BlockState ground = server.getBlockState(below);
+        if (!(ground.is(BlockTags.DIRT) || ground.is(BlockTags.SAND))) {
+            return;
+        }
+        triggerAnim(ACTION_CONTROLLER, "sniff");
+        ItemStack found = new ItemStack(Items.EGG);
+        if (this.random.nextInt(6) == 0) {
+            List<RegistrySupplier<Block>> eggs = new ArrayList<>(ModBlocks.EGGS.values());
+            found = new ItemStack(eggs.get(this.random.nextInt(eggs.size())).get());
+        }
+        this.spawnAtLocation(found);
     }
 """)
     if s.get("brooder"):
@@ -1119,7 +1178,18 @@ def gen(s, bounds):
         imports.update({"net.minecraft.server.level.ServerLevel", "net.minecraft.core.BlockPos", "net.minecraft.core.particles.BlockParticleOption",
                         "net.minecraft.core.particles.ParticleTypes", "net.minecraft.tags.BlockTags",
                         "net.minecraft.world.item.ItemStack", "net.minecraft.world.level.block.Blocks", "net.minecraft.world.level.block.state.BlockState"})
-        if s["dig"] == "tubers":
+        if s["dig"] == "insects":
+            what = "insects and grubs: spider eyes, string, bone meal, now and then a honeycomb"
+            loot = """        if (roll < 30) {
+            found = new ItemStack(Items.SPIDER_EYE);
+        } else if (roll < 55) {
+            found = new ItemStack(Items.STRING);
+        } else if (roll < 75) {
+            found = new ItemStack(Items.BONE_MEAL, 1 + this.random.nextInt(2));
+        } else if (roll < 82) {
+            found = new ItemStack(Items.HONEYCOMB);
+        }"""
+        elif s["dig"] == "tubers":
             what = "roots and tubers"
             loot = """        if (roll < 24) {
             found = new ItemStack(Items.HANGING_ROOTS);

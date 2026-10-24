@@ -42,6 +42,22 @@ Flag `brooder` do gerador (`DinosaurEntity.brooder()`), primeira espécie o **Ci
 Teste humano: Citipati selvagem perto de um ninho selvagem deve sentar e abrir as asas; ovo domado com um Citipati
 domado sentado ao lado choca em cerca de um minuto; longe dele, no tempo normal.
 
+## O ladrão de ovos (Didelphodon, fase 85)
+
+Flag `egg_thief` do gerador (`DinosaurEntity.eggThief()`), primeira espécie o **Didelphodon**.
+
+- **Selvagem** (`entity/ai/EggThiefGoal`, prioridade 6): adulto com fome (não saciado), sem alvo, com mobGriefing
+  ligado, de vez em quando (1/120 por tick) procura um bloco de ovo de dinossauro a 8 blocos (`nearestEgg`), vai até
+  ele e o come: o bloco some sem drop, partículas de ovo, o ladrão se alimenta (+40 de fome).
+- **A manada reage**: `DinoEggBlock.alertParents` agora aceita qualquer `LivingEntity` como culpado (antes só
+  jogador), então os adultos selvagens da espécie a 20 blocos acordam e vão atrás do ladrão, como fariam com um
+  jogador. Ovos domados (WILD=false) não convocam ninguém: proteja o ninho com cerca ou um guarda.
+- **Domado**: parado na terra ou areia, 1/1200 por tick fareja (animação `sniff`) e solta um ovo de galinha; 1 em 6
+  vezes um ovo de dinossauro de alguma espécie (`ModBlocks.EGGS`).
+
+Teste humano: Didelphodon selvagem perto de um ninho selvagem de Protoceratops come o ovo e os adultos o perseguem;
+perto de um ovo domado também come (sem reação da manada); domado e parado na grama, aparece um ovo de vez em quando.
+
 ## O que falta
 
 - Conquista "Ladrão de ninhos" (roubar um ovo selvagem) na aba Caderno de Campo: espera a thread de conquistas.

@@ -1297,6 +1297,12 @@ SKULLS = {
                            ".obbbbbbbbbbo...", "..oooooooooo...."],
     "gallimimus": [".........oooo...", ".......oobllbo..", ".....oobbbeeebo.", "...oobbbbbeeebo.",
                    ".oobbbbbbbbbbbo.", "obbbbbbbbbbbbo..", ".oobbbbbbbbbo...", "...ooooooooo...."],
+    # alvarezsaurid: a tiny narrow skull with big orbits
+    "mononykus": ["........ooooo...", "......ooblllbo..", "....oobbbbbeebo.", "..oobbbbbbbeebo.",
+                  "obbbbbbbbbbbbbo.", "oobbbbbbbbbbbo..", "..ooooooooooo..."],
+    # the mammal: a short deep skull with a big jaw, no fenestrae
+    "didelphodon": ["....ooooooo.....", "..oobbbbbbboo...", ".obbbbbeebbbbo..", "obbbbbbbbbbbbbo.",
+                    "ottbbbbbbbbbbbo.", ".ottttbbbbbbbo..", "..obbbbbbbbbo...", "...ooooooooo...."],
     "maiasaura": ["..........o.....", ".........olo....", "........obbo....", "......oobbbboo..",
                   "....oobbbbbeebo.", "..oobbbbbbbeebo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbbo.",
                   "oobbbbbbbbbbbo..", ".obbbbbbbbbbo...", "..oooooooooo...."],
@@ -1412,7 +1418,7 @@ HIDE_PATTERN = {  # rug pattern of each species (scales by default)
     "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots",
     "ankylosaurus": "osteoderms", "triceratops": "big_scales", "mosasaurus": "fine_scales",
     "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
-    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers",
+    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz",
     "struthiomimus": "feathers", "deinocheirus": "feathers", "therizinosaurus": "feathers",
     "hesperornis": "feathers", "ichthyornis": "feathers",
 }

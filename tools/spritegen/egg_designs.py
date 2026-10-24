@@ -605,6 +605,36 @@ def citipati():
     return e
 
 
+def mononykus():
+    e = theropod("mononykus", {"b": "#b08c5c", "c": "#ecdfc0", "d": "#7a5c3a", "n": "#3a2c20",
+                               "f": "#8a4a28"}, jaw="narrow", teeth=(), stripes=((3, 20, 5, 16),))
+    # rust cap plumes and the two big thumb claws held in front
+    for (x, h) in ((14, 3), (16, 4)):
+        e.line([(x, 5 - h + 1), (x, 6)], "f", 2)
+    e.pal["I"] = "#2a2520"
+    _side(e, [(6, 24), (5, 28), (7, 30), (8, 27)], "I")
+    return e
+
+
+def didelphodon():
+    """The mammal: a furry face, round ears, a dark bandit mask and a pink nose over a strong jaw."""
+    e = Egg("didelphodon", {"b": "#7a5c40", "c": "#d8c8a8", "d": "#4e3a28", "n": "#c8788a", "k": "#2a1e14", "R": MOUTH})
+    cap(e, "d", (5, 3, 26, 19), None)
+    for x0 in (6, 20):
+        e.ell((x0, 0, x0 + 5, 6), "d")
+        e.ell((x0 + 1, 1, x0 + 4, 5), "n")
+    e.rect((5, 12, 26, 16), "k", clip=True)
+    e.ell((9, 19, 22, 33), "c", clip=True)
+    e.rect((14, 20, 17, 22), "n")
+    e.line([(11, 27), (20, 27)], "R")
+    fangs(e, 28, (12, 19))
+    e.pal["K"] = "#f0e0c0"
+    e.px(e.mirror([(10, 13), (11, 13), (10, 14), (11, 14)]), "K")
+    e.pal["P"] = "#0a0604"
+    e.px(e.mirror([(11, 14)]), "P")
+    return e
+
+
 def therizinosaurus():
     e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
                                    "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
@@ -818,7 +848,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",
