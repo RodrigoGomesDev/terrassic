@@ -20,6 +20,8 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Compsognathus | 1-1,25 m | 1,2 x 0,4 | 1,3 x 0,4 | 0,4 x 0,5 | 50% |
 | Mosasaurus (v0.3) | 11-17 m (M. hoffmannii; estimativa máxima ~17 m, Grigoriev 2014) | novo | **17,0 x 3,0** | 3,0 x 2,0 | 20% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
+| Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
+| Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |
 | Pteranodon (v0.3) | envergadura 5,6-7,25 m nos machos (Bennett 2001), corpo pequeno | novo | **7,25 de envergadura** x 1,9 | 1,3 x 1,7 | 30% |
 
 ## Escolhas

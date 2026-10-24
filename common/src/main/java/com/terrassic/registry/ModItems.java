@@ -55,6 +55,8 @@ public final class ModItems {
     public static final RegistrySupplier<Item> GALLIMIMUS_SPAWN_EGG = egg("gallimimus", ModEntities.GALLIMIMUS);
     public static final RegistrySupplier<Item> MAIASAURA_SPAWN_EGG = egg("maiasaura", ModEntities.MAIASAURA);
     public static final RegistrySupplier<Item> PTERANODON_SPAWN_EGG = egg("pteranodon", ModEntities.PTERANODON);
+    public static final RegistrySupplier<Item> QUETZALCOATLUS_SPAWN_EGG = egg("quetzalcoatlus", ModEntities.QUETZALCOATLUS);
+    public static final RegistrySupplier<Item> HATZEGOPTERYX_SPAWN_EGG = egg("hatzegopteryx", ModEntities.HATZEGOPTERYX);
     public static final RegistrySupplier<Item> MOSASAURUS_SPAWN_EGG = egg("mosasaurus", ModEntities.MOSASAURUS);
     // END GENERATED spawn eggs
 

@@ -6,11 +6,13 @@ import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Gallimimus;
+import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Mosasaurus;
 import com.terrassic.entity.Pachycephalosaurus;
 import com.terrassic.entity.Parasaurolophus;
 import com.terrassic.entity.Pteranodon;
+import com.terrassic.entity.Quetzalcoatlus;
 import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Triceratops;
@@ -48,6 +50,8 @@ public final class TerrassicClient {
         renderer(ModEntities.GALLIMIMUS, "gallimimus", Gallimimus.MODEL_SCALE, Gallimimus.SHADOW);
         renderer(ModEntities.MAIASAURA, "maiasaura", Maiasaura.MODEL_SCALE, Maiasaura.SHADOW);
         renderer(ModEntities.PTERANODON, "pteranodon", Pteranodon.MODEL_SCALE, Pteranodon.SHADOW);
+        renderer(ModEntities.QUETZALCOATLUS, "quetzalcoatlus", Quetzalcoatlus.MODEL_SCALE, Quetzalcoatlus.SHADOW);
+        renderer(ModEntities.HATZEGOPTERYX, "hatzegopteryx", Hatzegopteryx.MODEL_SCALE, Hatzegopteryx.SHADOW);
         renderer(ModEntities.MOSASAURUS, "mosasaurus", Mosasaurus.MODEL_SCALE, Mosasaurus.SHADOW);
         // END GENERATED renderers
         EntityRendererRegistry.register(ModEntities.SPEAR, ThrownSpearRenderer::new);

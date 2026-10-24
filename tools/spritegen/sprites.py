@@ -310,6 +310,33 @@ def spawn_eggs():
     eye(cv, 9, 5, "#d8a838")
     eggs["pteranodon"] = cv
 
+    # Quetzalcoatlus: sandy cream egg with a long grey beak line running diagonally and the red face patch
+    cv = base_egg(None, "#9a9284", "#efe9dc")
+    for k, (x, y) in enumerate(((4, 11), (5, 10), (6, 10), (7, 9), (8, 9), (9, 8), (10, 8), (11, 7))):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#d8c89a" if k < 6 else "#2a2522"))
+    for (x, y) in ((4, 4), (5, 4), (6, 3)):
+        cv.set(x, y, hexc("#9a3a2a"))
+    cv.set(7, 6, hexc("#c8472e")); cv.set(8, 6, hexc("#c8472e")); cv.set(7, 7, hexc("#c8472e"))
+    cv.set(10, 12, hexc("#5b5550")); cv.set(11, 12, hexc("#5b5550"))
+    eye(cv, 9, 6, "#e6c24a")
+    eggs["quetzalcoatlus"] = cv
+
+    # Hatzegopteryx: dark slate egg with a broad black band, pale face patch and the dark red keel
+    cv = base_egg(None, "#4e4a48", "#9c948c")
+    for x in range(3, 13):
+        if inside(cv, x, 8):
+            cv.set(x, 8, hexc("#1f1a19"))
+        if inside(cv, x, 9) and x % 2 == 0:
+            cv.set(x, 9, hexc("#1f1a19"))
+    for (x, y) in ((5, 5), (6, 5), (5, 6), (6, 6)):
+        cv.set(x, y, hexc("#d8c6a8"))
+    for (x, y) in ((8, 3), (9, 3), (10, 4)):
+        cv.set(x, y, hexc("#7a2a22"))
+    cv.set(10, 11, hexc("#5a4a3e")); cv.set(11, 11, hexc("#5a4a3e")); cv.set(12, 10, hexc("#1e1917"))
+    eye(cv, 7, 5, "#d9b14a")
+    eggs["hatzegopteryx"] = cv
+
     # Mosasaurus: dark sea-blue egg with a pale belly, a row of teeth and a tail fluke
     cv = base_egg(None, "#2e3a44", "#d8dbd0")
     for x in range(3, 13):
@@ -346,6 +373,7 @@ EGG_BLOCK = {
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "gallimimus": ("#f0ece0", "#9c917c"),
     "maiasaura": ("#e4dac0", "#7a6244"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
+    "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),
 }
 
 

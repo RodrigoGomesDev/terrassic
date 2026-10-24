@@ -2,6 +2,7 @@ package com.terrassic.registry;
 
 import com.terrassic.Terrassic;
 import com.terrassic.block.DinoEggBlock;
+import com.terrassic.block.FacingBlock;
 import com.terrassic.block.PrehistoricTreeGrower;
 import com.terrassic.block.ResearchTableBlock;
 import com.terrassic.entity.DinosaurEntity;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -62,6 +64,8 @@ public final class ModBlocks {
         egg("gallimimus", ModEntities.GALLIMIMUS, false);
         egg("maiasaura", ModEntities.MAIASAURA, false);
         egg("pteranodon", ModEntities.PTERANODON, false);
+        egg("quetzalcoatlus", ModEntities.QUETZALCOATLUS, false);
+        egg("hatzegopteryx", ModEntities.HATZEGOPTERYX, false);
         // END GENERATED eggs
     }
 
@@ -134,6 +138,12 @@ public final class ModBlocks {
                     .ignitedByLava().pushReaction(PushReaction.DESTROY);
             case "bone" -> p.strength(2.0F).requiresCorrectToolForDrops().sound(SoundType.BONE_BLOCK);
             case "hide" -> p.strength(0.8F).sound(SoundType.WOOL).ignitedByLava();
+            case "earth" -> p.strength(1.0F, 3.0F).sound(SoundType.ROOTED_DIRT);
+            case "plaster" -> p.strength(1.2F, 3.0F).sound(SoundType.MUD_BRICKS);
+            case "wicker" -> p.strength(0.8F).sound(SoundType.BAMBOO_WOOD).ignitedByLava();
+            case "fiber" -> p.strength(0.8F).sound(SoundType.WOOL).ignitedByLava();
+            case "net" -> p.noCollission().strength(0.3F).sound(SoundType.WOOL).ignitedByLava()
+                    .pushReaction(PushReaction.DESTROY);
             default -> throw new IllegalArgumentException("unknown building material " + material);
         };
     }
@@ -202,6 +212,21 @@ public final class ModBlocks {
     /** Grows flat on the faces of other blocks, like glow lichen but without light. */
     static void multiface(String id, BlockBehaviour.Properties p) {
         building(id, () -> new GlowLichenBlock(p) {});
+    }
+
+    /** Full block with a picture on its front, turned towards the player who placed it (cave paintings). */
+    static void facing(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new FacingBlock(p, null));
+    }
+
+    /** Tilted sheet of roofing hanging over the edge of a roof. */
+    static void eave(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new FacingBlock(p.noOcclusion(), FacingBlock.EAVE));
+    }
+
+    /** Hangs on walls and ceilings like a vine, without growing; climbable through the minecraft:climbable tag. */
+    static void climber(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new VineBlock(p) {});
     }
 
     static void fenceGate(String id, BlockBehaviour.Properties p) {

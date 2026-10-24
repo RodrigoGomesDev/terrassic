@@ -38,6 +38,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Gallimimus          savanna, plains, desert*        6       3-6
  *  Maiasaura           plains, savanna                 4       3-6
  *  Pteranodon          beach, stony shore              8       2-4
+ *  Quetzalcoatlus      plains, savanna, badlands       3       1-2
+ *  Hatzegopteryx       hills, forest                   2       1
  *  Mosasaurus          deep ocean (not frozen)         2       1
  *  END GENERATED table
  *  (*desert only where there is sand to stand on)
@@ -63,6 +65,10 @@ public final class ModSpawns {
         placement(ModEntities.GALLIMIMUS);
         placement(ModEntities.MAIASAURA);
         SpawnPlacementsRegistry.register(ModEntities.PTERANODON, SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.QUETZALCOATLUS, SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.HATZEGOPTERYX, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
@@ -125,6 +131,12 @@ public final class ModSpawns {
             }
             if (coast) {
                 add(props, ModEntities.PTERANODON.get(), 8, 2, 4);
+            }
+            if (plains || savanna || badlands) {
+                add(props, ModEntities.QUETZALCOATLUS.get(), 3, 1, 2);
+            }
+            if (hill || forest) {
+                add(props, ModEntities.HATZEGOPTERYX.get(), 2, 1, 1);
             }
             if (deepSea) {
                 add(props, MobCategory.WATER_CREATURE, ModEntities.MOSASAURUS.get(), 2, 1, 1);

@@ -7,11 +7,13 @@ import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Gallimimus;
+import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Mosasaurus;
 import com.terrassic.entity.Pachycephalosaurus;
 import com.terrassic.entity.Parasaurolophus;
 import com.terrassic.entity.Pteranodon;
+import com.terrassic.entity.Quetzalcoatlus;
 import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Triceratops;
@@ -69,6 +71,10 @@ public final class ModEntities {
     // ---- flyers
     public static final RegistrySupplier<EntityType<Pteranodon>> PTERANODON =
             mob("pteranodon", Pteranodon::new, MobCategory.CREATURE, Pteranodon.WIDTH, Pteranodon.HEIGHT, 10);
+    public static final RegistrySupplier<EntityType<Quetzalcoatlus>> QUETZALCOATLUS =
+            mob("quetzalcoatlus", Quetzalcoatlus::new, MobCategory.CREATURE, Quetzalcoatlus.WIDTH, Quetzalcoatlus.HEIGHT, 12);
+    public static final RegistrySupplier<EntityType<Hatzegopteryx>> HATZEGOPTERYX =
+            mob("hatzegopteryx", Hatzegopteryx::new, MobCategory.CREATURE, Hatzegopteryx.WIDTH, Hatzegopteryx.HEIGHT, 12);
     // ---- marine reptiles
     public static final RegistrySupplier<EntityType<Mosasaurus>> MOSASAURUS =
             mob("mosasaurus", Mosasaurus::new, MobCategory.WATER_CREATURE, Mosasaurus.WIDTH, Mosasaurus.HEIGHT, 12);
@@ -105,6 +111,8 @@ public final class ModEntities {
         EntityAttributeRegistry.register(GALLIMIMUS, Gallimimus::createAttributes);
         EntityAttributeRegistry.register(MAIASAURA, Maiasaura::createAttributes);
         EntityAttributeRegistry.register(PTERANODON, Pteranodon::createAttributes);
+        EntityAttributeRegistry.register(QUETZALCOATLUS, Quetzalcoatlus::createAttributes);
+        EntityAttributeRegistry.register(HATZEGOPTERYX, Hatzegopteryx::createAttributes);
         EntityAttributeRegistry.register(MOSASAURUS, Mosasaurus::createAttributes);
         // END GENERATED attributes
     }

@@ -498,5 +498,75 @@
    "animation.maiasaura.tame"
   ],
   "render_scale": 1.0
+ },
+ "quetzalcoatlus": {
+  "bones": 30,
+  "cubes": 48,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -60.0,
+    1.11991812870008e-06,
+    -44.264707313087044
+   ],
+   [
+    60.0,
+    71.00692512316138,
+    10.0
+   ]
+  ],
+  "animations": [
+   "animation.quetzalcoatlus.idle",
+   "animation.quetzalcoatlus.walk",
+   "animation.quetzalcoatlus.run",
+   "animation.quetzalcoatlus.fly",
+   "animation.quetzalcoatlus.glide",
+   "animation.quetzalcoatlus.sit",
+   "animation.quetzalcoatlus.attack",
+   "animation.quetzalcoatlus.knocked_out",
+   "animation.quetzalcoatlus.wake",
+   "animation.quetzalcoatlus.eat",
+   "animation.quetzalcoatlus.beg",
+   "animation.quetzalcoatlus.tame"
+  ],
+  "render_scale": 1.0
+ },
+ "hatzegopteryx": {
+  "bones": 29,
+  "cubes": 47,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -63.0,
+    -0.12790841218199667,
+    -48.4276726914282
+   ],
+   [
+    63.0,
+    52.16627464982567,
+    12.0
+   ]
+  ],
+  "animations": [
+   "animation.hatzegopteryx.idle",
+   "animation.hatzegopteryx.walk",
+   "animation.hatzegopteryx.run",
+   "animation.hatzegopteryx.fly",
+   "animation.hatzegopteryx.glide",
+   "animation.hatzegopteryx.sit",
+   "animation.hatzegopteryx.attack",
+   "animation.hatzegopteryx.knocked_out",
+   "animation.hatzegopteryx.wake",
+   "animation.hatzegopteryx.eat",
+   "animation.hatzegopteryx.beg",
+   "animation.hatzegopteryx.tame"
+  ],
+  "render_scale": 1.0
  }
 }

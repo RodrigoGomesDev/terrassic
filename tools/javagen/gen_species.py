@@ -40,6 +40,10 @@ SIZES = {
     "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). The body is small (hitbox ~ folded on the ground).
     "pteranodon":         dict(real=7.25, scale=1.07, w=1.3, h=1.7, baby=0.3,  shadow=1.0),
+    # Azhdarchids: "real" is the wingspan. Quetzalcoatlus northropi 10-11 m (Witton & Habib 2010; Andres & Langston
+    # 2021), standing as tall as a giraffe; Hatzegopteryx thambema 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017).
+    "quetzalcoatlus":     dict(real=11.0, scale=1.47, w=2.5, h=5.0, baby=0.25, shadow=2.0),
+    "hatzegopteryx":      dict(real=12.0, scale=1.52, w=2.5, h=4.6, baby=0.25, shadow=2.1),
     # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
     "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
 }
@@ -61,6 +65,8 @@ GUIDE = {
     "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "maiasaura":          dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
+    "quetzalcoatlus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "hatzegopteryx":      dict(era="late_cretaceous", diet="carnivore", fossil=1),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
 }
 
@@ -83,6 +89,8 @@ WORLD = {
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
     "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
     "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
+    "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
+    "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
     "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
 }
 
@@ -191,6 +199,20 @@ SPECIES = [
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.45, 1.4, 220), xp=12, run=0.03,
       rideable=True, ride_offset=0.95, ride_forward=0.05, ride_speed=1.0,
       prey="e instanceof AbstractFish"),
+ dict(id="quetzalcoatlus", cls="Quetzalcoatlus", base="FlyingDinosaur",
+      doc="Quetzalcoatlus northropi - the largest flyer ever, a giraffe-tall azhdarchid that stalks open country on all fours and spears small prey like a giant stork. Egg-tamed for now (knockout taming comes in v0.7); a heavy flying mount.",
+      attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.3, FLYING_SPEED=0.7, ATTACK_DAMAGE=9, ARMOR=2, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=32),
+      food="Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF",
+      sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.6, 1.8, 300), xp=28, run=0.04,
+      rideable=True, ride_offset=2.25, ride_forward=0.0, ride_speed=0.9, egg_only=True,
+      prey="e.getBbWidth() < 1.0F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=140),
+ dict(id="hatzegopteryx", cls="Hatzegopteryx", base="FlyingDinosaur",
+      doc="Hatzegopteryx thambema - robust azhdarchid from Hateg Island with a very wide skull and a short, massive neck; the island's top predator, taking prey the size of a horse. Egg-tamed for now (knockout taming comes in v0.7); a heavy combat flyer.",
+      attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.28, FLYING_SPEED=0.62, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.0, ARMOR=3, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=32),
+      food="Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN",
+      sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.5, 2.0, 320), xp=32, run=0.04,
+      rideable=True, ride_offset=2.15, ride_forward=0.0, ride_speed=0.85, egg_only=True,
+      prey="e.getBbWidth() < 1.6F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=160),
  # ---- marine reptiles (SwimmingDinosaur: smooth swimming, wild only for now)
  dict(id="mosasaurus", cls="Mosasaurus", base="SwimmingDinosaur",
       doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Wild only in this version.",
@@ -306,6 +328,9 @@ def gen(s, bounds):
             body.append("    @Override\n    protected boolean huntsPlayers() {\n        return false;\n    }\n")
         if s.get("feeding_tame"):
             body.append("    @Override\n    public TameMethod tameMethod() {\n        return TameMethod.FEEDING;\n    }\n")
+        if s.get("egg_only") and s["base"] != "PredatorDinosaur":
+            # egg / baby taming only (knockout taming later): adults ignore food offered by hand
+            body.append("    @Override\n    public TameMethod tameMethod() {\n        return TameMethod.BABY_FEEDING;\n    }\n")
     # extra goals
     goals = []
     if s.get("leap"):
@@ -482,7 +507,7 @@ def gen_guide(bounds):
         k = size["scale"] / 16.0
         biggest = max((z1 - z0) * k, (y1 - y0) * k, (x1 - x0) * k)
         gui = round(100.0 / biggest, 2)  # pixels per block so the adult fits a ~100 px box in the notebook
-        egg_only = s["base"] == "PredatorDinosaur" and not s.get("feeding_tame")
+        egg_only = s.get("egg_only", s["base"] == "PredatorDinosaur" and not s.get("feeding_tame"))
         rows.append(f'            new GuideSpecies("{sid}", "{g["era"]}", "{g["diet"]}", {size["real"]}F, {str(bool(s.get("rideable"))).lower()}, '
                     f'{str(egg_only).lower()}, {g["fossil"]}, {gui}F)')
     src = f"""package com.terrassic.research;

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "hatch=0": {
+      "model": "terrassic:block/quetzalcoatlus_egg_0"
+    },
+    "hatch=1": {
+      "model": "terrassic:block/quetzalcoatlus_egg_1"
+    },
+    "hatch=2": {
+      "model": "terrassic:block/quetzalcoatlus_egg_2"
+    }
+  }
+}
