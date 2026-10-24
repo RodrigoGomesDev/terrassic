@@ -18,6 +18,7 @@ Spec keys (boxes are (x0, y0, z0, x1, y1, z1); head boxes are relative to the he
   saddle                    add_saddle(...) arguments after the bone, or None
   sit                       (drop, thigh, shin, foot, toes, {other joints}) resting pose
   after_torso(m), after_tail(m, tail)   hooks for special parts
+  extra_anims(m)            hook for more animations (abelisaur charge)
 """
 import math
 from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks, add_knockout, ground_drop
@@ -90,6 +91,8 @@ def build(species_id, spec):
     if spec.get("saddle"):
         add_saddle(m, "body", *spec["saddle"][0], **spec["saddle"][1])
     animations(m, spec["sit"])
+    if spec.get("extra_anims"):
+        spec["extra_anims"](m)
     return m
 
 

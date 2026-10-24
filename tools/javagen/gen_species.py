@@ -59,6 +59,7 @@ SIZES = {
     "dreadnoughtus":      dict(real=26.0, scale=2.69, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
     "giganotosaurus":     dict(real=13.0, scale=1.75, w=2.4, h=4.4, baby=0.25, shadow=2.3),
     "carcharodontosaurus": dict(real=12.5, scale=1.80, w=2.4, h=4.6, baby=0.25, shadow=2.3),
+    "carnotaurus":        dict(real=8.0,  scale=1.30, w=1.8, h=3.4, baby=0.3,  shadow=1.6),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -122,6 +123,7 @@ GUIDE = {
     "dreadnoughtus":      dict(era="late_cretaceous", diet="herbivore", fossil=2),
     "giganotosaurus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "carcharodontosaurus": dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "carnotaurus":        dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -171,6 +173,7 @@ WORLD = {
     "dreadnoughtus":      dict(biomes=("plains", "forest", "savanna"), weight=1, group=(1, 2), track=16),  # temperate Patagonia
     "giganotosaurus":     dict(biomes=("badlands", "savanna", "desert"), weight=1, group=(1, 2), track=10),  # the dry lands (HISTORIA)
     "carcharodontosaurus": dict(biomes=("savanna", "river", "badlands"), weight=1, group=(1, 1), track=10),  # Saharan river plains
+    "carnotaurus":        dict(biomes=("savanna", "plains", "badlands"), weight=2, group=(1, 2), track=10),  # Patagonian plains
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -350,6 +353,14 @@ SPECIES = [
       xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.1,
       prey="!(e instanceof Carcharodontosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, kills=True, prey_interval=200),
+ dict(id="carnotaurus", cls="Carnotaurus", base="PredatorDinosaur",
+      doc="Carnotaurus sastrei - 8 m horned abelisaur of the Patagonian plains: bull skull with two horns, stub arms, long legs, the fastest of the big predators. Roars when it locks onto a target and its charge throws whatever it hits. Only tameable from a stolen wild egg until the knockout (v0.7); the fast combat mount.",
+      attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.2, ARMOR=4, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=28),
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.9, 1.6, 220), step=("RAVAGER_STEP", 0.7, 0.8),
+      xp=28, step_height=1.2, head=(40, 30), run=0.02, rideable=True, jump=0.6, ride_offset=1.9, ride_speed=1.35,
+      prey="e.getBbWidth() < 2.6F && !(e instanceof Carnotaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
+      roar=True, prey_interval=160),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),

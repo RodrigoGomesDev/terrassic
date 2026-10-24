@@ -1431,5 +1431,40 @@
    "animation.carcharodontosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "carnotaurus": {
+  "bones": 24,
+  "cubes": 74,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -8.0,
+    -2.191411066133535e-05,
+    -41.249809171686834
+   ],
+   [
+    8.0,
+    43.699068525861875,
+    57.06117644194919
+   ]
+  ],
+  "animations": [
+   "animation.carnotaurus.idle",
+   "animation.carnotaurus.walk",
+   "animation.carnotaurus.run",
+   "animation.carnotaurus.attack",
+   "animation.carnotaurus.roar",
+   "animation.carnotaurus.sit",
+   "animation.carnotaurus.knocked_out",
+   "animation.carnotaurus.wake",
+   "animation.carnotaurus.eat",
+   "animation.carnotaurus.beg",
+   "animation.carnotaurus.tame",
+   "animation.carnotaurus.charge"
+  ],
+  "render_scale": 1.0
  }
 }

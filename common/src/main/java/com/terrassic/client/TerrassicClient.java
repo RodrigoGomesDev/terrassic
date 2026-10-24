@@ -8,6 +8,7 @@ import com.terrassic.entity.Argentinosaurus;
 import com.terrassic.entity.Baurusuchus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Carcharodontosaurus;
+import com.terrassic.entity.Carnotaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Corythosaurus;
 import com.terrassic.entity.Deinocheirus;
@@ -89,6 +90,7 @@ public final class TerrassicClient {
         renderer(ModEntities.DREADNOUGHTUS, "dreadnoughtus", Dreadnoughtus.MODEL_SCALE, Dreadnoughtus.SHADOW);
         renderer(ModEntities.GIGANOTOSAURUS, "giganotosaurus", Giganotosaurus.MODEL_SCALE, Giganotosaurus.SHADOW);
         renderer(ModEntities.CARCHARODONTOSAURUS, "carcharodontosaurus", Carcharodontosaurus.MODEL_SCALE, Carcharodontosaurus.SHADOW);
+        renderer(ModEntities.CARNOTAURUS, "carnotaurus", Carnotaurus.MODEL_SCALE, Carnotaurus.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

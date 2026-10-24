@@ -823,6 +823,22 @@ GUIDE = {
         note=("Ele comeu três bicos-de-pato em uma tarde. No terceiro, já corria mais do que eu conseguia contar.",
               "It ate three duckbills in one afternoon. By the third it ran faster than I could count.",
               "Se comió tres picos de pato en una tarde. Al tercero ya corría más de lo que yo podía contar.")),
+    "carnotaurus": dict(
+        sci=("Viveu há 72 a 70 milhões de anos na Patagônia argentina. 8 m e até 2 toneladas; crânio curto e fundo como o de um touro, com dois chifres grossos sobre os olhos; os braços mais curtos de todos os grandes terópodes; pernas longas e a maior musculatura de cauda: o mais rápido dos grandes predadores. A pele, conhecida por impressões, tinha fileiras de escudos cônicos.",
+             "Lived 72 to 70 million years ago in Argentine Patagonia. 8 m and up to 2 tonnes; a short, deep bull-like skull with two thick horns over the eyes; the shortest arms of any large theropod; long legs and the biggest tail muscles: the fastest of the big predators. Its skin, known from impressions, carried rows of conical scutes.",
+             "Vivió hace 72 a 70 millones de años en la Patagonia argentina. 8 m y hasta 2 toneladas; cráneo corto y profundo como el de un toro, con dos cuernos gruesos sobre los ojos; los brazos más cortos de todos los grandes terópodos; patas largas y la mayor musculatura de cola: el más rápido de los grandes depredadores. La piel, conocida por impresiones, tenía filas de escudos cónicos."),
+        behavior=("Planícies e savanas, sozinho ou em par. Ruge ao escolher a presa e vem de cabeça baixa: a investida arremessa quem atinge. Caça o que é menor que ele e corre de quase tudo o que é maior.",
+                  "Plains and savannas, alone or in a pair. It roars when it picks its prey and comes head down: the charge throws whatever it hits. It hunts what is smaller than itself and outruns almost everything bigger.",
+                  "Llanuras y sabanas, solo o en pareja. Ruge al elegir la presa y viene con la cabeza baja: la embestida lanza a quien golpea. Caza lo que es más pequeño que él y le gana en carrera a casi todo lo que es más grande."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem e criar o filhote com carne crua.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest and raise the baby on raw meat.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje y criar a la cría con carne cruda."),
+        utility=("A montaria de combate rápida: o grande predador mais veloz com uma sela em cima, e os chifres derrubam o que estiver na frente.",
+                 "The fast combat mount: the quickest big predator with a saddle on, and the horns knock down whatever stands in front.",
+                 "La montura de combate rápida: el gran depredador más veloz con una silla encima, y los cuernos derriban lo que esté delante."),
+        note=("Não dá para fugir dele a pé. Anotei isso depois.",
+              "You cannot outrun it on foot. I wrote that down afterwards.",
+              "No se le escapa a pie. Lo anoté después.")),
 }
 
 ERAS = {
