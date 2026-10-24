@@ -67,7 +67,7 @@ public class Dilophosaurus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 3.4D;
+        return 3.7D;
     }
 
     @Override

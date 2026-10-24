@@ -1,7 +1,7 @@
 {
  "tyrannosaurus": {
   "bones": 24,
-  "cubes": 52,
+  "cubes": 54,
   "texture": [
    128,
    256
@@ -14,7 +14,7 @@
    ],
    [
     9.5,
-    42.22876802622638,
+    43.07039501240632,
     58.07846886204352
    ]
   ],
@@ -25,7 +25,11 @@
    "animation.tyrannosaurus.attack",
    "animation.tyrannosaurus.roar",
    "animation.tyrannosaurus.sit",
-   "animation.tyrannosaurus.knocked_out"
+   "animation.tyrannosaurus.knocked_out",
+   "animation.tyrannosaurus.wake",
+   "animation.tyrannosaurus.eat",
+   "animation.tyrannosaurus.beg",
+   "animation.tyrannosaurus.tame"
   ],
   "render_scale": 1.0
  },
@@ -55,13 +59,17 @@
    "animation.spinosaurus.attack",
    "animation.spinosaurus.roar",
    "animation.spinosaurus.sit",
-   "animation.spinosaurus.knocked_out"
+   "animation.spinosaurus.knocked_out",
+   "animation.spinosaurus.wake",
+   "animation.spinosaurus.eat",
+   "animation.spinosaurus.beg",
+   "animation.spinosaurus.tame"
   ],
   "render_scale": 1.0
  },
  "dilophosaurus": {
-  "bones": 24,
-  "cubes": 34,
+  "bones": 25,
+  "cubes": 42,
   "texture": [
    128,
    128
@@ -70,12 +78,12 @@
    [
     -5.0,
     -0.14989446755437008,
-    -32.06308085254458
+    -36.07991813871589
    ],
    [
     5.0,
-    31.23939095899331,
-    41.00004408120612
+    33.23879977934128,
+    44.00004408120612
    ]
   ],
   "animations": [
@@ -85,25 +93,29 @@
    "animation.dilophosaurus.sit",
    "animation.dilophosaurus.display",
    "animation.dilophosaurus.attack",
-   "animation.dilophosaurus.knocked_out"
+   "animation.dilophosaurus.knocked_out",
+   "animation.dilophosaurus.wake",
+   "animation.dilophosaurus.eat",
+   "animation.dilophosaurus.beg",
+   "animation.dilophosaurus.tame"
   ],
   "render_scale": 1.0
  },
  "velociraptor": {
   "bones": 23,
-  "cubes": 36,
+  "cubes": 37,
   "texture": [
    128,
    128
   ],
   "bounds_px": [
    [
-    -4.0,
+    -4.5,
     1.3542856188248829e-05,
     -29.54294652807449
    ],
    [
-    4.0,
+    4.5,
     26.129759865306756,
     38.99998109612815
    ]
@@ -114,13 +126,17 @@
    "animation.velociraptor.run",
    "animation.velociraptor.sit",
    "animation.velociraptor.attack",
-   "animation.velociraptor.knocked_out"
+   "animation.velociraptor.knocked_out",
+   "animation.velociraptor.wake",
+   "animation.velociraptor.eat",
+   "animation.velociraptor.beg",
+   "animation.velociraptor.tame"
   ],
   "render_scale": 0.5
  },
  "compsognathus": {
-  "bones": 24,
-  "cubes": 29,
+  "bones": 25,
+  "cubes": 33,
   "texture": [
    64,
    128
@@ -128,13 +144,13 @@
   "bounds_px": [
    [
     -3.0,
-    -0.18719412780487232,
-    -23.961625578966864
+    -4.128006580828014e-05,
+    -25.95617861075005
    ],
    [
     3.0,
-    22.29712962219956,
-    41.011048053431345
+    22.825331778049367,
+    43.00867136753198
    ]
   ],
   "animations": [
@@ -143,7 +159,11 @@
    "animation.compsognathus.run",
    "animation.compsognathus.sit",
    "animation.compsognathus.attack",
-   "animation.compsognathus.knocked_out"
+   "animation.compsognathus.knocked_out",
+   "animation.compsognathus.wake",
+   "animation.compsognathus.eat",
+   "animation.compsognathus.beg",
+   "animation.compsognathus.tame"
   ],
   "render_scale": 0.3
  },
@@ -173,7 +193,11 @@
    "animation.triceratops.attack",
    "animation.triceratops.sit",
    "animation.triceratops.graze",
-   "animation.triceratops.knocked_out"
+   "animation.triceratops.knocked_out",
+   "animation.triceratops.wake",
+   "animation.triceratops.eat",
+   "animation.triceratops.beg",
+   "animation.triceratops.tame"
   ],
   "render_scale": 1.0
  },
@@ -203,7 +227,11 @@
    "animation.stegosaurus.attack",
    "animation.stegosaurus.sit",
    "animation.stegosaurus.graze",
-   "animation.stegosaurus.knocked_out"
+   "animation.stegosaurus.knocked_out",
+   "animation.stegosaurus.wake",
+   "animation.stegosaurus.eat",
+   "animation.stegosaurus.beg",
+   "animation.stegosaurus.tame"
   ],
   "render_scale": 1.0
  },
@@ -233,7 +261,11 @@
    "animation.ankylosaurus.attack",
    "animation.ankylosaurus.sit",
    "animation.ankylosaurus.graze",
-   "animation.ankylosaurus.knocked_out"
+   "animation.ankylosaurus.knocked_out",
+   "animation.ankylosaurus.wake",
+   "animation.ankylosaurus.eat",
+   "animation.ankylosaurus.beg",
+   "animation.ankylosaurus.tame"
   ],
   "render_scale": 1.0
  },
@@ -263,7 +295,11 @@
    "animation.brachiosaurus.attack",
    "animation.brachiosaurus.sit",
    "animation.brachiosaurus.graze",
-   "animation.brachiosaurus.knocked_out"
+   "animation.brachiosaurus.knocked_out",
+   "animation.brachiosaurus.wake",
+   "animation.brachiosaurus.eat",
+   "animation.brachiosaurus.beg",
+   "animation.brachiosaurus.tame"
   ],
   "render_scale": 1.0
  },
@@ -294,13 +330,17 @@
    "animation.parasaurolophus.sit",
    "animation.parasaurolophus.graze",
    "animation.parasaurolophus.call",
-   "animation.parasaurolophus.knocked_out"
+   "animation.parasaurolophus.knocked_out",
+   "animation.parasaurolophus.wake",
+   "animation.parasaurolophus.eat",
+   "animation.parasaurolophus.beg",
+   "animation.parasaurolophus.tame"
   ],
   "render_scale": 1.0
  },
  "pachycephalosaurus": {
   "bones": 24,
-  "cubes": 39,
+  "cubes": 43,
   "texture": [
    128,
    128
@@ -309,11 +349,11 @@
    [
     -6.0,
     -0.38300637678448757,
-    -31.063690025525496
+    -30.563717520841802
    ],
    [
     6.0,
-    35.994485309094905,
+    35.45901266884374,
     44.00001258866713
    ]
   ],
@@ -324,13 +364,17 @@
    "animation.pachycephalosaurus.sit",
    "animation.pachycephalosaurus.graze",
    "animation.pachycephalosaurus.attack",
-   "animation.pachycephalosaurus.knocked_out"
+   "animation.pachycephalosaurus.knocked_out",
+   "animation.pachycephalosaurus.wake",
+   "animation.pachycephalosaurus.eat",
+   "animation.pachycephalosaurus.beg",
+   "animation.pachycephalosaurus.tame"
   ],
   "render_scale": 0.667
  },
  "gallimimus": {
-  "bones": 24,
-  "cubes": 40,
+  "bones": 25,
+  "cubes": 42,
   "texture": [
    64,
    128
@@ -338,13 +382,13 @@
   "bounds_px": [
    [
     -4.5,
-    3.5581221027314314e-06,
-    -24.422172786313368
+    -3.741767337985774e-05,
+    -23.412442397507476
    ],
    [
     4.5,
-    31.388352645324133,
-    37.99998109612815
+    34.233090638163496,
+    38.99998109612815
    ]
   ],
   "animations": [
@@ -354,7 +398,11 @@
    "animation.gallimimus.sit",
    "animation.gallimimus.graze",
    "animation.gallimimus.attack",
-   "animation.gallimimus.knocked_out"
+   "animation.gallimimus.knocked_out",
+   "animation.gallimimus.wake",
+   "animation.gallimimus.eat",
+   "animation.gallimimus.beg",
+   "animation.gallimimus.tame"
   ],
   "render_scale": 1.0
  },
@@ -443,7 +491,11 @@
    "animation.maiasaura.sit",
    "animation.maiasaura.graze",
    "animation.maiasaura.call",
-   "animation.maiasaura.knocked_out"
+   "animation.maiasaura.knocked_out",
+   "animation.maiasaura.wake",
+   "animation.maiasaura.eat",
+   "animation.maiasaura.beg",
+   "animation.maiasaura.tame"
   ],
   "render_scale": 1.0
  }

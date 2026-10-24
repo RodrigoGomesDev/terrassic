@@ -44,15 +44,17 @@ SPEC = dict(
     torso=[("hips", (-6, 23, -1, 6, 36, 13)), ("belly", (-7, 17, -14, 7, 35, 0)), ("chest", (-6, 17, -24, 6, 33, -13)),
            ("shoulders", (-5, 27, -28, 5, 35, -22)), ("back_ridge", (-4, 35, -14, 4, 37, 10)),
            ("belly_low", (-5, 15, -19, 5, 17, -5))],
-    neck=([(31, -23), (34, -28), (35.5, -32)], [(9, 10), (8, 9)]), skull_tilt=-3,
+    neck=([(31, -23), (34, -28), (35.5, -32)], [(10, 11), (9, 10)]), skull_tilt=-3,
     head=[  # deep skull, wide at the back, narrow snout; brow horns
-        dict(bone="skull", box=(-4.5, -1, -8, 4.5, 6, 1), name="cranium", paint=MOUTH_DOWN),
+        dict(bone="skull", box=(-5, -1, -8, 5, 6, 1), name="cranium", paint=MOUTH_DOWN),
         dict(bone="skull", box=(-3, 0, -16, 3, 5, -8), name="snout",
              paint={"faces": {"down": "mouth"}, "teeth": {"edge": "bottom", "rows": 1}}),
         dict(bone="skull", box=(-2, 5, -14, 2, 6, -7), name="nasal_ridge"),
-        dict(bone="skull", box=(2.5, 6, -8, 4.5, 7, -5), name="brow_l", tag="dorsal_dark"),
-        dict(bone="skull", box=(-4.5, 6, -8, -2.5, 7, -5), name="brow_r", tag="dorsal_dark"),
-        dict(bone="jaw", box=(-4, -4, -9, 4, 0, -1), name="jaw_back", paint=MOUTH_UP),
+        dict(bone="skull", box=(3, 6, -7, 5, 7, -4), name="brow_l", tag="dorsal_dark"),       # postorbital bosses
+        dict(bone="skull", box=(-5, 6, -7, -3, 7, -4), name="brow_r", tag="dorsal_dark"),
+        dict(bone="skull", box=(2.5, 6, -10, 3.5, 8, -8), name="horn_l", tag="dorsal_dark"),  # lacrimal horns
+        dict(bone="skull", box=(-3.5, 6, -10, -2.5, 8, -8), name="horn_r", tag="dorsal_dark"),
+        dict(bone="jaw", box=(-4.5, -5, -9, 4.5, 0, -1), name="jaw_back", paint=MOUTH_UP),
         dict(bone="jaw", box=(-2.5, -3, -15, 2.5, 0, -9), name="jaw_front",
              paint={"faces": {"up": "mouth"}, "teeth": {"edge": "top", "rows": 1}}, inflate=0.0),
     ],
@@ -65,7 +67,7 @@ SPEC = dict(
          [("toe_mid", "limb", (-1, -2, -7, 1, 0, 1)), ("toe_out", "limb", (1, -2, -5, 2, 0, 1)),
           ("toe_in", "limb", (-2, -2, -5, -1, 0, 1)), ("claw_mid", "claw", (-1, -2, -8, 1, -1, -7)),
           ("claw_out", "claw", (1, -2, -6, 2, -1, -5)), ("claw_in", "claw", (-2, -2, -6, -1, -1, -5))]),
-    tail=([(31, 11), (30.5, 23), (30.5, 35), (31, 46), (31.5, 57)], [(10, 10), (8, 8), (6, 6), (4, 4)]),
+    tail=([(31, 11), (30.5, 23), (30.5, 35), (31, 46), (31.5, 57)], [(11, 11), (8, 8), (6, 6), (4, 4)]),
     saddle=((37, -6, 4, 8, 7), {"flap": 6}),
     sit=(13, 62, -118, 62, -6, {"tail1": (9, 0, 0), "tail2": (4, 0, 0), "tail3": (-2, 0, 0), "neck1": (-6, 0, 0), "skull": (4, 0, 0)}),
 )

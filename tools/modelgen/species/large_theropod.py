@@ -20,7 +20,7 @@ Spec keys (boxes are (x0, y0, z0, x1, y1, z1); head boxes are relative to the he
   after_torso(m), after_tail(m, tail)   hooks for special parts
 """
 import math
-from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks, add_knockout
+from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks, add_knockout, ground_drop
 
 
 def build(species_id, spec):
@@ -185,6 +185,7 @@ def animations(m, sit):
         joints["foot_" + side] = (foot, 0, 0)
         joints["toes_" + side] = (toes, 0, 0)
     joints.update(other)
+    drop = ground_drop(m, sit_tracks(4.0, drop, joints, breathe=0.4), drop)
     m.anim("sit", 4.0, True, sit_tracks(4.0, drop, joints, breathe=0.4))
 
-    add_knockout(m)
+    add_knockout(m, neck_down=-40)

@@ -1,6 +1,6 @@
 """Shared limb helpers + gait for big quadrupeds (Triceratops, Stegosaurus)."""
 import math
-from rig import wave, track, keys, sit_tracks, add_knockout
+from rig import wave, track, keys, sit_tracks, add_knockout, ground_drop
 
 
 def hind_leg(m, side, sx, x, pts, secs, pad):
@@ -55,6 +55,7 @@ def quad_sit(m, drop, hind=(50, -95, 45), front=(-35, 95, -50), tail=(6, 3), nec
     joints["tail1"] = (tail[0], 0, 0)
     joints["tail2"] = (tail[1], 0, 0)
     joints["neck1"] = (neck, 0, 0)
+    drop = ground_drop(m, sit_tracks(length, drop, joints), drop)   # belly exactly on the ground
     tr = sit_tracks(length, drop, joints)
     # front legs hang from the body, so they go down with it automatically
     return tr

@@ -67,11 +67,27 @@ Para centenas de espécies, cada família tem **um rig compartilhado** (arquéti
 - Todo arquétipo traz a animação `knocked_out` (deitado de lado, para a domesticação por nocaute; ver `docs/DOMESTICACAO.md`).
   A pose usa `rig.add_knockout(m, lift=..., shift=...)`, com altura e deslocamento em fração da altura do quadril.
 - O tamanho no jogo vem da escala do renderizador (`SIZES` em `tools/javagen/gen_species.py`), então o rig fica num tamanho só.
-- Próximos arquétipos: terópode pequeno, ceratopsiano, saurópode, anquilossauro, pterossauro e réptil marinho.
+- `species/pterosaur.py`: pterossauros (asa em 3 ossos + membranas, voo, andar de quatro com a asa dobrada, `sit` e
+  `knocked_out` com as asas recolhidas ao corpo). Usado por `quetzalcoatlus.py`; o `pteranodon.py` ainda tem o rig
+  próprio (migrar sem mudar a geometria, `checks.py`).
+- Ordem de produção (docs/ROADMAP.md): uma era por vez, na ordem da fila; o arquétipo nasce quando a primeira espécie
+  da fila precisa dele. Próximos: réptil marinho, plesiossauro, crocodilo, ceratopsiano, saurópode, anquilossauro.
+- **Cada modelo é único**: o arquétipo é só o esqueleto e as animações base; corpo, cabeça, proporções, pele e
+  detalhes são da espécie (ganchos `body_parts`, `leg`, `pattern`, `attack`, `after_*`).
+
+## Conferir uma pose sem compilar
+
+```bash
+python3 preview.py quetzalcoatlus idle sit knocked_out walk:0.25 fly:0.25   # folha quetzalcoatlus_pv.png (lado, 3/4, frente, cabeça)
+python3 posecheck.py quetzalcoatlus idle sit knocked_out                    # extensão de cada cubo; marca o que afunda no chão
+```
+
+A folha de prévia centraliza a câmera em cada pose e escreve o ponto mais baixo (`lowest y`): 0 = pés no chão;
+negativo = afundou; positivo nas poses de chão = flutuando. Use antes de rodar o `build_all.py`.
 
 ## Adicionar uma espécie
 
-1. Se a família já tem arquétipo, copie uma ficha (ex.: `maiasaura.py`) e mude a paleta, a cabeça e a crista. Se não tem, copie o arquivo mais parecido: `smalltheropod.py` + `velociraptor.py`/`gallimimus.py`/`dilophosaurus.py` para bípedes, `tyrannosaurus.py`/`spinosaurus.py` para terópodes grandes, ou `quadruped.py` + `brachiosaurus.py` para quadrúpedes.
+1. Se a família já tem arquétipo, copie uma ficha (ex.: `maiasaura.py`) e mude a paleta, a cabeça e a crista. Se não tem, copie o arquivo mais parecido: `smalltheropod.py` + `velociraptor.py`/`gallimimus.py`/`dilophosaurus.py` para bípedes, `tyrannosaurus.py`/`spinosaurus.py` para terópodes grandes, ou `quadruped.py` + `brachiosaurus.py` para quadrúpedes; `pterosaur.py` + `quetzalcoatlus.py` para pterossauros.
 2. Ajuste as proporções a partir das medidas reais (comprimento, altura do quadril, crânio).
 3. Adicione o nome em `ALL`, no `build_all.py`, e rode o gerador.
 4. No mod: adicione a espécie nas tabelas de `tools/javagen/gen_species.py` (`SPECIES`, `SIZES`, `GUIDE`, `WORLD`) e em `gen_resources.py`, e rode os dois. Os registros em `ModEntities`, `ModItems`, `ModBlocks`, `TerrassicClient` e `ModSpawns` são gerados (entre os marcadores GENERATED). Desenhe o ovo gerador em `tools/spritegen/sprites.py`.

@@ -9,13 +9,17 @@ Options in the parameter dict P (besides the geometry):
   teeth      : False for beaked animals (gallimimus, pachy)
   beak       : tag the snout as "beak"
   head_extra : extra head cubes [(x0,y0,z0, x1,y1,z1, tag, bone[, rot, origin_rel])] relative to the head
-               pivot; bone is "skull", "male_display" or "female_display"
+               pivot; bone is "skull", "male_display" or "female_display". Or dicts:
+               dict(box=(...), tag=, bone=, name=, paint=, rot=, origin=, inflate=)
+  neck_pts   : N+1 joints -> N neck segments (neck1..neckN); the head hangs from the last one
+  sickle_size: (length, height) of the raised sickle claw (default (1, 2))
+  extra      : callback extra(m, neck, tail) adding species-only geometry after the shared rig
   saddle     : (top_y, z0, z1, width, body_half_width) for rideable species
   sit        : dict(drop=, thigh=, shin=, foot=, toes=, tail=, neck=) resting pose
   sexes      : {"male": {palette overrides}, "female": {...}}
 """
 import math
-from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks, add_knockout
+from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks, add_knockout, ground_drop
 
 
 def build_small(ident, P):
@@ -28,9 +32,10 @@ def build_small(ident, P):
         m.box("body", b[0], b[1], name=b[2] if len(b) > 2 else "torso", tag=b[3] if len(b) > 3 else "skin")
 
     # neck + head --------------------------------------------------------
-    neck = m.chain(["neck1", "neck2"], "body", 0, P["neck_pts"], "-z", P["neck_secs"], overlap=(1.5, 1.0))
+    neck_names = [f"neck{i + 1}" for i in range(len(P["neck_pts"]) - 1)]
+    neck = m.chain(neck_names, "body", 0, P["neck_pts"], "-z", P["neck_secs"], overlap=(1.5, 1.0))
     ay, az = neck["end"]
-    m.bone("head", "neck2", (0, ay, az))
+    m.bone("head", neck_names[-1], (0, ay, az))
     m.bone("skull", "head", (0, ay, az), (P.get("head_pitch", 0) - neck["abs"], 0, 0))
     A = (0, ay, az)
 
@@ -58,17 +63,25 @@ def build_small(ident, P):
         m.box("skull", *rel(cx0, cy0, cz0, cx1, cy1, cz1), name="crest", tag="feather")
     made = set()
     for ex in P.get("head_extra", []):
-        x0, y0, z0, x1, y1, z1, tag, bone = ex[:8]
-        rot = ex[8] if len(ex) > 8 else None
-        org = ex[9] if len(ex) > 9 else None
+        if isinstance(ex, dict):   # dict(box=(x0,y0,z0,x1,y1,z1), tag, bone="skull", name, paint, rot, origin, inflate)
+            x0, y0, z0, x1, y1, z1 = ex["box"]
+            tag, bone = ex.get("tag", "skin"), ex.get("bone", "skull")
+            rot, org = ex.get("rot"), ex.get("origin")
+            extra_kw = {k: ex[k] for k in ("paint", "inflate") if k in ex}
+            name = ex.get("name", tag)
+        else:
+            x0, y0, z0, x1, y1, z1, tag, bone = ex[:8]
+            rot = ex[8] if len(ex) > 8 else None
+            org = ex[9] if len(ex) > 9 else None
+            extra_kw, name = {}, tag
         if bone in ("male_display", "female_display") and bone not in made:
             m.bone(bone, "skull", (0, ay, az))
             made.add(bone)
-        kw = {}
+        kw = dict(extra_kw)
         if rot:
             kw["rot"] = rot
             kw["origin"] = (org[0], ay + org[1], az + org[2]) if org else None
-        m.box(bone, *rel(x0, y0, z0, x1, y1, z1), tag=tag, name=tag, **{k: v for k, v in kw.items() if v is not None})
+        m.box(bone, *rel(x0, y0, z0, x1, y1, z1), tag=tag, name=name, **{k: v for k, v in kw.items() if v is not None})
     er = H.get("eye_r", 1.0)
     ey, ez = A[1] + H["eye"][0], A[2] + H["eye"][1]
     m.decals += [
@@ -109,7 +122,8 @@ def build_small(ident, P):
         m.box(f"toes_{side}", (x - tw / 2, by - 1, bz - tl - 1), (x + tw / 2, by, bz - tl), tag="claw", name="claws")
         if P.get("sickle"):
             ix = x - sx * (tw / 2)  # inner edge
-            m.box(f"toes_{side}", (min(ix, ix + sx), by, bz - 2), (max(ix, ix + sx), by + 2, bz - 1), tag="claw",
+            sl, sh = P.get("sickle_size", (1, 2))   # length back along the toe, height
+            m.box(f"toes_{side}", (min(ix, ix + sx), by, bz - 1 - sl), (max(ix, ix + sx), by + sh, bz - 1), tag="claw",
                   name="sickle", rot=(-25, 0, 0), origin=(ix, by, bz - 1), paint={"axis": "+y"})
     m.sym(leg)
 
@@ -125,6 +139,8 @@ def build_small(ident, P):
 
     if P.get("saddle"):
         add_saddle(m, "body", *P["saddle"])
+    if P.get("extra"):
+        P["extra"](m, neck, tail)     # species-only geometry (plumage, knobs, fingers...)
     m.sexes = P.get("sexes", {"male": {}, "female": {}})
     m.pattern = P.get("pattern")
     animations(m, P)
@@ -185,6 +201,7 @@ def animations(m, P):
     joints["tail2"] = (4, 0, 0)
     joints["neck1"] = (st.get("neck", -10), 0, 0)
     joints["skull"] = (6, 0, 0)
+    drop = ground_drop(m, sit_tracks(3.0, drop, joints), drop)   # belly / folded legs exactly on the ground
     m.anim("sit", 3.0, True, sit_tracks(3.0, drop, joints))
 
     if P.get("display"):
@@ -218,7 +235,7 @@ def animations(m, P):
                           pos=keys([(0, 0, 0, 0), (0.2, 0, 0, 2), (0.35, 0, -0.5, -3), (0.7, 0, 0, 0)])),
         })
     if P.get("pachy"):
-        add_knockout(m)
+        add_knockout(m, neck_down=-50)
         return
     La = 0.6
     m.anim("attack", La, False, {
@@ -229,4 +246,4 @@ def animations(m, P):
         "arm_r": track(rot=keys([(0, 0, 0, 0), (0.15, -40, 0, 10), (0.3, 20, 0, 0), (0.6, 0, 0, 0)])),
         "body": track(rot=keys([(0, 0, 0, 0), (0.15, 4, 0, 0), (0.3, -6, 0, 0), (0.6, 0, 0, 0)])),
     })
-    add_knockout(m)
+    add_knockout(m, neck_down=-50)   # bipeds reach the ground with the whole neck

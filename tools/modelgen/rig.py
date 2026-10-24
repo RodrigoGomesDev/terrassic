@@ -335,7 +335,7 @@ for _side, _k in (("l", 1), ("r", -1)):
                  f"upperarm_{_side}": (-25 * _k, 0, 0), f"forearm_{_side}": (20, 0, 0)})
 
 
-def add_knockout(m, roll=82, lift=0.26, shift=0.57, joints=None, length=4.0):
+def add_knockout(m, roll=82, lift=0.26, shift=0.57, joints=None, length=4.0, neck_down=-30):
     """
     Adds the 'knocked_out' loop (knockout taming, docs/DOMESTICACAO.md) to any model with root/body bones.
     lift and shift are fractions of the hip height (the body pivot), so one setting fits every size.
@@ -343,4 +343,83 @@ def add_knockout(m, roll=82, lift=0.26, shift=0.57, joints=None, length=4.0):
     names = {b.name for b in m.bones}
     hip = next(b for b in m.bones if b.name == "body").pivot[1]
     limp = {k: v for k, v in (joints or LIMP).items() if k in names}
-    m.anim("knocked_out", length, True, knockout_tracks(length, roll, -lift * hip, shift * hip, limp))
+    lift_px = ground_lift(m, knockout_tracks(length, roll, -lift * hip, shift * hip, limp), lift * hip)
+    m.anim("knocked_out", length, True, knockout_tracks(length, roll, -lift_px, shift * hip, limp))
+    add_wake(m, roll, lift_px, shift * hip, limp)
+    add_actions(m, neck_down=neck_down)   # eat / beg / tame; neck_down = how far the head dips to the food
+
+
+HIDDEN_FOR_GROUND = ("saddle", "male_display", "female_display")
+
+
+def lowest_point(m, tracks, t=0.0, hidden=HIDDEN_FOR_GROUND):
+    """World y of the lowest cube corner of the model in the pose given by `tracks` at time t (pybench)."""
+    from pybench import Rig, pose_at
+    probe = {"name": "probe", "length": 1, "loop": False, "bones": {bone: dict(tr) for bone, tr in tracks.items()}}
+    faces = Rig(m.spec()).cube_faces(pose_at(probe, t), hidden=hidden)
+    return min(w[1][1] for c, f, corners, uv in faces for w in corners.values())
+
+
+def ground_lift(m, tracks, lift_px):
+    """Root lift that puts the lowest cube of the (knocked-out) pose exactly on the ground, so the body neither sinks
+    nor floats whatever the species' shape."""
+    return round(lift_px - lowest_point(m, tracks), 2)
+
+
+def ground_drop(m, tracks, drop):
+    """Body drop that puts the lowest cube of a resting pose exactly on the ground (see sit_tracks)."""
+    return round(drop + lowest_point(m, tracks), 2)
+
+
+def _only(m, tracks):
+    names = {b.name for b in m.bones}
+    return {k: v for k, v in tracks.items() if k in names}
+
+
+def add_wake(m, roll, lift, shift, limp, length=1.8):
+    """'wake': gets up from the knocked-out pose (same roll/shift/lift), then shakes the head."""
+    t = {"root": track(rot=keys([(0, 0, 0, roll), (0.4, 0, 0, roll), (1.2, 0, 0, 0), (length, 0, 0, 0)]),
+                       pos=keys([(0, shift, lift, 0), (0.4, shift, lift, 0), (1.2, 0, 0, 0), (length, 0, 0, 0)])),
+         "skull": track(rot=keys([(0, 0, 0, 0), (1.2, 0, 0, 0), (1.35, 0, 0, 10), (1.5, 0, 0, -10), (1.65, 0, 0, 6), (length, 0, 0, 0)]))}
+    for bone, rot in limp.items():
+        if bone == "skull":
+            t[bone] = track(rot=keys([(0, *rot), (0.4, *rot), (1.2, 0, 0, 0), (1.35, 0, 0, 10), (1.5, 0, 0, -10), (1.65, 0, 0, 6), (length, 0, 0, 0)]))
+        else:
+            t[bone] = track(rot=keys([(0, *rot), (0.4, *rot), (1.2, 0, 0, 0), (length, 0, 0, 0)]))
+    m.anim("wake", length, False, _only(m, t))
+
+
+def add_actions(m, neck_down=-30, chew=-14):
+    """
+    Generic taming-loop actions for any model with neck1/neck2/skull/jaw (docs/DOMESTICACAO.md):
+      eat  : lowers the head to the food and chews four times (one-shot, 2.4 s)
+      beg  : looks up at the player, head tilting side to side, small bounce (loop, 2 s)
+      tame : happy shake, head up and mouth open (one-shot, 1.6 s)
+    Bones the model does not have are skipped, so every archetype can call it.
+    """
+    jk = [(0, 0, 0, 0), (0.5, 0, 0, 0)]
+    for k in range(4):
+        t0 = 0.6 + k * 0.3
+        jk += [(t0, chew, 0, 0), (t0 + 0.15, -2, 0, 0)]
+    jk += [(1.9, 0, 0, 0), (2.4, 0, 0, 0)]
+    m.anim("eat", 2.4, False, _only(m, {
+        "neck1": track(rot=keys([(0, 0, 0, 0), (0.5, neck_down, 0, 0), (1.9, neck_down, 0, 0), (2.4, 0, 0, 0)])),
+        "neck2": track(rot=keys([(0, 0, 0, 0), (0.5, neck_down * 0.5, 0, 0), (1.9, neck_down * 0.5, 0, 0), (2.4, 0, 0, 0)])),
+        "skull": track(rot=keys([(0, 0, 0, 0), (0.5, -10, 0, 0), (1.9, -10, 0, 0), (2.4, 0, 0, 0)])),
+        "jaw": track(rot=keys(jk)),
+        "body": track(rot=keys([(0, 0, 0, 0), (0.5, -4, 0, 0), (1.9, -4, 0, 0), (2.4, 0, 0, 0)])),
+    }))
+    m.anim("beg", 2.0, True, _only(m, {
+        "neck1": track(rot=keys([(0, 12, 0, 0), (1.0, 15, 0, 0), (2.0, 12, 0, 0)])),
+        "skull": track(rot=keys([(0, 6, 0, 12), (0.5, 8, 0, 0), (1.0, 6, 0, -12), (1.5, 8, 0, 0), (2.0, 6, 0, 12)])),
+        "jaw": track(rot=keys([(0, -6, 0, 0), (0.5, -12, 0, 0), (1.0, -6, 0, 0), (1.5, -12, 0, 0), (2.0, -6, 0, 0)])),
+        "body": track(pos=keys([(0, 0, 0, 0), (0.5, 0, 0.6, 0), (1.0, 0, 0, 0), (1.5, 0, 0.6, 0), (2.0, 0, 0, 0)])),
+        "tail1": track(rot=keys([(0, 0, 10, 0), (0.5, 0, -10, 0), (1.0, 0, 10, 0), (1.5, 0, -10, 0), (2.0, 0, 10, 0)])),
+    }))
+    m.anim("tame", 1.6, False, _only(m, {
+        "body": track(rot=keys([(0, 0, 0, 0), (0.2, 0, 0, 4), (0.4, 0, 0, -4), (0.6, 0, 0, 4), (0.8, 0, 0, -3), (1.0, 0, 0, 0), (1.6, 0, 0, 0)])),
+        "neck1": track(rot=keys([(0, 0, 0, 0), (0.6, 18, 0, 0), (1.2, 18, 0, 0), (1.6, 0, 0, 0)])),
+        "skull": track(rot=keys([(0, 0, 0, 0), (0.6, 10, 0, 0), (1.2, 10, 0, 0), (1.6, 0, 0, 0)])),
+        "jaw": track(rot=keys([(0, 0, 0, 0), (0.6, -22, 0, 0), (1.2, -22, 0, 0), (1.6, 0, 0, 0)])),
+        "tail1": track(rot=keys([(0, 0, 0, 0), (0.2, 0, 12, 0), (0.4, 0, -12, 0), (0.6, 0, 12, 0), (0.8, 0, -12, 0), (1.0, 0, 0, 0), (1.6, 0, 0, 0)])),
+    }))

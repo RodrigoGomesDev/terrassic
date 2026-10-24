@@ -61,7 +61,7 @@ public class Compsognathus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 0.9D;
+        return 1.0D;
     }
 
     @Override

@@ -61,7 +61,7 @@ public class Pachycephalosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 2.3D;
+        return 2.2D;
     }
 
     @Override

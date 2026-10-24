@@ -34,14 +34,14 @@ Mesmos nomes da seção "Domesticação: animações e telas" do `docs/ROSTER.md
 | Animação | Tipo | Estado |
 |---|---|---|
 | `knockout` | uma vez: cambaleia e tomba | a fazer |
-| `knocked_out` | em loop: deitada de lado, respiração lenta | **pronta nos 13 dinossauros terrestres** (falta Pteranodonte e Mosassauro) |
-| `wake` | uma vez: levanta e sacode a cabeça | a fazer |
-| `eat` | uma vez: come da mão ou do chão | a fazer |
-| `tame` | uma vez: reação de domada | a fazer |
-| `beg` | em loop: filhote pedindo comida | a fazer |
+| `knocked_out` | em loop: deitada de lado, respiração lenta | **pronta nos 13 dinossauros terrestres e no Quetzalcoatlus** (falta Pteranodonte e Mosassauro). A altura é calibrada por medida (`rig.ground_lift`), então nenhum corpo afunda nem flutua |
+| `wake` | uma vez: levanta da pose de nocaute e sacode a cabeça | **pronta** onde há `knocked_out` (`rig.add_wake`) |
+| `eat` | uma vez: abaixa a cabeça até a comida e mastiga 4 vezes | **pronta** (`rig.add_actions`) |
+| `tame` | uma vez: sacode o corpo, cabeça pra cima e boca aberta, cauda abanando | **pronta** (`rig.add_actions`) |
+| `beg` | em loop: olha para cima, inclina a cabeça de um lado para o outro, pulinho | **pronta** (`rig.add_actions`) |
 | `hatch` | uma vez: sai do ovo (quem nasce vivo usa a de nascimento) | a fazer |
 
-Todo arquétipo novo (terópode, ceratopsiano, saurópode, anquilossauro, pterossauro, réptil marinho) sai com `knocked_out`. As espécies antigas que ainda não usam arquétipo ganham a animação quando migrarem.
+Todo arquétipo novo (terópode, ceratopsiano, saurópode, anquilossauro, pterossauro, réptil marinho) sai com `knocked_out`, `wake`, `eat`, `beg` e `tame` (o `rig.add_knockout` adiciona as cinco; o Java ainda não as dispara, isso entra com o sistema na v0.7). As espécies antigas que ainda não usam arquétipo ganham a animação quando migrarem.
 
 ## Realismo
 O nocaute é mecânica de jogo, não comportamento real. O que segue a vida real: tamanho, dieta, comida preferida, comportamento em bando e onde cada animal vive. Animais muito grandes precisam de mais torpor, e predadores de topo acordam mais rápido.
