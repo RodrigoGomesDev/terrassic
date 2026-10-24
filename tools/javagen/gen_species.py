@@ -80,6 +80,8 @@ SIZES = {
     "didelphodon":        dict(real=1.0,  scale=0.26, w=0.5, h=0.4, baby=0.5,  shadow=0.3),
     # Mesodma: ~15 cm head and body plus a tail nearly as long (Clemens 1964; Wilson 2013). Modelled large, 43 px.
     "mesodma":            dict(real=0.25, scale=0.09, w=0.3, h=0.2, baby=0.5,  shadow=0.15),
+    # Basilemys: a 1-1.3 m box-like carapace (Dinosaur Park, Hell Creek; Brinkman 1998; Mallon & Brinkman 2011), ~1.7 m with head and tail. 74 px long at 2x.
+    "basilemys":          dict(real=1.7,  scale=0.37, w=0.9, h=0.5, baby=0.4,  shadow=0.7),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -160,6 +162,7 @@ GUIDE = {
     "mononykus":          dict(era="late_cretaceous", diet="carnivore", fossil=4),
     "didelphodon":        dict(era="late_cretaceous", diet="omnivore",  fossil=5),
     "mesodma":            dict(era="late_cretaceous", diet="omnivore",  fossil=8),
+    "basilemys":          dict(era="late_cretaceous", diet="herbivore", fossil=7),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -223,6 +226,7 @@ WORLD = {
     "mononykus":          dict(biomes=("desert", "badlands", "savanna", "plains"), weight=6, group=(2, 4), track=6),  # Nemegt sands, small groups
     "didelphodon":        dict(biomes=("river", "swamp", "forest", "plains"), weight=6, group=(1, 2), track=6),  # Hell Creek riverbanks
     "mesodma":            dict(biomes=("forest", "plains", "swamp", "river", "taiga"), weight=10, group=(2, 4), track=6),  # the "rabbit": everywhere in the litter
+    "basilemys":          dict(biomes=("plains", "river", "swamp", "coast"), weight=7, group=(1, 3), track=8),        # the land turtle of the floodplains and deltas
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -496,6 +500,11 @@ SPECIES = [
       food="Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.SWEET_BERRIES, Items.GLOW_BERRIES",
       sounds=("RABBIT_AMBIENT", "RABBIT_HURT", "RABBIT_DEATH", 1.3, 0.5, 220), step=("RABBIT_JUMP", 0.1, 1.4),
       xp=1, run=0.04, prey="false", hunts_players=False, feeding_tame=True, skittish=True, nocturnal=True, rear="nibble"),
+ dict(id="basilemys", cls="Basilemys", base="HerbivoreDinosaur",
+      doc="Basilemys - the big land turtle of the Cretaceous floodplains, a high box-like sculptured shell over a metre long, a hooked beak and thick clawed legs. Slow, peaceful and armoured: hurt, it pulls into the shell (the hide animation and a burst of Resistance) and only bites back. Meat and shell plates (scutes); hand-tamed with ferns, berries, kelp or melon.",
+      attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.16, ATTACK_DAMAGE=4, ARMOR=10, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=16),
+      food="Items.FERN, Items.SWEET_BERRIES, Items.KELP, Items.MELON_SLICE",
+      sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 1.0, 0.9, 320), xp=4, run=0.02, shell=True),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -718,6 +727,8 @@ def gen(s, bounds):
         extras.append("display")
     if s.get("call"):
         extras.append("call")
+    if s.get("shell"):
+        extras.append("hide")
     if s.get("rear"):
         extras.append(s["rear"] if isinstance(s["rear"], str) else "rear")
     if s.get("dig"):
@@ -1050,6 +1061,22 @@ def gen(s, bounds):
         }
     }
 """.replace('"rear"', '"' + rear_anim + '"'))
+    if s.get("shell"):
+        assert not s.get("call"), s["id"] + ": call and shell both override hurt"
+        imports.add("net.minecraft.world.damagesource.DamageSource")
+        imports.add("net.minecraft.world.effect.MobEffectInstance")
+        imports.add("net.minecraft.world.effect.MobEffects")
+        body.append("""    /** Hurt, it pulls into the shell: the "hide" animation and four seconds of Resistance II (not while ridden). */
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && !this.level().isClientSide() && this.isAlive() && !this.isVehicle()) {
+            triggerAnim(ACTION_CONTROLLER, "hide");
+            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 80, 1));
+        }
+        return hurt;
+    }
+""")
     if s.get("call"):
         imports.add("net.minecraft.world.damagesource.DamageSource")
         call = "this.callOut()" if s.get("calm") else 'triggerAnim(ACTION_CONTROLLER, "call")'

@@ -59,6 +59,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Mononykus           desert*, badlands, savanna, plains 6       2-4
  *  Didelphodon         river, swamp, mangrove, forest, plains 6       1-2
  *  Mesodma             forest, plains, swamp, mangrove, river, taiga 10      2-4
+ *  Basilemys           plains, river, swamp, mangrove, beach, stony shore 7       1-3
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -125,6 +126,7 @@ public final class ModSpawns {
         placement(ModEntities.MONONYKUS);
         placement(ModEntities.DIDELPHODON);
         placement(ModEntities.MESODMA);
+        placement(ModEntities.BASILEMYS);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -280,6 +282,9 @@ public final class ModSpawns {
             }
             if (forest || plains || swamp || river || taiga) {
                 add(props, ModEntities.MESODMA.get(), 10, 2, 4);
+            }
+            if (plains || river || swamp || coast) {
+                add(props, ModEntities.BASILEMYS.get(), 7, 1, 3);
             }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);

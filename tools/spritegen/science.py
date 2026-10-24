@@ -500,6 +500,7 @@ FOSSIL_MOTIF = {
     # sea
     "mosasaurus": "mosa_jaw", "tylosaurus": "mosa_jaw", "elasmosaurus": "paddle", "xiphactinus": "fish",
     "archelon": "shell",
+    "basilemys": "shell",
     # crocodylomorphs and the mammal
     "deinosuchus": "croc_jaw", "baurusuchus": "croc_jaw", "didelphodon": "mammal_jaw", "mesodma": "mammal_jaw",
 }

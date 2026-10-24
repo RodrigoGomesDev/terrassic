@@ -1916,5 +1916,40 @@
    "animation.mesodma.tame"
   ],
   "render_scale": 0.2
+ },
+ "basilemys": {
+  "bones": 23,
+  "cubes": 39,
+  "texture": [
+   256,
+   256
+  ],
+  "bounds_px": [
+   [
+    -14.0,
+    -0.13052318421546794,
+    -42.96836568985926
+   ],
+   [
+    14.0,
+    21.0,
+    31.09322974188683
+   ]
+  ],
+  "animations": [
+   "animation.basilemys.idle",
+   "animation.basilemys.walk",
+   "animation.basilemys.run",
+   "animation.basilemys.sit",
+   "animation.basilemys.graze",
+   "animation.basilemys.attack",
+   "animation.basilemys.hide",
+   "animation.basilemys.knocked_out",
+   "animation.basilemys.wake",
+   "animation.basilemys.eat",
+   "animation.basilemys.beg",
+   "animation.basilemys.tame"
+  ],
+  "render_scale": 0.5
  }
 }

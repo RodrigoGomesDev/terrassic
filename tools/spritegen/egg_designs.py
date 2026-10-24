@@ -655,6 +655,29 @@ def mesodma():
     return e
 
 
+def basilemys():
+    """The land turtle: a high dark sculptured carapace with the scute grid and a straw rim, the hooked beak below."""
+    e = Egg("basilemys", {"b": "#4e4a30", "c": "#c8b878", "d": "#3e3a24", "n": "#262014",
+                          "o": "#9a8c58", "O": "#8c8458", "k": "#5a5440", "s": "#7e7858", "S": "#9a9470"})
+    # the box-like carapace over the top, with the seams of the scutes and the pale rim
+    e.ell((2, 0, 29, 19), "b", clip=True)
+    for y in (5, 11):
+        e.line([(3, y), (28, y)], "O", clip=True)
+    for x in (9, 15, 21):
+        e.line([(x, 1), (x, 16)], "O", clip=True)
+    e.line([(3, 16), (28, 16)], "d", clip=True)
+    e.line([(2, 17), (29, 17)], "o", clip=True)
+    e.line([(2, 18), (29, 18)], "o", clip=True)
+    # the head below the rim: grey-brown skin, the beak hooked down, the plastron patch at the bottom
+    e.ell((9, 19, 22, 31), "s", clip=True)
+    e.ell((11, 20, 20, 25), "S", clip=True)
+    eyes(e, 23, 13)
+    e.poly([(12, 27), (19, 27), (18, 31), (16, 33), (14, 31)], "k")
+    e.line([(13, 29), (18, 29)], "n")
+    e.ell((10, 33, 21, 40), "c", clip=True)
+    return e
+
+
 def therizinosaurus():
     e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
                                    "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
@@ -894,7 +917,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma", "basilemys"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

@@ -22,6 +22,7 @@ SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearin
     "leptoceratops": ("Leptoceratops", "Leptoceratops", "Leptoceratops", False),
     "vegavis": ("Vegavis", "Vegavis", "Vegavis", False),
     "mesodma": ("Mesodma", "Mesodma", "Mesodma", False),
+    "basilemys": ("Basilemys", "Basilemys", "Basilemys", False),
     "stegosaurus": ("Stegosaurus", "Estegossauro", "Estegosaurio", True),
     "ankylosaurus": ("Ankylosaurus", "Anquilossauro", "Anquilosaurio", True),
     "euoplocephalus": ("Euoplocephalus", "Euoplocéfalo", "Euoplocephalus", True),
@@ -351,6 +352,7 @@ def main():
         "leptoceratops": [item("terrassic:raw_dino_meat", 2, 4, True), item("minecraft:leather", 1, 2), item("minecraft:bone", 0, 2)],
         "vegavis": [item("terrassic:raw_dino_meat", 1, 1, True), item("minecraft:feather", 1, 3), item("minecraft:bone", 0, 1)],
         "mesodma": [item("terrassic:raw_dino_meat", 0, 1, True), item("minecraft:rabbit_hide", 0, 1), item("minecraft:bone", 0, 1)],
+        "basilemys": [item("terrassic:raw_dino_meat", 1, 2, True), item("minecraft:scute", 1, 3), item("minecraft:bone", 1, 2)],
     }
     for sid, pools in loot.items():
         if sid in SEA_MEAT:

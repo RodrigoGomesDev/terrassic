@@ -1587,6 +1587,9 @@ SKULLS = {
     # the little multituberculate: a round cranium, a big orbit and the long gnawing incisors
     "mesodma": ["......ooooooo...", "....oobbbbbbboo.", "...obbbbbeebbbo.", "..obbbbbbeebbbo.",
                 "..obbbbbbbbbbbo.", "..ottbbbbbbbbo..", "...o.obbbbbbo...", ".....oooooooo..."],
+    # the land turtle: a blunt deep skull, a big orbit, the hooked beak
+    "basilemys": [".......oooooo...", ".....oobbbbbboo.", "...oobbbbbeebbo.", "..obbbbbbbeebbo.",
+                  ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbo..", "obbbbbbbbbbbo...", ".oooobbbbbbo....", "....oooooooo...."],
     "maiasaura": ["..........o.....", ".........olo....", "........obbo....", "......oobbbboo..",
                   "....oobbbbbeebo.", "..oobbbbbbbeebo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbbo.",
                   "oobbbbbbbbbbbo..", ".obbbbbbbbbbo...", "..oooooooooo...."],
@@ -1735,7 +1738,7 @@ HIDE_PATTERN = {  # rug pattern of each species (scales by default)
     "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots", "leptoceratops": "spots",
     "ankylosaurus": "osteoderms", "triceratops": "big_scales", "mosasaurus": "fine_scales",
     "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
-    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz", "mesodma": "fuzz",
+    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz", "mesodma": "fuzz", "basilemys": "osteoderms",
     "struthiomimus": "feathers", "deinocheirus": "feathers", "therizinosaurus": "feathers",
     "hesperornis": "feathers", "ichthyornis": "feathers", "vegavis": "feathers",
 }

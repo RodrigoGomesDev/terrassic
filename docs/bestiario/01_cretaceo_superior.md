@@ -422,7 +422,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 302 | Protostega | Tartaruga marinha | 🌊 | Onívoro | 3 m | Onívoro médio | Defensivo | Comida | ✅ | Montaria aquática |  |
 | 303 | Desmatochelys | Tartaruga marinha | 🌊 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 304 | Toxochelys | Tartaruga marinha | 🌊 | Onívoro | 1,5 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
-| 305 | Basilemys | Tartaruga | 🦖 | Herbívoro | 1,5 m | Herbívoro pequeno | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
+| 305 | **Basilemys** | Tartaruga | 🐢 | Herbívoro | 1,7 m | Herbívoro pequeno | Pacífico (recolhe-se no casco) | Comida | — | Carne e escamas; a tartaruga terrestre dos deltas | v0.7 |
 
 ## Lagartos, serpentes e anfíbios
 
