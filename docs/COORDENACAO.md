@@ -42,6 +42,7 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Codex | `research/Knowledge.java`, `ResearchData.java`, `Research.java`, `network/ModNetwork.java` e delta NBT, `client/ClientHooks.java`/`ClientResearch.java` (só recepção de dados), `common/build.gradle`, testes e documentação | Concluído; build e regressões de dados/protocolo passaram. Sem alterações de interface/arte ou novas features narrativas |
 | Codex | `tools/validation/`, utilitários de teste em `common/src/regression/`, documentação | Concluído: conexões reais em Fabric e Forge, páginas, isolamento, negociação, reconexão e reinício passaram; fixtures Python passaram |
 | Codex | `tools/validation/load_profile.py`, `tools/validation/java/JfrSummary.java`, documentação | Em preparação: perfil local gradual com clientes criativos estacionários e JFR; não equivale a jogadores ativos nem valida o alvo de 100 jogadores |
+| Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Em uso (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
 ## Estado observado no checkout
@@ -130,3 +131,7 @@ atuais nesta entrega; o histórico Git permanece preservado.
   4.153 JSONs e 1.516 chaves por idioma. Teste visual do novo menu continua com a frente correspondente.
 - Referências empresariais reapareceram nos estudos recebidos; foram ajustadas à decisão de titularidade pessoal
   do Rodrigo, inclusive as hipóteses de cessão para empresa. Não foram criados documentos de licença por esta frente.
+- Integrados também `9678b59`/`801eb01` (vozes e efeitos próprios) e `9de2bed` (Leptoceratops e comida dos carnívoros).
+  Conflito no quadro de reservas resolvido preservando as duas frentes. Validador: 54 espécies, 4.180 JSONs e
+  1.743 chaves por idioma; build dos dois loaders com regressões passou em 27 s. A reserva da fauna 108-113 segue
+  com o Claude; o perfil do Codex só lê um snapshot fixo dessas fontes.

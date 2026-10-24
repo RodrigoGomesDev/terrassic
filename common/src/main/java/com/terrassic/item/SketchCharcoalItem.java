@@ -1,5 +1,6 @@
 package com.terrassic.item;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.registry.ModItems;
 import com.terrassic.research.Research;
@@ -68,7 +69,7 @@ public class SketchCharcoalItem extends Item {
             user.releaseUsingItem();
             return;
         }
-        level.playSound(null, player.blockPosition(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER, SoundSource.PLAYERS, 0.5F, 1.4F);
+        level.playSound(null, player.blockPosition(), ModSounds.SFX_CHARCOAL.get(), SoundSource.PLAYERS, 0.5F, 1.4F);
         if (used >= SKETCH_TICKS) {
             ItemStack sketch = SketchItem.of(ModItems.SKETCH.get(), target.speciesId());
             if (!player.getInventory().add(sketch)) {

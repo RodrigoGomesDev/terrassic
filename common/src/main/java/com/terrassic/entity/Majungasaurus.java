@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -29,7 +31,7 @@ public class Majungasaurus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.26F;
     public static final float SHADOW = 1.5F;
-    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, Items.CHICKEN);
+    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
 
     public Majungasaurus(EntityType<? extends Majungasaurus> type, Level level) {
@@ -136,7 +138,7 @@ public class Majungasaurus extends PredatorDinosaur {
         if (!this.level().isClientSide() && target != null && previous == null && this.displayCooldown <= 0 && !this.isVehicle()) {
             this.displayCooldown = 400;
             triggerAnim(ACTION_CONTROLLER, "roar");
-            this.playSound(SoundEvents.RAVAGER_ROAR, 3.0F, 0.7F);
+            this.playSound(ModSounds.MAJUNGASAURUS_THREAT.get(), 3.0F, 1.0F);
         }
     }
 
@@ -155,17 +157,17 @@ public class Majungasaurus extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.RAVAGER_AMBIENT;
+        return ModSounds.MAJUNGASAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.RAVAGER_HURT;
+        return ModSounds.MAJUNGASAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.RAVAGER_DEATH;
+        return ModSounds.MAJUNGASAURUS_DEATH.get();
     }
 
     @Override
@@ -185,6 +187,6 @@ public class Majungasaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.6F, 0.85F);
+        this.playSound(ModSounds.MAJUNGASAURUS_STEP.get(), 0.6F, 1.0F);
     }
 }

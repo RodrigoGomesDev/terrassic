@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -137,22 +138,22 @@ public class Maiasaura extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.CAMEL_AMBIENT;
+        return ModSounds.MAIASAURA_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.CAMEL_HURT;
+        return ModSounds.MAIASAURA_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.CAMEL_DEATH;
+        return ModSounds.MAIASAURA_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.6F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override

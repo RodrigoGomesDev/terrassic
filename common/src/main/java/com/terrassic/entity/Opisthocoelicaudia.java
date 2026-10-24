@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -148,22 +149,22 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SNIFFER_IDLE;
+        return ModSounds.OPISTHOCOELICAUDIA_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SNIFFER_HURT;
+        return ModSounds.OPISTHOCOELICAUDIA_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SNIFFER_DEATH;
+        return ModSounds.OPISTHOCOELICAUDIA_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.6F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -178,6 +179,6 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.9F, 0.65F);
+        this.playSound(ModSounds.OPISTHOCOELICAUDIA_STEP.get(), 0.9F, 1.0F);
     }
 }

@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -90,12 +91,12 @@ public class ThrownSpear extends AbstractArrow {
             }
         }
         this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
-        this.playSound(SoundEvents.TRIDENT_HIT, 1.0F, 1.0F);
+        this.playSound(ModSounds.SFX_SPEAR_HIT.get(), 1.0F, 1.0F);
     }
 
     @Override
     protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return SoundEvents.TRIDENT_HIT_GROUND;
+        return ModSounds.SFX_SPEAR_GROUND.get();
     }
 
     @Override

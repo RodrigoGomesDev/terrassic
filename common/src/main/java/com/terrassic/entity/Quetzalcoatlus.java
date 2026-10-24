@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -29,7 +30,7 @@ public class Quetzalcoatlus extends FlyingDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.47F;
     public static final float SHADOW = 2.0F;
-    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF);
+    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
 
     public Quetzalcoatlus(EntityType<? extends Quetzalcoatlus> type, Level level) {
         super(type, level);
@@ -114,22 +115,22 @@ public class Quetzalcoatlus extends FlyingDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_AMBIENT.get();
+        return ModSounds.QUETZALCOATLUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.SQUAWK_PTEROSAUR_HURT.get();
+        return ModSounds.QUETZALCOATLUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_DEATH.get();
+        return ModSounds.QUETZALCOATLUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.62F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -144,6 +145,6 @@ public class Quetzalcoatlus extends FlyingDinosaur {
 
     @Override
     protected SoundEvent flapSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_FLAP.get();
+        return ModSounds.QUETZALCOATLUS_FLAP.get();
     }
 }

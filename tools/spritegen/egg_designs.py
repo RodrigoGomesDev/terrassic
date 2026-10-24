@@ -717,6 +717,17 @@ def protoceratops():
     return e
 
 
+def leptoceratops():
+    """Hornless: a short russet frill with a pale rim, olive back, cream belly and the forest dapples."""
+    e = ceratopsian("leptoceratops", {"b": "#a8945c", "c": "#e0d6ac", "e": "#a4683a", "w": "#e4d4a6",
+                                      "D": "#623420", "i": "#f0e8cc", "j": "#c8b48c", "d": "#6e6838",
+                                      "n": "#46421f"}, frill=(5, 3, 26, 17), knobs=(), brow=False, nose=None)
+    e.pal["s"] = "#524c2a"
+    e.px([(9, 16), (10, 16), (9, 17), (21, 17), (22, 17), (22, 18), (12, 22), (13, 22), (19, 23), (18, 23),
+          (10, 20), (21, 21)], "s")
+    return e
+
+
 def euoplocephalus():
     e = ankylosaurus()
     e.name = "euoplocephalus"
@@ -848,7 +859,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

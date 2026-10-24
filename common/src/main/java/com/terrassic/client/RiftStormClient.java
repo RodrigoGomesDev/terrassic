@@ -1,5 +1,6 @@
 package com.terrassic.client;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.world.RiftStorm;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
@@ -89,11 +90,7 @@ public final class RiftStormClient {
         }
         // time "glitches": a distorted sound every so often
         if (RANDOM.nextFloat() < 0.004F * intensity) {
-            SoundEvent sound = switch (RANDOM.nextInt(3)) {
-                case 0 -> SoundEvents.AMETHYST_BLOCK_RESONATE;
-                case 1 -> SoundEvents.BEACON_AMBIENT;
-                default -> SoundEvents.AMBIENT_CAVE.value();
-            };
+            SoundEvent sound = ModSounds.SFX_RIFT_GLITCH.get();
             level.playLocalSound(player.getX(), player.getY(), player.getZ(), sound, SoundSource.AMBIENT,
                     0.6F + intensity * 0.4F, 0.45F + RANDOM.nextFloat() * 0.2F, false);
         }

@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -30,7 +31,7 @@ public class Tyrannosaurus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.02F;
     public static final float SHADOW = 2.4F;
-    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON);
+    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
 
     public Tyrannosaurus(EntityType<? extends Tyrannosaurus> type, Level level) {
@@ -142,7 +143,7 @@ public class Tyrannosaurus extends PredatorDinosaur {
         if (!this.level().isClientSide() && target != null && previous == null && this.displayCooldown <= 0 && !this.isVehicle()) {
             this.displayCooldown = 400;
             triggerAnim(ACTION_CONTROLLER, "roar");
-            this.playSound(ModSounds.BOOM_LARGE_THREAT.get(), 3.0F, 1.0F);
+            this.playSound(ModSounds.TYRANNOSAURUS_THREAT.get(), 3.0F, 1.0F);
         }
     }
 
@@ -161,17 +162,17 @@ public class Tyrannosaurus extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.BOOM_LARGE_AMBIENT.get();
+        return ModSounds.TYRANNOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.BOOM_LARGE_HURT.get();
+        return ModSounds.TYRANNOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.BOOM_LARGE_DEATH.get();
+        return ModSounds.TYRANNOSAURUS_DEATH.get();
     }
 
     @Override
@@ -191,6 +192,6 @@ public class Tyrannosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.BOOM_LARGE_STEP.get(), 0.9F, 1.0F);
+        this.playSound(ModSounds.TYRANNOSAURUS_STEP.get(), 0.9F, 1.0F);
     }
 }

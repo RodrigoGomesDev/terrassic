@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -103,22 +104,22 @@ public class Oviraptor extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.PARROT_AMBIENT;
+        return ModSounds.OVIRAPTOR_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.CHICKEN_HURT;
+        return ModSounds.OVIRAPTOR_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.CHICKEN_DEATH;
+        return ModSounds.OVIRAPTOR_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.7F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override

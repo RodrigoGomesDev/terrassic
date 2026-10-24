@@ -92,22 +92,22 @@ public class Ichthyornis extends FlyingDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_AMBIENT.get();
+        return ModSounds.ICHTHYORNIS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.SQUAWK_PTEROSAUR_HURT.get();
+        return ModSounds.ICHTHYORNIS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_DEATH.get();
+        return ModSounds.ICHTHYORNIS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 1.7F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -122,6 +122,6 @@ public class Ichthyornis extends FlyingDinosaur {
 
     @Override
     protected SoundEvent flapSound() {
-        return ModSounds.SQUAWK_PTEROSAUR_FLAP.get();
+        return ModSounds.ICHTHYORNIS_FLAP.get();
     }
 }

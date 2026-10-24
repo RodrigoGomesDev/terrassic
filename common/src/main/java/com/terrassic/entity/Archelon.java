@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -128,22 +129,22 @@ public class Archelon extends SwimmingDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.TURTLE_AMBIENT_LAND;
+        return ModSounds.ARCHELON_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.TURTLE_HURT;
+        return ModSounds.ARCHELON_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.TURTLE_DEATH;
+        return ModSounds.ARCHELON_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.5F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override

@@ -41,6 +41,8 @@ SIZES = {
     "pachyrhinosaurus":   dict(real=8.0,  scale=1.5,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
     "protoceratops":      dict(real=2.0,  scale=0.43, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
+    # Leptoceratops gracilis: ~2 m, 70-200 kg (Brown 1914; Ott 2007). Modelled at 2x (render_scale 0.5), 82 px long.
+    "leptoceratops":      dict(real=2.0,  scale=0.39, w=0.6, h=0.7, baby=0.5,  shadow=0.5),
     "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
     "ankylosaurus":       dict(real=8.0,  scale=1.83, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
     # Euoplocephalus tutus: 5.5-6 m, ~2.5 t (Arbour & Currie 2013; Paul 2010); the widest body for its length.
@@ -128,6 +130,7 @@ GUIDE = {
     "styracosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "pachyrhinosaurus":   dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "protoceratops":      dict(era="late_cretaceous", diet="herbivore", fossil=6),
+    "leptoceratops":      dict(era="late_cretaceous", diet="herbivore", fossil=7),
     "stegosaurus":        dict(era="jurassic",        diet="herbivore", fossil=5),
     "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "euoplocephalus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -188,6 +191,7 @@ WORLD = {
     "styracosaurus":      dict(biomes=("savanna", "plains", "forest"), weight=5, group=(2, 5), track=10),  # herds at the forest edge
     "pachyrhinosaurus":   dict(biomes=("taiga", "hill", "forest"), weight=4, group=(2, 5), track=10),     # cold country herds
     "protoceratops":      dict(biomes=("desert", "badlands", "savanna"), weight=7, group=(2, 5), track=8),    # dunes and dry scrub
+    "leptoceratops":      dict(biomes=("plains", "forest", "savanna"), weight=9, group=(3, 5), track=8),     # the "pig" of the undergrowth, small herds
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
     "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
     "euoplocephalus":     dict(biomes=("plains", "forest", "savanna"), weight=4, group=(1, 3), track=10),  # grazes the open floodplain
@@ -257,7 +261,7 @@ SPECIES = [
  dict(id="tyrannosaurus", cls="Tyrannosaurus", base="PredatorDinosaur",
       doc="Tyrannosaurus rex - apex predator. Hunts players and big animals, roars when it locks onto a target. Rideable when tamed (raised from an egg or a baby).",
       attrs=dict(MAX_HEALTH=160, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=16, ATTACK_KNOCKBACK=1.5, ARMOR=6, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.6, 2.0, 240), step=("RAVAGER_STEP", 0.9, 0.6),
       xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=4.2, ride_speed=1.1,
       prey="!(e instanceof Tyrannosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
@@ -272,20 +276,20 @@ SPECIES = [
  dict(id="dilophosaurus", cls="Dilophosaurus", base="PredatorDinosaur",
       doc="Dilophosaurus wetherilli - mid-sized Jurassic predator with a pair of thin head crests. Flashes its crests before attacking.",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=7, FOLLOW_RANGE=24, ARMOR=2),
-      food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP",
+      food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get()",
       sounds=("HOGLIN_AMBIENT", "HOGLIN_HURT", "HOGLIN_DEATH", 1.25, 1.2, 220),
       xp=12, step_height=1.0, head=(45, 30),
       prey="e.getBbWidth() < 1.0F && !(e instanceof DinosaurEntity)", display=True, prey_interval=100, nocturnal=True, pack=True),
  dict(id="velociraptor", cls="Velociraptor", base="PredatorDinosaur",
       doc="Velociraptor mongoliensis - fast feathered pack hunter. When one raptor picks a target, the rest of the pack nearby joins in. Leaps at its prey and avoids T. rex.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=5, FOLLOW_RANGE=24),
-      food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP",
+      food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get()",
       sounds=("FOX_SCREECH", "FOX_HURT", "FOX_DEATH", 0.8, 1.0, 200),
       xp=8, run=0.03, prey="e.getBbWidth() < 1.0F && !(e instanceof Velociraptor)", prey_interval=80, pack=True, leap=True, nocturnal=True),
  dict(id="compsognathus", cls="Compsognathus", base="PredatorDinosaur",
       doc="Compsognathus longipes - tiny skittish scavenger living in groups. Avoids players but the group swarms whoever hurts one of them. Can be tamed with fish, like a cat.",
       attrs=dict(MAX_HEALTH=6, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=1.5),
-      food="Items.CHICKEN, Items.COD, Items.SALMON",
+      food="Items.CHICKEN, Items.COD, Items.SALMON, ModItems.RAW_DINO_MEAT.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.2, 1.0, 120),
       xp=2, run=0.03, prey="false", hunts_players=False, feeding_tame=True, skittish=True, pack=True),
  dict(id="triceratops", cls="Triceratops", base="HerbivoreDinosaur",
@@ -311,6 +315,11 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ATTACK_KNOCKBACK=0.5, ARMOR=3, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=16),
       food="Items.WHEAT, Items.CARROT, Items.BEETROOT, Items.FERN",
       sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 1.1, 1.0, 240), xp=7, run=0.02, dig=True),
+ dict(id="leptoceratops", cls="Leptoceratops", base="HerbivoreDinosaur",
+      doc="Leptoceratops gracilis - 2 m hornless ceratopsian of the Hell Creek undergrowth, the \"pig\" of the Cretaceous: small herds on the plains, in the forests and the savanna, the easy early meat and leather (docs/FAUNA.md). Skittish, rears on its hind legs to look over the ferns; cornered, it butts. Hand-tamed with ferns, berries, wheat or apples.",
+      attrs=dict(MAX_HEALTH=20, MOVEMENT_SPEED=0.28, ATTACK_DAMAGE=3, ATTACK_KNOCKBACK=0.4, ARMOR=1, KNOCKBACK_RESISTANCE=0.1, FOLLOW_RANGE=16),
+      food="Items.FERN, Items.SWEET_BERRIES, Items.WHEAT, Items.APPLE",
+      sounds=("GOAT_AMBIENT", "GOAT_HURT", "GOAT_DEATH", 1.25, 0.8, 240), xp=5, run=0.03, skittish=True, rear=True),
  dict(id="stegosaurus", cls="Stegosaurus", base="HerbivoreDinosaur",
       doc="Stegosaurus stenops - slow herbivore that defends itself with the spiked tail (thagomizer).",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.20, ATTACK_DAMAGE=10, ATTACK_KNOCKBACK=1.2, ARMOR=8, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=20),
@@ -379,7 +388,7 @@ SPECIES = [
  dict(id="giganotosaurus", cls="Giganotosaurus", base="PredatorDinosaur",
       doc="Giganotosaurus carolinii - 13 m carcharodontosaur of the dry lands, as long as the T. rex and leaner, with a long low skull and blade teeth. Hunts in loose pairs; the more it bleeds the harder it bites (rage). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.2, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.7, 1.9, 240), step=("RAVAGER_STEP", 0.9, 0.65),
       xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.15,
       prey="!(e instanceof Giganotosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
@@ -387,7 +396,7 @@ SPECIES = [
  dict(id="carcharodontosaurus", cls="Carcharodontosaurus", base="PredatorDinosaur",
       doc="Carcharodontosaurus saharicus - 12.5 m shark-toothed carnosaur of the Saharan river plains, deep boxy skull with brow bosses and a dark mask. Solitary; every kill makes it stronger and faster for a while (trophies, up to five). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=15, ATTACK_KNOCKBACK=1.3, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.65, 1.9, 240), step=("RAVAGER_STEP", 0.9, 0.6),
       xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.1,
       prey="!(e instanceof Carcharodontosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
@@ -395,7 +404,7 @@ SPECIES = [
  dict(id="carnotaurus", cls="Carnotaurus", base="PredatorDinosaur",
       doc="Carnotaurus sastrei - 8 m horned abelisaur of the Patagonian plains: bull skull with two horns, stub arms, long legs, the fastest of the big predators. Roars when it locks onto a target and its charge throws whatever it hits. Only tameable from a stolen wild egg until the knockout (v0.7); the fast combat mount.",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.2, ARMOR=4, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=28),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.9, 1.6, 220), step=("RAVAGER_STEP", 0.7, 0.8),
       xp=28, step_height=1.2, head=(40, 30), run=0.02, rideable=True, jump=0.6, ride_offset=1.9, ride_speed=1.35,
       prey="e.getBbWidth() < 2.6F && !(e instanceof Carnotaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
@@ -403,7 +412,7 @@ SPECIES = [
  dict(id="tarbosaurus", cls="Tarbosaurus", base="PredatorDinosaur",
       doc="Tarbosaurus bataar - 12 m tyrannosaur of the Gobi, the sturdy Asian cousin of the T. rex: longer lower skull, the smallest arms of the family, heavier armour and footing. Solitary; roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=170, MOVEMENT_SPEED=0.23, ATTACK_DAMAGE=15, ATTACK_KNOCKBACK=1.5, ARMOR=9, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=32),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.55, 2.0, 260), step=("RAVAGER_STEP", 0.9, 0.55),
       xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.45, ride_offset=2.0, ride_speed=1.05,
       prey="!(e instanceof Tarbosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
@@ -411,7 +420,7 @@ SPECIES = [
  dict(id="daspletosaurus", cls="Daspletosaurus", base="PredatorDinosaur",
       doc="Daspletosaurus torosus - 9 m tyrannosaur of the river forests, the 'frightful lizard': a massive deep skull for its size with horned bosses behind the eyes and the biggest teeth of the family. Hunts in pairs (the pair shares a target). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.3, ARMOR=6, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=30),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.8, 1.8, 240), step=("RAVAGER_STEP", 0.8, 0.7),
       xp=32, step_height=1.3, head=(38, 28), rideable=True, jump=0.5, ride_offset=2.0, ride_speed=1.15,
       prey="e.getBbWidth() < 3.0F && !(e instanceof Daspletosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
@@ -419,7 +428,7 @@ SPECIES = [
  dict(id="albertosaurus", cls="Albertosaurus", base="PredatorDinosaur",
       doc="Albertosaurus sarcophagus - 9.5 m light, long-legged tyrannosaur of the northern forests with a short horn over each eye: the fast one, hunting in packs of two to four that share a target. Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); a fast rideable hunter when tamed.",
       attrs=dict(MAX_HEALTH=95, MOVEMENT_SPEED=0.29, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=30),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.95, 1.7, 220), step=("RAVAGER_STEP", 0.7, 0.75),
       xp=30, step_height=1.3, head=(40, 28), run=0.02, rideable=True, jump=0.55, ride_offset=2.0, ride_speed=1.25,
       prey="e.getBbWidth() < 2.8F && !(e instanceof Albertosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
@@ -427,7 +436,7 @@ SPECIES = [
  dict(id="majungasaurus", cls="Majungasaurus", base="PredatorDinosaur",
       doc="Majungasaurus crenatissimus - 7.5 m abelisaur of Madagascar: a very short deep snout, a single dome horn on the skull roof, stub arms and strong short legs. An ambusher with a very fast short burst (it breaks into the charge at once) and a bite that throws. Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=10, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),
-      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, Items.CHICKEN",
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.0, 1.5, 220), step=("RAVAGER_STEP", 0.6, 0.85),
       xp=26, step_height=1.2, head=(40, 30), run=0.012, rideable=True, jump=0.55, ride_offset=1.7, ride_speed=1.3,
       prey="e.getBbWidth() < 2.2F && !(e instanceof Majungasaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
@@ -435,7 +444,7 @@ SPECIES = [
  dict(id="dakotaraptor", cls="Dakotaraptor", base="PredatorDinosaur",
       doc="Dakotaraptor steini - 5.5 m dromaeosaur of Hell Creek, nearly three times the Velociraptor: long legs, broad feathered wings, a huge sickle claw. Hunts in small packs (one picks a target, the pack joins), leaps at its prey and runs down anything mid-sized; avoids T. rex like its small cousin. Only tameable from a stolen wild egg until the knockout (v0.7); when tamed it is the agile hunting mount that jumps highest of all.",
       attrs=dict(MAX_HEALTH=50, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=0.6, ARMOR=2, FOLLOW_RANGE=28),
-      food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP",
+      food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get()",
       sounds=("FOX_SCREECH", "FOX_HURT", "FOX_DEATH", 1.0, 0.7, 200), step=("WOLF_STEP", 0.5, 0.9),
       xp=18, step_height=1.1, head=(45, 35), run=0.02, rideable=True, jump=1.0, ride_offset=1.55, ride_speed=1.35,
       prey="e.getBbWidth() < 1.6F && !(e instanceof Dakotaraptor) && !(e instanceof Velociraptor) && !e.isBaby()",
@@ -443,7 +452,7 @@ SPECIES = [
  dict(id="troodon", cls="Troodon", base="PredatorDinosaur",
       doc="Troodon formosus - 2.4 m gracile troodontid with the biggest eyes of any dinosaur for its size: a nocturnal hunter of small prey that sleeps through the day and wakes at dusk. Avoids the big predators. Only tameable from a stolen wild egg until the knockout (v0.7); a tame one is the night guard: it attacks hostile mobs around it after dark and its owner nearby sees in the dark while it watches.",
       attrs=dict(MAX_HEALTH=20, MOVEMENT_SPEED=0.33, ATTACK_DAMAGE=4, FOLLOW_RANGE=28),
-      food="Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON",
+      food="Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON, ModItems.RAW_DINO_MEAT.get()",
       sounds=("PARROT_AMBIENT", "FOX_HURT", "FOX_DEATH", 0.7, 0.8, 160), step=("WOLF_STEP", 0.3, 1.2),
       xp=10, head=(50, 40), run=0.03,
       prey="e.getBbWidth() < 0.9F && !(e instanceof Troodon)",
@@ -469,7 +478,7 @@ SPECIES = [
  dict(id="didelphodon", cls="Didelphodon", base="PredatorDinosaur",
       doc="Didelphodon vorax - badger-sized Hell Creek mammal with the strongest bite for its size of any mammal, the egg thief: wild ones eat the dinosaur eggs they find (and the herd turns on them), hunt small prey and keep clear of players. Tamed with eggs or meat like a cat; a tame one noses out lost eggs now and then (docs/NINHOS.md).",
       attrs=dict(MAX_HEALTH=12, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=4, FOLLOW_RANGE=16),
-      food="Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD",
+      food="Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get()",
       sounds=("FOX_AMBIENT", "FOX_HURT", "FOX_DEATH", 0.9, 0.9, 160), step=("WOLF_STEP", 0.2, 1.3),
       xp=4, run=0.03, prey="e.getBbWidth() < 0.5F && !(e instanceof DinosaurEntity)", hunts_players=False, feeding_tame=True,
       skittish=True, egg_thief=True, prey_interval=120),
@@ -530,14 +539,14 @@ SPECIES = [
  dict(id="quetzalcoatlus", cls="Quetzalcoatlus", base="FlyingDinosaur",
       doc="Quetzalcoatlus northropi - the largest flyer ever, a giraffe-tall azhdarchid that stalks open country on all fours and spears small prey like a giant stork. Egg-tamed for now (knockout taming comes in v0.7); a heavy flying mount.",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.3, FLYING_SPEED=0.7, ATTACK_DAMAGE=9, ARMOR=2, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=32),
-      food="Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF",
+      food="Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.6, 1.8, 300), xp=28, run=0.04,
       rideable=True, ride_offset=2.25, ride_forward=0.0, ride_speed=0.9, egg_only=True,
       prey="e.getBbWidth() < 1.0F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=140),
  dict(id="hatzegopteryx", cls="Hatzegopteryx", base="FlyingDinosaur",
       doc="Hatzegopteryx thambema - robust azhdarchid from Hateg Island with a very wide skull and a short, massive neck; the island's top predator, taking prey the size of a horse. Egg-tamed for now (knockout taming comes in v0.7); a heavy combat flyer.",
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.28, FLYING_SPEED=0.62, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.0, ARMOR=3, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=32),
-      food="Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN",
+      food="Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.5, 2.0, 320), xp=32, run=0.04,
       rideable=True, ride_offset=2.15, ride_forward=0.0, ride_speed=0.85, egg_only=True,
       prey="e.getBbWidth() < 1.6F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=160),
@@ -594,7 +603,7 @@ SPECIES = [
  dict(id="deinosuchus", cls="Deinosuchus", base="PredatorDinosaur",
       doc="Deinosuchus riograndensis - 12 m alligator of the inland sea's shores. Basks by rivers, swamps and beaches, swims as well as it walks, and ambushes anything that comes to the water: its grip slows the victim. Egg taming only until the knockout (v0.7).",
       attrs=dict(MAX_HEALTH=160, MOVEMENT_SPEED=0.2, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=1.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=28),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.6, 0.6),
       xp=38, step_height=1.0, head=(40, 20),
       prey="e.isInWaterOrBubble() || e.getBbWidth() < 1.6F && !(e instanceof Deinosuchus)", prey_interval=140, fish=True,
@@ -602,7 +611,7 @@ SPECIES = [
  dict(id="baurusuchus", cls="Baurusuchus", base="PredatorDinosaur",
       doc="Baurusuchus salgadoensis - 3.5 m land crocodylomorph on upright legs with a deep dog-like skull and blade teeth: a fast runner of the hot plains that hunts anything smaller than itself, alone or in pairs. Egg taming only until the knockout (v0.7); a tamed one is a base guard.",
       attrs=dict(MAX_HEALTH=55, MOVEMENT_SPEED=0.3, ATTACK_DAMAGE=9, ARMOR=5, KNOCKBACK_RESISTANCE=0.5, FOLLOW_RANGE=24),
-      food="Items.BEEF, Items.PORKCHOP, Items.CHICKEN, Items.MUTTON",
+      food="Items.BEEF, Items.PORKCHOP, Items.CHICKEN, Items.MUTTON, ModItems.RAW_DINO_MEAT.get()",
       sounds=("HOGLIN_AMBIENT", "HOGLIN_HURT", "HOGLIN_DEATH", 0.8, 1.4, 260), step=("RAVAGER_STEP", 0.5, 1.0),
       xp=16, step_height=1.0, head=(45, 25),
       prey="e.getBbWidth() < 1.4F && !(e instanceof Baurusuchus)", prey_interval=100, pack=True),
@@ -647,6 +656,8 @@ def gen(s, bounds):
         body.append(f"    private static final Ingredient FOOD = Ingredient.of({s['food_tag']});")
     else:
         imports.add("net.minecraft.world.item.Items")
+        if "ModItems." in s["food"]:
+            imports.add("com.terrassic.registry.ModItems")
         body.append(f"    private static final Ingredient FOOD = Ingredient.of({s['food']});")
     if s.get("roar") or s.get("display"):
         body.append("    private int displayCooldown;")
@@ -687,6 +698,8 @@ def gen(s, bounds):
         extras.append("display")
     if s.get("call"):
         extras.append("call")
+    if s.get("rear"):
+        extras.append(s["rear"] if isinstance(s["rear"], str) else "rear")
     if s.get("dig"):
         extras.append("dig")
     if s.get("egg_thief"):
@@ -1004,6 +1017,19 @@ def gen(s, bounds):
         }
     }
 """)
+    if s.get("rear"):
+        assert not s.get("call"), s["id"] + ": call and rear both override playAmbientSound"
+        rear_anim = s["rear"] if isinstance(s["rear"], str) else "rear"   # rear=True plays "rear"; rear="nibble" plays that
+        body.append("""    /** Rears on the hind legs to look over the ferns, now and then with the ambient call. */
+    @Override
+    public void playAmbientSound() {
+        super.playAmbientSound();
+        if (!this.level().isClientSide() && this.random.nextInt(3) == 0 && this.getTarget() == null && !this.isVehicle()
+                && !this.isSleeping()) {
+            triggerAnim(ACTION_CONTROLLER, "rear");
+        }
+    }
+""".replace('"rear"', '"' + rear_anim + '"'))
     if s.get("call"):
         imports.add("net.minecraft.world.damagesource.DamageSource")
         call = "this.callOut()" if s.get("calm") else 'triggerAnim(ACTION_CONTROLLER, "call")'

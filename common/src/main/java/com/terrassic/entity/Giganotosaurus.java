@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -33,7 +35,7 @@ public class Giganotosaurus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.75F;
     public static final float SHADOW = 2.3F;
-    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON);
+    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
     private static final UUID RAGE_ID = UUID.fromString("7c1e5a3e-6b8d-4b1f-9a2e-3c6e4aedcfac");
 
@@ -136,7 +138,7 @@ public class Giganotosaurus extends PredatorDinosaur {
         if (!this.level().isClientSide() && target != null && previous == null && this.displayCooldown <= 0 && !this.isVehicle()) {
             this.displayCooldown = 400;
             triggerAnim(ACTION_CONTROLLER, "roar");
-            this.playSound(SoundEvents.RAVAGER_ROAR, 3.0F, 0.7F);
+            this.playSound(ModSounds.GIGANOTOSAURUS_THREAT.get(), 3.0F, 1.0F);
         }
     }
 
@@ -174,22 +176,22 @@ public class Giganotosaurus extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.RAVAGER_AMBIENT;
+        return ModSounds.GIGANOTOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.RAVAGER_HURT;
+        return ModSounds.GIGANOTOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.RAVAGER_DEATH;
+        return ModSounds.GIGANOTOSAURUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.7F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -204,6 +206,6 @@ public class Giganotosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.9F, 0.65F);
+        this.playSound(ModSounds.GIGANOTOSAURUS_STEP.get(), 0.9F, 1.0F);
     }
 }

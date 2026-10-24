@@ -1,10 +1,10 @@
 """
-Builds the mod's own sounds from recipes.py:
+Builds the mod's own sounds from recipes.py (all procedural, see synth.py):
   assets/terrassic/sounds/voice/<set>/<event>_<n>.ogg   (mono OGG Vorbis, loudness normalised)
   assets/terrassic/sounds.json
   common/src/main/java/com/terrassic/registry/ModSounds.java
 Unchanged sounds are not rewritten (git sees no diff). Needs numpy and ffmpeg (with libvorbis).
-Recordings come from art/sounds/src (python3 fetch.py downloads them); without them the procedural fallbacks are used.
+Old recipes could cut recordings from art/sounds/src (fetch.py); no voice set uses them any more.
 usage: python3 build.py
 """
 import glob
@@ -19,7 +19,18 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import recipes  # noqa: E402
 from recipes import FX, VOICE_SETS, SUBTITLES, field, sound_id  # noqa: E402
+
+# voice sets, then the effects as one more group "sfx" (sounds/sfx/<name>_<n>.ogg)
+SFX = getattr(recipes, "SFX", {})
+GROUPS = dict(VOICE_SETS)
+if SFX:
+    GROUPS["sfx"] = {name: (fx, dist, variants) for name, (fx, dist, variants, _) in SFX.items()}
+
+
+def rel_path(vset, ev, i):
+    return f"sfx/{ev}_{i}" if vset == "sfx" else f"voice/{vset}/{ev}_{i}"
 from sources import AUDIO_EXT  # noqa: E402
 from synth import SR, VOICES, envelope, norm  # noqa: E402
 
@@ -155,11 +166,11 @@ def main():
     sounds_json = {}
     changed = 0
     recorded = 0
-    for vset, evs in VOICE_SETS.items():
+    for vset, evs in GROUPS.items():
         for ev, (fx, dist, variants) in evs.items():
             names = []
             for i, var in enumerate(variants, start=1):
-                rel = f"voice/{vset}/{ev}_{i}"
+                rel = rel_path(vset, ev, i)
                 out = os.path.join(ASSETS, "sounds", rel + ".ogg")
                 recorded += uses_recording(var)
                 if wants_recording(var) and not uses_recording(var) and os.path.exists(out):
@@ -171,12 +182,21 @@ def main():
             if (vset, ev) in SUBTITLES:
                 entry["subtitle"] = f"subtitles.terrassic.{sound_id(vset, ev)}"
             sounds_json[sound_id(vset, ev)] = entry
+    # files of sounds that no recipe makes any more (a set or a variant was removed)
+    made = {os.path.join(ASSETS, "sounds", n["name"].split(":", 1)[1] + ".ogg")
+            for e in sounds_json.values() for n in e["sounds"]}
+    removed = 0
+    for old in glob.glob(os.path.join(ASSETS, "sounds", "voice", "*", "*.ogg")) + \
+            glob.glob(os.path.join(ASSETS, "sounds", "sfx", "*.ogg")):
+        if old not in made:
+            os.remove(old)
+            removed += 1
     with open(os.path.join(ASSETS, "sounds.json"), "w", encoding="utf-8") as f:
         json.dump(sounds_json, f, indent=2)
         f.write("\n")
 
     fields = []
-    for vset, evs in VOICE_SETS.items():
+    for vset, evs in GROUPS.items():
         for ev in evs:
             fields.append(f'    public static final RegistrySupplier<SoundEvent> {field(vset, ev)} = register("{sound_id(vset, ev)}");')
     src = f"""package com.terrassic.registry;
@@ -207,7 +227,8 @@ public final class ModSounds {{
 """
     with open(JAVA, "w") as f:
         f.write(src)
-    print(f"sounds: {sum(len(v[2]) for e in VOICE_SETS.values() for v in e.values())} files ({recorded} from recordings), {changed} changed")
+    print(f"sounds: {sum(len(v[2]) for e in GROUPS.values() for v in e.values())} files ({recorded} from recordings), "
+          f"{changed} changed, {removed} removed")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -78,22 +79,22 @@ public class Stegosaurus extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.COW_AMBIENT;
+        return ModSounds.STEGOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.COW_HURT;
+        return ModSounds.STEGOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.COW_DEATH;
+        return ModSounds.STEGOSAURUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.55F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -108,6 +109,6 @@ public class Stegosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.5F, 1.0F);
+        this.playSound(ModSounds.STEGOSAURUS_STEP.get(), 0.5F, 1.0F);
     }
 }

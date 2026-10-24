@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -29,7 +31,7 @@ public class Albertosaurus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.43F;
     public static final float SHADOW = 1.8F;
-    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON);
+    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
 
     public Albertosaurus(EntityType<? extends Albertosaurus> type, Level level) {
@@ -136,7 +138,7 @@ public class Albertosaurus extends PredatorDinosaur {
         if (!this.level().isClientSide() && target != null && previous == null && this.displayCooldown <= 0 && !this.isVehicle()) {
             this.displayCooldown = 400;
             triggerAnim(ACTION_CONTROLLER, "roar");
-            this.playSound(SoundEvents.RAVAGER_ROAR, 3.0F, 0.7F);
+            this.playSound(ModSounds.ALBERTOSAURUS_THREAT.get(), 3.0F, 1.0F);
         }
     }
 
@@ -160,22 +162,22 @@ public class Albertosaurus extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.RAVAGER_AMBIENT;
+        return ModSounds.ALBERTOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.RAVAGER_HURT;
+        return ModSounds.ALBERTOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.RAVAGER_DEATH;
+        return ModSounds.ALBERTOSAURUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.95F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -190,6 +192,6 @@ public class Albertosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.7F, 0.75F);
+        this.playSound(ModSounds.ALBERTOSAURUS_STEP.get(), 0.7F, 1.0F);
     }
 }

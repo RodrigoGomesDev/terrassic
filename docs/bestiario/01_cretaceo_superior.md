@@ -245,7 +245,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 175 | Zuniceratops | Ceratopsiano | 🦖 | Herbívoro | 3,5 m | Herbívoro médio | Territorial | Comida | ✅ | Montaria rápida |  |
 | 176 | Montanoceratops | Ceratopsiano | 🦖 | Herbívoro | 3 m | Herbívoro médio | Territorial | Comida | ✅ | Montaria rápida |  |
 | 177 | **Protoceratops** | Ceratopsiano | 🦖 | Herbívoro | 2 m | Herbívoro médio | Territorial | Comida | — | Cava e acha raízes e fósseis rasos | v0.6 |
-| 178 | Leptoceratops | Ceratopsiano | 🦖 | Herbívoro | 2 m | Herbívoro médio | Territorial | Comida | — | Coleta (frutas, sementes, fibra) |  |
+| 178 | **Leptoceratops** | Ceratopsiano | 🦖 | Herbívoro | 2 m | Herbívoro médio | Arisco | Comida | — | O "porco" do Cretáceo: carne e couro fáceis | v0.7 |
 | 179 | Bagaceratops | Ceratopsiano | 🦖 | Herbívoro | 1 m | Herbívoro pequeno | Territorial | Comida | 🦜 | Vai no ombro (bônus) |  |
 
 ## Anquilossauros e nodossauros

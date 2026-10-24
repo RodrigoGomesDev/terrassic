@@ -1,5 +1,6 @@
 package com.terrassic.item;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -57,7 +58,7 @@ public class ClayJarItem extends Item {
                 stripped = stripped.setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS));
             }
             level.setBlock(pos, stripped, Block.UPDATE_ALL_IMMEDIATE);
-            level.playSound(null, pos, SoundEvents.HONEY_BLOCK_SLIDE, SoundSource.BLOCKS, 1.0F, 0.8F);
+            level.playSound(null, pos, ModSounds.SFX_CLAY_JAR.get(), SoundSource.BLOCKS, 1.0F, 0.8F);
             ItemStack stack = context.getItemInHand();
             ItemStack resin = new ItemStack(ModItems.RESIN_JAR.get());
             if (player == null || !player.getAbilities().instabuild) {

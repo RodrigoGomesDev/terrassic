@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +35,7 @@ public class Carcharodontosaurus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.8F;
     public static final float SHADOW = 2.3F;
-    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON);
+    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
     private static final UUID KILLS_ATTACK_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e1f-28092a8ad990");
     private static final UUID KILLS_SPEED_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e2f-a3cbbac8af37");
@@ -139,7 +141,7 @@ public class Carcharodontosaurus extends PredatorDinosaur {
         if (!this.level().isClientSide() && target != null && previous == null && this.displayCooldown <= 0 && !this.isVehicle()) {
             this.displayCooldown = 400;
             triggerAnim(ACTION_CONTROLLER, "roar");
-            this.playSound(SoundEvents.RAVAGER_ROAR, 3.0F, 0.7F);
+            this.playSound(ModSounds.CARCHARODONTOSAURUS_THREAT.get(), 3.0F, 1.0F);
         }
     }
 
@@ -212,22 +214,22 @@ public class Carcharodontosaurus extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.RAVAGER_AMBIENT;
+        return ModSounds.CARCHARODONTOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.RAVAGER_HURT;
+        return ModSounds.CARCHARODONTOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.RAVAGER_DEATH;
+        return ModSounds.CARCHARODONTOSAURUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.65F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -242,6 +244,6 @@ public class Carcharodontosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.9F, 0.6F);
+        this.playSound(ModSounds.CARCHARODONTOSAURUS_STEP.get(), 0.9F, 1.0F);
     }
 }

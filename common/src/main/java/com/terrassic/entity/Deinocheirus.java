@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -165,22 +166,22 @@ public class Deinocheirus extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SNIFFER_IDLE;
+        return ModSounds.DEINOCHEIRUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SNIFFER_HURT;
+        return ModSounds.DEINOCHEIRUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SNIFFER_DEATH;
+        return ModSounds.DEINOCHEIRUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.5F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -195,6 +196,6 @@ public class Deinocheirus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.8F, 0.6F);
+        this.playSound(ModSounds.DEINOCHEIRUS_STEP.get(), 0.8F, 1.0F);
     }
 }

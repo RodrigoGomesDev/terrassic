@@ -3,6 +3,8 @@ package com.terrassic.entity;
 import com.terrassic.entity.ai.EggThiefGoal;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import dev.architectury.registry.registries.RegistrySupplier;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class Didelphodon extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.26F;
     public static final float SHADOW = 0.3F;
-    private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD);
+    private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get());
 
     public Didelphodon(EntityType<? extends Didelphodon> type, Level level) {
         super(type, level);
@@ -147,22 +149,22 @@ public class Didelphodon extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.FOX_AMBIENT;
+        return ModSounds.DIDELPHODON_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.FOX_HURT;
+        return ModSounds.DIDELPHODON_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.FOX_DEATH;
+        return ModSounds.DIDELPHODON_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.9F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -177,6 +179,6 @@ public class Didelphodon extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.WOLF_STEP, 0.2F, 1.3F);
+        this.playSound(ModSounds.DIDELPHODON_STEP.get(), 0.2F, 1.0F);
     }
 }

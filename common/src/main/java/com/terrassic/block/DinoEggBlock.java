@@ -1,5 +1,6 @@
 package com.terrassic.block;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
 import com.terrassic.entity.DinosaurEntity;
@@ -79,7 +80,7 @@ public class DinoEggBlock extends Block {
             }
         }
         if (hatch != state.getValue(HATCH)) {
-            level.playSound(null, pos, SoundEvents.TURTLE_EGG_CRACK, SoundSource.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
+            level.playSound(null, pos, ModSounds.SFX_EGG_CRACK.get(), SoundSource.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
             level.setBlock(pos, state.setValue(HATCH, hatch), Block.UPDATE_CLIENTS);
         }
     }
@@ -112,7 +113,7 @@ public class DinoEggBlock extends Block {
     }
 
     private void hatchEgg(ServerLevel level, BlockPos pos, RandomSource random, boolean wild) {
-        level.playSound(null, pos, SoundEvents.TURTLE_EGG_HATCH, SoundSource.BLOCKS, 0.8F, 0.9F + random.nextFloat() * 0.2F);
+        level.playSound(null, pos, ModSounds.SFX_EGG_HATCH.get(), SoundSource.BLOCKS, 0.8F, 0.9F + random.nextFloat() * 0.2F);
         level.removeBlock(pos, false);
         level.levelEvent(2001, pos, Block.getId(this.defaultBlockState()));
         DinosaurEntity baby = this.species.get().create(level);
@@ -133,5 +134,6 @@ public class DinoEggBlock extends Block {
             }
         }
         level.addFreshEntity(baby);
+        baby.playAmbientSound();
     }
 }

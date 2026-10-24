@@ -1,5 +1,6 @@
 package com.terrassic.item;
 
+import com.terrassic.registry.ModSounds;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.terrassic.entity.ThrownSpear;
@@ -88,7 +89,7 @@ public class SpearItem extends Item implements Vanishable {
                 spear.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
             level.addFreshEntity(spear);
-            level.playSound(null, spear, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 0.85F);
+            level.playSound(null, spear, ModSounds.SFX_SPEAR_THROW.get(), SoundSource.PLAYERS, 1.0F, 0.85F);
             if (!player.getAbilities().instabuild) {
                 player.getInventory().removeItem(stack);
             }

@@ -128,17 +128,17 @@ public class Parasaurolophus extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSounds.HORN_HADROSAUR_AMBIENT.get();
+        return ModSounds.PARASAUROLOPHUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return ModSounds.HORN_HADROSAUR_HURT.get();
+        return ModSounds.PARASAUROLOPHUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSounds.HORN_HADROSAUR_DEATH.get();
+        return ModSounds.PARASAUROLOPHUS_DEATH.get();
     }
 
     @Override

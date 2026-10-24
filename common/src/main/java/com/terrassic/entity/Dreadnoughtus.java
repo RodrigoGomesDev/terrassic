@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -146,22 +147,22 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SNIFFER_IDLE;
+        return ModSounds.DREADNOUGHTUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SNIFFER_HURT;
+        return ModSounds.DREADNOUGHTUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SNIFFER_DEATH;
+        return ModSounds.DREADNOUGHTUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.4F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -176,6 +177,6 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 1.3F, 0.45F);
+        this.playSound(ModSounds.DREADNOUGHTUS_STEP.get(), 1.3F, 1.0F);
     }
 }

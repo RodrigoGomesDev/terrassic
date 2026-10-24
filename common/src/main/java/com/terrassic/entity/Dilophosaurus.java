@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -27,7 +29,7 @@ public class Dilophosaurus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.53F;
     public static final float SHADOW = 1.0F;
-    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP);
+    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get());
     private int displayCooldown;
 
     public Dilophosaurus(EntityType<? extends Dilophosaurus> type, Level level) {
@@ -107,7 +109,7 @@ public class Dilophosaurus extends PredatorDinosaur {
         if (!this.level().isClientSide() && target != null && previous == null && this.displayCooldown <= 0 && !this.isVehicle()) {
             this.displayCooldown = 400;
             triggerAnim(ACTION_CONTROLLER, "display");
-            this.playSound(SoundEvents.HOGLIN_ANGRY, 1.2F, 1.3F);
+            this.playSound(ModSounds.DILOPHOSAURUS_THREAT.get(), 3.0F, 1.0F);
         }
     }
 
@@ -131,22 +133,22 @@ public class Dilophosaurus extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.HOGLIN_AMBIENT;
+        return ModSounds.DILOPHOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.HOGLIN_HURT;
+        return ModSounds.DILOPHOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.HOGLIN_DEATH;
+        return ModSounds.DILOPHOSAURUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 1.25F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override

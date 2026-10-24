@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -103,22 +104,22 @@ public class Triceratops extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.RAVAGER_AMBIENT;
+        return ModSounds.TRICERATOPS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.RAVAGER_HURT;
+        return ModSounds.TRICERATOPS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.RAVAGER_DEATH;
+        return ModSounds.TRICERATOPS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 1.25F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -133,6 +134,6 @@ public class Triceratops extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 0.6F, 0.8F);
+        this.playSound(ModSounds.TRICERATOPS_STEP.get(), 0.6F, 1.0F);
     }
 }

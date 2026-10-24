@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -31,7 +33,7 @@ public class Dakotaraptor extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.14F;
     public static final float SHADOW = 0.8F;
-    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP);
+    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get());
 
     public Dakotaraptor(EntityType<? extends Dakotaraptor> type, Level level) {
         super(type, level);
@@ -142,17 +144,17 @@ public class Dakotaraptor extends PredatorDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.FOX_SCREECH;
+        return ModSounds.DAKOTARAPTOR_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.FOX_HURT;
+        return ModSounds.DAKOTARAPTOR_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.FOX_DEATH;
+        return ModSounds.DAKOTARAPTOR_DEATH.get();
     }
 
     @Override
@@ -172,6 +174,6 @@ public class Dakotaraptor extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.WOLF_STEP, 0.5F, 0.9F);
+        this.playSound(ModSounds.DAKOTARAPTOR_STEP.get(), 0.5F, 1.0F);
     }
 }

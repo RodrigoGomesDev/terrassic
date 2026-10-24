@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -88,22 +89,22 @@ public class Xiphactinus extends SwimmingDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.COD_AMBIENT;
+        return ModSounds.XIPHACTINUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.COD_HURT;
+        return ModSounds.XIPHACTINUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.COD_DEATH;
+        return ModSounds.XIPHACTINUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.5F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override

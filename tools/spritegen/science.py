@@ -485,7 +485,7 @@ FOSSIL_MOTIF = {
     "gallimimus": "beak_skull", "struthiomimus": "beak_skull", "deinocheirus": "claw", "therizinosaurus": "claw",
     # ceratopsians
     "triceratops": "horned_skull", "styracosaurus": "frilled_skull", "pachyrhinosaurus": "frilled_skull",
-    "protoceratops": "frilled_skull",
+    "protoceratops": "frilled_skull", "leptoceratops": "frilled_skull",
     # armoured
     "stegosaurus": "plates", "ankylosaurus": "tail_club", "euoplocephalus": "armor_scute",
     # sauropods

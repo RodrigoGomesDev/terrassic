@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.Terrassic;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.registry.ModItems;
@@ -108,7 +109,7 @@ public final class KatarinaRefuge {
                 }
             }
             sp.displayClientMessage(msg, true);
-            level.playSound(null, here, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.8F, 1.2F);
+            level.playSound(null, here, ModSounds.SFX_AMBER_PING.get(), SoundSource.PLAYERS, 0.8F, 1.2F);
             sp.getCooldowns().addCooldown(stack.getItem(), 40);
         }
         return CompoundEventResult.interruptTrue(stack);

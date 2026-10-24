@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -124,22 +125,22 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SNIFFER_IDLE;
+        return ModSounds.BRACHIOSAURUS_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SNIFFER_HURT;
+        return ModSounds.BRACHIOSAURUS_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SNIFFER_DEATH;
+        return ModSounds.BRACHIOSAURUS_DEATH.get();
     }
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.45F;
+        return super.getVoicePitch() * 1.0F;
     }
 
     @Override
@@ -154,6 +155,6 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RAVAGER_STEP, 1.2F, 0.5F);
+        this.playSound(ModSounds.BRACHIOSAURUS_STEP.get(), 1.2F, 1.0F);
     }
 }
