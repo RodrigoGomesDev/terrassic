@@ -1603,6 +1603,10 @@ SKULLS.update({  # one skull per species added after the first fifteen
     "styracosaurus": ["..........o.o.o.", "..........lolol.", "....o.....obbbo.", "....lo...obbbbo.", "....lo..obbbebo.", ".....lo.obbbbbo.", "..oo.lobbbbbbbo.", ".olbbbbbbbbbebo.", "olbbbbbeebbbbbo.", "obbbbbbeebbbbo..", "obbbbbbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
     "pachyrhinosaurus": ["...........o.o..", "..........olol..", ".........obbbo..", "...oooo.obbbbo..", "..ollllobbbebo..", ".olbbbbbbbbbbo..", "olbbbbeebbbbbo..", "obbbbbeebbbbo...", "obbbbbbbbbbo....", ".obbbbbbbbo.....", "..oooooooo......"],
     "protoceratops": ["...........oo...", "..........obbo..", ".........obbbo..", "....oooooobebo..", "..oobbbbbbbbbo..", ".obbbbbeebbbbo..", "obbbbbbeebbbo...", "obbbbbbbbbbo....", ".obbbbbbbbo.....", "..oooooooo......"],
+    # hornless, a short solid frill, a deep short face with the tall parrot beak
+    "leptoceratops": ["..........oooo..", ".........obbbbo.", "......oooobbbbo.", "....oobbbbbeebo.",
+                      "..oobbbbbbbeebo.", ".obbbbbbbbbbbo..", "obbbbbbbbbbbo...", "obbbbbbbbbo.....",
+                      ".oooooooooo....."],
     "euoplocephalus": ["...o.o.o.o.o....", "..olololololo...", ".obbbbbbbbbbbo..", ".obbbbbbbbbeebl.", "obbbbbbbbbbeebo.", "obbbbbbbbbbbbbl.", ".obbbbbbbbbbbo..", "..otttbbbbbbo...", "...ooooooooo...."],
     "therizinosaurus": [".......oooo.....", ".....oobllbo....", "...oobbbbeebo...", ".oobbbbbbeebo...", "obbbbbbbbbbbo...", ".ootttbbbbbo....", "...oooooooo....."],
     "deinocheirus": ["..........oooo..", "........oobllbo.", "......oobbbeebo.", "..ooooobbbbeebo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbo..", "oobbbbbbbbbbbo..", ".oobbbbbbbbbo...", "...ooooooooo...."],
@@ -1722,7 +1726,7 @@ def species_ramp(sid):
 HIDE_PATTERN = {  # rug pattern of each species (scales by default)
     "spinosaurus": "stripes", "dilophosaurus": "stripes", "parasaurolophus": "stripes",
     "velociraptor": "feathers", "compsognathus": "feathers", "gallimimus": "feathers",
-    "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots",
+    "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots", "leptoceratops": "spots",
     "ankylosaurus": "osteoderms", "triceratops": "big_scales", "mosasaurus": "fine_scales",
     "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
     "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz",

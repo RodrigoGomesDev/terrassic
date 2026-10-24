@@ -54,6 +54,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Citipati (v0.7) | 2,5-3 m, ~75-85 kg (Clark, Norell & Barsbold 2001, IGM 100/979 "Big Mama"; Paul 2010) | novo | **3,0 x 2,3** (cabeça erguida, com casque) | 0,9 x 2,0 | 40% |
 | Mononykus (v0.7) | 1-1,2 m, ~3,5 kg (Perle et al. 1993, IGM 107/6) | novo | **1,0 x 0,45** | 0,4 x 0,5 | 50% |
 | Didelphodon (v0.7) | ~1 m com a cauda, ~5 kg (Wilson et al. 2016; crânio 12 cm) | novo | **1,0 x 0,23** | 0,5 x 0,4 | 50% |
+| Leptoceratops (v0.7, 2x) | ~2 m, 70-200 kg (Brown 1914, AMNH 5205; Sternberg 1951; Ott 2007) | novo | **2,0 x 0,66** | 0,6 x 0,7 | 50% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

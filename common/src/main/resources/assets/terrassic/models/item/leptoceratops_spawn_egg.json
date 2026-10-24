@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "terrassic:item/leptoceratops_spawn_egg"
+  }
+}

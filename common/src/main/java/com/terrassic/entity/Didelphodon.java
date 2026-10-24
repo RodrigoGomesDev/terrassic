@@ -3,6 +3,7 @@ package com.terrassic.entity;
 import com.terrassic.entity.ai.EggThiefGoal;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import dev.architectury.registry.registries.RegistrySupplier;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class Didelphodon extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.26F;
     public static final float SHADOW = 0.3F;
-    private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD);
+    private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get());
 
     public Didelphodon(EntityType<? extends Didelphodon> type, Level level) {
         super(type, level);

@@ -839,6 +839,19 @@ def spawn_eggs():
     eye(cv, 10, 8, "#c89a40")
     eggs["protoceratops"] = cv
 
+    # Leptoceratops: olive-and-cream forest egg with a short russet frill at the top and dark dapples
+    cv = base_egg(None, "#6e6838", "#e0d6ac")
+    for x in range(6, 11):
+        for y in (2, 3):
+            if inside(cv, x, y):
+                cv.set(x, y, hexc("#a4683a"))
+    cv.set(8, 3, hexc("#623420"))
+    for x, y in ((4, 6), (9, 7), (6, 9), (11, 9), (8, 12), (5, 11), (10, 13)):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#524c2a"))
+    eye(cv, 11, 7, "#c8a846")
+    eggs["leptoceratops"] = cv
+
     # Pachyrhinosaurus: slate egg with white frill spots at the top, the rust boss below and two little horns
     cv = base_egg(None, "#3c4044", "#9a9690")
     for x, y in ((5, 3), (8, 2), (11, 4), (4, 6), (12, 7), (7, 5)):
@@ -882,6 +895,7 @@ EGG_BLOCK = {
     "baurusuchus": ("#e6dcc0", "#8a6a3c"), "edmontosaurus": ("#e0d8c4", "#6a6050"),
     "corythosaurus": ("#dcdcb4", "#3c5038"), "styracosaurus": ("#e2d4b4", "#9a4e2e"),
     "protoceratops": ("#e8dcc0", "#a06a3c"),
+    "leptoceratops": ("#e0d6ac", "#6e6838"),
     "pachyrhinosaurus": ("#c8c4b8", "#3c4044"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
     "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),

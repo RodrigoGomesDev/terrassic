@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
@@ -34,7 +35,7 @@ public class Carcharodontosaurus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.8F;
     public static final float SHADOW = 2.3F;
-    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON);
+    private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
     private static final UUID KILLS_ATTACK_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e1f-28092a8ad990");
     private static final UUID KILLS_SPEED_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e2f-a3cbbac8af37");

@@ -38,6 +38,10 @@
       "required": false
     },
     {
+      "id": "terrassic:leptoceratops_skull_trophy",
+      "required": false
+    },
+    {
       "id": "terrassic:stegosaurus_skull_trophy",
       "required": false
     },

@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -38,7 +39,7 @@ public class Troodon extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.55F;
     public static final float SHADOW = 0.4F;
-    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON);
+    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON, ModItems.RAW_DINO_MEAT.get());
 
     public Troodon(EntityType<? extends Troodon> type, Level level) {
         super(type, level);

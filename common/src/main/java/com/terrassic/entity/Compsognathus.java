@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -31,7 +32,7 @@ public class Compsognathus extends PredatorDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.31F;
     public static final float SHADOW = 0.25F;
-    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.COD, Items.SALMON);
+    private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.COD, Items.SALMON, ModItems.RAW_DINO_MEAT.get());
 
     public Compsognathus(EntityType<? extends Compsognathus> type, Level level) {
         super(type, level);

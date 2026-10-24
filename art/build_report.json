@@ -1810,5 +1810,40 @@
    "animation.didelphodon.tame"
   ],
   "render_scale": 0.3
+ },
+ "leptoceratops": {
+  "bones": 27,
+  "cubes": 53,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -7.0,
+    -2.0484132689178136e-05,
+    -33.01122090298387
+   ],
+   [
+    7.0,
+    27.01377246844967,
+    48.86322527468077
+   ]
+  ],
+  "animations": [
+   "animation.leptoceratops.idle",
+   "animation.leptoceratops.walk",
+   "animation.leptoceratops.run",
+   "animation.leptoceratops.attack",
+   "animation.leptoceratops.sit",
+   "animation.leptoceratops.graze",
+   "animation.leptoceratops.rear",
+   "animation.leptoceratops.knocked_out",
+   "animation.leptoceratops.wake",
+   "animation.leptoceratops.eat",
+   "animation.leptoceratops.beg",
+   "animation.leptoceratops.tame"
+  ],
+  "render_scale": 0.5
  }
 }

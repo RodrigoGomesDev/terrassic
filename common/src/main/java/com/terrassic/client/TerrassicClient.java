@@ -1,7 +1,8 @@
 package com.terrassic.client;
 
-// BEGIN GENERATED imports
 import com.terrassic.client.title.TerrassicMenuScreen;
+
+// BEGIN GENERATED imports
 import com.terrassic.entity.Alamosaurus;
 import com.terrassic.entity.Albertosaurus;
 import com.terrassic.entity.Ankylosaurus;
@@ -29,6 +30,7 @@ import com.terrassic.entity.Giganotosaurus;
 import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Hesperornis;
 import com.terrassic.entity.Ichthyornis;
+import com.terrassic.entity.Leptoceratops;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Majungasaurus;
 import com.terrassic.entity.Mononykus;
@@ -88,6 +90,7 @@ public final class TerrassicClient {
         renderer(ModEntities.STYRACOSAURUS, "styracosaurus", Styracosaurus.MODEL_SCALE, Styracosaurus.SHADOW);
         renderer(ModEntities.PACHYRHINOSAURUS, "pachyrhinosaurus", Pachyrhinosaurus.MODEL_SCALE, Pachyrhinosaurus.SHADOW);
         renderer(ModEntities.PROTOCERATOPS, "protoceratops", Protoceratops.MODEL_SCALE, Protoceratops.SHADOW);
+        renderer(ModEntities.LEPTOCERATOPS, "leptoceratops", Leptoceratops.MODEL_SCALE, Leptoceratops.SHADOW);
         renderer(ModEntities.STEGOSAURUS, "stegosaurus", Stegosaurus.MODEL_SCALE, Stegosaurus.SHADOW);
         renderer(ModEntities.ANKYLOSAURUS, "ankylosaurus", Ankylosaurus.MODEL_SCALE, Ankylosaurus.SHADOW);
         renderer(ModEntities.EUOPLOCEPHALUS, "euoplocephalus", Euoplocephalus.MODEL_SCALE, Euoplocephalus.SHADOW);

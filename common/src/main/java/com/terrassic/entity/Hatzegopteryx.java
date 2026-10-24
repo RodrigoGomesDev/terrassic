@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -29,7 +30,7 @@ public class Hatzegopteryx extends FlyingDinosaur {
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.52F;
     public static final float SHADOW = 2.1F;
-    private static final Ingredient FOOD = Ingredient.of(Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN);
+    private static final Ingredient FOOD = Ingredient.of(Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
 
     public Hatzegopteryx(EntityType<? extends Hatzegopteryx> type, Level level) {
         super(type, level);
