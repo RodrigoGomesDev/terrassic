@@ -25,7 +25,7 @@ Nota: pterossauros, répteis marinhos, crocodilos antigos e mamíferos não são
 |---|---|---|---|
 | v0.2 ✅ | Primeiros dinossauros | 12 | 12 |
 | v0.3 | Cretáceo: fundação da história e do cientista | 3 | 15 |
-| v0.4 | Cretáceo: os céus | 3 | 18 |
+| v0.4 ✅ | Cretáceo: os céus | 3 | 18 |
 | v0.5 | Cretáceo: o Mar Interior | 7 | 25 |
 | v0.6 | Cretáceo: planícies, manadas e titãs | 15 | 40 |
 | v0.7 | Cretáceo: predadores ápice | 13 | 53 |
@@ -74,7 +74,7 @@ Sistemas: tela de abertura e "Relatório do Incidente", **Caderno de Campo** (te
 **Andamento (24/10/2026, feito na nuvem, ainda não compilado):** prontos o Caderno de Campo com as 4 abas, a tela de abertura, o Guia com níveis, fósseis com pincel e cinzel, a Mesa de Pesquisa, o Carvão de Esboço, a tradução es_es, o **Pteranodon** (voo montado simples: decolar, voar para onde olha, bater asas, planar), o **Mosasaurus** selvagem (oceano profundo, caça quem está na água ou de barco, seca se encalhar), a **Maiasaura** (filhotes perto dela crescem 2x mais rápido), o pulo na montaria (espaço, como o cavalo) tirar a sela (com tesoura, porque shift + clique já manda sentar), a **Lente de Âmbar** (luneta com zoom; observar 2 s registra no Guia), o **Frasco de Argila** (resina de abeto ou árvore da selva vira Âmbar Bruto, ingrediente da Lente; levado no inventário, enche com uma Amostra de Sangue ao derrotar um dinossauro, que vale +2 pontos na Mesa de Pesquisa) e a configuração de spawn (`config/terrassic.json`). Falta: sons próprios (plano em `docs/SONS.md`). O DNA e a clonagem a partir das amostras ficam para depois.
 Nota científica: o Mosasaurus paria filhotes vivos, sem ovo. Quando ele ficar domável (v0.5), o caminho mais fiel é domar o filhote recém-nascido em vez de chocar um ovo.
 
-## v0.4 Os céus do Cretáceo
+## v0.4 ✅ Os céus do Cretáceo (modelos, animações e Java prontos; falta testar no jogo)
 
 Sistemas: voo montado completo (subir, descer, planar, stamina), criaturas de ombro, sela por espécie.
 

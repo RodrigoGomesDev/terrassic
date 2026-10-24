@@ -6,6 +6,7 @@ usage: python3 sprites.py   -> writes into common/src/main/resources/assets/terr
 """
 import math
 import os
+import random
 from PIL import Image
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -337,6 +338,18 @@ def spawn_eggs():
     eye(cv, 7, 5, "#d9b14a")
     eggs["hatzegopteryx"] = cv
 
+    # Ichthyornis: small pale blue-grey egg speckled dark like a tern's, a tiny toothed beak line
+    cv = base_egg(None, "#9fb0b4", "#e4ebe8")
+    rnd = random.Random("ichthyornis")
+    for _ in range(14):
+        x, y = rnd.randrange(3, 13), rnd.randrange(3, 14)
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#4a4a4c" if rnd.random() < 0.6 else "#6e6560"))
+    cv.set(10, 6, hexc("#2a2b2e")); cv.set(11, 6, hexc("#2a2b2e")); cv.set(12, 7, hexc("#2a2b2e"))
+    cv.set(11, 7, hexc("#f4f0e4"))
+    eye(cv, 9, 5, "#2b2420")
+    eggs["ichthyornis"] = cv
+
     # Mosasaurus: dark sea-blue egg with a pale belly, a row of teeth and a tail fluke
     cv = base_egg(None, "#2e3a44", "#d8dbd0")
     for x in range(3, 13):
@@ -355,7 +368,7 @@ def spawn_eggs():
     for name, cv in eggs.items():
         path = os.path.join(TEX, "item", f"{name}_spawn_egg.png")
         if name in egg_designs.ORDER:
-            egg_designs.render(name).save(path)
+            save_png(egg_designs.render(name), path)   # no-op when the pixels did not change
             continue
         cv.outline(0.45)
         cv.save(path)
@@ -374,6 +387,7 @@ EGG_BLOCK = {
     "maiasaura": ("#e4dac0", "#7a6244"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
     "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),
+    "ichthyornis": ("#e4ebe8", "#4a4a4c"),
 }
 
 
@@ -573,7 +587,7 @@ def weapons():
 
 
 # ------------------------------------------------------------------ hides
-FUZZY = {"velociraptor", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx"}  # feathers / pycnofibres
+FUZZY = {"velociraptor", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis"}  # feathers / pycnofibres
 HIDE_ROWS = {2: ((4, 5), (10, 11)), 3: ((3, 12),), 4: ((2, 13),), 5: ((2, 13),), 6: ((2, 13),), 7: ((2, 13),),
              8: ((2, 13),), 9: ((2, 13),), 10: ((2, 13),), 11: ((3, 12),), 12: ((4, 5), (10, 11))}
 

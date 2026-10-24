@@ -97,6 +97,7 @@ SPECIES_VOICE = {
     "pteranodon": ("squawk_pterosaur", 1.0),
     "quetzalcoatlus": ("squawk_pterosaur", 0.62),   # giant azhdarchids: the same squawk an octave down
     "hatzegopteryx": ("squawk_pterosaur", 0.55),
+    "ichthyornis": ("squawk_pterosaur", 1.7),       # tern-sized: the same squawk, high and short
 }
 
 # subtitles per set event: (pt_br, en_us, es_es)

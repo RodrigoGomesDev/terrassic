@@ -40,6 +40,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Pteranodon          beach, stony shore              8       2-4
  *  Quetzalcoatlus      plains, savanna, badlands       3       1-2
  *  Hatzegopteryx       hills, forest                   2       1
+ *  Ichthyornis         beach, stony shore              10      3-6
  *  Mosasaurus          deep ocean (not frozen)         2       1
  *  END GENERATED table
  *  (*desert only where there is sand to stand on)
@@ -69,6 +70,8 @@ public final class ModSpawns {
         SpawnPlacementsRegistry.register(ModEntities.QUETZALCOATLUS, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.HATZEGOPTERYX, SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.ICHTHYORNIS, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
@@ -137,6 +140,9 @@ public final class ModSpawns {
             }
             if (hill || forest) {
                 add(props, ModEntities.HATZEGOPTERYX.get(), 2, 1, 1);
+            }
+            if (coast) {
+                add(props, ModEntities.ICHTHYORNIS.get(), 10, 3, 6);
             }
             if (deepSea) {
                 add(props, MobCategory.WATER_CREATURE, ModEntities.MOSASAURUS.get(), 2, 1, 1);

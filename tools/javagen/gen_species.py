@@ -44,6 +44,8 @@ SIZES = {
     # 2021), standing as tall as a giraffe; Hatzegopteryx thambema 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017).
     "quetzalcoatlus":     dict(real=11.0, scale=1.47, w=2.5, h=5.0, baby=0.25, shadow=2.0),
     "hatzegopteryx":      dict(real=12.0, scale=1.52, w=2.5, h=4.6, baby=0.25, shadow=2.1),
+    # Ichthyornis dispar: a tern-sized toothed seabird, wingspan ~60 cm (Clarke 2004; Field et al. 2018). Modelled at 4x.
+    "ichthyornis":        dict(real=0.66, scale=0.245, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
     "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
 }
@@ -67,6 +69,7 @@ GUIDE = {
     "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
     "quetzalcoatlus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "hatzegopteryx":      dict(era="late_cretaceous", diet="carnivore", fossil=1),
+    "ichthyornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
 }
 
@@ -91,6 +94,7 @@ WORLD = {
     "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
     "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
+    "ichthyornis":        dict(biomes=("coast",), weight=10, group=(3, 6), track=8),                            # flocks on the shore
     "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
 }
 
@@ -213,6 +217,12 @@ SPECIES = [
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.5, 2.0, 320), xp=32, run=0.04,
       rideable=True, ride_offset=2.15, ride_forward=0.0, ride_speed=0.85, egg_only=True,
       prey="e.getBbWidth() < 1.6F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=160),
+ dict(id="ichthyornis", cls="Ichthyornis", base="FlyingDinosaur",
+      doc="Ichthyornis dispar - tern-sized toothed seabird of the Western Interior Seaway shores. Tamed with fish; rides on the owner's shoulder, calls out when a monster is after them and now and then dives for a fish.",
+      attrs=dict(MAX_HEALTH=8, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.75, ATTACK_DAMAGE=1, FOLLOW_RANGE=20),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.6, 0.5, 160), xp=3, run=0.03,
+      prey="e instanceof AbstractFish && e.getBbWidth() < 0.6F", prey_interval=100, shoulder=True, fisher=True),
  # ---- marine reptiles (SwimmingDinosaur: smooth swimming, wild only for now)
  dict(id="mosasaurus", cls="Mosasaurus", base="SwimmingDinosaur",
       doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Wild only in this version.",
@@ -313,6 +323,10 @@ def gen(s, bounds):
             body.append(f"    @Override\n    protected double jumpStrength() {{\n        return {s['jump']}D;\n    }}\n")
         if s.get("ride_forward"):
             body.append(f"    @Override\n    protected double riderForwardOffset() {{\n        return {round(s['ride_forward'] * size['scale'], 2)}D;\n    }}\n")
+    if s.get("shoulder"):
+        body.append("    @Override\n    public boolean canPerch() {\n        return true;\n    }\n")
+    if s.get("fisher"):
+        body.append("    @Override\n    protected boolean perchFishes() {\n        return true;\n    }\n")
     if s.get("fights") is False:
         body.append("    @Override\n    protected boolean fightsBack() {\n        return false;\n    }\n")
     if base in ("FlyingDinosaur", "SwimmingDinosaur"):

@@ -119,7 +119,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     @Override
     public boolean isFlying() {
-        return !this.onGround() && !this.isInWater();
+        return !this.onGround() && !this.isInWater() && !this.isPassenger();
     }
 
     @Override

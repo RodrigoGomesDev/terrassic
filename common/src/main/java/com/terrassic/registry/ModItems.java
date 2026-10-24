@@ -57,6 +57,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> PTERANODON_SPAWN_EGG = egg("pteranodon", ModEntities.PTERANODON);
     public static final RegistrySupplier<Item> QUETZALCOATLUS_SPAWN_EGG = egg("quetzalcoatlus", ModEntities.QUETZALCOATLUS);
     public static final RegistrySupplier<Item> HATZEGOPTERYX_SPAWN_EGG = egg("hatzegopteryx", ModEntities.HATZEGOPTERYX);
+    public static final RegistrySupplier<Item> ICHTHYORNIS_SPAWN_EGG = egg("ichthyornis", ModEntities.ICHTHYORNIS);
     public static final RegistrySupplier<Item> MOSASAURUS_SPAWN_EGG = egg("mosasaurus", ModEntities.MOSASAURUS);
     // END GENERATED spawn eggs
 
@@ -78,6 +79,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> PTERANODON_HIDE = hide("pteranodon");
     public static final RegistrySupplier<Item> QUETZALCOATLUS_HIDE = hide("quetzalcoatlus");
     public static final RegistrySupplier<Item> HATZEGOPTERYX_HIDE = hide("hatzegopteryx");
+    public static final RegistrySupplier<Item> ICHTHYORNIS_HIDE = hide("ichthyornis");
     public static final RegistrySupplier<Item> MOSASAURUS_HIDE = hide("mosasaurus");
     // END GENERATED hides
 

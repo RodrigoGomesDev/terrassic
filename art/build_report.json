@@ -568,5 +568,40 @@
    "animation.hatzegopteryx.tame"
   ],
   "render_scale": 1.0
+ },
+ "ichthyornis": {
+  "bones": 19,
+  "cubes": 31,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -21.5,
+    3.42736420102413e-05,
+    -22.142707976431204
+   ],
+   [
+    21.5,
+    19.342674144356817,
+    16.0
+   ]
+  ],
+  "animations": [
+   "animation.ichthyornis.idle",
+   "animation.ichthyornis.walk",
+   "animation.ichthyornis.run",
+   "animation.ichthyornis.fly",
+   "animation.ichthyornis.glide",
+   "animation.ichthyornis.sit",
+   "animation.ichthyornis.attack",
+   "animation.ichthyornis.knocked_out",
+   "animation.ichthyornis.wake",
+   "animation.ichthyornis.eat",
+   "animation.ichthyornis.beg",
+   "animation.ichthyornis.tame"
+  ],
+  "render_scale": 0.25
  }
 }

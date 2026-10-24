@@ -13,10 +13,12 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -34,6 +36,8 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -93,6 +97,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private RawAnimation sitAnim;
     /** Jump asked by the rider (0..1), done on the next ridden tick on the ground. */
     private float riderJump;
+    /** Ticks after perching during which the owner's sneak does not shake the animal off (it was sneaking to perch it). */
+    private int perchGrace;
+    /** Cooldown of the perched animal's danger warning. */
+    private int perchWarnCooldown;
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -120,6 +128,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Whether a tamed adult accepts a saddle and can be ridden. */
     public boolean isRideable() {
+        return false;
+    }
+
+    /** Whether a tamed adult hops onto its owner's shoulder when they sneak and right-click it with an empty hand. */
+    public boolean canPerch() {
+        return false;
+    }
+
+    /** Whether a perched animal dives for fish now and then when its owner stands near water. */
+    protected boolean perchFishes() {
         return false;
     }
 
@@ -235,7 +253,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
-        if (this.isInSittingPose() && !this.isVehicle()) {
+        if (this.isPerched() || (this.isInSittingPose() && !this.isVehicle())) {
             return state.setAndContinue(this.sitAnim);
         }
         if (state.isMoving()) {
@@ -301,6 +319,19 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (!client) {
                     this.usePlayerItem(player, hand, stack);
                     this.heal(Math.max(2.0F, this.getMaxHealth() * 0.1F));
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
+            // shoulder animals hop on when the owner sneaks with an empty hand (sneak again later to shake it off)
+            if (this.canPerch() && !this.isBaby() && stack.isEmpty() && player.isShiftKeyDown() && !this.isPassenger()
+                    && !player.isVehicle() && !player.isPassenger()) {
+                if (!client) {
+                    this.setOrderedToSit(false);
+                    this.navigation.stop();
+                    this.setTarget(null);
+                    this.startRiding(player, true);
+                    this.perchGrace = 60;
+                    player.displayClientMessage(Component.translatable("message.terrassic.perch", this.getDisplayName()), true);
                 }
                 return InteractionResult.sidedSuccess(client);
             }
@@ -384,6 +415,93 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.level().broadcastEntityEvent(this, (byte) 7);
         player.displayClientMessage(Component.translatable("message.terrassic.tamed", this.getDisplayName(),
                 Component.translatable(this.isFemale() ? "sex.terrassic.female" : "sex.terrassic.male")), true);
+    }
+
+    // ------------------------------------------------------------------ shoulder perch
+
+    /** True while riding on a player's shoulder. */
+    public boolean isPerched() {
+        return this.getVehicle() instanceof Player;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.isPerched()) {
+            this.perchedTick((Player) this.getVehicle());
+        }
+    }
+
+    private void perchedTick(Player owner) {
+        // turn with the owner so the animal looks where they look
+        this.setYRot(owner.yBodyRot);
+        this.yRotO = this.getYRot();
+        this.yBodyRot = owner.yBodyRot;
+        this.yHeadRot = owner.yHeadRot;
+        this.setXRot(0.0F);
+        if (this.level().isClientSide()) {
+            return;
+        }
+        if (this.perchGrace > 0) {
+            this.perchGrace--;
+        }
+        if (this.perchWarnCooldown > 0) {
+            this.perchWarnCooldown--;
+        }
+        boolean shakeOff = (owner.isShiftKeyDown() && this.perchGrace == 0) || owner.isDeadOrDying() || owner.isSpectator()
+                || owner.isInWater() || owner.isSleeping() || !this.isTame() || !this.isOwnedBy(owner) || this.isDeadOrDying();
+        if (shakeOff) {
+            this.stopRiding();
+            return;
+        }
+        // a lookout: calls out when a monster is after the owner
+        if (this.perchWarnCooldown == 0 && this.tickCount % 20 == 0) {
+            for (Monster m : this.level().getEntitiesOfClass(Monster.class, owner.getBoundingBox().inflate(12.0D))) {
+                if (m.getTarget() == owner) {
+                    SoundEvent call = this.getAmbientSound();
+                    if (call != null) {
+                        this.playSound(call, 1.0F, 1.3F);
+                    }
+                    owner.displayClientMessage(Component.translatable("message.terrassic.perch_warn", this.getDisplayName()), true);
+                    this.perchWarnCooldown = 200;
+                    break;
+                }
+            }
+        }
+        // fishing birds dive from the shoulder now and then and bring the owner a fish
+        if (this.perchFishes() && this.random.nextInt(1800) == 0 && nearWater(owner.blockPosition())) {
+            ItemEntity fish = new ItemEntity(this.level(), owner.getX(), owner.getY() + 1.0D, owner.getZ(), new ItemStack(Items.COD));
+            fish.setPickUpDelay(10);
+            this.level().addFreshEntity(fish);
+            this.playSound(SoundEvents.GENERIC_SPLASH, 0.6F, 1.4F);
+            triggerAnim(ACTION_CONTROLLER, "attack");
+            owner.displayClientMessage(Component.translatable("message.terrassic.perch_fish", this.getDisplayName()), true);
+        }
+    }
+
+    private boolean nearWater(BlockPos centre) {
+        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-4, -2, -4), centre.offset(4, 1, 4))) {
+            if (this.level().getFluidState(pos).is(FluidTags.WATER)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return !this.isPerched() && super.isPickable();
+    }
+
+    @Override
+    public boolean isPushable() {
+        return !this.isPerched() && super.isPushable();
+    }
+
+    @Override
+    public double getMyRidingOffset() {
+        // on a player the vanilla offset puts us at chest height; lift to the shoulder
+        return this.isPerched() ? 0.1D : super.getMyRidingOffset();
     }
 
     // ------------------------------------------------------------------ riding
