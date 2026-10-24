@@ -58,6 +58,8 @@ SIZES = {
     "archelon":           dict(real=4.6, scale=1.18, w=2.2, h=1.1, baby=0.25, shadow=1.6),
     # Hesperornis regalis: up to 1.8 m long (Marsh 1880; Bell & Chiappe 2015). Modelled at 2x.
     "hesperornis":        dict(real=1.8, scale=0.39, w=0.6, h=0.6, baby=0.4,  shadow=0.4),
+    # Deinosuchus riograndensis: 10.6 m well measured (Cossette & Brochu 2020), up to 12 m in older estimates (Schwimmer 2002).
+    "deinosuchus":        dict(real=12.0, scale=1.64, w=2.6, h=1.4, baby=0.2,  shadow=2.2),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -86,6 +88,7 @@ GUIDE = {
     "xiphactinus":        dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "archelon":           dict(era="late_cretaceous", diet="omnivore", fossil=3),
     "hesperornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
+    "deinosuchus":        dict(era="late_cretaceous", diet="carnivore", fossil=2),
 }
 
 # Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
@@ -116,6 +119,7 @@ WORLD = {
     "xiphactinus":        dict(biomes=("ocean", "deep_sea"), weight=6, group=(1, 3), track=12),  # small hunting packs
     "archelon":           dict(biomes=("ocean", "coast"), weight=4, group=(1, 2), track=12),      # cruises near the shore
     "hesperornis":        dict(biomes=("coast", "ocean"), weight=8, group=(2, 5), track=10),      # rafts of divers
+    "deinosuchus":        dict(biomes=("river", "swamp", "coast"), weight=3, group=(1, 1), track=10),  # ambush at the water's edge
 }
 
 # biome predicate -> (Java expression in ModSpawns, description for the doc comment)
@@ -288,6 +292,14 @@ SPECIES = [
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.7, 0.6, 200), xp=4, run=0.03,
       prey="e instanceof AbstractFish && e.getBbWidth() < 0.8F", hunts_players=False, tame="feeding", dive=1.3),
+ dict(id="deinosuchus", cls="Deinosuchus", base="PredatorDinosaur",
+      doc="Deinosuchus riograndensis - 12 m alligator of the inland sea's shores. Basks by rivers, swamps and beaches, swims as well as it walks, and ambushes anything that comes to the water: its grip slows the victim. Egg taming only until the knockout (v0.7).",
+      attrs=dict(MAX_HEALTH=160, MOVEMENT_SPEED=0.2, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=1.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=28),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.6, 0.6),
+      xp=38, step_height=1.0, head=(40, 20),
+      prey="e.isInWaterOrBubble() || e.getBbWidth() < 1.6F && !(e instanceof Deinosuchus)", prey_interval=140, fish=True,
+      amphibious=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 1)]),
 ]
 
 
@@ -339,6 +351,9 @@ def gen(s, bounds):
     body.append("        super(type, level);")
     if "step_height" in s:
         body.append(f"        this.setMaxUpStep({s['step_height']}F);")
+    if s.get("amphibious"):
+        imports.add("net.minecraft.world.level.pathfinder.BlockPathTypes")
+        body.append("        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);")
     body.append(f"        this.xpReward = {s.get('xp', 5)};")
     body.append("    }")
     body.append("")
@@ -443,6 +458,11 @@ def gen(s, bounds):
         goals.append("        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, AbstractFish.class, 40, true, false, e -> this.canHunt()));")
     if goals:
         body.append("    @Override\n    protected void addExtraGoals() {\n" + "\n".join(goals) + "\n    }\n")
+    if s.get("amphibious"):
+        # walks the river bed and swims across: the frog / axolotl navigation
+        imports.add("net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation")
+        imports.add("net.minecraft.world.entity.ai.navigation.PathNavigation")
+        body.append("    @Override\n    protected PathNavigation createNavigation(Level level) {\n        return new AmphibiousPathNavigation(this, level);\n    }\n")
     if s.get("fish"):
         body.append("    @Override\n    public boolean canBreatheUnderwater() {\n        return true;\n    }\n")
         body.append("    @Override\n    public boolean isPushedByFluid() {\n        return false;\n    }\n")

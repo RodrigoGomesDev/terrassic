@@ -519,6 +519,22 @@ GUIDE = {
         note=("Contei doze segundos debaixo d'água e ela ainda não tinha subido. Subiu com um peixe maior que a minha mão.",
               "I counted twelve seconds under water and it still had not come up. It came up with a fish bigger than my hand.",
               "Conté doce segundos bajo el agua y todavía no había subido. Subió con un pez más grande que mi mano.")),
+    "deinosuchus": dict(
+        sci=("Viveu há cerca de 80 milhões de anos nas duas margens do Mar Interior Ocidental, na América do Norte. Parente dos jacarés de 10 a 12 m e várias toneladas, com crânio chato de quase 2 m, ponta do focinho inchada, dentes grossos e rombudos no fundo da boca para esmagar tartarugas, e fileiras de placas ósseas pesadas nas costas. Marcas da sua mordida aparecem em ossos de tiranossauros.",
+             "Lived about 80 million years ago on both shores of the Western Interior Seaway, in North America. An alligator relative of 10 to 12 m and several tonnes, with a flat skull almost 2 m long, a swollen snout tip, thick blunt teeth at the back of the mouth for crushing turtles, and rows of heavy bony plates down the back. Its bite marks turn up on tyrannosaur bones.",
+             "Vivió hace unos 80 millones de años en ambas orillas del Mar Interior Occidental, en América del Norte. Pariente de los caimanes de 10 a 12 m y varias toneladas, con cráneo plano de casi 2 m, punta del hocico hinchada, dientes gruesos y romos al fondo de la boca para triturar tortugas, y filas de placas óseas pesadas en el lomo. Marcas de su mordida aparecen en huesos de tiranosaurios."),
+        behavior=("Toma sol na beira de rios, pântanos e praias e boia parado como um tronco. Tudo que chega à água é presa: peixe, tartaruga, dinossauro bebendo, barco. A mordida agarra e a vítima fica lenta.",
+                  "Basks at the edge of rivers, swamps and beaches and floats as still as a log. Everything that comes to the water is prey: fish, turtles, a dinosaur drinking, a boat. The bite grips and the victim is slowed.",
+                  "Toma sol a la orilla de ríos, pantanos y playas y flota quieto como un tronco. Todo lo que llega al agua es presa: peces, tortugas, un dinosaurio bebiendo, un bote. La mordida agarra y la víctima queda lenta."),
+        taming=("Só pelo ovo, por enquanto: o filhote que nasce perto de você é seu. O nocaute do adulto chega na v0.7.",
+                "Only through the egg for now: the hatchling born near you is yours. Knocking out an adult arrives in v0.7.",
+                "Solo por el huevo, por ahora: la cría que nace cerca de usted es suya. El noqueo del adulto llega en la v0.7."),
+        utility=("Guardião de rio e de porto: nada tão bem quanto anda e nada passa pela água dele. Couro grosso em quantidade.",
+                 "Guardian of river and harbour: it swims as well as it walks and nothing gets through its water. Thick hide in quantity.",
+                 "Guardián de río y de puerto: nada tan bien como camina y nada pasa por su agua. Cuero grueso en cantidad."),
+        note=("Achei que era um tronco e amarrei o barco nele. O tronco abriu a boca.",
+              "I thought it was a log and tied the boat to it. The log opened its mouth.",
+              "Pensé que era un tronco y até el bote a él. El tronco abrió la boca.")),
 }
 
 ERAS = {

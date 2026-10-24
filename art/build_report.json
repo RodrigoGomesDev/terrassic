@@ -778,5 +778,38 @@
    "animation.hesperornis.tame"
   ],
   "render_scale": 0.5
+ },
+ "deinosuchus": {
+  "bones": 18,
+  "cubes": 44,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -17.92820323027551,
+    8.180792478835599e-17,
+    -46.0
+   ],
+   [
+    17.92820323027551,
+    16.0,
+    71.07383416923005
+   ]
+  ],
+  "animations": [
+   "animation.deinosuchus.idle",
+   "animation.deinosuchus.walk",
+   "animation.deinosuchus.run",
+   "animation.deinosuchus.sit",
+   "animation.deinosuchus.attack",
+   "animation.deinosuchus.knocked_out",
+   "animation.deinosuchus.wake",
+   "animation.deinosuchus.eat",
+   "animation.deinosuchus.beg",
+   "animation.deinosuchus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

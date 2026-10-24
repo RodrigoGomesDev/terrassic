@@ -6,6 +6,7 @@ import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Archelon;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
+import com.terrassic.entity.Deinosuchus;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Elasmosaurus;
 import com.terrassic.entity.Gallimimus;
@@ -96,6 +97,9 @@ public final class ModEntities {
             mob("archelon", Archelon::new, MobCategory.WATER_CREATURE, Archelon.WIDTH, Archelon.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Hesperornis>> HESPERORNIS =
             mob("hesperornis", Hesperornis::new, MobCategory.WATER_CREATURE, Hesperornis.WIDTH, Hesperornis.HEIGHT, 10);
+    // ---- predators
+    public static final RegistrySupplier<EntityType<Deinosuchus>> DEINOSUCHUS =
+            mob("deinosuchus", Deinosuchus::new, MobCategory.CREATURE, Deinosuchus.WIDTH, Deinosuchus.HEIGHT, 10);
     // END GENERATED species
 
     // ---- projectiles
@@ -138,6 +142,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(XIPHACTINUS, Xiphactinus::createAttributes);
         EntityAttributeRegistry.register(ARCHELON, Archelon::createAttributes);
         EntityAttributeRegistry.register(HESPERORNIS, Hesperornis::createAttributes);
+        EntityAttributeRegistry.register(DEINOSUCHUS, Deinosuchus::createAttributes);
         // END GENERATED attributes
     }
 }
