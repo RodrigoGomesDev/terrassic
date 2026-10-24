@@ -1,6 +1,7 @@
 package com.terrassic.client;
 
 // BEGIN GENERATED imports
+import com.terrassic.client.title.TerrassicMenuScreen;
 import com.terrassic.entity.Alamosaurus;
 import com.terrassic.entity.Albertosaurus;
 import com.terrassic.entity.Ankylosaurus;
@@ -136,6 +137,7 @@ public final class TerrassicClient {
         EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();
         BuildingBlocksClient.init();
+        TerrassicMenuScreen.register(); // the Terrassic main menu (docs/MENU.md)
     }
 
     private static <T extends DinosaurEntity> void renderer(RegistrySupplier<EntityType<T>> type, String id, float scale, float shadow) {

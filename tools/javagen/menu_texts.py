@@ -1,6 +1,9 @@
 """Texts of the title screen and the loading screens (v0.8, phase M2), in the three languages of the mod.
 
-  menu.terrassic.subtitle      line under the logo on the title screen
+  menu.terrassic.subtitle      chapter line (loading screens, Field Guide)
+  menu.terrassic.slogan        line under the TERRASSIC title of the main menu (client/title/TerrassicMenuScreen)
+  menu.terrassic.<entry>.hint  one line under the highlighted option of the main menu
+  menu.terrassic.scene.<id>.*  museum placard of each main-menu scene: the animal, when and where it lived
   menu.terrassic.did_you_know  header of the loading tips
   splash.terrassic.<n>         the yellow splash on the title screen (short)
   tip.terrassic.<n>            one tip per loading screen: real facts about the creatures and the Cretaceous,
@@ -15,6 +18,25 @@ Merged into the lang files by gen_world.py -> gen_resources.py.
 MENU = {
     "menu.terrassic.subtitle": ("Chapter 1 · Echoes of the End", "Capítulo 1 · Ecos do Fim", "Capítulo 1 · Ecos del Fin"),
     "menu.terrassic.did_you_know": ("Did you know?", "Você sabia?", "¿Sabías que...?"),
+    # main menu (client/title/TerrassicMenuScreen, docs/MENU.md)
+    "menu.terrassic.slogan": ("The past has awoken.", "O passado acordou.", "El pasado despertó."),
+    "menu.terrassic.mods": ("Mods", "Mods", "Mods"),
+    "menu.terrassic.singleplayer.hint": ("Your worlds, or a new leap", "Seus mundos, ou um novo salto",
+                                         "Tus mundos, o un nuevo salto"),
+    "menu.terrassic.multiplayer.hint": ("Servers and LAN worlds", "Servidores e mundos na rede local",
+                                        "Servidores y mundos en red local"),
+    "menu.terrassic.rules.hint": ("Default rules for new worlds", "Regras padrão para mundos novos",
+                                  "Reglas por defecto para mundos nuevos"),
+    "menu.terrassic.mods.hint": ("Installed mods and their settings", "Mods instalados e suas opções",
+                                 "Mods instalados y sus opciones"),
+    "menu.terrassic.options.hint": ("Video, sound, controls and Terrassic", "Vídeo, som, controles e o Terrassic",
+                                    "Vídeo, sonido, controles y Terrassic"),
+    "menu.terrassic.quit.hint": ("See you in the Cretaceous", "Até a próxima no Cretáceo", "Hasta pronto en el Cretácico"),
+    "menu.terrassic.scene.nevoa.name": ("Tyrannosaurus rex", "Tyrannosaurus rex", "Tyrannosaurus rex"),
+    "menu.terrassic.scene.nevoa.when": ("Maastrichtian · 68 to 66 million years ago",
+                                        "Maastrichtiano · 68 a 66 milhões de anos",
+                                        "Maastrichtiense · hace 68 a 66 millones de años"),
+    "menu.terrassic.scene.nevoa.facts": ("13 m · 8 t · Laramidia", "13 m · 8 t · Laramídia", "13 m · 8 t · Laramidia"),
     # HUD (phase M5)
     "hud.terrassic.rift_storm": ("Rift Storm", "Tempestade da Fenda", "Tormenta de la Grieta"),
     "hud.terrassic.era.late_cretaceous": ("Late Cretaceous", "Cretáceo Superior", "Cretácico Superior"),
