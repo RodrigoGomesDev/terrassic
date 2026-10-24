@@ -10,7 +10,7 @@ four-toed feet, large polygonal feature scales up to 10 cm.
 In game: scale ~0.6 -> ~5.5 blocks long, ~2 blocks tall at the frill.
 """
 import math
-from rig import Model, wave, sinx, track, keys
+from rig import Model, wave, sinx, track, keys, add_knockout
 from quadruped import hind_leg, front_leg, quad_gait, quad_sit
 from rig import add_saddle
 from paint import vnoise, hash3
@@ -108,6 +108,7 @@ def build():
                "female": {"frill": "#7c6248", "frill_edge": "#cbbd9b", "dorsal": "#5e5545", "flank": "#7f725c"}}
     add_saddle(m, "body", 28, -3, 7, 10, 10, flap=7)
     animations(m)
+    add_knockout(m, lift=0.42)  # the wide body and frill rest higher on the ground
     return m
 
 

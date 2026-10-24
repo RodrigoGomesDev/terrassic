@@ -97,6 +97,6 @@ def build():
                 rgb = rgb * 0.85
         return rgb
     m.pattern = pattern
-    quad_anims(m, 3, walk=(2.0, 14, 14, 0.4), run=(1.1, 22, 22, 0.8), attack="tail", sit_drop=5,
+    quad_anims(m, 3, knockout={"lift": 0.8}, walk=(2.0, 14, 14, 0.4), run=(1.1, 22, 22, 0.8), attack="tail", sit_drop=5,
                graze_neck=-14, graze_skull=-12, sit_kw={"hind": (30, -60, 30), "front": (-25, 60, -35)})
     return m

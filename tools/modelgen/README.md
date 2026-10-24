@@ -61,11 +61,13 @@ python3 checks.py        # confere que o backend Python reconstrói os 12 modelo
 Para centenas de espécies, cada família tem **um rig compartilhado** (arquétipo) e cada espécie vira uma ficha curta
 (paleta, cabeça, crista, padrão de pele), com cerca de 20 linhas. Corpo, pernas, cauda, sela e animações vêm do arquétipo.
 
+- Todos os dinossauros terrestres têm `knocked_out` via `rig.add_knockout(m)` (os quadrúpedes pelo `quad_anims`).
 - `species/hadrosaur.py`: hadrossauros (bico de pato). Usado por `parasaurolophus.py` e `maiasaura.py`.
+- `species/large_theropod.py`: terópodes grandes. Usado por `tyrannosaurus.py` e `spinosaurus.py` (vela e cauda-remo entram por ganchos `after_torso`/`after_tail`).
 - Todo arquétipo traz a animação `knocked_out` (deitado de lado, para a domesticação por nocaute; ver `docs/DOMESTICACAO.md`).
-  A pose usa `rig.knockout_tracks(...)`; os números de rolagem, altura e deslocamento ficam em `KNOCKOUT` no arquétipo.
+  A pose usa `rig.add_knockout(m, lift=..., shift=...)`, com altura e deslocamento em fração da altura do quadril.
 - O tamanho no jogo vem da escala do renderizador (`SIZES` em `tools/javagen/gen_species.py`), então o rig fica num tamanho só.
-- Próximos arquétipos: terópode (pequeno e grande), ceratopsiano, saurópode, anquilossauro, pterossauro e réptil marinho.
+- Próximos arquétipos: terópode pequeno, ceratopsiano, saurópode, anquilossauro, pterossauro e réptil marinho.
 
 ## Adicionar uma espécie
 

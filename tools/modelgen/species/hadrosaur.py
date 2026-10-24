@@ -14,7 +14,7 @@ Spec keys (head boxes are relative to the head anchor: x, y, z with -z = forward
   pattern          "stripes" (bands across the back) or "blotches" (irregular dark spots)
 """
 import math
-from rig import Model, track, keys, add_saddle, knockout_tracks
+from rig import Model, track, keys, add_saddle
 from quadruped import hind_leg, front_leg, quad_anims
 
 DEFAULTS = dict(belly=(7, 12), crest=[], male_crest=[], crest_origin=(4, -2), pattern="stripes")
@@ -77,20 +77,10 @@ def build(species_id, spec):
         "skull": track(rot=keys([(0, 0, 0, 0), (0.35, 14, 0, 0), (1.3, 14, 0, 0), (1.6, 0, 0, 0)])),
         "jaw": track(rot=keys([(0, 0, 0, 0), (0.35, -16, 0, 0), (1.25, -16, 0, 0), (1.5, 0, 0, 0)])),
     }
-    # knocked out (taming by knockout, see docs/DOMESTICACAO.md): lying on its side, legs limp, neck and tail flat
-    limp = {"neck1": (-10, 0, 0), "neck2": (-6, 0, 0), "skull": (-4, 0, 0), "jaw": (-8, 0, 0),
-            "tail1": (-6, 0, 0), "tail2": (-4, 0, 0)}
-    for side, k in (("l", 1), ("r", -1)):
-        limp.update({f"thigh_{side}": (20 * k, 0, 0), f"shin_{side}": (-25, 0, 0), f"foot_{side}": (20, 0, 0),
-                     f"upperarm_{side}": (-25 * k, 0, 0), f"forearm_{side}": (20, 0, 0)})
     quad_anims(m, 4, walk=(1.5, 20, 16, 0.6), run=(0.75, 32, 22, 1.2), attack="headbutt", sit_drop=9,
-               graze_neck=-26, graze_skull=-10,
-               extra={"call": (1.6, False, call), "knocked_out": (4.0, True, knockout_tracks(4.0, *KNOCKOUT, limp))})
+               graze_neck=-26, graze_skull=-10, extra={"call": (1.6, False, call)})
     return m
 
-
-# root roll (deg), drop and sideways shift (px) that lay the body on the ground
-KNOCKOUT = (82, -6, 13)
 
 
 def _crest_band(tx, rgb):

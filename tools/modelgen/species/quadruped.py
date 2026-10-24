@@ -1,6 +1,6 @@
 """Shared limb helpers + gait for big quadrupeds (Triceratops, Stegosaurus)."""
 import math
-from rig import wave, track, keys, sit_tracks
+from rig import wave, track, keys, sit_tracks, add_knockout
 
 
 def hind_leg(m, side, sx, x, pts, secs, pad):
@@ -61,7 +61,7 @@ def quad_sit(m, drop, hind=(50, -95, 45), front=(-35, 95, -50), tail=(6, 3), nec
 
 
 def quad_anims(m, ntail, nneck=2, walk=(1.8, 18, 18, 0.6), run=(0.9, 28, 28, 1.1), attack="headbutt",
-               sit_drop=8, graze_neck=-22, graze_skull=-16, sit_kw=None, extra=None):
+               sit_drop=8, graze_neck=-22, graze_skull=-16, sit_kw=None, extra=None, knockout=None):
     """Standard animation set for quadrupeds: idle, walk, run, sit, graze and an attack style:
     'headbutt' (lower the head and thrust up), 'tail' (big sideways tail swing), 'stomp' (rear up)."""
     from rig import sinx
@@ -121,3 +121,4 @@ def quad_anims(m, ntail, nneck=2, walk=(1.8, 18, 18, 0.6), run=(0.9, 28, 28, 1.1
     m.anim("graze", 2.8, False, g)
     for name, (length, loop, tracks) in (extra or {}).items():
         m.anim(name, length, loop, tracks)
+    add_knockout(m, **(knockout or {}))  # wide armoured bodies need more lift to stay above the ground

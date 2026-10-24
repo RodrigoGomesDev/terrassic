@@ -9,13 +9,13 @@
   "bounds_px": [
    [
     -9.5,
-    -0.10587278931878608,
+    -0.10587278931877897,
     -48.239780870332204
    ],
    [
     9.5,
-    42.228768026226376,
-    58.078468862043515
+    42.22876802622638,
+    58.07846886204352
    ]
   ],
   "animations": [
@@ -24,7 +24,8 @@
    "animation.tyrannosaurus.run",
    "animation.tyrannosaurus.attack",
    "animation.tyrannosaurus.roar",
-   "animation.tyrannosaurus.sit"
+   "animation.tyrannosaurus.sit",
+   "animation.tyrannosaurus.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -37,13 +38,13 @@
   ],
   "bounds_px": [
    [
-    -9,
-    -3.0305848999656604e-05,
-    -59.08103907101545
+    -9.0,
+    -3.0305849000663546e-05,
+    -59.08103907101546
    ],
    [
-    9,
-    49,
+    9.0,
+    49.0,
     61.999976490604155
    ]
   ],
@@ -53,7 +54,8 @@
    "animation.spinosaurus.run",
    "animation.spinosaurus.attack",
    "animation.spinosaurus.roar",
-   "animation.spinosaurus.sit"
+   "animation.spinosaurus.sit",
+   "animation.spinosaurus.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -66,13 +68,13 @@
   ],
   "bounds_px": [
    [
-    -5,
-    -0.14989446755437097,
-    -32.06308085254459
+    -5.0,
+    -0.14989446755437008,
+    -32.06308085254458
    ],
    [
-    5,
-    31.239390958993308,
+    5.0,
+    31.23939095899331,
     41.00004408120612
    ]
   ],
@@ -82,7 +84,8 @@
    "animation.dilophosaurus.run",
    "animation.dilophosaurus.sit",
    "animation.dilophosaurus.display",
-   "animation.dilophosaurus.attack"
+   "animation.dilophosaurus.attack",
+   "animation.dilophosaurus.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -95,13 +98,13 @@
   ],
   "bounds_px": [
    [
-    -4,
-    1.3542856184933783e-05,
-    -29.5429465280745
+    -4.0,
+    1.3542856188248829e-05,
+    -29.54294652807449
    ],
    [
-    4,
-    26.12975986530676,
+    4.0,
+    26.129759865306756,
     38.99998109612815
    ]
   ],
@@ -110,7 +113,8 @@
    "animation.velociraptor.walk",
    "animation.velociraptor.run",
    "animation.velociraptor.sit",
-   "animation.velociraptor.attack"
+   "animation.velociraptor.attack",
+   "animation.velociraptor.knocked_out"
   ],
   "render_scale": 0.5
  },
@@ -123,14 +127,14 @@
   ],
   "bounds_px": [
    [
-    -3,
-    -0.18719412780487366,
-    -23.96162557896686
+    -3.0,
+    -0.18719412780487232,
+    -23.961625578966864
    ],
    [
-    3,
-    22.297129622199563,
-    41.01104805343135
+    3.0,
+    22.29712962219956,
+    41.011048053431345
    ]
   ],
   "animations": [
@@ -138,7 +142,8 @@
    "animation.compsognathus.walk",
    "animation.compsognathus.run",
    "animation.compsognathus.sit",
-   "animation.compsognathus.attack"
+   "animation.compsognathus.attack",
+   "animation.compsognathus.knocked_out"
   ],
   "render_scale": 0.3
  },
@@ -151,12 +156,12 @@
   ],
   "bounds_px": [
    [
-    -11,
-    -0.24848177044797648,
-    -44.2554416149631
+    -11.0,
+    -0.24848177044797914,
+    -44.25544161496309
    ],
    [
-    11,
+    11.0,
     36.224082217454594,
     44.2066357550258
    ]
@@ -167,7 +172,8 @@
    "animation.triceratops.run",
    "animation.triceratops.attack",
    "animation.triceratops.sit",
-   "animation.triceratops.graze"
+   "animation.triceratops.graze",
+   "animation.triceratops.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -180,14 +186,14 @@
   ],
   "bounds_px": [
    [
-    -9,
-    -2.689262250399338e-05,
+    -9.0,
+    -2.6892622500919423e-05,
     -38.88323547528455
    ],
    [
-    9,
+    9.0,
     36.7713886832774,
-    54.60858659065945
+    54.608586590659456
    ]
   ],
   "animations": [
@@ -196,7 +202,8 @@
    "animation.stegosaurus.run",
    "animation.stegosaurus.attack",
    "animation.stegosaurus.sit",
-   "animation.stegosaurus.graze"
+   "animation.stegosaurus.graze",
+   "animation.stegosaurus.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -209,13 +216,13 @@
   ],
   "bounds_px": [
    [
-    -12,
-    -4.4865476168109986e-05,
-    -27.835203101845156
+    -12.0,
+    -4.4865476165262586e-05,
+    -27.835203101845153
    ],
    [
-    12,
-    20,
+    12.0,
+    20.0,
     42.10942925107145
    ]
   ],
@@ -225,7 +232,8 @@
    "animation.ankylosaurus.run",
    "animation.ankylosaurus.attack",
    "animation.ankylosaurus.sit",
-   "animation.ankylosaurus.graze"
+   "animation.ankylosaurus.graze",
+   "animation.ankylosaurus.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -239,13 +247,13 @@
   "bounds_px": [
    [
     -12.5,
-    -4.1437348202721935e-06,
-    -43.91811930937932
+    -4.143734815780691e-06,
+    -43.918119309379335
    ],
    [
     12.5,
-    82.53673791161792,
-    64.08728363697023
+    82.5367379116179,
+    64.08728363697021
    ]
   ],
   "animations": [
@@ -254,7 +262,8 @@
    "animation.brachiosaurus.run",
    "animation.brachiosaurus.attack",
    "animation.brachiosaurus.sit",
-   "animation.brachiosaurus.graze"
+   "animation.brachiosaurus.graze",
+   "animation.brachiosaurus.knocked_out"
   ],
   "render_scale": 1.0
  },
@@ -298,14 +307,14 @@
   ],
   "bounds_px": [
    [
-    -6,
-    -0.3830063767844889,
+    -6.0,
+    -0.38300637678448757,
     -31.063690025525496
    ],
    [
-    6,
-    35.9944853090949,
-    44.00001258866714
+    6.0,
+    35.994485309094905,
+    44.00001258866713
    ]
   ],
   "animations": [
@@ -314,7 +323,8 @@
    "animation.pachycephalosaurus.run",
    "animation.pachycephalosaurus.sit",
    "animation.pachycephalosaurus.graze",
-   "animation.pachycephalosaurus.attack"
+   "animation.pachycephalosaurus.attack",
+   "animation.pachycephalosaurus.knocked_out"
   ],
   "render_scale": 0.667
  },
@@ -328,12 +338,12 @@
   "bounds_px": [
    [
     -4.5,
-    3.5581221019542753e-06,
+    3.5581221027314314e-06,
     -24.422172786313368
    ],
    [
     4.5,
-    31.388352645324137,
+    31.388352645324133,
     37.99998109612815
    ]
   ],
@@ -343,7 +353,8 @@
    "animation.gallimimus.run",
    "animation.gallimimus.sit",
    "animation.gallimimus.graze",
-   "animation.gallimimus.attack"
+   "animation.gallimimus.attack",
+   "animation.gallimimus.knocked_out"
   ],
   "render_scale": 1.0
  },

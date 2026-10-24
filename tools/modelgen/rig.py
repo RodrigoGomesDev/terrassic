@@ -325,3 +325,22 @@ def knockout_tracks(length, roll, drop, shift, joints, breathe=0.3):
     for bone, rot in joints.items():
         tracks[bone] = track(rot=keys([(0, *rot), (length, *rot)]))
     return tracks
+
+
+# limp pose of a knocked-out animal; bones the model does not have are skipped
+LIMP = {"neck1": (-8, 0, 0), "neck2": (-5, 0, 0), "skull": (-3, 0, 0), "jaw": (-10, 0, 0),
+        "tail1": (-5, 0, 0), "tail2": (-3, 0, 0), "arm_l": (20, 0, 0), "arm_r": (30, 0, 0)}
+for _side, _k in (("l", 1), ("r", -1)):
+    LIMP.update({f"thigh_{_side}": (18 * _k, 0, 0), f"shin_{_side}": (-28, 0, 0), f"foot_{_side}": (22, 0, 0),
+                 f"upperarm_{_side}": (-25 * _k, 0, 0), f"forearm_{_side}": (20, 0, 0)})
+
+
+def add_knockout(m, roll=82, lift=0.26, shift=0.57, joints=None, length=4.0):
+    """
+    Adds the 'knocked_out' loop (knockout taming, docs/DOMESTICACAO.md) to any model with root/body bones.
+    lift and shift are fractions of the hip height (the body pivot), so one setting fits every size.
+    """
+    names = {b.name for b in m.bones}
+    hip = next(b for b in m.bones if b.name == "body").pivot[1]
+    limp = {k: v for k, v in (joints or LIMP).items() if k in names}
+    m.anim("knocked_out", length, True, knockout_tracks(length, roll, -lift * hip, shift * hip, limp))

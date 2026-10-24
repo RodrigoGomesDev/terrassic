@@ -15,7 +15,7 @@ Options in the parameter dict P (besides the geometry):
   sexes      : {"male": {palette overrides}, "female": {...}}
 """
 import math
-from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks
+from rig import Model, wave, sinx, track, keys, add_saddle, sit_tracks, add_knockout
 
 
 def build_small(ident, P):
@@ -218,6 +218,7 @@ def animations(m, P):
                           pos=keys([(0, 0, 0, 0), (0.2, 0, 0, 2), (0.35, 0, -0.5, -3), (0.7, 0, 0, 0)])),
         })
     if P.get("pachy"):
+        add_knockout(m)
         return
     La = 0.6
     m.anim("attack", La, False, {
@@ -228,3 +229,4 @@ def animations(m, P):
         "arm_r": track(rot=keys([(0, 0, 0, 0), (0.15, -40, 0, 10), (0.3, 20, 0, 0), (0.6, 0, 0, 0)])),
         "body": track(rot=keys([(0, 0, 0, 0), (0.15, 4, 0, 0), (0.3, -6, 0, 0), (0.6, 0, 0, 0)])),
     })
+    add_knockout(m)

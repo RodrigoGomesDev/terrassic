@@ -34,7 +34,7 @@ Mesmos nomes da seção "Domesticação: animações e telas" do `docs/ROSTER.md
 | Animação | Tipo | Estado |
 |---|---|---|
 | `knockout` | uma vez: cambaleia e tomba | a fazer |
-| `knocked_out` | em loop: deitada de lado, respiração lenta | **pronta no arquétipo hadrossauro** (Parassaurolofo, Maiassaura) |
+| `knocked_out` | em loop: deitada de lado, respiração lenta | **pronta nos 13 dinossauros terrestres** (falta Pteranodonte e Mosassauro) |
 | `wake` | uma vez: levanta e sacode a cabeça | a fazer |
 | `eat` | uma vez: come da mão ou do chão | a fazer |
 | `tame` | uma vez: reação de domada | a fazer |

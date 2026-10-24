@@ -10,7 +10,7 @@ narrow head carried low (no higher than ~1 m).
 In game: scale ~0.6 -> ~4.5 blocks long, ~2 blocks tall at the plates.
 """
 import math
-from rig import Model, wave, sinx, track, keys
+from rig import Model, wave, sinx, track, keys, add_knockout
 from quadruped import hind_leg, front_leg, quad_gait, quad_sit
 from paint import vnoise, hex2rgb, mix, smooth
 
@@ -133,6 +133,7 @@ def build():
     m.sexes = {"male": {"plate": "#8a2a1a", "plate_edge": "#f0a640"},
                "female": {"plate": "#5e4632", "plate_edge": "#b99c66", "dorsal": "#56603a"}}
     animations(m)
+    add_knockout(m)
     return m
 
 
