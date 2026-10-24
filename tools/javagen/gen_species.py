@@ -43,6 +43,8 @@ SIZES = {
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
+    # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
+    "struthiomimus":      dict(real=4.3,  scale=1.07, w=1.0, h=2.4, baby=0.35, shadow=0.8),
     "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
     "edmontosaurus":      dict(real=12.0, scale=1.93, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
@@ -92,6 +94,7 @@ GUIDE = {
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
+    "struthiomimus":      dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "maiasaura":          dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "edmontosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "corythosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -129,6 +132,7 @@ WORLD = {
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
+    "struthiomimus":      dict(biomes=("plains", "savanna", "forest"), weight=6, group=(3, 6), track=10),   # flocks on the floodplain
     "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
     "edmontosaurus":      dict(biomes=("plains", "forest", "savanna"), weight=6, group=(4, 8), track=10),  # big herds
     "corythosaurus":      dict(biomes=("forest", "plains"), weight=5, group=(3, 6), track=10),            # wooded floodplains
@@ -255,6 +259,12 @@ SPECIES = [
       food="Items.WHEAT_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.55, 1.2, 200), xp=8, run=0.03,
       fights=False, rideable=True, jump=0.8, ride_offset=1.1, ride_forward=0.12, ride_speed=1.35),
+ dict(id="struthiomimus", cls="Struthiomimus", base="HerbivoreDinosaur",
+      doc="Struthiomimus altus - 4.3 m ostrich mimic of the floodplains. Flocks flee from danger. Omnivore, tamed with seeds, berries or eggs; the lightest and fastest mount.",
+      attrs=dict(MAX_HEALTH=26, MOVEMENT_SPEED=0.37, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
+      food="Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES, Items.EGG",
+      sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.7, 1.1, 200), xp=8, run=0.03,
+      fights=False, rideable=True, jump=0.9, ride_offset=1.0, ride_forward=0.1, ride_speed=1.45),
  dict(id="maiasaura", cls="Maiasaura", base="HerbivoreDinosaur",
       doc="Maiasaura peeblesorum - the \"good mother\" hadrosaur. Lives in nesting colonies; babies of any species near an adult grow twice as fast. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=65, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ARMOR=3, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=20),

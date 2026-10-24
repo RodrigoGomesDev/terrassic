@@ -1017,5 +1017,39 @@
    "animation.protoceratops.tame"
   ],
   "render_scale": 0.5
+ },
+ "struthiomimus": {
+  "bones": 27,
+  "cubes": 50,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -4.5,
+    -2.124604247464827e-05,
+    -26.348072234245002
+   ],
+   [
+    4.5,
+    36.79413511090813,
+    37.99998109612815
+   ]
+  ],
+  "animations": [
+   "animation.struthiomimus.idle",
+   "animation.struthiomimus.walk",
+   "animation.struthiomimus.run",
+   "animation.struthiomimus.sit",
+   "animation.struthiomimus.graze",
+   "animation.struthiomimus.attack",
+   "animation.struthiomimus.knocked_out",
+   "animation.struthiomimus.wake",
+   "animation.struthiomimus.eat",
+   "animation.struthiomimus.beg",
+   "animation.struthiomimus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

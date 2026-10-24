@@ -631,6 +631,22 @@ GUIDE = {
         note=("Deixei um no quintal. Em uma semana tinha cenouras, três ossos e um dente que não é dele.",
               "I left one in the yard. In a week I had carrots, three bones and a tooth that is not its own.",
               "Dejé uno en el patio. En una semana tenía zanahorias, tres huesos y un diente que no es suyo.")),
+    "struthiomimus": dict(
+        sci=("Viveu há 76 a 70 milhões de anos em Alberta, no Canadá. O \"imitador de avestruz\": 4,3 m e uns 150 kg, conhecido por um esqueleto quase completo achado em 1914. Cabeça pequena de olhos grandes numa pescoço longuíssimo, bico sem dentes, braços compridos com três dedos iguais de garras retas (ganchos para puxar galhos), pernas longas e cauda rígida de balancim. Um dos dinossauros mais rápidos: 50 a 80 km/h.",
+             "Lived 76 to 70 million years ago in Alberta, Canada. The \"ostrich mimic\": 4.3 m and some 150 kg, known from a nearly complete skeleton found in 1914. A small big-eyed head on a very long neck, a toothless beak, long arms with three equal fingers bearing straight claws (hooks for pulling down branches), long legs and a stiff balancing tail. One of the fastest dinosaurs: 50 to 80 km/h.",
+             "Vivió hace 76 a 70 millones de años en Alberta, Canadá. El \"imitador de avestruz\": 4,3 m y unos 150 kg, conocido por un esqueleto casi completo hallado en 1914. Cabeza pequeña de ojos grandes en un cuello larguísimo, pico sin dientes, brazos largos con tres dedos iguales de garras rectas (ganchos para bajar ramas), patas largas y cola rígida de balancín. Uno de los dinosaurios más rápidos: 50 a 80 km/h."),
+        behavior=("Bandos de 3 a 6 nas planícies e na beira da mata. Não briga: ao menor susto o bando inteiro dispara, e ninguém alcança.",
+                  "Flocks of 3 to 6 on the plains and the forest edge. It does not fight: at the first scare the whole flock bolts, and nothing catches it.",
+                  "Bandadas de 3 a 6 en las llanuras y el borde del bosque. No pelea: al menor susto toda la bandada sale disparada, y nadie la alcanza."),
+        taming=("Onívoro: doma-se na mão com sementes, frutas silvestres ou ovos. Os pares põem um ovo pequeno.",
+                "An omnivore: hand-tamed with seeds, sweet berries or eggs. Pairs lay a small egg.",
+                "Omnívoro: se doma a mano con semillas, bayas o huevos. Las parejas ponen un huevo pequeño."),
+        utility=("A montaria mais leve e rápida do mod: pula alto e cruza a planície em segundos. Não carrega quase nada além de você.",
+                 "The lightest and fastest mount in the mod: jumps high and crosses the plain in seconds. Carries little besides you.",
+                 "La montura más ligera y rápida del mod: salta alto y cruza la llanura en segundos. No carga casi nada además de ti."),
+        note=("Apostei corrida com o Galimimo. O meu venceu por um pescoço. Literalmente.",
+              "I raced the Gallimimus. Mine won by a neck. Literally.",
+              "Corrí una carrera contra el Gallimimus. El mío ganó por un cuello. Literalmente.")),
 }
 
 ERAS = {
