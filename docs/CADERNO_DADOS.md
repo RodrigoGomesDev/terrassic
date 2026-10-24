@@ -75,8 +75,41 @@ Verificações:
 - Estado do protocolo: snapshot inicial, supressão de duplicatas, reconstrução do cliente, UUIDs independentes,
   desconexão/reconexão, limpeza ao encerrar e fallback para clientes sem delta.
 
-Esses testes de estado/protocolo não simulam um cliente conectado. Reconexão real, respawn, transição entre
-dimensões, telas e compatibilidade com um JAR cliente antigo continuam exigindo validação em jogo/rede real.
+Esses testes de estado/protocolo não simulam um cliente conectado. O roteiro de rede abaixo complementa a
+regressão com conexões reais; respawn, transição entre dimensões, telas e um JAR cliente antigo ainda exigem
+validação específica no jogo.
 
 Resultado em 24/10/2026: a build completa Fabric/Forge passou em 37 s, incluindo todas as regressões acima.
 Os servidores dedicados foram revalidados pelos roteiros de entidades nos dois loaders após a mudança.
+
+## Clientes de protocolo conectados
+
+```sh
+python3 -B tools/validation/network_regression.py --loader fabric --eula-file /caminho/eula.txt
+python3 -B tools/validation/network_regression.py --loader forge --eula-file /caminho/eula.txt
+```
+
+O roteiro inicia um servidor descartável vinculado somente a localhost, em modo offline, e conecta dois clientes
+de protocolo Minecraft 1.20.1/763. Não usa contas, mundos ou servidores externos. O `eula.txt` aceito é fornecido
+pelo operador, como nos testes de entidades. Logs e mundos ficam em `build/network-regression/`.
+
+Os clientes confirmam teleportes/keepalive e decodificam os pacotes reais, com a compactação negociada na conexão.
+Os IDs foram consultados no `ConnectionProtocol` local por
+`./gradlew :common:researchRegression --args=--protocol-dump --offline --no-daemon`.
+O cliente anuncia seus canais depois de JoinGame; o Forge recebe também a lista virtual do Architectury.
+
+O servidor dá a página `c1_day_3` a TerraAlice e `c1_day_9` a TerraBob; o `inventoryTick` real do item preenche o
+Caderno. Alice anuncia suporte ao delta, Bob anuncia somente o snapshot completo. O teste exige o formato correto
+de atualização para cada um, ausência de vazamento, reconexão de Alice com snapshot completo e sem introdução
+repetida, arquivos individuais no disco e preservação dos dois Cadernos após reiniciar o servidor.
+
+Fabric passou em 24/10/2026: `build/network-regression/fabric-fjkqmtwr/{network-create,network-reload}.log`.
+Forge passou: `build/network-regression/forge-zted3u2n/{network-create,network-reload}.log`.
+O cliente Forge fala FML3, anuncia versões de canais e confirma o recebimento dos registros/configurações;
+não carrega as classes, texturas ou renderizadores dos mods no cliente. O primeiro cliente sem FML3 foi recusado
+como esperado. Uma tentativa de reinício atingiu o prazo de arranque; a repetição final passou com heap do Gradle
+limitado a 1 GiB e prazo de 360 s por arranque. O heap do servidor de teste continua em 2 GiB.
+
+Esses clientes não renderizam telas nem exercitam respawn ou troca de dimensão; também não são uma execução de
+um JAR cliente antigo, apenas reproduzem a ausência do receptor delta. As 13 verificações Python incluem fixtures
+de VarInt, UTF-8, NBT, patch e wrapper FML3, além das verificações de integridade do projeto.

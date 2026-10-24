@@ -32,3 +32,7 @@ Depois, compile Fabric e Forge com `./gradlew build --no-daemon` e siga os rotei
 Testes adicionais de orçamento e servidor real: [`docs/TESTES_SERVIDOR.md`](../../docs/TESTES_SERVIDOR.md).
 `check_spawn_budget.py` testa a classe Java de produção sem dependências; `server_regression.py` verifica estado
 de entidades após reiniciar um mundo temporário nos dois loaders.
+
+`network_regression.py` conecta dois clientes de protocolo por sockets reais a um servidor descartável. Verifica
+páginas por UUID, snapshot/delta, reconexão e persistência após reinício; suporta a negociação FML3 do Forge.
+Comandos e limites em [`docs/CADERNO_DADOS.md`](../../docs/CADERNO_DADOS.md). Esses clientes não renderizam o jogo.

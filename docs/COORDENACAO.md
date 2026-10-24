@@ -40,6 +40,8 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Codex | `AGENTS.md`, `docs/COORDENACAO.md`, `docs/PLANO_MESTRE.md`, `tools/validation/`, autoria em README/CLAUDE/metadados, ponte no roadmap | Concluído; arquivos liberados; sem alteração de sistemas de gameplay |
 | Codex | Testes isolados de servidor; `tools/validation/`, `EcoSpawner.java`, `SpawnBudget.java`, classes-base de IA e persistência (`DinosaurEntity.java`, `HerbivoreDinosaur.java`, `PredatorDinosaur.java`, `DinoEggBlock.java`), docs e ponte de validação em AGENTS/CLAUDE | Concluído; arquivos liberados. Servidores/regressões Fabric e Forge, orçamento e build passaram; arte e tabelas de espécies preservadas |
 | Codex | `research/Knowledge.java`, `ResearchData.java`, `Research.java`, `network/ModNetwork.java` e delta NBT, `client/ClientHooks.java`/`ClientResearch.java` (só recepção de dados), `common/build.gradle`, testes e documentação | Concluído; build e regressões de dados/protocolo passaram. Sem alterações de interface/arte ou novas features narrativas |
+| Codex | `tools/validation/`, utilitários de teste em `common/src/regression/`, documentação | Concluído: conexões reais em Fabric e Forge, páginas, isolamento, negociação, reconexão e reinício passaram; fixtures Python passaram |
+| Codex | `tools/validation/load_profile.py`, `tools/validation/java/JfrSummary.java`, documentação | Em preparação: perfil local gradual com clientes criativos estacionários e JFR; não equivale a jogadores ativos nem valida o alvo de 100 jogadores |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
 ## Estado observado no checkout
@@ -85,6 +87,16 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 - Servidores Fabric e Forge revalidados com a nova implementação: `fabric-4fzbf69k` e `forge-hrik4quw`
   em `build/server-regression/`, com todos os marcadores de criação/recarga de entidades.
 - Transporte com clientes conectados, telas, respawn e troca de dimensões ainda não validados nesta entrega.
+
+### Quarta entrega: conexões reais de teste
+
+- Cliente de protocolo local implementado, sem renderização e restrito ao servidor de teste em localhost.
+- Fabric passou com dois UUIDs, páginas diferentes, delta para cliente capaz, snapshot para cliente sem delta,
+  reconexão e reinício do servidor; introdução não repetiu. Logs em `build/network-regression/fabric-fjkqmtwr/`.
+- Forge passou com negociação FML3 e os mesmos cenários: `build/network-regression/forge-zted3u2n/`.
+  Roteiro e limites em `CADERNO_DADOS.md`; não confundir cliente de protocolo com teste visual ou JAR cliente antigo.
+- Treze testes Python passaram, incluindo codec e wrapper de negociação. Nenhuma mudança adicional de produção
+  foi necessária nesta quarta entrega.
 
 ## Fila de engenharia, sem sobrepor as features
 
