@@ -29,7 +29,7 @@ public class Spinosaurus extends PredatorDinosaur {
     public static final float WIDTH = 2.5F;
     public static final float HEIGHT = 4.6F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.85F;
+    public static final float MODEL_SCALE = 0.95F;
     public static final float SHADOW = 2.4F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH);
     private int displayCooldown;
@@ -73,7 +73,7 @@ public class Spinosaurus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 6.2D;
+        return 6.3D;
     }
 
     @Override

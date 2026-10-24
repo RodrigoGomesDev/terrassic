@@ -35,21 +35,21 @@
  },
  "spinosaurus": {
   "bones": 24,
-  "cubes": 52,
+  "cubes": 130,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -9.0,
-    -3.0305849000663546e-05,
-    -59.08103907101546
+    -19.0,
+    -0.4039306607837405,
+    -122.2487088711055
    ],
    [
-    9.0,
-    49.0,
-    61.999976490604155
+    19.0,
+    84.0,
+    113.99997123302845
    ]
   ],
   "animations": [
@@ -65,7 +65,7 @@
    "animation.spinosaurus.beg",
    "animation.spinosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "dilophosaurus": {
   "bones": 25,

@@ -28,7 +28,8 @@ SIZES = {
     #                   real length (m)  scale   w     h    baby   shadow
     # T. rex v3 is modelled at 2x (16 px = 1 m). Adults 11-13.3 m: Stan ~12 m, Sue 12.3-12.8 m, Scotty 13 m.
     "tyrannosaurus":      dict(real=13.0, scale=1.02, w=2.6, h=4.8, baby=0.25, shadow=2.4, var=(0.85, 1.02)),
-    "spinosaurus":        dict(real=14.0, scale=1.85, w=2.5, h=4.6, baby=0.25, shadow=2.4),
+    # Spinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "spinosaurus":        dict(real=14.0, scale=0.95, w=2.5, h=4.6, baby=0.25, shadow=2.4),
     "dilophosaurus":      dict(real=7.0,  scale=1.53, w=1.2, h=2.6, baby=0.35, shadow=1.0),
     "velociraptor":       dict(real=2.07, scale=0.48,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
     "compsognathus":      dict(real=1.25, scale=0.31,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),

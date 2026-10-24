@@ -13,7 +13,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
                            int fossilWeight, float guiScale) {
     public static final List<GuideSpecies> ALL = List.of(
             new GuideSpecies("tyrannosaurus", "late_cretaceous", "carnivore", 13.0F, true, true, 2, 7.68F),
-            new GuideSpecies("spinosaurus", "late_cretaceous", "piscivore", 14.0F, false, true, 2, 7.14F),
+            new GuideSpecies("spinosaurus", "late_cretaceous", "piscivore", 14.0F, false, true, 2, 7.13F),
             new GuideSpecies("dilophosaurus", "jurassic", "carnivore", 7.0F, false, true, 4, 13.06F),
             new GuideSpecies("velociraptor", "late_cretaceous", "carnivore", 2.07F, false, true, 4, 48.63F),
             new GuideSpecies("compsognathus", "jurassic", "carnivore", 1.25F, false, false, 3, 74.84F),
