@@ -425,6 +425,24 @@ def spawn_eggs():
     eye(cv, 10, 6, "#c8a040")
     eggs["carnotaurus"] = cv
 
+    # Tarbosaurus: sandy grey-brown egg with a dark stripe running down the middle, dark cap, long toothy jaw
+    cv = base_egg(None, "#5f5648", "#d4c7a6")
+    for y in range(1, 14):
+        if inside(cv, 7, y):
+            cv.set(7, y, hexc("#3e362c"))
+        if inside(cv, 8, y) and y % 2 == 0:
+            cv.set(8, y, hexc("#3e362c"))
+    for x in range(5, 11):
+        if inside(cv, x, 2):
+            cv.set(x, 2, hexc("#352822"))
+    for x in range(3, 14):
+        if inside(cv, x, 11):
+            cv.set(x, 11, hexc("#3a1f1c"))
+        if inside(cv, x, 12) and x % 2 == 1:
+            cv.set(x, 12, hexc("#efe7d2"))
+    eye(cv, 11, 6, "#d2a63a")
+    eggs["tarbosaurus"] = cv
+
     # Parasaurolophus: teal egg with the long red crest sweeping back from the top
     cv = base_egg(None, "#46584c", "#d8d4b0")
     for i, (x, y) in enumerate(((7, 4), (6, 3), (5, 2), (4, 1), (3, 0))):
@@ -736,7 +754,7 @@ EGG_BLOCK = {
     "euoplocephalus": ("#d4d2b0", "#4a4e3a"),
     "therizinosaurus": ("#c8b898", "#4e4034"),
     "deinocheirus": ("#d8d0bc", "#4a423a"),
-    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#dcc8ac", "#7a4a34"), "carnotaurus": ("#d0ccb4", "#55503f"), "parasaurolophus": ("#dfe6d8", "#46584c"),
+    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#dcc8ac", "#7a4a34"), "carnotaurus": ("#d0ccb4", "#55503f"), "tarbosaurus": ("#d8d0b8", "#5f5648"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "thescelosaurus": ("#d8d0a8", "#5c5a3a"), "gallimimus": ("#f0ece0", "#9c917c"),
     "struthiomimus": ("#f0e6d0", "#8a5a3a"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),

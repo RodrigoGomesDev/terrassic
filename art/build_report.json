@@ -1466,5 +1466,39 @@
    "animation.carnotaurus.charge"
   ],
   "render_scale": 1.0
+ },
+ "tarbosaurus": {
+  "bones": 24,
+  "cubes": 53,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.5,
+    -0.1058971434569882,
+    -50.18470590921974
+   ],
+   [
+    9.5,
+    40.439475253351944,
+    57.08618092857509
+   ]
+  ],
+  "animations": [
+   "animation.tarbosaurus.idle",
+   "animation.tarbosaurus.walk",
+   "animation.tarbosaurus.run",
+   "animation.tarbosaurus.attack",
+   "animation.tarbosaurus.roar",
+   "animation.tarbosaurus.sit",
+   "animation.tarbosaurus.knocked_out",
+   "animation.tarbosaurus.wake",
+   "animation.tarbosaurus.eat",
+   "animation.tarbosaurus.beg",
+   "animation.tarbosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

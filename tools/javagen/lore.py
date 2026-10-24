@@ -839,6 +839,22 @@ GUIDE = {
         note=("Não dá para fugir dele a pé. Anotei isso depois.",
               "You cannot outrun it on foot. I wrote that down afterwards.",
               "No se le escapa a pie. Lo anoté después.")),
+    "tarbosaurus": dict(
+        sci=("Viveu há 70 milhões de anos na Mongólia e na China, nas planícies de rio de Nemegt. 10 a 12 m e 4 a 5 toneladas; crânio de 1,35 m mais comprido, baixo e estreito que o do T. rex, com uma trava na mandíbula, e os menores braços da família. O primo asiático, de constituição pesada.",
+             "Lived 70 million years ago in Mongolia and China, on the Nemegt river plains. 10 to 12 m and 4 to 5 tonnes; a 1.35 m skull longer, lower and narrower than the T. rex's, with a locking joint in the lower jaw, and the smallest arms of the family. The heavy-built Asian cousin.",
+             "Vivió hace 70 millones de años en Mongolia y China, en las llanuras fluviales de Nemegt. 10 a 12 m y 4 a 5 toneladas; cráneo de 1,35 m más largo, bajo y estrecho que el del T. rex, con una traba en la mandíbula, y los brazos más pequeños de la familia. El primo asiático, de constitución pesada."),
+        behavior=("Solitário nos desertos, rios e cerrados do leste. Ruge ao escolher a presa. Mais lento que o T. rex, mas aguenta mais: pele grossa e pés firmes, não sai do lugar com pancada.",
+                  "Solitary in the deserts, rivers and badlands of the east. It roars when it picks its prey. Slower than the T. rex, but it takes more: thick hide and firm footing, no blow moves it.",
+                  "Solitario en los desiertos, ríos y tierras baldías del este. Ruge al elegir la presa. Más lento que el T. rex, pero aguanta más: piel gruesa y pies firmes, ningún golpe lo mueve."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem e criar o filhote com carne crua.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest and raise the baby on raw meat.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje y criar a la cría con carne cruda."),
+        utility=("A montaria-muralha: a mais blindada entre os grandes carnívoros, para aguentar no meio da briga.",
+                 "The wall mount: the most armoured of the big carnivores, built to hold in the middle of a fight.",
+                 "La montura-muralla: la más blindada entre los grandes carnívoros, hecha para aguantar en medio de la pelea."),
+        note=("Acertei três lanças nele. Ele olhou para mim como quem espera a quarta.",
+              "I landed three spears on it. It looked at me like it was waiting for the fourth.",
+              "Le acerté tres lanzas. Me miró como quien espera la cuarta.")),
 }
 
 ERAS = {

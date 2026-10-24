@@ -38,6 +38,7 @@ import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Struthiomimus;
 import com.terrassic.entity.Styracosaurus;
+import com.terrassic.entity.Tarbosaurus;
 import com.terrassic.entity.Therizinosaurus;
 import com.terrassic.entity.Thescelosaurus;
 import com.terrassic.entity.Triceratops;
@@ -116,6 +117,8 @@ public final class ModEntities {
             mob("carcharodontosaurus", Carcharodontosaurus::new, MobCategory.CREATURE, Carcharodontosaurus.WIDTH, Carcharodontosaurus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Carnotaurus>> CARNOTAURUS =
             mob("carnotaurus", Carnotaurus::new, MobCategory.CREATURE, Carnotaurus.WIDTH, Carnotaurus.HEIGHT, 10);
+    public static final RegistrySupplier<EntityType<Tarbosaurus>> TARBOSAURUS =
+            mob("tarbosaurus", Tarbosaurus::new, MobCategory.CREATURE, Tarbosaurus.WIDTH, Tarbosaurus.HEIGHT, 10);
     // ---- herbivores
     public static final RegistrySupplier<EntityType<Parasaurolophus>> PARASAUROLOPHUS =
             mob("parasaurolophus", Parasaurolophus::new, MobCategory.CREATURE, Parasaurolophus.WIDTH, Parasaurolophus.HEIGHT, 10);
@@ -207,6 +210,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(GIGANOTOSAURUS, Giganotosaurus::createAttributes);
         EntityAttributeRegistry.register(CARCHARODONTOSAURUS, Carcharodontosaurus::createAttributes);
         EntityAttributeRegistry.register(CARNOTAURUS, Carnotaurus::createAttributes);
+        EntityAttributeRegistry.register(TARBOSAURUS, Tarbosaurus::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
         EntityAttributeRegistry.register(THESCELOSAURUS, Thescelosaurus::createAttributes);
