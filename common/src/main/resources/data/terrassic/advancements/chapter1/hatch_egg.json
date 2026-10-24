@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:triceratops_egg"
+    },
+    "title": {
+      "translate": "objective.terrassic.hatch_egg"
+    },
+    "description": {
+      "translate": "objective.terrassic.hatch_egg.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

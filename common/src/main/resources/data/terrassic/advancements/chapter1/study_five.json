@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:field_notebook"
+    },
+    "title": {
+      "translate": "objective.terrassic.study_five"
+    },
+    "description": {
+      "translate": "objective.terrassic.study_five.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

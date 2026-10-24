@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:fern"
+    },
+    "title": {
+      "translate": "objective.terrassic.tame_herbivore"
+    },
+    "description": {
+      "translate": "objective.terrassic.tame_herbivore.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

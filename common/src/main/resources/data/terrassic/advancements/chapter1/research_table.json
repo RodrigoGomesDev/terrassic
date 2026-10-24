@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:research_table"
+    },
+    "title": {
+      "translate": "objective.terrassic.research_table"
+    },
+    "description": {
+      "translate": "objective.terrassic.research_table.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

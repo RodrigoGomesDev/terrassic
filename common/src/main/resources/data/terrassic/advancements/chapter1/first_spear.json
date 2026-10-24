@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:flint_spear"
+    },
+    "title": {
+      "translate": "objective.terrassic.first_spear"
+    },
+    "description": {
+      "translate": "objective.terrassic.first_spear.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

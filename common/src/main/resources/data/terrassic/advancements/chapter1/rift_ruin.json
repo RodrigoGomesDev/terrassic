@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "title": {
+      "translate": "objective.terrassic.rift_ruin"
+    },
+    "description": {
+      "translate": "objective.terrassic.rift_ruin.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

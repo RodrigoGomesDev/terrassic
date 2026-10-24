@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "title": {
+      "translate": "objective.terrassic.rift_storm"
+    },
+    "description": {
+      "translate": "objective.terrassic.rift_storm.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

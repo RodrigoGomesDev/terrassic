@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "LBL",
+    "CCC",
+    "C C"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "C": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "item": "terrassic:research_table",
+    "count": 1
+  }
+}

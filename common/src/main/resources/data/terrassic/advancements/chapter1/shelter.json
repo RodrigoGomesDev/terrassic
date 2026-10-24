@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:thatch"
+    },
+    "title": {
+      "translate": "objective.terrassic.shelter"
+    },
+    "description": {
+      "translate": "objective.terrassic.shelter.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

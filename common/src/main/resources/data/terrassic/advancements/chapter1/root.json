@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "terrassic:field_notebook"
+    },
+    "title": {
+      "translate": "advancements.terrassic.root.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.root.description"
+    },
+    "background": "minecraft:textures/block/packed_mud.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

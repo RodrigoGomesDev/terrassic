@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:saddle"
+    },
+    "title": {
+      "translate": "objective.terrassic.ride"
+    },
+    "description": {
+      "translate": "objective.terrassic.ride.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

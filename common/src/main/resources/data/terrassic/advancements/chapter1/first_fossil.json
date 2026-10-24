@@ -1,0 +1,19 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:hair_brush"
+    },
+    "title": {
+      "translate": "objective.terrassic.first_fossil"
+    },
+    "description": {
+      "translate": "objective.terrassic.first_fossil.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
