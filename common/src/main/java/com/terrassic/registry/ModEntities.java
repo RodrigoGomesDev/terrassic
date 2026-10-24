@@ -32,6 +32,7 @@ import com.terrassic.entity.Ichthyornis;
 import com.terrassic.entity.Leptoceratops;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Majungasaurus;
+import com.terrassic.entity.Mesodma;
 import com.terrassic.entity.Mononykus;
 import com.terrassic.entity.Mosasaurus;
 import com.terrassic.entity.Opisthocoelicaudia;
@@ -152,6 +153,8 @@ public final class ModEntities {
             mob("mononykus", Mononykus::new, MobCategory.CREATURE, Mononykus.WIDTH, Mononykus.HEIGHT, 6);
     public static final RegistrySupplier<EntityType<Didelphodon>> DIDELPHODON =
             mob("didelphodon", Didelphodon::new, MobCategory.CREATURE, Didelphodon.WIDTH, Didelphodon.HEIGHT, 6);
+    public static final RegistrySupplier<EntityType<Mesodma>> MESODMA =
+            mob("mesodma", Mesodma::new, MobCategory.CREATURE, Mesodma.WIDTH, Mesodma.HEIGHT, 6);
     // ---- herbivores
     public static final RegistrySupplier<EntityType<Parasaurolophus>> PARASAUROLOPHUS =
             mob("parasaurolophus", Parasaurolophus::new, MobCategory.CREATURE, Parasaurolophus.WIDTH, Parasaurolophus.HEIGHT, 10);
@@ -256,6 +259,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(CITIPATI, Citipati::createAttributes);
         EntityAttributeRegistry.register(MONONYKUS, Mononykus::createAttributes);
         EntityAttributeRegistry.register(DIDELPHODON, Didelphodon::createAttributes);
+        EntityAttributeRegistry.register(MESODMA, Mesodma::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
         EntityAttributeRegistry.register(THESCELOSAURUS, Thescelosaurus::createAttributes);

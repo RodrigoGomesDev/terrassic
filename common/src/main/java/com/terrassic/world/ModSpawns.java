@@ -58,6 +58,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Citipati            desert*, badlands, savanna      3       1-2
  *  Mononykus           desert*, badlands, savanna, plains 6       2-4
  *  Didelphodon         river, swamp, mangrove, forest, plains 6       1-2
+ *  Mesodma             forest, plains, swamp, mangrove, river, taiga 10      2-4
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -123,6 +124,7 @@ public final class ModSpawns {
         placement(ModEntities.CITIPATI);
         placement(ModEntities.MONONYKUS);
         placement(ModEntities.DIDELPHODON);
+        placement(ModEntities.MESODMA);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -275,6 +277,9 @@ public final class ModSpawns {
             }
             if (river || swamp || forest || plains) {
                 add(props, ModEntities.DIDELPHODON.get(), 6, 1, 2);
+            }
+            if (forest || plains || swamp || river || taiga) {
+                add(props, ModEntities.MESODMA.get(), 10, 2, 4);
             }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);

@@ -635,6 +635,26 @@ def didelphodon():
     return e
 
 
+def mesodma():
+    """The little multituberculate: a round grey-brown furry face, big dark eyes, round ears, a pink nose, long whiskers."""
+    e = Egg("mesodma", {"b": "#8c7a5c", "c": "#e2d8c0", "d": "#6a5a44", "n": "#d08898", "k": "#1e1410", "W": "#f0ece4", "R": MOUTH})
+    cap(e, "d", (5, 3, 26, 19), None)
+    for x0 in (7, 20):
+        e.ell((x0, 1, x0 + 4, 5), "d")
+        e.ell((x0 + 1, 2, x0 + 3, 4), "n")
+    e.ell((9, 19, 22, 33), "c", clip=True)
+    for cx in (11, 20):
+        e.ell((cx - 2, 11, cx + 2, 15), "k")
+        e.px([(cx + 1, 12)], "W")
+    e.rect((14, 20, 17, 22), "n")
+    e.line([(13, 25), (18, 25)], "R")
+    e.px([(14, 26), (15, 26), (16, 26), (17, 26)], "W")      # the gnawing incisors
+    for y in (22, 24):
+        e.line([(4, y), (11, y + 1)], "W", clip=True)
+        e.line([(20, y + 1), (27, y)], "W", clip=True)
+    return e
+
+
 def therizinosaurus():
     e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
                                    "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
@@ -874,7 +894,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

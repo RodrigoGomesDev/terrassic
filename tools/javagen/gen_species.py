@@ -78,6 +78,8 @@ SIZES = {
     "citipati":           dict(real=3.0,  scale=0.85, w=0.9, h=2.0, baby=0.4,  shadow=0.6),
     "mononykus":          dict(real=1.0,  scale=0.24, w=0.4, h=0.5, baby=0.5,  shadow=0.2),
     "didelphodon":        dict(real=1.0,  scale=0.26, w=0.5, h=0.4, baby=0.5,  shadow=0.3),
+    # Mesodma: ~15 cm head and body plus a tail nearly as long (Clemens 1964; Wilson 2013). Modelled large, 43 px.
+    "mesodma":            dict(real=0.25, scale=0.09, w=0.3, h=0.2, baby=0.5,  shadow=0.15),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -157,6 +159,7 @@ GUIDE = {
     "citipati":           dict(era="late_cretaceous", diet="omnivore",  fossil=3),
     "mononykus":          dict(era="late_cretaceous", diet="carnivore", fossil=4),
     "didelphodon":        dict(era="late_cretaceous", diet="omnivore",  fossil=5),
+    "mesodma":            dict(era="late_cretaceous", diet="omnivore",  fossil=8),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -219,6 +222,7 @@ WORLD = {
     "citipati":           dict(biomes=("desert", "badlands", "savanna"), weight=3, group=(1, 2), track=8),  # Ukhaa Tolgod, pairs on the nest
     "mononykus":          dict(biomes=("desert", "badlands", "savanna", "plains"), weight=6, group=(2, 4), track=6),  # Nemegt sands, small groups
     "didelphodon":        dict(biomes=("river", "swamp", "forest", "plains"), weight=6, group=(1, 2), track=6),  # Hell Creek riverbanks
+    "mesodma":            dict(biomes=("forest", "plains", "swamp", "river", "taiga"), weight=10, group=(2, 4), track=6),  # the "rabbit": everywhere in the litter
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -486,6 +490,12 @@ SPECIES = [
       sounds=("FOX_AMBIENT", "FOX_HURT", "FOX_DEATH", 0.9, 0.9, 160), step=("WOLF_STEP", 0.2, 1.3),
       xp=4, run=0.03, prey="e.getBbWidth() < 0.5F && !(e instanceof DinosaurEntity)", hunts_players=False, feeding_tame=True,
       skittish=True, egg_thief=True, prey_interval=120),
+ dict(id="mesodma", cls="Mesodma", base="PredatorDinosaur",
+      doc="Mesodma - the rabbit of the Cretaceous, a rat-sized multituberculate of the Hell Creek leaf litter: gnawing incisors, big night eyes, a long naked tail. The commonest and smallest game, out at dusk and at night; it flees everything and hunts nothing. Hand-tamed with seeds or berries like a cat; a tame one sits up and nibbles.",
+      attrs=dict(MAX_HEALTH=4, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=1, FOLLOW_RANGE=12),
+      food="Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.SWEET_BERRIES, Items.GLOW_BERRIES",
+      sounds=("RABBIT_AMBIENT", "RABBIT_HURT", "RABBIT_DEATH", 1.3, 0.5, 220), step=("RABBIT_JUMP", 0.1, 1.4),
+      xp=1, run=0.04, prey="false", hunts_players=False, feeding_tame=True, skittish=True, nocturnal=True, rear="nibble"),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),

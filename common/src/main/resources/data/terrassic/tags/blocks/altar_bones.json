@@ -46,6 +46,10 @@
       "required": false
     },
     {
+      "id": "terrassic:mesodma_skull_trophy",
+      "required": false
+    },
+    {
       "id": "terrassic:stegosaurus_skull_trophy",
       "required": false
     },

@@ -563,6 +563,17 @@ def spawn_eggs():
     eye(cv, 10, 5, "#2a1a10")
     eggs["didelphodon"] = cv
 
+    # Mesodma: small grey-brown furry egg with round ears, big dark eyes and a pink nose (16x16 fallback)
+    cv = base_egg(None, "#6a5a44", "#e2d8c0")
+    for x, y in ((4, 2), (5, 2), (10, 2), (11, 2), (4, 3), (11, 3)):
+        cv.set(x, y, hexc("#5a4a3a"))
+    for x, y in ((5, 6), (6, 6), (9, 6), (10, 6)):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#1e1410"))
+    cv.set(7, 9, hexc("#d08898")); cv.set(8, 9, hexc("#d08898"))
+    cv.set(7, 10, hexc("#f0ece4")); cv.set(8, 10, hexc("#f0ece4"))
+    eggs["mesodma"] = cv
+
     # Parasaurolophus: teal egg with the long red crest sweeping back from the top
     cv = base_egg(None, "#46584c", "#d8d4b0")
     for i, (x, y) in enumerate(((7, 4), (6, 3), (5, 2), (4, 1), (3, 0))):
@@ -913,7 +924,7 @@ EGG_BLOCK = {
     "pachyrhinosaurus": ("#c8c4b8", "#3c4044"),
     "pteranodon": ("#e6e2d4", "#5c6870"),
     "quetzalcoatlus": ("#efe9dc", "#8c8378"), "hatzegopteryx": ("#9c948c", "#2a2626"),
-    "ichthyornis": ("#e4ebe8", "#4a4a4c"), "vegavis": ("#e8e0c8", "#7a4a2e"),
+    "ichthyornis": ("#e4ebe8", "#4a4a4c"), "vegavis": ("#e8e0c8", "#7a4a2e"), "mesodma": ("#e2d8c0", "#6a5a44"),
 }
 
 

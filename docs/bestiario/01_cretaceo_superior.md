@@ -449,7 +449,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 319 | Zalambdalestes | Mamífero | 🐾 | Insetívoro | 0,2 m | Comedor de insetos | Arisco | — | — | Vida pequena do bioma |  |
 | 320 | Deltatheridium | Mamífero | 🐾 | Carnívoro | 0,15 m | Caçador pequeno | Arisco | — | — | Vida pequena do bioma |  |
 | 321 | Kryptobaatar | Mamífero | 🐾 | Herbívoro | 0,1 m | Herbívoro pequeno | Arisco | — | — | Vida pequena do bioma |  |
-| 322 | Mesodma | Mamífero | 🐾 | Herbívoro | 0,1 m | Herbívoro pequeno | Arisco | — | — | Vida pequena do bioma |  |
+| 322 | **Mesodma** | Mamífero | 🐾 | Onívoro | 0,25 m | Onívoro pequeno | Arisco | Comida | — | O "coelho" do Cretáceo: caça miúda noturna | v0.7 |
 
 ## Invertebrados
 

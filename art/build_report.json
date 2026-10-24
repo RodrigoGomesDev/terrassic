@@ -1881,5 +1881,40 @@
    "animation.vegavis.tame"
   ],
   "render_scale": 0.25
+ },
+ "mesodma": {
+  "bones": 23,
+  "cubes": 39,
+  "texture": [
+   64,
+   64
+  ],
+  "bounds_px": [
+   [
+    -3.5,
+    2.5724661690963824e-05,
+    -19.031290616454015
+   ],
+   [
+    3.5,
+    9.963282911577945,
+    24.00000613011913
+   ]
+  ],
+  "animations": [
+   "animation.mesodma.idle",
+   "animation.mesodma.walk",
+   "animation.mesodma.run",
+   "animation.mesodma.sit",
+   "animation.mesodma.graze",
+   "animation.mesodma.attack",
+   "animation.mesodma.nibble",
+   "animation.mesodma.knocked_out",
+   "animation.mesodma.wake",
+   "animation.mesodma.eat",
+   "animation.mesodma.beg",
+   "animation.mesodma.tame"
+  ],
+  "render_scale": 0.2
  }
 }

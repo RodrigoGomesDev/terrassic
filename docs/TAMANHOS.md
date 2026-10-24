@@ -56,6 +56,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Didelphodon (v0.7) | ~1 m com a cauda, ~5 kg (Wilson et al. 2016; crânio 12 cm) | novo | **1,0 x 0,23** | 0,5 x 0,4 | 50% |
 | Leptoceratops (v0.7, 2x) | ~2 m, 70-200 kg (Brown 1914, AMNH 5205; Sternberg 1951; Ott 2007) | novo | **2,0 x 0,66** | 0,6 x 0,7 | 50% |
 | Vegavis (v0.7, 4x) | do tamanho de uma marreca, ~0,6-0,7 m, envergadura ~1 m (Clarke et al. 2005, 2016, MLP 93-I-3-1) | novo | **0,7 x 0,4** (0,97 de envergadura) | 0,4 x 0,4 | 50% |
+| Mesodma (v0.7, 5x) | 15 cm de corpo + cauda quase igual, 20-40 g (Clemens 1964; Wilson 2013) | novo | **0,25 x 0,06** | 0,3 x 0,2 | 50% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |
