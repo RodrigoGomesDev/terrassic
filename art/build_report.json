@@ -1568,5 +1568,40 @@
    "animation.albertosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "majungasaurus": {
+  "bones": 24,
+  "cubes": 70,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -8.0,
+    -0.10003627572223284,
+    -38.252244999680514
+   ],
+   [
+    8.0,
+    40.76882325852819,
+    57.055711093558465
+   ]
+  ],
+  "animations": [
+   "animation.majungasaurus.idle",
+   "animation.majungasaurus.walk",
+   "animation.majungasaurus.run",
+   "animation.majungasaurus.attack",
+   "animation.majungasaurus.roar",
+   "animation.majungasaurus.sit",
+   "animation.majungasaurus.knocked_out",
+   "animation.majungasaurus.wake",
+   "animation.majungasaurus.eat",
+   "animation.majungasaurus.beg",
+   "animation.majungasaurus.tame",
+   "animation.majungasaurus.charge"
+  ],
+  "render_scale": 1.0
  }
 }

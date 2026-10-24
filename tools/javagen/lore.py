@@ -887,6 +887,22 @@ GUIDE = {
         note=("Contei quatro na borda da floresta. Eles também me contaram.",
               "I counted four at the edge of the forest. They counted me too.",
               "Conté cuatro al borde del bosque. Ellos también me contaron.")),
+    "majungasaurus": dict(
+        sci=("Viveu há 70 a 66 milhões de anos em Madagascar, numa planície de cheias sazonais. 6 a 8 m e cerca de 1 tonelada; focinho muito curto e fundo, um único chifre em domo no alto do crânio, braços-toco e pernas curtas e fortes: emboscador de arrancada, não corredor de fundo. Marcas de dentes em ossos da própria espécie: o único dinossauro com prova firme de canibalismo.",
+             "Lived 70 to 66 million years ago in Madagascar, on a seasonal floodplain. 6 to 8 m and about a tonne; a very short deep snout, a single dome horn on the skull roof, stub arms and short strong legs: a burst ambusher, not a distance runner. Tooth marks on bones of its own kind: the one dinosaur with firm evidence of cannibalism.",
+             "Vivió hace 70 a 66 millones de años en Madagascar, en una llanura de crecidas estacionales. 6 a 8 m y cerca de una tonelada; hocico muy corto y profundo, un único cuerno en domo en lo alto del cráneo, brazos-muñón y patas cortas y fuertes: emboscador de arranque, no corredor de fondo. Marcas de dientes en huesos de su propia especie: el único dinosaurio con prueba firme de canibalismo."),
+        behavior=("Selva, savana e beira de rio, sozinho ou em par. Fica parado e ruge quando escolhe a presa; depois vem de uma vez, numa arrancada curta e muito rápida, e a mordida arremessa. Caça o que é menor que ele.",
+                  "Jungle, savanna and riverbank, alone or in a pair. It stands still and roars when it picks its prey; then it comes all at once, in a short, very fast burst, and the bite throws. It hunts what is smaller than itself.",
+                  "Selva, sabana y orilla de río, solo o en pareja. Se queda quieto y ruge cuando elige la presa; luego viene de golpe, en un arranque corto y muy rápido, y la mordida lanza. Caza lo que es más pequeño que él."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem e criar o filhote com carne crua ou frango.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest and raise the baby on raw meat or chicken.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje y criar a la cría con carne cruda o pollo."),
+        utility=("Montaria de arrancada: parte do zero mais rápido que qualquer outra, para caçar na mata fechada.",
+                 "The burst mount: it goes from standing to full speed faster than any other, for hunting in thick jungle.",
+                 "Montura de arranque: parte de cero más rápido que cualquier otra, para cazar en la selva cerrada."),
+        note=("Achei um esqueleto da espécie com marcas de dente da espécie. Anotei e saí dali.",
+              "I found a skeleton of the species with tooth marks of the species. I wrote it down and left.",
+              "Encontré un esqueleto de la especie con marcas de dientes de la especie. Lo anoté y me fui.")),
 }
 
 ERAS = {
