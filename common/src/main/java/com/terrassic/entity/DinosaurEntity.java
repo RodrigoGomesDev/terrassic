@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -1238,11 +1239,22 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     private static BlockPos findEggSpot(LevelAccessor level, BlockPos center) {
+        // While a chunk is generating (mobs spawned with it), the level is a WorldGenRegion: reading or writing outside
+        // that chunk crashes the game ("asking a region for a chunk out of bound"), so the egg stays in it.
+        // Otherwise only chunks that are loaded are looked at.
+        boolean worldgen = level instanceof WorldGenRegion;
+        int cx = center.getX() >> 4;
+        int cz = center.getZ() >> 4;
         for (int r = 1; r <= 3; r++) {
             for (int dx = -r; dx <= r; dx++) {
                 for (int dz = -r; dz <= r; dz++) {
                     for (int dy = 1; dy >= -1; dy--) {
                         BlockPos pos = center.offset(dx, dy, dz);
+                        int px = pos.getX() >> 4;
+                        int pz = pos.getZ() >> 4;
+                        if (worldgen ? (px != cx || pz != cz) : !level.hasChunk(px, pz)) {
+                            continue;
+                        }
                         BlockPos below = pos.below();
                         if (level.isEmptyBlock(pos) && level.getBlockState(below).isFaceSturdy(level, below, Direction.UP)) {
                             return pos;
