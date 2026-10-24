@@ -45,6 +45,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Opisthocoelicaudia  desert*, badlands, savanna      2       1-3
  *  Dreadnoughtus       plains, forest, savanna         1       1-2
  *  Giganotosaurus      badlands, savanna, desert*      1       1-2
+ *  Carcharodontosaurus savanna, river, badlands        1       1
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -96,6 +97,7 @@ public final class ModSpawns {
         placement(ModEntities.OPISTHOCOELICAUDIA);
         placement(ModEntities.DREADNOUGHTUS);
         placement(ModEntities.GIGANOTOSAURUS);
+        placement(ModEntities.CARCHARODONTOSAURUS);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -207,6 +209,9 @@ public final class ModSpawns {
             }
             if (badlands || savanna || desert) {
                 add(props, ModEntities.GIGANOTOSAURUS.get(), 1, 1, 2);
+            }
+            if (savanna || river || badlands) {
+                add(props, ModEntities.CARCHARODONTOSAURUS.get(), 1, 1, 1);
             }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);

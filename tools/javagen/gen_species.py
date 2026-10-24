@@ -58,6 +58,7 @@ SIZES = {
     # Dreadnoughtus schrani: 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015); the 11 m neck carried high.
     "dreadnoughtus":      dict(real=26.0, scale=2.69, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
     "giganotosaurus":     dict(real=13.0, scale=1.75, w=2.4, h=4.4, baby=0.25, shadow=2.3),
+    "carcharodontosaurus": dict(real=12.5, scale=1.80, w=2.4, h=4.6, baby=0.25, shadow=2.3),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -120,6 +121,7 @@ GUIDE = {
     "opisthocoelicaudia": dict(era="late_cretaceous", diet="herbivore", fossil=3),
     "dreadnoughtus":      dict(era="late_cretaceous", diet="herbivore", fossil=2),
     "giganotosaurus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "carcharodontosaurus": dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -168,6 +170,7 @@ WORLD = {
     "opisthocoelicaudia": dict(biomes=("desert", "badlands", "savanna"), weight=2, group=(1, 3), track=14),  # the Gobi
     "dreadnoughtus":      dict(biomes=("plains", "forest", "savanna"), weight=1, group=(1, 2), track=16),  # temperate Patagonia
     "giganotosaurus":     dict(biomes=("badlands", "savanna", "desert"), weight=1, group=(1, 2), track=10),  # the dry lands (HISTORIA)
+    "carcharodontosaurus": dict(biomes=("savanna", "river", "badlands"), weight=1, group=(1, 1), track=10),  # Saharan river plains
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -339,6 +342,14 @@ SPECIES = [
       xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.15,
       prey="!(e instanceof Giganotosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, rage=True, pack=True, prey_interval=200),
+ dict(id="carcharodontosaurus", cls="Carcharodontosaurus", base="PredatorDinosaur",
+      doc="Carcharodontosaurus saharicus - 12.5 m shark-toothed carnosaur of the Saharan river plains, deep boxy skull with brow bosses and a dark mask. Solitary; every kill makes it stronger and faster for a while (trophies, up to five). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
+      attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=15, ATTACK_KNOCKBACK=1.3, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
+      food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.65, 1.9, 240), step=("RAVAGER_STEP", 0.9, 0.6),
+      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.1,
+      prey="!(e instanceof Carcharodontosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
+      roar=True, kills=True, prey_interval=200),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -516,6 +527,12 @@ def gen(s, bounds):
         body.append(f"    private static final Ingredient FOOD = Ingredient.of({s['food']});")
     if s.get("roar") or s.get("display"):
         body.append("    private int displayCooldown;")
+    if s.get("kills"):
+        assert not s.get("trample"), s["id"] + ": kills and trample both override aiStep"
+        body.append('    private static final UUID KILLS_ATTACK_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e1f-%s");' % hashlib.md5((s["id"] + "a").encode()).hexdigest()[:12])
+        body.append('    private static final UUID KILLS_SPEED_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e2f-%s");' % hashlib.md5((s["id"] + "s").encode()).hexdigest()[:12])
+        body.append("    private int kills;")
+        body.append("    private int killsTimer;")
     if s.get("rage"):
         body.append('    private static final UUID RAGE_ID = UUID.fromString("7c1e5a3e-6b8d-4b1f-9a2e-%s");' % hashlib.md5(s["id"].encode()).hexdigest()[:12])
     body.append("")
@@ -687,6 +704,63 @@ def gen(s, bounds):
 """)
     if s.get("pack"):
         body.append("    @Override\n    protected boolean packHunter() {\n        return true;\n    }\n")
+    if s.get("kills"):
+        imports.update(["java.util.UUID", "net.minecraft.nbt.CompoundTag", "net.minecraft.world.entity.LivingEntity",
+                        "net.minecraft.world.entity.ai.attributes.AttributeInstance", "net.minecraft.world.entity.ai.attributes.AttributeModifier"])
+        body.append("""    /** Trophies: every kill adds a stack (up to five) of +8% attack and +3% speed; one stack fades every five minutes. */
+    @Override
+    public boolean killedEntity(ServerLevel level, LivingEntity killed) {
+        boolean result = super.killedEntity(level, killed);
+        if (this.kills < 5) {
+            this.kills++;
+        }
+        this.killsTimer = 6000;
+        this.applyKills();
+        return result;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (!this.level().isClientSide() && this.kills > 0 && --this.killsTimer <= 0) {
+            this.kills--;
+            this.killsTimer = 6000;
+            this.applyKills();
+        }
+    }
+
+    private void applyKills() {
+        AttributeInstance attack = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        AttributeInstance speed = this.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (attack != null) {
+            attack.removeModifier(KILLS_ATTACK_ID);
+            if (this.kills > 0) {
+                attack.addTransientModifier(new AttributeModifier(KILLS_ATTACK_ID, "Trophies", 0.08D * this.kills, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            }
+        }
+        if (speed != null) {
+            speed.removeModifier(KILLS_SPEED_ID);
+            if (this.kills > 0) {
+                speed.addTransientModifier(new AttributeModifier(KILLS_SPEED_ID, "Trophies", 0.03D * this.kills, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            }
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("Kills", this.kills);
+        tag.putInt("KillsTimer", this.killsTimer);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.kills = tag.getInt("Kills");
+        this.killsTimer = tag.getInt("KillsTimer");
+        this.applyKills();
+    }
+""")
     if s.get("rage"):
         imports.update(["java.util.UUID", "net.minecraft.util.Mth", "net.minecraft.world.entity.ai.attributes.AttributeInstance",
                         "net.minecraft.world.entity.ai.attributes.AttributeModifier"])

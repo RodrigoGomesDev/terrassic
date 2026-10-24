@@ -145,7 +145,7 @@ Sistemas: **nocaute** (zarabatana com dardo de narcótico, boleadeira e ervas so
 | **Mononykus** | 🦖 | Insetívoro | Comida | 🦜 | Cava cupinzeiros; acha insetos para isca | 1 m |
 | **Didelphodon** | 🐾 | Onívoro | Comida | — | Mamífero que rouba ovos; domesticado, acha ovos perdidos | 0,8 m |
 
-Progresso: Giganotosaurus ✅ (fase 70: carcarodontossauro de 13 m no rig dos grandes terópodes, crânio baixo com cristas, três garras, pele ocre mosqueada e cauda em faixas; terras secas em pares (matilha), ruge ao escolher a presa, fúria (mordida até +60% conforme perde vida); só pelo ovo roubado até o nocaute; montaria).
+Progresso: Giganotosaurus ✅ (fase 70: carcarodontossauro de 13 m no rig dos grandes terópodes, crânio baixo com cristas, três garras, pele ocre mosqueada e cauda em faixas; terras secas em pares (matilha), ruge ao escolher a presa, fúria (mordida até +60% conforme perde vida); só pelo ovo roubado até o nocaute; montaria). Carcharodontosaurus ✅ (fase 71: carnossauro de 12,5 m no mesmo rig, crânio fundo e quadrado com bossas e máscara escura (preta nos machos), listras verticais nos flancos e cauda; solitário da savana e dos rios; troféus: cada presa morta dá +8% de ataque e +3% de velocidade, até 5, esquecidos um a um a cada 5 min (flag kills=True); só pelo ovo roubado até o nocaute; montaria).
 
 ## v0.8 Mundo Terrassic
 

@@ -807,6 +807,22 @@ GUIDE = {
         note=("Feri um com a lança e ele ficou mais rápido. Não repito.",
               "I wounded one with the spear and it got faster. Not doing that again.",
               "Herí a uno con la lanza y se volvió más rápido. No lo repito.")),
+    "carcharodontosaurus": dict(
+        sci=("Viveu há 99 a 94 milhões de anos no norte da África, nas planícies de rio do Saara, ao lado do Spinosaurus. 12 a 13 m e 6 a 15 toneladas; crânio de 1,6 m, fundo e quadrado, com bossas rugosas sobre os olhos e dentes serrilhados como os de um tubarão: 'lagarto de dentes de tubarão'.",
+             "Lived 99 to 94 million years ago in North Africa, on the Saharan river plains, beside the Spinosaurus. 12 to 13 m and 6 to 15 tonnes; a 1.6 m skull, deep and boxy, with rugose bosses over the eyes and serrated teeth like a shark's: 'shark-toothed lizard'.",
+             "Vivió hace 99 a 94 millones de años en el norte de África, en las llanuras fluviales del Sahara, junto al Spinosaurus. 12 a 13 m y 6 a 15 toneladas; cráneo de 1,6 m, profundo y cuadrado, con protuberancias rugosas sobre los ojos y dientes aserrados como los de un tiburón: 'lagarto de dientes de tiburón'."),
+        behavior=("Solitário na savana e à beira dos rios. Ruge ao escolher a presa. Cada presa morta o deixa mais forte e mais rápido por um tempo: até cinco troféus, que vão esquecendo um a um.",
+                  "Solitary in the savanna and along the rivers. It roars when it picks its prey. Every kill leaves it stronger and faster for a while: up to five trophies, forgotten one by one.",
+                  "Solitario en la sabana y a orillas de los ríos. Ruge al elegir la presa. Cada presa muerta lo deja más fuerte y más rápido por un tiempo: hasta cinco trofeos, que va olvidando uno a uno."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem e criar o filhote com carne crua.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest and raise the baby on raw meat.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje y criar a la cría con carne cruda."),
+        utility=("Montaria de guerra que cresce com a caçada: quanto mais mata, mais rende.",
+                 "A war mount that grows with the hunt: the more it kills, the more it gives.",
+                 "Montura de guerra que crece con la cacería: cuanto más mata, más rinde."),
+        note=("Ele comeu três bicos-de-pato em uma tarde. No terceiro, já corria mais do que eu conseguia contar.",
+              "It ate three duckbills in one afternoon. By the third it ran faster than I could count.",
+              "Se comió tres picos de pato en una tarde. Al tercero ya corría más de lo que yo podía contar.")),
 }
 
 ERAS = {

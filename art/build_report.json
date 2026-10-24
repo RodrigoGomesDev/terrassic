@@ -1397,5 +1397,39 @@
    "animation.giganotosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "carcharodontosaurus": {
+  "bones": 24,
+  "cubes": 56,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.0,
+    -0.10587278931877897,
+    -51.237030251583946
+   ],
+   [
+    9.0,
+    43.62269173356936,
+    60.0511694068692
+   ]
+  ],
+  "animations": [
+   "animation.carcharodontosaurus.idle",
+   "animation.carcharodontosaurus.walk",
+   "animation.carcharodontosaurus.run",
+   "animation.carcharodontosaurus.attack",
+   "animation.carcharodontosaurus.roar",
+   "animation.carcharodontosaurus.sit",
+   "animation.carcharodontosaurus.knocked_out",
+   "animation.carcharodontosaurus.wake",
+   "animation.carcharodontosaurus.eat",
+   "animation.carcharodontosaurus.beg",
+   "animation.carcharodontosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

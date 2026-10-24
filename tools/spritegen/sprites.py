@@ -391,6 +391,25 @@ def spawn_eggs():
     eye(cv, 11, 7, "#d9b04a")
     eggs["giganotosaurus"] = cv
 
+    # Carcharodontosaurus: red-brown egg with dark vertical stripes, a black brow mask and a shark-tooth smile
+    cv = base_egg(None, "#7a4a34", "#e0d0b0")
+    for x in (4, 7, 10):
+        for y in range(3, 10):
+            if inside(cv, x, y):
+                cv.set(x, y, hexc("#5a3426"))
+    for x in range(5, 12):
+        if inside(cv, x, 5):
+            cv.set(x, 5, hexc("#2e1c18"))
+    for x in range(3, 14):
+        if inside(cv, x, 11):
+            cv.set(x, 11, hexc("#3a1f1c"))
+        if inside(cv, x, 12) and x % 2 == 0:
+            cv.set(x, 12, hexc("#efe7d2"))
+        if inside(cv, x, 10) and x % 2 == 1 and x > 4:
+            cv.set(x, 10, hexc("#efe7d2"))
+    eye(cv, 11, 7, "#c9a23c")
+    eggs["carcharodontosaurus"] = cv
+
     # Parasaurolophus: teal egg with the long red crest sweeping back from the top
     cv = base_egg(None, "#46584c", "#d8d4b0")
     for i, (x, y) in enumerate(((7, 4), (6, 3), (5, 2), (4, 1), (3, 0))):
@@ -702,7 +721,7 @@ EGG_BLOCK = {
     "euoplocephalus": ("#d4d2b0", "#4a4e3a"),
     "therizinosaurus": ("#c8b898", "#4e4034"),
     "deinocheirus": ("#d8d0bc", "#4a423a"),
-    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "parasaurolophus": ("#dfe6d8", "#46584c"),
+    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#dcc8ac", "#7a4a34"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "thescelosaurus": ("#d8d0a8", "#5c5a3a"), "gallimimus": ("#f0ece0", "#9c917c"),
     "struthiomimus": ("#f0e6d0", "#8a5a3a"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),
