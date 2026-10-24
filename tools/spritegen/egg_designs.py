@@ -775,6 +775,21 @@ def hatzegopteryx():
                      crest=((16, 7), (10, 1)), beak=(11, 15, 20, 29))
 
 
+def vegavis():
+    """The duck: chestnut head with a dark cap and a pale cheek stripe, a slate bill with a pale nail, buff speckled body."""
+    e = beaked("vegavis", {"b": "#b8a070", "c": "#e8e0c8", "d": "#7a4a2e", "n": "#2a2420",
+                           "m": "#4a5058", "M": "#6a7078"}, beak=(12, 16, 19, 27))
+    e.pal["k"] = "#2a2420"
+    e.rect((7, 2, 24, 7), "k", clip=True)                 # the dark cap
+    e.pal["w"] = "#e6d8b8"
+    e.line([(8, 11), (23, 11)], "w")                      # the pale cheek stripe
+    e.pal["s"] = "#5a4a30"
+    e.px([(9, 21), (12, 24), (20, 22), (18, 26), (11, 28), (21, 29), (15, 31)], "s")
+    e.pal["N"] = "#d8d0b8"
+    e.px([(15, 26), (16, 26)], "N")                        # the nail at the tip of the bill
+    return e
+
+
 def hesperornis():
     e = beaked("hesperornis", {"b": "#4e5864", "c": "#e8ecee", "d": "#1e2630", "n": "#1e2630",
                                "m": "#3a3632", "f": "#2a3440"}, beak=(13, 15, 18, 30))
@@ -859,7 +874,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

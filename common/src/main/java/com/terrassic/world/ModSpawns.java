@@ -70,6 +70,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Quetzalcoatlus      plains, savanna, badlands       3       1-2
  *  Hatzegopteryx       hills, forest                   2       1
  *  Ichthyornis         beach, stony shore              10      3-6
+ *  Vegavis             river, swamp, mangrove, beach, stony shore 10      3-6
  *  Mosasaurus          deep ocean (not frozen)         2       1
  *  Tylosaurus          deep ocean (not frozen), ocean (not frozen) 3       1
  *  Elasmosaurus        ocean (not frozen), deep ocean (not frozen) 4       1-2
@@ -137,6 +138,8 @@ public final class ModSpawns {
         SpawnPlacementsRegistry.register(ModEntities.HATZEGOPTERYX, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.ICHTHYORNIS, SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.VEGAVIS, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
@@ -308,6 +311,9 @@ public final class ModSpawns {
             }
             if (coast) {
                 add(props, ModEntities.ICHTHYORNIS.get(), 10, 3, 6);
+            }
+            if (river || swamp || coast) {
+                add(props, ModEntities.VEGAVIS.get(), 10, 3, 6);
             }
             if (deepSea) {
                 add(props, MobCategory.WATER_CREATURE, ModEntities.MOSASAURUS.get(), 2, 1, 1);

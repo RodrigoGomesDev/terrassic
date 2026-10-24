@@ -1845,5 +1845,41 @@
    "animation.leptoceratops.tame"
   ],
   "render_scale": 0.5
+ },
+ "vegavis": {
+  "bones": 19,
+  "cubes": 29,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -23.5,
+    -3.800684897485497e-05,
+    -20.538806535318898
+   ],
+   [
+    23.5,
+    19.511703164413742,
+    13.994693849077908
+   ]
+  ],
+  "animations": [
+   "animation.vegavis.idle",
+   "animation.vegavis.walk",
+   "animation.vegavis.run",
+   "animation.vegavis.fly",
+   "animation.vegavis.glide",
+   "animation.vegavis.sit",
+   "animation.vegavis.attack",
+   "animation.vegavis.call",
+   "animation.vegavis.knocked_out",
+   "animation.vegavis.wake",
+   "animation.vegavis.eat",
+   "animation.vegavis.beg",
+   "animation.vegavis.tame"
+  ],
+  "render_scale": 0.25
  }
 }

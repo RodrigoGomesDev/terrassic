@@ -100,6 +100,8 @@ SIZES = {
     "hatzegopteryx":      dict(real=12.0, scale=1.52, w=2.5, h=4.6, baby=0.25, shadow=2.1),
     # Ichthyornis dispar: a tern-sized toothed seabird, wingspan ~60 cm (Clarke 2004; Field et al. 2018). Modelled at 4x.
     "ichthyornis":        dict(real=0.66, scale=0.245, w=0.4, h=0.4, baby=0.5, shadow=0.2),
+    # Vegavis iaai: a small duck, ~0.7 m nose to tail, ~1 m wingspan (Clarke et al. 2005, 2016). Modelled at 4x, 47 px span.
+    "vegavis":            dict(real=0.7,  scale=0.33, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
     "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
     # Tylosaurus proriger: 12-13 m (the "Bunker" specimen KUVP 5033 ~13 m; Everhart 2005). Sleeker than the Mosasaurus.
@@ -167,6 +169,7 @@ GUIDE = {
     "quetzalcoatlus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "hatzegopteryx":      dict(era="late_cretaceous", diet="carnivore", fossil=1),
     "ichthyornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
+    "vegavis":            dict(era="late_cretaceous", diet="omnivore", fossil=6),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "tylosaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "elasmosaurus":       dict(era="late_cretaceous", diet="piscivore", fossil=3),
@@ -228,6 +231,7 @@ WORLD = {
     "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
     "ichthyornis":        dict(biomes=("coast",), weight=10, group=(3, 6), track=8),                            # flocks on the shore
+    "vegavis":            dict(biomes=("river", "swamp", "coast"), weight=10, group=(3, 6), track=8),            # the "duck": flocks on rivers, deltas and beaches
     "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
     "tylosaurus":         dict(biomes=("deep_sea", "ocean"), weight=3, group=(1, 1), track=12),  # also the shallower open sea
     "elasmosaurus":       dict(biomes=("ocean", "deep_sea"), weight=4, group=(1, 2), track=12),  # fishes the open sea in pairs
@@ -556,6 +560,12 @@ SPECIES = [
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.6, 0.5, 160), xp=3, run=0.03,
       prey="e instanceof AbstractFish && e.getBbWidth() < 0.6F", prey_interval=100, shoulder=True, fisher=True),
+ dict(id="vegavis", cls="Vegavis", base="FlyingDinosaur",
+      doc="Vegavis iaai - the duck of the Cretaceous (Vega Island, Antarctica), a small relative of ducks and geese with the oldest known syrinx: it honks. Flocks on rivers, swamps and beaches; skittish, flies off when approached; the early feathers, meat and eggs (docs/FAUNA.md). Hand-tamed with seeds, berries or fish; rides on the shoulder.",
+      attrs=dict(MAX_HEALTH=8, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.7, ATTACK_DAMAGE=1, FOLLOW_RANGE=16),
+      food="Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.SWEET_BERRIES, Items.COD",
+      sounds=("GOAT_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 1.5, 0.6, 200), xp=2, run=0.03,
+      prey="false", hunts_players=False, feeding_tame=True, skittish=True, shoulder=True, call=True),
  # ---- marine reptiles (SwimmingDinosaur: smooth swimming, wild only for now)
  dict(id="mosasaurus", cls="Mosasaurus", base="SwimmingDinosaur",
       doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Gives birth to live calves, and only a calf can be tamed (fed fish); grown and saddled it is the giant aquatic mount.",

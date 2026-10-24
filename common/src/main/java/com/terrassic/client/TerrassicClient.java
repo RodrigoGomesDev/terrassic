@@ -55,6 +55,7 @@ import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Troodon;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
+import com.terrassic.entity.Vegavis;
 import com.terrassic.entity.Velociraptor;
 import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
@@ -127,6 +128,7 @@ public final class TerrassicClient {
         renderer(ModEntities.QUETZALCOATLUS, "quetzalcoatlus", Quetzalcoatlus.MODEL_SCALE, Quetzalcoatlus.SHADOW);
         renderer(ModEntities.HATZEGOPTERYX, "hatzegopteryx", Hatzegopteryx.MODEL_SCALE, Hatzegopteryx.SHADOW);
         renderer(ModEntities.ICHTHYORNIS, "ichthyornis", Ichthyornis.MODEL_SCALE, Ichthyornis.SHADOW);
+        renderer(ModEntities.VEGAVIS, "vegavis", Vegavis.MODEL_SCALE, Vegavis.SHADOW);
         renderer(ModEntities.MOSASAURUS, "mosasaurus", Mosasaurus.MODEL_SCALE, Mosasaurus.SHADOW);
         renderer(ModEntities.TYLOSAURUS, "tylosaurus", Tylosaurus.MODEL_SCALE, Tylosaurus.SHADOW);
         renderer(ModEntities.ELASMOSAURUS, "elasmosaurus", Elasmosaurus.MODEL_SCALE, Elasmosaurus.SHADOW);

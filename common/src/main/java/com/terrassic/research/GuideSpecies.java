@@ -58,6 +58,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("quetzalcoatlus", "late_cretaceous", "carnivore", 11.0F, true, true, 2, 9.07F),
             new GuideSpecies("hatzegopteryx", "late_cretaceous", "carnivore", 12.0F, true, true, 1, 8.35F),
             new GuideSpecies("ichthyornis", "late_cretaceous", "piscivore", 0.66F, false, false, 4, 151.87F),
+            new GuideSpecies("vegavis", "late_cretaceous", "omnivore", 0.7F, false, false, 6, 103.16F),
             new GuideSpecies("mosasaurus", "late_cretaceous", "carnivore", 17.0F, true, true, 2, 5.89F),
             new GuideSpecies("tylosaurus", "late_cretaceous", "carnivore", 13.0F, false, false, 3, 7.71F),
             new GuideSpecies("elasmosaurus", "late_cretaceous", "piscivore", 10.3F, true, false, 3, 9.7F),

@@ -33,7 +33,7 @@ nosso), e os textos do Guia em `lore.py` falam na carne de dinossauro em vez de 
 | Ordem | Espécie | Papel no mundo | Tamanho real | O que dá | Rig |
 |---|---|---|---|---|---|
 | 1 | **Leptoceratops** ✅ fase 108 | o "porco": ceratopsiano pequeno sem gola grande, em bandos de 3-5 nas planícies e florestas; foge, mas um macho encurralado dá cabeçada | 2 m, ~70 kg (Hell Creek, Scollard) | carne 2-4, couro 1-2 | ceratopsiano (Protoceratops) |
-| 2 | **Vegavis** | a "galinha/pato": ave aquática que grasna (a siringe mais antiga conhecida), em bandos nos rios, deltas e praias; bota ovos em ninhos na margem | 0,6 m (Ilha Vega, Antártica) | carne 1, penas 1-3, ovos (bloco de ovo pequeno) | ave (Ichthyornis/Hesperornis) |
+| 2 | **Vegavis** ✅ fase 109 | a "galinha/pato": ave aquática que grasna (a siringe mais antiga conhecida), em bandos nos rios, deltas e praias; bota ovos em ninhos na margem | 0,6 m (Ilha Vega, Antártica) | carne 1, penas 1-3, ovos (bloco de ovo pequeno) | ave (Ichthyornis/Hesperornis) |
 | 3 | **Mesodma** | o "coelho": multituberculado do tamanho de um rato grande, noturno, em tocas sob as raízes; some na grama alta | 15 cm sem a cauda (Hell Creek) | carne 0-1, couro de coelho | mamífero (Didelphodon, 3x) |
 | 4 | **Basilemys** | a tartaruga terrestre: lenta, de casco alto, pasta em planícies e deltas; protege-se no casco | 1,3 m de casco (Dinosaur Park) | carne 1-2, casco (escamas) 1-3 | tartaruga (Archelon, terrestre) |
 | 5 | **Enchodus** | o "peixe-sabre": peixe marinho com presas, em cardumes no Mar Interior; morde quem nada perto | 1,5 m (Niobrara) | peixe próprio (Enchodus cru/assado), substitui o bacalhau no loot dos marinhos | peixe (Xiphactinus) |

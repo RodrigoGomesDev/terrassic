@@ -105,6 +105,7 @@ public final class ModBlocks {
         egg("quetzalcoatlus", ModEntities.QUETZALCOATLUS, false);
         egg("hatzegopteryx", ModEntities.HATZEGOPTERYX, false);
         egg("ichthyornis", ModEntities.ICHTHYORNIS, false);
+        egg("vegavis", ModEntities.VEGAVIS, false);
         egg("archelon", ModEntities.ARCHELON, true);
         egg("hesperornis", ModEntities.HESPERORNIS, false);
         egg("deinosuchus", ModEntities.DEINOSUCHUS, true);

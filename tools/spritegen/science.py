@@ -496,7 +496,7 @@ FOSSIL_MOTIF = {
     "maiasaura": "egg_nest", "pachycephalosaurus": "dome_skull", "thescelosaurus": "small_skull",
     # pterosaurs and birds
     "pteranodon": "ptero_skull", "quetzalcoatlus": "ptero_skull", "hatzegopteryx": "ptero_skull",
-    "ichthyornis": "bird_skull", "hesperornis": "bird_skull",
+    "ichthyornis": "bird_skull", "hesperornis": "bird_skull", "vegavis": "bird_skull",
     # sea
     "mosasaurus": "mosa_jaw", "tylosaurus": "mosa_jaw", "elasmosaurus": "paddle", "xiphactinus": "fish",
     "archelon": "shell",

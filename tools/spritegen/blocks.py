@@ -1627,6 +1627,9 @@ SKULLS.update({  # one skull per species added after the first fifteen
     "oviraptor": [".......oooo.....", "......olllo.....", ".....olbbbo.....", "....obbbbbbo....", "...obbbbbeebo...", "..obbbbbbeebo...", ".obbbbbbbbbbo...", "obbbbbbbbbbo....", ".oobbbbbbbo.....", "...ooooooo......"],
     "thescelosaurus": ["........oooo....", "......oobllbo...", "....oobbbbeebo..", "..oobbbbbbeebo..", ".obbbbbbbbbbbo..", "obbbbbbbbbbbo...", ".ootttbbbbbo....", "...oooooooo....."],
     "struthiomimus": ["..........oooo..", "........oobllbo.", "......oobbbeebo.", "....oobbbbbeebo.", "..oobbbbbbbbbbo.", "oobbbbbbbbbbbo..", "..oooobbbbbo....", "......ooooo....."],
+    # the duck: a round cranium and the long flat bill
+    "vegavis": ["..........oooo..", "........oobbbbo.", "......oobbbeebo.", "oooooobbbbbeebo.",
+                "obbbbbbbbbbbbbo.", "obbbbbbbbbbbbo..", ".oooooobbbbbo...", "........ooooo..."],
     "ichthyornis": [".........oooo...", ".......oobllbo..", ".....oobbbeebo..", "...oobbbbbeebo..", "oobbbbbbbbbbo...", "ottttttbbbbbo...", ".oooooobbbbo....", ".......oooo....."],
     "tylosaurus": [".........ooooo..", "......ooobllbo..", "...oobbbbbbbeebo", ".obbbbbbbbbbeebo", "obbbbbbbbbbbbbbo", "oobttttttttbbbbo", ".o.t.t.t.t.tbbbo", "..obbbbbbbbbbbo.", "...oooooooooooo."],
     "elasmosaurus": [".........oooo...", ".......oobllbo..", ".....oobbbeebo..", "..ooobbbbbeebo..", ".obbbbbbbbbbbo..", "tottttttbbbbo...", ".t.t.t.t.bbo....", "..oooooooo......"],
@@ -1731,7 +1734,7 @@ HIDE_PATTERN = {  # rug pattern of each species (scales by default)
     "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
     "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz",
     "struthiomimus": "feathers", "deinocheirus": "feathers", "therizinosaurus": "feathers",
-    "hesperornis": "feathers", "ichthyornis": "feathers",
+    "hesperornis": "feathers", "ichthyornis": "feathers", "vegavis": "feathers",
 }
 
 

@@ -54,6 +54,7 @@ import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Troodon;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
+import com.terrassic.entity.Vegavis;
 import com.terrassic.entity.Velociraptor;
 import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
@@ -177,6 +178,8 @@ public final class ModEntities {
             mob("hatzegopteryx", Hatzegopteryx::new, MobCategory.CREATURE, Hatzegopteryx.WIDTH, Hatzegopteryx.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Ichthyornis>> ICHTHYORNIS =
             mob("ichthyornis", Ichthyornis::new, MobCategory.CREATURE, Ichthyornis.WIDTH, Ichthyornis.HEIGHT, 8);
+    public static final RegistrySupplier<EntityType<Vegavis>> VEGAVIS =
+            mob("vegavis", Vegavis::new, MobCategory.CREATURE, Vegavis.WIDTH, Vegavis.HEIGHT, 8);
     // ---- marine reptiles
     public static final RegistrySupplier<EntityType<Mosasaurus>> MOSASAURUS =
             mob("mosasaurus", Mosasaurus::new, MobCategory.WATER_CREATURE, Mosasaurus.WIDTH, Mosasaurus.HEIGHT, 12);
@@ -265,6 +268,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(QUETZALCOATLUS, Quetzalcoatlus::createAttributes);
         EntityAttributeRegistry.register(HATZEGOPTERYX, Hatzegopteryx::createAttributes);
         EntityAttributeRegistry.register(ICHTHYORNIS, Ichthyornis::createAttributes);
+        EntityAttributeRegistry.register(VEGAVIS, Vegavis::createAttributes);
         EntityAttributeRegistry.register(MOSASAURUS, Mosasaurus::createAttributes);
         EntityAttributeRegistry.register(TYLOSAURUS, Tylosaurus::createAttributes);
         EntityAttributeRegistry.register(ELASMOSAURUS, Elasmosaurus::createAttributes);

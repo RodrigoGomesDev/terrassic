@@ -173,7 +173,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 113 | **Hesperornis** | Ave | 🌊 | Piscívoro | 1,8 m | Pescador | Territorial | Comida (peixe) | — | Ave mergulhadora; traz peixe do fundo | v0.5 |
 | 114 | Baptornis | Ave | 🌊 | Piscívoro | 1 m | Pescador | Arisco | Comida (peixe) | — | Guarda da base |  |
 | 115 | **Ichthyornis** | Ave | 🪽 | Piscívoro | 0,6 m env. | Pescador | Arisco | Comida (peixe) | 🦜 | Ave de ombro que pesca e traz peixe para o dono | v0.4 |
-| 116 | Vegavis | Ave | 🐊 | Onívoro | 0,6 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus); parente dos patos |  |
+| 116 | **Vegavis** | Ave | 🪽 | Onívoro | 0,7 m | Onívoro pequeno | Arisco | Comida | 🦜 | A "galinha/pato" do Cretáceo: penas, carne e ovos; vai no ombro | v0.7 |
 | 117 | Patagopteryx | Ave | 🦖 | Onívoro | 0,5 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 118 | Asteriornis | Ave | 🪽 | Onívoro | 0,4 m env. | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus); o "frango do fim do mundo" |  |
 
