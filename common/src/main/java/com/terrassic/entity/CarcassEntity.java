@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -273,7 +274,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
             dino.onAteCarrion();
         }
         this.splash();
-        this.playSound(SoundEvents.GENERIC_EAT, 1.0F, 0.8F + this.random.nextFloat() * 0.3F);
+        this.playSound(ModSounds.SFX_CARCASS_TEAR.get(), 1.0F, 0.8F + this.random.nextFloat() * 0.3F);
         if (!this.hasMeat()) {
             this.finish(false);
         }
@@ -300,7 +301,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
                     this.getX(), this.getY() + this.getBbHeight() * 0.5D, this.getZ(), 8,
                     this.getBbWidth() * 0.3D, 0.2D, this.getBbWidth() * 0.3D, 0.05D);
         }
-        this.playSound(SoundEvents.SLIME_SQUISH, 0.8F, 0.7F + this.random.nextFloat() * 0.3F);
+        this.playSound(ModSounds.SFX_CARCASS_SQUISH.get(), 0.8F, 0.7F + this.random.nextFloat() * 0.3F);
     }
 
     /** Gone: whatever loot is left drops on the spot (nothing is lost to rot), then the body disappears. */
@@ -314,7 +315,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
                 server.sendParticles(rotted ? ParticleTypes.SMOKE : ParticleTypes.POOF, this.getX(), this.getY() + 0.3D, this.getZ(),
                         12, this.getBbWidth() * 0.4D, 0.2D, this.getBbWidth() * 0.4D, 0.02D);
             }
-            this.playSound(rotted ? SoundEvents.COMPOSTER_FILL_SUCCESS : SoundEvents.SLIME_BLOCK_BREAK, 1.0F, 0.8F);
+            this.playSound(rotted ? ModSounds.SFX_CARCASS_ROT.get() : ModSounds.SFX_CARCASS_BONES.get(), 1.0F, 0.8F);
         }
         this.discard();
     }

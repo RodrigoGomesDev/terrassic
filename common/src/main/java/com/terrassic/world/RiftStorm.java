@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import com.terrassic.registry.ModSounds;
 import com.mojang.brigadier.CommandDispatcher;
 import com.terrassic.Terrassic;
 import com.terrassic.config.WorldConfig;
@@ -136,7 +137,7 @@ public final class RiftStorm {
         for (ServerPlayer p : level.players()) {
             d.survivors.add(p.getUUID());
             p.displayClientMessage(Component.translatable("message.terrassic.storm_start"), false);
-            level.playSound(null, p.blockPosition(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.AMBIENT, 1.0F, 0.5F);
+            level.playSound(null, p.blockPosition(), ModSounds.SFX_RIFT_PULSE.get(), SoundSource.AMBIENT, 1.0F, 0.5F);
         }
         d.setDirty();
         sendAll(level.getServer(), true);
@@ -239,8 +240,8 @@ public final class RiftStorm {
             level.addFreshEntity(dino);
             level.sendParticles(AMBER, dino.getX(), dino.getY() + dino.getBbHeight() / 2, dino.getZ(), 80,
                     dino.getBbWidth() / 2, dino.getBbHeight() / 2, dino.getBbWidth() / 2, 0.02D);
-            level.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE, 1.2F, 0.5F);
-            level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.HOSTILE, 1.0F, 0.6F);
+            level.playSound(null, pos, ModSounds.SFX_RIFT_TEAR.get(), SoundSource.HOSTILE, 1.2F, 0.5F);
+            level.playSound(null, pos, ModSounds.SFX_RIFT_PULSE.get(), SoundSource.HOSTILE, 1.0F, 0.6F);
             return;
         }
     }

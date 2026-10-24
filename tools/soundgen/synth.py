@@ -338,6 +338,136 @@ def trill(dur=0.8, f0=((0, 3000), (1, 2400)), rate=24, sharp=3.0, vibrato=(0.0, 
     return norm(x * envelope(n, attack, release, 1.2))
 
 
+# ------------------------------------------------------------------ effects (not voices)
+
+def crack(dur=0.5, clicks=6, bright=1.0, crumble=0.4, seed=0):
+    """Eggshell cracking: sharp little snaps that speed up, with a dry crumble between them."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    t = np.arange(n) / SR
+    out = np.zeros(n)
+    times = np.sort(rng.uniform(0, 1, clicks) ** 0.7) * dur * 0.85
+    for i, c in enumerate(times):
+        f = rng.uniform(2200, 5200) * bright
+        x = spectral_filter(noise(n, rng), ((f, f * 0.35, 0), (f * 0.45, f * 0.3, -6)), floor=0.003)
+        out += rng.uniform(0.5, 1.0) * x * np.exp(-np.clip(t - c, 0, None) * rng.uniform(180, 320)) * (t >= c)
+    grit = spectral_filter(noise(n, rng), ((3000 * bright, 3000, 0),), floor=0.01) * pulses(n, 70, 8, rng, 0.8)
+    out = norm(out, 1.0) + crumble * norm(grit, 1.0) * envelope(n, dur * 0.2, dur * 0.4, 1.0)
+    return norm(out)
+
+
+def wet(dur=0.4, low=500.0, tear=0.0, bubbles=4, seed=0):
+    """Wet flesh: a squelch of dark noise; tear > 0 adds the fibrous ripping crackle."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    t = np.arange(n) / SR
+    body = spectral_filter(noise(n, rng), ((tr_(0, low, 1, low * 1.6), low, 0), (low * 3, low * 2, -8)), floor=0.005)
+    out = norm(body, 1.0) * envelope(n, 0.01, dur * 0.6, 1.2)
+    if tear:
+        rip = spectral_filter(noise(n, rng), ((1800, 2000, 0), (4000, 2500, -6)), floor=0.01)
+        rip *= pulses(n, [(0, 40), (1, 110)], 6, rng, 0.9)
+        out += tear * norm(rip, 1.0) * envelope(n, dur * 0.3, dur * 0.3, 1.0)
+    for _ in range(bubbles):
+        c = rng.uniform(0.05, 0.85) * dur
+        m = _n(0.025)
+        i = int(c * SR)
+        if i + m < n:
+            f = rng.uniform(250, 600)
+            ph = 2 * np.pi * np.cumsum(np.linspace(f, f * 2.5, m)) / SR
+            out[i:i + m] += 0.5 * np.sin(ph) * np.hanning(m)
+    return norm(out)
+
+
+def tr_(*points):
+    return [(points[i], points[i + 1]) for i in range(0, len(points), 2)]
+
+
+def whoosh(dur=0.45, f0=500.0, f1=1600.0, q=0.6, seed=0):
+    """Air torn by a thrown object: a band of noise that sweeps up (approach) and fades."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    x = spectral_filter(noise(n, rng), ((tr_(0, f0, 0.6, f1, 1, f1 * 0.8), tr_(0, f0, 1, f1)[0][1] * q * 2, 0),),
+                        floor=0.01)
+    return norm(x * envelope(n, dur * 0.55, dur * 0.4, 1.6))
+
+
+def modes(dur=0.6, freqs=(220, 507, 830), decays=(8, 14, 22), gains=(1, 0.6, 0.4), strike=0.3, glide=0.0, seed=0):
+    """Struck object: damped resonant modes (wood, bone, hide, amber) plus the strike noise."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    t = np.arange(n) / SR
+    out = np.zeros(n)
+    for f, d, g in zip(freqs, decays, gains):
+        ff = f * (1 - glide * (1 - np.exp(-t * 18)))
+        out += g * np.sin(2 * np.pi * np.cumsum(ff) / SR + rng.uniform(0, 6)) * np.exp(-t * d)
+    hit = spectral_filter(noise(n, rng), ((freqs[0] * 3, freqs[0] * 4, 0),), floor=0.01) * np.exp(-t * 90)
+    return norm((norm(out, 1.0) + strike * norm(hit, 1.0)) * envelope(n, 0, dur * 0.35, 1.0))  # no cut-off click
+
+
+def scratch(dur=0.8, strokes=3, seed=0):
+    """Charcoal on paper: quick strokes of bright grainy friction."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    t = np.arange(n) / SR
+    env = np.zeros(n)
+    for i in range(strokes):
+        c = (i + 0.5) / strokes * dur
+        w = dur / strokes * rng.uniform(0.25, 0.4)
+        env += np.exp(-((t - c) / w) ** 4)
+    x = spectral_filter(noise(n, rng), ((3500, 3000, 0), (7000, 3000, -4)), floor=0.02, hp=900)
+    x *= 0.6 + 0.4 * pulses(n, 90, 3, rng, 0.9)
+    return norm(x * env)
+
+
+def creak(dur=0.5, rate=((0, 30), (1, 70)), f=900.0, seed=0):
+    """Leather or rawhide straining: stick-slip pulses ringing a hollow body."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    src = pulses(n, rate, 14, rng, 0.25) - 0.1
+    src += 0.15 * noise(n, rng)
+    x = spectral_filter(src, ((f, f * 0.4, 0), (f * 2.3, f * 0.8, -6), (f * 0.5, f * 0.3, -6)), floor=0.01)
+    return norm(x * envelope(n, 0.03, dur * 0.3, 1.2))
+
+
+def rustle(dur=0.5, f=2500.0, grain=40, seed=0):
+    """Dry fibres moving (straw, wicker, leaves, a nest)."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    x = spectral_filter(noise(n, rng), ((f, f * 1.2, 0), (f * 0.4, f * 0.5, -6)), floor=0.01)
+    x *= pulses(n, grain, 5, rng, 1.2)
+    return norm(x * envelope(n, dur * 0.2, dur * 0.4, 1.2))
+
+
+def drone(dur=3.0, f0=55.0, voices=5, detune=0.012, bright=((0, 400), (0.5, 1600), (1, 500)), crackle=0.2, seed=0):
+    """The Rift: detuned partials beating against each other, a filter that breathes and sparse crackles."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    t = np.arange(n) / SR
+    out = np.zeros(n)
+    for v in range(voices):
+        f = f0 * (1 + detune * (v - voices / 2)) * (1 + 0.003 * wobble(n, 2, rng))
+        out += harmonics(f, -6, rng, False)
+    out = spectral_filter(out, ((bright, 600, 0), (tr_(0, 2400, 1, 3600), 900, -10)), floor=0.02)
+    out = norm(out, 1.0)
+    if crackle:
+        sp = (rng.uniform(0, 1, n) > 0.9993).astype(float)
+        sp = spectral_filter(sp, ((5000, 4000, 0),), floor=0.05)
+        out += crackle * norm(sp, 1.0)
+    return norm(out * envelope(n, dur * 0.3, dur * 0.4, 1.4))
+
+
+def swell(dur=1.2, f0=80.0, seed=0):
+    """A reversed-sounding swell that ends in a snap (something tearing through time)."""
+    rng = np.random.default_rng(seed)
+    n = _n(dur)
+    t = np.arange(n) / SR
+    up = harmonics(f0 * (1 + 2.5 * (t / dur) ** 3), -5, rng, False) * (t / dur) ** 2.5
+    air = spectral_filter(noise(n, rng), ((tr_(0, 300, 1, 4000), 1500, 0),), floor=0.01) * (t / dur) ** 3
+    x = norm(up, 1.0) + 0.6 * norm(air, 1.0)
+    x[-_n(0.02):] *= np.linspace(1, 0, _n(0.02))
+    return norm(x)
+
+
 def silence(dur=0.1):
     return np.zeros(_n(dur))
 
@@ -363,4 +493,5 @@ def mix(parts, room=(1.0, 0.15), drive_amount=1.0, peak=0.9, hp=None, lp=None, *
 
 
 VOICES = {"call": call, "breath": breath, "thud": thud, "flap": flap, "clack": clack, "trill": trill,
-          "silence": silence, "mix": mix}
+          "silence": silence, "mix": mix, "crack": crack, "wet": wet, "whoosh": whoosh, "modes": modes,
+          "scratch": scratch, "creak": creak, "rustle": rustle, "drone": drone, "swell": swell}

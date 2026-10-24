@@ -1,5 +1,6 @@
 package com.terrassic.block;
 
+import com.terrassic.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +23,7 @@ public class DrumBlock extends FacingBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         float pitch = 0.6F + level.getRandom().nextFloat() * 0.4F;
-        level.playSound(player, pos, SoundEvents.NOTE_BLOCK_BASEDRUM.value(), SoundSource.RECORDS, 2.0F, pitch);
+        level.playSound(player, pos, ModSounds.SFX_DRUM.get(), SoundSource.RECORDS, 2.0F, pitch);
         if (level.isClientSide()) {
             level.addParticle(ParticleTypes.NOTE, pos.getX() + 0.5D, pos.getY() + 0.9D, pos.getZ() + 0.5D,
                     pitch - 0.6D, 0.0D, 0.0D);

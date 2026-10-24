@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.block.DinoEggBlock;
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
@@ -845,7 +846,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         int rows = this.cargoRows();
         player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new ChestMenu(cargoMenuType(rows), id, inventory, this.cargo, rows),
                 this.getDisplayName()));
-        this.playSound(SoundEvents.DONKEY_CHEST, 0.5F, 1.2F);
+        this.playSound(ModSounds.SFX_CARGO.get(), 0.5F, 1.2F);
     }
 
     /** The generic chest menu of that many rows (only threeRows/sixRows take a container in 1.20.1, so build it directly). */
@@ -934,7 +935,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (!client) {
                     this.usePlayerItem(player, hand, stack);
                     this.setChested(true);
-                    this.playSound(SoundEvents.DONKEY_CHEST, 1.0F, 1.0F);
+                    this.playSound(ModSounds.SFX_CARGO.get(), 1.0F, 1.0F);
                     player.displayClientMessage(Component.translatable(this.isRideable() ? "message.terrassic.cargo_chest_ride"
                             : "message.terrassic.cargo_chest", this.getDisplayName()), true);
                 }
@@ -953,7 +954,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     this.usePlayerItem(player, hand, stack);
                     this.setSaddled(true);
                     this.setPlatform(true);
-                    this.playSound(SoundEvents.HORSE_SADDLE, 1.0F, 0.7F);
+                    this.playSound(ModSounds.SFX_SADDLE_ON.get(), 1.0F, 0.7F);
                     player.displayClientMessage(Component.translatable("message.terrassic.platform", this.getDisplayName()), true);
                 }
                 return InteractionResult.sidedSuccess(client);
@@ -963,7 +964,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (!client) {
                     this.usePlayerItem(player, hand, stack);
                     this.setSaddled(true);
-                    this.playSound(SoundEvents.HORSE_SADDLE, 1.0F, 0.8F);
+                    this.playSound(ModSounds.SFX_SADDLE_ON.get(), 1.0F, 0.8F);
                 }
                 return InteractionResult.sidedSuccess(client);
             }
@@ -973,7 +974,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     this.spawnAtLocation(this.saddleItem());
                     this.setSaddled(false);
                     this.setPlatform(false);
-                    this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
+                    this.playSound(ModSounds.SFX_SADDLE_OFF.get(), 1.0F, 1.0F);
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
                 }
                 return InteractionResult.sidedSuccess(client);
@@ -982,7 +983,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             if (this.isChested() && !this.isSaddled() && stack.is(Items.SHEARS)) {
                 if (!client) {
                     this.dropCargo();
-                    this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
+                    this.playSound(ModSounds.SFX_SADDLE_OFF.get(), 1.0F, 1.0F);
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
                     player.displayClientMessage(Component.translatable("message.terrassic.cargo_off", this.getDisplayName()), true);
                 }
@@ -1128,7 +1129,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     stack.shrink(1);
                     this.feed(25);
                     triggerAnim(ACTION_CONTROLLER, "eat");
-                    this.playSound(SoundEvents.GENERIC_EAT, 1.0F, 1.0F);
+                    this.playSound(ModSounds.SFX_EAT.get(), 1.0F, 1.0F);
                     break;
                 }
             }
@@ -1437,7 +1438,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 }
             }
             if (laid > 0) {
-                level.playSound(null, mother.blockPosition(), SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.7F, 0.9F);
+                level.playSound(null, mother.blockPosition(), ModSounds.SFX_EGG_LAY.get(), SoundSource.BLOCKS, 0.7F, 0.9F);
             }
             this.setHunger(this.getHunger() - 15);
             if (partner instanceof DinosaurEntity other) {
@@ -1447,7 +1448,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             BlockPos pos = findEggSpot(level, mother.blockPosition());
             if (pos != null) {
                 level.setBlock(pos, egg.defaultBlockState(), Block.UPDATE_ALL);
-                level.playSound(null, pos, SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.7F, 0.9F);
+                level.playSound(null, pos, ModSounds.SFX_EGG_LAY.get(), SoundSource.BLOCKS, 0.7F, 0.9F);
             } else {
                 mother.spawnAtLocation(egg);
             }

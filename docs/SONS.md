@@ -93,3 +93,26 @@ Espécie nova: escolha um conjunto (ou crie um) em `SPECIES_VOICE`, rode `build.
 
 ### Uma voz por espécie (v3)
 O Rodrigo pediu que cada dino tenha som único. Os 20 conjuntos viraram **arquétipos** (`ARCHETYPES` em recipes.py) e cada espécie tem o seu conjunto, com o nome dela (`SPECIES`): o arquétipo é re-vozeado para o corpo do animal (`fp` tom, `fk` tamanho da garganta = formantes, `tf` ritmo, `rough` aspereza, sementes próprias) e ganha um **som assinatura** ligado à anatomia: o T. rex tem o estrondo de peito mais longo, o Carnotaurus bufa pelos chifres e buzina, o Dilophosaurus chocalha a crista, o Styracosaurus bate os chifres, o Mononykus zumbe e cava, a Citipati ronrona chocando, o Pachycephalosaurus bate a cúpula, o Tylosaurus bate o rostro, e assim por diante. O tom fica embutido no som (pitch 1.0 em `SPECIES_VOICE`). Espécie nova: uma linha em `SPECIES` com o arquétipo, o perfil e a assinatura.
+
+## Efeitos próprios (fase 2)
+Os sons temáticos que ainda vinham do Minecraft viraram 24 efeitos sintetizados (45 variações), em
+`sounds/sfx/<nome>_<n>.ogg`, gerados pela mesma `tools/soundgen` (tabela `SFX` em `recipes.py`; legenda
+`subtitles.terrassic.sfx.<nome>`; registro `ModSounds.SFX_<NOME>`).
+
+| Efeito | Onde toca | Substituiu |
+|---|---|---|
+| egg_crack, egg_hatch | ovo racha e eclode (`DinoEggBlock`); o filhote já chama ao nascer | tartaruga |
+| egg_lay | fêmea põe ovo (`DinosaurEntity`) | tartaruga |
+| egg_break | ladrão de ovos (`EggThiefGoal`) | tartaruga |
+| eat | dinossauro come | comer genérico |
+| carcass_tear, carcass_squish, carcass_rot, carcass_bones | carcaça (`CarcassEntity`) | comer, slime, compostor |
+| saddle_on, saddle_off, cargo | sela e cesto de carga | cavalo, tesoura, baú do burro |
+| spear_throw, spear_hit, spear_ground | lança (`SpearItem`, `ThrownSpear`) | tridente |
+| charcoal | desenho a carvão | aldeão cartógrafo |
+| amber_ping | âmbar do refúgio da Katarina | ametista |
+| discover | descoberta (`Research`): registrado, troca pendente (arquivo reservado ao Codex) | ametista |
+| drum, chimes, clay_jar | tambor, sinos de osso, jarro de argila | bloco musical, mel |
+| rift_pulse, rift_tear, rift_glitch | Fenda (`RiftStorm`, `RiftStormClient`) | ametista, enderman |
+
+Continuam vanilla de propósito, porque o jogador já os reconhece: pegar item, respingo, virar página,
+luneta, pincel, fogueira e mesa de cartografia.

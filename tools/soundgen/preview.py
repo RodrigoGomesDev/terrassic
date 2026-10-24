@@ -1,7 +1,7 @@
 """
 Listening previews of the voice sets: one file per set with all its sounds in a row (events in order, a short
 pause between sounds), plus a spectrogram sheet when matplotlib is installed. Nothing here goes into the mod.
-usage: python3 preview.py OUT_DIR [set ...]
+usage: python3 preview.py OUT_DIR [set ... | efeitos]
 """
 import os
 import subprocess
@@ -13,6 +13,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import recipes  # noqa: E402
 from recipes import VOICE_SETS  # noqa: E402
 from synth import SR, VOICES, norm  # noqa: E402
 
@@ -43,7 +44,10 @@ def main():
         import matplotlib.pyplot as plt
     except ImportError:
         plt = None
-    for vset, evs in VOICE_SETS.items():
+    groups = dict(VOICE_SETS)
+    if getattr(recipes, "SFX", None):  # the effects as one sheet: efeitos.mp3 / efeitos.png
+        groups["efeitos"] = {name: (fx, dist, variants) for name, (fx, dist, variants, _) in recipes.SFX.items()}
+    for vset, evs in groups.items():
         if only and vset not in only:
             continue
         clips, labels = [], []

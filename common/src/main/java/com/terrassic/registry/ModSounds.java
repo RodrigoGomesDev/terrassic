@@ -216,6 +216,30 @@ public final class ModSounds {
     public static final RegistrySupplier<SoundEvent> BAURUSUCHUS_HURT = register("voice.baurusuchus.hurt");
     public static final RegistrySupplier<SoundEvent> BAURUSUCHUS_DEATH = register("voice.baurusuchus.death");
     public static final RegistrySupplier<SoundEvent> BAURUSUCHUS_STEP = register("voice.baurusuchus.step");
+    public static final RegistrySupplier<SoundEvent> SFX_EGG_CRACK = register("sfx.egg_crack");
+    public static final RegistrySupplier<SoundEvent> SFX_EGG_HATCH = register("sfx.egg_hatch");
+    public static final RegistrySupplier<SoundEvent> SFX_EGG_LAY = register("sfx.egg_lay");
+    public static final RegistrySupplier<SoundEvent> SFX_EGG_BREAK = register("sfx.egg_break");
+    public static final RegistrySupplier<SoundEvent> SFX_EAT = register("sfx.eat");
+    public static final RegistrySupplier<SoundEvent> SFX_CARCASS_TEAR = register("sfx.carcass_tear");
+    public static final RegistrySupplier<SoundEvent> SFX_CARCASS_SQUISH = register("sfx.carcass_squish");
+    public static final RegistrySupplier<SoundEvent> SFX_CARCASS_ROT = register("sfx.carcass_rot");
+    public static final RegistrySupplier<SoundEvent> SFX_CARCASS_BONES = register("sfx.carcass_bones");
+    public static final RegistrySupplier<SoundEvent> SFX_SADDLE_ON = register("sfx.saddle_on");
+    public static final RegistrySupplier<SoundEvent> SFX_SADDLE_OFF = register("sfx.saddle_off");
+    public static final RegistrySupplier<SoundEvent> SFX_CARGO = register("sfx.cargo");
+    public static final RegistrySupplier<SoundEvent> SFX_SPEAR_THROW = register("sfx.spear_throw");
+    public static final RegistrySupplier<SoundEvent> SFX_SPEAR_HIT = register("sfx.spear_hit");
+    public static final RegistrySupplier<SoundEvent> SFX_SPEAR_GROUND = register("sfx.spear_ground");
+    public static final RegistrySupplier<SoundEvent> SFX_CHARCOAL = register("sfx.charcoal");
+    public static final RegistrySupplier<SoundEvent> SFX_DISCOVER = register("sfx.discover");
+    public static final RegistrySupplier<SoundEvent> SFX_AMBER_PING = register("sfx.amber_ping");
+    public static final RegistrySupplier<SoundEvent> SFX_DRUM = register("sfx.drum");
+    public static final RegistrySupplier<SoundEvent> SFX_CHIMES = register("sfx.chimes");
+    public static final RegistrySupplier<SoundEvent> SFX_CLAY_JAR = register("sfx.clay_jar");
+    public static final RegistrySupplier<SoundEvent> SFX_RIFT_PULSE = register("sfx.rift_pulse");
+    public static final RegistrySupplier<SoundEvent> SFX_RIFT_TEAR = register("sfx.rift_tear");
+    public static final RegistrySupplier<SoundEvent> SFX_RIFT_GLITCH = register("sfx.rift_glitch");
 
     private ModSounds() {
     }

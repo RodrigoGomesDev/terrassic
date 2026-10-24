@@ -1113,4 +1113,121 @@ def field(voice_set, event):
 
 
 def sound_id(voice_set, event):
+    if voice_set == "sfx":
+        return f"sfx.{event}"
     return f"voice.{voice_set}.{event}"
+
+
+# ---------------------------------------------------------------- effects (not voices)
+# name -> (fx, attenuation distance, [variants], (pt_br, en_us, es_es) subtitle). Sound id sfx.<name>,
+# files sounds/sfx/<name>_<n>.ogg, Java constant ModSounds.SFX_<NAME>.
+def _chime(f, decay=2.5, strike=0.15, seed=0):
+    return P(0, "modes", dur=decay * 1.2, freqs=(f, f * 2.32, f * 4.25, f * 6.63), decays=(1 / decay * 2.2, 1 / decay * 3.4,
+                                                                                       1 / decay * 5.5, 1 / decay * 8),
+             gains=(1, 0.55, 0.3, 0.15), strike=strike, seed=seed)
+
+
+SFX = {
+    "egg_crack": ("ground", 12, [V(P(0, "crack", dur=0.45, clicks=4 + i, bright=0.9 + 0.1 * i, crumble=0.12, seed=3000 + i),
+                                   room=(0.4, 0.08)) for i in range(3)],
+                  ("Casca de ovo racha", "Eggshell cracks", "Cáscara de huevo se agrieta")),
+    "egg_hatch": ("ground", 16, [V(P(0, "crack", dur=0.7, clicks=10, crumble=0.35, seed=3010 + i),
+                                   P(0.25, "rustle", 0.5, dur=0.6, f=2200, grain=30, seed=3012 + i),
+                                   P(0.55, "thud", 0.4, dur=0.15, f0=150, weight=0.15, crunch=0.6, seed=3014 + i),
+                                   room=(0.5, 0.1)) for i in range(2)],
+                  ("Ovo eclode", "Egg hatches", "Huevo eclosiona")),
+    "egg_lay": ("ground", 12, [V(P(0, "thud", dur=0.2, f0=95 - 10 * i, weight=0.3, crunch=0.4, seed=3020 + i),
+                                 P(0.05, "rustle", 0.7, dur=0.5, f=2000, grain=25, seed=3022 + i), room=(0.4, 0.08))
+                               for i in range(2)],
+                ("Ovo posto no ninho", "Egg laid in the nest", "Huevo puesto en el nido")),
+    "egg_break": ("ground", 12, [V(P(0, "crack", dur=0.25, clicks=4, crumble=0.6, seed=3030),
+                                   P(0.08, "wet", 0.8, dur=0.35, low=600, bubbles=3, seed=3031), room=(0.4, 0.08))],
+                  ("Ovo quebrado", "Egg breaks", "Huevo roto")),
+    "eat": ("voice", 12, [V(P(0, "clack", 0.8, dur=0.08, freq=700 + 120 * i, q=400, seed=3040 + i),
+                            P(0.05, "rustle", 0.9, dur=0.35, f=1600 + 300 * i, grain=22 + 4 * i, seed=3043 + i),
+                            P(0.1, "wet", 0.4, dur=0.3, low=450, bubbles=2, seed=3046 + i), room=(0.4, 0.08))
+                          for i in range(3)],
+            ("Dinossauro come", "Dinosaur eats", "Dinosaurio come")),
+    "carcass_tear": ("voice", 16, [V(P(0, "wet", dur=0.6 + 0.1 * i, low=420, tear=0.8, bubbles=3, seed=3050 + i),
+                                     P(0, "clack", 0.6, dur=0.1, freq=500, q=300, seed=3053 + i), room=(0.5, 0.1))
+                                   for i in range(3)],
+                     ("Carne rasgada", "Flesh tears", "Carne desgarrada")),
+    "carcass_squish": ("voice", 12, [V(P(0, "wet", dur=0.35, low=350 + 80 * i, bubbles=6, seed=3060 + i),
+                                       room=(0.4, 0.08)) for i in range(2)],
+                       ("Carcaça esmagada", "Carcass squishes", "Cadáver aplastado")),
+    "carcass_rot": ("voice", 12, [V(P(0, "wet", dur=0.9, low=260, bubbles=8, seed=3070),
+                                    P(0.2, "breath", 0.5, dur=0.7, formants=[(300, 300, 0)], lp=900, seed=3071),
+                                    room=(0.6, 0.12))],
+                    ("Carcaça apodrece", "Carcass rots away", "Cadáver se pudre")),
+    "carcass_bones": ("ground", 16, [V(*[P(0.07 * k + 0.02 * (k % 2), "modes", 0.9 - 0.12 * k, dur=0.25,
+                                           freqs=(1200 + 230 * k, 2900 + 410 * k, 4800), decays=(30, 45, 60),
+                                           gains=(1, 0.5, 0.3), strike=0.4, seed=3080 + k) for k in range(6)],
+                                       P(0.1, "thud", 0.5, dur=0.25, f0=110, weight=0.3, crunch=0.5, seed=3087),
+                                       room=(0.5, 0.1))],
+                      ("Ossos caem", "Bones clatter", "Huesos caen")),
+    "saddle_on": ("voice", 12, [V(P(0, "creak", dur=0.45, f=800 + 150 * i, seed=3090 + i),
+                                  P(0.35, "modes", 0.6, dur=0.2, freqs=(1700, 4100), decays=(35, 50), gains=(1, 0.4),
+                                    strike=0.3, seed=3092 + i),
+                                  P(0.1, "rustle", 0.5, dur=0.4, f=1800, grain=20, seed=3094 + i), room=(0.4, 0.08))
+                                for i in range(2)],
+                  ("Sela colocada", "Saddle fastened", "Silla colocada")),
+    "saddle_off": ("voice", 12, [V(P(0, "creak", dur=0.3, rate=((0, 60), (1, 25)), f=750, seed=3100),
+                                   P(0.2, "rustle", 0.7, dur=0.35, f=1600, grain=18, seed=3101),
+                                   P(0.45, "thud", 0.6, dur=0.2, f0=120, weight=0.25, crunch=0.5, seed=3102),
+                                   room=(0.4, 0.08))],
+                   ("Sela retirada", "Saddle removed", "Silla retirada")),
+    "cargo": ("voice", 12, [V(P(0, "rustle", dur=0.5, f=2300 - 300 * i, grain=30, seed=3110 + i),
+                              P(0.15, "creak", 0.6, dur=0.35, f=1100, seed=3112 + i), room=(0.4, 0.08))
+                            for i in range(2)],
+              ("Cesto de carga", "Cargo basket", "Cesta de carga")),
+    "spear_throw": ("air", 16, [V(P(0, "whoosh", dur=0.45, f0=450 + 80 * i, f1=1500 + 200 * i, seed=3120 + i))
+                                for i in range(2)],
+                    ("Lança arremessada", "Spear thrown", "Lanza arrojada")),
+    "spear_hit": ("ground", 16, [V(P(0, "wet", 0.8, dur=0.25, low=500, bubbles=1, seed=3130 + i),
+                                   P(0, "modes", dur=0.3, freqs=(190 + 20 * i, 430, 770), decays=(25, 35, 50),
+                                     gains=(1, 0.5, 0.3), strike=0.5, seed=3132 + i), room=(0.4, 0.08))
+                                 for i in range(2)],
+                  ("Lança acerta", "Spear hits", "Lanza impacta")),
+    "spear_ground": ("ground", 16, [V(P(0, "modes", dur=0.35, freqs=(240, 560, 980, 1500), decays=(20, 30, 45, 60),
+                                        gains=(1, 0.6, 0.4, 0.25), strike=0.8, seed=3140),
+                                      P(0, "thud", 0.6, dur=0.2, f0=130, weight=0.2, crunch=0.8, seed=3141),
+                                      room=(0.4, 0.08))],
+                     ("Lança se crava", "Spear sticks in", "Lanza se clava")),
+    "charcoal": ("voice", 8, [V(P(0, "scratch", dur=0.7 + 0.15 * i, strokes=3 + i, seed=3150 + i)) for i in range(3)],
+                 ("Desenho a carvão", "Charcoal sketching", "Dibujo al carbón")),
+    "discover": ("voice", 16, [V(_chime(660, 2.6, seed=3160), P(0.12, "modes", 0.6, dur=3.0,
+                                                                freqs=(990, 990 * 2.32, 990 * 4.25),
+                                                                decays=(0.9, 1.4, 2.4), gains=(1, 0.5, 0.25),
+                                                                strike=0.1, seed=3161), room=(1.6, 0.25))],
+                 ("Descoberta", "Discovery", "Descubrimiento")),
+    "amber_ping": ("voice", 16, [V(_chime(1180, 1.4, seed=3170), room=(1.2, 0.2))],
+                   ("Âmbar ressoa", "Amber rings", "Ámbar resuena")),
+    "drum": ("ground", 24, [V(P(0, "modes", dur=0.9, freqs=(110 + 8 * i, 176, 237, 290, 410), decays=(6, 9, 12, 16, 24),
+                                gains=(1, 0.8, 0.6, 0.45, 0.3), strike=0.7, glide=0.12, seed=3180 + i),
+                              room=(0.8, 0.14)) for i in range(2)],
+             ("Tambor de couro", "Hide drum", "Tambor de cuero")),
+    "chimes": ("ground", 12, [V(_chime(f, 1.2, strike=0.35, seed=3190 + k), room=(0.9, 0.16))
+                              for k, f in enumerate((780, 930, 1050))],
+               ("Sinos de osso", "Bone chimes", "Campanillas de hueso")),
+    "clay_jar": ("voice", 12, [V(P(0, "wet", dur=0.5, low=300, bubbles=5, seed=3200),
+                                 P(0, "modes", 0.5, dur=0.4, freqs=(380, 920), decays=(18, 30), gains=(1, 0.4),
+                                   strike=0.2, seed=3201), room=(0.4, 0.08))],
+                 ("Jarro de argila", "Clay jar", "Jarra de arcilla")),
+    "rift_pulse": ("deep", 48, [V(P(0, "drone", dur=2.8, f0=52 + 7 * i, seed=3210 + i), room=(2.4, 0.3))
+                                for i in range(2)],
+                   ("A Fenda pulsa", "The Rift pulses", "La Grieta pulsa")),
+    "rift_tear": ("deep", 48, [V(P(0, "swell", dur=1.1, f0=70, seed=3220),
+                                 P(1.08, "clack", 1.0, dur=0.15, freq=1500, q=1200, seed=3221),
+                                 P(1.1, "drone", 0.7, dur=1.6, f0=48, voices=4, crackle=0.4, seed=3222),
+                                 room=(2.4, 0.3))],
+                  ("Algo atravessa a Fenda", "Something comes through the Rift", "Algo cruza la Grieta")),
+    "rift_glitch": ("deep", 32, [V(P(0, "drone", dur=1.6 + 0.4 * i, f0=(40, 66, 90)[i], voices=3 + i,
+                                     detune=0.02 + 0.01 * i, crackle=0.5, seed=3230 + i), room=(2.0, 0.3))
+                                 for i in range(3)],
+                    ("O tempo falha", "Time glitches", "El tiempo falla")),
+}
+for _name, (_fx, _dist, _variants, _sub) in SFX.items():
+    for _v in _variants:
+        if _v[2].get("hp") is None:
+            _v[2]["hp"] = 30
+    SUBTITLES[("sfx", _name)] = _sub

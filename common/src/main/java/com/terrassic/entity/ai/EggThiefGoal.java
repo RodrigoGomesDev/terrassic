@@ -1,5 +1,6 @@
 package com.terrassic.entity.ai;
 
+import com.terrassic.registry.ModSounds;
 import com.terrassic.block.DinoEggBlock;
 import com.terrassic.entity.DinosaurEntity;
 import net.minecraft.core.BlockPos;
@@ -63,8 +64,8 @@ public class EggThiefGoal extends Goal {
                 server.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.EGG)),
                         this.egg.getX() + 0.5D, this.egg.getY() + 0.3D, this.egg.getZ() + 0.5D, 10, 0.2D, 0.2D, 0.2D, 0.05D);
                 server.destroyBlock(this.egg, false, this.dino);
-                this.dino.playSound(SoundEvents.TURTLE_EGG_BREAK, 0.9F, 1.0F);
-                this.dino.playSound(SoundEvents.GENERIC_EAT, 0.8F, 1.2F);
+                this.dino.playSound(ModSounds.SFX_EGG_BREAK.get(), 0.9F, 1.0F);
+                this.dino.playSound(ModSounds.SFX_EAT.get(), 0.8F, 1.2F);
                 this.dino.feed(40);
             }
             this.timer = 0;
