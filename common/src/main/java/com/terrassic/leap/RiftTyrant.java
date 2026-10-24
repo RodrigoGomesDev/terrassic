@@ -63,6 +63,7 @@ public class RiftTyrant extends Tyrannosaurus {
     /** The meteor it called onto its target, and where it will land (marked by a ring of sparks until it does). */
     private Meteor incoming;
     private Vec3 landing;
+    private long incomingAt;
 
     public RiftTyrant(EntityType<? extends RiftTyrant> type, Level level) {
         super(type, level);
@@ -75,11 +76,11 @@ public class RiftTyrant extends Tyrannosaurus {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        // x SIZE^2 for health and x SIZE for the bite through the size modifiers: ~770 health, ~30 damage
+        // x SIZE^2 for health and x SIZE for the bite through the size modifiers: ~770 health, ~22 damage
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 420.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.26D)
-                .add(Attributes.ATTACK_DAMAGE, 22.0D)
+                .add(Attributes.ATTACK_DAMAGE, 16.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.0D)
                 .add(Attributes.ARMOR, 12.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
@@ -97,7 +98,18 @@ public class RiftTyrant extends Tyrannosaurus {
     protected void registerGoals() {
         super.registerGoals();
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, 5, false, false,
-                e -> !((Player) e).isCreative() && !e.isSpectator()));
+                e -> !((Player) e).isCreative() && !e.isSpectator() && this.withinLeash(e)));
+    }
+
+    /** It only goes after what is within {@link #LEASH} blocks of its altar (a target dragged further is dropped). */
+    private boolean withinLeash(LivingEntity e) {
+        return this.altar == null || e.distanceToSqr(Vec3.atCenterOf(this.altar)) < LEASH * LEASH;
+    }
+
+    /** It came for the players, not for dinner (and never for its own raptors). */
+    @Override
+    protected boolean isPrey(LivingEntity e) {
+        return false;
     }
 
     @Override
@@ -197,15 +209,23 @@ public class RiftTyrant extends Tyrannosaurus {
             this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.31D);
             this.roarNow();
         }
-        LivingEntity target = this.getTarget();
+        // a Tyrant whose ritual is over (or another one's) goes back into the Rift
+        if (this.altar != null && this.tickCount % 40 == 0 && level.isLoaded(this.altar)
+                && !(level.getBlockEntity(this.altar) instanceof LeapAltarBlockEntity be && be.fighting(this.getUUID()))) {
+            level.sendParticles(SPARK, this.getX(), this.getY() + this.getBbHeight() / 2, this.getZ(), 200,
+                    this.getBbWidth() / 2, this.getBbHeight() / 2, this.getBbWidth() / 2, 0.05D);
+            dismissRaptors(level, this.position());
+            this.discard();
+            return;
+        }
         // the leash: it does not chase you to the other side of the map
-        if (this.altar != null && this.distanceToSqr(Vec3.atCenterOf(this.altar)) > LEASH * LEASH) {
-            if (target != null && target.distanceToSqr(Vec3.atCenterOf(this.altar)) > LEASH * LEASH) {
-                this.setTarget(null);
-            }
-            if (this.getTarget() == null && this.tickCount % 20 == 0) {
-                this.getNavigation().moveTo(this.altar.getX() + 0.5D, this.altar.getY(), this.altar.getZ() + 0.5D, 1.1D);
-            }
+        if (this.getTarget() != null && !this.withinLeash(this.getTarget())) {
+            this.setTarget(null);
+        }
+        LivingEntity target = this.getTarget();
+        if (this.altar != null && target == null && this.tickCount % 20 == 0
+                && this.distanceToSqr(Vec3.atCenterOf(this.altar)) > 24.0D * 24.0D) {
+            this.getNavigation().moveTo(this.altar.getX() + 0.5D, this.altar.getY(), this.altar.getZ() + 0.5D, 1.1D);
         }
         if (this.roarCooldown > 0) {
             this.roarCooldown--;
@@ -216,7 +236,7 @@ public class RiftTyrant extends Tyrannosaurus {
             if (--this.callCooldown <= 0) {
                 this.callRaptors(level);
             }
-            if (this.incoming != null && this.incoming.isAlive()) {
+            if (this.incoming != null && this.incoming.isAlive() && level.getGameTime() - this.incomingAt < 200L) {
                 if (this.tickCount % 5 == 0) {
                     this.markLanding(level);
                 }
@@ -224,6 +244,7 @@ public class RiftTyrant extends Tyrannosaurus {
                 this.meteorCooldown = 100 + this.random.nextInt(80);
                 this.landing = target.position();
                 this.incoming = Meteor.fallAt(level, this.landing, 2.0F);
+                this.incomingAt = level.getGameTime();
             }
         }
     }
@@ -284,11 +305,16 @@ public class RiftTyrant extends Tyrannosaurus {
             be.onTyrantDeath(this);
         }
         if (this.level() instanceof ServerLevel level) {
-            // its raptors go back into the Rift with it
-            for (Velociraptor v : level.getEntitiesOfClass(Velociraptor.class, this.getBoundingBox().inflate(64.0D), DinosaurEntity::isRift)) {
-                level.sendParticles(SPARK, v.getX(), v.getY() + 0.8D, v.getZ(), 40, 0.5D, 0.8D, 0.5D, 0.05D);
-                v.discard();
-            }
+            dismissRaptors(level, this.position());  // its raptors go back into the Rift with it
+        }
+    }
+
+    /** The raptors of the Rift it called, within 64 blocks of {@code around}, go back into the Rift. */
+    static void dismissRaptors(ServerLevel level, Vec3 around) {
+        for (Velociraptor v : level.getEntitiesOfClass(Velociraptor.class, new AABB(around, around).inflate(64.0D),
+                v -> v.isRift() && !v.isTame())) {
+            level.sendParticles(SPARK, v.getX(), v.getY() + 0.8D, v.getZ(), 40, 0.5D, 0.8D, 0.5D, 0.05D);
+            v.discard();
         }
     }
 

@@ -221,7 +221,7 @@ def entities():
         return {"rolls": 1, "entries": [{"type": "minecraft:item", "name": item, "functions": [
             {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": lo, "max": hi}}]}]}
     write(f"{D}/loot_tables/entities/rift_tyrant.json", {"type": "minecraft:entity", "pools": [
-        pool("terrassic:raw_amber", 6, 10), pool("terrassic:rex_tooth", 2, 4), pool("terrassic:raw_prime_meat", 6, 10)]})
+        pool("terrassic:raw_amber", 3, 5), pool("terrassic:rex_tooth", 2, 4), pool("terrassic:raw_prime_meat", 6, 10)]})
 
 
 def main():

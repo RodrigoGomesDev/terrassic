@@ -66,6 +66,9 @@ public class LeapAltarBlockEntity extends BlockEntity {
     private final Set<UUID> participants = new HashSet<>();
     /** Unstable Leap asked once: player -> game time (a second offering within 5 s confirms). Not saved. */
     private final Map<UUID, Long> unstableAsked = new HashMap<>();
+    /** Last click per player: holding the use button repeats it every 4 ticks. Not saved. */
+    private final Map<UUID, Long> lastClick = new HashMap<>();
+    private static final long CLICK_COOLDOWN = 12L;
     /** Altars with a ritual on, for {@code /terrassic ritual parar} (refilled by the ticks after a restart). */
     private static final Set<LeapAltarBlockEntity> ACTIVE = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
 
@@ -77,6 +80,11 @@ public class LeapAltarBlockEntity extends BlockEntity {
         return this.phase;
     }
 
+    /** Whether this altar's fight is going on against exactly this Tyrant (a stray one discards itself). */
+    boolean fighting(java.util.UUID id) {
+        return this.phase == FIGHT && id.equals(this.tyrant);
+    }
+
     public boolean ritualActive() {
         return this.phase == CALL || this.phase == FIGHT;
     }
@@ -85,6 +93,11 @@ public class LeapAltarBlockEntity extends BlockEntity {
 
     void use(Player p) {
         if (!(p instanceof ServerPlayer player) || !(this.level instanceof ServerLevel level)) {
+            return;
+        }
+        long now = level.getGameTime();
+        Long last = this.lastClick.put(player.getUUID(), now);
+        if (last != null && now - last < CLICK_COOLDOWN || Leap.isLeaping(player.getUUID())) {
             return;
         }
         if (this.ritualActive()) {
@@ -115,11 +128,12 @@ public class LeapAltarBlockEntity extends BlockEntity {
                 this.offer(player, held);
                 this.startRitual(level, player);
             } else if (LeapProgress.canLeapUnstable(player)) {
-                long now = level.getGameTime();
                 Long asked = this.unstableAsked.get(player.getUUID());
                 if (asked != null && now - asked <= CONFIRM_TICKS) {
                     this.unstableAsked.remove(player.getUUID());
-                    this.offer(player, held);
+                    if (Leap.hasDestination(Leap.chapterOf(level) + 1)) {
+                        this.offer(player, held);  // the amber is only spent when the Rift really opens
+                    }
                     Leap.leap(player, this, true);
                 } else {
                     this.unstableAsked.put(player.getUUID(), now);
@@ -195,6 +209,7 @@ public class LeapAltarBlockEntity extends BlockEntity {
             level.playSound(null, t.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE, 3.0F, 0.4F);
             t.discard();
         }
+        RiftTyrant.dismissRaptors(level, t == null ? Vec3.atCenterOf(this.worldPosition) : t.position());
         this.broadcast(level, Component.translatable(broken ? "altar.terrassic.broken" : "altar.terrassic.retreat"), 128.0D);
         this.phase = IDLE;
         this.tyrant = null;
@@ -208,7 +223,7 @@ public class LeapAltarBlockEntity extends BlockEntity {
 
     /** Called by the Rift Tyrant when it dies. */
     void onTyrantDeath(RiftTyrant dead) {
-        if (!(this.level instanceof ServerLevel level) || this.phase != FIGHT) {
+        if (!(this.level instanceof ServerLevel level) || this.phase != FIGHT || !dead.getUUID().equals(this.tyrant)) {
             return;
         }
         this.phase = AFTER;
@@ -328,7 +343,9 @@ public class LeapAltarBlockEntity extends BlockEntity {
         } else {
             boolean someone = false;
             for (ServerPlayer p : level.players()) {
-                if (p.isAlive() && !p.isSpectator() && p.distanceToSqr(Vec3.atCenterOf(this.worldPosition)) < PRESENCE * PRESENCE) {
+                boolean near = p.distanceToSqr(Vec3.atCenterOf(this.worldPosition)) < PRESENCE * PRESENCE
+                        || p.distanceToSqr(t) < 64.0D * 64.0D;
+                if (p.isAlive() && !p.isSpectator() && near) {
                     someone = true;
                     this.participants.add(p.getUUID());
                 }

@@ -17,6 +17,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -54,7 +57,8 @@ public class Meteor extends Entity {
         fallAt(level, new Vec3(x + 0.5D, y, z + 0.5D), power);
     }
 
-    /** A meteor that lands on {@code target}, coming in from a random side at about 50 degrees. */
+    /** A meteor that lands on {@code target}, coming in steeply (about 70 degrees) from a random side; none when
+     *  its start would be outside the entity-ticking area (it would hang frozen in the sky). */
     public static Meteor fallAt(ServerLevel level, Vec3 target, float power) {
         Meteor m = LeapRegistry.METEOR.get().create(level);
         if (m == null) {
@@ -62,8 +66,12 @@ public class Meteor extends Entity {
         }
         RandomSource r = level.random;
         double a = r.nextDouble() * Math.PI * 2.0D;
-        double height = 70.0D + r.nextDouble() * 20.0D;
-        Vec3 start = target.add(Math.cos(a) * height * 0.8D, height, Math.sin(a) * height * 0.8D);
+        double height = 50.0D + r.nextDouble() * 20.0D;
+        Vec3 start = target.add(Math.cos(a) * height * 0.36D, height, Math.sin(a) * height * 0.36D);
+        if (!level.isPositionEntityTicking(BlockPos.containing(start.x, target.y, start.z))
+                || !level.isPositionEntityTicking(BlockPos.containing(target))) {
+            return null;
+        }
         m.setPos(start.x, Math.min(start.y, level.getMaxBuildHeight() + 40.0D), start.z);
         m.setDeltaMovement(target.subtract(m.position()).normalize().scale(SPEED));
         m.power = power;
@@ -112,11 +120,10 @@ public class Meteor extends Entity {
 
     private void impact(Vec3 at) {
         ServerLevel level = (ServerLevel) this.level();
+        level.playSound(null, BlockPos.containing(at), SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 3.0F, 0.8F);
+        level.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y + 0.5D, at.z, 3, 0.5D, 0.3D, 0.5D, 0.0D);
         if (WorldConfig.meteorDamage()) {
-            level.explode(this, at.x, at.y + 0.5D, at.z, this.power, false, Level.ExplosionInteraction.NONE);
-        } else {
-            level.playSound(null, BlockPos.containing(at), SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 3.0F, 0.8F);
-            level.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y + 0.5D, at.z, 3, 0.5D, 0.3D, 0.5D, 0.0D);
+            this.burst(level, at);
         }
         level.sendParticles(ParticleTypes.LAVA, at.x, at.y + 0.5D, at.z, 12, 0.6D, 0.2D, 0.6D, 0.0D);
         level.sendParticles(ParticleTypes.LARGE_SMOKE, at.x, at.y + 0.8D, at.z, 20, 0.8D, 0.6D, 0.8D, 0.02D);
@@ -126,6 +133,29 @@ public class Meteor extends Entity {
             level.addFreshEntity(amber);
         }
         this.discard();
+    }
+
+    /** Hurts, burns and pushes the living things around (not items, frames or blocks), less with distance. */
+    private void burst(ServerLevel level, Vec3 at) {
+        double radius = this.power * 1.6D;
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(radius), LivingEntity::isAlive)) {
+            double d = Math.sqrt(e.distanceToSqr(at));
+            if (d > radius || e instanceof ArmorStand) {
+                continue;
+            }
+            float k = (float) (1.0D - d / radius);
+            if (e.hurt(level.damageSources().explosion(this, null), 2.0F + this.power * 3.0F * k)) {
+                e.setSecondsOnFire(2);
+            }
+            Vec3 push = e.position().subtract(at).normalize().scale(0.8D * k);
+            e.push(push.x, 0.3D * k, push.z);
+            e.hurtMarked = true;
+        }
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
     }
 
     /** Client: fire and smoke behind the rock, drawn from any distance (always-visible particles). */

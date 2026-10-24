@@ -1,7 +1,14 @@
 package com.terrassic.leap;
 
 import com.terrassic.entity.DinosaurEntity;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.TickEvent;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -59,6 +66,38 @@ public final class Leap {
         LeapNetwork.init();
         LeapCommands.init();
         TickEvent.SERVER_POST.register(Leap::tick);
+        InteractionEvent.RIGHT_CLICK_BLOCK.register(Leap::clickAltar);
+    }
+
+    /**
+     * Every main-hand click on an altar goes here, before vanilla: vanilla never calls Block.use for a sneaking
+     * player holding an item (the amber offering) or with anything in the off hand (the empty-hand leap).
+     * Sneaking with another block in hand still places it, so the ring can be built around the altar.
+     */
+    private static EventResult clickAltar(Player player, InteractionHand hand, BlockPos pos, Direction face) {
+        if (!player.level().getBlockState(pos).is(LeapRegistry.LEAP_ALTAR.get()) || player.isSpectator()) {
+            return EventResult.pass();
+        }
+        ItemStack held = player.getMainHandItem();
+        if (player.isShiftKeyDown() && held.getItem() instanceof BlockItem) {
+            return EventResult.pass();
+        }
+        if (hand != InteractionHand.MAIN_HAND) {
+            return EventResult.pass();
+        }
+        if (!player.level().isClientSide() && player.level().getBlockEntity(pos) instanceof LeapAltarBlockEntity altar) {
+            altar.use(player);
+        }
+        return EventResult.interruptTrue();
+    }
+
+    static boolean isLeaping(UUID player) {
+        for (Pending p : PENDING) {
+            if (p.player().equals(player)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** v2.0 and later: the era of {@code chapter} (2 = Early Cretaceous, 3 = Jurassic, ...). */

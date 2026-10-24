@@ -183,6 +183,14 @@ public final class LeapClient {
         if (level == null || STREAKS.isEmpty()) {
             return;
         }
+        // the vanilla sky is skipped in lava and powder snow and under blindness or darkness: so are the streaks
+        net.minecraft.client.Camera camera = mc.gameRenderer.getMainCamera();
+        net.minecraft.world.level.material.FogType fluid = camera.getFluidInCamera();
+        if (fluid == net.minecraft.world.level.material.FogType.LAVA || fluid == net.minecraft.world.level.material.FogType.POWDER_SNOW
+                || camera.getEntity() instanceof net.minecraft.world.entity.LivingEntity e
+                && (e.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS) || e.hasEffect(net.minecraft.world.effect.MobEffects.DARKNESS))) {
+            return;
+        }
         float night = level.getStarBrightness(partialTick) * (1.0F - level.getRainLevel(partialTick));
         float visible = Math.max(night * 2.0F, ritual(partialTick));
         if (visible <= 0.02F) {
