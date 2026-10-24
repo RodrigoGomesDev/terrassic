@@ -17,6 +17,10 @@ validadas em Fabric e Forge. Errantes selvagens sem nome são temporários e nã
 ovos selvagens também são errantes. Domados/nomeados e ovos colocados pelo jogador continuam persistentes.
 Spawner e classes-base de IA receberam escalonamento e checagens antecipadas. Falta perfil de carga e teste
 de comportamento com jogadores; não anunciar desempenho para 100 jogadores com base nesses testes.
+Terceira entrega Codex: Caderno salvo em arquivos `terrassic_research_<uuid>.dat`, migração preguiçosa do arquivo
+global antigo preservado, dirty tracking automático em `Knowledge` e sincronização incremental com fallback para
+o snapshot completo. Leia `docs/CADERNO_DADOS.md` antes de alterar o conhecimento; `pages()` é somente leitura,
+use `addPage()`. Regressões de dados/protocolo fazem parte da build (`:common:researchRegression`).
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
@@ -88,7 +92,8 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.
 - `world/ModSpawns` spawn por bioma. `world/ModWorldgen`: veios de Rocha Fossilífera e Páginas Soltas em baús vanilla.
 - `research/` (v0.3, mecânicas de cientista): `Knowledge` (o que cada jogador sabe: nível do Guia e pontos por espécie,
-  páginas da Katarina, objetivos, contadores), salvo por jogador em `ResearchData` (SavedData do overworld, não no item),
+  páginas da Katarina, objetivos, contadores), salvo por UUID em `ResearchData` (SavedData do overworld, não no item;
+  `docs/CADERNO_DADOS.md`),
   `Research` (eventos que enchem o Knowledge, completam objetivos e dão conquistas com `Research.award`; nunca move o
   jogador), `Objective` (12 objetivos do Capítulo 1 em 4 temas; 2 de 3 = 1 fragmento de âmbar), `GuideSpecies` e `Lore` (GERADOS).
   Conquistas: árvore em `docs/CONQUISTAS.md`, gerada por `tools/javagen/conquistas.py` (aba por capítulo + aba Caderno de Campo;

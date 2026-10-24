@@ -6,6 +6,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 
 import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -33,9 +34,16 @@ public class Knowledge {
     private final Map<String, Integer> levels = new HashMap<>();
     private final Map<String, Integer> points = new HashMap<>();
     private final Set<String> pages = new LinkedHashSet<>();
+    private final Set<String> pagesView = Collections.unmodifiableSet(this.pages);
     private final Set<String> objectives = new LinkedHashSet<>();
     private final Map<String, Integer> counters = new HashMap<>();
     private boolean introSeen;
+    private Runnable onChange = () -> { };
+
+    /** Storage attaches a dirty listener; client copies and newly loaded values have no side effects. */
+    void onChange(Runnable listener) {
+        this.onChange = listener;
+    }
 
     public int level(String species) {
         return this.levels.getOrDefault(species, UNKNOWN);
@@ -47,15 +55,21 @@ public class Knowledge {
 
     /** Raises the level (never lowers it). Returns true if it changed. */
     public boolean raiseLevel(String species, int level) {
+        level = Math.max(UNKNOWN, Math.min(TAMED, level));
         if (level <= this.level(species)) {
             return false;
         }
         this.levels.put(species, level);
+        this.onChange.run();
         return true;
     }
 
     public void addPoints(String species, int amount) {
-        this.points.put(species, Math.min(99, this.points(species) + amount));
+        int points = (int) Math.max(0L, Math.min(99L, (long) this.points(species) + amount));
+        if (points != this.points(species)) {
+            this.points.put(species, points);
+            this.onChange.run();
+        }
     }
 
     /** Number of species at or above a level. */
@@ -70,7 +84,15 @@ public class Knowledge {
     }
 
     public Set<String> pages() {
-        return this.pages;
+        return this.pagesView;
+    }
+
+    public boolean addPage(String page) {
+        boolean changed = this.pages.add(page);
+        if (changed) {
+            this.onChange.run();
+        }
+        return changed;
     }
 
     public boolean hasObjective(Objective objective) {
@@ -78,7 +100,11 @@ public class Knowledge {
     }
 
     public boolean completeObjective(Objective objective) {
-        return this.objectives.add(objective.id());
+        boolean changed = this.objectives.add(objective.id());
+        if (changed) {
+            this.onChange.run();
+        }
+        return changed;
     }
 
     public int counter(String name) {
@@ -86,8 +112,11 @@ public class Knowledge {
     }
 
     public int increment(String name) {
-        int value = this.counter(name) + 1;
-        this.counters.put(name, value);
+        int value = (int) Math.min(Integer.MAX_VALUE, (long) this.counter(name) + 1);
+        if (value != this.counter(name)) {
+            this.counters.put(name, value);
+            this.onChange.run();
+        }
         return value;
     }
 
@@ -96,7 +125,10 @@ public class Knowledge {
     }
 
     public void setIntroSeen(boolean seen) {
-        this.introSeen = seen;
+        if (this.introSeen != seen) {
+            this.introSeen = seen;
+            this.onChange.run();
+        }
     }
 
     // ------------------------------------------------------------------ NBT
@@ -134,10 +166,10 @@ public class Knowledge {
         for (String id : species.getAllKeys()) {
             CompoundTag s = species.getCompound(id);
             if (s.getInt("Level") > UNKNOWN) {
-                k.levels.put(id, s.getInt("Level"));
+                k.levels.put(id, Math.min(TAMED, s.getInt("Level")));
             }
             if (s.getInt("Points") > 0) {
-                k.points.put(id, s.getInt("Points"));
+                k.points.put(id, Math.min(99, s.getInt("Points")));
             }
         }
         for (Tag t : tag.getList("Pages", Tag.TAG_STRING)) {
@@ -148,7 +180,7 @@ public class Knowledge {
         }
         CompoundTag counters = tag.getCompound("Counters");
         for (String name : counters.getAllKeys()) {
-            k.counters.put(name, counters.getInt(name));
+            k.counters.put(name, Math.max(0, counters.getInt(name)));
         }
         k.introSeen = tag.getBoolean("IntroSeen");
         return k;

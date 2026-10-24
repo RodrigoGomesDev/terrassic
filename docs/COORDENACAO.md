@@ -39,6 +39,7 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 |---|---|---|
 | Codex | `AGENTS.md`, `docs/COORDENACAO.md`, `docs/PLANO_MESTRE.md`, `tools/validation/`, autoria em README/CLAUDE/metadados, ponte no roadmap | Concluído; arquivos liberados; sem alteração de sistemas de gameplay |
 | Codex | Testes isolados de servidor; `tools/validation/`, `EcoSpawner.java`, `SpawnBudget.java`, classes-base de IA e persistência (`DinosaurEntity.java`, `HerbivoreDinosaur.java`, `PredatorDinosaur.java`, `DinoEggBlock.java`), docs e ponte de validação em AGENTS/CLAUDE | Concluído; arquivos liberados. Servidores/regressões Fabric e Forge, orçamento e build passaram; arte e tabelas de espécies preservadas |
+| Codex | `research/Knowledge.java`, `ResearchData.java`, `Research.java`, `network/ModNetwork.java` e delta NBT, `client/ClientHooks.java`/`ClientResearch.java` (só recepção de dados), `common/build.gradle`, testes e documentação | Concluído; build e regressões de dados/protocolo passaram. Sem alterações de interface/arte ou novas features narrativas |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
 ## Estado observado no checkout
@@ -69,6 +70,21 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 - Build final da segunda entrega: `./gradlew build --offline --no-daemon` passou em 20 s, após as regressões
   completas nos dois loaders. JARs gerados em `fabric/build/libs` e `forge/build/libs`.
 - Testes com jogador real, reconexão, Caderno, eclosão, caça/fuga e medição de desempenho seguem pendentes.
+
+### Terceira entrega: Caderno individual e delta de rede
+
+- Implementados arquivos de pesquisa por UUID com migração preguiçosa e preservação do arquivo global antigo.
+- Toda mutação real de `Knowledge` marca somente seu próprio arquivo para salvamento. `pages()` é somente leitura;
+  usar `addPage()` ao inserir. Contrato e procedimento em `CADERNO_DADOS.md`.
+- Snapshot completo ao entrar/reconectar; deltas para clientes que anunciam suporte; fallback para o canal completo
+  anterior. Estado de rede separado por UUID e descartado ao sair/encerrar.
+- Regressões com armazenamento/NBT reais passaram para isolamento de UUIDs, preservação do legado, recarga,
+  dirty tracking e patches: 1.000 pares de NBT e 100 round-trips pelo codec real passaram na build final.
+- Build Fabric/Forge com `:common:researchRegression` incluída passou em 37 s. Fixtures e classes de regressão
+  foram conferidos como ausentes dos JARs finais. Logs de regressão ficam sob `common/build/`.
+- Servidores Fabric e Forge revalidados com a nova implementação: `fabric-4fzbf69k` e `forge-hrik4quw`
+  em `build/server-regression/`, com todos os marcadores de criação/recarga de entidades.
+- Transporte com clientes conectados, telas, respawn e troca de dimensões ainda não validados nesta entrega.
 
 ## Fila de engenharia, sem sobrepor as features
 

@@ -37,3 +37,5 @@ python3 -B tools/validation/check_spawn_budget.py
 Use `--offline` se todas as dependências já estiverem no cache. Validação de recursos e build não substituem
 testes de servidor, recarga do mundo, multiplayer e revisão visual no jogo.
 Regressão isolada de servidor e persistência: `docs/TESTES_SERVIDOR.md`.
+Regressão de migração/sincronização do Caderno: `./gradlew :common:researchRegression --no-daemon`, também incluída
+na build. Contrato para mutações de conhecimento e arquivos por UUID em `docs/CADERNO_DADOS.md`.

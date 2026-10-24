@@ -32,6 +32,12 @@ public final class ClientHooks {
             CompoundTag tag = buf.readNbt();
             context.queue(() -> ClientResearch.set(tag == null ? new Knowledge() : Knowledge.load(tag)));
         });
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.DELTA, (buf, context) -> {
+            CompoundTag patch = buf.readNbt();
+            if (patch != null) {
+                context.queue(() -> ClientResearch.applyDelta(patch));
+            }
+        });
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.INTRO, (buf, context) ->
                 context.queue(() -> introPending = true));
         // world rules (docs/REGRAS.md): the server's values, and the command that opens the screen

@@ -65,6 +65,7 @@ public final class Research {
     }
 
     public static void init() {
+        ModNetwork.init();
         PlayerEvent.PLAYER_JOIN.register(Research::onJoin);
         TickEvent.PLAYER_POST.register(Research::onPlayerTick);
         EntityEvent.LIVING_DEATH.register((entity, source) -> {
@@ -111,7 +112,6 @@ public final class Research {
     }
 
     private static void changed(ServerPlayer player, Knowledge k, boolean sync) {
-        ResearchData.get(player.server).setDirty();
         if (milestones(player, k) || sync) {
             ModNetwork.sendKnowledge(player, k);
         }
@@ -132,17 +132,14 @@ public final class Research {
             if (!player.getInventory().add(notebook)) {
                 player.drop(notebook, false);
             }
-            changed(player, k, false);
             ModNetwork.sendIntro(player);
         }
-        if (milestones(player, k)) {
-            ResearchData.get(player.server).setDirty();
-        }
-        ModNetwork.sendKnowledge(player, k);
+        milestones(player, k);
+        ModNetwork.sendFullKnowledge(player, k);
     }
 
     private static void onPlayerTick(Player player) {
-        if (!(player instanceof ServerPlayer sp) || sp.tickCount % 20 != 0 || sp.isSpectator()) {
+        if (!(player instanceof ServerPlayer sp) || (sp.tickCount + sp.getId()) % 20 != 0 || sp.isSpectator()) {
             return;
         }
         Knowledge k = knowledge(sp);
@@ -410,7 +407,7 @@ public final class Research {
     /** Adds a Katarina page to the player's notebook. Returns false if they already had it. */
     public static boolean addPage(ServerPlayer player, String page) {
         Knowledge k = knowledge(player);
-        if (!k.pages().add(page)) {
+        if (!k.addPage(page)) {
             return false;
         }
         changed(player, k, true);

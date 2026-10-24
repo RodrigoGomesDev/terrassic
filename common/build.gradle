@@ -23,3 +23,26 @@ dependencies {
 processResources {
     exclude 'resourcepacks/**'
 }
+
+// Data regressions run against the real mapped Minecraft/NBT classes, with no extra test-framework dependency.
+// A separate source set keeps fixtures and test entry points out of the shipped mod jars.
+sourceSets {
+    regression {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
+}
+
+tasks.register('researchRegression', JavaExec) {
+    dependsOn tasks.named('regressionClasses')
+    classpath = sourceSets.regression.runtimeClasspath
+    mainClass = 'com.terrassic.research.ResearchRegression'
+    workingDir = layout.buildDirectory.dir('regression-run').get().asFile
+    doFirst {
+        workingDir.mkdirs()
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('researchRegression')
+}
