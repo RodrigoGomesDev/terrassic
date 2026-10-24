@@ -154,6 +154,8 @@ class LocalClient:
         self.full_packets = 0
         self.delta_packets = 0
         self.intro_packets = 0
+        self.respawn_packets = 0
+        self.dimension = None
         self.forge_messages = {}
         self.error = None
         self._closing = False
@@ -237,6 +239,12 @@ class LocalClient:
                     self.send(0, varint(read_varint(packet)))
                 elif packet_id == 26:
                     raise RuntimeError("play disconnected: " + read_utf(packet))
+                elif packet_id == 65:  # Respawn (also sent on dimension change): two resource keys first.
+                    read_utf(packet)  # dimension type
+                    with self._condition:
+                        self.dimension = read_utf(packet)
+                        self.respawn_packets += 1
+                        self._condition.notify_all()
                 elif packet_id == 23:
                     channel = read_utf(packet)
                     if channel == "architectury:network":
@@ -271,6 +279,9 @@ class LocalClient:
                     raise TimeoutError(f"{self.name}: expected network state not received")
                 self._condition.wait(remaining)
             return copy.deepcopy(self.knowledge)
+
+    def request_respawn(self):
+        self.send(7, varint(0))  # ServerboundClientCommandPacket, PERFORM_RESPAWN.
 
     def close(self):
         self._closing = True

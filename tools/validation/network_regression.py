@@ -1,4 +1,4 @@
-"""Real socket regression of notebooks, two UUIDs, delta negotiation, reconnect and server restart."""
+"""Real socket regression of notebooks, UUIDs, delta, dimensions, death, reconnect and restart."""
 import argparse
 import time
 from pathlib import Path
@@ -21,6 +21,34 @@ def connect(server, name, supports_delta=True):
     except BaseException:
         client.close()
         raise
+
+
+def lifecycle(server, alice, bob):
+    """Exercise the same live connection through a new dimension and a new ServerPlayer after death."""
+    server.command("gamemode creative TerraAlice")
+    server.command("spawnpoint TerraAlice 0 -60 0")
+    before = alice.respawn_packets
+    server.command("execute in minecraft:the_nether run tp TerraAlice 0 100 0")
+    alice.wait_for(lambda c: c.respawn_packets > before and c.dimension == "minecraft:the_nether", timeout=60)
+    server.command('give TerraAlice terrassic:loose_page{Page:"c1_day_17"} 1')
+    alice.wait_for(lambda c: "c1_day_17" in c.knowledge.get("Pages", []))
+    require("c1_day_3" in alice.knowledge["Pages"], "dimension change must preserve previous research")
+    before = alice.respawn_packets
+    server.command("execute in minecraft:overworld run tp TerraAlice 0 -60 0")
+    alice.wait_for(lambda c: c.respawn_packets > before and c.dimension == "minecraft:overworld", timeout=60)
+    cursor = len(server.lines)
+    server.command("kill TerraAlice")
+    server.wait(lambda: any("Killed TerraAlice" in line for line in server.lines[cursor:]), 15)
+    before = alice.respawn_packets
+    alice.request_respawn()
+    alice.wait_for(lambda c: c.respawn_packets > before and c.dimension == "minecraft:overworld")
+    server.command('give TerraAlice terrassic:loose_page{Page:"c1_day_41"} 1')
+    alice.wait_for(lambda c: "c1_day_41" in c.knowledge.get("Pages", []))
+    require(set(alice.knowledge["Pages"]) == {"c1_day_3", "c1_day_17", "c1_day_41"},
+            "respawn must preserve notebook and allow subsequent delta updates")
+    require(bob.knowledge.get("Pages") == ["c1_day_9"], "lifecycle must not change the other player's notebook")
+    require(alice.intro_packets == 1, "dimension/death must not replay introduction")
+    print(f"{server.loader}: dimension round trip, death/respawn and subsequent notebook updates passed", flush=True)
 
 
 def main():
@@ -52,6 +80,8 @@ def main():
         require(bob.delta_packets == 0 and bob.full_packets >= 2, "legacy-capability client must get full snapshots")
         alice_uuid, bob_uuid = alice.profile_uuid, bob.profile_uuid
         print(f"{args.loader}: real joins, distinct UUIDs, page delta and legacy full fallback passed", flush=True)
+        lifecycle(server, alice, bob)
+        first_page = alice.knowledge
         alice.close()
         clients.remove(alice)
         server.wait(lambda: any("TerraAlice lost connection" in line for line in server.lines), 15)
@@ -73,7 +103,7 @@ def main():
         clients.append(bob)
         require(alice.knowledge == saved_alice and bob.knowledge == saved_bob, "both notebooks must survive server restart independently")
         require(alice.intro_packets == bob.intro_packets == 0, "saved introduction flags must survive server restart")
-        print(f"PASS: {args.loader} real sockets: UUID isolation, pages, delta, legacy fallback, reconnect and restart", flush=True)
+        print(f"PASS: {args.loader} real sockets: UUID isolation, pages, delta, legacy fallback, dimensions, respawn, reconnect and restart", flush=True)
     finally:
         for client in clients:
             client.close()

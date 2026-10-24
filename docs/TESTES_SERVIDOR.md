@@ -81,7 +81,8 @@ Esta primeira regressão não mede rede ou desempenho. Entregas posteriores vali
 reconexão e reinício com clientes locais de protocolo em Fabric e Forge: consulte `CADERNO_DADOS.md`.
 O perfil inicial de ticks com carga gradual está em `PERFIL_LOCAL.md`; a meta de 100 jogadores continua pendente.
 Os testes de persistência acima usam entidades geradas por comandos, sem interação de um jogador real.
-Transferência de dimensões, eclosão de ovos e comportamento de caça/fuga ainda precisam de validação no jogo.
+O roteiro do Caderno também cobre transferência entre dimensões vanilla e respawn via protocolo nos dois loaders.
+Eclosão de ovos e comportamento de caça/fuga ainda precisam de validação no jogo.
 
 ## Próximos testes de experiência
 

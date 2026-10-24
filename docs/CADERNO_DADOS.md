@@ -76,8 +76,8 @@ Verificações:
   desconexão/reconexão, limpeza ao encerrar e fallback para clientes sem delta.
 
 Esses testes de estado/protocolo não simulam um cliente conectado. O roteiro de rede abaixo complementa a
-regressão com conexões reais; respawn, transição entre dimensões, telas e um JAR cliente antigo ainda exigem
-validação específica no jogo.
+regressão com conexões reais, inclusive respawn e transição entre dimensões. Telas e um JAR cliente antigo
+ainda exigem validação específica no jogo.
 
 Resultado em 24/10/2026: a build completa Fabric/Forge passou em 37 s, incluindo todas as regressões acima.
 Os servidores dedicados foram revalidados pelos roteiros de entidades nos dois loaders após a mudança.
@@ -110,6 +110,14 @@ não carrega as classes, texturas ou renderizadores dos mods no cliente. O prime
 como esperado. Uma tentativa de reinício atingiu o prazo de arranque; a repetição final passou com heap do Gradle
 limitado a 1 GiB e prazo de 360 s por arranque. O heap do servidor de teste continua em 2 GiB.
 
-Esses clientes não renderizam telas nem exercitam respawn ou troca de dimensão; também não são uma execução de
-um JAR cliente antigo, apenas reproduzem a ausência do receptor delta. As 13 verificações Python incluem fixtures
+O roteiro ampliado leva Alice ao Nether, registra `c1_day_17` nessa dimensão, retorna ao Overworld, mata e
+recria o personagem por solicitação real de respawn, e registra `c1_day_41` depois disso. Exige preservação das
+páginas anteriores, novas atualizações de rede, isolamento de Bob e ausência de repetição da introdução.
+Depois reconecta e reinicia o servidor, conferindo também esse progresso adicional.
+
+Fabric passou com o roteiro ampliado: `build/network-regression/fabric-rhjx7o6o/`.
+Forge passou com o roteiro ampliado: `build/network-regression/forge-9vf1dt2d/`.
+
+Esses clientes não renderizam telas; também não são uma execução de um JAR cliente antigo, apenas reproduzem
+a ausência do receptor delta. As 13 verificações Python incluem fixtures
 de VarInt, UTF-8, NBT, patch e wrapper FML3, além das verificações de integridade do projeto.
