@@ -117,6 +117,11 @@ public class Argentinosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected boolean platformSpecies() {
+        return true;
+    }
+
+    @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
         if (hit && target instanceof LivingEntity living) {

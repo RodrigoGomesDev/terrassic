@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModBlocks;
+import com.terrassic.registry.ModItems;
 import com.terrassic.research.Objective;
 import com.terrassic.research.Research;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -83,6 +84,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  *   <li><b>Cargo</b>: species with {@link #cargoRows()} &gt; 0 take a chest once tamed and grown; the chest is a
  *       cargo inventory of that many rows (sneak + use opens it, or the inventory key while riding), and the animal
  *       picks up the drops around its feet while it is up and about (docs/CARGA.md).</li>
+ *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
+ *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
  * </ul>
  */
 public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity, PlayerRideableJumping, HasCustomInventoryScreen {
@@ -94,6 +97,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_CHESTED =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_PLATFORM =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Riders a platform saddle seats (the owner drives, the rest sit along the back). */
+    public static final int PLATFORM_SEATS = 4;
 
     /** How a wild animal of this species can be tamed (eggs always work). */
     public enum TameMethod {
@@ -150,6 +157,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Rows of nine cargo slots a tamed adult carries once a chest is strapped on; 0 = carries no cargo. */
     public int cargoRows() {
         return 0;
+    }
+
+    /** Whether the species takes the platform saddle (the titans): four riders, anyone may climb on. */
+    protected boolean platformSpecies() {
+        return false;
     }
 
     /** Whether a tamed adult hops onto its owner's shoulder when they sneak and right-click it with an empty hand. */
@@ -214,6 +226,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_FEMALE, false);
         this.entityData.define(DATA_SADDLED, false);
         this.entityData.define(DATA_CHESTED, false);
+        this.entityData.define(DATA_PLATFORM, false);
     }
 
     public boolean isFemale() {
@@ -241,12 +254,22 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.set(DATA_CHESTED, chested);
     }
 
+    /** True while the saddle on it is the platform saddle. */
+    public boolean isPlatform() {
+        return this.entityData.get(DATA_PLATFORM);
+    }
+
+    public void setPlatform(boolean platform) {
+        this.entityData.set(DATA_PLATFORM, platform);
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Female", this.isFemale());
         tag.putBoolean("Saddled", this.isSaddled());
         tag.putBoolean("Chested", this.isChested());
+        tag.putBoolean("Platform", this.isPlatform());
         if (this.cargo != null) {
             ListTag list = new ListTag();
             for (int i = 0; i < this.cargo.getContainerSize(); i++) {
@@ -270,6 +293,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         this.setSaddled(tag.getBoolean("Saddled"));
         this.setChested(tag.getBoolean("Chested"));
+        this.setPlatform(tag.getBoolean("Platform"));
         if (this.cargo != null && tag.contains("Cargo", Tag.TAG_LIST)) {
             ListTag list = tag.getList("Cargo", Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
@@ -358,9 +382,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     protected void dropEquipment() {
         super.dropEquipment();
         if (this.isSaddled()) {
-            this.spawnAtLocation(Items.SADDLE);
+            this.spawnAtLocation(this.saddleItem());
         }
         this.dropCargo();
+    }
+
+    /** The saddle item this animal wears (plain saddle or the platform saddle). */
+    protected ItemStack saddleItem() {
+        return new ItemStack(this.isPlatform() ? ModItems.PLATFORM_SADDLE.get() : Items.SADDLE);
     }
 
     // ------------------------------------------------------------------ cargo
@@ -383,13 +412,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return;
         }
         int rows = this.cargoRows();
-        MenuType<ChestMenu> type = cargoMenuType(rows);
-        player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new ChestMenu(type, id, inventory, this.cargo, rows),
+        player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new ChestMenu(cargoMenuType(rows), id, inventory, this.cargo, rows),
                 this.getDisplayName()));
         this.playSound(SoundEvents.DONKEY_CHEST, 0.5F, 1.2F);
     }
 
-    /** Vanilla only has container-backed factories for 3 and 6 rows, so the other sizes use the ChestMenu constructor. */
+    /** The generic chest menu of that many rows (only threeRows/sixRows take a container in 1.20.1, so build it directly). */
     private static MenuType<ChestMenu> cargoMenuType(int rows) {
         return switch (rows) {
             case 1 -> MenuType.GENERIC_9x1;
@@ -437,6 +465,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         ItemStack stack = player.getItemInHand(hand);
         boolean client = this.level().isClientSide();
 
+        // anyone may climb onto a platform saddle as a passenger (only the owner drives)
+        if (this.isTame() && this.isPlatform() && !this.isOwnedBy(player) && !this.isBaby() && stack.isEmpty()
+                && !player.isSecondaryUseActive() && !player.isPassenger() && this.canAddPassenger(player)) {
+            if (!client) {
+                player.startRiding(this);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+
         if (this.isTame() && this.isOwnedBy(player)) {
             // heal with food
             if (this.isFood(stack) && this.getHealth() < this.getMaxHealth()) {
@@ -477,6 +514,17 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 }
                 return InteractionResult.sidedSuccess(client);
             }
+            // the platform saddle of the titans (docs/CARGA.md)
+            if (this.platformSpecies() && !this.isBaby() && !this.isSaddled() && stack.is(ModItems.PLATFORM_SADDLE.get())) {
+                if (!client) {
+                    this.usePlayerItem(player, hand, stack);
+                    this.setSaddled(true);
+                    this.setPlatform(true);
+                    this.playSound(SoundEvents.HORSE_SADDLE, 1.0F, 0.7F);
+                    player.displayClientMessage(Component.translatable("message.terrassic.platform", this.getDisplayName()), true);
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
             // saddle
             if (this.isRideable() && !this.isBaby() && !this.isSaddled() && stack.is(Items.SADDLE)) {
                 if (!client) {
@@ -489,8 +537,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             // shears take the saddle off
             if (this.isSaddled() && !this.isVehicle() && stack.is(Items.SHEARS)) {
                 if (!client) {
+                    this.spawnAtLocation(this.saddleItem());
                     this.setSaddled(false);
-                    this.spawnAtLocation(Items.SADDLE);
+                    this.setPlatform(false);
                     this.playSound(SoundEvents.SHEEP_SHEAR, 1.0F, 1.0F);
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
                 }
@@ -508,7 +557,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
             if (stack.isEmpty()) {
                 // ride (saddled) or toggle sit / follow (sneak, or not saddled)
-                if (this.isSaddled() && !this.isBaby() && !player.isSecondaryUseActive() && !this.isVehicle()) {
+                if (this.isSaddled() && !this.isBaby() && !player.isSecondaryUseActive() && this.canAddPassenger(player)) {
                     if (!client) {
                         this.setOrderedToSit(false);
                         player.startRiding(this);
@@ -662,10 +711,24 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     // ------------------------------------------------------------------ riding
 
+    /** A plain saddle seats one; the platform saddle seats {@link #PLATFORM_SEATS}. */
+    @Override
+    protected boolean canAddPassenger(Entity passenger) {
+        return this.getPassengers().size() < (this.isPlatform() ? PLATFORM_SEATS : 1);
+    }
+
+    /** The rider drives; on a platform only the owner does, wherever they sit (nobody aboard = the animal walks itself). */
     @Override
     public LivingEntity getControllingPassenger() {
-        if (this.isSaddled() && this.getFirstPassenger() instanceof Player player) {
-            return player;
+        if (this.isSaddled()) {
+            for (Entity e : this.getPassengers()) {
+                if (e instanceof Player player && (!this.isPlatform() || this.isOwnedBy(player))) {
+                    return player;
+                }
+            }
+            if (this.isPlatform()) {
+                return null;
+            }
         }
         return super.getControllingPassenger();
     }
@@ -676,6 +739,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return;
         }
         double forward = this.riderForwardOffset() * this.getScale();
+        // the platform's seats run back along the spine from the saddle, a third of the body width apart
+        int seat = this.getPassengers().indexOf(passenger);
+        if (seat > 0) {
+            forward -= seat * this.getBbWidth() * 0.35D;
+        }
         float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
         move.accept(passenger, this.getX() - Mth.sin(yaw) * forward,
                 this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset(),

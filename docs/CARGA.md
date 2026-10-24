@@ -32,8 +32,30 @@ Sem `cargo=` no gerador, a espécie montável leva fileiras pelo comprimento rea
 `cargo=N` força o número (`cargo=0` tira a carga de uma montaria). Espécies não montáveis não levam carga a menos que
 o gerador diga `cargo=N`.
 
+## Sela de plataforma (fase 64)
+
+Item `platform_saddle` (criativo por enquanto; receita no crafting da v0.8). Só as espécies com `platform=True` no
+gerador a aceitam: Brachiosaurus, Alamosaurus, Argentinosaurus e Dreadnoughtus.
+
+| Regra | Como |
+|---|---|
+| Equipar | Dono usa a sela de plataforma no titã domado, adulto e sem sela. Tesoura tira (derruba a sela de plataforma, não a comum). |
+| Lugares | 4: o primeiro no lugar da sela, os outros em fila para trás ao longo do dorso, a 35% da largura do corpo um do outro. |
+| Quem sobe | Qualquer jogador com a mão vazia (clique direito); o dono também. Agachar desce. |
+| Quem conduz | Só o dono, em qualquer lugar da fila. Sem o dono a bordo o animal anda por conta própria com os passageiros. |
+| Carga | A mesma do baú (fase 63): o dono abre com a tecla do inventário montado. |
+
+Construir blocos de verdade em cima de um animal em movimento não cabe no Minecraft sem reescrever o mundo; a
+plataforma do Terrassic é a dos lugares e da carga. Um convés de módulos (fogueira, bancada, cama) fica para depois,
+se o jogo pedir.
+
+## Tecla do inventário montado
+
+Todo dinossauro é `HasCustomInventoryScreen` (a tecla do inventário manda o pedido ao servidor, que abre a carga). Para
+a tecla continuar abrindo o inventário do jogador quando a montaria não tem baú, o mixin de cliente
+`InventoryKeyMixin` (`MultiPlayerGameMode.isServerControlledInventory`) só devolve verdadeiro com baú.
+
 ## O que falta (fases seguintes)
 
-- Sela-plataforma (fase 64): vários passageiros e convés nos titãs.
 - Peso e stamina da carga, e o painel de montaria com o peso: v0.8 (HUD).
-- O baú não aparece no modelo ainda (um bloco de baú preso ao osso da sela): fica para o passe visual das selas por espécie (v0.4 pendente).
+- O baú e a sela de plataforma não aparecem no modelo ainda: fica para o passe visual das selas por espécie (v0.4 pendente).

@@ -64,6 +64,7 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "horn_spear": ("Horn Spear", "Lança de Chifre", "Lanza de Cuerno", "item/handheld"),
     "rex_tooth_dagger": ("T. rex Tooth Dagger", "Adaga de Dente de Tiranossauro", "Daga de Diente de Tiranosaurio", "item/handheld"),
     "tail_club": ("Tail Club", "Clava de Cauda", "Garrote de Cola", "item/handheld"),
+    "platform_saddle": ("Platform Saddle", "Sela de Plataforma", "Silla de Plataforma", "item/generated"),
 }
 
 LANG_EXTRA = {
@@ -79,6 +80,7 @@ LANG_EXTRA = {
         "message.terrassic.cargo_chest": "%s carries cargo now: sneak and use it with an empty hand to open the chest",
         "message.terrassic.cargo_chest_ride": "%s carries cargo now: sneak + use without a saddle, or the inventory key while riding",
         "message.terrassic.cargo_off": "%s dropped its cargo chest",
+        "message.terrassic.platform": "%s wears the platform saddle: four aboard, anyone may climb on, you drive",
         "sex.terrassic.male": "male",
         "sex.terrassic.female": "female",
     },
@@ -94,6 +96,7 @@ LANG_EXTRA = {
         "message.terrassic.cargo_chest": "%s agora leva carga: agache e use com a mão vazia para abrir o baú",
         "message.terrassic.cargo_chest_ride": "%s agora leva carga: agachar + usar sem sela, ou a tecla do inventário montado",
         "message.terrassic.cargo_off": "%s largou o baú de carga",
+        "message.terrassic.platform": "%s leva a sela de plataforma: quatro a bordo, qualquer um pode subir, você conduz",
         "sex.terrassic.male": "macho",
         "sex.terrassic.female": "fêmea",
     },
@@ -109,6 +112,7 @@ LANG_EXTRA = {
         "message.terrassic.cargo_chest": "%s ahora lleva carga: agáchate y úsalo con la mano vacía para abrir el baúl",
         "message.terrassic.cargo_chest_ride": "%s ahora lleva carga: agacharse + usar sin silla, o la tecla del inventario montado",
         "message.terrassic.cargo_off": "%s soltó el baúl de carga",
+        "message.terrassic.platform": "%s lleva la silla de plataforma: cuatro a bordo, cualquiera puede subir, tú conduces",
         "sex.terrassic.male": "macho",
         "sex.terrassic.female": "hembra",
     },

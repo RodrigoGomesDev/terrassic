@@ -295,13 +295,13 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.45, 3.0, 360), step=("RAVAGER_STEP", 1.2, 0.5),
-      xp=50, step_height=1.6, head=(25, 30), rideable=True, jump=0.0, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
+      xp=50, step_height=1.6, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
  dict(id="alamosaurus", cls="Alamosaurus", base="HerbivoreDinosaur",
       doc="Alamosaurus sanjuanensis - 30 m titanosaur, the last and largest sauropod of North America. Eats leaves; peaceful unless hurt, then the whip tail cracks. Rideable when tamed (the building platform saddle comes with the v0.6 systems).",
       attrs=dict(MAX_HEALTH=360, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=20, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 380), step=("RAVAGER_STEP", 1.3, 0.45),
-      xp=60, step_height=1.8, head=(25, 30), rideable=True, jump=0.0, ride_offset=3.2, ride_forward=0.6, ride_speed=0.95),
+      xp=60, step_height=1.8, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=3.2, ride_forward=0.6, ride_speed=0.95),
  dict(id="saltasaurus", cls="Saltasaurus", base="HerbivoreDinosaur",
       doc="Saltasaurus loricatus - 12 m armoured titanosaur: oval osteoderms over a skin of bony pebbles, a short neck and a low wide body. Herd animal; hurt, it rears and stomps. Eats leaves; rideable when tamed, a living tank.",
       attrs=dict(MAX_HEALTH=220, MOVEMENT_SPEED=0.19, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=18, ARMOR_TOUGHNESS=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
@@ -313,7 +313,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=600, MOVEMENT_SPEED=0.15, ATTACK_DAMAGE=28, ATTACK_KNOCKBACK=3.0, ARMOR=12, ARMOR_TOUGHNESS=4, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.3, 3.5, 420), step=("RAVAGER_STEP", 1.6, 0.4),
-      xp=80, step_height=2.0, head=(20, 25), rideable=True, jump=0.0, ride_offset=3.7, ride_forward=0.4, ride_speed=0.9,
+      xp=80, step_height=2.0, head=(20, 25), rideable=True, platform=True, jump=0.0, ride_offset=3.7, ride_forward=0.4, ride_speed=0.9,
       egg_only=True, trample=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 2)]),
  dict(id="opisthocoelicaudia", cls="Opisthocoelicaudia", base="HerbivoreDinosaur",
       doc="Opisthocoelicaudia skarzynskii - 12 m stocky titanosaur of the Gobi with a rod-stiff tail it props on to rear up and browse the canopy (the tripod). Peaceful; hurt, it shoves with the hips and slams a forefoot. Hand-tamed with leaves; rideable, a steady pack animal (the cargo inventory comes with the v0.6 systems).",
@@ -326,7 +326,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=420, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 400), step=("RAVAGER_STEP", 1.3, 0.45),
-      xp=56, step_height=1.8, head=(20, 30), rideable=True, jump=0.0, ride_offset=3.4, ride_forward=0.2, ride_speed=0.95, call=True),
+      xp=56, step_height=1.8, head=(20, 30), rideable=True, platform=True, jump=0.0, ride_offset=3.4, ride_forward=0.2, ride_speed=0.95, call=True),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -568,6 +568,8 @@ def gen(s, bounds):
         rows = 6 if real >= 25 else 5 if real >= 15 else 4 if real >= 9 else 3 if real >= 6 else 2 if real >= 3.5 else 1
     if rows:
         body.append(f"    @Override\n    public int cargoRows() {{\n        return {rows};\n    }}\n")
+    if s.get("platform"):
+        body.append("    @Override\n    protected boolean platformSpecies() {\n        return true;\n    }\n")
     if s.get("shoulder"):
         body.append("    @Override\n    public boolean canPerch() {\n        return true;\n    }\n")
     if s.get("fisher"):

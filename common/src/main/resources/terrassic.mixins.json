@@ -6,7 +6,9 @@
   "mixins": [
     "PlayerMixin"
   ],
-  "client": [],
+  "client": [
+    "client.InventoryKeyMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

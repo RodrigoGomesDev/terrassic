@@ -153,6 +153,10 @@ public final class ModItems {
     public static final RegistrySupplier<Item> TAIL_CLUB = ITEMS.register("tail_club",
             () -> new ClubItem(ModTiers.ANKYLO_CLUB, 6, -3.4F, 1.2F, new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
 
+    // ---- riding gear: the platform saddle of the titans (docs/CARGA.md): four aboard, anyone may climb on
+    public static final RegistrySupplier<Item> PLATFORM_SADDLE = ITEMS.register("platform_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+
     // ---- science: notebook, field tools, fossils (docs/HISTORIA.md, section 4)
     public static final RegistrySupplier<Item> FIELD_NOTEBOOK = ITEMS.register("field_notebook",
             () -> new FieldNotebookItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.SCIENCE)));

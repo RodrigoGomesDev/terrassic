@@ -842,6 +842,27 @@ def weapons():
         cv.set(x, y, SCUTE)
     out["tail_club"] = cv
 
+    # platform saddle: a plank deck lashed over a wide leather girth, a rail of poles along the far edge
+    cv = Canvas()
+    PS_PLANK, PS_PLANK_D, PS_PLANK_L = hexc("#9a6e3c"), hexc("#6e4a24"), hexc("#b8884c")
+    PS_LEATHER, PS_LEATHER_D, PS_ROPE = hexc("#6a3f22"), hexc("#46291a"), hexc("#c8b078")
+    for y in range(5, 11):
+        for x in range(2, 14):
+            c = PS_PLANK_D if (x + 1) % 4 == 0 else (PS_PLANK_L if y == 5 else PS_PLANK)
+            cv.set(x, y, c)
+    for x in range(2, 14):
+        cv.set(x, 4, hexc("#5a4030"))                    # the rail
+    for x in (2, 7, 12):
+        cv.set(x, 3, hexc("#5a4030")); cv.set(x, 2, hexc("#4a3426"))
+    for y in range(11, 14):
+        for x in range(3, 13):
+            cv.set(x, y, PS_LEATHER if y < 13 else PS_LEATHER_D)
+    for x in (4, 8, 12):
+        for y in (6, 9):
+            cv.set(x, y, PS_ROPE)
+    cv.set(1, 11, PS_LEATHER_D); cv.set(14, 11, PS_LEATHER_D); cv.set(1, 12, PS_LEATHER_D); cv.set(14, 12, PS_LEATHER_D)
+    out["platform_saddle"] = cv
+
     # materials ----------------------------------------------------------
     cv = Canvas()  # rex tooth
     for (y, a, b) in ((2, 9, 9), (3, 8, 9), (4, 8, 9), (5, 7, 9), (6, 7, 10), (7, 6, 10), (8, 6, 10), (9, 6, 10),

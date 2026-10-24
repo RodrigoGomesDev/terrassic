@@ -113,6 +113,11 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected boolean platformSpecies() {
+        return true;
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         boolean hurt = super.hurt(source, amount);
         if (hurt && !this.level().isClientSide() && this.random.nextInt(3) == 0) {
