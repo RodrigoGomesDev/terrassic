@@ -663,6 +663,22 @@ GUIDE = {
         note=("Fareja o chão por um minuto, cava três vezes e sai com uma batata. Nunca errou.",
               "It sniffs the ground for a minute, digs three times and comes up with a potato. It has never missed.",
               "Olfatea el suelo un minuto, cava tres veces y sale con una patata. Nunca ha fallado.")),
+    "pachyrhinosaurus": dict(
+        sci=("Viveu há 73 a 69 milhões de anos em Alberta e no Alasca, onde passava meses de escuridão polar. O \"lagarto de nariz grosso\": ceratopsiano de 6 a 8 m e umas 4 toneladas, sem chifre nasal: uma bossa de osso rugoso cobre o focinho e outra a testa; do alto do escudo saem dois chifres curvados para a frente, com ganchos pela borda. Leitos de ossos guardam manadas de centenas.",
+             "Lived 73 to 69 million years ago in Alberta and Alaska, where it spent months of polar darkness. The \"thick-nosed lizard\": a ceratopsian of 6 to 8 m and some 4 tonnes with no nose horn at all: a rough bony boss covers the snout and another the brow; two horns curve forward from the top of the frill, with hooks along its rim. Bone beds hold herds of hundreds.",
+             "Vivió hace 73 a 69 millones de años en Alberta y Alaska, donde pasaba meses de oscuridad polar. El \"lagarto de nariz gruesa\": ceratopsiano de 6 a 8 m y unas 4 toneladas, sin cuerno nasal: una protuberancia de hueso rugoso cubre el hocico y otra la frente; de lo alto de la gola salen dos cuernos curvados hacia delante, con ganchos por el borde. Lechos de huesos guardan manadas de cientos."),
+        behavior=("Manadas de 2 a 5 na taiga, nas colinas e nas florestas frias. Territorial: baixa a cabeça e bate com a bossa. Ferido ou de vez em quando, solta um almíscar: os herbívoros em volta se acalmam e os predadores selvagens se irritam e partem para cima dele, não de você.",
+                  "Herds of 2 to 5 in the taiga, the hills and the cold forests. Territorial: it lowers its head and rams with the boss. Hurt, or now and then, it releases a musk: the herbivores around calm down and the wild predators get irritated and go for it, not for you.",
+                  "Manadas de 2 a 5 en la taiga, las colinas y los bosques fríos. Territorial: baja la cabeza y golpea con la protuberancia. Herido, o de vez en cuando, suelta un almizcle: los herbívoros alrededor se calman y los depredadores salvajes se irritan y van a por él, no a por ti."),
+        taming=("Doma-se na mão com trigo, samambaias ou frutas silvestres. Os pares põem um ovo grande.",
+                "Hand-tamed with wheat, ferns or sweet berries. Pairs lay a large egg.",
+                "Se doma a mano con trigo, helechos o bayas. Las parejas ponen un huevo grande."),
+        utility=("Montaria pesada que abre caminho na mata e atrai os predadores para si: leve-o na frente da caravana. O cheiro também acalma o resto do rebanho.",
+                 "A heavy mount that clears the brush and draws the predators onto itself: ride it at the head of the caravan. The scent also calms the rest of the herd.",
+                 "Montura pesada que abre camino en el bosque y atrae a los depredadores hacia sí: llévalo al frente de la caravana. El olor también calma al resto del rebaño."),
+        note=("O cheiro é terrível. Os raptores concordam: largaram a Maiasaura e foram todos atrás dele.",
+              "The smell is dreadful. The raptors agree: they dropped the Maiasaura and all went after him.",
+              "El olor es terrible. Los raptores están de acuerdo: soltaron a la Maiasaura y fueron todos tras él.")),
 }
 
 ERAS = {

@@ -1086,5 +1086,40 @@
    "animation.thescelosaurus.dig"
   ],
   "render_scale": 0.8
+ },
+ "pachyrhinosaurus": {
+  "bones": 26,
+  "cubes": 66,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -12.0,
+    -0.24857554789431546,
+    -43.507522801884775
+   ],
+   [
+    12.0,
+    43.80950237385089,
+    42.06012467806892
+   ]
+  ],
+  "animations": [
+   "animation.pachyrhinosaurus.idle",
+   "animation.pachyrhinosaurus.walk",
+   "animation.pachyrhinosaurus.run",
+   "animation.pachyrhinosaurus.attack",
+   "animation.pachyrhinosaurus.sit",
+   "animation.pachyrhinosaurus.graze",
+   "animation.pachyrhinosaurus.scent",
+   "animation.pachyrhinosaurus.knocked_out",
+   "animation.pachyrhinosaurus.wake",
+   "animation.pachyrhinosaurus.eat",
+   "animation.pachyrhinosaurus.beg",
+   "animation.pachyrhinosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

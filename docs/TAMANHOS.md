@@ -33,6 +33,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Protoceratops (v0.6) | 1,8-2,5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011) | novo | **2,0 x 0,8** | 0,7 x 0,8 | 50% |
 | Struthiomimus (v0.6) | 4,3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985) | novo | **4,3 x 2,5** (cabeça erguida) | 1,0 x 2,4 | 35% |
 | Thescelosaurus (v0.6) | 3,5-4 m, ~250-300 kg (Boyd 2014) | novo | **4,0 x 1,6** | 1,0 x 1,6 | 35% |
+| Pachyrhinosaurus (v0.6) | 6-8 m, ~4 t (Currie et al. 2008) | novo | **8,0 x 4,2** (com chifres do escudo) | 2,4 x 3,6 | 30% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

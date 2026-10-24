@@ -31,6 +31,8 @@ SIZES = {
     "triceratops":        dict(real=9.0,  scale=1.63, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
     "styracosaurus":      dict(real=5.5,  scale=1.1,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
+    # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
+    "pachyrhinosaurus":   dict(real=8.0,  scale=1.5,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
     "protoceratops":      dict(real=2.0,  scale=0.43, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
     "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
@@ -88,6 +90,7 @@ GUIDE = {
     "compsognathus":      dict(era="jurassic",        diet="carnivore", fossil=3),
     "triceratops":        dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "styracosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=4),
+    "pachyrhinosaurus":   dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "protoceratops":      dict(era="late_cretaceous", diet="herbivore", fossil=6),
     "stegosaurus":        dict(era="jurassic",        diet="herbivore", fossil=5),
     "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
@@ -127,6 +130,7 @@ WORLD = {
     "compsognathus":      dict(biomes=("forest", "jungle"), weight=8, group=(3, 6), track=8),
     "triceratops":        dict(biomes=("savanna", "plains"), weight=6, group=(2, 4), track=10),
     "styracosaurus":      dict(biomes=("savanna", "plains", "forest"), weight=5, group=(2, 5), track=10),  # herds at the forest edge
+    "pachyrhinosaurus":   dict(biomes=("taiga", "hill", "forest"), weight=4, group=(2, 5), track=10),     # cold country herds
     "protoceratops":      dict(biomes=("desert", "badlands", "savanna"), weight=7, group=(2, 5), track=8),    # dunes and dry scrub
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
     "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
@@ -219,6 +223,12 @@ SPECIES = [
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.4, 0.9, 280), step=("RAVAGER_STEP", 0.5, 0.9),
       xp=16, rideable=True, jump=0.5, ride_offset=1.5, ride_speed=1.1, trample=True),
+ dict(id="pachyrhinosaurus", cls="Pachyrhinosaurus", base="HerbivoreDinosaur",
+      doc="Pachyrhinosaurus canadensis - 8 m horned herbivore of the cold north with a bony boss instead of a nose horn. Territorial: gores with the boss. Its musk calms the herbivores around it and draws the predators onto itself. Tamed with plants; rideable, breaks the brush in its way.",
+      attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
+      food="Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.1, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
+      xp=22, rideable=True, jump=0.45, ride_offset=1.6, ride_speed=1.05, trample=True, musk=True),
  dict(id="protoceratops", cls="Protoceratops", base="HerbivoreDinosaur",
       doc="Protoceratops andrewsi - sheep-sized frilled herbivore of the dunes. Bites back when bothered. Digs in soft ground: a tame one turns up roots, bones and shallow fossils.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ATTACK_KNOCKBACK=0.5, ARMOR=3, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=16),
@@ -456,6 +466,8 @@ def gen(s, bounds):
         extras.append("call")
     if s.get("dig"):
         extras.append("dig")
+    if s.get("musk"):
+        extras.append("scent")
     if base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
     elif base == "HerbivoreDinosaur" and len(extras) > 1:
@@ -624,6 +636,48 @@ def gen(s, bounds):
                 other.setTarget(null);
                 other.getNavigation().stop();
                 other.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0));
+            }
+        }
+    }
+""")
+    if s.get("musk"):
+        # the musk: when hurt or now and then, a scent that calms the herbivores around and draws the wild predators onto itself
+        imports.update({"net.minecraft.server.level.ServerLevel", "net.minecraft.world.damagesource.DamageSource",
+                        "net.minecraft.core.particles.ParticleTypes", "net.minecraft.world.effect.MobEffectInstance",
+                        "net.minecraft.world.effect.MobEffects"})
+        body.append("""    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && !this.level().isClientSide() && this.random.nextInt(2) == 0) {
+            this.releaseMusk();
+        }
+        return hurt;
+    }
+
+    @Override
+    public void playAmbientSound() {
+        super.playAmbientSound();
+        if (!this.level().isClientSide() && !this.isBaby() && this.random.nextInt(4) == 0) {
+            this.releaseMusk();
+        }
+    }
+
+    /** The musk: herbivores within 12 blocks calm down (panic and target cleared, brief regeneration); wild adult
+     *  predators within 12 blocks get irritated and turn on this animal instead of whatever they were hunting. */
+    private void releaseMusk() {
+        triggerAnim(ACTION_CONTROLLER, "scent");
+        if (this.level() instanceof ServerLevel server) {
+            server.sendParticles(ParticleTypes.SNEEZE, this.getX(), this.getY() + this.getBbHeight() * 0.8D, this.getZ(),
+                    10, this.getBbWidth() * 0.5D, 0.3D, this.getBbWidth() * 0.5D, 0.02D);
+            for (HerbivoreDinosaur other : server.getEntitiesOfClass(HerbivoreDinosaur.class, this.getBoundingBox().inflate(12.0D), e -> e != this)) {
+                other.setLastHurtByMob(null);
+                other.setTarget(null);
+                other.getNavigation().stop();
+                other.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0));
+            }
+            for (PredatorDinosaur predator : server.getEntitiesOfClass(PredatorDinosaur.class, this.getBoundingBox().inflate(12.0D),
+                    p -> !p.isTame() && !p.isBaby())) {
+                predator.setTarget(this);
             }
         }
     }
