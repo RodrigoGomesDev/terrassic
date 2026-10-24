@@ -18,6 +18,7 @@ import com.terrassic.entity.Quetzalcoatlus;
 import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Triceratops;
+import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
 import com.terrassic.entity.Velociraptor;
 // END GENERATED imports
@@ -81,6 +82,8 @@ public final class ModEntities {
     // ---- marine reptiles
     public static final RegistrySupplier<EntityType<Mosasaurus>> MOSASAURUS =
             mob("mosasaurus", Mosasaurus::new, MobCategory.WATER_CREATURE, Mosasaurus.WIDTH, Mosasaurus.HEIGHT, 12);
+    public static final RegistrySupplier<EntityType<Tylosaurus>> TYLOSAURUS =
+            mob("tylosaurus", Tylosaurus::new, MobCategory.WATER_CREATURE, Tylosaurus.WIDTH, Tylosaurus.HEIGHT, 12);
     // END GENERATED species
 
     // ---- projectiles
@@ -118,6 +121,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(HATZEGOPTERYX, Hatzegopteryx::createAttributes);
         EntityAttributeRegistry.register(ICHTHYORNIS, Ichthyornis::createAttributes);
         EntityAttributeRegistry.register(MOSASAURUS, Mosasaurus::createAttributes);
+        EntityAttributeRegistry.register(TYLOSAURUS, Tylosaurus::createAttributes);
         // END GENERATED attributes
     }
 }

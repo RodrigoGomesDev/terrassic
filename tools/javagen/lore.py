@@ -439,6 +439,22 @@ GUIDE = {
         note=("Vi a sombra passar debaixo do barco. Era maior que o barco. Remei até a praia sem olhar para trás.",
               "I saw the shadow pass under the boat. It was bigger than the boat. I rowed to the beach without looking back.",
               "Vi la sombra pasar debajo del bote. Era más grande que el bote. Remé hasta la playa sin mirar atrás.")),
+    "tylosaurus": dict(
+        sci=("Viveu há cerca de 85 milhões de anos no Mar Interior Ocidental, na América do Norte. Mosassauro de 12 a 13 m, mais esguio que o Mosasaurus, de nadadeiras pequenas e cauda que é quase metade do corpo. O focinho termina num rostro sem dentes, reforçado, com que ele abalroa a presa. A pele fóssil mostra o dorso escuro e a barriga clara.",
+             "Lived about 85 million years ago in the Western Interior Seaway, in North America. A 12 to 13 m mosasaur, sleeker than the Mosasaurus, with small flippers and a tail that is almost half the body. The snout ends in a toothless, reinforced rostrum it rams prey with. Fossil skin shows a dark back and a pale belly.",
+             "Vivió hace unos 85 millones de años en el Mar Interior Occidental, en América del Norte. Mosasaurio de 12 a 13 m, más esbelto que el Mosasaurus, de aletas pequeñas y cola que es casi la mitad del cuerpo. El hocico termina en un rostro sin dientes, reforzado, con el que embiste a la presa. La piel fósil muestra el dorso oscuro y el vientre claro."),
+        behavior=("Patrulha o mar aberto sozinho e ataca tudo o que nada ou flutua: peixes, tartarugas, aves no raso e até mosassauros jovens. Primeiro bate com o focinho, depois morde.",
+                  "Patrols the open sea alone and attacks anything that swims or floats: fish, turtles, birds on the water and even young mosasaurs. It rams with the snout first, then bites.",
+                  "Patrulla el mar abierto solo y ataca todo lo que nada o flota: peces, tortugas, aves en el agua y hasta mosasaurios jóvenes. Primero golpea con el hocico, después muerde."),
+        taming=("Ainda não se doma: só com o nocaute, que chega na v0.7. Até lá, respeite a distância.",
+                "Not tameable yet: only by knockout, which arrives in v0.7. Until then, keep your distance.",
+                "Todavía no se doma: solo por noqueo, que llega en la v0.7. Hasta entonces, guarda distancia."),
+        utility=("A investida com o focinho deixa a vítima lenta e tonta por alguns segundos. Um dia será a montaria de combate do mar.",
+                 "The ramming hit leaves the victim slow and dazed for a few seconds. One day it will be the sea's combat mount.",
+                 "La embestida con el hocico deja a la víctima lenta y aturdida por unos segundos. Algún día será la montura de combate del mar."),
+        note=("Senti a pancada antes de ver o bicho. Quando a vista voltou, o barco não estava mais lá.",
+              "I felt the blow before I saw the animal. When my sight came back, the boat was gone.",
+              "Sentí el golpe antes de ver al animal. Cuando volvió la vista, el barco ya no estaba.")),
 }
 
 ERAS = {

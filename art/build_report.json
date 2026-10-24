@@ -613,5 +613,38 @@
    "animation.ichthyornis.tame"
   ],
   "render_scale": 0.25
+ },
+ "tylosaurus": {
+  "bones": 17,
+  "cubes": 24,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -13.55158801981627,
+    0.6336353659998633,
+    -51.999965810104015
+   ],
+   [
+    13.55158801981627,
+    19.671771318735523,
+    79.41765838307052
+   ]
+  ],
+  "animations": [
+   "animation.tylosaurus.idle",
+   "animation.tylosaurus.walk",
+   "animation.tylosaurus.run",
+   "animation.tylosaurus.sit",
+   "animation.tylosaurus.attack",
+   "animation.tylosaurus.knocked_out",
+   "animation.tylosaurus.wake",
+   "animation.tylosaurus.eat",
+   "animation.tylosaurus.beg",
+   "animation.tylosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

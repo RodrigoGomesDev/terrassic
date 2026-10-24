@@ -48,6 +48,8 @@ SIZES = {
     "ichthyornis":        dict(real=0.66, scale=0.245, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
     "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
+    # Tylosaurus proriger: 12-13 m (the "Bunker" specimen KUVP 5033 ~13 m; Everhart 2005). Sleeker than the Mosasaurus.
+    "tylosaurus":         dict(real=13.0, scale=1.58, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
@@ -71,6 +73,7 @@ GUIDE = {
     "hatzegopteryx":      dict(era="late_cretaceous", diet="carnivore", fossil=1),
     "ichthyornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "tylosaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=3),
 }
 
 # Where each species lives in the world (ModSpawns) and its entity tracking range (ModEntities).
@@ -96,6 +99,7 @@ WORLD = {
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
     "ichthyornis":        dict(biomes=("coast",), weight=10, group=(3, 6), track=8),                            # flocks on the shore
     "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
+    "tylosaurus":         dict(biomes=("deep_sea", "ocean"), weight=3, group=(1, 1), track=12),  # also the shallower open sea
 }
 
 # biome predicate -> (Java expression in ModSpawns, description for the doc comment)
@@ -112,6 +116,7 @@ BIOMES = {
     "swamp": ('key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp")', "swamp, mangrove"),
     "coast": ('ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore")', "beach, stony shore"),
     "deep_sea": ('ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen")', "deep ocean (not frozen)"),
+    "ocean": ('ctx.hasTag(BiomeTags.IS_OCEAN) && !key.contains("frozen")', "ocean (not frozen)"),
 }
 
 SPECIES = [
@@ -231,6 +236,14 @@ SPECIES = [
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.45, 2.0, 400), xp=40, run=0.04,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof Pteranodon",
       prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"]),
+ dict(id="tylosaurus", cls="Tylosaurus", base="SwimmingDinosaur",
+      doc="Tylosaurus proriger - the top predator of the Western Interior Seaway before the Mosasaurus: slender, 13 m, small flippers and a toothless reinforced rostrum it rams prey with (the hit slows and dazes). Wild only for now (knockout taming in v0.7).",
+      attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=1.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=4, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.6, 2.0, 380), xp=36, run=0.05,
+      prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof FlyingDinosaur || e instanceof Mosasaurus && e.isBaby()",
+      prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
+      hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 100, 2), ("MobEffects.CONFUSION", 100, 0)]),
 ]
 
 
@@ -329,6 +342,15 @@ def gen(s, bounds):
         body.append("    @Override\n    protected boolean perchFishes() {\n        return true;\n    }\n")
     if s.get("fights") is False:
         body.append("    @Override\n    protected boolean fightsBack() {\n        return false;\n    }\n")
+    if s.get("hit_effects"):
+        # status effects put on whatever this animal hits (ramming, venom, a stunning tail blow...)
+        imports.add("net.minecraft.world.entity.Entity")
+        imports.add("net.minecraft.world.entity.LivingEntity")
+        imports.add("net.minecraft.world.effect.MobEffectInstance")
+        imports.add("net.minecraft.world.effect.MobEffects")
+        fx = "\n".join(f"            living.addEffect(new MobEffectInstance({e}, {d}, {a}));" for e, d, a in s["hit_effects"])
+        body.append("    @Override\n    public boolean doHurtTarget(Entity target) {\n        boolean hit = super.doHurtTarget(target);\n"
+                    "        if (hit && target instanceof LivingEntity living) {\n" + fx + "\n        }\n        return hit;\n    }\n")
     if base in ("FlyingDinosaur", "SwimmingDinosaur"):
         imports.add("net.minecraft.world.entity.LivingEntity")
         imports.update(s.get("prey_imports", ["net.minecraft.world.entity.animal.AbstractFish"]))

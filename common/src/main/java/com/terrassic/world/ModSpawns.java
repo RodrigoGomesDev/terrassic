@@ -42,6 +42,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Hatzegopteryx       hills, forest                   2       1
  *  Ichthyornis         beach, stony shore              10      3-6
  *  Mosasaurus          deep ocean (not frozen)         2       1
+ *  Tylosaurus          deep ocean (not frozen), ocean (not frozen) 3       1
  *  END GENERATED table
  *  (*desert only where there is sand to stand on)
  * Weights can be scaled or turned off per species in config/terrassic.json (SpawnConfig).
@@ -75,6 +76,8 @@ public final class ModSpawns {
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
         SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
+        SpawnPlacementsRegistry.register(ModEntities.TYLOSAURUS, SpawnPlacements.Type.IN_WATER,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         // END GENERATED placements
 
         LifecycleEvent.SETUP.register(() -> BiomeModifications.addProperties((ctx, props) -> {
@@ -92,6 +95,7 @@ public final class ModSpawns {
             boolean swamp = key.equals("minecraft:swamp") || key.equals("minecraft:mangrove_swamp");
             boolean coast = ctx.hasTag(BiomeTags.IS_BEACH) || key.equals("minecraft:stony_shore");
             boolean deepSea = ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen");
+            boolean ocean = ctx.hasTag(BiomeTags.IS_OCEAN) && !key.contains("frozen");
 
             if (savanna || jungle) {
                 add(props, ModEntities.TYRANNOSAURUS.get(), 1, 1, 1);
@@ -146,6 +150,9 @@ public final class ModSpawns {
             }
             if (deepSea) {
                 add(props, MobCategory.WATER_CREATURE, ModEntities.MOSASAURUS.get(), 2, 1, 1);
+            }
+            if (deepSea || ocean) {
+                add(props, MobCategory.WATER_CREATURE, ModEntities.TYLOSAURUS.get(), 3, 1, 1);
             }
             // END GENERATED biomes
         }));

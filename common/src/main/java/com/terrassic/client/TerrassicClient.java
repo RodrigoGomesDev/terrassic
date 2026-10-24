@@ -17,6 +17,7 @@ import com.terrassic.entity.Quetzalcoatlus;
 import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Triceratops;
+import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
 import com.terrassic.entity.Velociraptor;
 // END GENERATED imports
@@ -55,6 +56,7 @@ public final class TerrassicClient {
         renderer(ModEntities.HATZEGOPTERYX, "hatzegopteryx", Hatzegopteryx.MODEL_SCALE, Hatzegopteryx.SHADOW);
         renderer(ModEntities.ICHTHYORNIS, "ichthyornis", Ichthyornis.MODEL_SCALE, Ichthyornis.SHADOW);
         renderer(ModEntities.MOSASAURUS, "mosasaurus", Mosasaurus.MODEL_SCALE, Mosasaurus.SHADOW);
+        renderer(ModEntities.TYLOSAURUS, "tylosaurus", Tylosaurus.MODEL_SCALE, Tylosaurus.SHADOW);
         // END GENERATED renderers
         EntityRendererRegistry.register(ModEntities.SPEAR, ThrownSpearRenderer::new);
         ClientHooks.init();

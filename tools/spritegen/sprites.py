@@ -363,6 +363,18 @@ def spawn_eggs():
     eye(cv, 10, 5, "#c8b04a")
     eggs["mosasaurus"] = cv
 
+    # Tylosaurus: slate egg with pale vertical bars and the pale rostrum knob at the front (live-bearer: spawn egg only)
+    cv = base_egg(None, "#243038", "#6e7e84")
+    for x in range(3, 13, 3):
+        for y in range(4, 13):
+            if inside(cv, x, y) and (y + x) % 2 == 0:
+                cv.set(x, y, hexc("#8a9a9e"))
+    cv.set(11, 7, hexc("#9aa09a")); cv.set(12, 7, hexc("#9aa09a")); cv.set(12, 8, hexc("#9aa09a"))
+    for x in range(6, 11):
+        cv.set(x, 9, hexc("#efe9d6" if x % 2 == 0 else "#86363a"))
+    eye(cv, 9, 6, "#d8b85a")
+    eggs["tylosaurus"] = cv
+
     # species with a front-view 32x32 design (egg_designs.py) use it; the rest keep the 16x16 sketch above
     import egg_designs
     for name, cv in eggs.items():

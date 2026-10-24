@@ -28,6 +28,7 @@ SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearin
     "hatzegopteryx": ("Hatzegopteryx", "Hatzegopteryx", "Hatzegopteryx", False),
     "ichthyornis": ("Ichthyornis", "Ictiórnis", "Ictiornis", False),
     "mosasaurus": ("Mosasaurus", "Mosassauro", "Mosasaurio", None),
+    "tylosaurus": ("Tylosaurus", "Tilossauro", "Tilosaurio", None),
 }
 
 ITEMS = {  # id: (en, pt, es, model parent)
@@ -212,6 +213,7 @@ def main():
         "ichthyornis": [item("minecraft:feather", 1, 2), item("minecraft:cod", 0, 1, True)],
         "mosasaurus": [item("minecraft:cod", 4, 8, True), item("minecraft:leather", 3, 6), item("minecraft:bone", 3, 6),
                        item("terrassic:mosasaurus_tooth", 1, 3, chance=0.6)],
+        "tylosaurus": [item("minecraft:cod", 3, 7, True), item("minecraft:leather", 3, 5), item("minecraft:bone", 3, 6)],
     }
     for sid, pools in loot.items():
         # every species drops its own hide (last pool, so the pools above stay as they are)

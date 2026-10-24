@@ -33,7 +33,7 @@ ART = os.path.join(ROOT, "art")
 ALL = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus",
        "triceratops", "stegosaurus", "ankylosaurus", "brachiosaurus", "parasaurolophus",
        "pachycephalosaurus", "gallimimus", "pteranodon", "mosasaurus", "maiasaura",
-       "quetzalcoatlus", "hatzegopteryx", "ichthyornis"]
+       "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "tylosaurus"]
 
 
 def clean_anim(anim_json):
