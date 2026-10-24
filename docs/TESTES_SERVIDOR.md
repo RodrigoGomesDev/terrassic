@@ -77,9 +77,11 @@ lotado e consumo de vagas entre grupos/categorias.
 - Metas de fuga e caça fazem a checagem do próprio animal antes de buscar alvos. Rotinas de carga, crescimento,
   reprodução e chamadas de matilha são escalonadas pelo ID da entidade.
 
-Não foram medidos MSPT, rede, 100 jogadores, reconexão de clientes, transferência de dimensões nem persistência
-do Caderno por jogador. Os testes de persistência acima usam entidades geradas por comandos, sem interação de
-um jogador real. Eclosão de ovos e comportamento de caça/fuga ainda precisam de validação no jogo.
+Esta primeira regressão não mede rede ou desempenho. Entregas posteriores validaram Caderno individual,
+reconexão e reinício com clientes locais de protocolo em Fabric e Forge: consulte `CADERNO_DADOS.md`.
+O perfil inicial de ticks com carga gradual está em `PERFIL_LOCAL.md`; a meta de 100 jogadores continua pendente.
+Os testes de persistência acima usam entidades geradas por comandos, sem interação de um jogador real.
+Transferência de dimensões, eclosão de ovos e comportamento de caça/fuga ainda precisam de validação no jogo.
 
 ## Próximos testes de experiência
 

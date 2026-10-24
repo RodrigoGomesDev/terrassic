@@ -13,7 +13,7 @@ as diferenças entre suas declarações de entrega e o checkout verificado.
 |---|---|---|---|
 | Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Retomar sua fase corrente; registrar aqui arquivos em uso antes de editar |
 | Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; escolher próxima fase livre e registrar escopo |
-| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores e persistência de entidades validados; próximos: Caderno/reconexão, comportamento com jogadores e perfil de carga |
+| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores, persistência e Caderno/reconexão validados; perfil gradual em curso, depois comportamento com jogadores e dimensões |
 | Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entregar documentação e lista de arquivos; preservar trabalho existente |
 | Aprovação visual e experiência | Rodrigo | Aparência, som, sensação de jogo e prioridades de produto | Validar os roteiros de jogo após as entregas técnicas |
 
@@ -41,7 +41,8 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Codex | Testes isolados de servidor; `tools/validation/`, `EcoSpawner.java`, `SpawnBudget.java`, classes-base de IA e persistência (`DinosaurEntity.java`, `HerbivoreDinosaur.java`, `PredatorDinosaur.java`, `DinoEggBlock.java`), docs e ponte de validação em AGENTS/CLAUDE | Concluído; arquivos liberados. Servidores/regressões Fabric e Forge, orçamento e build passaram; arte e tabelas de espécies preservadas |
 | Codex | `research/Knowledge.java`, `ResearchData.java`, `Research.java`, `network/ModNetwork.java` e delta NBT, `client/ClientHooks.java`/`ClientResearch.java` (só recepção de dados), `common/build.gradle`, testes e documentação | Concluído; build e regressões de dados/protocolo passaram. Sem alterações de interface/arte ou novas features narrativas |
 | Codex | `tools/validation/`, utilitários de teste em `common/src/regression/`, documentação | Concluído: conexões reais em Fabric e Forge, páginas, isolamento, negociação, reconexão e reinício passaram; fixtures Python passaram |
-| Codex | `tools/validation/load_profile.py`, `tools/validation/java/JfrSummary.java`, documentação | Em preparação: perfil local gradual com clientes criativos estacionários e JFR; não equivale a jogadores ativos nem valida o alvo de 100 jogadores |
+| Codex | `tools/validation/load_profile.py`, `tools/validation/java/JfrSummary.java`, `local_server.py`, documentação | Concluído: perfis Fabric/Forge com 0, 4, 8 e 16 conexões; roteiro e métricas em `PERFIL_LOCAL.md`. Não equivale a jogadores ativos nem valida o alvo de 100 jogadores |
+| Codex | `tools/validation/minecraft_client.py`, `network_regression.py`, documentação | Em uso: ampliar regressão do Caderno para troca de dimensão e morte/respawn; sem editar sistemas de gameplay |
 | Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Em uso (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
@@ -99,16 +100,25 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 - Treze testes Python passaram, incluindo codec e wrapper de negociação. Nenhuma mudança adicional de produção
   foi necessária nesta quarta entrega.
 
+### Quinta entrega: perfil gradual local
+
+- Snapshot fixo `34953fe` compilado fora do checkout compartilhado, sem mudar de branch.
+- Fabric e Forge concluíram patamares de 0, 4, 8 e 16 clientes estacionários, com ecossistema ligado.
+- Na etapa de 16: Fabric teve 82 criaturas do mod e média de janelas de 16,617 ms; Forge teve 111 e 13,614 ms.
+  São amostras curtas, populações diferentes e mundo plano; não usar para comparar loaders ou anunciar 100 jogadores.
+- `PERFIL_LOCAL.md` documenta cenário, comandos, limitações, revisão e diretórios das gravações JFR.
+- Treze fixtures Python, integridade de 54 espécies e testes do orçamento passaram; sem alterar gameplay nesta entrega.
+
 ## Fila de engenharia, sem sobrepor as features
 
 | Prioridade | Trabalho | Condição de entrada / evidência esperada |
 |---|---|---|
 | 1 | Build dos dois loaders e integridade de recursos | Primeira entrega validada; repetir após alterações de código/recursos |
 | 2 | Inicialização de servidor dedicado Fabric e Forge | Concluída no ambiente de desenvolvimento, com logs e roteiro automatizado |
-| 3 | Persistência de domados, carga e progresso | Entidades e carga validadas após reinício; faltam Caderno e reconexão de jogadores |
+| 3 | Persistência de domados, carga e progresso | Entidades, carga, Caderno por UUID, reconexão e reinício validados nos dois loaders; faltam telas e dimensões |
 | 4 | Errantes efêmeros e controle de ninhos | Implementado; persistência validada nos dois loaders. Eclosão/ninhos ainda exigem teste no jogo |
 | 5 | Spawner justo e distribuído no tempo | Implementados escalonamento e orçamento por grupo; testes aritméticos passaram. Falta simulação com jogadores/perfil e cota proporcional por jogador |
-| 6 | Reduzir buscas de IA e medir custo | Saídas antecipadas implementadas; falta medir MSPT e confirmar comportamento com jogadores |
+| 6 | Reduzir buscas de IA e medir custo | Saídas antecipadas implementadas; perfil inicial com clientes de protocolo em `PERFIL_LOCAL.md`; falta comportamento com jogadores completos e perfil prolongado |
 | 7 | Tags/datapacks e integrações opcionais | Alinhar contrato com o Claude principal antes de mudar geradores |
 
 ## Estado das entregas de outras frentes

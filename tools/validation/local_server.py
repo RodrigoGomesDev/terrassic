@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 class LocalServer:
     def __init__(self, loader, eula_file, report="network-regression", properties=None):
         self.loader = loader
+        self.source_root = ROOT
         if not any(line.strip().lower() == "eula=true" for line in eula_file.read_text().splitlines()):
             raise ValueError("supply an existing accepted eula.txt")
         reports = ROOT / "build" / report
@@ -50,8 +51,8 @@ class LocalServer:
         self.stopping = False
         self.ended = False
         self.log_path = self.directory / f"{stage}.log"
-        self.process = subprocess.Popen([str(ROOT / "gradlew"), "-Dorg.gradle.jvmargs=-Xmx1G", "-I", str(self.init), f":{self.loader}:runServer",
-                                         "--offline", "--no-daemon", "--console=plain"], cwd=ROOT,
+        self.process = subprocess.Popen([str(self.source_root / "gradlew"), "-Dorg.gradle.jvmargs=-Xmx1G", "-I", str(self.init), f":{self.loader}:runServer",
+                                         "--offline", "--no-daemon", "--console=plain"], cwd=self.source_root,
                                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                         text=True, bufsize=1, start_new_session=True)
 
