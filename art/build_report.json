@@ -270,22 +270,22 @@
   "render_scale": 1.0
  },
  "brachiosaurus": {
-  "bones": 28,
-  "cubes": 49,
+  "bones": 30,
+  "cubes": 72,
   "texture": [
-   128,
-   256
+   512,
+   512
   ],
   "bounds_px": [
    [
-    -12.5,
-    -4.143734815780691e-06,
-    -43.918119309379335
+    -26.0,
+    1.1826288163838702e-05,
+    -173.81975715767152
    ],
    [
-    12.5,
-    82.5367379116179,
-    64.08728363697021
+    26.0,
+    214.8425995671334,
+    162.30590672592243
    ]
   ],
   "animations": [
@@ -301,7 +301,7 @@
    "animation.brachiosaurus.beg",
    "animation.brachiosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "parasaurolophus": {
   "bones": 27,

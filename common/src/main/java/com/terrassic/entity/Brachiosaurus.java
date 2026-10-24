@@ -26,7 +26,7 @@ public class Brachiosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 4.0F;
     public static final float HEIGHT = 9.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 3.26F;
+    public static final float MODEL_SCALE = 1.05F;
     public static final float SHADOW = 4.5F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
@@ -89,7 +89,7 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 8.8D * this.getScale();
+        return 6.41D * this.getScale();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 2.61D;
+        return 3.36D;
     }
 
     @Override

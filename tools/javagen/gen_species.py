@@ -51,7 +51,8 @@ SIZES = {
     "deinocheirus":       dict(real=11.0, scale=1.72, w=2.4, h=4.8, baby=0.2,  shadow=2.2),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
     # 22 m length; our model holds the neck more upright than that, so the head reaches ~17 blocks.
-    "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
+    # Brachiosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "brachiosaurus":      dict(real=22.0, scale=1.05, w=4.0, h=9.0, baby=0.12, shadow=4.5),
     # Alamosaurus sanjuanensis: 26-30 m, 30-80 t (Fowler & Sullivan 2011; Tykoski & Fiorillo 2017); head ~13 blocks up.
     "alamosaurus":        dict(real=30.0, scale=3.02, w=5.0, h=9.0, baby=0.1,  shadow=5.5),
     # Saltasaurus loricatus: 12-13 m, ~7 t (Paul 2010), the armoured titanosaur; back at ~4 blocks.
@@ -343,7 +344,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.45, 3.0, 360), step=("RAVAGER_STEP", 1.2, 0.5),
-      xp=50, step_height=1.6, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
+      xp=50, step_height=1.6, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=6.1, ride_forward=3.2, ride_speed=1.0),
  dict(id="alamosaurus", cls="Alamosaurus", base="HerbivoreDinosaur",
       doc="Alamosaurus sanjuanensis - 30 m titanosaur, the last and largest sauropod of North America. Eats leaves; peaceful unless hurt, then the whip tail cracks. Rideable when tamed (the building platform saddle comes with the v0.6 systems).",
       attrs=dict(MAX_HEALTH=360, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=20, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
