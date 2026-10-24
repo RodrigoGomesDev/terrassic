@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.block.DinoEggBlock;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModItems;
 import com.terrassic.research.Objective;
@@ -95,6 +96,9 @@ import java.util.List;
  *       animals sleep through their resting hours ({@link #nocturnal()}).</li>
  *   <li><b>Herds and packs</b> (docs/BANDOS.md): wild adults keep a neighbour of their species within seven blocks
  *       (FollowHerdGoal); fleeing herds stampede together; pack hunters ({@link #packHunter()}) share a target.</li>
+ *   <li><b>Wild nests</b> (docs/NINHOS.md): a wild, well fed adult with a mate nearby and room in the herd
+ *       ({@link #wildPopulationCap()}) breeds on its own and lays a clutch of wild eggs ({@link #clutchSize()});
+ *       a herd may spawn with an egg already laid. Wild eggs hatch wild babies and the herd guards them.</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
  *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
  * </ul>
@@ -243,6 +247,23 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Whether this animal eats carcasses (meat eaters). */
     protected boolean scavenges() {
         return false;
+    }
+
+    /** Whether the wild ones of this species breed and nest on their own (land animals; the sea comes in v0.8). */
+    protected boolean wildNests() {
+        return true;
+    }
+
+    /** How many wild ones of the species may live within 32 blocks before they stop breeding: fewer the bigger. */
+    protected int wildPopulationCap() {
+        float w = this.getType().getWidth();
+        return w >= 4.0F ? 3 : w >= 2.0F ? 5 : w >= 1.0F ? 8 : 12;
+    }
+
+    /** Eggs in a wild clutch: one for the giants, two for the mid-sized, three for the small. */
+    protected int clutchSize() {
+        float w = this.getType().getWidth();
+        return w >= 3.0F ? 1 : w >= 1.2F ? 2 : 3;
     }
 
     /** Bites of carrion that fill this animal up (then it is sated for a few minutes). */
@@ -424,7 +445,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
                                         SpawnGroupData spawnData, CompoundTag tag) {
         this.setFemale(this.random.nextBoolean());
-        return super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+        // one herd in five spawns with a nest already laid next to a grown female (docs/NINHOS.md)
+        if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && this.wildNests() && !this.isBaby()
+                && this.isFemale() && this.random.nextInt(5) == 0) {
+            this.layWildEgg(level);
+        }
+        return data;
     }
 
     // ------------------------------------------------------------------ GeckoLib
@@ -793,6 +820,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         if (!this.level().isClientSide() && this.isAlive()) {
             this.hungerTick();
+            if (this.tickCount % 200 == 0) {
+                this.wildBreedingTick();
+            }
         }
     }
 
@@ -1047,6 +1077,56 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return this.isInLove() && other.isInLove() && dino.isFemale() != this.isFemale();
     }
 
+    /**
+     * Wild breeding (docs/NINHOS.md), checked every ten seconds with a one in twelve chance: a wild, grown, well
+     * fed (gauge 80+), awake, idle animal whose species has room nearby looks for a wild mate of the other sex in the
+     * same state within 16 blocks, and both fall in love; the vanilla BreedGoal does the rest.
+     */
+    private void wildBreedingTick() {
+        if (this.isTame() || this.isBaby() || !this.wildNests() || !this.canFallInLove() || this.getAge() != 0
+                || this.getHunger() < 80 || this.isSleeping() || this.getTarget() != null || this.isVehicle()
+                || this.random.nextInt(12) != 0 || !(this.level() instanceof ServerLevel level)) {
+            return;
+        }
+        if (level.getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(32.0D), e -> !e.isTame()).size()
+                >= this.wildPopulationCap()) {
+            return;
+        }
+        DinosaurEntity mate = null;
+        double best = Double.MAX_VALUE;
+        for (DinosaurEntity other : level.getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(16.0D),
+                e -> e != this && !e.isTame() && !e.isBaby() && e.isFemale() != this.isFemale() && e.canFallInLove()
+                        && e.getAge() == 0 && e.getHunger() >= 80 && !e.isSleeping() && e.getTarget() == null && !e.isVehicle())) {
+            double d = this.distanceToSqr(other);
+            if (d < best) {
+                best = d;
+                mate = other;
+            }
+        }
+        if (mate != null) {
+            this.setInLove(null);
+            mate.setInLove(null);
+        }
+    }
+
+    /** Lays one wild egg next to the animal (a nest found with a herd, or a clutch). */
+    protected boolean layWildEgg(LevelAccessor level) {
+        Block egg = ModBlocks.eggFor(this.speciesId());
+        if (egg == null) {
+            return false;
+        }
+        BlockPos pos = findEggSpot(level, this.blockPosition());
+        if (pos == null) {
+            return false;
+        }
+        BlockState state = egg.defaultBlockState();
+        if (state.hasProperty(DinoEggBlock.WILD)) {
+            state = state.setValue(DinoEggBlock.WILD, true);
+        }
+        level.setBlock(pos, state, Block.UPDATE_ALL);
+        return true;
+    }
+
     @Override
     public void spawnChildFromBreeding(ServerLevel level, Animal partner) {
         Block egg = ModBlocks.eggFor(this.speciesId());
@@ -1055,12 +1135,29 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return;
         }
         DinosaurEntity mother = partner instanceof DinosaurEntity d && d.isFemale() ? d : this;
-        BlockPos pos = findEggSpot(level, mother.blockPosition());
-        if (pos != null) {
-            level.setBlock(pos, egg.defaultBlockState(), Block.UPDATE_ALL);
-            level.playSound(null, pos, SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.7F, 0.9F);
+        if (!mother.isTame() && !this.isTame()) {
+            // a wild couple lays a clutch of wild eggs and the two of them spend some of their reserves on it
+            int laid = 0;
+            for (int i = 0; i < mother.clutchSize(); i++) {
+                if (mother.layWildEgg(level)) {
+                    laid++;
+                }
+            }
+            if (laid > 0) {
+                level.playSound(null, mother.blockPosition(), SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.7F, 0.9F);
+            }
+            this.setHunger(this.getHunger() - 15);
+            if (partner instanceof DinosaurEntity other) {
+                other.setHunger(other.getHunger() - 15);
+            }
         } else {
-            mother.spawnAtLocation(egg);
+            BlockPos pos = findEggSpot(level, mother.blockPosition());
+            if (pos != null) {
+                level.setBlock(pos, egg.defaultBlockState(), Block.UPDATE_ALL);
+                level.playSound(null, pos, SoundEvents.TURTLE_LAY_EGG, SoundSource.BLOCKS, 0.7F, 0.9F);
+            } else {
+                mother.spawnAtLocation(egg);
+            }
         }
 
         ServerPlayer cause = this.getLoveCause();
@@ -1081,7 +1178,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
-    private static BlockPos findEggSpot(ServerLevel level, BlockPos center) {
+    private static BlockPos findEggSpot(LevelAccessor level, BlockPos center) {
         for (int r = 1; r <= 3; r++) {
             for (int dx = -r; dx <= r; dx++) {
                 for (int dz = -r; dz <= r; dz++) {

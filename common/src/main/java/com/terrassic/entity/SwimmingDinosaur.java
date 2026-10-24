@@ -69,6 +69,12 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
+    /** Sea reptiles do not nest yet: the Archelon beaches and the live births at sea come with v0.8. */
+    @Override
+    protected boolean wildNests() {
+        return false;
+    }
+
     /** Favourite food (taming, healing). */
     protected abstract Ingredient food();
 
