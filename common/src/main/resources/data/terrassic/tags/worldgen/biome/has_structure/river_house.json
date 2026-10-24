@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:cretaceous_river",
+    "terrassic:river_delta",
+    "terrassic:hadrosaur_plains",
+    "terrassic:magnolia_forest",
+    "terrassic:redwood_forest",
+    "terrassic:cypress_swamp",
+    "terrassic:dry_lands",
+    "terrassic:cretaceous_beach",
+    "#minecraft:is_river",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    "#minecraft:is_forest",
+    "#minecraft:is_taiga",
+    "#minecraft:is_jungle",
+    "#minecraft:is_savanna",
+    "#minecraft:is_beach",
+    "minecraft:desert"
+  ]
+}

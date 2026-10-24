@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "terrassic:cretaceous/magnolia_checked",
+        "chance": 0.5
+      },
+      {
+        "feature": "terrassic:cretaceous/podocarpus_checked",
+        "chance": 0.2
+      },
+      {
+        "feature": "terrassic:cretaceous/platanus_checked",
+        "chance": 0.15
+      }
+    ],
+    "default": "terrassic:cretaceous/ginkgo_checked"
+  }
+}

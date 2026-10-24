@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "terrassic:cretaceous/araucaria_checked",
+        "chance": 0.6
+      }
+    ],
+    "default": "terrassic:cretaceous/podocarpus_checked"
+  }
+}

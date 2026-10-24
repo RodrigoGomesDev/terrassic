@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:hadrosaur_plains",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    "#minecraft:is_savanna"
+  ]
+}

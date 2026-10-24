@@ -40,7 +40,7 @@ def fragment_texts(theme):
 # Diary objectives of Chapter 1 per theme, in the order of the Objective enum; False = not in the game yet
 CHAPTER1_THEMES = {
     "survival": [("shelter", "terrassic:thatch", True), ("first_spear", "terrassic:flint_spear", True),
-                 ("rift_storm", "minecraft:amethyst_shard", False)],
+                 ("rift_storm", "minecraft:amethyst_shard", True)],
     "science": [("study_five", "minecraft:writable_book", True), ("first_fossil", "terrassic:hair_brush", True),
                 ("research_table", "terrassic:research_table", True)],
     "taming": [("tame_herbivore", "minecraft:fern", True), ("hatch_egg", "terrassic:triceratops_egg", True),
@@ -109,12 +109,12 @@ NODES += [
     N("chapter1/river_house", "chapter1/first_page", "minecraft:campfire", T(
         ("Casa do Rio", "River House", "Casa del Río"),
         ("Ache o Refúgio da Katarina na margem do rio.", "Find Katarina's Refuge on the riverbank.",
-         "Encuentra el Refugio de Katarina a orillas del río.")), xp=25, ready=False),
+         "Encuentra el Refugio de Katarina a orillas del río.")), xp=25),
     N("chapter1/mate", "chapter1/river_house", "terrassic:parasaurolophus_spawn_egg", T(
         ("Mate", "Mate", "Mate"),
         ("O Parasaurolophus da Katarina aceita você como dono. Bom Mate.",
          "Katarina's Parasaurolophus accepts you as its owner. Good mate.",
-         "El Parasaurolophus de Katarina te acepta como dueño. Buen mate.")), xp=25, ready=False),
+         "El Parasaurolophus de Katarina te acepta como dueño. Buen mate.")), xp=25),
 
     # the Rift
     N("chapter1/out_of_time", "chapter1/root", "terrassic:stegosaurus_spawn_egg", T(

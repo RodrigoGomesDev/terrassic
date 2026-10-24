@@ -1,6 +1,7 @@
 package com.terrassic;
 
 import com.terrassic.client.TerrassicClient;
+import com.terrassic.client.TerrassicWorldClient;
 import com.terrassic.registry.ModBlockEntities;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
@@ -8,6 +9,10 @@ import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModTabs;
 import com.terrassic.research.Research;
+import com.terrassic.world.ArrivalCrater;
+import com.terrassic.world.CretaceousBiomes;
+import com.terrassic.world.KatarinaRefuge;
+import com.terrassic.world.RiftStorm;
 import com.terrassic.world.ModSpawns;
 import com.terrassic.world.ModWorldgen;
 import dev.architectury.utils.Env;
@@ -34,6 +39,11 @@ public final class Terrassic {
         ModEntities.registerAttributes();
         ModSpawns.init();
         ModWorldgen.init();
+        CretaceousBiomes.init(); // v0.8: Cretaceous biomes of the "Terrassic" world type
+        ArrivalCrater.init(); // v0.8: the arrival crater next to the world spawn
+        KatarinaRefuge.init(); // v0.8: Mate at the River House, the Amber Lens pointing to it
+        RiftStorm.init(); // v0.8: Rift Storms
+        EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicWorldClient::init); // v0.8: storm effects, HUD
         Research.init();
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }

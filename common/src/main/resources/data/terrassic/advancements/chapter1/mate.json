@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/river_house",
+  "display": {
+    "icon": {
+      "item": "terrassic:parasaurolophus_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.mate.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.mate.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

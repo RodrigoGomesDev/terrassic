@@ -1,0 +1,22 @@
+{
+  "structures": [
+    {
+      "structure": "terrassic:katarina_camp_reed",
+      "weight": 1
+    },
+    {
+      "structure": "terrassic:katarina_camp_fern",
+      "weight": 1
+    },
+    {
+      "structure": "terrassic:katarina_camp_hide",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 30,
+    "separation": 10,
+    "salt": 1958241307
+  }
+}

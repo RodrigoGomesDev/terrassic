@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/first_page",
+  "display": {
+    "icon": {
+      "item": "minecraft:campfire"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.river_house.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.river_house.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

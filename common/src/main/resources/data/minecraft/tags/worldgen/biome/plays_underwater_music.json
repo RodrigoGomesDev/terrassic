@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:cretaceous_river",
+    "terrassic:deep_inner_sea",
+    "terrassic:inner_sea"
+  ]
+}

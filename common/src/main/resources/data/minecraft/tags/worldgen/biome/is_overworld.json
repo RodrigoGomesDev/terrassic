@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:cretaceous_beach",
+    "terrassic:cretaceous_highlands",
+    "terrassic:cretaceous_river",
+    "terrassic:cypress_swamp",
+    "terrassic:deep_inner_sea",
+    "terrassic:dry_lands",
+    "terrassic:hadrosaur_plains",
+    "terrassic:inner_sea",
+    "terrassic:magnolia_forest",
+    "terrassic:redwood_forest",
+    "terrassic:river_delta"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "terrassic:cretaceous/platanus_checked",
+        "chance": 0.5
+      },
+      {
+        "feature": "terrassic:cretaceous/metasequoia_checked",
+        "chance": 0.3
+      }
+    ],
+    "default": "terrassic:cretaceous/taxodium_checked"
+  }
+}
