@@ -53,3 +53,13 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] Agachado, usar a Lente de Âmbar mostra a distância e a direção do Refúgio; perto dele, "Você está no Refúgio da Katarina".
 - [ ] Sem agachar, a Lente continua funcionando como luneta.
 - [ ] `/locate structure terrassic:nest_colony`: montes com ninhos e ovos de Maiasaura e quatro adultas por perto.
+
+## 5. Tempestades da Fenda (M4)
+- [ ] `/terrassic tempestade iniciar`: aparece a mensagem; em uns 5 s o céu, as nuvens e a névoa ficam âmbar e surgem partículas de âmbar.
+- [ ] Sons distorcidos de vez em quando.
+- [ ] A cada ~10 s surge perto de você (20-34 blocos) um Stegosaurus, Brachiosaurus, Dilophosaurus ou Compsognathus, com clarão âmbar e brilho; no máximo 3 por jogador.
+- [ ] Matar uma delas solta âmbar bruto.
+- [ ] `/terrassic tempestade parar` (ou esperar 3-5 min): mensagem de fim, o céu volta ao normal e as criaturas somem num clarão, menos as domadas.
+- [ ] Quem ficou no Overworld a tempestade toda completa "Sobreviver a uma Tempestade da Fenda" no Diário (e ganha a conquista).
+- [ ] Sem comando: com `storm_chance` 1.0 e `storm_min_days` 0 no `config/terrassic-world.json`, a tempestade começa no entardecer.
+- [ ] No Nether e no End não há efeito nenhum.

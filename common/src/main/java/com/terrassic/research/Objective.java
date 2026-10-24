@@ -10,7 +10,7 @@ package com.terrassic.research;
 public enum Objective {
     SHELTER(Theme.SURVIVAL, true),
     FIRST_SPEAR(Theme.SURVIVAL, true),
-    RIFT_STORM(Theme.SURVIVAL, false),
+    RIFT_STORM(Theme.SURVIVAL, true),
     STUDY_FIVE(Theme.SCIENCE, true),
     FIRST_FOSSIL(Theme.SCIENCE, true),
     RESEARCH_TABLE(Theme.SCIENCE, true),

@@ -1204,6 +1204,8 @@
   "message.terrassic.sit": "%s está descansando",
   "message.terrassic.sketch_done": "Boceto listo: %s",
   "message.terrassic.sketch_lost": "Perdiste de vista al animal.",
+  "message.terrassic.storm_end": "La Grieta se calma. Lo que cruzó regresa, salvo que alguien lo haya domado.",
+  "message.terrassic.storm_start": "El cielo se vuelve ámbar y el tiempo falla... ¡Una Tormenta de la Grieta! Criaturas de otras eras están cruzando.",
   "message.terrassic.tamed": "¡Has domesticado a %s (%s)!",
   "message.terrassic.theme_done": "Fragmento de ámbar recuperado: %s de 4",
   "notebook.terrassic.guide.all_diets": "Todas las dietas",

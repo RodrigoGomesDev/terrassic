@@ -6,9 +6,12 @@ import com.terrassic.registry.ModItems;
 import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.InteractionEvent;
+import dev.architectury.event.events.common.TickEvent;
+import com.terrassic.research.Research;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -29,12 +32,14 @@ import java.util.UUID;
  *   <li><b>Mate</b>, her Parasaurolophus, waits on the deck: the template spawns him tamed to Katarina (who is never
  *       online, so he stays sitting). The first player who touches him with an empty hand becomes his owner.</li>
  *   <li><b>The Amber Lens points to the Refuge:</b> sneak and use the lens to get the distance and the direction.</li>
+ *   <li>Advancements "River House" (standing in it) and "Mate" (Mate accepts you).</li>
  * </ul>
  */
 public final class KatarinaRefuge {
     /** Katarina's UUID, as written in the River House template (KATARINA_UUID in gen_structures.py). */
     public static final UUID KATARINA = new UUID(0x4B61746172696E61L, 0x2055736861000001L);
     public static final TagKey<Structure> REFUGE = TagKey.create(Registries.STRUCTURE, Terrassic.id("katarina_refuge"));
+    private static final ResourceLocation RIVER_HOUSE = Terrassic.id("river_house");
     private static final String[] DIRECTIONS = {"n", "ne", "e", "se", "s", "sw", "w", "nw"};
 
     private KatarinaRefuge() {
@@ -43,6 +48,23 @@ public final class KatarinaRefuge {
     public static void init() {
         InteractionEvent.INTERACT_ENTITY.register(KatarinaRefuge::touchMate);
         InteractionEvent.RIGHT_CLICK_ITEM.register(KatarinaRefuge::useLens);
+        TickEvent.SERVER_LEVEL_POST.register(KatarinaRefuge::visit);
+    }
+
+    /** Every 2 s: players standing in the River House get the advancement "River House". */
+    private static void visit(ServerLevel level) {
+        if (level.getGameTime() % 40 != 0 || level.players().isEmpty()) {
+            return;
+        }
+        Structure house = level.registryAccess().registryOrThrow(Registries.STRUCTURE).get(RIVER_HOUSE);
+        if (house == null) {
+            return;
+        }
+        for (ServerPlayer p : level.players()) {
+            if (level.structureManager().getStructureWithPieceAt(p.blockPosition(), house).isValid()) {
+                Research.award(p, "chapter1/river_house");
+            }
+        }
     }
 
     private static EventResult touchMate(Player player, Entity entity, InteractionHand hand) {
@@ -54,6 +76,9 @@ public final class KatarinaRefuge {
             dino.removeTag("terrassic_mate");
             dino.tameBy(player);
             player.displayClientMessage(Component.translatable("message.terrassic.mate_greets", dino.getDisplayName()), false);
+            if (player instanceof ServerPlayer sp) {
+                Research.award(sp, "chapter1/mate");
+            }
         }
         return EventResult.interruptTrue();
     }

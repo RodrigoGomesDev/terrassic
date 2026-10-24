@@ -1204,6 +1204,8 @@
   "message.terrassic.sit": "%s está descansando",
   "message.terrassic.sketch_done": "Esboço pronto: %s",
   "message.terrassic.sketch_lost": "Você perdeu o animal de vista.",
+  "message.terrassic.storm_end": "A Fenda se acalma. O que atravessou volta, a não ser que alguém tenha domado.",
+  "message.terrassic.storm_start": "O céu fica âmbar e o tempo falha... Uma Tempestade da Fenda! Criaturas de outras eras estão atravessando.",
   "message.terrassic.tamed": "Você domesticou %s (%s)!",
   "message.terrassic.theme_done": "Fragmento de âmbar recuperado: %s de 4",
   "notebook.terrassic.guide.all_diets": "Todas as dietas",

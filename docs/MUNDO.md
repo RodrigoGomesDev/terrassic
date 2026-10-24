@@ -80,10 +80,11 @@ idêntico ao mapeamento direto.
 Ordem das features: as que aparecem em mais de um bioma seguem sempre a mesma ordem (`PLANT_ORDER`, `NAMED_ORDER`
 em `gen_world.py`). Sem isso o jogo recusa o mundo com "Feature order cycle found".
 
-Arquivos compartilhados que esta frente tocou (só o mínimo; M2 só acrescentou 3 linhas no `terrassic.mixins.json`):
+Arquivos compartilhados que esta frente tocou (só o mínimo; M2 e M4 só acrescentaram linhas no `terrassic.mixins.json`):
 - `tools/javagen/gen_species.py`: a tabela `BIOMES` (13 linhas) ganhou `|| ctx.hasTag(CretaceousBiomes.habitat(...))`.
 - `tools/javagen/gen_resources.py`: 3 linhas, para chamar `gen_world` e juntar os textos.
-- `Terrassic.java`: 1 linha (`CretaceousBiomes.init()`). `terrassic.mixins.json`: 1 linha.
+- `Terrassic.java`: 4 linhas (`CretaceousBiomes`, `ArrivalCrater`, `KatarinaRefuge`, `RiftStorm`). `terrassic.mixins.json`: as linhas dos mixins novos.
+- `research/Objective.java`: `RIFT_STORM` passou a `true`. `tools/javagen/conquistas.py`: `rift_storm`, `river_house` e `mate` passaram a `ready`.
 
 ## 4. Próximas fases desta frente (v0.8)
 
@@ -93,8 +94,8 @@ Arquivos compartilhados que esta frente tocou (só o mínimo; M2 só acrescentou
 | M2 | Tela de título: panorama do Cretáceo, logo de pedra, frases e dicas de carregamento com curiosidades reais | ✅ (falta ver no jogo) |
 | M3a | Estruturas I: Cratera de Chegada, Acampamentos da Katarina (3 variantes), Sítio Fossilífero, Ossuário | ✅ (falta ver no jogo) |
 | M3b | Estruturas II: Casa do Rio (Refúgio, com o "Mate"), Colônia de Ninhos de Maiasaura, Lente de Âmbar apontando o Refúgio | ✅ (falta ver no jogo) |
-| M4 | Tempestades da Fenda (céu âmbar, criaturas fora de época) | ⏭ |
-| M5 | HUD: montaria, bando, nova espécie, nome da era | ○ |
+| M4 | Tempestades da Fenda (céu âmbar, criaturas fora de época) | ✅ (falta ver no jogo) |
+| M5 | HUD: montaria, bando, nova espécie, nome da era | ⏭ |
 | M6 | Música e sons de fundo por bioma (gravações PD/CC0, no Mac) | ○ |
 
 ## 5. Tela de título e telas de carregamento (M2)
@@ -145,7 +146,25 @@ sente o cheiro da Katarina em você e aceita você"). Conta como domar para o Di
 blocos, direção noroeste"), com o som de cristal de ametista. Usa a tag de estrutura `terrassic:katarina_refuge`, então
 `/locate structure #terrassic:katarina_refuge` também acha.
 
-## 7. Perguntas abertas para o Rodrigo
+## 7. Tempestades da Fenda (M4)
+
+`world/RiftStorm` (servidor) e `client/RiftStormClient` (efeitos).
+- **Quando:** no entardecer (tempo 12600), com 20% de chance, se já passaram 3 dias desde a última. Dura 3 a 5 minutos.
+  Configurável em `config/terrassic-world.json` (`rift_storms`, `storm_chance`, `storm_min_days`, `storm_minutes_min/max`,
+  `storm_creatures`). Admin: `/terrassic tempestade iniciar` e `/terrassic tempestade parar`.
+- **Como é:** céu, nuvens e névoa ficam âmbar (mixins de cliente `ClientLevelMixin` e `FogRendererMixin`, opcionais), e
+  partículas de âmbar flutuam em volta do jogador. De vez em quando o "tempo falha" com sons distorcidos (ametista, sinalizador,
+  caverna em tom grave). Aparecem mensagens no começo e no fim.
+- **Criaturas de outras eras:** a cada 10 s, perto de cada jogador no Overworld (até 3 por jogador), surge da Fenda uma
+  espécie do Guia cuja era não é o Cretáceo Superior. Hoje são os 4 jurássicos; qualquer espécie de outra era que entrar
+  depois aparece também. Elas chegam com um clarão de partículas âmbar, som de teleporte grave e brilho por 10 s.
+  Têm a tag `terrassic_rift` e soltam âmbar bruto ao morrer. No fim da tempestade voltam para a Fenda, a não ser que alguém
+  tenha domado alguma.
+- **Diário:** quem está no Overworld quando a tempestade começa e continua vivo quando ela acaba completa o objetivo
+  "Sobreviver a uma Tempestade da Fenda" (`Objective.RIFT_STORM` ligado, conquista `chapter1/rift_storm` gerada).
+- Conquistas ligadas junto com a M3b: `chapter1/river_house` (estar dentro da Casa do Rio) e `chapter1/mate` (o Mate aceita você).
+
+## 8. Perguntas abertas para o Rodrigo
 
 1. **Biomas do Cretáceo também no mundo normal?** Hoje eles só existem no tipo "Terrassic". Para misturar com o
    vanilla seria preciso um sistema de regiões próprio (sem TerraBlender, que é de terceiros).

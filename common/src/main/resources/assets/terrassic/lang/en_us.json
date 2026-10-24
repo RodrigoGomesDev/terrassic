@@ -1204,6 +1204,8 @@
   "message.terrassic.sit": "%s is resting",
   "message.terrassic.sketch_done": "Sketch done: %s",
   "message.terrassic.sketch_lost": "You lost sight of the animal.",
+  "message.terrassic.storm_end": "The Rift calms down. What came through goes back, unless someone tamed it.",
+  "message.terrassic.storm_start": "The sky turns amber and time stutters... A Rift Storm! Creatures from other eras are coming through.",
   "message.terrassic.tamed": "You tamed %s (%s)!",
   "message.terrassic.theme_done": "Amber fragment recovered: %s of 4",
   "notebook.terrassic.guide.all_diets": "All diets",

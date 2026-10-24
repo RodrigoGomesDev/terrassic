@@ -11,7 +11,9 @@
     "client.InventoryKeyMixin",
     "client.TitleScreenMixin",
     "client.LevelLoadingScreenMixin",
-    "client.ReceivingLevelScreenMixin"
+    "client.ReceivingLevelScreenMixin",
+    "client.ClientLevelMixin",
+    "client.FogRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
