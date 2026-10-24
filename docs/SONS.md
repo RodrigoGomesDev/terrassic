@@ -50,16 +50,5 @@ O que preciso do Rodrigo:
 - Piloto: Tiranossauro (estrondo, ameaça, passos), Parassaurolofo (chamado de crista) e Pteranodonte (grasnado e bater de asas). As outras espécies continuam com os sons vanilla até ganharem um conjunto.
 - `python3 tools/soundgen/build.py` gera os .ogg, o `sounds.json` e o `ModSounds.java`; `gen_resources.py` gera as legendas; `gen_species.py` liga as espécies aos conjuntos.
 
-## O que baixar (Freesound, filtro de licença "Creative Commons 0")
-Coloque os arquivos em `art/sounds/src/` com o nome sugerido e preencha `art/sounds/src/CREDITS.md`. 2 ou 3 de cada já bastam.
-
-| Para o conjunto | Buscar no Freesound | Nome sugerido |
-|---|---|---|
-| boom_large | `alligator bellow`, `crocodile growl`, `ostrich boom` | `boom_jacare_1.wav`, `boom_avestruz_1.wav` |
-| boom_large (ameaça) | `cassowary boom`, `elephant seal` | `ameaca_casuar_1.wav` |
-| horn_hadrosaur | `didgeridoo low`, `conch shell horn`, `emu drumming` | `trompa_1.wav` |
-| squawk_pterosaur | `heron call`, `pelican`, `gannet colony` | `grasnado_garca_1.wav` |
-| squawk_pterosaur (asas) | `swan wings flap`, `large bird wings` | `asas_1.wav` |
-| passos | `heavy footstep dirt`, `log thud` | `passo_1.wav` |
-
-Depois é só me avisar: eu troco as receitas para usar os arquivos, mantendo o código como camada grave.
+## Gravações (automático)
+O download não depende do Rodrigo: `tools/soundgen/fetch.py` baixa no Mac gravações em domínio público (National Park Service, US Fish and Wildlife Service) e CC0 (OpenGameArt), sem login, e confere a licença. As receitas usam jacaré e bisão (T. rex), alce e mergulhão mais graves (Parassaurolofo), grou, garça e corvo (Pteranodonte) e asas grandes, com o som sintético por baixo como camada grave e como reserva enquanto a gravação não existe. Passo a passo: `docs/SONS_DOWNLOAD.md`. Licenças: `docs/LICENSES-SOUNDS.md`.

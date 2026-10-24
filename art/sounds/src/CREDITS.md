@@ -1,7 +1,3 @@
 # Fontes de som gravadas
 
-Só entram aqui arquivos com licença **CC0** (domínio público), ou equivalente sem exigência de crédito e com uso comercial liberado.
-Uma linha por arquivo. O `tools/soundgen/recipes.py` usa um arquivo daqui com a variante `("src", "arquivo.wav", início_s, duração_s)`.
-
-| Arquivo | Animal / conteúdo | Autor | Link | Licença |
-|---|---|---|---|---|
+As fontes ficam em `art/sounds/src/<id>/`, baixadas por `tools/soundgen/fetch.py` a partir da lista em `tools/soundgen/sources.py` (só domínio público ou CC0). Autores, links e licenças: `docs/LICENSES-SOUNDS.md` (gerado, não edite à mão). Para adicionar uma fonte, inclua-a em `sources.py` e rode o `fetch.py`.

@@ -2,9 +2,10 @@
 Sound recipes. Sounds are organised in VOICE SETS shared by many species (one per kind of animal), so hundreds
 of species need only a few dozen sets: each species picks a set and a pitch in SPECIES_VOICE.
 
-A variant is either a procedural voice from synth.py, ("synth", voice, params), or a recorded source,
-("src", "file.wav", seconds_start, seconds_length), read from art/sounds/src/ (CC0 only; list each file in
-art/sounds/src/CREDITS.md). Every variant then goes through the set's ffmpeg filter chain (FX[...]).
+A variant is a procedural voice from synth.py (S(...)), or a cut of a recording (rec(...)) from art/sounds/src/,
+listed in sources.py (public domain or CC0 only) and downloaded by fetch.py. A recording can sit over a procedural
+layer, and falls back to a procedural voice while it is not downloaded. Every variant then goes through the set's
+ffmpeg filter chain (FX[...]).
 
 After editing: python3 build.py (sounds, sounds.json, ModSounds.java), then python3 ../javagen/gen_resources.py
 (subtitles) and python3 ../javagen/gen_species.py (species use the sets).
@@ -20,36 +21,72 @@ FX = {
     "air": "highpass=f=90,lowpass=f=1800",
 }
 
+
+def S(voice, **params):
+    """Procedural voice from synth.py."""
+    return ("synth", voice, params)
+
+
+def rec(pattern, fallback, layer=None, layer_gain=0.45, **params):
+    """A recording from art/sounds/src (sources.py id + glob), optionally over a procedural layer (the felt low end).
+    params: dur (seconds cut from the source), pick (n-th loudest part, auto) or start, pitch (<1 = slower and
+    deeper), file (n-th matching file), fade_in, fade_out (fraction). Falls back to `fallback` until downloaded."""
+    src = ("src", pattern, params)
+    if layer is not None:
+        src = ("mix", [(src, 1.0), (layer, layer_gain)])
+    return ("alt", src, fallback)
+
+
 # set -> event -> (fx, attenuation distance in blocks, [variants])
 VOICE_SETS = {
-    # big theropods: closed-mouth boom, felt more than heard
+    # big theropods: closed-mouth boom (alligator bellow, bison), felt more than heard
     "boom_large": {
-        "ambient": ("deep", 48, [("synth", "boom", dict(dur=2.6, f0=56, f1=46, seed=1)),
-                                 ("synth", "boom", dict(dur=2.2, f0=60, f1=50, flutter=8.5, seed=2)),
-                                 ("synth", "boom", dict(dur=3.0, f0=50, f1=44, flutter=6.0, depth=0.45, seed=3))]),
-        "threat": ("deep", 64, [("synth", "boom", dict(dur=3.4, f0=64, f1=42, flutter=9.0, depth=0.55, breath=0.25, seed=4))]),
-        "hurt": ("deep", 32, [("synth", "grunt", dict(dur=0.5, f0=120, f1=78, seed=5)),
-                              ("synth", "grunt", dict(dur=0.45, f0=135, f1=90, seed=6))]),
-        "death": ("deep", 48, [("synth", "groan", dict(dur=2.6, f0=80, f1=34, seed=7))]),
-        "step": ("ground", 24, [("synth", "thud", dict(f0=46, seed=8)), ("synth", "thud", dict(f0=40, seed=9))]),
+        "ambient": ("deep", 48, [
+            rec("wm_alligator_bellow/*", S("boom", dur=2.6, f0=56, f1=46, seed=1), dur=1.8, pitch=0.7,
+                layer=S("boom", dur=2.6, f0=48, f1=42, seed=1)),
+            rec("wm_alligator_bellow_2/*", S("boom", dur=2.2, f0=60, f1=50, flutter=8.5, seed=2), dur=1.6, pitch=0.7,
+                layer=S("boom", dur=2.3, f0=52, f1=44, seed=2)),
+            rec("nps_bison_bellow_a/*", S("boom", dur=3.0, f0=50, f1=44, flutter=6.0, depth=0.45, seed=3), dur=1.8,
+                pitch=0.6, layer=S("boom", dur=3.0, f0=46, f1=40, seed=3))]),
+        "threat": ("deep", 64, [
+            rec("nps_grizzly_roar/*", S("boom", dur=3.4, f0=64, f1=42, flutter=9.0, depth=0.55, breath=0.25, seed=4),
+                dur=2.0, pitch=0.6, layer=S("boom", dur=3.4, f0=58, f1=40, seed=4), layer_gain=0.6)]),
+        "hurt": ("deep", 32, [
+            rec("nps_grizzly_warn/*", S("grunt", dur=0.5, f0=120, f1=78, seed=5), dur=0.45, pitch=0.7),
+            rec("nps_grizzly_warn/*", S("grunt", dur=0.45, f0=135, f1=90, seed=6), dur=0.45, pitch=0.75, pick=1)]),
+        "death": ("deep", 48, [
+            rec("nps_bison_rut/*", S("groan", dur=2.6, f0=80, f1=34, seed=7), dur=1.8, pitch=0.55, fade_out=0.6,
+                layer=S("groan", dur=3.2, f0=70, f1=30, seed=7))]),
+        "step": ("ground", 24, [S("thud", f0=46, seed=8), S("thud", f0=40, seed=9)]),
     },
-    # hadrosaurs: resonant crest call
+    # hadrosaurs: resonant crest call (elk bugle and loon slowed down into a horn)
     "horn_hadrosaur": {
-        "ambient": ("tube", 64, [("synth", "horn", dict(dur=2.6, f0=92, f1=84, seed=11)),
-                                 ("synth", "horn", dict(dur=1.8, f0=98, f1=92, seed=12)),
-                                 ("synth", "horn", dict(dur=3.2, f0=88, f1=80, vibrato=3.5, seed=13))]),
-        "hurt": ("tube", 24, [("synth", "grunt", dict(dur=0.45, f0=180, f1=130, noise=0.3, seed=14)),
-                              ("synth", "grunt", dict(dur=0.4, f0=200, f1=150, noise=0.3, seed=15))]),
-        "death": ("tube", 32, [("synth", "horn", dict(dur=2.4, f0=96, f1=60, vibrato=6.0, seed=16))]),
+        "ambient": ("tube", 64, [
+            rec("nps_elk_bugle/*", S("horn", dur=2.6, f0=92, f1=84, seed=11), dur=1.4, pitch=0.5,
+                layer=S("horn", dur=2.8, f0=92, f1=84, seed=11), layer_gain=0.35),
+            rec("nps_loon/*", S("horn", dur=1.8, f0=98, f1=92, seed=12), dur=1.2, pitch=0.55,
+                layer=S("horn", dur=2.2, f0=98, f1=92, seed=12), layer_gain=0.35),
+            rec("nps_elk_bugle/*", S("horn", dur=3.2, f0=88, f1=80, vibrato=3.5, seed=13), dur=1.6, pitch=0.45, pick=1,
+                layer=S("horn", dur=3.6, f0=88, f1=80, seed=13), layer_gain=0.35)]),
+        "hurt": ("tube", 24, [
+            rec("nps_goose/*", S("grunt", dur=0.45, f0=180, f1=130, noise=0.3, seed=14), dur=0.3, pitch=0.6),
+            rec("nps_goose/*", S("grunt", dur=0.4, f0=200, f1=150, noise=0.3, seed=15), dur=0.3, pitch=0.65, pick=1)]),
+        "death": ("tube", 32, [
+            rec("nps_elk_bugle/*", S("horn", dur=2.4, f0=96, f1=60, vibrato=6.0, seed=16), dur=1.3, pitch=0.42, pick=2,
+                fade_out=0.6)]),
     },
-    # pterosaurs: raspy squawk and wing beats
+    # pterosaurs: raspy squawk (crane, heron, raven, deeper) and wing beats
     "squawk_pterosaur": {
-        "ambient": ("beak", 32, [("synth", "squawk", dict(dur=0.55, f0=380, f1=300, seed=21)),
-                                 ("synth", "squawk", dict(dur=0.4, f0=420, f1=340, seed=22)),
-                                 ("synth", "squawk", dict(dur=0.7, f0=340, f1=260, rough=0.8, seed=23))]),
-        "hurt": ("beak", 24, [("synth", "squawk", dict(dur=0.3, f0=520, f1=420, rough=0.9, seed=24))]),
-        "death": ("beak", 24, [("synth", "squawk", dict(dur=0.9, f0=400, f1=180, rough=0.7, seed=25))]),
-        "flap": ("air", 16, [("synth", "flap", dict(dur=0.45, beats=1, seed=26)), ("synth", "flap", dict(dur=0.5, beats=1, seed=27))]),
+        "ambient": ("beak", 32, [
+            rec("nps_crane/*", S("squawk", dur=0.55, f0=380, f1=300, seed=21), dur=0.6, pitch=0.75),
+            rec("wm_heron/*", S("squawk", dur=0.4, f0=420, f1=340, seed=22), dur=0.5, pitch=0.8),
+            rec("nps_raven/*", S("squawk", dur=0.7, f0=340, f1=260, rough=0.8, seed=23), dur=0.6, pitch=0.7)]),
+        "hurt": ("beak", 24, [rec("wm_pelican/*", S("squawk", dur=0.3, f0=520, f1=420, rough=0.9, seed=24), dur=0.3,
+                                  pitch=0.8)]),
+        "death": ("beak", 24, [rec("nps_crane/*", S("squawk", dur=0.9, f0=400, f1=180, rough=0.7, seed=25), dur=0.7,
+                                   pitch=0.6, pick=1, fade_out=0.6)]),
+        "flap": ("air", 16, [rec("oga_wings/*", S("flap", dur=0.45, beats=1, seed=26), dur=0.5, pitch=0.8),
+                             rec("oga_wings/*", S("flap", dur=0.5, beats=1, seed=27), dur=0.5, pitch=0.75, file=1)]),
     },
 }
 
