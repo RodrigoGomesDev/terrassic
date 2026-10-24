@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.ai.EatCarcassGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
@@ -56,6 +57,12 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         return TameMethod.BABY_FEEDING;
     }
 
+    /** Every meat eater takes carrion (docs/CARCACAS.md). */
+    @Override
+    protected boolean scavenges() {
+        return true;
+    }
+
     /** Hook for extra goals (leap, avoid...). Called at the end of {@link #registerGoals()}. */
     protected void addExtraGoals() {
     }
@@ -64,6 +71,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        this.goalSelector.addGoal(2, new EatCarcassGoal(this));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, attackSpeed(), true));
         this.goalSelector.addGoal(4, new FollowOwnerGoal(this, 1.2D, 10.0F, Math.max(2.0F, this.getBbWidth() * 1.5F), false));
         this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));

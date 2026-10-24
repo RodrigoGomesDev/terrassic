@@ -43,6 +43,7 @@ import com.terrassic.entity.Tyrannosaurus;
 import com.terrassic.entity.Velociraptor;
 import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
+import com.terrassic.entity.CarcassEntity;
 import com.terrassic.entity.ThrownSpear;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -154,6 +155,11 @@ public final class ModEntities {
     public static final RegistrySupplier<EntityType<ThrownSpear>> SPEAR = ENTITY_TYPES.register("spear",
             () -> EntityType.Builder.<ThrownSpear>of(ThrownSpear::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build("spear"));
+
+    // ---- carcasses (docs/CARCACAS.md): the body a dead dinosaur leaves, harvested by players and scavengers
+    public static final RegistrySupplier<EntityType<CarcassEntity>> CARCASS = ENTITY_TYPES.register("carcass",
+            () -> EntityType.Builder.<CarcassEntity>of(CarcassEntity::new, MobCategory.MISC)
+                    .sized(1.0F, 0.5F).clientTrackingRange(10).updateInterval(20).build("carcass"));
 
     private ModEntities() {
     }

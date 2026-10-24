@@ -68,6 +68,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Base class of every Terrassic dinosaur.
  *
@@ -84,6 +87,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  *   <li><b>Cargo</b>: species with {@link #cargoRows()} &gt; 0 take a chest once tamed and grown; the chest is a
  *       cargo inventory of that many rows (sneak + use opens it, or the inventory key while riding), and the animal
  *       picks up the drops around its feet while it is up and about (docs/CARGA.md).</li>
+ *   <li><b>Carcass</b>: a dead dinosaur leaves a {@link CarcassEntity} holding its death loot (docs/CARCACAS.md);
+ *       meat eaters scavenge it ({@link #scavenges()}) and are sated for a while afterwards.</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
  *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
  * </ul>
@@ -123,6 +128,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private int perchGrace;
     /** Cooldown of the perched animal's danger warning. */
     private int perchWarnCooldown;
+    /** While dying, the death loot is collected here for the carcass instead of being dropped. */
+    private List<ItemStack> capturedLoot;
+    /** Ticks a meat eater stays full after a meal (it does not hunt while sated). */
+    private int sated;
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -157,6 +166,29 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Rows of nine cargo slots a tamed adult carries once a chest is strapped on; 0 = carries no cargo. */
     public int cargoRows() {
         return 0;
+    }
+
+    /** Whether this animal eats carcasses (meat eaters). */
+    protected boolean scavenges() {
+        return false;
+    }
+
+    /** Bites of carrion that fill this animal up (then it is sated for a few minutes). */
+    public int carcassFill() {
+        return 2 + Math.round(this.getBbWidth() * 2.0F);
+    }
+
+    public boolean isSated() {
+        return this.sated > 0;
+    }
+
+    public void setSated(int ticks) {
+        this.sated = ticks;
+    }
+
+    /** Called when it bites a carcass: the eating animation. */
+    public void onAteCarrion() {
+        triggerAnim(ACTION_CONTROLLER, "eat");
     }
 
     /** Whether the species takes the platform saddle (the titans): four riders, anyone may climb on. */
@@ -213,9 +245,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return "animation." + speciesId() + "." + name;
     }
 
-    /** Wild predators only hunt when grown up and when the world is not on Peaceful. */
+    /** Wild predators only hunt when grown up, hungry (not sated by a recent meal) and when the world is not on Peaceful. */
     protected boolean canHunt() {
-        return !this.isBaby() && !this.isTame() && this.level().getDifficulty() != Difficulty.PEACEFUL;
+        return !this.isBaby() && !this.isTame() && !this.isSated() && this.level().getDifficulty() != Difficulty.PEACEFUL;
     }
 
     // ------------------------------------------------------------------ synced data / save
@@ -270,6 +302,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         tag.putBoolean("Saddled", this.isSaddled());
         tag.putBoolean("Chested", this.isChested());
         tag.putBoolean("Platform", this.isPlatform());
+        tag.putInt("Sated", this.sated);
         if (this.cargo != null) {
             ListTag list = new ListTag();
             for (int i = 0; i < this.cargo.getContainerSize(); i++) {
@@ -294,6 +327,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setSaddled(tag.getBoolean("Saddled"));
         this.setChested(tag.getBoolean("Chested"));
         this.setPlatform(tag.getBoolean("Platform"));
+        this.sated = tag.getInt("Sated");
         if (this.cargo != null && tag.contains("Cargo", Tag.TAG_LIST)) {
             ListTag list = tag.getList("Cargo", Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
@@ -326,6 +360,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
         AnimationController<DinosaurEntity> action = new AnimationController<>(this, ACTION_CONTROLLER, 3, state -> PlayState.STOP);
         action.triggerableAnim("attack", RawAnimation.begin().thenPlay(anim("attack")));
+        action.triggerableAnim("eat", RawAnimation.begin().thenPlay(anim("eat")));
         for (String extra : extraActions()) {
             action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
         }
@@ -380,11 +415,46 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     @Override
     protected void dropEquipment() {
+        // the gear drops where the animal fell, not inside the carcass
+        List<ItemStack> hold = this.capturedLoot;
+        this.capturedLoot = null;
         super.dropEquipment();
         if (this.isSaddled()) {
             this.spawnAtLocation(this.saddleItem());
         }
         this.dropCargo();
+        this.capturedLoot = hold;
+    }
+
+    // ------------------------------------------------------------------ death: the carcass
+
+    /** The death loot goes into a carcass (docs/CARCACAS.md) instead of flying out of the body. */
+    @Override
+    protected void dropAllDeathLoot(DamageSource source) {
+        if (!(this.level() instanceof ServerLevel server)) {
+            super.dropAllDeathLoot(source);
+            return;
+        }
+        this.capturedLoot = new ArrayList<>();
+        List<ItemStack> loot;
+        try {
+            super.dropAllDeathLoot(source);
+        } finally {
+            loot = this.capturedLoot;
+            this.capturedLoot = null;
+        }
+        server.addFreshEntity(CarcassEntity.of(server, this, loot));
+    }
+
+    @Override
+    public ItemEntity spawnAtLocation(ItemStack stack, float yOffset) {
+        if (this.capturedLoot != null) {
+            if (!stack.isEmpty()) {
+                this.capturedLoot.add(stack.copy());
+            }
+            return null;
+        }
+        return super.spawnAtLocation(stack, yOffset);
     }
 
     /** The saddle item this animal wears (plain saddle or the platform saddle). */
@@ -634,6 +704,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (!this.level().isClientSide() && this.cargo != null && this.isChested() && this.isTame() && this.isAlive()
                 && !this.isInSittingPose() && this.tickCount % 10 == 0) {
             this.collectCargo();
+        }
+        if (!this.level().isClientSide() && this.sated > 0) {
+            this.sated--;
         }
     }
 

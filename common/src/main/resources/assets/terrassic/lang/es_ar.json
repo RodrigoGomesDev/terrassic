@@ -372,6 +372,8 @@
   "entity.terrassic.argentinosaurus": "Argentinosaurio",
   "entity.terrassic.baurusuchus": "Baurusuchus",
   "entity.terrassic.brachiosaurus": "Braquiosaurio",
+  "entity.terrassic.carcass": "Carcasa",
+  "entity.terrassic.carcass.of": "Carcasa de %s",
   "entity.terrassic.compsognathus": "Compsognathus",
   "entity.terrassic.corythosaurus": "Corythosaurus",
   "entity.terrassic.deinocheirus": "Deinocheirus",

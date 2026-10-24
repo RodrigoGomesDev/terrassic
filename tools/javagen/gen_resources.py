@@ -71,6 +71,8 @@ LANG_EXTRA = {
     "en_us": {
         "itemGroup.terrassic.main": "Terrassic",
         "entity.terrassic.spear": "Spear",
+        "entity.terrassic.carcass": "Carcass",
+        "entity.terrassic.carcass.of": "%s carcass",
         "message.terrassic.sit": "%s is resting",
         "message.terrassic.follow": "%s is following you",
         "message.terrassic.tamed": "You tamed %s (%s)!",
@@ -87,6 +89,8 @@ LANG_EXTRA = {
     "pt_br": {
         "itemGroup.terrassic.main": "Terrassic",
         "entity.terrassic.spear": "Lança",
+        "entity.terrassic.carcass": "Carcaça",
+        "entity.terrassic.carcass.of": "Carcaça de %s",
         "message.terrassic.sit": "%s está descansando",
         "message.terrassic.follow": "%s está te seguindo",
         "message.terrassic.tamed": "Você domesticou %s (%s)!",
@@ -103,6 +107,8 @@ LANG_EXTRA = {
     "es_es": {
         "itemGroup.terrassic.main": "Terrassic",
         "entity.terrassic.spear": "Lanza",
+        "entity.terrassic.carcass": "Carcasa",
+        "entity.terrassic.carcass.of": "Carcasa de %s",
         "message.terrassic.sit": "%s está descansando",
         "message.terrassic.follow": "%s te está siguiendo",
         "message.terrassic.tamed": "¡Has domesticado a %s (%s)!",

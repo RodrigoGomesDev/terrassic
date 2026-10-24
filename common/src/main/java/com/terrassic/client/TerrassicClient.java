@@ -48,12 +48,18 @@ import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.world.entity.EntityType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Client-only setup. Model scale and shadow come from the generated species classes (SIZES in
  * tools/javagen/gen_species.py), which combine the pixel size each model was authored at (tools/modelgen) with
  * the in-game size of the species.
  */
 public final class TerrassicClient {
+    /** species id -> renderer scale of its model (the carcass renderer draws any species). */
+    public static final Map<String, Float> MODEL_SCALES = new HashMap<>();
+
     private TerrassicClient() {
     }
 
@@ -101,11 +107,13 @@ public final class TerrassicClient {
         renderer(ModEntities.BAURUSUCHUS, "baurusuchus", Baurusuchus.MODEL_SCALE, Baurusuchus.SHADOW);
         // END GENERATED renderers
         EntityRendererRegistry.register(ModEntities.SPEAR, ThrownSpearRenderer::new);
+        EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();
         BuildingBlocksClient.init();
     }
 
     private static <T extends DinosaurEntity> void renderer(RegistrySupplier<EntityType<T>> type, String id, float scale, float shadow) {
+        MODEL_SCALES.put(id, scale);
         EntityRendererRegistry.register(type, context -> new DinosaurRenderer<T>(context, id, scale, shadow));
     }
 }
