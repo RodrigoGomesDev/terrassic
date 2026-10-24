@@ -110,6 +110,8 @@ import java.util.List;
 public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity, PlayerRideableJumping, HasCustomInventoryScreen {
     public static final String ACTION_CONTROLLER = "action";
 
+    /** A wild nest decided in finalizeSpawn during world generation, laid on the first tick (docs/NINHOS.md). */
+    private boolean pendingNest;
     private static final EntityDataAccessor<Boolean> DATA_FEMALE =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_SADDLED =
@@ -441,6 +443,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         super.addAdditionalSaveData(tag);
         tag.putBoolean("Female", this.isFemale());
         tag.putBoolean("Saddled", this.isSaddled());
+        if (this.pendingNest) {
+            tag.putBoolean("PendingNest", true);
+        }
         tag.putBoolean("Chested", this.isChested());
         tag.putBoolean("Platform", this.isPlatform());
         tag.putInt("Sated", this.sated);
@@ -467,6 +472,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.setFemale(tag.getBoolean("Female"));
         }
         this.setSaddled(tag.getBoolean("Saddled"));
+        this.pendingNest = tag.getBoolean("PendingNest");
         this.setChested(tag.getBoolean("Chested"));
         this.setPlatform(tag.getBoolean("Platform"));
         this.sated = tag.getInt("Sated");
@@ -493,7 +499,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         // one herd in five spawns with a nest already laid next to a grown female (docs/NINHOS.md)
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && this.wildNests() && !this.isBaby()
                 && this.isFemale() && this.random.nextInt(5) == 0) {
-            this.layWildEgg(level);
+            if (level instanceof WorldGenRegion) {
+                this.pendingNest = true;  // nothing can be placed while the chunk generates: lay it on the first tick
+            } else {
+                this.layWildEgg(level);
+            }
         }
         return data;
     }
@@ -856,6 +866,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     public void tick() {
         super.tick();
+        if (this.pendingNest && !this.level().isClientSide()) {
+            this.pendingNest = false;
+            this.layWildEgg(this.level());
+        }
         if (this.isPerched()) {
             this.perchedTick((Player) this.getVehicle());
         }
@@ -1183,8 +1197,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (state.hasProperty(DinoEggBlock.WILD)) {
             state = state.setValue(DinoEggBlock.WILD, true);
         }
-        level.setBlock(pos, state, Block.UPDATE_ALL);
-        return true;
+        return level.setBlock(pos, state, Block.UPDATE_ALL);
     }
 
     @Override
