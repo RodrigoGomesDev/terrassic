@@ -20,11 +20,14 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.block.Block;
 
@@ -162,6 +165,22 @@ public final class ModItems {
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> ANKYLOSAURUS_CLUB = ITEMS.register("ankylosaurus_club",
             () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+
+    // ---- Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken.
+    // Dino meat cooks like beef; prime cuts come from the big species and, cooked, heal a little.
+    public static final RegistrySupplier<Item> RAW_DINO_MEAT = ITEMS.register("raw_dino_meat",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(3).saturationMod(0.3F).meat().build())));
+    public static final RegistrySupplier<Item> COOKED_DINO_MEAT = ITEMS.register("cooked_dino_meat",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8F).meat().build())));
+    public static final RegistrySupplier<Item> RAW_PRIME_MEAT = ITEMS.register("raw_prime_meat",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(4).saturationMod(0.3F).meat().build())));
+    public static final RegistrySupplier<Item> COOKED_PRIME_MEAT = ITEMS.register("cooked_prime_meat",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
+                    .food(new FoodProperties.Builder().nutrition(10).saturationMod(0.9F).meat()
+                            .effect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0), 1.0F).build())));
 
     // ---- archaic weapons
     public static final RegistrySupplier<Item> FLINT_KNIFE = ITEMS.register("flint_knife",

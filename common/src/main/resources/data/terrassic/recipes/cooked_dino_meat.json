@@ -1,0 +1,10 @@
+{
+  "category": "food",
+  "ingredient": {
+    "item": "terrassic:raw_dino_meat"
+  },
+  "result": "terrassic:cooked_dino_meat",
+  "experience": 0.35,
+  "type": "minecraft:smelting",
+  "cookingtime": 200
+}

@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModItems;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +28,6 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -296,7 +296,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
 
     private void splash() {
         if (this.level() instanceof ServerLevel server) {
-            server.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.BEEF)),
+            server.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(ModItems.RAW_DINO_MEAT.get())),
                     this.getX(), this.getY() + this.getBbHeight() * 0.5D, this.getZ(), 8,
                     this.getBbWidth() * 0.3D, 0.2D, this.getBbWidth() * 0.3D, 0.05D);
         }

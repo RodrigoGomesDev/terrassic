@@ -78,6 +78,11 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "rex_tooth_dagger": ("T. rex Tooth Dagger", "Adaga de Dente de Tiranossauro", "Daga de Diente de Tiranosaurio", "item/handheld"),
     "tail_club": ("Tail Club", "Clava de Cauda", "Garrote de Cola", "item/handheld"),
     "platform_saddle": ("Platform Saddle", "Sela de Plataforma", "Silla de Plataforma", "item/generated"),
+    # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
+    "raw_dino_meat": ("Raw Dino Meat", "Carne de Dinossauro Crua", "Carne de Dinosaurio Cruda", "item/generated"),
+    "cooked_dino_meat": ("Cooked Dino Meat", "Carne de Dinossauro Assada", "Carne de Dinosaurio Asada", "item/generated"),
+    "raw_prime_meat": ("Raw Prime Meat", "Carne Nobre Crua", "Carne Selecta Cruda", "item/generated"),
+    "cooked_prime_meat": ("Cooked Prime Meat", "Carne Nobre Assada", "Carne Selecta Asada", "item/generated"),
 }
 
 LANG_EXTRA = {
@@ -243,8 +248,32 @@ def main():
     shaped("rex_tooth_dagger", ["T", "L"], {"T": "terrassic:rex_tooth", "L": "minecraft:leather"}, "terrassic:rex_tooth_dagger")
     shaped("tail_club", [" C", "S "], {"C": "terrassic:ankylosaurus_club", "S": "minecraft:stick"}, "terrassic:tail_club")
 
+    def cooked(raw, result):
+        """Furnace, smoker and campfire, like vanilla meat (the loot's furnace_smelt function uses the smelting one)."""
+        base = {"category": "food", "ingredient": {"item": f"terrassic:{raw}"}, "result": f"terrassic:{result}", "experience": 0.35}
+        write(f"{D}/recipes/{result}.json", dict(base, type="minecraft:smelting", cookingtime=200))
+        write(f"{D}/recipes/{result}_from_smoking.json", dict(base, type="minecraft:smoking", cookingtime=100))
+        write(f"{D}/recipes/{result}_from_campfire_cooking.json", dict(base, type="minecraft:campfire_cooking", cookingtime=600))
+    cooked("raw_dino_meat", "cooked_dino_meat")
+    cooked("raw_prime_meat", "cooked_prime_meat")
+
     # ------------------------------------------------------------- entity loot
+    # Cretaceous food (docs/FAUNA.md): there are no cattle, sheep or chickens in the Terrassic world, so every animal
+    # drops its own meat (raw_dino_meat; cooks like beef). The big ones also drop prime cuts (raw_prime_meat).
+    MEAT = {"minecraft:beef": "terrassic:raw_dino_meat", "minecraft:mutton": "terrassic:raw_dino_meat",
+            "minecraft:chicken": "terrassic:raw_dino_meat", "minecraft:porkchop": "terrassic:raw_dino_meat"}
+    SEA_MEAT = {"mosasaurus", "tylosaurus", "elasmosaurus", "deinosuchus"}  # their "cod" below is their own flesh
+    PRIME = {  # species: (min, max) prime cuts
+        "brachiosaurus": (3, 6), "alamosaurus": (3, 6), "argentinosaurus": (4, 8), "dreadnoughtus": (3, 6), "saltasaurus": (2, 4),
+        "opisthocoelicaudia": (2, 4), "tyrannosaurus": (1, 3), "spinosaurus": (1, 3), "giganotosaurus": (1, 3),
+        "carcharodontosaurus": (1, 3), "tarbosaurus": (1, 3), "daspletosaurus": (1, 2), "albertosaurus": (1, 2),
+        "carnotaurus": (1, 2), "majungasaurus": (1, 2), "triceratops": (1, 3), "styracosaurus": (1, 2), "pachyrhinosaurus": (1, 3),
+        "ankylosaurus": (1, 2), "euoplocephalus": (1, 2), "stegosaurus": (1, 2), "therizinosaurus": (1, 2), "deinocheirus": (1, 2),
+        "parasaurolophus": (1, 2), "edmontosaurus": (1, 3), "corythosaurus": (1, 2), "maiasaura": (1, 2), "mosasaurus": (2, 4),
+        "tylosaurus": (1, 3), "elasmosaurus": (1, 2), "deinosuchus": (1, 2), "quetzalcoatlus": (1, 2), "hatzegopteryx": (1, 2)}
+
     def item(name, lo, hi, smelt=False, chance=None):
+        name = MEAT.get(name, name)
         fns = [{"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": lo, "max": hi}}]
         if smelt:
             fns.append({"function": "minecraft:furnace_smelt", "conditions": [
@@ -312,9 +341,17 @@ def main():
         "protoceratops": [item("minecraft:mutton", 1, 2, True), item("minecraft:leather", 0, 1), item("minecraft:bone", 0, 2)],
     }
     for sid, pools in loot.items():
+        if sid in SEA_MEAT:
+            for pool in pools:
+                for entry in pool["entries"]:
+                    if entry["name"] == "minecraft:cod":
+                        entry["name"] = "terrassic:raw_dino_meat"
+        if sid in PRIME:
+            pools = pools + [item("terrassic:raw_prime_meat", *PRIME[sid], True)]
         # every species drops its own hide (last pool, so the pools above stay as they are)
         write(f"{D}/loot_tables/entities/{sid}.json", {"type": "minecraft:entity", "pools": pools + [item(f"terrassic:{sid}_hide", 1, 3)]})
     missing = [sid for sid in SPECIES if sid not in loot]
+    assert set(PRIME) <= set(loot), sorted(set(PRIME) - set(loot))
     assert not missing, f"species without loot table: {missing}"
     print("resources written")
 

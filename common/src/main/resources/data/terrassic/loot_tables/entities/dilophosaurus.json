@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:mutton",
+          "name": "terrassic:raw_dino_meat",
           "functions": [
             {
               "function": "minecraft:set_count",

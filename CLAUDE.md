@@ -113,6 +113,10 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   ligado por padrão (`TerrassicFabric.registerEraPacks`), Forge via `forge/EraPacks` (`AddPackFindersEvent`, ligado uma vez na
   primeira execução, `config/terrassic-packs.json`). As chaves de lang do pacote vêm de `tools/texpack/pack_lang.py`, mescladas por
   gen_resources.py. Propostas de progressão (sete eixos, aguardam o Rodrigo): `docs/PROGRESSAO.md`.
+- Comida do Cretáceo (`docs/FAUNA.md`): itens `raw_/cooked_dino_meat` e `raw_/cooked_prime_meat` (ModItems, seção
+  "Cretaceous food"); o loot de toda espécie troca beef/mutton/chicken pela carne própria (`MEAT`/`PRIME`/`SEA_MEAT` em
+  gen_resources.py, receitas de forno/defumador/fogueira), sprites em `sprites.py` (`meats()`). Fauna de caça do Cretáceo
+  (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus) substitui os animais vanilla do mundo Terrassic.
 - Tudo é autoral e gerado por código; referências só de medidas (Wikipedia). Não copiar arte de terceiros.
 
 ## Espécies (12)

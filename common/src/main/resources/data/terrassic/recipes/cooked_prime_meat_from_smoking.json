@@ -1,0 +1,10 @@
+{
+  "category": "food",
+  "ingredient": {
+    "item": "terrassic:raw_prime_meat"
+  },
+  "result": "terrassic:cooked_prime_meat",
+  "experience": 0.35,
+  "type": "minecraft:smoking",
+  "cookingtime": 100
+}

@@ -1105,6 +1105,72 @@ def weapons():
     return out
 
 
+# ------------------------------------------------------------------ Cretaceous food (docs/FAUNA.md)
+RAW, RAW_L, RAW_D = hexc("#b5353e"), hexc("#dc6c70"), hexc("#7a1f27")
+FAT, FAT_D = hexc("#f2ddd3"), hexc("#d8b6a9")
+CKD, CKD_L, CKD_D, CKD_G = hexc("#8d5a30"), hexc("#bb8552"), hexc("#5a3517"), hexc("#e0a35c")
+MEAT_ROWS = {2: (7, 10), 3: (5, 11), 4: (4, 12), 5: (3, 13), 6: (3, 13), 7: (2, 13), 8: (2, 13), 9: (3, 13), 10: (3, 12),
+             11: (4, 12), 12: (5, 11), 13: (7, 10)}  # an irregular chunk, like vanilla beef
+PRIME_ROWS = {2: (7, 12), 3: (6, 13), 4: (5, 13), 5: (5, 14), 6: (5, 14), 7: (5, 15), 8: (5, 15), 9: (5, 14),
+              10: (5, 14), 11: (5, 13), 12: (5, 13), 13: (6, 11), 14: (8, 10)}
+
+
+def meat_chunk(cv, rows, body, light, dark):
+    """A rounded cut of meat: body colour, lit top-left edge, shaded bottom-right edge (vanilla beef look)."""
+    for y, (x0, x1) in rows.items():
+        for x in range(x0, x1 + 1):
+            cv.set(x, y, body)
+    for y, (x0, x1) in rows.items():
+        for x in range(x0, x1 + 1):
+            up, left = cv.get(x, y - 1), cv.get(x - 1, y)
+            down, right = cv.get(x, y + 1), cv.get(x + 1, y)
+            if up is None or left is None:
+                cv.set(x, y, light)
+            elif down is None or right is None:
+                cv.set(x, y, dark)
+
+
+def meats():
+    """raw/cooked dino meat (every animal) and raw/cooked prime meat (the big species, with a rib bone)."""
+    out = {}
+    # raw dino meat: a thick steak, two streaks of fat
+    cv = Canvas(); meat_chunk(cv, MEAT_ROWS, RAW, RAW_L, RAW_D)
+    for x, y in ((6, 6), (7, 7), (8, 8), (9, 9), (10, 10), (11, 11), (5, 10), (6, 11), (7, 12)):
+        cv.set(x, y, FAT)
+    for x, y in ((7, 6), (8, 7), (9, 8), (10, 9), (11, 10), (6, 10), (7, 11)):
+        cv.set(x, y, FAT_D)
+    out["raw_dino_meat"] = cv
+    # cooked: brown, grill marks where the fat was, a glossy pixel
+    cv = Canvas(); meat_chunk(cv, MEAT_ROWS, CKD, CKD_L, CKD_D)
+    for x, y in ((6, 6), (7, 7), (8, 8), (9, 9), (10, 10), (11, 11), (5, 10), (6, 11), (7, 12), (9, 5), (10, 6), (11, 7)):
+        cv.set(x, y, CKD_D)
+    cv.set(5, 5, CKD_G); cv.set(6, 4, CKD_G)
+    out["cooked_dino_meat"] = cv
+    # raw prime meat: a bigger cut with a rib bone along the left side and richer marbling
+    cv = Canvas(); meat_chunk(cv, PRIME_ROWS, RAW, RAW_L, RAW_D)
+    for y in range(3, 14):
+        cv.set(3, y, BONE_D if y in (3, 13) else BONE); cv.set(4, y, BONE_D)
+    cv.set(2, 3, BONE); cv.set(2, 13, BONE); cv.set(2, 4, BONE_D); cv.set(2, 12, BONE_D)
+    for x, y in ((7, 4), (8, 5), (9, 6), (10, 7), (11, 8), (12, 9), (13, 10), (6, 9), (7, 10), (8, 11), (9, 12), (12, 5), (13, 6)):
+        cv.set(x, y, FAT)
+    for x, y in ((8, 4), (9, 5), (10, 6), (11, 7), (12, 8), (13, 9), (7, 9), (8, 10), (9, 11), (13, 5)):
+        cv.set(x, y, FAT_D)
+    out["raw_prime_meat"] = cv
+    # cooked prime: dark roast, bone browned at the tips, grill marks and shine
+    cv = Canvas(); meat_chunk(cv, PRIME_ROWS, CKD, CKD_L, CKD_D)
+    for y in range(3, 14):
+        cv.set(3, y, BONE_D if y in (3, 13) else BONE); cv.set(4, y, BONE_D)
+    cv.set(2, 3, BONE_D); cv.set(2, 13, BONE_D); cv.set(2, 4, BONE_D); cv.set(2, 12, BONE_D)
+    for x, y in ((7, 4), (8, 5), (9, 6), (10, 7), (11, 8), (12, 9), (13, 10), (6, 9), (7, 10), (8, 11), (9, 12), (10, 3), (11, 4), (12, 5), (13, 6)):
+        cv.set(x, y, CKD_D)
+    cv.set(7, 3, CKD_G); cv.set(6, 3, CKD_G); cv.set(6, 4, CKD_L)
+    out["cooked_prime_meat"] = cv
+    for name, cv in out.items():
+        cv.outline(0.42)
+        cv.save(os.path.join(TEX, "item", f"{name}.png"))
+    return out
+
+
 # ------------------------------------------------------------------ hides
 FUZZY = {"velociraptor", "dakotaraptor", "troodon", "oviraptor", "citipati", "mononykus", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "hesperornis"}  # feathers / pycnofibres
 HIDE_ROWS = {2: ((4, 5), (10, 11)), 3: ((3, 12),), 4: ((2, 13),), 5: ((2, 13),), 6: ((2, 13),), 7: ((2, 13),),
@@ -1176,6 +1242,7 @@ if __name__ == "__main__":
     spawn_eggs()
     egg_blocks()
     weapons()
+    meats()
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)
