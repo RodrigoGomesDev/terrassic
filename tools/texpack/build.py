@@ -12,7 +12,8 @@ lichen on oak, moss on jungle), the leaves, the ground plants (horsetails and fe
 furnace and the torch. Batch 3 adds the vanilla rocks (granite, diorite, andesite, tuff, deepslate, calcite)
 and the sixteen ores, in natural veins on the pack's own stone and deepslate, plus the chest. Batch 3b adds the
 building and ground blocks (stone bricks, bricks, moss, farmland, path, hay, snow, sugar cane, lily pad);
-batch 3c the twelve small flowers in early-angiosperm shapes.
+batch 3c the twelve small flowers in early-angiosperm shapes. The pack also carries the era filter (filters.py):
+a post chain the mod draws over the world, a light warm and faded colour grade.
 The pack name and description are lang keys of the mod (pack.terrassic.<era>), so they read in all three languages.
 """
 import json
@@ -24,6 +25,7 @@ from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import cretaceo as C  # noqa: E402
+import filters as FX  # noqa: E402
 import preview as P  # noqa: E402
 import leaves as LV  # noqa: E402
 import plants as PL  # noqa: E402
@@ -389,6 +391,29 @@ def preview_batch3(era, table):
     save_png(P.sheet(meadow, f"Terrassic: pacote {NAMES[era]}, flores", cols=6), os.path.join(PREVIEWS, f"{era}_flores.png"))
 
 
+def write_text(path, text):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
+def write_filter(era, root):
+    program = os.path.join(root, "assets", "minecraft", "shaders", "program", FX.PROGRAM)
+    write_json(program + ".json", FX.program())
+    write_text(program + ".fsh", FX.FRAGMENT)
+    write_json(os.path.join(root, "assets", "terrassic", "shaders", "post", f"era_{era}.json"), FX.post_chain(era))
+
+
+def preview_filter(era):
+    """The tree scenes and the diorama without and with the era filter, as the game grades the whole screen."""
+    items = []
+    for name in (f"{era}_arvores.png", f"{era}_diorama.png"):
+        img = Image.open(os.path.join(PREVIEWS, name)).convert("RGBA")
+        items += [(f"{name[:-4]} sem filtro", img), (f"{name[:-4]} com filtro", FX.grade(img, era))]
+    save_png(P.sheet_images(items, f"Terrassic: pacote {NAMES[era]}, filtro de era", cols=2),
+             os.path.join(PREVIEWS, f"{era}_filtro.png"))
+
+
 def build(era, table, extra):
     root = os.path.join(PACKS, era)
     write_json(os.path.join(root, "pack.mcmeta"), {
@@ -406,10 +431,12 @@ def build(era, table, extra):
         write_json(os.path.join(root, "assets", "minecraft", "blockstates", f"{block}.json"), {"variants": variants})
     for name, model in models(era).items():
         write_json(os.path.join(root, "assets", "terrassic", "models", "block", era, f"{name}.json"), model)
+    write_filter(era, root)
     os.makedirs(PREVIEWS, exist_ok=True)
     preview(era, table, extra)
     preview_batch2(era, table)
     preview_batch3(era, table)
+    preview_filter(era)
 
 
 if __name__ == "__main__":

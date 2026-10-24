@@ -102,13 +102,20 @@ Plano B, se a camada C der problema com algum mod: recarregar o pacote da era **
 que já é uma tela cheia de luz âmbar de alguns segundos.
 
 ### Camada D · Filtro da era (o "shader" sem depender de shader)
-Um efeito de pós-processamento do próprio Minecraft (`PostChain`, o mesmo sistema da visão da aranha e do creeper,
-em `assets/terrassic/shaders/post/`), ligado pelo mod quando o jogador está numa era:
-- **Gradação de cor por era:** curva de tons, saturação, temperatura da luz (tabela da seção 4).
-- **Vinheta suave** e **grão fino de filme**, para o ar "antigo". Tudo sutil.
-- Intensidade em `config/terrassic-client.json` (0 = desligado, padrão 0,6).
+Um efeito de pós-processamento do próprio Minecraft (`PostChain`, o mesmo sistema da visão da aranha e do creeper),
+desenhado pelo mod (`common/.../client/EraFilter.java`) no fim do mundo, antes da mão e do HUD. **Pronto (TX5).**
+- **Vem dentro do pacote da era:** `assets/terrassic/shaders/post/era_cretaceo.json` (os números da era) e um único
+  programa GLSL para todas as eras, `assets/minecraft/shaders/program/terrassic_era_grade.*` (o vanilla só procura
+  programas no espaço `minecraft`). Desligar o pacote desliga o filtro. Gerado por `tools/texpack/filters.py`.
+- **Gradação do Cretáceo:** 8% menos saturação, luz quente (vermelho ×1,035, azul ×0,95), pretos um pouco
+  levantados e quentes (ar de foto antiga) e vinheta suave. Prévia: `art/texpack/previews/cretaceo_filtro.png`.
+- **Config** em `config/terrassic-packs.json`: `"era_filter": true/false` e `"era_filter_strength"` (0 a 1,
+  padrão 0,6). O arquivo é criado com esses valores na primeira vez.
+- Ganchos: Fabric `WorldRenderEvents.END` (entrypoint `client`), Forge `RenderLevelStageEvent` na fase
+  `AFTER_WEATHER`. Recarregar pacotes (F3+T) refaz o filtro.
 - **Desliga sozinho quando um shaderpack do Iris ou do Oculus está ativo** (consulta a API do Iris por reflexão, sem
   depender dele). Assim nunca briga com shaders de terceiros.
+- Grão de filme ficou de fora: em movimento parece sujeira na tela. Pode voltar como opção.
 - Com Sodium/Embeddium funciona normal (eles não mexem no pós-processamento).
 
 Para quem usa shaders: um **shaderpack próprio "Terrassic Âmbar"** para Iris/Oculus pode vir depois, como download
@@ -139,7 +146,7 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 | TX3b | **Construção e chão:** tijolos de pedra em fiadas lavradas à mão (com musgo, rachados e um entalhado com amonite), tijolos queimados em argamassa de cal, bloco de musgo, terra arada (seca e molhada), caminho batido com uma pegada de terópode, fardo de palha amarrado, neve; a cana-de-açúcar vira cavalinha gigante e a vitória-régia ganha folha entalhada com nervuras | ✓ |
 | TX3c | **Flores:** as 12 flores pequenas em formas das primeiras plantas com flor (taça de tépalas como a magnólia, flor aberta, sininhos, umbela, estrela, tulipa fechada), cada uma mantendo a cor que dá o corante | ✓ |
 | TX4 | Interface: botões, inventário, baús, fornalha, fundo dos menus, barra de itens, em couro, osso e pedra | ○ |
-| TX5 | Filtro da era (camada D) | ○ |
+| TX5 | Filtro da era (camada D) | ✓ |
 | TX6 | Refazer os blocos do mod com o motor novo: a thread de blocos usa `tools/texpack/api.py` e `materials.py` (decisão do Rodrigo, 24/10) | 🔄 |
 | TX7 | Camada C (troca por era sem recarregar) e os pacotes das outras eras | ○ (v2.0) |
 
@@ -160,3 +167,8 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
   sem costura, a trava de osso fica na frente e o interior aparece ao abrir.
 - Lote 3b: o caminho mostra as pegadas em sequência como uma trilha; a terra arada lê como sulcos, seca e
   molhada; a cana (cavalinha) e a vitória-régia recebem a cor do bioma.
+- Filtro (TX5): no mundo a imagem fica levemente quente e com vinheta, a mão e o HUD não mudam; `"era_filter":
+  false` em `config/terrassic-packs.json` (e F3+T ou reiniciar) desliga; força 0 e 1 mudam a intensidade; desligar
+  o pacote no menu desliga o filtro; com shaderpack do Iris/Oculus o filtro não aparece; nada de tela preta ao
+  redimensionar a janela, no F1, no modo espectador nem com gráficos "Fabuloso" (no Forge, em Fabuloso, a água e
+  as partículas podem ficar fora do filtro: anotar se destoar).
