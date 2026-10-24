@@ -36,3 +36,12 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] Entrando num servidor ou trocando de dimensão ("Carregando terreno"): também aparece uma dica.
 - [ ] Com `"title_screen": false` em `config/terrassic-client.json`, volta a tela vanilla. Com `"loading_tips": false`, somem as dicas.
 - [ ] No Forge: a tela de título abre normalmente (botão "Mods" do Forge continua lá). Se algo do Terrassic não aparecer, o log diz qual injeção não achou o alvo.
+
+## 3. Estruturas (M3a)
+- [ ] Mundo novo (Terrassic ou normal): a 18-26 blocos do spawn existe a **Cratera de Chegada** (bacia de cinza e lama rachada, âmbar no centro, cesto na borda com âmbar bruto e uma página). Só uma por mundo.
+- [ ] `/locate structure terrassic:katarina_camp_reed` (e `_fern`, `_hide`), `terrassic:fossil_site` e `terrassic:bone_bed` acham as estruturas.
+- [ ] O acampamento fica no chão (nem enterrado, nem flutuando), a barraca tem a cumeeira certa, a cama e o cesto funcionam.
+- [ ] O cesto do acampamento traz uma Página Solta; ao pegar, ela vira uma página nova da Katarina no Caderno.
+- [ ] Sítio Fossilífero: a parede mostra Rocha Fossilífera e crânios fósseis; o pincel tira fósseis dela.
+- [ ] Ossuário: esqueleto de titanossauro, ossos espalhados e três Compsognathus.
+- [ ] Nenhuma estrutura nasce dentro d'água.

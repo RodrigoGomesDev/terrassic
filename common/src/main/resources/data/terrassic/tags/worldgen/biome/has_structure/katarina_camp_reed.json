@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:hadrosaur_plains",
+    "terrassic:cypress_swamp",
+    "terrassic:river_delta",
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp"
+  ]
+}

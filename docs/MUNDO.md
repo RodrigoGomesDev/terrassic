@@ -91,7 +91,8 @@ Arquivos compartilhados que esta frente tocou (só o mínimo; M2 só acrescentou
 |---|---|---|
 | M1 | Biomas do Cretáceo + tipo de mundo Terrassic | ✅ (falta testar no jogo, `TESTES_V08.md`) |
 | M2 | Tela de título: panorama do Cretáceo, logo de pedra, frases e dicas de carregamento com curiosidades reais | ✅ (falta ver no jogo) |
-| M3 | Estruturas: Cratera de Chegada, Acampamentos da Katarina, Sítio Fossilífero, Casa do Rio, Colônia de Ninhos, Ossuário | ⏭ |
+| M3a | Estruturas I: Cratera de Chegada, Acampamentos da Katarina (3 variantes), Sítio Fossilífero, Ossuário | ✅ (falta ver no jogo) |
+| M3b | Estruturas II: Casa do Rio (Refúgio, com o "Mate"), Colônia de Ninhos de Maiasaura, Lente de Âmbar apontando o Refúgio | ⏭ |
 | M4 | Tempestades da Fenda (céu âmbar, criaturas fora de época) | ○ |
 | M5 | HUD: montaria, bando, nova espécie, nome da era | ○ |
 | M6 | Música e sons de fundo por bioma (gravações PD/CC0, no Mac) | ○ |
@@ -115,7 +116,25 @@ Arquivos compartilhados que esta frente tocou (só o mínimo; M2 só acrescentou
 - Desligar: `config/terrassic-client.json` → `"title_screen": false` e/ou `"loading_tips": false`.
 - Arte nova: mostrar as prévias ao Rodrigo (regra 12 do ROADMAP). Ela não troca nenhum asset do mod, só o visual vanilla da tela de título.
 
-## 6. Perguntas abertas para o Rodrigo
+## 6. Estruturas (M3)
+
+Todas geradas por código: os moldes `.nbt` por `tools/structgen/template.py` (blocos do mod, conferidos contra os
+blockstates), o resto (estrutura, pool, conjunto, tags de bioma, loot) por `tools/javagen/gen_structures.py`.
+Prévias isométricas: `art/estruturas/` (`python3 tools/structgen/preview.py`). Nascem nos biomas do Cretáceo **e** nos
+biomas vanilla equivalentes, então a história também anda num mundo normal.
+
+| Estrutura | Como é | Onde | Frequência |
+|---|---|---|---|
+| **Cratera de Chegada** | Bacia rasa de cinza vulcânica e lama rachada, âmbar no centro, cinza na borda, cesto com âmbar bruto e uma página | 18 a 26 blocos do spawn do mundo, uma por mundo, cavada na primeira entrada (`world/ArrivalCrater`) | 1 |
+| **Acampamento da Katarina** | Barraca de palha com cumeeira, cama, esteiras, cesto, fogueira de pedras apagada, troncos de sentar, varal ou estaleiro de couro, pedra de giz com as marcas dela | 3 variantes: junco (planícies, pântano, delta), samambaia (florestas), cicadácea com couro (Terras Secas, serras, savana, deserto) | 1 a cada ~30 chunks |
+| **Sítio Fossilífero** | Barranco de folhelho, calcário e giz cortado a prumo, com Rocha Fossilífera e crânios fósseis na parede, andaime de galhos, bancada de lascar sílex e cesto de ferramentas | Terras Secas, serras, planícies; badlands, savana, deserto, colinas | 1 a cada ~26 chunks |
+| **Ossuário** | Leito de ossos com o esqueleto de um titanossauro (coluna, costelas, crânio), lama rachada, crânios fósseis e três Compsognathus carniceiros | Terras Secas, delta, planícies; badlands, savana, deserto | 1 a cada ~40 chunks |
+
+Loot: `loot_tables/chests/katarina_camp.json` traz sempre uma Página Solta, que vira uma página que **aquele** jogador ainda
+não tem (`LoosePageItem`), mais comida, sílex, linha, osso, papel, às vezes âmbar bruto e uma ferramenta simples.
+`fossil_site.json` traz pincel ou cinzel, 1 ou 2 fósseis de espécies e às vezes uma página.
+
+## 7. Perguntas abertas para o Rodrigo
 
 1. **Biomas do Cretáceo também no mundo normal?** Hoje eles só existem no tipo "Terrassic". Para misturar com o
    vanilla seria preciso um sistema de regiões próprio (sem TerraBlender, que é de terceiros).

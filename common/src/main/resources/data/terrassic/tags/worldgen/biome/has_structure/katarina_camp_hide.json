@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:dry_lands",
+    "terrassic:cretaceous_highlands",
+    "#minecraft:is_savanna",
+    "#minecraft:is_badlands",
+    "minecraft:desert",
+    "minecraft:windswept_hills"
+  ]
+}

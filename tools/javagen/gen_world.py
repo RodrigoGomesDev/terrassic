@@ -736,6 +736,9 @@ def main():
     merge_tag(os.path.join(blocks, "dirt.json"), soils)
     merge_tag(os.path.join(blocks, "animals_spawnable_on.json"), soils + [f"{NS}:cracked_mud"])
 
+    import gen_structures  # Katarina's camps, fossil sites, bone beds (phase M3)
+    gen_structures.main()
+
     import menu_texts  # title screen and loading tips (phase M2)
     for code, entries in menu_texts.lang().items():
         LANG[code].update(entries)

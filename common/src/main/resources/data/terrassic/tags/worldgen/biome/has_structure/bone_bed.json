@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:dry_lands",
+    "terrassic:river_delta",
+    "terrassic:hadrosaur_plains",
+    "#minecraft:is_badlands",
+    "#minecraft:is_savanna",
+    "minecraft:desert"
+  ]
+}

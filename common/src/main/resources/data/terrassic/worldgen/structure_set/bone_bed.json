@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "terrassic:bone_bed",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 40,
+    "separation": 14,
+    "salt": 1958241309
+  }
+}

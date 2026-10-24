@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:dry_lands",
+    "terrassic:cretaceous_highlands",
+    "terrassic:hadrosaur_plains",
+    "#minecraft:is_badlands",
+    "#minecraft:is_savanna",
+    "minecraft:desert",
+    "#minecraft:is_hill",
+    "minecraft:stony_shore"
+  ]
+}
