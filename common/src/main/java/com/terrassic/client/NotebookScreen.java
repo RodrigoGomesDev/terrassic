@@ -1,5 +1,8 @@
 package com.terrassic.client;
 
+import com.terrassic.client.ui.TerrassicButton;
+import com.terrassic.client.ui.TerrassicFonts;
+
 import com.terrassic.Terrassic;
 import com.terrassic.research.GuideSpecies;
 import com.terrassic.research.Knowledge;
@@ -80,16 +83,15 @@ public class NotebookScreen extends Screen {
         int tabW = 70;
         for (int i = 0; i < TABS.length; i++) {
             String id = TABS[i];
-            Button b = Button.builder(Component.translatable("notebook.terrassic.tab." + id), button -> this.select(id))
-                    .bounds(this.left + 8 + i * (tabW + 4), this.top - 20, tabW, 18).build();
-            b.active = !id.equals(this.tab);
-            this.addRenderableWidget(b);
+            // leather tabs; the open one shows the page colour (TerrassicButton, docs/IDENTIDADE.md)
+            this.addRenderableWidget(TerrassicButton.notebook(this.left + 8 + i * (tabW + 4), this.top - 20, tabW, 18,
+                    Component.translatable("notebook.terrassic.tab." + id), button -> this.select(id), id.equals(this.tab)));
         }
         if (this.tab.equals("katarina") || this.tab.equals("report")) {
-            this.addRenderableWidget(Button.builder(Component.translatable("notebook.terrassic.prev"), b -> this.turn(-1))
-                    .bounds(this.left + 10, this.top + H - 24, 70, 16).build());
-            this.addRenderableWidget(Button.builder(Component.translatable("notebook.terrassic.next"), b -> this.turn(1))
-                    .bounds(this.left + W - 80, this.top + H - 24, 70, 16).build());
+            this.addRenderableWidget(TerrassicButton.notebook(this.left + 10, this.top + H - 24, 70, 16,
+                    Component.translatable("notebook.terrassic.prev"), b -> this.turn(-1), false));
+            this.addRenderableWidget(TerrassicButton.notebook(this.left + W - 80, this.top + H - 24, 70, 16,
+                    Component.translatable("notebook.terrassic.next"), b -> this.turn(1), false));
         }
         if (this.tab.equals("guide")) {
             this.guideList();
@@ -108,16 +110,16 @@ public class NotebookScreen extends Screen {
                 : Component.translatable("era.terrassic." + lastEra);
         Component diet = lastDiet == null ? Component.translatable("notebook.terrassic.guide.all_diets")
                 : Component.translatable("diet.terrassic." + lastDiet);
-        this.addRenderableWidget(Button.builder(era, b -> {
+        this.addRenderableWidget(TerrassicButton.notebook(x, this.top + 18, 104, 12, era, b -> {
             lastEra = next(eras, lastEra);
             lastListPage = 0;
             this.rebuildWidgets();
-        }).bounds(x, this.top + 18, 104, 12).build());
-        this.addRenderableWidget(Button.builder(diet, b -> {
+        }, false));
+        this.addRenderableWidget(TerrassicButton.notebook(x, this.top + 31, 104, 12, diet, b -> {
             lastDiet = next(diets, lastDiet);
             lastListPage = 0;
             this.rebuildWidgets();
-        }).bounds(x, this.top + 31, 104, 12).build());
+        }, false));
 
         List<GuideSpecies> shown = filtered();
         int pages = Math.max(1, (shown.size() + LIST_ROWS - 1) / LIST_ROWS);
@@ -127,24 +129,22 @@ public class NotebookScreen extends Screen {
             int level = ClientResearch.get().level(s.id());
             Component name = level >= Knowledge.SIGHTED ? Component.translatable("entity.terrassic." + s.id())
                     : Component.translatable("notebook.terrassic.guide.unknown");
-            Button b = Button.builder(name, button -> {
+            this.addRenderableWidget(TerrassicButton.notebook(x, y, 104, 12, name, button -> {
                 lastSpecies = s.id();
                 this.scroll = 0;
                 this.rebuildWidgets();
-            }).bounds(x, y, 104, 12).build();
-            b.active = !s.id().equals(this.selectedSpecies());
-            this.addRenderableWidget(b);
+            }, s.id().equals(this.selectedSpecies())));
             y += 13;
         }
         if (pages > 1) {
-            Button prev = Button.builder(Component.literal("<"), b -> {
+            Button prev = TerrassicButton.notebook(x, this.top + H - 20, 18, 12, Component.literal("<"), b -> {
                 lastListPage--;
                 this.rebuildWidgets();
-            }).bounds(x, this.top + H - 20, 18, 12).build();
-            Button next = Button.builder(Component.literal(">"), b -> {
+            }, false);
+            Button next = TerrassicButton.notebook(x + 86, this.top + H - 20, 18, 12, Component.literal(">"), b -> {
                 lastListPage++;
                 this.rebuildWidgets();
-            }).bounds(x + 86, this.top + H - 20, 18, 12).build();
+            }, false);
             prev.active = lastListPage > 0;
             next.active = lastListPage < pages - 1;
             this.addRenderableWidget(prev);
@@ -233,12 +233,19 @@ public class NotebookScreen extends Screen {
     }
 
     private void heading(GuiGraphics g, Component text, int x, int y) {
-        g.drawString(this.font, text.copy().withStyle(ChatFormatting.BOLD), x, y, INK, false);
+        // titles in "Entalhe"; a title too long for the half page falls back to bold "Sedimento"
+        Component t = TerrassicFonts.title(text);
+        if (this.font.width(t) > W / 2 - 24) {
+            t = TerrassicFonts.ui(text.copy().withStyle(ChatFormatting.BOLD));
+            g.drawString(this.font, t, x, y, INK, false);
+            return;
+        }
+        g.drawString(this.font, t, x, y - 2, INK, false);
     }
 
     /** Draws wrapped text and returns the y below it. */
     private int text(GuiGraphics g, Component text, int x, int y, int width, int color) {
-        for (FormattedCharSequence line : this.font.split(text, width)) {
+        for (FormattedCharSequence line : this.font.split(TerrassicFonts.ui(text), width)) {
             g.drawString(this.font, line, x, y, color, false);
             y += 10;
         }
@@ -265,9 +272,9 @@ public class NotebookScreen extends Screen {
                 }
             }
             boolean complete = done >= Objective.PER_THEME;
-            g.drawString(this.font, Component.translatable("notebook.terrassic.journal.theme",
+            g.drawString(this.font, TerrassicFonts.ui(Component.translatable("notebook.terrassic.journal.theme",
                     Component.translatable("theme.terrassic." + themes[t].id()), Math.min(done, Objective.PER_THEME))
-                    .withStyle(ChatFormatting.BOLD), bx, by, complete ? DONE : INK, false);
+                    .withStyle(ChatFormatting.BOLD)), bx, by, complete ? DONE : INK, false);
             int oy = by + 14;
             for (Objective o : Objective.values()) {
                 if (o.theme() != themes[t]) {
@@ -277,9 +284,9 @@ public class NotebookScreen extends Screen {
                 int color = has ? DONE : o.available() ? INK : INK_SOFT;
                 MutableComponent line = Component.literal(has ? "✔ " : "○ ")
                         .append(Component.translatable("objective.terrassic." + o.id()));
-                g.drawString(this.font, line, bx + 4, oy, color, false);
+                g.drawString(this.font, TerrassicFonts.ui(line), bx + 4, oy, color, false);
                 if (mouseX >= bx && mouseX < bx + W / 2 - 16 && mouseY >= oy - 1 && mouseY < oy + 10) {
-                    tooltip = this.font.split(Component.translatable("objective.terrassic." + o.id() + ".hint"), 180);
+                    tooltip = this.font.split(TerrassicFonts.ui("objective.terrassic." + o.id() + ".hint"), 180);
                 }
                 oy += 16;
             }
@@ -299,14 +306,14 @@ public class NotebookScreen extends Screen {
                 recorded++;
             }
         }
-        g.drawString(this.font, Component.translatable("notebook.terrassic.guide.count", recorded, GuideSpecies.ALL.size()),
+        g.drawString(this.font, TerrassicFonts.ui("notebook.terrassic.guide.count", recorded, GuideSpecies.ALL.size()),
                 this.left + 10, this.top + 8, INK_SOFT, false);
         int shown = filtered().size();
         int pages = Math.max(1, (shown + LIST_ROWS - 1) / LIST_ROWS);
         if (shown == 0) {
             this.text(g, Component.translatable("notebook.terrassic.guide.empty"), this.left + 10, this.top + 49, 100, INK_SOFT);
         } else if (pages > 1) {
-            Component label = Component.translatable("notebook.terrassic.guide.page", lastListPage + 1, pages);
+            Component label = TerrassicFonts.ui("notebook.terrassic.guide.page", lastListPage + 1, pages);
             g.drawString(this.font, label, this.left + 60 - this.font.width(label) / 2, this.top + H - 18, INK_SOFT, false);
         }
 
@@ -379,7 +386,10 @@ public class NotebookScreen extends Screen {
         if (level >= Knowledge.TAMED) {
             this.section(lines, "utility", s.id(), width);
             this.add(lines, Component.translatable("notebook.terrassic.guide.note").withStyle(ChatFormatting.BOLD), INK, width);
-            this.add(lines, Component.translatable("guide.terrassic." + s.id() + ".note").withStyle(ChatFormatting.ITALIC), AMBER, width);
+            // Katarina's own note, in her handwriting
+            for (FormattedCharSequence seq : this.font.split(TerrassicFonts.hand(Component.translatable("guide.terrassic." + s.id() + ".note")), width)) {
+                lines.add(new Line(seq, AMBER));
+            }
         }
 
         int textTop = picBottom + 6;
@@ -402,7 +412,7 @@ public class NotebookScreen extends Screen {
     }
 
     private void add(List<Line> lines, Component text, int color, int width) {
-        for (FormattedCharSequence seq : this.font.split(text, width)) {
+        for (FormattedCharSequence seq : this.font.split(TerrassicFonts.ui(text), width)) {
             lines.add(new Line(seq, color));
         }
     }
@@ -446,16 +456,18 @@ public class NotebookScreen extends Screen {
         }
         int index = Mth.clamp(lastKatarinaPage, 0, pages.size() - 1);
         Lore.Page page = pages.get(index);
-        g.drawString(this.font, Component.translatable("notebook.terrassic.katarina.count", pages.size(), Lore.ALL.size()),
+        g.drawString(this.font, TerrassicFonts.ui("notebook.terrassic.katarina.count", pages.size(), Lore.ALL.size()),
                 x, this.top + 8, INK_SOFT, false);
+        // her pages are in her handwriting
         this.renderPage(g, Component.translatable("page.terrassic." + page.id() + ".title"),
-                Component.translatable("page.terrassic." + page.id() + ".text"), index, pages.size());
+                TerrassicFonts.hand(Component.translatable("page.terrassic." + page.id() + ".text")), index, pages.size());
     }
 
     private void renderReport(GuiGraphics g) {
         int index = Mth.clamp(lastReportPage, 0, Lore.REPORT_PAGES - 1);
+        // the lab report is typed
         this.renderPage(g, Component.translatable("report.terrassic." + index + ".title"),
-                Component.translatable("report.terrassic." + index + ".text"), index, Lore.REPORT_PAGES);
+                TerrassicFonts.ui(Component.translatable("report.terrassic." + index + ".text")), index, Lore.REPORT_PAGES);
     }
 
     /** Title on the left page, text flowing from the left page to the right one. */
@@ -479,7 +491,7 @@ public class NotebookScreen extends Screen {
             g.drawString(this.font, line, x, y, INK, false);
             y += 10;
         }
-        Component number = Component.translatable("notebook.terrassic.page", index + 1, count);
+        Component number = TerrassicFonts.ui("notebook.terrassic.page", index + 1, count);
         g.drawString(this.font, number, this.left + W / 2 - this.font.width(number) / 2, this.top + H - 20, INK_SOFT, false);
     }
 }

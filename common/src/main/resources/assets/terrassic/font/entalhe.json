@@ -1,0 +1,40 @@
+{
+  "providers": [
+    {
+      "type": "space",
+      "advances": {
+        " ": 5,
+        "‌": 0
+      }
+    },
+    {
+      "type": "bitmap",
+      "file": "terrassic:font/entalhe.png",
+      "height": 12,
+      "ascent": 10,
+      "chars": [
+        "!\"#%&'()+,-./012",
+        "3456789:;?ABCDEF",
+        "GHIJKLMNOPQRSTUV",
+        "WXYZabcdefghijkl",
+        "mnopqrstuvwxyz¡ª",
+        "«°·º»¿×–—‘’“”\u0000\u0000\u0000"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "terrassic:font/entalhe_accented.png",
+      "height": 16,
+      "ascent": 14,
+      "chars": [
+        "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒ",
+        "ÓÔÕÖÙÚÛÜàáâãäçèé",
+        "êëìíîïñòóôõöùúûü"
+      ]
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:default"
+    }
+  ]
+}

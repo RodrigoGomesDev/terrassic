@@ -40,10 +40,10 @@ public final class SpeciesToast implements Toast {
             default -> "hud.terrassic.species.tamed";
         };
         var font = toasts.getMinecraft().font;
-        g.drawString(font, Component.translatable(key), 33, 8, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.AMBER_500), false);
+        g.drawString(font, com.terrassic.client.ui.TerrassicFonts.ui(key), 33, 8, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.AMBER_500), false);
         Component name = this.level <= Knowledge.SILHOUETTE ? Component.literal("???")
                 : Component.translatable("entity.terrassic." + this.species);
-        g.drawString(font, name, 33, 19, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.BONE_100), false);
+        g.drawString(font, com.terrassic.client.ui.TerrassicFonts.ui(name), 33, 19, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.BONE_100), false);
         LivingEntity model = this.level <= Knowledge.SILHOUETTE ? null : model(this.species);
         if (model != null) {
             TerrassicHud.portrait(g, model, 4, 4, 24);

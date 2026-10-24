@@ -123,7 +123,7 @@ public final class TerrassicHud {
         frame(g, x, y, x + 132, y + 46);
         g.fill(x + 3, y + 3, x + 43, y + 43, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
         portrait(g, d, x + 3, y + 3, 40);
-        g.drawString(font, d.getDisplayName(), x + 47, y + 5, PAPER);
+        g.drawString(font, com.terrassic.client.ui.TerrassicFonts.ui(d.getDisplayName()), x + 47, y + 5, PAPER);
         icon(g, HEART, x + 47, y + 17);
         bar(g, x + 58, y + 19, 70, d.getHealth() / d.getMaxHealth(), com.terrassic.client.ui.TerrassicPalette.BLOOD_500);
         icon(g, HUNGER, x + 47, y + 27);
@@ -153,7 +153,7 @@ public final class TerrassicHud {
         g.blit(ICONS, width / 2 - 8, 3, 0.0F, 16.0F, 16, 16, 64, 32);
         g.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
-        g.drawCenteredString(font, Component.translatable("hud.terrassic.rift_storm"), width / 2, 21, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.RIFT_500));
+        g.drawCenteredString(font, com.terrassic.client.ui.TerrassicFonts.ui("hud.terrassic.rift_storm"), width / 2, 21, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.RIFT_500));
     }
 
     /** The live entity, scaled to fit a size x size box (by the species' real length), seen three-quarters. */
@@ -205,8 +205,8 @@ public final class TerrassicHud {
         if (titleDelay > 0 && mc.screen == null) {
             if (--titleDelay == 0 && ClientConfig.flag("hud_era_title") && mc.level.dimension() == Level.OVERWORLD) {
                 mc.gui.setTimes(10, 70, 20);
-                mc.gui.setSubtitle(Component.translatable("menu.terrassic.subtitle"));
-                mc.gui.setTitle(Component.translatable("hud.terrassic.era.late_cretaceous"));
+                mc.gui.setSubtitle(com.terrassic.client.ui.TerrassicFonts.ui("menu.terrassic.subtitle"));
+                mc.gui.setTitle(com.terrassic.client.ui.TerrassicFonts.title(Component.translatable("hud.terrassic.era.late_cretaceous")));
             }
         }
         if (tick % 10 != 0) {

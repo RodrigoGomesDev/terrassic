@@ -38,7 +38,7 @@ public final class TerrassicTitle {
         graphics.blit(LOGO, screenWidth / 2 - 128, LOGO_Y - 6, 0.0F, 0.0F, 256, 64, 256, 64);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int a = Math.max(4, (int) (alpha * 255.0F)) << 24;
-        graphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("menu.terrassic.subtitle"),
+        graphics.drawCenteredString(Minecraft.getInstance().font, com.terrassic.client.ui.TerrassicFonts.ui("menu.terrassic.subtitle"),
                 screenWidth / 2, LOGO_Y + 46, PAPER | a);
     }
 
@@ -60,9 +60,9 @@ public final class TerrassicTitle {
             return;
         }
         var font = Minecraft.getInstance().font;
-        List<FormattedCharSequence> lines = font.split(tip, Math.min(320, width - 40));
+        List<FormattedCharSequence> lines = font.split(com.terrassic.client.ui.TerrassicFonts.ui(tip), Math.min(320, width - 40));
         int y = height - 16 - lines.size() * 10;
-        graphics.drawCenteredString(font, Component.translatable("menu.terrassic.did_you_know"), width / 2, y - 14, AMBER);
+        graphics.drawCenteredString(font, com.terrassic.client.ui.TerrassicFonts.ui("menu.terrassic.did_you_know"), width / 2, y - 14, AMBER);
         for (FormattedCharSequence line : lines) {
             graphics.drawCenteredString(font, line, width / 2, y, PAPER);
             y += 10;

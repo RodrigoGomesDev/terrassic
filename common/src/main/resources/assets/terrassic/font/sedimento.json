@@ -1,0 +1,43 @@
+{
+  "providers": [
+    {
+      "type": "space",
+      "advances": {
+        " ": 3,
+        "‌": 0
+      }
+    },
+    {
+      "type": "bitmap",
+      "file": "terrassic:font/sedimento.png",
+      "height": 8,
+      "ascent": 7,
+      "chars": [
+        "!\"#$%&'()*+,-./0",
+        "123456789:;<=>?@",
+        "ABCDEFGHIJKLMNOP",
+        "QRSTUVWXYZ[\\]^_`",
+        "abcdefghijklmnop",
+        "qrstuvwxyz{|}~¡ª",
+        "«°±·º»¿×÷ı–—‘’“”",
+        "…←→○●♦✔\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "terrassic:font/sedimento_accented.png",
+      "height": 11,
+      "ascent": 10,
+      "chars": [
+        "ÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒ",
+        "ÓÔÕÖÙÚÛÜàáâãäçèé",
+        "êëìíîïñòóôõöùúûü",
+        "ýÿ\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
+      ]
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:default"
+    }
+  ]
+}
