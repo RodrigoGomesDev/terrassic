@@ -727,6 +727,22 @@ GUIDE = {
         note=("Dormi no lombo dele. Acordei em outro bioma.",
               "I slept on its back. I woke up in another biome.",
               "Dormí en su lomo. Desperté en otro bioma.")),
+    "saltasaurus": dict(
+        sci=("Viveu há 70 milhões de anos no noroeste da Argentina. Titanossauro pequeno e atarracado, de 12 m e 7 toneladas, pescoço curto, barriga larga e baixa, pernas curtas. Foi o primeiro saurópode achado com armadura: placas ovais de 10 a 12 cm sobre uma pele pavimentada por milhares de ossículos do tamanho de ervilhas. Os ninhais de Auca Mahuevo, milhares de ovos no barro da planície, são atribuídos aos seus parentes.",
+             "Lived 70 million years ago in the northwest of Argentina. A small, stocky titanosaur of 12 m and 7 tonnes, short neck, low wide belly, short legs. The first sauropod found with armour: oval plates of 10 to 12 cm over a skin paved with thousands of pea-sized ossicles. The Auca Mahuevo nesting grounds, thousands of eggs in the floodplain mud, are credited to its relatives.",
+             "Vivió hace 70 millones de años en el noroeste de Argentina. Titanosaurio pequeño y rechoncho, de 12 m y 7 toneladas, cuello corto, vientre ancho y bajo, patas cortas. Fue el primer saurópodo hallado con armadura: placas ovales de 10 a 12 cm sobre una piel empedrada con miles de osículos del tamaño de guisantes. Los nidales de Auca Mahuevo, miles de huevos en el barro de la llanura, se atribuyen a sus parientes."),
+        behavior=("Manadas de dois a quatro em savanas, planícies e margens de rio. Pacífico e quase impossível de derrubar: a armadura segura flechas e dentes. Ferido, empina e pisa.",
+                  "Herds of two to four in savannas, plains and riverbanks. Peaceful and nearly impossible to bring down: the armour holds arrows and teeth. Hurt, it rears and stomps.",
+                  "Manadas de dos a cuatro en sabanas, llanuras y orillas de río. Pacífico y casi imposible de derribar: la armadura aguanta flechas y dientes. Herido, se encabrita y pisotea."),
+        taming=("Doma-se na mão com folhas de qualquer árvore. Os pares põem um ovo grande, e gostam de pôr perto da água.",
+                "Hand-tamed with leaves of any tree. Pairs lay a large egg, and like to lay it near water.",
+                "Se doma a mano con hojas de cualquier árbol. Las parejas ponen un huevo grande, y les gusta ponerlo cerca del agua."),
+        utility=("Um tanque vivo: montaria blindada que atravessa um bando de predadores sem parar. Lenta, mas nada a derruba.",
+                 "A living tank: an armoured mount that walks through a pack of predators without stopping. Slow, but nothing knocks it down.",
+                 "Un tanque viviente: montura blindada que atraviesa una manada de depredadores sin detenerse. Lenta, pero nada la derriba."),
+        note=("Tentei contar os ossículos. Desisti nos quatrocentos. Ela nem percebeu.",
+              "I tried to count the ossicles. Gave up at four hundred. She never noticed.",
+              "Intenté contar los osículos. Me rendí en los cuatrocientos. Ni se dio cuenta.")),
 }
 
 ERAS = {

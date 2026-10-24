@@ -26,6 +26,7 @@ import com.terrassic.entity.Parasaurolophus;
 import com.terrassic.entity.Protoceratops;
 import com.terrassic.entity.Pteranodon;
 import com.terrassic.entity.Quetzalcoatlus;
+import com.terrassic.entity.Saltasaurus;
 import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Struthiomimus;
@@ -71,6 +72,7 @@ public final class TerrassicClient {
         renderer(ModEntities.DEINOCHEIRUS, "deinocheirus", Deinocheirus.MODEL_SCALE, Deinocheirus.SHADOW);
         renderer(ModEntities.BRACHIOSAURUS, "brachiosaurus", Brachiosaurus.MODEL_SCALE, Brachiosaurus.SHADOW);
         renderer(ModEntities.ALAMOSAURUS, "alamosaurus", Alamosaurus.MODEL_SCALE, Alamosaurus.SHADOW);
+        renderer(ModEntities.SALTASAURUS, "saltasaurus", Saltasaurus.MODEL_SCALE, Saltasaurus.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

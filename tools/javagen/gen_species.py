@@ -48,6 +48,8 @@ SIZES = {
     "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
     # Alamosaurus sanjuanensis: 26-30 m, 30-80 t (Fowler & Sullivan 2011; Tykoski & Fiorillo 2017); head ~13 blocks up.
     "alamosaurus":        dict(real=30.0, scale=3.02, w=5.0, h=9.0, baby=0.1,  shadow=5.5),
+    # Saltasaurus loricatus: 12-13 m, ~7 t (Paul 2010), the armoured titanosaur; back at ~4 blocks.
+    "saltasaurus":        dict(real=12.0, scale=1.81, w=2.8, h=3.8, baby=0.15, shadow=3.0),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -105,6 +107,7 @@ GUIDE = {
     "deinocheirus":       dict(era="late_cretaceous", diet="omnivore",  fossil=1),
     "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
     "alamosaurus":        dict(era="late_cretaceous", diet="herbivore", fossil=2),
+    "saltasaurus":        dict(era="late_cretaceous", diet="herbivore", fossil=3),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -148,6 +151,7 @@ WORLD = {
     "deinocheirus":       dict(biomes=("river", "swamp"), weight=3, group=(1, 2), track=12),                # wades the river margins
     "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
     "alamosaurus":        dict(biomes=("badlands", "savanna", "desert"), weight=1, group=(1, 2), track=16),  # the dry southwest
+    "saltasaurus":        dict(biomes=("savanna", "plains", "river"), weight=2, group=(2, 4), track=14),  # the Patagonian floodplain
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -286,6 +290,12 @@ SPECIES = [
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 380), step=("RAVAGER_STEP", 1.3, 0.45),
       xp=60, step_height=1.8, head=(25, 30), rideable=True, jump=0.0, ride_offset=3.2, ride_forward=0.6, ride_speed=0.95),
+ dict(id="saltasaurus", cls="Saltasaurus", base="HerbivoreDinosaur",
+      doc="Saltasaurus loricatus - 12 m armoured titanosaur: oval osteoderms over a skin of bony pebbles, a short neck and a low wide body. Herd animal; hurt, it rears and stomps. Eats leaves; rideable when tamed, a living tank.",
+      attrs=dict(MAX_HEALTH=220, MOVEMENT_SPEED=0.19, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=18, ARMOR_TOUGHNESS=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
+      food_tag="ItemTags.LEAVES",
+      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.55, 2.4, 340), step=("RAVAGER_STEP", 1.0, 0.6),
+      xp=40, step_height=1.5, head=(30, 30), rideable=True, jump=0.0, ride_offset=2.3, ride_forward=0.2, ride_speed=1.0),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),

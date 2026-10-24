@@ -1226,5 +1226,39 @@
    "animation.alamosaurus.attack"
   ],
   "render_scale": 1.0
+ },
+ "saltasaurus": {
+  "bones": 28,
+  "cubes": 87,
+  "texture": [
+   256,
+   256
+  ],
+  "bounds_px": [
+   [
+    -13.5,
+    -4.8276235561427443e-05,
+    -48.86326712954678
+   ],
+   [
+    13.5,
+    42.1109621602499,
+    57.10430108066146
+   ]
+  ],
+  "animations": [
+   "animation.saltasaurus.idle",
+   "animation.saltasaurus.walk",
+   "animation.saltasaurus.run",
+   "animation.saltasaurus.sit",
+   "animation.saltasaurus.graze",
+   "animation.saltasaurus.knocked_out",
+   "animation.saltasaurus.wake",
+   "animation.saltasaurus.eat",
+   "animation.saltasaurus.beg",
+   "animation.saltasaurus.tame",
+   "animation.saltasaurus.attack"
+  ],
+  "render_scale": 1.0
  }
 }
