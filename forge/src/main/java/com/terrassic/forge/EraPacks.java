@@ -8,9 +8,11 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.IModFileInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -30,17 +32,37 @@ final class EraPacks {
             return;
         }
         for (String era : ERA_PACKS) {
-            Path path = ModList.get().getModFileById(Terrassic.MOD_ID).getFile().findResource("resourcepacks/" + era);
+            Path path = findPack("resourcepacks/" + era);
+            if (path == null) {
+                LOG.warn("Terrassic: built-in pack {} not found in any mod file", era);
+                continue;
+            }
             String id = Terrassic.MOD_ID + "_" + era;
             Pack pack = Pack.readMetaAndCreate(id, Component.translatable("pack.terrassic." + era), false,
                     name -> new PathPackResources(name, path, false), PackType.CLIENT_RESOURCES, Pack.Position.TOP,
                     PackSource.BUILT_IN);
             if (pack == null) {
-                LOG.warn("Terrassic: built-in pack {} not found in the jar", era);
+                LOG.warn("Terrassic: built-in pack {} has no readable pack.mcmeta at {}", era, path);
                 continue;
             }
+            LOG.info("Terrassic: built-in pack {} registered from {}", era, path);
             event.addRepositorySource(consumer -> consumer.accept(pack));
             EraPacksClient.enableOnce(id);
         }
+    }
+
+    /** This mod's own file first; in a dev run the common module may be a file of its own, so look in all. */
+    private static Path findPack(String folder) {
+        Path own = ModList.get().getModFileById(Terrassic.MOD_ID).getFile().findResource(folder);
+        if (Files.exists(own.resolve("pack.mcmeta"))) {
+            return own;
+        }
+        for (IModFileInfo info : ModList.get().getModFiles()) {
+            Path p = info.getFile().findResource(folder);
+            if (Files.exists(p.resolve("pack.mcmeta"))) {
+                return p;
+            }
+        }
+        return null;
     }
 }
