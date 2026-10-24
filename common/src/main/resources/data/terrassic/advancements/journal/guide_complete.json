@@ -1,0 +1,23 @@
+{
+  "parent": "terrassic:journal/first_studied",
+  "display": {
+    "icon": {
+      "item": "minecraft:enchanted_book"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.guide_complete.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.guide_complete.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/fragment_exploration",
+  "display": {
+    "icon": {
+      "item": "terrassic:loose_page"
+    },
+    "title": {
+      "translate": "objective.terrassic.katarina_pages"
+    },
+    "description": {
+      "translate": "objective.terrassic.katarina_pages.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

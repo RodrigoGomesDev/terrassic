@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/fragment_exploration",
+  "display": {
+    "icon": {
+      "item": "terrassic:mosasaurus_spawn_egg"
+    },
+    "title": {
+      "translate": "objective.terrassic.inland_sea"
+    },
+    "description": {
+      "translate": "objective.terrassic.inland_sea.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

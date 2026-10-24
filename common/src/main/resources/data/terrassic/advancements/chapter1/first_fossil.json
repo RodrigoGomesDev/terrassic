@@ -1,5 +1,5 @@
 {
-  "parent": "terrassic:chapter1/root",
+  "parent": "terrassic:chapter1/fragment_science",
   "display": {
     "icon": {
       "item": "terrassic:hair_brush"
@@ -15,5 +15,8 @@
     "done": {
       "trigger": "minecraft:impossible"
     }
+  },
+  "rewards": {
+    "experience": 10
   }
 }

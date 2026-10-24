@@ -1,0 +1,26 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:raw_amber"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.fragment_survival.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.fragment_survival.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 50,
+    "loot": [
+      "terrassic:rewards/katarina_page"
+    ]
+  }
+}

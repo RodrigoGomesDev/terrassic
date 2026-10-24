@@ -1,0 +1,23 @@
+{
+  "parent": "terrassic:chapter1/study_five",
+  "display": {
+    "icon": {
+      "item": "terrassic:field_notebook"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.all_cretaceous.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.all_cretaceous.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

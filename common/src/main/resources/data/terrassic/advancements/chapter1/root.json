@@ -1,13 +1,13 @@
 {
   "display": {
     "icon": {
-      "item": "terrassic:field_notebook"
+      "item": "terrassic:tyrannosaurus_spawn_egg"
     },
     "title": {
-      "translate": "advancements.terrassic.root.title"
+      "translate": "advancements.terrassic.chapter1.root.title"
     },
     "description": {
-      "translate": "advancements.terrassic.root.description"
+      "translate": "advancements.terrassic.chapter1.root.description"
     },
     "background": "minecraft:textures/block/packed_mud.png",
     "show_toast": false,

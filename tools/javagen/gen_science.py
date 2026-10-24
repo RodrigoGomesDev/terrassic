@@ -1,12 +1,13 @@
 """Generates the resources of the scientist mechanics (docs/HISTORIA.md, sections 4 to 9): fossils, field tools,
-Fossil Rock and Research Table (models, blockstates, loot, recipes, worldgen), the Chapter 1 advancements and every
-story / Field Guide text from lore.py.  Also writes research/Lore.java (Katarina's page list).
+Fossil Rock and Research Table (models, blockstates, loot, recipes, worldgen), the advancement tree of conquistas.py
+and every story / Field Guide text from lore.py.  Also writes research/Lore.java (Katarina's page list).
 
 Lang entries are exported in LANG and merged by gen_resources.py.  Item and block ids must match ModItems / ModBlocks."""
 import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
+import conquistas  # noqa: E402
 import lore  # noqa: E402
 from gen_resources import A, D, ROOT, write  # noqa: E402
 from gen_species import GUIDE as GUIDE_DATA, SPECIES as SPECIES_TABLE  # noqa: E402
@@ -33,14 +34,6 @@ BLOCKS = {
     "fossil_rock": ("Fossil Rock", "Rocha Fossilífera", "Roca Fosilífera"),
     "research_table": ("Research Table", "Mesa de Pesquisa", "Mesa de Investigación"),
 }
-# objective id -> advancement icon
-OBJECTIVE_ICONS = {
-    "shelter": "terrassic:thatch", "first_spear": "terrassic:flint_spear", "rift_storm": "minecraft:amethyst_shard",
-    "study_five": "terrassic:field_notebook", "first_fossil": "terrassic:hair_brush", "research_table": "terrassic:research_table",
-    "tame_herbivore": "minecraft:fern", "hatch_egg": "terrassic:triceratops_egg", "ride": "minecraft:saddle",
-    "katarina_camps": "terrassic:loose_page", "rift_ruin": "minecraft:crying_obsidian", "migration": "terrassic:parasaurolophus_spawn_egg",
-}
-
 LANG = {c: {} for c in CODES}
 
 
@@ -90,6 +83,8 @@ def gen_lang():
         tr(f"objective.{NS}.{oid}.hint", hint)
     for theme, values in lore.THEMES.items():
         tr(f"theme.{NS}.{theme}", values)
+    for code, entries in conquistas.lang().items():
+        LANG[code].update(entries)
 
 
 def gen_models():
@@ -180,19 +175,45 @@ def gen_data():
                                                       "min_inclusive": {"absolute": 0}, "max_inclusive": {"absolute": 96}}},
         {"type": "minecraft:biome"}]})
 
-    # advancements: the Field Journal of Chapter 1 (awarded from code, criterion "done")
-    adv = f"{D}/advancements/chapter1"
-    write(f"{adv}/root.json", {
-        "display": {"icon": {"item": f"{NS}:field_notebook"}, "title": {"translate": "advancements.terrassic.root.title"},
-                    "description": {"translate": "advancements.terrassic.root.description"},
-                    "background": "minecraft:textures/block/packed_mud.png", "show_toast": False, "announce_to_chat": False},
-        "criteria": {"tick": {"trigger": "minecraft:tick"}}})
-    for oid in lore.OBJECTIVES:
-        write(f"{adv}/{oid}.json", {
-            "parent": f"{NS}:chapter1/root",
-            "display": {"icon": {"item": OBJECTIVE_ICONS[oid]}, "title": {"translate": f"objective.{NS}.{oid}"},
-                        "description": {"translate": f"objective.{NS}.{oid}.hint"}},
-            "criteria": {"done": {"trigger": "minecraft:impossible"}}})
+
+
+def gen_advancements():
+    """The advancement tree of tools/javagen/conquistas.py (docs/CONQUISTAS.md). The folder is rewritten from
+    scratch so nodes that left the table disappear. Checks that every icon exists and that every id the Java code
+    awards is in the game."""
+    import glob
+    import re
+    import shutil
+    adv_root = f"{D}/advancements"
+    shutil.rmtree(adv_root, ignore_errors=True)
+    nodes = conquistas.emitted()
+    for n in nodes:
+        icon_ns, icon = n["icon"].split(":")
+        if icon_ns == NS and not os.path.exists(f"{A}/models/item/{icon}.json"):
+            raise SystemExit(f"advancement {n['id']}: icon {n['icon']} has no item model")
+        write(f"{adv_root}/{n['id']}.json", conquistas.advancement(n))
+    # fragments give one Loose Page: the page item turns into a page that player has not found yet
+    write(f"{D}/loot_tables/rewards/katarina_page.json", {"type": "minecraft:advancement_reward", "pools": [{
+        "rolls": 1, "entries": [{"type": "minecraft:item", "name": f"{NS}:loose_page"}]}]})
+
+    # the diary objectives must match the Objective enum and lore.OBJECTIVES
+    java_dir = os.path.join(ROOT, "common", "src", "main", "java", "com", "terrassic")
+    with open(os.path.join(java_dir, "research", "Objective.java"), encoding="utf-8") as f:
+        rows = re.findall(r"^\s{4}([A-Z_]+)\(Theme\.[A-Z]+, (true|false)\)", f.read(), re.M)
+    enum = [name.lower() for name, _available in rows]
+    if enum != conquistas.objective_ids() or list(lore.OBJECTIVES) != enum:
+        raise SystemExit(f"Objective enum {enum}, conquistas {conquistas.objective_ids()} and lore.OBJECTIVES "
+                         f"{list(lore.OBJECTIVES)} must list the same objectives in the same order")
+    for name, available in rows:
+        if (available == "true") != (f"chapter1/{name.lower()}" in {n["id"] for n in nodes}):
+            raise SystemExit(f"Objective.{name}: 'available' in Java and 'ready' in conquistas.py disagree")
+    # every literal id given to Research.award(...) must be written
+    ready = {n["id"] for n in nodes}
+    for path in glob.glob(os.path.join(java_dir, "**", "*.java"), recursive=True):
+        with open(path, encoding="utf-8") as f:
+            for nid in re.findall(r"award\([^;]*?\"([a-z0-9_]+/[a-z0-9_]+)\"\)", f.read()):
+                if nid not in ready:
+                    raise SystemExit(f"{os.path.relpath(path, ROOT)} awards {nid}, which is not a ready node of conquistas.py")
 
 
 def gen_lore_java():
@@ -248,6 +269,7 @@ def main():
     gen_lang()
     gen_models()
     gen_data()
+    gen_advancements()
     gen_lore_java()
     print("science resources written")
 

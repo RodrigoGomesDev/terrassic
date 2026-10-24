@@ -1,5 +1,5 @@
 {
-  "parent": "terrassic:chapter1/root",
+  "parent": "terrassic:chapter1/fragment_taming",
   "display": {
     "icon": {
       "item": "terrassic:triceratops_egg"
@@ -15,5 +15,8 @@
     "done": {
       "trigger": "minecraft:impossible"
     }
+  },
+  "rewards": {
+    "experience": 10
   }
 }

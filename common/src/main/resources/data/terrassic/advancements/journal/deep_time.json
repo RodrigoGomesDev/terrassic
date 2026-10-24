@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:journal/first_silhouette",
+  "display": {
+    "icon": {
+      "item": "terrassic:stegosaurus_fossil"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.deep_time.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.deep_time.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

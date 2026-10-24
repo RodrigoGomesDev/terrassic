@@ -1,0 +1,23 @@
+{
+  "parent": "terrassic:chapter1/hatch_egg",
+  "display": {
+    "icon": {
+      "item": "terrassic:tyrannosaurus_egg"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.pet_rex.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.pet_rex.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

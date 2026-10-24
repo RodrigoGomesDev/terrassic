@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:stegosaurus_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.out_of_time.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.out_of_time.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

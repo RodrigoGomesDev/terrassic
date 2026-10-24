@@ -2,7 +2,9 @@ package com.terrassic.item;
 
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.registry.ModItems;
+import com.terrassic.research.Research;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -73,6 +75,9 @@ public class SketchCharcoalItem extends Item {
                 player.drop(sketch, false);
             }
             player.displayClientMessage(Component.translatable("message.terrassic.sketch_done", target.getType().getDescription()), true);
+            if (player instanceof ServerPlayer sp) {
+                Research.award(sp, "journal/first_sketch");
+            }
             stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
             user.releaseUsingItem();
         }

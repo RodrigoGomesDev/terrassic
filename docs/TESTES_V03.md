@@ -17,7 +17,7 @@ Nada da v0.3 foi compilado: a nuvem não alcança o maven do Fabric, do Forge e 
 
 ## 2. Caderno de Campo
 - [ ] Clique direito abre o Caderno com as 4 abas: Diário, Guia, Katarina, Relatório.
-- [ ] Diário: 12 objetivos em 4 temas; 3 marcados como "em breve".
+- [ ] Diário: 12 objetivos em 4 temas; 2 marcados como "em breve" (Céu de âmbar e A grande fila). No topo, "Fragmentos de âmbar: N de 4".
 - [ ] Guia: lista de espécies; as nunca vistas aparecem como silhueta; o modelo 3D aparece e cabe no quadro (Brachiosaurus e Mosasaurus são os maiores).
 - [ ] Chegar a menos de 16 blocos de um dinossauro muda o nível para "avistado".
 
@@ -83,3 +83,13 @@ Nada da v0.3 foi compilado: a nuvem não alcança o maven do Fabric, do Forge e 
 ## 10. Coisas que já existiam (regressão)
 - [ ] As 12 espécies da v0.2 continuam aparecendo, domando e montando como antes.
 - [ ] Blocos primitivos (sapê, pedra seca etc.) continuam com textura e receita.
+
+## 11. Conquistas (docs/CONQUISTAS.md)
+- [ ] A tela de conquistas (L) tem duas abas do Terrassic: "Ecos do Fim" (Capítulo 1) e "Caderno de Campo". Nenhuma conquista aparece como chave crua nos 3 idiomas.
+- [ ] Ecos do Fim: 4 fragmentos com os objetivos à direita, "O núcleo reunido", "Ela esteve aqui" e "Fora de época". Não aparecem conquistas de coisas que ainda não existem (Altar, chefe, Tempestade da Fenda, migração).
+- [ ] Fazer 2 objetivos do mesmo tema dá o fragmento: aviso de objetivo, mensagem "Fragmento de âmbar recuperado: N de 4", som de ametista, XP e uma Página Solta que vira página da Katarina.
+- [ ] Achar 3 páginas completa "Rastros dela"; ver um Mosassauro e um Pteranodonte completa "Mar Interior".
+- [ ] Ver um Estegossauro, Braquiossauro, Dilofossauro ou Compsognato no mundo normal dá "Fora de época".
+- [ ] Caderno de Campo: estudar fóssil na Mesa ("Só os ossos"; fóssil de espécie jurássica dá "Ossos do futuro"), esboço, Lente de Âmbar, Âmbar Bruto, Amostra de Sangue, voar num Pteranodonte montado, 5 espécies domadas, 5 páginas.
+- [ ] Mundo antigo (de antes desta versão): ao entrar, as conquistas do que já foi feito aparecem sozinhas (objetivos, fragmentos, páginas, espécies estudadas).
+- [ ] Multiplayer: as conquistas e os fragmentos são de cada jogador.

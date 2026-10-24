@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:journal/raw_amber",
+  "display": {
+    "icon": {
+      "item": "terrassic:amber_lens"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.amber_lens.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.amber_lens.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

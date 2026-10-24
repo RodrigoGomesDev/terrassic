@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:journal/first_sighting",
+  "display": {
+    "icon": {
+      "item": "terrassic:sketch"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.first_studied.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.first_studied.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

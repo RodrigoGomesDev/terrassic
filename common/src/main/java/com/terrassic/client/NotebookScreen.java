@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * The Field Notebook (docs/HISTORIA.md, section 9): one screen with four tabs.
  * <ul>
- *   <li><b>Journal</b>: the 12 objectives of the chapter in 4 themes, with a hint on hover.</li>
+ *   <li><b>Journal</b>: the 12 objectives of the chapter in 4 themes, with a hint on hover, and the amber fragments.</li>
  *   <li><b>Guide</b>: every species, revealed level by level (Knowledge.SILHOUETTE .. TAMED).</li>
  *   <li><b>Katarina</b>: the pages of her notebook found so far, in day order.</li>
  *   <li><b>Report</b>: the "Incident Report" the player starts with.</li>
@@ -251,7 +251,7 @@ public class NotebookScreen extends Screen {
         int x = this.left + 10;
         int y = this.top + 8;
         this.heading(g, Component.translatable("notebook.terrassic.journal.header"), x, y);
-        this.text(g, Component.translatable("notebook.terrassic.journal.intro"), x, y + 12, W - 20, INK_SOFT);
+        this.text(g, Component.translatable("notebook.terrassic.journal.intro", Objective.fragments(k)), x, y + 12, W - 20, INK_SOFT);
         List<FormattedCharSequence> tooltip = null;
         Objective.Theme[] themes = Objective.Theme.values();
         for (int t = 0; t < themes.length; t++) {

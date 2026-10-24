@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:paper"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.first_page.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.first_page.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

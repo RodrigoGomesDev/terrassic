@@ -1,0 +1,23 @@
+{
+  "parent": "terrassic:journal/five_pages",
+  "display": {
+    "icon": {
+      "item": "minecraft:writable_book"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.all_pages.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.all_pages.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

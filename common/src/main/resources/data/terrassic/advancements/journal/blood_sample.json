@@ -1,0 +1,31 @@
+{
+  "parent": "terrassic:journal/first_sketch",
+  "display": {
+    "icon": {
+      "item": "terrassic:blood_sample"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.blood_sample.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.blood_sample.description"
+    }
+  },
+  "criteria": {
+    "has": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:blood_sample"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:journal/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:lead"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.five_tamed.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.five_tamed.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:journal/root",
+  "display": {
+    "icon": {
+      "item": "terrassic:loose_page"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.five_pages.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.five_pages.description"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 25
+  }
+}

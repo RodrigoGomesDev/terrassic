@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "terrassic:field_notebook"
+    },
+    "title": {
+      "translate": "advancements.terrassic.journal.root.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.journal.root.description"
+    },
+    "background": "terrassic:textures/block/fossil_rock.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

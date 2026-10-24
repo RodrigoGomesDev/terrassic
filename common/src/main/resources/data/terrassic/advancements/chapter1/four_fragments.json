@@ -1,0 +1,23 @@
+{
+  "parent": "terrassic:chapter1/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:amethyst_cluster"
+    },
+    "title": {
+      "translate": "advancements.terrassic.chapter1.four_fragments.title"
+    },
+    "description": {
+      "translate": "advancements.terrassic.chapter1.four_fragments.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

@@ -2,7 +2,9 @@ package com.terrassic.research;
 
 import com.terrassic.Terrassic;
 import com.terrassic.entity.DinosaurEntity;
+import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.entity.HerbivoreDinosaur;
+import com.terrassic.entity.SwimmingDinosaur;
 import com.terrassic.item.SpearItem;
 import com.terrassic.network.ModNetwork;
 import com.terrassic.registry.ModBlocks;
@@ -14,13 +16,18 @@ import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Server side of the scientist mechanics (docs/HISTORIA.md, sections 4 to 6): fills each player's
@@ -34,6 +41,10 @@ import net.minecraft.world.level.block.state.BlockState;
  *   <li>Tamed: tame or hatch one.</li>
  * </ul>
  * A studied species is easier to tame and takes more damage from that player (see DinosaurEntity).
+ *
+ * It also gives the advancements of docs/CONQUISTAS.md ({@link #award}). Those that follow from the Knowledge
+ * (counts, objectives, fragments) are checked again on every change and when the player joins, so old worlds
+ * catch up.
  */
 public final class Research {
     public static final double SIGHT_RANGE = 16.0D;
@@ -41,6 +52,14 @@ public final class Research {
     public static final int SKETCH_POINTS = 2;
     public static final int DEFEAT_POINTS = 3;
     public static final int SAMPLE_POINTS = 2;
+    /** Tamed species for "Mixed herd" and pages for "Close reader". */
+    public static final int TAMED_SPECIES = 5;
+    public static final int READER_PAGES = 5;
+    /** Eras from the oldest to the newest (Field Guide era ids). */
+    public static final List<String> ERAS = List.of("triassic", "jurassic", "early_cretaceous", "late_cretaceous", "ice_age");
+    /** Knowledge counters: a marine reptile / a pterosaur was sighted (objective "Inland Sea"). */
+    private static final String SEEN_SEA = "seen_sea";
+    private static final String SEEN_SKY = "seen_sky";
 
     private Research() {
     }
@@ -93,9 +112,14 @@ public final class Research {
 
     private static void changed(ServerPlayer player, Knowledge k, boolean sync) {
         ResearchData.get(player.server).setDirty();
-        if (sync) {
+        if (milestones(player, k) || sync) {
             ModNetwork.sendKnowledge(player, k);
         }
+    }
+
+    /** Era of the place the player is in: the Overworld is Chapter 1 (other eras will get their own dimensions). */
+    public static String eraHere(ServerPlayer player) {
+        return player.level().dimension() == Level.OVERWORLD ? "late_cretaceous" : null;
     }
 
     // ------------------------------------------------------------------ events
@@ -111,6 +135,9 @@ public final class Research {
             changed(player, k, false);
             ModNetwork.sendIntro(player);
         }
+        if (milestones(player, k)) {
+            ResearchData.get(player.server).setDirty();
+        }
         ModNetwork.sendKnowledge(player, k);
     }
 
@@ -121,18 +148,46 @@ public final class Research {
         Knowledge k = knowledge(sp);
         for (DinosaurEntity dino : sp.level().getEntitiesOfClass(DinosaurEntity.class, sp.getBoundingBox().inflate(SIGHT_RANGE),
                 d -> d.distanceToSqr(sp) < SIGHT_RANGE * SIGHT_RANGE)) {
-            if (k.level(dino.speciesId()) < Knowledge.SIGHTED && sp.hasLineOfSight(dino)) {
-                sighted(sp, dino.speciesId());
+            if (isNews(k, dino) && sp.hasLineOfSight(dino)) {
+                sighted(sp, dino);
             }
+        }
+        // ridden flight: really in the air, not just a jump
+        if (sp.getVehicle() instanceof FlyingDinosaur flyer && flyer.isFlying() && sp.level().isEmptyBlock(flyer.blockPosition().below(3))) {
+            award(sp, "journal/ride_flyer");
         }
     }
 
+    /** Whether seeing this animal teaches the player something new. */
+    private static boolean isNews(Knowledge k, DinosaurEntity dino) {
+        return k.level(dino.speciesId()) < Knowledge.SIGHTED
+                || dino instanceof SwimmingDinosaur && k.counter(SEEN_SEA) == 0
+                || dino instanceof FlyingDinosaur && k.counter(SEEN_SKY) == 0;
+    }
+
     // ------------------------------------------------------------------ what raises knowledge
+
+    /** A living animal seen up close or through the Amber Lens. */
+    public static void sighted(ServerPlayer player, DinosaurEntity dino) {
+        Knowledge k = knowledge(player);
+        if (dino instanceof SwimmingDinosaur && k.counter(SEEN_SEA) == 0) {
+            k.increment(SEEN_SEA);
+        }
+        if (dino instanceof FlyingDinosaur && k.counter(SEEN_SKY) == 0) {
+            k.increment(SEEN_SKY);
+        }
+        sighted(player, dino.speciesId());
+    }
 
     public static void sighted(ServerPlayer player, String species) {
         Knowledge k = knowledge(player);
         if (k.raiseLevel(species, Knowledge.SIGHTED)) {
             announce(player, species, Knowledge.SIGHTED);
+        }
+        // a Rift leak: an animal of another era in this one (only Chapter 1 has its own tab so far)
+        GuideSpecies s = GuideSpecies.byId(species);
+        if (s != null && "late_cretaceous".equals(eraHere(player)) && !s.era().equals("late_cretaceous")) {
+            award(player, "chapter1/out_of_time");
         }
         checkStudied(player, k, species);
         changed(player, k, true);
@@ -146,6 +201,13 @@ public final class Research {
         }
         k.addPoints(species, FOSSIL_POINTS);
         checkStudied(player, k, species);
+        award(player, "journal/first_silhouette");
+        // fossils tell the future: an older era than the one the player is in
+        GuideSpecies s = GuideSpecies.byId(species);
+        String here = eraHere(player);
+        if (s != null && here != null && ERAS.indexOf(s.era()) >= 0 && ERAS.indexOf(s.era()) < ERAS.indexOf(here)) {
+            award(player, "journal/deep_time");
+        }
         objective(player, Objective.RESEARCH_TABLE);
         changed(player, k, true);
     }
@@ -203,7 +265,6 @@ public final class Research {
         Knowledge k = knowledge(player);
         if (k.raiseLevel(dino.speciesId(), Knowledge.TAMED)) {
             announce(player, dino.speciesId(), Knowledge.TAMED);
-            checkStudyCount(player, k);
         }
         if (dino instanceof HerbivoreDinosaur) {
             objective(player, Objective.TAME_HERBIVORE);
@@ -215,13 +276,6 @@ public final class Research {
         if (k.level(species) == Knowledge.SIGHTED && k.points(species) >= Knowledge.POINTS_TO_STUDY) {
             k.raiseLevel(species, Knowledge.STUDIED);
             announce(player, species, Knowledge.STUDIED);
-            checkStudyCount(player, k);
-        }
-    }
-
-    private static void checkStudyCount(ServerPlayer player, Knowledge k) {
-        if (k.countAtLeast(Knowledge.STUDIED) >= Objective.STUDY_SPECIES) {
-            objective(player, Objective.STUDY_FIVE);
         }
     }
 
@@ -236,25 +290,121 @@ public final class Research {
     /** Completes a Field Journal objective (and its advancement). Safe to call again. */
     public static void objective(ServerPlayer player, Objective objective) {
         Knowledge k = knowledge(player);
+        if (complete(player, k, objective)) {
+            changed(player, k, true);
+        }
+    }
+
+    /** Marks the objective and gives its advancement and, on the theme's 2nd objective, the amber fragment. */
+    private static boolean complete(ServerPlayer player, Knowledge k, Objective objective) {
         if (!objective.available() || !k.completeObjective(objective)) {
-            return;
+            return false;
         }
-        Advancement advancement = player.server.getAdvancements().getAdvancement(Terrassic.id(objective.advancement()));
-        if (advancement != null) {
-            player.getAdvancements().award(advancement, "done");
-        }
-        int done = 0;
-        for (Objective o : Objective.values()) {
-            if (o.theme() == objective.theme() && k.hasObjective(o)) {
-                done++;
-            }
-        }
-        if (done == Objective.PER_THEME) {
-            player.sendSystemMessage(Component.translatable("message.terrassic.theme_done",
-                    Component.translatable("theme.terrassic." + objective.theme().id())));
+        award(player, objective.advancement());
+        if (Objective.done(k, objective.theme()) == Objective.PER_THEME) {
+            award(player, objective.theme().advancement());
+            player.displayClientMessage(Component.translatable("message.terrassic.theme_done", Objective.fragments(k)), true);
             player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0F, 0.8F);
         }
-        changed(player, k, true);
+        return true;
+    }
+
+    // ------------------------------------------------------------------ advancements (docs/CONQUISTAS.md)
+
+    /** Gives the advancement terrassic:&lt;path&gt; (all its criteria). Does nothing if it is done or not in the game. */
+    public static void award(ServerPlayer player, String path) {
+        Advancement advancement = player.server.getAdvancements().getAdvancement(Terrassic.id(path));
+        if (advancement == null) {
+            return;
+        }
+        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancement);
+        if (progress.isDone()) {
+            return;
+        }
+        List<String> remaining = new ArrayList<>();
+        progress.getRemainingCriteria().forEach(remaining::add);
+        for (String criterion : remaining) {
+            player.getAdvancements().award(advancement, criterion);
+        }
+    }
+
+    /**
+     * Objectives and advancements that follow from what the player knows: counts, fragments, pages. Cheap and safe to
+     * repeat. Returns true if an objective was completed (the client copy needs a sync).
+     */
+    private static boolean milestones(ServerPlayer player, Knowledge k) {
+        boolean changed = false;
+        int studied = k.countAtLeast(Knowledge.STUDIED);
+        int pages = 0;
+        for (Lore.Page p : Lore.ALL) {
+            if (k.pages().contains(p.id())) {
+                pages++;
+            }
+        }
+        if (studied >= Objective.STUDY_SPECIES) {
+            changed |= complete(player, k, Objective.STUDY_FIVE);
+        }
+        if (pages >= Objective.PAGES) {
+            changed |= complete(player, k, Objective.KATARINA_PAGES);
+        }
+        if (k.counter(SEEN_SEA) > 0 && k.counter(SEEN_SKY) > 0) {
+            changed |= complete(player, k, Objective.INLAND_SEA);
+        }
+        for (Objective o : Objective.values()) {
+            if (o.available() && k.hasObjective(o)) {
+                award(player, o.advancement());
+            }
+        }
+        for (Objective.Theme t : Objective.Theme.values()) {
+            if (Objective.done(k, t) >= Objective.PER_THEME) {
+                award(player, t.advancement());
+            }
+        }
+        if (Objective.fragments(k) == Objective.Theme.values().length) {
+            award(player, "chapter1/four_fragments");
+        }
+        if (k.countAtLeast(Knowledge.SIGHTED) > 0) {
+            award(player, "journal/first_sighting");
+        }
+        if (studied > 0) {
+            award(player, "journal/first_studied");
+        }
+        if (allStudied(k, "late_cretaceous")) {
+            award(player, "chapter1/all_cretaceous");
+        }
+        if (allStudied(k, null)) {
+            award(player, "journal/guide_complete");
+        }
+        if (k.countAtLeast(Knowledge.TAMED) >= TAMED_SPECIES) {
+            award(player, "journal/five_tamed");
+        }
+        if (k.level("tyrannosaurus") >= Knowledge.TAMED) {
+            award(player, "chapter1/pet_rex");
+        }
+        if (pages > 0) {
+            award(player, "chapter1/first_page");
+        }
+        if (pages >= READER_PAGES) {
+            award(player, "journal/five_pages");
+        }
+        if (pages == Lore.ALL.size()) {
+            award(player, "journal/all_pages");
+        }
+        return changed;
+    }
+
+    /** Every Field Guide species of the era (null = of every era) is at least studied. */
+    private static boolean allStudied(Knowledge k, String era) {
+        int count = 0;
+        for (GuideSpecies s : GuideSpecies.ALL) {
+            if (era == null || s.era().equals(era)) {
+                if (k.level(s.id()) < Knowledge.STUDIED) {
+                    return false;
+                }
+                count++;
+            }
+        }
+        return count > 0;
     }
 
     /** Adds a Katarina page to the player's notebook. Returns false if they already had it. */

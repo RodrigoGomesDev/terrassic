@@ -73,7 +73,8 @@ public class AmberLensItem extends Item {
         }
         if (++obs[1] == OBSERVE_TICKS) {
             boolean known = Research.level(player, target.speciesId()) >= Knowledge.SIGHTED;
-            Research.sighted(player, target.speciesId());
+            Research.sighted(player, target);
+            Research.award(player, "journal/amber_lens");
             if (known) {
                 player.displayClientMessage(Component.translatable("message.terrassic.lens_seen", target.getType().getDescription(),
                         (int) Math.round(player.distanceTo(target))), true);
