@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "terrassic:metasequoia_logs"
+    }
+  ],
+  "result": {
+    "item": "terrassic:metasequoia_hewn_planks",
+    "count": 4
+  }
+}

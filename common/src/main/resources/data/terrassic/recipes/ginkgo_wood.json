@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "LL",
+    "LL"
+  ],
+  "key": {
+    "L": {
+      "item": "terrassic:ginkgo_log"
+    }
+  },
+  "result": {
+    "item": "terrassic:ginkgo_wood",
+    "count": 3
+  }
+}

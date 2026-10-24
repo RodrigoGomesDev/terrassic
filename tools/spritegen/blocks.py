@@ -4,7 +4,9 @@ art): tileable value noise for the material, a colour ramp taken from the real m
 stacked stones and flagstones, light from the top-left.
 
 Rocks: ROCKS has one entry per rock; every rock gets <rock>.png (natural), <rock>_stacked.png (dry-laid stones),
-<rock>_flagstone.png (flat paving), mossy_<rock>_stacked.png and <rock>_pebbles.png (loose pebbles on soil).  The other textures are in OTHER.
+<rock>_flagstone.png (flat paving), mossy_<rock>_stacked.png and <rock>_pebbles.png (loose pebbles on soil).
+Woods: WOODS has one entry per prehistoric tree (bark, log ends, stripped, hewn planks, leaves, sapling, lashed door
+and trapdoor, branch fence).  The other textures are in OTHER.
 
 usage: python3 blocks.py [preview.png]   -> writes into common/src/main/resources/assets/terrassic/textures/block
 """
@@ -392,38 +394,6 @@ def wattle_daub():
     return cv
 
 
-# ------------------------------------------------------------------ log palisade (paliçada)
-BARK_RAMP = ["#2a1d10", "#3e2c19", "#563f25", "#6e5233", "#836542"]
-WOOD_RAMP = ["#8c6a3e", "#a8834f", "#c09a62", "#d2ae76"]
-
-
-def palisade_side():
-    """Unbarked trunk: long vertical ridges and furrows, a couple of knots."""
-    n = Noise("bark", periods=(8, 16), weights=(0.6, 0.4), stretch=(1.0, 0.2))
-    rnd = random.Random("bark")
-    cv = paint(lambda x, y: ramp(BARK_RAMP, contrast(n(x, y), 1.6)))
-    for _ in range(2):
-        x, y = rnd.randrange(N), rnd.randrange(N)
-        cv.set(x, y, hexc("#1c130a")); cv.set(x, (y + 1) % N, hexc("#2a1d10")); cv.set((x + 1) % N, y, hexc("#6e5233"))
-    return cv
-
-
-def palisade_top():
-    """Hewn end of a log: growth rings around the pith, an axe facet."""
-    rnd = random.Random("ptop")
-
-    def px(x, y):
-        d = math.hypot(x - 7.5, y - 7.5)
-        if d > 7.2:
-            return ramp(BARK_RAMP, 0.4 + 0.2 * rnd.random())
-        ring = 0.5 + 0.5 * math.sin(d * 2.2)
-        return ramp(WOOD_RAMP, 0.25 + 0.55 * ring + 0.1 * rnd.random())
-    cv = paint(px)
-    for i in range(3, 13):
-        cv.set(i, 15 - i, shade(cv.get(i, 15 - i), 0.82))
-    return cv
-
-
 # ------------------------------------------------------------------ bone fence (cerca de osso)
 BONE_RAMP = ["#9c9178", "#bdb296", "#d6ccb0", "#e6dec6", "#f3eedf"]
 
@@ -465,9 +435,262 @@ def hide_screen_edge():
     return paint(lambda x, y: ramp(STICK_RAMP, 0.3 + 0.4 * ((x % 4) in (1, 2))))
 
 
+# ------------------------------------------------------------------ prehistoric woods
+# tree id: bark ramp, bark style, wood ramp (stripped / planks), leaf ramp, leaf style
+WOODS = {
+    # Araucaria (monkey puzzle / Parana pine): grey-brown bark in scaly horizontal rings; pale yellow wood;
+    # dark glossy green, stiff spiky scale leaves
+    "araucaria": {"bark": ["#2e241b", "#43352a", "#5a4a3b", "#706050", "#857563"], "bark_style": "rings",
+                  "wood": ["#9c8058", "#b8996a", "#cdb07e", "#dcc294", "#e8d3a8"],
+                  "leaf": ["#14281a", "#1f3a22", "#2c4f2c", "#3d6638", "#527d46"], "leaf_style": "spiky"},
+    # Ginkgo: grey, deeply furrowed bark; pale cream wood; bright fan-shaped leaves
+    "ginkgo": {"bark": ["#2f2c27", "#48433b", "#615a50", "#7a7267", "#938a7e"], "bark_style": "furrows",
+               "wood": ["#a89470", "#c2ad86", "#d6c29a", "#e3d1ab", "#eedfbd"],
+               "leaf": ["#3b5a1c", "#557a26", "#6f9631", "#8cb03f", "#a8c858"], "leaf_style": "fans"},
+    # Metasequoia (dawn redwood): red-brown fibrous bark peeling in long strips; pinkish heartwood;
+    # soft feathery light-green needles
+    "metasequoia": {"bark": ["#3a1c10", "#55291a", "#723a25", "#8f4c32", "#a86142"], "bark_style": "fibres",
+                    "wood": ["#8e5a42", "#a86d52", "#bf8266", "#cf977b", "#dcab91"],
+                    "leaf": ["#2b4a22", "#3d632c", "#517c36", "#679444", "#7fab55"], "leaf_style": "feathery"},
+}
+LASHING = ["#4a3a22", "#6e5a3a", "#8f7a55", "#b39d74"]
+
+
+def bark(tid):
+    w = WOODS[tid]
+    style = w["bark_style"]
+    rnd = random.Random(tid + "bark")
+    if style == "rings":  # scaly plates in horizontal bands with dark leaf scars
+        n = Noise(tid + "b", periods=(4, 16), weights=(0.5, 0.5), stretch=(1.0, 1.0))
+        cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.3) * (0.6 if y % 4 == 3 else 1.0) + (0.12 if y % 4 == 0 else 0)))
+        for _ in range(6):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            cv.set(x, y, hexc(w["bark"][0]))
+        return cv
+    if style == "furrows":  # deep vertical furrows, ridges catching light
+        n = Noise(tid + "b", periods=(8, 16), weights=(0.6, 0.4), stretch=(1.0, 0.25))
+        fine = Noise(tid + "f", periods=(16,), weights=(1.0,))
+        return paint(lambda x, y: ramp(w["bark"], contrast(n(x, y) * 0.8 + fine(x, y) * 0.2, 1.7)))
+    # fibres: long stringy strips, some peeling (lighter edge)
+    n = Noise(tid + "b", periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
+    cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.5)))
+    for _ in range(4):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for i in range(rnd.randint(3, 6)):
+            cv.set(x, (y + i) % N, hexc(w["bark"][4]))
+            cv.set((x + 1) % N, (y + i) % N, hexc(w["bark"][0]))
+    return cv
+
+
+def log_top(tid, stripped=False):
+    """Cut end: growth rings around an off-centre pith, radial drying cracks; bark ring unless stripped."""
+    w = WOODS[tid]
+    rnd = random.Random(tid + "top")
+    wob = Noise(tid + "rw", periods=(2, 4), weights=(0.7, 0.3))
+
+    def px(x, y):
+        d = math.hypot(x - 7.2, y - 7.8) + (wob(x, y) - 0.5) * 1.2
+        edge = max(abs(x - 7.5), abs(y - 7.5))
+        if not stripped and edge > 6.6:
+            return ramp(w["bark"], 0.35 + 0.3 * rnd.random())
+        ring = 0.5 + 0.5 * math.cos(d * 2.4)
+        return ramp(w["wood"], 0.15 + 0.6 * ring + 0.12 * rnd.random() - (0.15 if d < 1.2 else 0))
+    cv = paint(px)
+    x, y = 7.2, 7.8
+    ang = rnd.uniform(0, math.tau)
+    for r in range(1, 7):  # one radial drying crack
+        cv.set(int(x + math.cos(ang) * r), int(y + math.sin(ang) * r), hexc(w["wood"][0]))
+    return cv
+
+
+def stripped_side(tid):
+    """Debarked trunk: long fibres with the draw-knife marks."""
+    w = WOODS[tid]
+    n = Noise(tid + "s", periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
+    cv = paint(lambda x, y: ramp(w["wood"], 0.2 + 0.65 * n(x, y)))
+    rnd = random.Random(tid + "knife")
+    for _ in range(3):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        for i in range(4):
+            cv.set((x + i) % N, (y + (i // 2)) % N, shade(cv.get((x + i) % N, (y + (i // 2)) % N), 0.85))
+    return cv
+
+
+def hewn_planks(tid):
+    """Planks split and dressed with an adze: four boards of uneven height, scalloped tool marks, no nails."""
+    w = WOODS[tid]
+    rnd = random.Random(tid + "hewn")
+    n = Noise(tid + "h", periods=(16, 8), weights=(0.5, 0.5), stretch=(0.25, 1.0))
+    seams = [3, 7, 12, 15]
+    tones = [0.85 + 0.25 * rnd.random() for _ in seams]
+
+    def px(x, y):
+        board = next(i for i, s in enumerate(seams) if y <= s)
+        if y == seams[board] and not (board == 1 and 6 <= x <= 8):
+            return ramp(w["wood"], 0.02)
+        scallop = 0.22 * math.cos((x + board * 3) * (2 * math.pi / 5))  # adze strokes, scalloped hollows
+        v = (0.3 + 0.45 * n(x, y) + scallop) * tones[board]
+        if y == (seams[board - 1] + 1 if board else 0):
+            v += 0.1
+        return ramp(w["wood"], v)
+    cv = paint(px)
+    for i, s in enumerate(seams):  # a drying crack along the grain of each board
+        x0 = rnd.randrange(N)
+        y = s - 2 if s - 2 >= 0 else 0
+        for k in range(rnd.randint(3, 6)):
+            cv.set((x0 + k) % N, y, ramp(w["wood"], 0.05))
+    return cv
+
+
+def leaves(tid):
+    """Foliage with gaps (transparent), clustered the way the real leaves grow."""
+    w = WOODS[tid]
+    style = w["leaf_style"]
+    rnd = random.Random(tid + "leaf")
+    n = Noise(tid + "l", periods=(4, 8, 16), weights=(0.4, 0.35, 0.25))
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            v = n(x, y)
+            if v < 0.36:
+                continue  # gap
+            cv.set(x, y, ramp(w["leaf"], contrast(v, 1.6) + 0.1 * rnd.random()))
+    if style == "spiky":  # stiff overlapping scale leaves: diagonal bright points
+        for _ in range(14):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            cv.set(x, y, hexc(w["leaf"][4])); cv.set((x + 1) % N, (y + 1) % N, hexc(w["leaf"][1]))
+    elif style == "fans":  # fan-shaped leaves: little bright wedges
+        for _ in range(7):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            for dx in (-1, 0, 1):
+                cv.set((x + dx) % N, y, hexc(w["leaf"][4]))
+            cv.set(x, (y + 1) % N, hexc(w["leaf"][3]))
+    else:  # feathery: rows of tiny needles along twigs
+        for _ in range(5):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            for i in range(5):
+                cv.set((x + i) % N, y, hexc(w["leaf"][1]))
+                cv.set((x + i) % N, (y - 1) % N if i % 2 else (y + 1) % N, hexc(w["leaf"][4]))
+    return cv
+
+
+def sapling(tid):
+    """Young tree, drawn on transparent background: thin stem and the crown shape of its species."""
+    w = WOODS[tid]
+    cv = Canvas()
+    stem = hexc(w["bark"][3])
+    for y in range(8, 16):
+        cv.set(7, y, stem)
+    leaf = lambda k: hexc(w["leaf"][k])  # noqa: E731
+    style = w["leaf_style"]
+    if style == "spiky":  # araucaria seedling: whorls of stiff spiky branches, tiered
+        for y, half in ((3, 2), (6, 4), (9, 5)):
+            for dx in range(-half, half + 1):
+                cv.set(7 + dx, y, leaf(2 if abs(dx) < half else 1))
+                if abs(dx) == half:
+                    cv.set(7 + dx, y - 1, leaf(4))
+        for y in range(1, 10):
+            cv.set(7, y, stem if y > 3 else leaf(3))
+    elif style == "fans":  # ginkgo: a few fan leaves on a twig
+        for (cx, cy) in ((4, 6), (10, 5), (7, 2), (5, 10), (10, 9)):
+            for dx in (-2, -1, 0, 1, 2):
+                cv.set(cx + dx, cy, leaf(3 if dx < 0 else 2))
+            for dx in (-1, 0, 1):
+                cv.set(cx + dx, cy + 1, leaf(2))
+            cv.set(cx, cy + 2, leaf(1))
+        for y in range(4, 16):
+            cv.set(7, y, stem)
+    else:  # metasequoia: soft cone of feathery needles
+        for y in range(1, 12):
+            half = max(0, (y - 1) // 2)
+            for dx in range(-half, half + 1):
+                if (dx + y) % 2 == 0 or abs(dx) < half:
+                    cv.set(7 + dx, y, leaf(3 if dx < 0 else 1))
+    cv.outline(0.5)
+    return cv
+
+
+def door(tid, part):
+    """Door of split logs lashed to two cross-bars with rawhide; a gap between logs shows light (transparent)."""
+    w = WOODS[tid]
+    rnd = random.Random(tid + part)
+    n = Noise(tid + "d" + part, periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            if x in (4, 11) and rnd.random() < 0.5:
+                continue  # crack between logs
+            col = x // 4
+            v = 0.2 + 0.55 * n(x, y) + (0.15 if x % 4 == 1 else 0) - (0.15 if x % 4 == 3 else 0)
+            cv.set(x, y, ramp(w["wood"], v - 0.05 * col))
+    bar = 3 if part == "top" else 11
+    for x in range(N):  # cross-bar and lashing
+        cv.set(x, bar, ramp(w["bark"], 0.6)); cv.set(x, bar + 1, ramp(w["bark"], 0.3))
+        if x % 4 == 1:
+            cv.set(x, bar - 1, hexc(LASHING[2])); cv.set(x, bar + 2, hexc(LASHING[1]))
+    if part == "top":
+        for x in range(N):  # sharpened tops of the logs
+            if x % 4 in (0, 3):
+                cv.p[0][x] = None
+    return cv
+
+
+def trapdoor(tid):
+    """Hatch of lashed round poles, two cross-bars."""
+    w = WOODS[tid]
+    n = Noise(tid + "t", periods=(16, 8), weights=(0.6, 0.4), stretch=(0.125, 1.0))
+    cv = Canvas()
+    for y in range(N):
+        for x in range(N):
+            if y % 4 == 3 and x not in (3, 4, 11, 12):
+                continue  # gaps between poles
+            v = 0.2 + 0.6 * n(x, y) + (0.15 if y % 4 == 0 else 0)
+            cv.set(x, y, ramp(w["wood"], v))
+    for y in range(N):
+        for x in (3, 4, 11, 12):
+            cv.set(x, y, ramp(w["bark"], 0.5 if x in (3, 11) else 0.3))
+    return cv
+
+
+def door_item(tid):
+    """Inventory sprite: the whole door squeezed to 8x16."""
+    top, bottom = door(tid, "top"), door(tid, "bottom")
+    cv = Canvas()
+    for y in range(N):
+        src = top if y < 8 else bottom
+        sy = (y % 8) * 2
+        for x in range(4, 12):
+            cv.set(x, y, src.get((x - 4) * 2, sy))
+    return cv
+
+
+def branch_fence(tid):
+    """Fence of whole branches: bark with knots and a lighter cut surface."""
+    cv = bark(tid)
+    rnd = random.Random(tid + "branch")
+    for _ in range(3):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        cv.set(x, y, ramp(WOODS[tid]["wood"], 0.6)); cv.set((x + 1) % N, y, ramp(WOODS[tid]["bark"], 0.0))
+    return cv
+
+
+def wood_textures(tid):
+    out = {f"{tid}_log": bark(tid), f"{tid}_log_top": log_top(tid), f"stripped_{tid}_log": stripped_side(tid),
+           f"stripped_{tid}_log_top": log_top(tid, True), f"{tid}_hewn_planks": hewn_planks(tid),
+           f"{tid}_leaves": leaves(tid), f"{tid}_sapling": sapling(tid), f"{tid}_lashed_door_top": door(tid, "top"),
+           f"{tid}_lashed_door_bottom": door(tid, "bottom"), f"{tid}_lashed_trapdoor": trapdoor(tid),
+           f"{tid}_branch_fence": branch_fence(tid)}
+    return out
+
+
+def wood_items(tid):
+    """Inventory sprites (textures/item) of the wood blocks that are not drawn as blocks."""
+    return {f"{tid}_lashed_door": door_item(tid)}
+
+
 OTHER = {
     "thatch": thatch, "thatch_top": thatch_top, "straw_mat": straw_mat, "wattle_and_daub": wattle_daub,
-    "log_palisade": palisade_side, "log_palisade_top": palisade_top, "bone_fence": bone_fence,
+    "bone_fence": bone_fence,
     "hide_screen": hide_screen, "hide_screen_edge": hide_screen_edge,
 }
 
@@ -479,8 +702,13 @@ def build():
         out[f"{rid}_pebbles"] = pebbles(rid)
     for name, fn in OTHER.items():
         out[name] = fn()
+    for tid in WOODS:
+        out.update(wood_textures(tid))
     for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
+    for tid in WOODS:
+        for name, cv in wood_items(tid).items():
+            cv.save(os.path.join(os.path.dirname(TEX), "item", f"{name}.png"))
     return out
 
 

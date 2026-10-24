@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "terrassic:block/araucaria_hewn_planks",
+    "top": "terrassic:block/araucaria_hewn_planks",
+    "side": "terrassic:block/araucaria_hewn_planks"
+  }
+}

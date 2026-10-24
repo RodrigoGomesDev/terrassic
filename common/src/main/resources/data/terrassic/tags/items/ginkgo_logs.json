@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:ginkgo_log",
+    "terrassic:stripped_ginkgo_log",
+    "terrassic:ginkgo_wood",
+    "terrassic:stripped_ginkgo_wood"
+  ]
+}

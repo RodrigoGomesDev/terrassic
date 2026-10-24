@@ -2,22 +2,34 @@ package com.terrassic.registry;
 
 import com.terrassic.Terrassic;
 import com.terrassic.block.DinoEggBlock;
+import com.terrassic.block.PrehistoricTreeGrower;
 import com.terrassic.block.ResearchTableBlock;
 import com.terrassic.entity.DinosaurEntity;
+import dev.architectury.event.events.common.LifecycleEvent;
+import dev.architectury.hooks.item.tool.AxeItemHooks;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CarpetBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -57,6 +69,12 @@ public final class ModBlocks {
 
     static {
         BuildingBlocks.register();
+        // an axe strips prehistoric logs and wood like the vanilla ones
+        LifecycleEvent.SETUP.register(() -> {
+            for (String[] pair : BuildingBlocks.STRIPPABLES) {
+                AxeItemHooks.addStrippable(BUILDING.get(pair[0]).get(), BUILDING.get(pair[1]).get());
+            }
+        });
     }
 
     public static final RegistrySupplier<Block> THATCH = BUILDING.get("thatch");
@@ -97,7 +115,13 @@ public final class ModBlocks {
             case "pebbles" -> p.strength(0.3F).sound(SoundType.GRAVEL);
             case "thatch" -> p.strength(0.5F).sound(SoundType.GRASS).ignitedByLava();
             case "mud" -> p.strength(1.2F, 3.0F).sound(SoundType.MUD_BRICKS);
-            case "wood" -> p.strength(2.5F, 4.0F).sound(SoundType.WOOD).ignitedByLava();
+            case "wood" -> p.strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava();
+            case "leaves" -> p.strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion()
+                    .isValidSpawn((state, level, pos, type) -> false).isSuffocating((state, level, pos) -> false)
+                    .isViewBlocking((state, level, pos) -> false).isRedstoneConductor((state, level, pos) -> false)
+                    .ignitedByLava().pushReaction(PushReaction.DESTROY);
+            case "sapling" -> p.noCollission().randomTicks().instabreak().sound(SoundType.GRASS)
+                    .pushReaction(PushReaction.DESTROY);
             case "bone" -> p.strength(2.0F).requiresCorrectToolForDrops().sound(SoundType.BONE_BLOCK);
             case "hide" -> p.strength(0.8F).sound(SoundType.WOOL).ignitedByLava();
             default -> throw new IllegalArgumentException("unknown building material " + material);
@@ -135,6 +159,32 @@ public final class ModBlocks {
 
     static void carpet(String id, BlockBehaviour.Properties p) {
         building(id, () -> new CarpetBlock(p.strength(0.1F)) {});
+    }
+
+    static void log(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new RotatedPillarBlock(p));
+    }
+
+    static void leaves(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new LeavesBlock(p));
+    }
+
+    /** Sapling that grows into the configured feature terrassic:&lt;tree&gt;. */
+    static void sapling(String id, String tree, BlockBehaviour.Properties p) {
+        building(id, () -> new SaplingBlock(new PrehistoricTreeGrower(tree), p) {});
+    }
+
+    static void fenceGate(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new FenceGateBlock(p.forceSolidOn(), WoodType.OAK));
+    }
+
+    static void door(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new DoorBlock(p.strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY), BlockSetType.OAK));
+    }
+
+    static void trapdoor(String id, BlockBehaviour.Properties p) {
+        building(id, () -> new TrapDoorBlock(p.strength(3.0F).noOcclusion()
+                .isValidSpawn((state, level, pos, type) -> false), BlockSetType.OAK));
     }
 
     /** The egg block of a species, or null if the registry is not ready / unknown species. */

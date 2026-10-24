@@ -25,6 +25,9 @@
     "terrassic:mossy_gneiss_stacked_slab",
     "terrassic:conglomerate_stacked_slab",
     "terrassic:conglomerate_flagstone_slab",
-    "terrassic:mossy_conglomerate_stacked_slab"
+    "terrassic:mossy_conglomerate_stacked_slab",
+    "terrassic:araucaria_hewn_slab",
+    "terrassic:ginkgo_hewn_slab",
+    "terrassic:metasequoia_hewn_slab"
   ]
 }

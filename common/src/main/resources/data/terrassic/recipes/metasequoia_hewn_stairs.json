@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:metasequoia_hewn_planks"
+    }
+  },
+  "result": {
+    "item": "terrassic:metasequoia_hewn_stairs",
+    "count": 4
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_left",
+  "textures": {
+    "top": "terrassic:block/ginkgo_lashed_door_top",
+    "bottom": "terrassic:block/ginkgo_lashed_door_bottom"
+  }
+}

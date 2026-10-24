@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "terrassic:block/metasequoia_hewn_slab"
+    },
+    "type=top": {
+      "model": "terrassic:block/metasequoia_hewn_slab_top"
+    },
+    "type=double": {
+      "model": "terrassic:block/metasequoia_hewn_planks"
+    }
+  }
+}

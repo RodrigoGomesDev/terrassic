@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "terrassic:block/metasequoia_log"
+    },
+    "axis=z": {
+      "model": "terrassic:block/metasequoia_log_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "terrassic:block/metasequoia_log_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

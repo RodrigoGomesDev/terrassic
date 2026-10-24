@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:araucaria_log",
+    "terrassic:stripped_araucaria_log",
+    "terrassic:araucaria_wood",
+    "terrassic:stripped_araucaria_wood"
+  ]
+}

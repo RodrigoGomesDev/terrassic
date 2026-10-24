@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:araucaria_hewn_planks"
+    }
+  },
+  "result": {
+    "item": "terrassic:araucaria_hewn_stairs",
+    "count": 4
+  }
+}

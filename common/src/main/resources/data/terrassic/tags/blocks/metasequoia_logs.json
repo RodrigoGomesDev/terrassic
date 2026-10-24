@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:metasequoia_log",
+    "terrassic:stripped_metasequoia_log",
+    "terrassic:metasequoia_wood",
+    "terrassic:stripped_metasequoia_wood"
+  ]
+}

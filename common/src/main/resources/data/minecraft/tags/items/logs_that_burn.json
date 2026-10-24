@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:araucaria_log",
+    "terrassic:stripped_araucaria_log",
+    "terrassic:araucaria_wood",
+    "terrassic:stripped_araucaria_wood",
+    "terrassic:ginkgo_log",
+    "terrassic:stripped_ginkgo_log",
+    "terrassic:ginkgo_wood",
+    "terrassic:stripped_ginkgo_wood",
+    "terrassic:metasequoia_log",
+    "terrassic:stripped_metasequoia_log",
+    "terrassic:metasequoia_wood",
+    "terrassic:stripped_metasequoia_wood"
+  ]
+}

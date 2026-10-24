@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PP",
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "terrassic:ginkgo_hewn_planks"
+    }
+  },
+  "result": {
+    "item": "terrassic:ginkgo_lashed_door",
+    "count": 3
+  }
+}

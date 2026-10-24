@@ -4,6 +4,9 @@
     "terrassic:thatch",
     "terrassic:thatch_stairs",
     "terrassic:thatch_slab",
-    "terrassic:straw_mat"
+    "terrassic:straw_mat",
+    "terrassic:araucaria_leaves",
+    "terrassic:ginkgo_leaves",
+    "terrassic:metasequoia_leaves"
   ]
 }

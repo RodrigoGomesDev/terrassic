@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
-    "terrassic:bone_fence"
+    "terrassic:bone_fence",
+    "terrassic:araucaria_branch_fence",
+    "terrassic:ginkgo_branch_fence",
+    "terrassic:metasequoia_branch_fence"
   ]
 }

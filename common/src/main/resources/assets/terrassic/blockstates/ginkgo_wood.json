@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "terrassic:block/ginkgo_wood"
+    },
+    "axis=z": {
+      "model": "terrassic:block/ginkgo_wood_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "terrassic:block/ginkgo_wood_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

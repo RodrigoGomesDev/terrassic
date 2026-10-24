@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " F ",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "L": {
+      "item": "terrassic:ginkgo_log"
+    }
+  },
+  "result": {
+    "item": "terrassic:ginkgo_palisade",
+    "count": 6
+  }
+}

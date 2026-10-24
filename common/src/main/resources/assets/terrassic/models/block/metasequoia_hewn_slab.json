@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "terrassic:block/metasequoia_hewn_planks",
+    "top": "terrassic:block/metasequoia_hewn_planks",
+    "side": "terrassic:block/metasequoia_hewn_planks"
+  }
+}
