@@ -98,7 +98,7 @@ animações do T. rex e as rachaduras de âmbar brilhando.
 
 | Atributo | Valor |
 |---|---|
-| Vida | ~770 (420 de base x 1,35²) |
+| Vida | ~770 com 1 jogador (420 de base x 1,35²); +50% por jogador a mais, até 8 |
 | Mordida | ~22 (16 x 1,35), mais o empurrão |
 | Armadura | 12, robustez 4, não leva empurrão |
 | Imune a | fogo, queda, afogamento e aos próprios meteoros |
@@ -111,7 +111,7 @@ animações do T. rex e as rachaduras de âmbar brilhando.
 - Não sai a mais de 48 blocos do Altar: larga quem fugiu para longe e volta. Se o ritual dele acabou, ou se ele não é
   o Tirano do ritual atual, volta para a Fenda sozinho.
 - A regra "Nível de dificuldade" (`REGRAS.md`) vale para ele como para qualquer selvagem.
-- Deixa uma carcaça de T. rex grande com 3-5 âmbar bruto, 2-4 dentes de rex e 6-10 carnes nobres.
+- Deixa uma carcaça de T. rex grande com 1-3 âmbar bruto, 2-4 dentes de rex e 6-10 carnes nobres.
 
 ## 5. O Salto e o Salto Instável
 
@@ -150,11 +150,11 @@ Mudanças pequenas e aditivas em arquivos de outras frentes:
 - `tools/javagen/gen_resources.py`: chamada de `gen_leap` e a mescla do LANG.
 - `tools/javagen/conquistas.py`: `meteor_ritual`, `rift_tyrant` e `rift_anomaly` prontas.
 
-## 8. Perguntas abertas para o Rodrigo
+## 8. Decisões (o Rodrigo deixou a frente decidir, 24/10/2026)
 
-1. O Tirano está forte o bastante (ou demais)? Os números de vida e mordida são estimativa; dá para ajustar
-   em `RiftTyrant.createAttributes`.
-2. O Altar deve exigir um mínimo de fragmentos para ser **construído** (hoje qualquer um constrói; só o uso depende
-   dos fragmentos)?
-3. Refazer o ritual depois de vencer dá 3-5 âmbar por 1 oferecido. Deixar assim (recompensa por lutar de novo) ou
-   dar só na primeira vitória de cada jogador?
+1. **Força do Tirano**: os números da tabela valem para 1 jogador. Em multiplayer a vida sobe 50% por jogador a mais
+   na luta (contados a até 96 blocos do Altar quando ele chega), até 8 jogadores (x4,5): 2 jogadores ~1.150,
+   4 jogadores ~1.900. A mordida não muda (cada um continua levando o mesmo dano).
+2. **Construir o Altar** não exige fragmentos (Regra 0: construir é livre); só o uso depende deles.
+3. **Refazer o ritual** devolve só 1-3 âmbar: dá para lutar de novo (para quem não estava na primeira vez, ou por
+   diversão) sem virar fazenda de âmbar.

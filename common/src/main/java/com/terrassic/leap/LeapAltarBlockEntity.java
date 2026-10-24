@@ -322,6 +322,13 @@ public class LeapAltarBlockEntity extends BlockEntity {
         }
         t.finalizeSpawn(level, level.getCurrentDifficultyAt(spot), MobSpawnType.EVENT, null, null);
         t.bindToAltar(this.worldPosition);
+        int fighters = 0;
+        for (ServerPlayer p : level.players()) {
+            if (p.isAlive() && !p.isSpectator() && p.distanceToSqr(Vec3.atCenterOf(this.worldPosition)) < PRESENCE * PRESENCE) {
+                fighters++;
+            }
+        }
+        t.scaleForPlayers(fighters);
         level.addFreshEntity(t);
         this.tyrant = t.getUUID();
         this.phase = FIGHT;
