@@ -60,6 +60,27 @@ public final class ModItems {
     public static final RegistrySupplier<Item> MOSASAURUS_SPAWN_EGG = egg("mosasaurus", ModEntities.MOSASAURUS);
     // END GENERATED spawn eggs
 
+    // ---- hides: one per species, dropped by the animal (1-3, more with Looting); raw material for hide blocks
+    // BEGIN GENERATED hides (tools/javagen/gen_species.py)
+    public static final RegistrySupplier<Item> TYRANNOSAURUS_HIDE = hide("tyrannosaurus");
+    public static final RegistrySupplier<Item> SPINOSAURUS_HIDE = hide("spinosaurus");
+    public static final RegistrySupplier<Item> DILOPHOSAURUS_HIDE = hide("dilophosaurus");
+    public static final RegistrySupplier<Item> VELOCIRAPTOR_HIDE = hide("velociraptor");
+    public static final RegistrySupplier<Item> COMPSOGNATHUS_HIDE = hide("compsognathus");
+    public static final RegistrySupplier<Item> TRICERATOPS_HIDE = hide("triceratops");
+    public static final RegistrySupplier<Item> STEGOSAURUS_HIDE = hide("stegosaurus");
+    public static final RegistrySupplier<Item> ANKYLOSAURUS_HIDE = hide("ankylosaurus");
+    public static final RegistrySupplier<Item> BRACHIOSAURUS_HIDE = hide("brachiosaurus");
+    public static final RegistrySupplier<Item> PARASAUROLOPHUS_HIDE = hide("parasaurolophus");
+    public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_HIDE = hide("pachycephalosaurus");
+    public static final RegistrySupplier<Item> GALLIMIMUS_HIDE = hide("gallimimus");
+    public static final RegistrySupplier<Item> MAIASAURA_HIDE = hide("maiasaura");
+    public static final RegistrySupplier<Item> PTERANODON_HIDE = hide("pteranodon");
+    public static final RegistrySupplier<Item> QUETZALCOATLUS_HIDE = hide("quetzalcoatlus");
+    public static final RegistrySupplier<Item> HATZEGOPTERYX_HIDE = hide("hatzegopteryx");
+    public static final RegistrySupplier<Item> MOSASAURUS_HIDE = hide("mosasaurus");
+    // END GENERATED hides
+
     // ---- materials dropped by dinosaurs
     public static final RegistrySupplier<Item> REX_TOOTH = ITEMS.register("rex_tooth",
             () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
@@ -164,6 +185,10 @@ public final class ModItems {
             }
         }
         return FOSSILS.values().iterator().next().get();
+    }
+
+    private static RegistrySupplier<Item> hide(String species) {
+        return ITEMS.register(species + "_hide", () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));
     }
 
     private static RegistrySupplier<Item> egg(String name, RegistrySupplier<? extends EntityType<? extends Mob>> type) {

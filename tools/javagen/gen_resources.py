@@ -119,6 +119,11 @@ def main():
         lang["es_es"][f"item.terrassic.{sid}_spawn_egg"] = f"Huevo Generador de {es}"
         # unique spawn egg sprite (layer0 only; tint colours are white)
         write(f"{A}/models/item/{sid}_spawn_egg.json", {"parent": "item/generated", "textures": {"layer0": f"terrassic:item/{sid}_spawn_egg"}})
+        # hide of the species (item terrassic:<sid>_hide; sprite from tools/spritegen/sprites.py, drawn from the model palette)
+        lang["en_us"][f"item.terrassic.{sid}_hide"] = f"{en} Hide"
+        lang["pt_br"][f"item.terrassic.{sid}_hide"] = f"Couro de {pt}"
+        lang["es_es"][f"item.terrassic.{sid}_hide"] = f"Cuero de {es}"
+        write(f"{A}/models/item/{sid}_hide.json", {"parent": "item/generated", "textures": {"layer0": f"terrassic:item/{sid}_hide"}})
         if large is None:
             continue
         lang["en_us"][f"block.terrassic.{sid}_egg"] = f"{en} Egg"
@@ -198,7 +203,10 @@ def main():
                        item("terrassic:mosasaurus_tooth", 1, 3, chance=0.6)],
     }
     for sid, pools in loot.items():
-        write(f"{D}/loot_tables/entities/{sid}.json", {"type": "minecraft:entity", "pools": pools})
+        # every species drops its own hide (last pool, so the pools above stay as they are)
+        write(f"{D}/loot_tables/entities/{sid}.json", {"type": "minecraft:entity", "pools": pools + [item(f"terrassic:{sid}_hide", 1, 3)]})
+    missing = [sid for sid in SPECIES if sid not in loot]
+    assert not missing, f"species without loot table: {missing}"
     print("resources written")
 
 

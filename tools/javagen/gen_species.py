@@ -587,6 +587,8 @@ def gen_registrations():
     fill(os.path.join(reg, "ModItems.java"), "spawn eggs",
          [f"    public static final RegistrySupplier<Item> {up(s)}_SPAWN_EGG = egg(\"{s['id']}\", ModEntities.{up(s)});"
           for s in SPECIES])
+    fill(os.path.join(reg, "ModItems.java"), "hides",
+         [f"    public static final RegistrySupplier<Item> {up(s)}_HIDE = hide(\"{s['id']}\");" for s in SPECIES])
     fill(os.path.join(reg, "ModBlocks.java"), "eggs",
          [f"        egg(\"{s['id']}\", ModEntities.{up(s)}, {str(NAMES[s['id']][3]).lower()});"
           for s in SPECIES if NAMES[s["id"]][3] is not None])

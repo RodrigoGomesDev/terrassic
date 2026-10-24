@@ -563,10 +563,64 @@ def weapons():
         cv.set(7, y, BONE_D); cv.set(8, y, BONE)
     out["ankylosaurus_club"] = cv
 
+    for sid, cv in hide_sprites().items():
+        out[f"{sid}_hide"] = cv
+
     for name, cv in out.items():
         cv.outline(0.42)
         cv.save(os.path.join(TEX, "item", f"{name}.png"))
     return out
+
+
+# ------------------------------------------------------------------ hides
+FUZZY = {"velociraptor", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx"}  # feathers / pycnofibres
+HIDE_ROWS = {2: ((4, 5), (10, 11)), 3: ((3, 12),), 4: ((2, 13),), 5: ((2, 13),), 6: ((2, 13),), 7: ((2, 13),),
+             8: ((2, 13),), 9: ((2, 13),), 10: ((2, 13),), 11: ((3, 12),), 12: ((4, 5), (10, 11))}
+
+
+def species_palettes():
+    """{species: palette} read from the modelgen species files (the same colours as the entity texture)."""
+    import importlib
+    import sys
+    here = os.path.dirname(os.path.abspath(__file__))
+    for p in (os.path.join(here, "..", "modelgen"), os.path.join(here, "..", "modelgen", "species")):
+        if p not in sys.path:
+            sys.path.insert(0, p)
+    from build_all import ALL
+    return {sid: importlib.import_module(sid).build().palette for sid in ALL}
+
+
+def hide_sprite(sid, pal):
+    """A stretched pelt with four leg flaps: dorsal colour down the middle, flank at the sides, belly along the
+    bottom edge; scaly species get a checker of darker scales, fuzzy ones get speckles."""
+    dorsal, flank = hexc(pal["dorsal"]), hexc(pal["flank"])
+    belly = hexc(pal.get("belly", pal["flank"]))
+    dark = shade(dorsal, 0.72)
+    cv = Canvas()
+    for y, spans in HIDE_ROWS.items():
+        for a, b in spans:
+            for x in range(a, b + 1):
+                c = flank
+                if 5 <= x <= 10 and 3 <= y <= 11:
+                    c = dorsal
+                if y >= 10 and (x < 5 or x > 10):
+                    c = belly
+                if sid in FUZZY:
+                    if (x * 7 + y * 3) % 5 == 0:
+                        c = dark
+                elif (x + y) % 2 == 0 and 3 <= y <= 11:
+                    c = shade(c, 0.9)
+                if x == a or x == b or y in (2, 12):
+                    c = shade(c, 0.78)          # rolled edge
+                if x == a + 1 and y in range(4, 9):
+                    c = shade(c, 1.15)          # highlight
+                cv.set(x, y, c)
+    cv.set(7, 6, shade(dorsal, 1.1)); cv.set(8, 7, shade(dorsal, 1.1))
+    return cv
+
+
+def hide_sprites():
+    return {sid: hide_sprite(sid, pal) for sid, pal in species_palettes().items()}
 
 
 def preview(path):
