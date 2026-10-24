@@ -1,6 +1,7 @@
 package com.terrassic;
 
 import com.terrassic.client.TerrassicClient;
+import com.terrassic.client.TerrassicWorldClient;
 import com.terrassic.registry.ModBlockEntities;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
@@ -42,6 +43,7 @@ public final class Terrassic {
         ArrivalCrater.init(); // v0.8: the arrival crater next to the world spawn
         KatarinaRefuge.init(); // v0.8: Mate at the River House, the Amber Lens pointing to it
         RiftStorm.init(); // v0.8: Rift Storms
+        EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicWorldClient::init); // v0.8: storm effects, HUD
         Research.init();
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }

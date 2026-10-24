@@ -20,7 +20,12 @@ import java.nio.file.Path;
  * <pre>
  * {
  *   "title_screen": true,    // Terrassic panorama, logo and splashes on the title screen
- *   "loading_tips": true     // a real fact or a game tip on the world loading screens
+ *   "loading_tips": true,    // a real fact or a game tip on the world loading screens
+ *   "hud_mount": true,       // HUD: panel of the dinosaur you ride
+ *   "hud_pack": true,        // HUD: your tamed dinosaurs nearby
+ *   "hud_new_species": true, // HUD: toast when a species reaches a new Field Guide level
+ *   "hud_era_title": true,   // HUD: the era's name when you arrive
+ *   "hud_rift_alert": true   // HUD: pulsing amber shard during a Rift Storm
  * }
  * </pre>
  */
@@ -28,6 +33,8 @@ public final class ClientConfig {
     private static final Logger LOG = LoggerFactory.getLogger("terrassic");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static JsonObject root;
+    private static final String[] FLAGS = {"title_screen", "loading_tips", "hud_mount", "hud_pack", "hud_new_species",
+            "hud_era_title", "hud_rift_alert"};
 
     private ClientConfig() {
     }
@@ -40,7 +47,8 @@ public final class ClientConfig {
         return flag("loading_tips");
     }
 
-    private static boolean flag(String name) {
+    /** Any boolean option above; missing ones count as on. */
+    public static boolean flag(String name) {
         JsonObject cfg = load();
         return !cfg.has(name) || cfg.get(name).getAsBoolean();
     }
@@ -64,7 +72,7 @@ public final class ClientConfig {
             }
         }
         boolean changed = false;
-        for (String name : new String[]{"title_screen", "loading_tips"}) {
+        for (String name : FLAGS) {
             if (!cfg.has(name)) {
                 cfg.addProperty(name, true);
                 changed = true;

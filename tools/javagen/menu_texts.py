@@ -15,6 +15,13 @@ Merged into the lang files by gen_world.py -> gen_resources.py.
 MENU = {
     "menu.terrassic.subtitle": ("Chapter 1 · Echoes of the End", "Capítulo 1 · Ecos do Fim", "Capítulo 1 · Ecos del Fin"),
     "menu.terrassic.did_you_know": ("Did you know?", "Você sabia?", "¿Sabías que...?"),
+    # HUD (phase M5)
+    "hud.terrassic.rift_storm": ("Rift Storm", "Tempestade da Fenda", "Tormenta de la Grieta"),
+    "hud.terrassic.era.late_cretaceous": ("Late Cretaceous", "Cretáceo Superior", "Cretácico Superior"),
+    "hud.terrassic.species.silhouette": ("Fossil studied", "Fóssil estudado", "Fósil estudiado"),
+    "hud.terrassic.species.sighted": ("New species sighted", "Nova espécie avistada", "Nueva especie avistada"),
+    "hud.terrassic.species.studied": ("Species studied", "Espécie estudada", "Especie estudiada"),
+    "hud.terrassic.species.tamed": ("Species tamed", "Espécie domesticada", "Especie domesticada"),
 }
 
 SPLASHES = [

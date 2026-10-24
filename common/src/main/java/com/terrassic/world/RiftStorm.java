@@ -2,7 +2,6 @@ package com.terrassic.world;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.terrassic.Terrassic;
-import com.terrassic.client.RiftStormClient;
 import com.terrassic.config.WorldConfig;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.SwimmingDinosaur;
@@ -16,8 +15,6 @@ import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.utils.Env;
-import dev.architectury.utils.EnvExecutor;
 import io.netty.buffer.Unpooled;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -60,7 +57,7 @@ import java.util.UUID;
 
 /**
  * Rift Storms (Tempestades da Fenda, HISTORIA.md §5; v0.8 phase M4). Now and then, at dusk, the sky turns amber, time
- * "glitches" (amber motes, distorted sounds; client side in {@link RiftStormClient}) and creatures from other eras
+ * "glitches" (amber motes, distorted sounds; client side in client/RiftStormClient) and creatures from other eras
  * step out of the Rift around every player in the overworld for a few minutes: the species of the Field Guide whose
  * era is not the Late Cretaceous (today the four Jurassic "leaks"; any out-of-era species added later joins in).
  * When the storm ends they go back through the Rift, unless someone tamed them. They drop raw amber.
@@ -86,7 +83,6 @@ public final class RiftStorm {
         PlayerEvent.CHANGE_DIMENSION.register((p, from, to) -> send(p, Data.get(p.server).active));
         EntityEvent.LIVING_DEATH.register(RiftStorm::onDeath);
         CommandRegistrationEvent.EVENT.register(RiftStorm::commands);
-        EnvExecutor.runInEnv(Env.CLIENT, () -> RiftStormClient::init);
     }
 
     public static boolean active(MinecraftServer server) {

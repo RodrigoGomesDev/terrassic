@@ -95,7 +95,7 @@ Arquivos compartilhados que esta frente tocou (só o mínimo; M2 e M4 só acresc
 | M3a | Estruturas I: Cratera de Chegada, Acampamentos da Katarina (3 variantes), Sítio Fossilífero, Ossuário | ✅ (falta ver no jogo) |
 | M3b | Estruturas II: Casa do Rio (Refúgio, com o "Mate"), Colônia de Ninhos de Maiasaura, Lente de Âmbar apontando o Refúgio | ✅ (falta ver no jogo) |
 | M4 | Tempestades da Fenda (céu âmbar, criaturas fora de época) | ✅ (falta ver no jogo) |
-| M5 | HUD: montaria, bando, nova espécie, nome da era | ⏭ |
+| M5 | HUD: montaria, bando, nova espécie, nome da era, alerta da Fenda | ✅ (falta ver no jogo) |
 | M6 | Música e sons de fundo por bioma (gravações PD/CC0, no Mac) | ○ |
 
 ## 5. Tela de título e telas de carregamento (M2)
@@ -164,7 +164,23 @@ blocos, direção noroeste"), com o som de cristal de ametista. Usa a tag de est
   "Sobreviver a uma Tempestade da Fenda" (`Objective.RIFT_STORM` ligado, conquista `chapter1/rift_storm` gerada).
 - Conquistas ligadas junto com a M3b: `chapter1/river_house` (estar dentro da Casa do Rio) e `chapter1/mate` (o Mate aceita você).
 
-## 8. Perguntas abertas para o Rodrigo
+## 8. HUD (M5)
+
+`client/TerrassicHud` (+ `client/SpeciesToast`), com os modelos do mod renderizados ao vivo. Os ícones ficam em
+`assets/terrassic/textures/gui/hud.png` (`tools/capagen/hud_icons.py`).
+
+| Parte | Quando | O que mostra |
+|---|---|---|
+| Painel de montaria | Montado num dinossauro | Retrato, nome, vida, fome, ícones de carga e de sono (canto superior esquerdo) |
+| Barra do bando | Com dinossauros seus a até 48 blocos | Até 6 cartões com retrato, vida e estado (seguindo, sentado, lutando, dormindo), como a equipe do Cobblemon |
+| Nova espécie | Quando uma espécie sobe de nível no Guia | Notificação com o modelo, o nome e o nível novo. Na silhueta, só "???" |
+| Nome da era | Ao entrar no mundo (no Overworld) | "Cretáceo Superior" e "Capítulo 1 · Ecos do Fim" em letras grandes |
+| Alerta da Fenda | Durante uma Tempestade da Fenda | Fragmento de âmbar rachado pulsando no topo da tela |
+
+Liga e desliga em `config/terrassic-client.json` (`hud_mount`, `hud_pack`, `hud_new_species`, `hud_era_title`,
+`hud_rift_alert`). O F1 esconde tudo. A stamina do voo (v0.4) entra no painel quando o sistema existir.
+
+## 9. Perguntas abertas para o Rodrigo
 
 1. **Biomas do Cretáceo também no mundo normal?** Hoje eles só existem no tipo "Terrassic". Para misturar com o
    vanilla seria preciso um sistema de regiões próprio (sem TerraBlender, que é de terceiros).

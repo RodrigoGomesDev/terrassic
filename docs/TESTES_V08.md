@@ -63,3 +63,12 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] Quem ficou no Overworld a tempestade toda completa "Sobreviver a uma Tempestade da Fenda" no Diário (e ganha a conquista).
 - [ ] Sem comando: com `storm_chance` 1.0 e `storm_min_days` 0 no `config/terrassic-world.json`, a tempestade começa no entardecer.
 - [ ] No Nether e no End não há efeito nenhum.
+
+## 6. HUD (M5)
+- [ ] Montado num dinossauro: painel no canto superior esquerdo com o modelo dele (inteiro no quadro), nome, vida e fome certas; ícone de cesto se tiver baú.
+- [ ] Com dinossauros domados por perto: cartões com retrato, vida e o estado certo (seguindo / sentado / lutando / dormindo).
+- [ ] Avistar uma espécie nova: aparece a notificação "Nova espécie avistada" com o modelo. Estudar e domar também avisam.
+- [ ] Ao entrar no mundo: título "Cretáceo Superior" e subtítulo do capítulo.
+- [ ] Durante uma tempestade: fragmento de âmbar pulsando no topo.
+- [ ] F1 esconde tudo; cada opção `hud_*` em `config/terrassic-client.json` desliga a sua parte.
+- [ ] Desempenho: com 6 dinossauros no bando, o FPS não cai visivelmente.
