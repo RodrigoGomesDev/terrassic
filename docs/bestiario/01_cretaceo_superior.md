@@ -160,7 +160,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 106 | Patagonykus | Alvarezssauro | 🦖 | Insetívoro | 2 m | Comedor de insetos | Arisco | Comida | — | Controla pragas, acha isca |  |
 | 107 | Alvarezsaurus | Alvarezssauro | 🦖 | Insetívoro | 1,4 m | Comedor de insetos | Arisco | Comida | — | Controla pragas, acha isca |  |
-| 108 | **Mononykus** | Alvarezssauro | 🦖 | Insetívoro | 1 m | Comedor de insetos | Arisco | Comida | 🦜 | Cava cupinzeiros; acha insetos para isca | v0.7 |
+| 108 | **Mononykus** | Alvarezssauro | 🦖 | Insetívoro | 1 m | Comedor de insetos | Arisco | Comida | ✅ 🦜 | Cava cupinzeiros; acha insetos para isca | v0.7 |
 | 109 | Albertonykus | Alvarezssauro | 🦖 | Insetívoro | 0,7 m | Comedor de insetos | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 110 | Shuvuuia | Alvarezssauro | 🦖 | Insetívoro | 0,6 m | Comedor de insetos | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 111 | Kol | Alvarezssauro | 🦖 | Insetívoro | 1,5 m | Comedor de insetos | Arisco | Comida | — | Controla pragas, acha isca |  |
@@ -441,7 +441,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 
 | # | Criatura | Grupo | Tipo | Dieta | Tamanho | Nicho | Comportamento | Domar | Montaria | Uso no jogo | Versão |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 314 | **Didelphodon** | Mamífero | 🐾 | Onívoro | 0,8 m | Onívoro médio | Arisco | Comida | — | Mamífero que rouba ovos; domesticado, acha ovos perdidos | v0.7 |
+| 314 | **Didelphodon** | Mamífero | 🐾 | Onívoro | 0,8 m | Onívoro médio | Arisco | Comida | ✅ | Mamífero que rouba ovos; domesticado, acha ovos perdidos | v0.7 |
 | 315 | Adalatherium | Mamífero | 🐾 | Onívoro | 0,5 m | Onívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 316 | Vintana | Mamífero | 🐾 | Herbívoro | 0,5 m | Herbívoro pequeno | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |
 | 317 | Cimolestes | Mamífero | 🐾 | Insetívoro | 0,3 m | Comedor de insetos | Arisco | Comida | 🦜 | Vai no ombro (bônus) |  |

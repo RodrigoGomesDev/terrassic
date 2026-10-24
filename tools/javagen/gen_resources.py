@@ -41,6 +41,8 @@ SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearin
     "troodon": ("Troodon", "Troodon", "Troodon", False),
     "oviraptor": ("Oviraptor", "Oviraptor", "Oviraptor", False),
     "citipati": ("Citipati", "Citipati", "Citipati", False),
+    "mononykus": ("Mononykus", "Mononykus", "Mononykus", False),
+    "didelphodon": ("Didelphodon", "Didelphodon", "Didelphodon", False),
     "parasaurolophus": ("Parasaurolophus", "Parassaurolofo", "Parasaurolophus", True),
     "pachycephalosaurus": ("Pachycephalosaurus", "Paquicefalossauro", "Paquicefalosaurio", False),
     "thescelosaurus": ("Thescelosaurus", "Tescelossauro", "Thescelosaurus", False),
@@ -212,9 +214,12 @@ def main():
     gen_blocks.main()
     import gen_science  # fossils, field tools, research table, advancements, story and Field Guide texts
     gen_science.main()
+    import gen_rules  # world rules (docs/REGRAS.md): Rule.java + the Rules screen texts
+    gen_rules.main()
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
+        lang[code].update(gen_rules.LANG[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")
@@ -276,6 +281,8 @@ def main():
         "troodon": [item("minecraft:chicken", 1, 2, True), item("minecraft:feather", 2, 4), item("minecraft:bone", 0, 2)],
         "oviraptor": [item("minecraft:chicken", 1, 2, True), item("minecraft:feather", 2, 4), item("minecraft:egg", 0, 1)],
         "citipati": [item("minecraft:chicken", 2, 3, True), item("minecraft:feather", 3, 5), item("minecraft:egg", 0, 2)],
+        "mononykus": [item("minecraft:feather", 1, 3, True), item("minecraft:bone", 0, 1)],
+        "didelphodon": [item("minecraft:rabbit_hide", 1, 2, True), item("minecraft:bone", 0, 1), item("minecraft:egg", 0, 1)],
         "parasaurolophus": [item("minecraft:beef", 2, 5, True), item("minecraft:leather", 1, 3)],
         "pachycephalosaurus": [item("minecraft:mutton", 1, 3, True), item("minecraft:bone", 1, 2)],
         "thescelosaurus": [item("minecraft:mutton", 1, 3, True), item("minecraft:leather", 0, 2)],

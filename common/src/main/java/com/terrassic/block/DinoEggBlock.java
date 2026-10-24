@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -89,15 +90,17 @@ public class DinoEggBlock extends Block {
         this.alertParents(state, level, pos, player);
     }
 
-    private void alertParents(BlockState state, Level level, BlockPos pos, Player player) {
-        if (level.isClientSide() || !state.getValue(WILD) || player.isCreative()) {
+    /** Whoever breaks a wild egg (a player, or an egg thief like the Didelphodon) becomes the enemy of the wild
+     *  adults of the species within twenty blocks. */
+    public void alertParents(BlockState state, Level level, BlockPos pos, LivingEntity culprit) {
+        if (level.isClientSide() || !state.getValue(WILD) || (culprit instanceof Player player && player.isCreative())) {
             return;
         }
         EntityType<?> type = this.species.get();
         for (DinosaurEntity parent : level.getEntitiesOfClass(DinosaurEntity.class, new AABB(pos).inflate(20.0D),
                 e -> e.getType() == type && !e.isTame() && !e.isBaby() && e.getLastHurtByMob() == null)) {
             parent.setSleeping(false);
-            parent.setLastHurtByMob(player);
+            parent.setLastHurtByMob(culprit);
         }
     }
 

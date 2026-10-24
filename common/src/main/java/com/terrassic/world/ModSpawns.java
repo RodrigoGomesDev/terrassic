@@ -55,6 +55,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Troodon             forest, taiga, plains           5       1-3
  *  Oviraptor           desert*, badlands, savanna      5       2-4
  *  Citipati            desert*, badlands, savanna      3       1-2
+ *  Mononykus           desert*, badlands, savanna, plains 6       2-4
+ *  Didelphodon         river, swamp, mangrove, forest, plains 6       1-2
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -116,6 +118,8 @@ public final class ModSpawns {
         placement(ModEntities.TROODON);
         placement(ModEntities.OVIRAPTOR);
         placement(ModEntities.CITIPATI);
+        placement(ModEntities.MONONYKUS);
+        placement(ModEntities.DIDELPHODON);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -257,6 +261,12 @@ public final class ModSpawns {
             }
             if (desert || badlands || savanna) {
                 add(props, ModEntities.CITIPATI.get(), 3, 1, 2);
+            }
+            if (desert || badlands || savanna || plains) {
+                add(props, ModEntities.MONONYKUS.get(), 6, 2, 4);
+            }
+            if (river || swamp || forest || plains) {
+                add(props, ModEntities.DIDELPHODON.get(), 6, 1, 2);
             }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);

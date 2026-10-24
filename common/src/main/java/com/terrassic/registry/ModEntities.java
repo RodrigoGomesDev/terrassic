@@ -18,6 +18,7 @@ import com.terrassic.entity.Dakotaraptor;
 import com.terrassic.entity.Daspletosaurus;
 import com.terrassic.entity.Deinocheirus;
 import com.terrassic.entity.Deinosuchus;
+import com.terrassic.entity.Didelphodon;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Dreadnoughtus;
 import com.terrassic.entity.Edmontosaurus;
@@ -30,6 +31,7 @@ import com.terrassic.entity.Hesperornis;
 import com.terrassic.entity.Ichthyornis;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Majungasaurus;
+import com.terrassic.entity.Mononykus;
 import com.terrassic.entity.Mosasaurus;
 import com.terrassic.entity.Opisthocoelicaudia;
 import com.terrassic.entity.Oviraptor;
@@ -141,6 +143,12 @@ public final class ModEntities {
             mob("oviraptor", Oviraptor::new, MobCategory.CREATURE, Oviraptor.WIDTH, Oviraptor.HEIGHT, 8);
     public static final RegistrySupplier<EntityType<Citipati>> CITIPATI =
             mob("citipati", Citipati::new, MobCategory.CREATURE, Citipati.WIDTH, Citipati.HEIGHT, 8);
+    // ---- predators
+    public static final RegistrySupplier<EntityType<Mononykus>> MONONYKUS =
+            mob("mononykus", Mononykus::new, MobCategory.CREATURE, Mononykus.WIDTH, Mononykus.HEIGHT, 6);
+    public static final RegistrySupplier<EntityType<Didelphodon>> DIDELPHODON =
+            mob("didelphodon", Didelphodon::new, MobCategory.CREATURE, Didelphodon.WIDTH, Didelphodon.HEIGHT, 6);
+    // ---- herbivores
     public static final RegistrySupplier<EntityType<Parasaurolophus>> PARASAUROLOPHUS =
             mob("parasaurolophus", Parasaurolophus::new, MobCategory.CREATURE, Parasaurolophus.WIDTH, Parasaurolophus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Pachycephalosaurus>> PACHYCEPHALOSAURUS =
@@ -239,6 +247,8 @@ public final class ModEntities {
         EntityAttributeRegistry.register(TROODON, Troodon::createAttributes);
         EntityAttributeRegistry.register(OVIRAPTOR, Oviraptor::createAttributes);
         EntityAttributeRegistry.register(CITIPATI, Citipati::createAttributes);
+        EntityAttributeRegistry.register(MONONYKUS, Mononykus::createAttributes);
+        EntityAttributeRegistry.register(DIDELPHODON, Didelphodon::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
         EntityAttributeRegistry.register(THESCELOSAURUS, Thescelosaurus::createAttributes);
