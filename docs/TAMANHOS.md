@@ -46,6 +46,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Carnotaurus (v0.7) | 7,5-8 m, 1,3-2,1 t (Bonaparte et al. 1990, MACN-CH 894; Mazzetta et al. 2004) | novo | **8,0 x 3,6** | 1,8 x 3,4 | 30% |
 | Tarbosaurus (v0.7) | 10-12 m, 4-5 t (Hurum & Sabath 2003, PIN 551-1; Paul 2010) | novo | **12,0 x 4,5** | 2,5 x 4,3 | 25% |
 | Daspletosaurus (v0.7) | 8,5-9 m, 2,5-3,8 t (Russell 1970, CMN 8506; Currie 2003) | novo | **9,0 x 3,9** | 2,1 x 3,8 | 28% |
+| Albertosaurus (v0.7) | 8-10 m, 1,7-2,5 t (Currie 2003; Erickson et al. 2004, Dry Island) | novo | **9,5 x 3,8** | 1,9 x 3,6 | 28% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

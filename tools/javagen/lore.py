@@ -871,6 +871,22 @@ GUIDE = {
         note=("Nunca é um. Quando você vê um, o outro já te viu.",
               "It is never one. When you see one, the other has already seen you.",
               "Nunca es uno. Cuando ves uno, el otro ya te vio.")),
+    "albertosaurus": dict(
+        sci=("Viveu há 71 a 68 milhões de anos em Alberta. 8 a 10 m e até 2,5 toneladas; mais leve e de pernas mais longas que o Daspletosaurus, focinho mais baixo, um chifre curto sobre cada olho. O leito de ossos de Dry Island, com mais de vinte animais de todas as idades juntos, é a melhor prova de vida em bando entre os tiranossauros.",
+             "Lived 71 to 68 million years ago in Alberta. 8 to 10 m and up to 2.5 tonnes; lighter and longer-legged than the Daspletosaurus, a lower snout, a short horn over each eye. The Dry Island bonebed, with more than twenty animals of all ages together, is the best evidence of pack life among tyrannosaurs.",
+             "Vivió hace 71 a 68 millones de años en Alberta. 8 a 10 m y hasta 2,5 toneladas; más liviano y de patas más largas que el Daspletosaurus, hocico más bajo, un cuerno corto sobre cada ojo. El lecho de huesos de Dry Island, con más de veinte animales de todas las edades juntos, es la mejor prueba de vida en manada entre los tiranosaurios."),
+        behavior=("Taiga, floresta e planície, em bandos de dois a quatro que caçam o mesmo alvo. Ruge ao travar a presa. O tiranossauro rápido: corre quase tão depressa quanto um Carnotaurus.",
+                  "Taiga, forest and plains, in packs of two to four that hunt the same target. It roars when it locks on. The fast tyrannosaur: it runs almost as quick as a Carnotaurus.",
+                  "Taiga, bosque y llanura, en manadas de dos a cuatro que cazan el mismo objetivo. Ruge al fijar la presa. El tiranosaurio rápido: corre casi tan ligero como un Carnotaurus."),
+        taming=("Adulto, só pelo nocaute (em breve). Até lá, roubar o ovo do ninho selvagem, com o bando por perto, e criar o filhote com carne crua.",
+                "Grown, only by knockout (coming). Until then, steal the egg from the wild nest, the pack nearby, and raise the baby on raw meat.",
+                "Adulto, solo por nocaut (pronto). Hasta entonces, robar el huevo del nido salvaje, con la manada cerca, y criar a la cría con carne cruda."),
+        utility=("Montaria de caça rápida; vários domados caçam em bando como os selvagens.",
+                 "A fast hunting mount; several tame ones hunt as a pack like the wild ones.",
+                 "Montura de caza rápida; varios domados cazan en manada como los salvajes."),
+        note=("Contei quatro na borda da floresta. Eles também me contaram.",
+              "I counted four at the edge of the forest. They counted me too.",
+              "Conté cuatro al borde del bosque. Ellos también me contaron.")),
 }
 
 ERAS = {

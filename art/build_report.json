@@ -1534,5 +1534,39 @@
    "animation.daspletosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "albertosaurus": {
+  "bones": 24,
+  "cubes": 52,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -8.5,
+    -0.010371449991112058,
+    -48.186064760586426
+   ],
+   [
+    8.5,
+    42.676398155057726,
+    58.05571109355847
+   ]
+  ],
+  "animations": [
+   "animation.albertosaurus.idle",
+   "animation.albertosaurus.walk",
+   "animation.albertosaurus.run",
+   "animation.albertosaurus.attack",
+   "animation.albertosaurus.roar",
+   "animation.albertosaurus.sit",
+   "animation.albertosaurus.knocked_out",
+   "animation.albertosaurus.wake",
+   "animation.albertosaurus.eat",
+   "animation.albertosaurus.beg",
+   "animation.albertosaurus.tame"
+  ],
+  "render_scale": 1.0
  }
 }

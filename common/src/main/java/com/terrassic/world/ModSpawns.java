@@ -49,6 +49,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Carnotaurus         savanna, plains, badlands       2       1-2
  *  Tarbosaurus         desert*, river, badlands        1       1
  *  Daspletosaurus      forest, river, plains           2       2
+ *  Albertosaurus       taiga, forest, plains           2       2-4
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
@@ -104,6 +105,7 @@ public final class ModSpawns {
         placement(ModEntities.CARNOTAURUS);
         placement(ModEntities.TARBOSAURUS);
         placement(ModEntities.DASPLETOSAURUS);
+        placement(ModEntities.ALBERTOSAURUS);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
         placement(ModEntities.THESCELOSAURUS);
@@ -227,6 +229,9 @@ public final class ModSpawns {
             }
             if (forest || river || plains) {
                 add(props, ModEntities.DASPLETOSAURUS.get(), 2, 2, 2);
+            }
+            if (taiga || forest || plains) {
+                add(props, ModEntities.ALBERTOSAURUS.get(), 2, 2, 4);
             }
             if (plains || forest) {
                 add(props, ModEntities.PARASAUROLOPHUS.get(), 5, 2, 5);
