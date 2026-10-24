@@ -39,6 +39,8 @@ SIZES = {
     "ankylosaurus":       dict(real=8.0,  scale=1.83, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
     # Euoplocephalus tutus: 5.5-6 m, ~2.5 t (Arbour & Currie 2013; Paul 2010); the widest body for its length.
     "euoplocephalus":     dict(real=6.0,  scale=1.43, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
+    # Therizinosaurus cheloniformis: 9-10 m, ~5 t (Zanno 2010; Paul 2010); stands ~6 blocks tall with the neck up.
+    "therizinosaurus":    dict(real=10.0, scale=1.94, w=2.4, h=5.0, baby=0.2,  shadow=2.0),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
     # 22 m length; our model holds the neck more upright than that, so the head reaches ~17 blocks.
     "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
@@ -95,6 +97,7 @@ GUIDE = {
     "stegosaurus":        dict(era="jurassic",        diet="herbivore", fossil=5),
     "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "euoplocephalus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
+    "therizinosaurus":    dict(era="late_cretaceous", diet="herbivore", fossil=2),
     "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
@@ -135,6 +138,7 @@ WORLD = {
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
     "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
     "euoplocephalus":     dict(biomes=("plains", "forest", "savanna"), weight=4, group=(1, 3), track=10),  # grazes the open floodplain
+    "therizinosaurus":    dict(biomes=("forest", "jungle", "swamp"), weight=2, group=(1, 2), track=12),    # browses the high canopy
     "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
@@ -250,6 +254,12 @@ SPECIES = [
       food="Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.MELON_SLICE",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.85, 1.1, 300), step=("RAVAGER_STEP", 0.45, 1.15), xp=18,
       hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 80, 3), ("MobEffects.WEAKNESS", 80, 0)]),
+ dict(id="therizinosaurus", cls="Therizinosaurus", base="HerbivoreDinosaur",
+      doc="Therizinosaurus cheloniformis - 10 m feathered herbivore with metre-long claws. Browses the canopy, pulling leaves down with the claws. Territorial: slashes hard. Egg-tamed for now (knockout taming comes in v0.7); a tall mount that harvests leaves as it goes.",
+      attrs=dict(MAX_HEALTH=140, MOVEMENT_SPEED=0.2, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=5, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
+      food="Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.MELON_SLICE",
+      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.8, 0.6),
+      xp=30, step_height=1.2, head=(30, 25), rideable=True, jump=0.5, ride_offset=2.6, ride_speed=1.0, egg_only=True, forage=True),
  dict(id="brachiosaurus", cls="Brachiosaurus", base="HerbivoreDinosaur",
       doc="Brachiosaurus altithorax - gigantic long-necked browser, eats leaves. Peaceful unless hurt. Rideable when tamed - the tallest mount in the game.",
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
@@ -679,6 +689,34 @@ def gen(s, bounds):
                     p -> !p.isTame() && !p.isBaby())) {
                 predator.setTarget(this);
             }
+        }
+    }
+""")
+    if s.get("forage"):
+        # browsing: idle under a tree (or carrying a rider), now and then it hooks a leaf block down and breaks it (drops as usual)
+        imports.update({"net.minecraft.core.BlockPos", "net.minecraft.tags.BlockTags", "net.minecraft.world.level.GameRules",
+                        "net.minecraft.world.level.block.state.BlockState", "net.minecraft.world.phys.AABB", "java.util.ArrayList", "java.util.List"})
+        body.append("""    /** Browsing: idle under a tree, or now and then with a rider, it hooks a leaf block down with the claws and breaks it
+     *  (the leaves drop their usual saplings, sticks and apples). Respects mobGriefing. */
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.isBaby() || this.getTarget() != null || this.isInSittingPose() || !this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)
+                || this.random.nextInt(this.isVehicle() ? 120 : 400) != 0) {
+            return;
+        }
+        AABB box = this.getBoundingBox().inflate(2.0D, 0.0D, 2.0D).expandTowards(0.0D, 2.0D, 0.0D);
+        List<BlockPos> leaves = new ArrayList<>();
+        for (BlockPos pos : BlockPos.betweenClosed((int) Math.floor(box.minX), (int) Math.floor(box.minY + this.getBbHeight() * 0.4D), (int) Math.floor(box.minZ),
+                (int) Math.floor(box.maxX), (int) Math.floor(box.maxY), (int) Math.floor(box.maxZ))) {
+            BlockState state = this.level().getBlockState(pos);
+            if (state.is(BlockTags.LEAVES)) {
+                leaves.add(pos.immutable());
+            }
+        }
+        if (!leaves.isEmpty()) {
+            triggerAnim(ACTION_CONTROLLER, "graze");
+            this.level().destroyBlock(leaves.get(this.random.nextInt(leaves.size())), true, this);
         }
     }
 """)

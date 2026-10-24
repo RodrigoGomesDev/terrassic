@@ -679,6 +679,22 @@ GUIDE = {
         note=("O cheiro é terrível. Os raptores concordam: largaram a Maiasaura e foram todos atrás dele.",
               "The smell is dreadful. The raptors agree: they dropped the Maiasaura and all went after him.",
               "El olor es terrible. Los raptores están de acuerdo: soltaron a la Maiasaura y fueron todos tras él.")),
+    "therizinosaurus": dict(
+        sci=("Viveu há cerca de 70 milhões de anos na Mongólia. Terópode herbívoro gigante de 9 a 10 m e umas 5 toneladas, descrito primeiro só pelas garras, tomadas por costelas de tartaruga. As garras mais longas de qualquer animal: 52 cm de osso, perto de 1 m com a bainha de queratina, três em cada mão, em braços compridos. Barriga de pote sobre quadris largos, pescoço longo com cabeça pequena de bico, pernas curtas de quatro dedos, cauda curta e, pelos parentes, uma pelagem de penas.",
+             "Lived about 70 million years ago in Mongolia. A giant herbivorous theropod of 9 to 10 m and some 5 tonnes, first described from its claws alone, mistaken for turtle ribs. The longest claws of any animal: 52 cm of bone, close to 1 m with the horny sheath, three on each hand, on long arms. A pot belly over wide hips, a long neck with a small beaked head, short four-toed legs, a short tail and, judging by its relatives, a shaggy coat of feathers.",
+             "Vivió hace unos 70 millones de años en Mongolia. Terópodo herbívoro gigante de 9 a 10 m y unas 5 toneladas, descrito primero solo por sus garras, tomadas por costillas de tortuga. Las garras más largas de cualquier animal: 52 cm de hueso, cerca de 1 m con la vaina córnea, tres en cada mano, en brazos largos. Barriga de olla sobre caderas anchas, cuello largo con cabeza pequeña de pico, patas cortas de cuatro dedos, cola corta y, por sus parientes, un pelaje de plumas."),
+        behavior=("Sozinho ou em pares nas florestas, selvas e pântanos, de pé sob as árvores: engancha os galhos com as garras e come as folhas, que caem com o que trazem. Não foge: quem o incomoda leva um rasgo de garra que derruba qualquer um.",
+                  "Alone or in pairs in forests, jungles and swamps, standing under the trees: it hooks the branches down with its claws and eats the leaves, which fall with whatever they hold. It does not flee: whoever bothers it takes a claw slash that floors anyone.",
+                  "Solo o en parejas en bosques, selvas y pantanos, de pie bajo los árboles: engancha las ramas con las garras y come las hojas, que caen con lo que traen. No huye: quien lo molesta recibe un zarpazo que tumba a cualquiera."),
+        taming=("Por enquanto só pelo ovo (o nocaute chega na v0.7). Cresce com maçãs, frutas silvestres e melancia. Os pares põem um ovo grande.",
+                "For now only from the egg (knockout taming comes in v0.7). Raised on apples, sweet berries and melon. Pairs lay a large egg.",
+                "Por ahora solo desde el huevo (el noqueo llega en la v0.7). Crece con manzanas, bayas y sandía. Las parejas ponen un huevo grande."),
+        utility=("Montaria alta que colhe folhas pelo caminho: cavalgue sob as copas e as mudas, gravetos e maçãs caem atrás de você. Garras para fibra e madeira chegam com o sistema de coleta.",
+                 "A tall mount that harvests leaves as it goes: ride under the canopy and the saplings, sticks and apples fall behind you. Claws for fibre and wood arrive with the harvesting system.",
+                 "Montura alta que cosecha hojas por el camino: cabalga bajo las copas y los brotes, palos y manzanas caen detrás de ti. Las garras para fibra y madera llegan con el sistema de recolección."),
+        note=("Foice de um metro em cada dedo, e ele usa para pegar folhas. Natureza tem senso de humor.",
+              "A metre-long scythe on every finger, and it uses them to pick leaves. Nature has a sense of humour.",
+              "Una guadaña de un metro en cada dedo, y las usa para coger hojas. La naturaleza tiene sentido del humor.")),
 }
 
 ERAS = {

@@ -1121,5 +1121,40 @@
    "animation.pachyrhinosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "therizinosaurus": {
+  "bones": 25,
+  "cubes": 64,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -10.5,
+    -0.48868663143668467,
+    -43.21053983992334
+   ],
+   [
+    10.5,
+    52.82262544249214,
+    39.12792414974783
+   ]
+  ],
+  "animations": [
+   "animation.therizinosaurus.idle",
+   "animation.therizinosaurus.walk",
+   "animation.therizinosaurus.run",
+   "animation.therizinosaurus.roar",
+   "animation.therizinosaurus.sit",
+   "animation.therizinosaurus.knocked_out",
+   "animation.therizinosaurus.wake",
+   "animation.therizinosaurus.eat",
+   "animation.therizinosaurus.beg",
+   "animation.therizinosaurus.tame",
+   "animation.therizinosaurus.attack",
+   "animation.therizinosaurus.graze"
+  ],
+  "render_scale": 1.0
  }
 }
