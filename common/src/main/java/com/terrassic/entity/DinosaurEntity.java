@@ -99,6 +99,8 @@ import java.util.List;
  *   <li><b>Wild nests</b> (docs/NINHOS.md): a wild, well fed adult with a mate nearby and room in the herd
  *       ({@link #wildPopulationCap()}) breeds on its own and lays a clutch of wild eggs ({@link #clutchSize()});
  *       a herd may spawn with an egg already laid. Wild eggs hatch wild babies and the herd guards them.</li>
+ *   <li><b>Migration</b> (docs/MIGRACAO.md): wild herbivore herds set off together for new grazing, 64 to 96
+ *       blocks away in the season's direction (MigrateGoal, {@link #getMigrationTarget()}).</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
  *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
  * </ul>
@@ -153,6 +155,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private int hungerTimer;
     /** Cooldown of the "is hungry" message to the owner. */
     private int hungryMessageCooldown;
+    /** Where the herd is migrating to (MigrateGoal), or null; not saved: a reloaded herd settles where it is. */
+    private BlockPos migrationTarget;
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -873,8 +877,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    public BlockPos getMigrationTarget() {
+        return this.migrationTarget;
+    }
+
+    public void setMigrationTarget(BlockPos target) {
+        this.migrationTarget = target;
+    }
+
     /** Grazing animals eat what grows within reach: grass, ferns, leaves, the grass block itself. */
-    protected boolean grazeNearby() {
+    public boolean grazeNearby() {
         BlockPos centre = this.blockPosition();
         int r = Math.max(1, Math.round(this.getBbWidth() * 0.6F));
         for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-r, -1, -r), centre.offset(r, 2, r))) {

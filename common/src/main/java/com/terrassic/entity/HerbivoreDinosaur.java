@@ -2,6 +2,7 @@ package com.terrassic.entity;
 
 import com.terrassic.entity.ai.DinoSleepGoal;
 import com.terrassic.entity.ai.FollowHerdGoal;
+import com.terrassic.entity.ai.MigrateGoal;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
@@ -93,6 +94,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(8, new MigrateGoal(this));
         this.goalSelector.addGoal(8, new FollowHerdGoal(this));
         this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10.0F));

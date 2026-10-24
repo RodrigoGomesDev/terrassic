@@ -104,7 +104,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | v0.3 | Árvore de conquistas nova: aba por capítulo + aba Caderno de Campo, trava só o salto (`CONQUISTAS.md`) | 🔄 |
 | v0.4 | Voo completo com stamina, sela por espécie (couro, osso, fibra), criaturas de ombro com bônus, temperamentos | ○ |
 | v0.5 | Nado montado (mergulhar sem afogar), sela aquática, filhotes de quem nasce vivo | ✅ fase 42: domar/sentar/seguir/montar na água com a sela comum (olhar para baixo mergulha), Respiração Aquática no jogador, 15% dos spawns vivíparos nascem filhotes; sela aquática própria fica para o crafting da v0.8 |
-| v0.6 | Cadeia alimentar, carcaças, bandos, fome e sono, ninhos selvagens, migração, procriação de selvagens, inventário de carga, coleta automática, sela de plataforma | 🔄 fase 63: inventário de carga + coleta automática; fase 64: sela de plataforma (quatro a bordo nos titãs, qualquer um sobe, o dono conduz; `CARGA.md`); fase 65: carcaças + carniceiros saciados (`CARCACAS.md`); fase 66: fome e sono + cadeia alimentar (`FOME_E_SONO.md`); fase 67: bandos, manadas e matilhas (`BANDOS.md`); fase 68: ninhos selvagens + procriação de selvagens (`NINHOS.md`) |
+| v0.6 | Cadeia alimentar, carcaças, bandos, fome e sono, ninhos selvagens, migração, procriação de selvagens, inventário de carga, coleta automática, sela de plataforma | 🔄 fase 63: inventário de carga + coleta automática; fase 64: sela de plataforma (quatro a bordo nos titãs, qualquer um sobe, o dono conduz; `CARGA.md`); fase 65: carcaças + carniceiros saciados (`CARCACAS.md`); fase 66: fome e sono + cadeia alimentar (`FOME_E_SONO.md`); fase 67: bandos, manadas e matilhas (`BANDOS.md`); fase 68: ninhos selvagens + procriação de selvagens (`NINHOS.md`); fase 69: migração (`MIGRACAO.md`). Sistemas v0.6 completos; faltam os testes no jogo |
 | v0.7 | Nocaute completo: torpor, barras de torpor e domesticação, eficiência, comer desmaiado, punho, zarabatana e dardo, boleadeira, erva sonífera (`DOMESTICACAO.md`); territórios; ferramentas de osso e sílex completas | ○ |
 | v0.8 | Tipo de mundo "Terrassic" + mundo normal, Tempestades da Fenda e criaturas "da Fenda", páginas da Katarina por jogador | ○ |
 | v0.9 | Fragmentos de âmbar, Altar do Salto, ritual dos meteoros, Salto Instável, modos Normal/Rápido/Livre, `/terrassic capitulo` | ○ |
@@ -260,7 +260,7 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 | **v0.3** | Fundação da história e do cientista, Pteranodon, Mosasaurus, Maiasaura, sons piloto, es_es, blocos base, ovos v5, tamanhos reais | 🔄 (falta: conquistas, testes no jogo, `mod_version` 0.3.0) |
 | v0.4 | Os céus | ○ |
 | v0.5 | O Mar Interior | ○ |
-| v0.6 | Planícies, manadas e titãs | ○ |
+| v0.6 | Planícies, manadas e titãs | 🔄 conteúdo completo (15 espécies, fases 48-62; 7 sistemas, fases 63-69); falta testar no jogo |
 | v0.7 | Predadores ápice e nocaute | ○ |
 | v0.8 | Mundo Terrassic: biomas, estruturas, menu do Minecraft, HUD, ambientação, pacote de texturas | ○ |
 | v0.9 | O Fim: Altar do Salto e chefe | ○ |
