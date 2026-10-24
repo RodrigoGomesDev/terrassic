@@ -1,21 +1,21 @@
 {
  "tyrannosaurus": {
   "bones": 24,
-  "cubes": 54,
+  "cubes": 139,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -9.5,
-    -0.10587278931877897,
-    -48.239780870332204
+    -22.0,
+    -0.21183195656032971,
+    -96.22481685590766
    ],
    [
-    9.5,
-    43.07039501240632,
-    58.07846886204352
+    22.0,
+    88.50107612150622,
+    108.10174485291634
    ]
   ],
   "animations": [
@@ -31,7 +31,7 @@
    "animation.tyrannosaurus.beg",
    "animation.tyrannosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "spinosaurus": {
   "bones": 24,
@@ -408,21 +408,21 @@
  },
  "pteranodon": {
   "bones": 29,
-  "cubes": 44,
+  "cubes": 91,
   "texture": [
-   128,
-   128
+   256,
+   256
   ],
   "bounds_px": [
    [
-    -54.0,
+    -108.0,
     0.0,
-    -34.43266053145962
+    -77.91690678255343
    ],
    [
-    54.0,
-    28.45032955902645,
-    12.0
+    108.0,
+    60.450089126531076,
+    26.0
    ]
   ],
   "animations": [
@@ -439,7 +439,7 @@
    "animation.pteranodon.beg",
    "animation.pteranodon.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "mosasaurus": {
   "bones": 16,

@@ -43,6 +43,8 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -72,6 +74,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Base class of every Terrassic dinosaur.
@@ -104,6 +107,10 @@ import java.util.List;
  *       ({@link #eggThief()}) eat the wild clutches they find, and the herd turns on them.</li>
  *   <li><b>Migration</b> (docs/MIGRACAO.md): wild herbivore herds set off together for new grazing, 64 to 96
  *       blocks away in the season's direction (MigrateGoal, {@link #getMigrationTarget()}).</li>
+ *   <li><b>Size</b> (docs/TAMANHOS.md): every animal rolls its own adult size between {@link #minSize()} and
+ *       {@link #maxSize()} of the species' standard (most near the middle, extremes rare), and every baby hatches
+ *       at its own size and grows smoothly into its adult size. Hitbox, model, rider seat and carcass follow the
+ *       size; health grows with its square and bite damage with it. Saved as "Size" and "BirthSize".</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
  *       one; it seats four along the back, anyone may climb on, and the owner drives (docs/CARGA.md).</li>
  * </ul>
@@ -125,6 +132,19 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_SLEEPING =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Adult size relative to the species' standard (1.0 = the SIZES row of gen_species.py). */
+    private static final EntityDataAccessor<Float> DATA_SIZE =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.FLOAT);
+    /** Hatchling size relative to the species' babyScale() (0.8 - 1.2). */
+    private static final EntityDataAccessor<Float> DATA_BIRTH_SIZE =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.FLOAT);
+    /** How far a baby has grown, 0 (hatchling) to 1 (adult); refreshed by the server as it ages. */
+    private static final EntityDataAccessor<Float> DATA_GROWTH =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.FLOAT);
+    private static final UUID SIZE_HEALTH_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e301");
+    private static final UUID SIZE_DAMAGE_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e302");
+    /** Ticks a baby takes to grow up (vanilla age counter). */
+    private static final float GROW_TICKS = 24000.0F;
     public static final int MAX_HUNGER = 100;
     /** Below this a wild predator hunts; at or above it, it lets prey and players be. */
     public static final int HUNTS_BELOW = 85;
@@ -169,6 +189,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
         this.entityData.set(DATA_FEMALE, this.random.nextBoolean());
+        if (!level.isClientSide()) {
+            this.rollSize();
+        }
         this.cargo = this.cargoRows() > 0 ? new SimpleContainer(this.cargoRows() * 9) : null;
     }
 
@@ -377,9 +400,87 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return 0.5F;
     }
 
+    /** Smallest adult of the species, relative to its SIZES row (the row is the upper end of the fossil estimates). */
+    protected float minSize() {
+        return 0.86F;
+    }
+
+    /** Largest adult of the species, relative to its SIZES row. */
+    protected float maxSize() {
+        return 1.04F;
+    }
+
+    /** This animal's adult size relative to the species' standard. */
+    public float getAdultSize() {
+        return this.entityData.get(DATA_SIZE);
+    }
+
+    /** Sets the adult size (clamped to 0.5 - 1.5) and the health and damage that go with it. */
+    public void setAdultSize(float size) {
+        this.entityData.set(DATA_SIZE, Mth.clamp(size, 0.5F, 1.5F));
+        this.applySizeModifiers();
+    }
+
+    /** Adults: most near the middle of minSize..maxSize, extremes rare (sum of two dice); babies: 0.8 - 1.2 at birth. */
+    private void rollSize() {
+        float t = (this.random.nextFloat() + this.random.nextFloat()) / 2.0F;
+        this.entityData.set(DATA_BIRTH_SIZE, 0.8F + 0.4F * this.random.nextFloat());
+        this.setAdultSize(this.minSize() + (this.maxSize() - this.minSize()) * t);
+    }
+
+    /** Health with the square of the size (a 10% bigger animal has 21% more), bite damage in proportion. Server only;
+     *  the modifiers are permanent, so they are saved with the attributes. */
+    private void applySizeModifiers() {
+        if (this.level().isClientSide()) {
+            return;
+        }
+        float size = this.getAdultSize();
+        boolean full = this.getHealth() >= this.getMaxHealth();
+        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            health.removeModifier(SIZE_HEALTH_ID);
+            health.addPermanentModifier(new AttributeModifier(SIZE_HEALTH_ID, "Size", size * size - 1.0F,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+        AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            damage.removeModifier(SIZE_DAMAGE_ID);
+            damage.addPermanentModifier(new AttributeModifier(SIZE_DAMAGE_ID, "Size", size - 1.0F,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+        if (full || this.getHealth() > this.getMaxHealth()) {
+            this.setHealth(this.getMaxHealth());
+        }
+    }
+
+    /** Model and hitbox scale: the adult size, or for a baby its hatchling size growing into it. */
     @Override
     public float getScale() {
-        return this.isBaby() ? this.babyScale() : 1.0F;
+        float adult = this.entityData.get(DATA_SIZE);
+        if (!this.isBaby()) {
+            return adult;
+        }
+        float birth = this.babyScale() * this.entityData.get(DATA_BIRTH_SIZE);
+        return birth + (adult - birth) * this.entityData.get(DATA_GROWTH);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (DATA_SIZE.equals(key) || DATA_BIRTH_SIZE.equals(key) || DATA_GROWTH.equals(key)) {
+            this.refreshDimensions();
+        }
+    }
+
+    /** Server: a baby's growth follows its age; sent to the clients in steps of 1% (about every 12 s). */
+    private void growthTick() {
+        if (!this.isBaby() || this.tickCount % 20 != 1) {
+            return;
+        }
+        float growth = Mth.clamp(1.0F + this.getAge() / GROW_TICKS, 0.0F, 1.0F);
+        if (Math.abs(growth - this.entityData.get(DATA_GROWTH)) >= 0.01F) {
+            this.entityData.set(DATA_GROWTH, growth);
+        }
     }
 
     /** How far the model sticks out of the hitbox (blocks), for frustum culling. */
@@ -408,6 +509,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_PLATFORM, false);
         this.entityData.define(DATA_HUNGER, 70);
         this.entityData.define(DATA_SLEEPING, false);
+        this.entityData.define(DATA_SIZE, 1.0F);
+        this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
+        this.entityData.define(DATA_GROWTH, 0.0F);
     }
 
     public boolean isFemale() {
@@ -456,6 +560,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         tag.putBoolean("Platform", this.isPlatform());
         tag.putInt("Sated", this.sated);
         tag.putInt("Hunger", this.getHunger());
+        tag.putFloat("Size", this.getAdultSize());
+        tag.putFloat("BirthSize", this.entityData.get(DATA_BIRTH_SIZE));
         if (this.cargo != null) {
             ListTag list = new ListTag();
             for (int i = 0; i < this.cargo.getContainerSize(); i++) {
@@ -484,6 +590,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.sated = tag.getInt("Sated");
         if (tag.contains("Hunger")) {
             this.setHunger(tag.getInt("Hunger"));
+        }
+        // size: worlds from before the size variation keep the size rolled when the entity was created
+        if (tag.contains("BirthSize")) {
+            this.entityData.set(DATA_BIRTH_SIZE, tag.getFloat("BirthSize"));
+        }
+        this.setAdultSize(tag.contains("Size") ? tag.getFloat("Size") : this.getAdultSize());
+        if (tag.contains("Health", Tag.TAG_ANY_NUMERIC)) {
+            this.setHealth(tag.getFloat("Health"));  // read again: it was clamped to the max health before the size modifier
         }
         if (this.cargo != null && tag.contains("Cargo", Tag.TAG_LIST)) {
             ListTag list = tag.getList("Cargo", Tag.TAG_COMPOUND);
@@ -887,6 +1001,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.sated--;
         }
         if (!this.level().isClientSide() && this.isAlive()) {
+            this.growthTick();
             this.hungerTick();
             if (this.tickCount % 200 == 0) {
                 this.wildBreedingTick();

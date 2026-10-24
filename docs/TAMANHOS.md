@@ -58,7 +58,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |
 | Ichthyornis (v0.4) | envergadura ~60 cm, corpo ~25 cm (Clarke 2004; Field et al. 2018), ave do tamanho de um trinta-réis | novo | **0,66 de envergadura** x 0,3 | 0,4 x 0,4 | 50% |
-| Pteranodon (v0.3) | envergadura 5,6-7,25 m nos machos (Bennett 2001), corpo pequeno | novo | **7,25 de envergadura** x 1,9 | 1,3 x 1,7 | 30% |
+| Pteranodon (v0.3) | envergadura 5,6-7,25 m nos machos (Bennett 2001), corpo pequeno | novo | **10,8 de envergadura** x ~3 (exceção de jogo, abaixo) | 1,9 x 2,5 | 30% |
 
 ## Escolhas
 
@@ -80,6 +80,30 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 - Filhotes agora têm tamanho por espécie: um T. rex recém-nascido tem 3 m, e não mais metade do adulto.
 - Altura da sela, culling e sombra foram recalculados automaticamente a partir da escala.
 
+## Variação de tamanho (Rodrigo, 24/10/2026)
+
+Cada animal tem o seu tamanho, como num rebanho de verdade:
+
+- **Adultos**: ao nascer ou aparecer no mundo, cada bicho sorteia o seu tamanho adulto entre `minSize` e `maxSize`
+  da espécie, relativo à linha da tabela `SIZES` (que é o topo das estimativas). O sorteio é a média de dois dados,
+  então a maioria fica perto do meio e os extremos são raros. Padrão: **86% a 104%**. Espécies com dados de vários
+  espécimes têm a sua faixa na coluna `var` da tabela:
+  - Tyrannosaurus: **85% a 102%**, de 11,0 a 13,3 m (Stan ~12 m, Sue 12,3-12,8 m, Scotty ~13 m).
+- **Filhotes**: cada ovo choca um filhote do seu tamanho (80% a 120% do `babyScale` da espécie) e ele **cresce
+  aos poucos** até o tamanho adulto dele, junto com a idade (20 minutos de jogo), em vez de pular de tamanho.
+- Vale para tudo: modelo, hitbox, altura da sela, carcaça e sombra. Vida cresce com o quadrado do tamanho (um bicho
+  10% maior tem 21% mais vida) e a mordida na mesma proporção do tamanho.
+- Salvo no NBT do bicho (`Size`, `BirthSize`). Mundos antigos: cada dinossauro já salvo recebe um tamanho sorteado
+  na primeira vez que carrega.
+- Ainda não herda dos pais (o ovo é um bloco sem dados); fica para quando os ovos guardarem os pais.
+
+## Exceções de jogo
+
+- **Pteranodon** (Rodrigo, 24/10/2026: "maior pra montaria ficar legal"): o real tem até 7,25 m de envergadura e um
+  corpo pequeno, menor que o jogador. No jogo ele é desenhado **1,5x o real**: ~10,8 m de envergadura, ~3 m de pé,
+  hitbox 1,9 x 2,5. Continua menor que os azdarquídeos (Quetzalcoatlus 11 m, Hatzegopteryx 12 m).
+  Comparação: `/mnt/project-files/modelos/pteranodon_escala_proposta.png`.
+
 ## O que testar no Mac
 
 1. `./gradlew :fabric:runClient` compila (a nuvem não consegue baixar as dependências).
@@ -88,10 +112,13 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 4. Gigantes andando: os pés escorregam (parece "moonwalk")? Se sim, aumento a velocidade da animação de passo.
 5. Chocar um ovo: o filhote nasce pequeno e cresce para o tamanho adulto sem travar no chão?
 6. O Brachiosaurus some da tela quando você olha só para a cabeça dele? (culling)
+7. Variação: spawnar uns 10 T. rex com o ovo gerador; eles têm tamanhos diferentes? Salvar, sair e voltar: o tamanho fica?
+8. Filhote: chocar dois ovos; nascem de tamanhos diferentes e vão crescendo sem pular? A hitbox acompanha (F3+B)?
+9. Pteranodon maior: montar e voar; o jogador fica bem sentado nas costas?
 
 ## Fontes das medidas
 
 - Velociraptor: Turner, Makovicky & Norell (2007); resumo em [Live Science](https://www.livescience.com/23922-velociraptor-facts.html).
 - Brachiosaurus: Taylor (2009) e [SV-POW, "How big was Brachiosaurus altithorax? I mean, really?"](https://svpow.com/2014/06/02/how-big-was-brachiosaurus-altithorax-i-mean-really/).
-- T. rex: Persons et al. (2019), espécime "Scotty"; Spinosaurus: Ibrahim et al. (2020).
+- T. rex: Persons et al. (2019), espécime "Scotty"; Brochu (2003), Sue; Carr (2025), crânio; Spinosaurus: Ibrahim et al. (2020).
 - Ankylosaurus: Arbour & Mallon (2017). Demais: verbetes da Wikipedia de cada espécie.

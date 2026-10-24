@@ -21,10 +21,13 @@ from recipes import SPECIES_VOICE, VOICE_SETS, field as sound_field  # noqa: E40
 #          mobs wider than ~2.5 blocks get stuck in forests. Height covers the body, not always the head.
 # baby   = size of a hatchling relative to the adult (hitbox and model).
 # shadow = shadow radius in blocks.
+# var    = optional (min, max) adult size of an individual relative to this row (DinosaurEntity.minSize/maxSize);
+#          default 0.86-1.04: each animal rolls its own size, most near the middle (docs/TAMANHOS.md).
 # Riding offsets (ride_offset, ride_forward in SPECIES) are given at scale 1.0 and multiplied by scale.
 SIZES = {
     #                   real length (m)  scale   w     h    baby   shadow
-    "tyrannosaurus":      dict(real=13.0, scale=1.96, w=2.6, h=4.8, baby=0.25, shadow=2.4),
+    # T. rex v3 is modelled at 2x (16 px = 1 m). Adults 11-13.3 m: Stan ~12 m, Sue 12.3-12.8 m, Scotty 13 m.
+    "tyrannosaurus":      dict(real=13.0, scale=1.02, w=2.6, h=4.8, baby=0.25, shadow=2.4, var=(0.85, 1.02)),
     "spinosaurus":        dict(real=14.0, scale=1.85, w=2.5, h=4.6, baby=0.25, shadow=2.4),
     "dilophosaurus":      dict(real=7.0,  scale=1.53, w=1.2, h=2.6, baby=0.35, shadow=1.0),
     "velociraptor":       dict(real=2.07, scale=0.48,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
@@ -82,8 +85,10 @@ SIZES = {
     "edmontosaurus":      dict(real=12.0, scale=1.93, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
     # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
     "corythosaurus":      dict(real=9.0,  scale=1.45, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
-    # Pteranodon: "real" is the wingspan (largest males ~7.25 m). The body is small (hitbox ~ folded on the ground).
-    "pteranodon":         dict(real=7.25, scale=1.07, w=1.3, h=1.7, baby=0.3,  shadow=1.0),
+    # Pteranodon: "real" is the wingspan (largest males ~7.25 m). GAME EXCEPTION (Rodrigo 2026-10-24, so the rider
+    # fits): drawn 1.5x real, ~10.8 m wingspan and 3 m standing, still below the azhdarchids (11 and 12 m).
+    # v3 is modelled at 2x (16 px = 1 m) like the T. rex.
+    "pteranodon":         dict(real=7.25, scale=0.8, w=1.9, h=2.5, baby=0.3,  shadow=1.5),
     # Azhdarchids: "real" is the wingspan. Quetzalcoatlus northropi 10-11 m (Witton & Habib 2010; Andres & Langston
     # 2021), standing as tall as a giraffe; Hatzegopteryx thambema 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017).
     "quetzalcoatlus":     dict(real=11.0, scale=1.47, w=2.5, h=5.0, baby=0.25, shadow=2.0),
@@ -251,7 +256,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=160, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=16, ATTACK_KNOCKBACK=1.5, ARMOR=6, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.6, 2.0, 240), step=("RAVAGER_STEP", 0.9, 0.6),
-      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.1, ride_speed=1.1,
+      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=4.2, ride_speed=1.1,
       prey="!(e instanceof Tyrannosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, prey_interval=200),
  dict(id="spinosaurus", cls="Spinosaurus", base="PredatorDinosaur",
@@ -517,7 +522,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.6, ATTACK_DAMAGE=4, FOLLOW_RANGE=24),
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.45, 1.4, 220), xp=12, run=0.03,
-      rideable=True, ride_offset=0.95, ride_forward=0.05, ride_speed=1.0,
+      rideable=True, ride_offset=1.9, ride_forward=0.1, ride_speed=1.0,
       prey="e instanceof AbstractFish"),
  dict(id="quetzalcoatlus", cls="Quetzalcoatlus", base="FlyingDinosaur",
       doc="Quetzalcoatlus northropi - the largest flyer ever, a giraffe-tall azhdarchid that stalks open country on all fours and spears small prey like a giant stork. Egg-tamed for now (knockout taming comes in v0.7); a heavy flying mount.",
@@ -692,6 +697,9 @@ def gen(s, bounds):
     elif base == "HerbivoreDinosaur" and len(extras) > 1:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
     body.append(f"    @Override\n    protected float babyScale() {{\n        return {size['baby']}F;\n    }}\n")
+    if "var" in size:
+        body.append(f"    @Override\n    protected float minSize() {{\n        return {size['var'][0]}F;\n    }}\n")
+        body.append(f"    @Override\n    protected float maxSize() {{\n        return {size['var'][1]}F;\n    }}\n")
     if "cull" in s:
         body.append(f"    @Override\n    protected double cullingInflate() {{\n        return {s['cull']}D;\n    }}\n")
     if "run" in s:

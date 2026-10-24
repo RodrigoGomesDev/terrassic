@@ -24,11 +24,11 @@ import net.minecraft.world.level.Level;
  */
 public class Pteranodon extends FlyingDinosaur {
     /** Hitbox (blocks). Adult real length ~7.25 m. */
-    public static final float WIDTH = 1.3F;
-    public static final float HEIGHT = 1.7F;
+    public static final float WIDTH = 1.9F;
+    public static final float HEIGHT = 2.5F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.07F;
-    public static final float SHADOW = 1.0F;
+    public static final float MODEL_SCALE = 0.8F;
+    public static final float SHADOW = 1.5F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH);
 
     public Pteranodon(EntityType<? extends Pteranodon> type, Level level) {
@@ -62,7 +62,7 @@ public class Pteranodon extends FlyingDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 3.5D;
+        return 5.0D;
     }
 
     @Override
@@ -82,12 +82,12 @@ public class Pteranodon extends FlyingDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.02D * this.getScale();
+        return 1.52D * this.getScale();
     }
 
     @Override
     protected double riderForwardOffset() {
-        return 0.05D;
+        return 0.08D;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class Tyrannosaurus extends PredatorDinosaur {
     public static final float WIDTH = 2.6F;
     public static final float HEIGHT = 4.8F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.96F;
+    public static final float MODEL_SCALE = 1.02F;
     public static final float SHADOW = 2.4F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON);
     private int displayCooldown;
@@ -71,6 +71,16 @@ public class Tyrannosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected float minSize() {
+        return 0.85F;
+    }
+
+    @Override
+    protected float maxSize() {
+        return 1.02F;
+    }
+
+    @Override
     protected double cullingInflate() {
         return 5.7D;
     }
@@ -97,7 +107,7 @@ public class Tyrannosaurus extends PredatorDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 4.12D * this.getScale();
+        return 4.28D * this.getScale();
     }
 
     @Override
