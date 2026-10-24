@@ -1,32 +1,29 @@
 {
   "nps_bison_bellow_a": {
-    "yell-YELLMM8K2005914Bison.mp3": "a6bf74b683b9ec5fe42e00806f5b4ad15a2c23c79d677f1e7088fef9d4b9b528"
+    "yell-YELLMM8K2005914Bison.mp3": "a7d4d61da5a15147fad17785b92c98c00422d4e1832ce5c29e05ace1289562a8"
   },
   "nps_bison_bellow_b": {
-    "yell-YELLMM8K2005918Bison.mp3": "238a3857b5088e05b2437d97f6edf38329e9fd8ae4596941032c587f80c47334"
+    "yell-YELLMM8K2005918Bison.mp3": "5d9b7a257d730d36f930db7c3749a1341f6b1355ff892a3770b8112a2033c05c"
   },
-  "nps_bison_rut": {},
   "nps_crane": {
-    "yell-YELLFLBCSACR20075171.mp3": "23371e93ed2dc6c43cfe8ada4125a2f15bcff19946e9efe969c8ca03caa60df8"
+    "yell-YELLFLBCSACR20075171.mp3": "e0ca96391b6fd7e40959e4f09d3481fd20215ea09808dce43e52a463e8f94750"
   },
   "nps_elk_bugle": {
-    "nri-ElkBuglingGRSA.mp3": "dc5c367965161eb9c9e25eb08a762ef2ec27a5f6fd3ca8d6e0f2e0ea32959675"
+    "nri-ElkBuglingGRSA.mp3": "87099fdb5862ba97bc19c8fe6e01c03002e74cac020a9630f9a6d546b5693645"
   },
-  "nps_goose": {},
   "nps_grizzly_roar": {
-    "yell-YELLgrizzlyC20160626SM303143.mp3": "0ec94dd0c9442b9eb1890e6b004bdabf542273cf9375c04c3cd422f0cb887050"
+    "yell-YELLgrizzlyC20160626SM303143.mp3": "c35d96cf6808ebe37061d5353375a2ea69b59004d74a3ac6eb5ed96786a57ec6"
   },
   "nps_grizzly_warn": {
-    "yell-YELLGrizzlyBearVocalizations20160520Android1.mp3": "1ec17f7a35de22b2a65a78c187b25e4d5e74262bab58892c60397f60d38cca29"
+    "yell-YELLGrizzlyBearVocalizations20160520Android1.mp3": "66b1baf13783a248bef10741475ebe2fa36ede0a59a20aa00edd6c657df7f8f7"
   },
-  "nps_loon": {},
   "nps_raven": {
-    "yell-RavenBlackSandBasin.mp3": "538acbc56806cf8f716c8c1cb91497a6ebf01904a64a497654f62eff797fbf13"
+    "yell-RavenBlackSandBasin.mp3": "2ee69b8687ca5a48cb4cc6e824caa5283555adaa9242db6dd796a3c31d411277"
   },
   "oga_bear": {
-    "bear_01.flac": "892069341b0d6392112811f3be0f24e834d5089060d860cbbb778a8eb2c3d146",
+    "bear_01.flac": "6608f2c9233b9f20a3114afd82bdb17230dbec46c51a5891e38b4ff9a9c5d8dd",
     "bear_01.ogg": "1b94b4cbed6880c8ab1a3bffe675000290c2df089fa6403ec21d3f5a69d84356",
-    "bear_02.flac": "fd0bbf205b1e18e4ce612c39417019b8f06aadf7dc7886ec84ea1d765792eeca",
+    "bear_02.flac": "0797075f64ed9bbf5b9cb2c830bfcb8306044660b1efa4db5968b1cc20072e69",
     "bear_02.ogg": "106d6c11a39fa0462a3dc45561692075e8a3a63eea107205d2b3fb053988677e"
   },
   "oga_creature_1": {
@@ -194,7 +191,7 @@
     "weird_09.ogg": "c8664381a49a548eb3b0dee89c38758f42f05f00df2b400a5a343d6ceebba156"
   },
   "oga_wings": {
-    "wings_flap_large.flac": "57dc196fdfbbddb75033d09222560901bc9d33f72224745e95e585c4cd994e4f",
+    "wings_flap_large.flac": "1b2deb5c91215267fd1a3fca35bfaf695e7318be01bc427bb237d36e057abbac",
     "wings_flap_large.ogg": "060d1e2b9403893c4aaff7148ea604c4bcfc6bf3e7bab44913a56429ff261a9c"
   },
   "wm_alligator_bellow": {
@@ -206,10 +203,16 @@
   "wm_alligator_hiss": {
     "Alligatorhiss.ogg": "b019246ade92f25ea00c2185e1b5f2e023770513691ba9ef71e47e6b3d0ca4b1"
   },
+  "wm_geese": {
+    "Geese_Honking_(loud).ogg": "1e8e2944de8a87c374c600a087aafc0d3edb2f609a51ab7b86b1165432902af0"
+  },
   "wm_heron": {
     "Littleblueheronfishes.ogg": "1239d94c59cb66a06745c1dc086029cdfd1f1ddf53b88d7abd3a20754f2ae2f3"
   },
   "wm_pelican": {
     "Baby_pelican.ogg": "89cccc96b27c70644b3e6dd2d0592c67ab2fbb292564e7807a7de4bec4c82978"
+  },
+  "wm_swans": {
+    "Tundra_swans.ogg": "726f1192505e875dd74e6424040bcb1a5f49131f0dc25b9e0683d3c615b55cfa"
   }
 }
