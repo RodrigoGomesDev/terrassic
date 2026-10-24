@@ -89,6 +89,7 @@ public final class ModBlocks {
         egg("dakotaraptor", ModEntities.DAKOTARAPTOR, false);
         egg("troodon", ModEntities.TROODON, false);
         egg("oviraptor", ModEntities.OVIRAPTOR, false);
+        egg("citipati", ModEntities.CITIPATI, false);
         egg("parasaurolophus", ModEntities.PARASAUROLOPHUS, true);
         egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS, false);
         egg("thescelosaurus", ModEntities.THESCELOSAURUS, false);
@@ -199,6 +200,13 @@ public final class ModBlocks {
             case "pit_cover" -> p.noCollission().strength(0.2F).sound(SoundType.GRASS).ignitedByLava();
             case "nest" -> p.strength(0.5F).sound(SoundType.GRASS).ignitedByLava();
             case "sand_nest" -> p.strength(0.5F).sound(SoundType.SAND);
+            case "amber" -> p.strength(1.0F, 3.0F).sound(SoundType.CALCITE);
+            case "amber_light" -> p.strength(0.6F).lightLevel(st -> 12).sound(SoundType.CALCITE)
+                    .pushReaction(PushReaction.DESTROY);
+            case "resin" -> p.strength(0.8F).sound(SoundType.HONEY_BLOCK).ignitedByLava();
+            case "soil" -> p.strength(0.6F).sound(SoundType.ROOTED_DIRT);
+            case "ash" -> p.strength(0.5F).sound(SoundType.SAND);
+            case "salt" -> p.strength(0.8F).sound(SoundType.CALCITE);
             case "chimes" -> p.noCollission().strength(0.3F).sound(SoundType.BONE_BLOCK).pushReaction(PushReaction.DESTROY);
             default -> throw new IllegalArgumentException("unknown building material " + material);
         };

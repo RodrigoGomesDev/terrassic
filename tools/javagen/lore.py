@@ -951,6 +951,22 @@ GUIDE = {
         note=("Cem anos de má fama por um ninho que era dele. Devo-lhe um pedido de desculpas e uma cesta de ovos.",
               "A hundred years of bad press over a nest that was its own. I owe it an apology and a basket of eggs.",
               "Cien años de mala fama por un nido que era suyo. Le debo una disculpa y una cesta de huevos.")),
+    "citipati": dict(
+        sci=("Viveu há 75 a 71 milhões de anos no Gobi (Ukhaa Tolgod, Mongólia). Cerca de 3 m e 80 kg, um dos maiores oviraptorídeos: casque alto como o do casuar sobre um crânio curto e sem dentes, pescoço longo, braços longos com penas de asa, cauda curta com leque. Vários esqueletos foram achados sentados sobre o ninho, com os braços abertos sobre os ovos em círculo: o dinossauro chocador.",
+             "Lived 75 to 71 million years ago in the Gobi (Ukhaa Tolgod, Mongolia). About 3 m and 80 kg, one of the largest oviraptorids: a tall cassowary-like casque on a short toothless skull, a long neck, long arms with wing feathers, a short fanned tail. Several skeletons were found sitting on the nest with the arms spread over the ring of eggs: the brooding dinosaur.",
+             "Vivió hace 75 a 71 millones de años en el Gobi (Ukhaa Tolgod, Mongolia). Unos 3 m y 80 kg, uno de los mayores oviraptóridos: casco alto como el del casuario sobre un cráneo corto y sin dientes, cuello largo, brazos largos con plumas de ala, cola corta con abanico. Varios esqueletos aparecieron sentados sobre el nido, con los brazos abiertos sobre los huevos en círculo: el dinosaurio incubador."),
+        behavior=("Deserto, badlands e savana, em par. Onívoro, bica o chão; revida quem o ataca. Quando acha um ovo de dinossauro, senta ao lado e abre as asas sobre ele por um bom tempo.",
+                  "Desert, badlands and savanna, in pairs. Omnivore, it pecks the ground; it fights back. When it finds a dinosaur egg it sits beside it and spreads its wings over it for a good while.",
+                  "Desierto, badlands y sabana, en pareja. Omnívoro, picotea el suelo; devuelve el golpe. Cuando encuentra un huevo de dinosaurio se sienta al lado y abre las alas sobre él un buen rato."),
+        taming=("Pela mão, com ovo, sementes, frutinhas ou maçã.",
+                "By hand, with an egg, seeds, sweet berries or an apple.",
+                "A mano, con huevo, semillas, bayas o manzana."),
+        utility=("O chocador: mande-o sentar junto dos ovos e eles chocam muitas vezes mais rápido. Sentado ao lado de um ovo ele toma a pose de choco, com as asas abertas.",
+                 "The brooder: tell it to sit by the eggs and they hatch many times faster. Sitting beside an egg it takes the brooding pose, wings spread.",
+                 "El incubador: mándalo sentarse junto a los huevos y eclosionan muchas veces más rápido. Sentado junto a un huevo toma la pose de incubar, con las alas abiertas."),
+        note=("Setenta milhões de anos sentado no mesmo ninho. Isso é que é paciência.",
+              "Seventy million years sitting on the same nest. Now that is patience.",
+              "Setenta millones de años sentado en el mismo nido. Eso sí es paciencia.")),
 }
 
 ERAS = {

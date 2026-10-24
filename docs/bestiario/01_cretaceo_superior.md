@@ -133,7 +133,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 89 | Gigantoraptor | Oviraptorossauro | 🦖 | Onívoro | 8 m | Onívoro grande | Defensivo | Comida | ✅ | Montaria de carga; o maior oviraptor; montaria rápida |  |
 | 90 | Anzu | Oviraptorossauro | 🦖 | Onívoro | 3,5 m | Onívoro médio | Defensivo | Comida | — | Coleta (frutas, sementes, fibra) |  |
-| 91 | **Citipati** | Oviraptorossauro | 🦖 | Onívoro | 3 m | Onívoro médio | Defensivo | Comida | — | Choca ovos mais rápido quando fica no ninho | v0.7 |
+| 91 | **Citipati** | Oviraptorossauro | 🦖 | Onívoro | 3 m | Onívoro médio | Defensivo | Comida | ✅ | Choca ovos mais rápido quando fica no ninho | v0.7 |
 | 92 | Chirostenotes | Oviraptorossauro | 🦖 | Onívoro | 2,5 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 93 | **Oviraptor** | Oviraptorossauro | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | ✅ | Aumenta a chance de ovos dos dinos domesticados por perto | v0.7 |
 | 94 | Rinchenia | Oviraptorossauro | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |

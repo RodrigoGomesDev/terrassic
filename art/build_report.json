@@ -1705,5 +1705,75 @@
    "animation.oviraptor.brood"
   ],
   "render_scale": 1.0
+ },
+ "citipati": {
+  "bones": 23,
+  "cubes": 42,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -7.0,
+    -0.03279097523352137,
+    -28.56309204304503
+   ],
+   [
+    7.0,
+    42.843061740216534,
+    28.000031366080105
+   ]
+  ],
+  "animations": [
+   "animation.citipati.idle",
+   "animation.citipati.walk",
+   "animation.citipati.run",
+   "animation.citipati.sit",
+   "animation.citipati.graze",
+   "animation.citipati.attack",
+   "animation.citipati.knocked_out",
+   "animation.citipati.wake",
+   "animation.citipati.eat",
+   "animation.citipati.beg",
+   "animation.citipati.tame",
+   "animation.citipati.display",
+   "animation.citipati.brood"
+  ],
+  "render_scale": 1.0
+ },
+ "mononykus": {
+  "bones": 25,
+  "cubes": 36,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -3.0,
+    -0.1819733067804421,
+    -24.92216145464675
+   ],
+   [
+    3.0,
+    29.24916306292746,
+    41.011048053431345
+   ]
+  ],
+  "animations": [
+   "animation.mononykus.idle",
+   "animation.mononykus.walk",
+   "animation.mononykus.run",
+   "animation.mononykus.sit",
+   "animation.mononykus.attack",
+   "animation.mononykus.knocked_out",
+   "animation.mononykus.wake",
+   "animation.mononykus.eat",
+   "animation.mononykus.beg",
+   "animation.mononykus.tame",
+   "animation.mononykus.dig"
+  ],
+  "render_scale": 0.3
  }
 }

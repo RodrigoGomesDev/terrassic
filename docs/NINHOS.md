@@ -27,6 +27,21 @@ incompatível com `roar`, `display`, `scoop`, `forage` e `night_guard` na mesma 
 Teste humano: dois dinos domados + um Oviraptor domado perto; o intervalo entre ovos deve cair pela metade;
 galinhas perto botam visivelmente mais.
 
+## O chocador (Citipati, fase 82)
+
+Flag `brooder` do gerador (`DinosaurEntity.brooder()`), primeira espécie o **Citipati**.
+
+- **Selvagem** (`entity/ai/BroodGoal`, prioridade 7): adulto sem alvo, de vez em quando (1/200 por tick) procura
+  um bloco de ovo de dinossauro a 6 blocos (`nearestEgg`), anda até ele e senta ao lado por 2 a 4 minutos.
+- **Pose de choco**: sentado (ou dormindo) com um ovo a 2 blocos, a animação de descanso passa de `sit` para
+  `brood` (asas abertas sobre a ninhada); recalculada a cada 10 ticks (`isBrooding()`). Vale para domados: mande
+  sentar junto do ninho.
+- **Choco rápido** (`broodEggs`): a cada 160 ticks cada bloco de ovo a 2 blocos de um chocador sentado recebe um
+  `randomTick` extra (metade avança um estágio). Os três estágios saem em ~1 minuto em vez de ~7 a 10.
+
+Teste humano: Citipati selvagem perto de um ninho selvagem deve sentar e abrir as asas; ovo domado com um Citipati
+domado sentado ao lado choca em cerca de um minuto; longe dele, no tempo normal.
+
 ## O que falta
 
 - Conquista "Ladrão de ninhos" (roubar um ovo selvagem) na aba Caderno de Campo: espera a thread de conquistas.

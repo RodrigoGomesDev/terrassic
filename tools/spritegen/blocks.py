@@ -460,6 +460,23 @@ WOODS = {
     "tree_fern": {"bark": ["#1e150d", "#2f2215", "#43321f", "#58432b", "#6d5537"], "bark_style": "frond_bases",
                   "wood": ["#5a4128", "#6e5233", "#83623e", "#98744b", "#aa8659"],
                   "leaf": ["#24401a", "#335a22", "#46732c", "#5b8c38", "#73a447"], "leaf_style": "fronds"},
+    # Sabal palm: trunk criss-crossed by the stubs of old leaf stalks; pale fibrous wood; stiff fan leaves
+    "sabal": {"bark": ["#3a3024", "#54473a", "#6e6150", "#887a66", "#a0927c"], "bark_style": "frond_bases",
+              "wood": ["#a08a64", "#b8a07a", "#ccb48c", "#dcc6a0", "#e8d6b4"],
+              "leaf": ["#2a3e1a", "#3c5824", "#507230", "#668c3c", "#7ea64c"], "leaf_style": "palm"},
+    # Magnolia, one of the first flowering trees: smooth grey bark, creamy wood, glossy dark leaves, white flowers
+    "magnolia": {"bark": ["#3c3a36", "#55524c", "#6e6a62", "#878278", "#a09a8e"], "bark_style": "smooth",
+                 "wood": ["#b09a74", "#c6b08a", "#d8c49e", "#e6d4b2", "#f0e2c4"],
+                 "leaf": ["#16301c", "#224428", "#305a34", "#427242", "#588a52"], "leaf_style": "broad",
+                 "flowers": ["#e8e0d8", "#f6f0ea", "#d8a8b8"]},
+    # Podocarpus: red-brown stringy bark, orange-brown wood, long narrow dark leaves
+    "podocarpus": {"bark": ["#3a2416", "#523321", "#6c442d", "#86573a", "#9c6a48"], "bark_style": "fibres",
+                   "wood": ["#a0703e", "#b8844c", "#cc985c", "#dcac70", "#e8c088"],
+                   "leaf": ["#1c3418", "#284820", "#365e2a", "#467436", "#5a8a44"], "leaf_style": "feathery"},
+    # Platanus (plane tree, known from Cretaceous leaves): bark peeling in patches of olive, grey and cream
+    "platanus": {"bark": ["#4a4636", "#6a654e", "#8c866a", "#aea886", "#cac4a2"], "bark_style": "plates",
+                 "wood": ["#a88a68", "#c0a07c", "#d2b490", "#e0c6a4", "#eed6b8"],
+                 "leaf": ["#2c4a1c", "#3e6226", "#527c30", "#68963c", "#80ae4c"], "leaf_style": "broad"},
 }
 LASHING = ["#4a3a22", "#6e5a3a", "#8f7a55", "#b39d74"]
 
@@ -487,6 +504,17 @@ def bark(tid):
                 if (x + y) % 6 == 0 or (x - y) % 6 == 0:
                     cv.set(x, y, hexc(w["bark"][4]) if (x + 2 * y) % 4 else hexc(w["bark"][3]))
         return cv
+    if style == "smooth":  # thin smooth bark: soft mottling and small horizontal lenticels
+        n = Noise(tid + "b", periods=(2, 4), weights=(0.6, 0.4))
+        cv = paint(lambda x, y: ramp(w["bark"], 0.35 + 0.4 * n(x, y)))
+        for _ in range(7):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            cv.set(x, y, hexc(w["bark"][1])); cv.set((x + 1) % N, y, hexc(w["bark"][1]))
+        return cv
+    if style == "plates":  # bark flaking off in patches (camouflage), each patch its own tone
+        cells = Cells(tid + "plates", 9)
+        tones = [rnd.uniform(0.15, 0.95) for _ in cells.seeds]
+        return paint(lambda x, y: ramp(w["bark"], tones[cells.at(x, y)] - (0.12 if cells.border(x, y, 0.8) else 0)))
     # fibres: long stringy strips, some peeling (lighter edge)
     n = Noise(tid + "b", periods=(16, 8), weights=(0.6, 0.4), stretch=(1.0, 0.125))
     cv = paint(lambda x, y: ramp(w["bark"], contrast(n(x, y), 1.5)))
@@ -581,6 +609,24 @@ def leaves(tid):
             for dx in (-1, 0, 1):
                 cv.set((x + dx) % N, y, hexc(w["leaf"][4]))
             cv.set(x, (y + 1) % N, hexc(w["leaf"][3]))
+    elif style == "broad":  # broad glossy leaves: bright highlight and dark midrib, a few flowers (magnolia)
+        for _ in range(8):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            cv.set(x, y, hexc(w["leaf"][4])); cv.set((x + 1) % N, y, hexc(w["leaf"][3]))
+            cv.set(x, (y + 1) % N, hexc(w["leaf"][1]))
+        for _ in range(3 if "flowers" in w else 0):
+            x, y = rnd.randrange(N), rnd.randrange(N)
+            for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
+                cv.set((x + dx) % N, (y + dy) % N, hexc(w["flowers"][(dx + dy) % 2]))
+            cv.set((x + 1) % N, (y + 1) % N, hexc(w["flowers"][2]))
+    elif style == "palm":  # fan palm: stiff strap-like segments radiating from a point
+        for x0, y0 in ((3, 6), (11, 14), (12, 4)):
+            for a in range(6):
+                ang = math.pi * (0.12 + a / 6.5)
+                for r in range(1, 8):
+                    x, y = int(x0 + math.cos(ang) * r) % N, int(y0 - math.sin(ang) * r) % N
+                    cv.set(x, y, hexc(w["leaf"][4 if r < 4 else 3]))
+                    cv.set(x, (y + 1) % N, hexc(w["leaf"][1]))
     elif style == "fronds":  # tree fern: long fronds with paired leaflets
         for _ in range(4):
             x, y = rnd.randrange(N), rnd.randrange(N)
@@ -631,6 +677,20 @@ def sapling(tid):
                 x += dx * 1.0; y += dy * 0.8 + (0.35 * i if dx else -0.6)
                 cv.set(int(x), int(y), leaf(3 if i % 2 else 2))
                 cv.set(int(x), int(y) + 1, leaf(1))
+    elif style == "broad":  # round leafy crown on a straight stem (a flower on the magnolia)
+        for y in range(1, 10):
+            half = 4 - abs(y - 5) // 1 if y < 9 else 2
+            for dx in range(-half, half + 1):
+                cv.set(7 + dx, y, leaf(3 if dx < 0 and y < 5 else 2 if (dx + y) % 3 else 1))
+        if "flowers" in w:
+            cv.set(5, 3, hexc(w["flowers"][1])); cv.set(9, 6, hexc(w["flowers"][0]))
+    elif style == "palm":  # young palm: fan of leaves straight from the ground
+        for k in range(7):
+            ang = math.pi * (0.1 + k / 7.5)
+            for r in range(2, 9):
+                cv.set(int(7.5 + math.cos(ang) * r), int(13 - math.sin(ang) * r), leaf(3 if r % 2 else 2))
+        for y in range(12, 16):
+            cv.set(7, y, stem)
     else:  # metasequoia: soft cone of feathery needles
         for y in range(1, 12):
             half = max(0, (y - 1) // 2)
@@ -1252,6 +1312,46 @@ SKULLS = {
                    "obbbbbbbbbbbbbbo", "ottttttttttbbbbo", ".t.t.t.t.t.tbbbo", "obbbbbbbbbbbbbo.",
                    ".ooooooooooooo.."],
 }
+SKULLS.update({  # one skull per species added after the first fifteen
+    "styracosaurus": ["..........o.o.o.", "..........lolol.", "....o.....obbbo.", "....lo...obbbbo.", "....lo..obbbebo.", ".....lo.obbbbbo.", "..oo.lobbbbbbbo.", ".olbbbbbbbbbebo.", "olbbbbbeebbbbbo.", "obbbbbbeebbbbo..", "obbbbbbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "pachyrhinosaurus": ["...........o.o..", "..........olol..", ".........obbbo..", "...oooo.obbbbo..", "..ollllobbbebo..", ".olbbbbbbbbbbo..", "olbbbbeebbbbbo..", "obbbbbeebbbbo...", "obbbbbbbbbbo....", ".obbbbbbbbo.....", "..oooooooo......"],
+    "protoceratops": ["...........oo...", "..........obbo..", ".........obbbo..", "....oooooobebo..", "..oobbbbbbbbbo..", ".obbbbbeebbbbo..", "obbbbbbeebbbo...", "obbbbbbbbbbo....", ".obbbbbbbbo.....", "..oooooooo......"],
+    "euoplocephalus": ["...o.o.o.o.o....", "..olololololo...", ".obbbbbbbbbbbo..", ".obbbbbbbbbeebl.", "obbbbbbbbbbeebo.", "obbbbbbbbbbbbbl.", ".obbbbbbbbbbbo..", "..otttbbbbbbo...", "...ooooooooo...."],
+    "therizinosaurus": [".......oooo.....", ".....oobllbo....", "...oobbbbeebo...", ".oobbbbbbeebo...", "obbbbbbbbbbbo...", ".ootttbbbbbo....", "...oooooooo....."],
+    "deinocheirus": ["..........oooo..", "........oobllbo.", "......oobbbeebo.", "..ooooobbbbeebo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbo..", "oobbbbbbbbbbbo..", ".oobbbbbbbbbo...", "...ooooooooo...."],
+    "alamosaurus": ["......ooooo.....", "....oobllbbo....", "...obbbbbbeeo...", "..obbbbbbbeeo...", ".obbbbbbbbbbo...", "otttbbbbbbbo....", "o.t.tbbbbbo.....", ".obbbbbbbo......", "..ooooooo......."],
+    "saltasaurus": [".......oooo.....", ".....oobllbo....", "....obbbbeebo...", "...obbbbbeebo...", "..obbbbbbbbbo...", "..otttbbbbbo....", "...obbbbbbo.....", "....oooooo......"],
+    "argentinosaurus": [".........ooo....", "......oooblbo...", "....oobbbbbbo...", "..oobbbbbbeebo..", ".obbbbbbbbeebo..", "obbbbbbbbbbbbo..", "otttttbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "opisthocoelicaudia": ["........oooo....", "......oobllbo...", "....oobbbbeebo..", "...obbbbbbeebo..", "..obbbbbbbbbbo..", ".otttbbbbbbbo...", "..obbbbbbbbo....", "...oooooooo....."],
+    "dreadnoughtus": [".......ooooo....", ".....oobllllo...", "...oobbbbbbbbo..", "..obbbbbbbeebo..", ".obbbbbbbbeebo..", ".obbbbbbbbbbbo..", ".otttttbbbbbo...", "..obbbbbbbbo....", "...oooooooo....."],
+    "giganotosaurus": [".......ooooooo..", "....ooobblllbbo.", "..oobbbbbbbbbbbo", ".obbbeeebbbbeebo", "obbbbeeebbbbeebo", "obbbbbbbbbbbbbbo", "otttttttbbbbbbbo", ".t.t.t.t.obbbbo.", ".obbbbbbbbbbbo..", "..ooooooooooo..."],
+    "carcharodontosaurus": ["......oooooo....", "....oobbblllo...", "..oobbbbbbbbbo..", ".obbbeeebbbbeeo.", "obbbbeeebbbbeebo", "obbbbbbbbbbbbbbo", "ottttttttbbbbbbo", ".t.t.t.t.tobbbo.", ".obbbbbbbbbbbo..", "..ooooooooooo..."],
+    "carnotaurus": [".........o..o...", "........olo.lo..", "......oobbbbbo..", "....oobbbbbeebo.", "..oobbbeebbeebo.", ".obbbbbeebbbbbo.", "obbbbbbbbbbbbo..", "otttttbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "tarbosaurus": [".......oooooo...", ".....oobbbllo...", "...oobbbbbbbbo..", "..obbbeebbbeebo.", ".obbbbeebbbeebo.", "obbbbbbbbbbbbbo.", "otttttbbbbbbbo..", ".t.t.tobbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "daspletosaurus": ["..........o.....", "......oooolo....", "....oobbbbbbo...", "..oolbblbbbbbo..", ".obbbbeebbbeebo.", "obbbbbeebbbeebo.", "obbbbbbbbbbbbbo.", "otttttttbbbbbo..", ".t.t.t.tobbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "albertosaurus": ["........ooooo...", "......oobbllo...", "....oobbbbbbbo..", "..oobbbeebbbeeo.", ".obbbbbeebbbeebo", "obbbbbbbbbbbbbbo", "ottttttbbbbbbbo.", ".t.t.t.obbbbo...", "..obbbbbbbbo....", "...oooooooo....."],
+    "majungasaurus": ["..........oo....", ".........olbo...", ".......oobbbbo..", ".....oobbbbeebo.", "...oobbeebbeebo.", "..obbbbeebbbbbo.", ".obbbbbbbbbbbo..", ".otttttbbbbbo...", "..obbbbbbbbo....", "...oooooooo....."],
+    "dakotaraptor": [".......oooooo...", "....oooobllbbo..", "..oobbbbbbbbeebo", ".obbbbbeebbbeebo", "obbbbbbbbbbbbbbo", "ottttttttbbbbbo.", ".t.t.t.t.obbbo..", ".obbbbbbbbbbo...", "..oooooooooo...."],
+    "troodon": ["........ooooo...", "......oobblbbo..", "....oobbbeeeebo.", "..oobbbbbeeeebo.", ".obbbbbbbeeeebo.", "obbbbbbbbbbbbo..", "otttttbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    "oviraptor": [".......oooo.....", "......olllo.....", ".....olbbbo.....", "....obbbbbbo....", "...obbbbbeebo...", "..obbbbbbeebo...", ".obbbbbbbbbbo...", "obbbbbbbbbbo....", ".oobbbbbbbo.....", "...ooooooo......"],
+    "thescelosaurus": ["........oooo....", "......oobllbo...", "....oobbbbeebo..", "..oobbbbbbeebo..", ".obbbbbbbbbbbo..", "obbbbbbbbbbbo...", ".ootttbbbbbo....", "...oooooooo....."],
+    "struthiomimus": ["..........oooo..", "........oobllbo.", "......oobbbeebo.", "....oobbbbbeebo.", "..oobbbbbbbbbbo.", "oobbbbbbbbbbbo..", "..oooobbbbbo....", "......ooooo....."],
+    "ichthyornis": [".........oooo...", ".......oobllbo..", ".....oobbbeebo..", "...oobbbbbeebo..", "oobbbbbbbbbbo...", "ottttttbbbbbo...", ".oooooobbbbo....", ".......oooo....."],
+    "tylosaurus": [".........ooooo..", "......ooobllbo..", "...oobbbbbbbeebo", ".obbbbbbbbbbeebo", "obbbbbbbbbbbbbbo", "oobttttttttbbbbo", ".o.t.t.t.t.tbbbo", "..obbbbbbbbbbbo.", "...oooooooooooo."],
+    "elasmosaurus": [".........oooo...", ".......oobllbo..", ".....oobbbeebo..", "..ooobbbbbeebo..", ".obbbbbbbbbbbo..", "tottttttbbbbo...", ".t.t.t.t.bbo....", "..oooooooo......"],
+    "xiphactinus": [".........oooo...", "......oooblbo...", "....oobbbbbbbo..", "..oobbbbbbeebbo.", ".obbbbbbbbeebbo.", "obbbbbbbbbbbbbo.", "ttttbbbbbbbbbo..", "t.t.tbbbbbbbo...", "otttbbbbbbbo....", ".ooooooooooo...."],
+    "archelon": [".......ooooo....", ".....oobllllo...", "...oobbbbbbbbo..", "..obbbbbbbeebo..", ".obbbbbbbbeebo..", "obbbbbbbbbbbbo..", "obbbbbbbbbbbo...", ".lbbbbbbbbbo....", "..ooooooooo....."],
+    "hesperornis": ["...........ooo..", ".........oollbo.", ".......oobbeebo.", "...ooooobbeebo..", "oobbbbbbbbbbo...", "otttttttbbbbo...", "..ooooooobbo....", ".........oo....."],
+    "deinosuchus": ["..........oooo..", ".........obeebo.", "oooooooooobbbbbo", "obbbbbbbbbbbbbbo", "otttttttttbbbbbo", ".t.t.t.t.t.tbbo.", "obbbbbbbbbbbbo..", ".oooooooooooo..."],
+    "baurusuchus": ["........oooo....", "......oobbbeo...", "...ooobbbbbeeo..", ".oobbbbbbbbbbbo.", "obbbbbbbbbbbbbo.", "otttttttbbbbbo..", ".t.t.t.tobbbo...", "obbbbbbbbbbo....", ".oooooooooo....."],
+    "edmontosaurus": ["..........oooo..", "........oobllbo.", "......oobbbeebo.", "....oobbbbbeebo.", "..oobbbbbbbbbbo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbo..", "oooooobbbbbbo...", "......ooooooo..."],
+    "citipati": ["......ooo.......", ".....ollo.......", ".....olllo......", "....olllbo......", "....obbbbbo.....",
+                 "...obbbbeebo....", "..obbbbbeebo....", ".obbbbbbbbbo....", "obbbbbbbbbo.....", ".oobbbbbbo......",
+                 "...oooooo......."],
+    "corythosaurus": ["........oooo....", ".......ollllo...", "......ollbbllo..", "......obbbbbbo..", ".....obbbbeebo..", "...oobbbbbeebo..", ".oobbbbbbbbbbo..", "obbbbbbbbbbbo...", "oobbbbbbbbbo....", "..ooooooooo....."],
+})
+
+
 SKULL_ERA_ROCK = {"brachiosaurus": "shale", "stegosaurus": "shale", "dilophosaurus": "shale",
                   "compsognathus": "shale"}  # Jurassic beds; the Cretaceous skulls come out of limestone
 FOSSIL_BONE = ["#4a3a2a", "#6b5640", "#8a7256", "#a28a6a", "#b8a27f"]  # mineralised bone: brown-grey, not white
@@ -1312,6 +1412,9 @@ HIDE_PATTERN = {  # rug pattern of each species (scales by default)
     "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots",
     "ankylosaurus": "osteoderms", "triceratops": "big_scales", "mosasaurus": "fine_scales",
     "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
+    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers",
+    "struthiomimus": "feathers", "deinocheirus": "feathers", "therizinosaurus": "feathers",
+    "hesperornis": "feathers", "ichthyornis": "feathers",
 }
 
 
@@ -1719,6 +1822,158 @@ def phase7_textures():
     return out
 
 
+# ------------------------------------------------------------------ amber and resin
+AMBER_RAMP = ["#4a2006", "#7a3c0e", "#a85a16", "#cc7c22", "#e8a238", "#f6c860"]
+
+
+def amber(kind):
+    """Fossil tree resin: deep orange-gold with clouds and bubbles inside (block), a smooth surface with a long
+    light streak (polished), or polished pieces set in dark resin (mosaic)."""
+    rnd = random.Random("amber" + kind)
+    n = Noise("amber" + kind, periods=(2, 4, 8), weights=(0.5, 0.3, 0.2))
+    if kind == "mosaic":
+        cells = Cells("ambermosaic", 10)
+        tones = [rnd.uniform(0.3, 0.85) for _ in cells.seeds]
+        return paint(lambda x, y: ramp(AMBER_RAMP, 0.05) if cells.border(x, y, 0.9)
+                     else ramp(AMBER_RAMP, tones[cells.at(x, y)] + 0.15 * (n(x, y) - 0.5)))
+    if kind == "polished":
+        return paint(lambda x, y: ramp(AMBER_RAMP, 0.35 + 0.35 * n(x, y) + (0.25 if (x + y) % 16 in (3, 4) else 0)))
+    cv = paint(lambda x, y: ramp(AMBER_RAMP, contrast(n(x, y), 1.4)))
+    for _ in range(5):  # bubbles caught in the resin
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        cv.set(x, y, hexc(AMBER_RAMP[5])); cv.set((x + 1) % N, (y + 1) % N, hexc(AMBER_RAMP[1]))
+    return cv
+
+
+INCLUSIONS = {  # what got caught in the resin: d dark body, l light part
+    "insect": ["................", "................", "......d...d.....", ".......d.d......", "....l..ddd..l...",
+               ".....l.ddd.l....", "......ddddd.....", "....dd.ddd.dd...", "...d...ddd...d..", "......ddddd.....",
+               ".....d.ddd.d....", "....d...d...d...", "................", "................", "................",
+               "................"],
+    "feather": ["................", "...........ll...", "..........lldl..", ".........lldll..", "........lldll...",
+                ".......lldll....", "......lldll.....", ".....lldll......", "....lldll.......", "...lldll........",
+                "....dll.........", "...d............", "..d.............", "................", "................",
+                "................"],
+    "leaf": ["................", "................", "........dd......", ".......dlld.....", "......dlldld....",
+             ".....dlldlld....", "....dlldlld.....", "....dldlld......", "...dlldld.......", "...dldld........",
+             "..d.dd..........", ".d..............", "................", "................", "................",
+             "................"],
+}
+
+
+def amber_inclusion(kind):
+    cv = amber("polished")
+    for y, row in enumerate(INCLUSIONS[kind]):
+        for x, ch in enumerate(row):
+            if ch == "d":
+                cv.set(x, y, mixc(hexc("#1e120a"), cv.get(x, y), 0.25))
+            elif ch == "l":
+                cv.set(x, y, mixc(hexc("#5a3a1a" if kind != "leaf" else "#3a4a1a"), cv.get(x, y), 0.35))
+    return cv
+
+
+def resin_block():
+    """Fresh resin set hard: paler, cloudy, with drips running down."""
+    n = Noise("resin", periods=(2, 4), weights=(0.6, 0.4), stretch=(1.0, 0.5))
+    return paint(lambda x, y: ramp(["#7a5a1e", "#a07a2c", "#c49c40", "#dcb85a", "#ecd07c"],
+                                   0.3 + 0.5 * n(x, y) + (0.15 if (x * 5) % 7 == 0 and y > 4 else 0)))
+
+
+def amber_lantern(top):
+    """Lantern: polished amber panes held in a bone frame; the light shows through the amber."""
+    if top:
+        return paint(lambda x, y: ramp(BONE_RAMP, 0.45 + 0.2 * ((x + y) % 3 == 0)))
+    def px(x, y):
+        if x in (0, 15, 7, 8) or y in (0, 1, 14, 15):
+            return ramp(BONE_RAMP, 0.6 if x != 15 and y > 1 else 0.35)
+        return ramp(AMBER_RAMP, 0.95 - abs(x - 7.5) / 12 - abs(y - 7.5) / 14)
+    return paint(px)
+
+
+def amber_textures():
+    out = {"amber_block": amber("raw"), "polished_amber": amber("polished"), "amber_mosaic": amber("mosaic"),
+           "resin_block": resin_block(), "amber_lantern": amber_lantern(False), "amber_lantern_top": amber_lantern(True)}
+    for kind in INCLUSIONS:
+        out[f"amber_with_{kind}"] = amber_inclusion(kind)
+    return out
+
+
+# ------------------------------------------------------------------ Cretaceous soils
+SOIL_RAMP = ["#3a2a1c", "#4e3a28", "#634a34", "#785c42", "#8c6e52"]
+
+
+def litter(kind, side):
+    """Forest floor: fallen fern fronds (brown and a few still green) or conifer needles over dark soil;
+    the side shows the soil with the litter only along the top."""
+    rnd = random.Random("litter" + kind + str(side))
+    n = Noise("litter" + kind, periods=(4, 8), weights=(0.5, 0.5))
+    soil = paint(lambda x, y: ramp(SOIL_RAMP, 0.25 + 0.5 * n(x, y)))
+    colors = (["#5a3e1e", "#7a5428", "#94683a", "#4a6a2a", "#6a8a38"] if kind == "fern"
+              else ["#6a3a1a", "#8a4e22", "#a8642c", "#c47c3a", "#7a4a20"])
+    rows = range(0, 4) if side else range(N)
+    for _ in range(40 if not side else 14):
+        x, y = rnd.randrange(N), rnd.choice(list(rows))
+        length = rnd.randint(2, 5)
+        dx = rnd.choice((1, -1))
+        for i in range(length):
+            yy = y + (i // 2 if kind == "fern" else i % 2)
+            if side and yy > 3:
+                break
+            soil.set((x + dx * i) % N, yy % N, hexc(rnd.choice(colors)))
+    if side:
+        for x in range(N):
+            if rnd.random() < 0.6:
+                soil.set(x, 0, hexc(colors[rnd.randrange(3)]))
+    return soil
+
+
+def cracked_mud():
+    """Mud dried in the sun: pale polygons curling at the edges, deep dark cracks between them."""
+    cells = Cells("mudcracks", 7)
+    n = Noise("mudcracks", periods=(4, 8), weights=(0.5, 0.5))
+    return paint(lambda x, y: ramp(SOIL_RAMP, 0.0) if cells.border(x, y, 0.4)
+                 else ramp(["#6a5a46", "#7e6c56", "#928066", "#a69478", "#b8a68a"],
+                           0.35 + 0.35 * n(x, y) + (0.2 if cells.border(x, y, 1.2) else 0)))
+
+
+def volcanic_ash(layer=False):
+    n = Noise("ash" + str(layer), periods=(4, 8, 16), weights=(0.4, 0.3, 0.3))
+    return paint(lambda x, y: ramp(["#6e6a66", "#827e78", "#96928c", "#aaa6a0", "#bcb8b2"], 0.2 + 0.7 * n(x, y)))
+
+
+def peat():
+    """Peat: dark, wet, half-rotten plant fibres."""
+    n = Noise("peat", periods=(2, 8, 16), weights=(0.3, 0.4, 0.3), stretch=(2.0, 0.5))
+    return paint(lambda x, y: ramp(["#1a120c", "#2a1e14", "#3a2a1c", "#4a3826", "#5e4a32"], 0.15 + 0.75 * n(x, y)))
+
+
+def lateritic_soil():
+    """Red tropical soil rich in iron, with small hard nodules."""
+    rnd = random.Random("latsoil")
+    n = Noise("latsoil", periods=(4, 8), weights=(0.5, 0.5))
+    cv = paint(lambda x, y: ramp(["#5a2414", "#74301c", "#8c3e24", "#a24e2e", "#b4603a"], 0.25 + 0.55 * n(x, y)))
+    for _ in range(8):
+        x, y = rnd.randrange(N), rnd.randrange(N)
+        cv.set(x, y, hexc("#3a1a10")); cv.set((x + 1) % N, y, hexc("#c47850"))
+    return cv
+
+
+def salt_crust():
+    """Salt left by an evaporated lagoon: white crystalline polygons with raised rims over grey sand."""
+    cells = Cells("salt", 9)
+    n = Noise("salt", periods=(4, 8), weights=(0.5, 0.5))
+    return paint(lambda x, y: ramp(["#e8e4dc", "#f4f2ec", "#ffffff"], 0.6 + 0.4 * n(x, y))
+                 if cells.border(x, y, 0.5)
+                 else ramp(["#a8a294", "#bcb6a8", "#d0cabc", "#dedad0"], 0.3 + 0.6 * n(x, y)))
+
+
+def soil_textures():
+    return {"fern_litter": litter("fern", False), "fern_litter_side": litter("fern", True),
+            "needle_litter": litter("needle", False), "needle_litter_side": litter("needle", True),
+            "cracked_mud": cracked_mud(), "volcanic_ash": volcanic_ash(), "peat": peat(),
+            "lateritic_soil": lateritic_soil(), "salt_crust": salt_crust()}
+
+
 OTHER = {
     "thatch": thatch, "thatch_top": thatch_top, "straw_mat": straw_mat, "wattle_and_daub": wattle_daub,
     "bone_fence": bone_fence,
@@ -1739,6 +1994,8 @@ def build():
     out.update(phase5_textures())
     out.update(phase6_textures())
     out.update(phase7_textures())
+    out.update(amber_textures())
+    out.update(soil_textures())
     for name, cv in out.items():
         cv.save(os.path.join(TEX, f"{name}.png"))
     for tid in WOODS:

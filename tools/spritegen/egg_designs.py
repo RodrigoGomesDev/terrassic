@@ -590,6 +590,21 @@ def oviraptor():
     return e
 
 
+def citipati():
+    e = beaked("citipati", {"b": "#4a4a56", "c": "#d6d0c2", "d": "#2a2a32", "n": "#1a1a20",
+                            "m": "#4a3a30", "e": "#e08a24", "F": "#3a6ab8", "W": "#f4f2ec"}, beak=(12, 17, 19, 26))
+    # the tall cassowary casque
+    e.poly([(12, 9), (19, 9), (18, 0), (13, 0)], "e")
+    e.line([(14, 1), (14, 8)], "f")
+    e.pal["f"] = "#f0b060"
+    # blue face band under it, white wing bars at the sides
+    e.rect((10, 10, 21, 11), "F", clip=True)
+    for y in (20, 24):
+        e.line([(3, y), (6, y)], "W", clip=True)
+        e.line([(25, y), (28, y)], "W", clip=True)
+    return e
+
+
 def therizinosaurus():
     e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
                                    "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
@@ -803,7 +818,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

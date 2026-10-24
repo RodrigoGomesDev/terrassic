@@ -51,6 +51,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Dakotaraptor (v0.7) | ~5,5 m, 220-350 kg (DePalma et al. 2015, PBMNH.P.10.113.T; foice de 24 cm) | novo | **5,5 x 2,1** | 1,0 x 2,0 | 40% |
 | Troodon (v0.7) | ~2,4 m, ~50 kg (Russell 1969; Varricchio 1997, Egg Mountain) | novo | **2,4 x 1,1** | 0,6 x 1,1 | 50% |
 | Oviraptor (v0.7) | 1,6-2 m, ~33-40 kg (Osborn 1924, AMNH 6517; Paul 2010) | novo | **2,0 x 1,5** (cabeça erguida) | 0,7 x 1,4 | 50% |
+| Citipati (v0.7) | 2,5-3 m, ~75-85 kg (Clark, Norell & Barsbold 2001, IGM 100/979 "Big Mama"; Paul 2010) | novo | **3,0 x 2,3** (cabeça erguida, com casque) | 0,9 x 2,0 | 40% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

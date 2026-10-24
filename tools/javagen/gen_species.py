@@ -67,6 +67,7 @@ SIZES = {
     "dakotaraptor":       dict(real=5.5,  scale=1.14, w=1.0, h=2.0, baby=0.4,  shadow=0.8),
     "troodon":            dict(real=2.4,  scale=0.55, w=0.6, h=1.1, baby=0.5,  shadow=0.4),
     "oviraptor":          dict(real=2.0,  scale=0.65, w=0.7, h=1.4, baby=0.5,  shadow=0.45),
+    "citipati":           dict(real=3.0,  scale=0.85, w=0.9, h=2.0, baby=0.4,  shadow=0.6),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -138,6 +139,7 @@ GUIDE = {
     "dakotaraptor":       dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "troodon":            dict(era="late_cretaceous", diet="carnivore", fossil=4),
     "oviraptor":          dict(era="late_cretaceous", diet="omnivore",  fossil=4),
+    "citipati":           dict(era="late_cretaceous", diet="omnivore",  fossil=3),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -195,6 +197,7 @@ WORLD = {
     "dakotaraptor":       dict(biomes=("plains", "forest", "river"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain, small packs
     "troodon":            dict(biomes=("forest", "taiga", "plains"), weight=5, group=(1, 3), track=8),   # Judith River woodland, pairs
     "oviraptor":          dict(biomes=("desert", "badlands", "savanna"), weight=5, group=(2, 4), track=8),  # the Djadochta dunes
+    "citipati":           dict(biomes=("desert", "badlands", "savanna"), weight=3, group=(1, 2), track=8),  # Ukhaa Tolgod, pairs on the nest
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -436,6 +439,12 @@ SPECIES = [
       food="Items.EGG, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES",
       sounds=("PARROT_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.7, 0.9, 200), xp=6, run=0.03,
       skittish=True, egg_boost=True),
+ dict(id="citipati", cls="Citipati", base="HerbivoreDinosaur",
+      doc="Citipati osmolskae - 3 m oviraptorid of the Gobi with a tall cassowary casque, the brooding dinosaur found sitting on its nests. An omnivore in pairs, tamed with eggs or seeds; it fights back. A wild one sits on eggs it finds; any egg beside a sitting Citipati hatches many times faster (docs/NINHOS.md).",
+      attrs=dict(MAX_HEALTH=34, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=5, ATTACK_KNOCKBACK=0.5, FOLLOW_RANGE=20),
+      food="Items.EGG, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
+      sounds=("PARROT_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.9, 0.7, 220), xp=10, run=0.025,
+      brooder=True),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -767,6 +776,12 @@ def gen(s, bounds):
         }
     }
 """)
+    if s.get("brooder"):
+        # the brooder (docs/NINHOS.md): sits on eggs it finds (BroodGoal, wild), the "brood" pose while sitting beside eggs,
+        # and the eggs beside a sitting one hatch fast (DinosaurEntity.broodEggs)
+        imports.add("com.terrassic.entity.ai.BroodGoal")
+        goals.append("        this.goalSelector.addGoal(7, new BroodGoal(this));")
+        body.append("    @Override\n    protected boolean brooder() {\n        return true;\n    }\n")
     if s.get("night_guard"):
         # the night guard (docs/GUARDA.md): a tame adult, awake and standing at night, goes for hostile mobs within ten
         # blocks (never a creeper, like the wolf); its owner within twelve blocks sees in the dark while it watches.

@@ -98,7 +98,8 @@ import java.util.List;
  *       (FollowHerdGoal); fleeing herds stampede together; pack hunters ({@link #packHunter()}) share a target.</li>
  *   <li><b>Wild nests</b> (docs/NINHOS.md): a wild, well fed adult with a mate nearby and room in the herd
  *       ({@link #wildPopulationCap()}) breeds on its own and lays a clutch of wild eggs ({@link #clutchSize()});
- *       a herd may spawn with an egg already laid. Wild eggs hatch wild babies and the herd guards them.</li>
+ *       a herd may spawn with an egg already laid. Wild eggs hatch wild babies and the herd guards them.
+ *       Brooders ({@link #brooder()}) sit on eggs they find and eggs beside a sitting one hatch fast.</li>
  *   <li><b>Migration</b> (docs/MIGRACAO.md): wild herbivore herds set off together for new grazing, 64 to 96
  *       blocks away in the season's direction (MigrateGoal, {@link #getMigrationTarget()}).</li>
  *   <li><b>Platform saddle</b>: species with {@link #platformSpecies()} take the platform saddle instead of a plain
@@ -141,6 +142,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private RawAnimation walkAnim;
     private RawAnimation runAnim;
     private RawAnimation sitAnim;
+    private RawAnimation broodAnim;
+    /** Whether it sits beside an egg right now (the brood pose; refreshed every ten ticks while it rests). */
+    private boolean brooding;
     /** Jump asked by the rider (0..1), done on the next ridden tick on the ground. */
     private float riderJump;
     /** Ticks after perching during which the owner's sneak does not shake the animal off (it was sneaking to perch it). */
@@ -251,6 +255,41 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Whether this animal eats carcasses (meat eaters). */
     protected boolean scavenges() {
         return false;
+    }
+
+    /** Whether it sits on eggs (docs/NINHOS.md): wild ones brood clutches they find (BroodGoal), it takes the "brood"
+     *  pose sitting beside an egg, and eggs within two blocks of a sitting one hatch fast ({@link #broodEggs}). */
+    protected boolean brooder() {
+        return false;
+    }
+
+    /** The nearest dinosaur egg block within r blocks (two up or down), or null. */
+    public BlockPos nearestEgg(int r) {
+        BlockPos here = this.blockPosition();
+        BlockPos best = null;
+        double bestDistance = Double.MAX_VALUE;
+        for (BlockPos pos : BlockPos.betweenClosed(here.offset(-r, -2, -r), here.offset(r, 2, r))) {
+            if (this.level().getBlockState(pos).getBlock() instanceof DinoEggBlock) {
+                double distance = pos.distSqr(here);
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    best = pos.immutable();
+                }
+            }
+        }
+        return best;
+    }
+
+    /** Fast hatching: every eight seconds each egg block within two blocks of a sitting brooder gets an extra random
+     *  tick (one in two advances a hatch stage), so a clutch hatches in about a minute instead of several. */
+    private void broodEggs(ServerLevel server) {
+        BlockPos here = this.blockPosition();
+        for (BlockPos pos : BlockPos.betweenClosed(here.offset(-2, -1, -2), here.offset(2, 1, 2))) {
+            BlockState state = server.getBlockState(pos);
+            if (state.getBlock() instanceof DinoEggBlock) {
+                state.randomTick(server, pos.immutable(), this.random);
+            }
+        }
     }
 
     /** Whether the wild ones of this species breed and nest on their own (land animals; the sea comes in v0.8). */
@@ -466,6 +505,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.walkAnim = RawAnimation.begin().thenLoop(anim("walk"));
         this.runAnim = RawAnimation.begin().thenLoop(anim("run"));
         this.sitAnim = RawAnimation.begin().thenLoop(anim("sit"));
+        this.broodAnim = RawAnimation.begin().thenLoop(anim("brood"));
 
         controllers.add(new AnimationController<>(this, "movement", 6, this::movementAnimation));
 
@@ -481,7 +521,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
         if (this.isPerched() || this.isSleeping() || (this.isInSittingPose() && !this.isVehicle())) {
-            return state.setAndContinue(this.sitAnim);
+            if (this.brooder() && this.tickCount % 10 == 0) {
+                this.brooding = !this.isBaby() && this.nearestEgg(2) != null;
+            }
+            return state.setAndContinue(this.brooder() && this.brooding ? this.broodAnim : this.sitAnim);
         }
         if (state.isMoving()) {
             boolean running = this.isAggressive() || this.getDeltaMovement().horizontalDistanceSqr() > runThresholdSqr();
@@ -826,6 +869,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.hungerTick();
             if (this.tickCount % 200 == 0) {
                 this.wildBreedingTick();
+            }
+            if (this.brooder() && this.tickCount % 160 == 0 && !this.isBaby() && (this.isInSittingPose() || this.isSleeping())
+                    && this.level() instanceof ServerLevel server) {
+                this.broodEggs(server);
             }
         }
     }
