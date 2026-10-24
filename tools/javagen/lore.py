@@ -615,6 +615,22 @@ GUIDE = {
         note=("Entrei na mata montado nele e saí do outro lado com uma trilha atrás de mim. E três maçãs.",
               "I rode him into the forest and came out the other side with a trail behind me. And three apples.",
               "Entré al bosque montado en él y salí del otro lado con un sendero detrás de mí. Y tres manzanas.")),
+    "protoceratops": dict(
+        sci=("Viveu há 75 a 71 milhões de anos nas dunas da Mongólia (os Penhascos Flamejantes). Ceratopsiano do tamanho de uma ovelha, 1,8 a 2,5 m e 60 a 180 kg, conhecido por dezenas de esqueletos de todas as idades, ninhos com ovos e os \"Dinossauros Lutadores\", um deles agarrado a um Velociraptor. Sem chifres de verdade, só um calombo no nariz; bico de papagaio; escudo com duas janelas, maior nos machos; olhos enormes (talvez ativo ao anoitecer). Provável origem da lenda do grifo.",
+             "Lived 75 to 71 million years ago on the dunes of Mongolia (the Flaming Cliffs). A sheep-sized ceratopsian, 1.8 to 2.5 m and 60 to 180 kg, known from dozens of skeletons of every age, nests with eggs and the \"Fighting Dinosaurs\", one of them locked with a Velociraptor. No true horns, just a bump on the nose; a parrot beak; a frill with two windows, bigger in the males; huge eyes (perhaps active at dusk). The likely origin of the griffin legend.",
+             "Vivió hace 75 a 71 millones de años en las dunas de Mongolia (los Acantilados Flameantes). Ceratopsiano del tamaño de una oveja, 1,8 a 2,5 m y 60 a 180 kg, conocido por decenas de esqueletos de todas las edades, nidos con huevos y los \"Dinosaurios Luchadores\", uno de ellos trabado con un Velociraptor. Sin cuernos de verdad, solo un bulto en la nariz; pico de loro; gola con dos ventanas, mayor en los machos; ojos enormes (quizá activo al anochecer). Probable origen de la leyenda del grifo."),
+        behavior=("Anda em bandos pelo deserto e pela savana seca e morde quem mexe com ele. Parado em chão macio, de vez em quando cava com as patas da frente.",
+                  "Roams the desert and dry savanna in groups and bites whoever bothers it. Standing on soft ground, it digs with its forefeet now and then.",
+                  "Anda en grupos por el desierto y la sabana seca y muerde a quien lo molesta. Parado en suelo blando, de vez en cuando cava con las patas delanteras."),
+        taming=("Doma-se na mão com trigo, cenoura, beterraba ou samambaia. Os pares põem um ovo pequeno.",
+                "Hand-tamed with wheat, carrots, beetroot or ferns. Pairs lay a small egg.",
+                "Se doma a mano con trigo, zanahoria, remolacha o helecho. Las parejas ponen un huevo pequeño."),
+        utility=("Escavador de bolso: deixe-o solto em terra, areia ou cascalho e ele traz raízes, legumes, ossos e, às vezes, um fóssil raso. Em cascalho, pederneira.",
+                 "A pocket digger: leave it loose on dirt, sand or gravel and it brings up roots, vegetables, bones and, now and then, a shallow fossil. On gravel, flint.",
+                 "Excavador de bolsillo: déjalo suelto en tierra, arena o grava y trae raíces, verduras, huesos y, a veces, un fósil superficial. En grava, pedernal."),
+        note=("Deixei um no quintal. Em uma semana tinha cenouras, três ossos e um dente que não é dele.",
+              "I left one in the yard. In a week I had carrots, three bones and a tooth that is not its own.",
+              "Dejé uno en el patio. En una semana tenía zanahorias, tres huesos y un diente que no es suyo.")),
 }
 
 ERAS = {

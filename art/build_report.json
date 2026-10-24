@@ -982,5 +982,40 @@
    "animation.euoplocephalus.attack"
   ],
   "render_scale": 1.0
+ },
+ "protoceratops": {
+  "bones": 26,
+  "cubes": 55,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -8.0,
+    -3.398721234949741e-05,
+    -34.98294041450086
+   ],
+   [
+    8.0,
+    29.750900051470765,
+    40.065572764861365
+   ]
+  ],
+  "animations": [
+   "animation.protoceratops.idle",
+   "animation.protoceratops.walk",
+   "animation.protoceratops.run",
+   "animation.protoceratops.attack",
+   "animation.protoceratops.sit",
+   "animation.protoceratops.graze",
+   "animation.protoceratops.dig",
+   "animation.protoceratops.knocked_out",
+   "animation.protoceratops.wake",
+   "animation.protoceratops.eat",
+   "animation.protoceratops.beg",
+   "animation.protoceratops.tame"
+  ],
+  "render_scale": 0.5
  }
 }

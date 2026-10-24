@@ -31,6 +31,8 @@ SIZES = {
     "triceratops":        dict(real=9.0,  scale=1.63, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
     "styracosaurus":      dict(real=5.5,  scale=1.1,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
+    # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
+    "protoceratops":      dict(real=2.0,  scale=0.43, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
     "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
     "ankylosaurus":       dict(real=8.0,  scale=1.83, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
     # Euoplocephalus tutus: 5.5-6 m, ~2.5 t (Arbour & Currie 2013; Paul 2010); the widest body for its length.
@@ -82,6 +84,7 @@ GUIDE = {
     "compsognathus":      dict(era="jurassic",        diet="carnivore", fossil=3),
     "triceratops":        dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "styracosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=4),
+    "protoceratops":      dict(era="late_cretaceous", diet="herbivore", fossil=6),
     "stegosaurus":        dict(era="jurassic",        diet="herbivore", fossil=5),
     "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "euoplocephalus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -118,6 +121,7 @@ WORLD = {
     "compsognathus":      dict(biomes=("forest", "jungle"), weight=8, group=(3, 6), track=8),
     "triceratops":        dict(biomes=("savanna", "plains"), weight=6, group=(2, 4), track=10),
     "styracosaurus":      dict(biomes=("savanna", "plains", "forest"), weight=5, group=(2, 5), track=10),  # herds at the forest edge
+    "protoceratops":      dict(biomes=("desert", "badlands", "savanna"), weight=7, group=(2, 5), track=8),    # dunes and dry scrub
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
     "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
     "euoplocephalus":     dict(biomes=("plains", "forest", "savanna"), weight=4, group=(1, 3), track=10),  # grazes the open floodplain
@@ -207,6 +211,11 @@ SPECIES = [
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.4, 0.9, 280), step=("RAVAGER_STEP", 0.5, 0.9),
       xp=16, rideable=True, jump=0.5, ride_offset=1.5, ride_speed=1.1, trample=True),
+ dict(id="protoceratops", cls="Protoceratops", base="HerbivoreDinosaur",
+      doc="Protoceratops andrewsi - sheep-sized frilled herbivore of the dunes. Bites back when bothered. Digs in soft ground: a tame one turns up roots, bones and shallow fossils.",
+      attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ATTACK_KNOCKBACK=0.5, ARMOR=3, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=16),
+      food="Items.WHEAT, Items.CARROT, Items.BEETROOT, Items.FERN",
+      sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 1.1, 1.0, 240), xp=7, run=0.02, dig=True),
  dict(id="stegosaurus", cls="Stegosaurus", base="HerbivoreDinosaur",
       doc="Stegosaurus stenops - slow herbivore that defends itself with the spiked tail (thagomizer).",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.20, ATTACK_DAMAGE=10, ATTACK_KNOCKBACK=1.2, ARMOR=8, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=20),
@@ -426,6 +435,8 @@ def gen(s, bounds):
         extras.append("display")
     if s.get("call"):
         extras.append("call")
+    if s.get("dig"):
+        extras.append("dig")
     if base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
     elif base == "HerbivoreDinosaur" and len(extras) > 1:
@@ -619,6 +630,54 @@ def gen(s, bounds):
                     this.level().destroyBlock(pos, true, this);
                 }
             }
+        }
+    }
+""")
+    if s.get("dig"):
+        # digging: idle on soft ground it scrapes with the forefeet now and then; a tame one turns something up
+        imports.update({"net.minecraft.server.level.ServerLevel", "net.minecraft.core.BlockPos", "net.minecraft.core.particles.BlockParticleOption",
+                        "net.minecraft.core.particles.ParticleTypes", "net.minecraft.tags.BlockTags", "net.minecraft.world.item.Item",
+                        "net.minecraft.world.item.ItemStack", "net.minecraft.world.level.block.Blocks", "net.minecraft.world.level.block.state.BlockState",
+                        "com.terrassic.registry.ModItems", "dev.architectury.registry.registries.RegistrySupplier", "java.util.ArrayList", "java.util.List"})
+        body.append("""    /** Digging: idle on dirt, sand, gravel or clay it scrapes with the forefeet now and then; a tame one turns up
+     *  roots, a vegetable, a bone or a shallow fossil (dropped at its feet). */
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.isBaby() || this.getTarget() != null || this.isVehicle() || this.isInSittingPose() || !this.getNavigation().isDone()
+                || this.random.nextInt(900) != 0 || !(this.level() instanceof ServerLevel server)) {
+            return;
+        }
+        BlockPos below = this.blockPosition().below();
+        BlockState ground = server.getBlockState(below);
+        if (!(ground.is(BlockTags.DIRT) || ground.is(BlockTags.SAND) || ground.is(Blocks.GRAVEL) || ground.is(Blocks.CLAY))) {
+            return;
+        }
+        triggerAnim(ACTION_CONTROLLER, "dig");
+        server.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ground), this.getX(), this.getY() + 0.1D, this.getZ(),
+                12, 0.3D, 0.1D, 0.3D, 0.05D);
+        this.playSound(ground.getSoundType().getHitSound(), 0.8F, 1.0F);
+        if (!this.isTame()) {
+            return;
+        }
+        int roll = this.random.nextInt(100);
+        ItemStack found = ItemStack.EMPTY;
+        if (roll < 28) {
+            found = new ItemStack(Items.HANGING_ROOTS);
+        } else if (roll < 44) {
+            found = new ItemStack(this.random.nextBoolean() ? Items.CARROT : Items.POTATO);
+        } else if (roll < 54) {
+            found = new ItemStack(Items.BEETROOT);
+        } else if (roll < 66) {
+            found = new ItemStack(Items.BONE);
+        } else if (roll < 74) {
+            List<RegistrySupplier<Item>> fossils = new ArrayList<>(ModItems.FOSSILS.values());
+            found = new ItemStack(fossils.get(this.random.nextInt(fossils.size())).get());
+        } else if (roll < 80 && ground.is(Blocks.GRAVEL)) {
+            found = new ItemStack(Items.FLINT);
+        }
+        if (!found.isEmpty()) {
+            this.spawnAtLocation(found);
         }
     }
 """)
