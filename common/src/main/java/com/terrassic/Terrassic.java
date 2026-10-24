@@ -4,6 +4,7 @@ import com.terrassic.client.TerrassicClient;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModTabs;
 import com.terrassic.research.Research;
 import com.terrassic.world.ModSpawns;
@@ -23,6 +24,7 @@ public final class Terrassic {
 
     public static void init() {
         // order matters on Fabric (registered immediately): tabs, entities, blocks, then items
+        ModSounds.SOUNDS.register();
         ModTabs.TABS.register();
         ModEntities.ENTITY_TYPES.register();
         ModBlocks.BLOCKS.register();

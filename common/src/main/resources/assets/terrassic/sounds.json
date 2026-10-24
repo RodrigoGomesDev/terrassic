@@ -1,0 +1,150 @@
+{
+  "voice.boom_large.ambient": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/boom_large/ambient_1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "terrassic:voice/boom_large/ambient_2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "terrassic:voice/boom_large/ambient_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.boom_large.ambient"
+  },
+  "voice.boom_large.threat": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/boom_large/threat_1",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.boom_large.threat"
+  },
+  "voice.boom_large.hurt": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/boom_large/hurt_1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "terrassic:voice/boom_large/hurt_2",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.boom_large.hurt"
+  },
+  "voice.boom_large.death": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/boom_large/death_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.boom_large.death"
+  },
+  "voice.boom_large.step": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/boom_large/step_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/boom_large/step_2",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.boom_large.step"
+  },
+  "voice.horn_hadrosaur.ambient": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/horn_hadrosaur/ambient_1",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "terrassic:voice/horn_hadrosaur/ambient_2",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "terrassic:voice/horn_hadrosaur/ambient_3",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.horn_hadrosaur.ambient"
+  },
+  "voice.horn_hadrosaur.hurt": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/horn_hadrosaur/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/horn_hadrosaur/hurt_2",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.horn_hadrosaur.hurt"
+  },
+  "voice.horn_hadrosaur.death": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/horn_hadrosaur/death_1",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.horn_hadrosaur.death"
+  },
+  "voice.squawk_pterosaur.ambient": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/squawk_pterosaur/ambient_1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "terrassic:voice/squawk_pterosaur/ambient_2",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "terrassic:voice/squawk_pterosaur/ambient_3",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.squawk_pterosaur.ambient"
+  },
+  "voice.squawk_pterosaur.hurt": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/squawk_pterosaur/hurt_1",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.squawk_pterosaur.hurt"
+  },
+  "voice.squawk_pterosaur.death": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/squawk_pterosaur/death_1",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.squawk_pterosaur.death"
+  },
+  "voice.squawk_pterosaur.flap": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/squawk_pterosaur/flap_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/squawk_pterosaur/flap_2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.squawk_pterosaur.flap"
+  }
+}

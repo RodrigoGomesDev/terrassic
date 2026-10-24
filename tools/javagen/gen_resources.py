@@ -2,6 +2,7 @@
 variants), recipes and loot tables."""
 import json
 import os
+import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 RES = os.path.join(ROOT, "common", "src", "main", "resources")
@@ -101,6 +102,12 @@ def egg_model(sid, stage, large):
 
 def main():
     lang = {code: dict(entries) for code, entries in LANG_EXTRA.items()}
+    # sound subtitles (tools/soundgen/recipes.py)
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "soundgen"))
+    from recipes import SUBTITLES, sound_id
+    for (vset, ev), (pt, en, es) in SUBTITLES.items():
+        key = f"subtitles.terrassic.{sound_id(vset, ev)}"
+        lang["pt_br"][key], lang["en_us"][key], lang["es_es"][key] = pt, en, es
     for sid, (en, pt, es, large) in SPECIES.items():
         lang["en_us"][f"entity.terrassic.{sid}"] = en
         lang["pt_br"][f"entity.terrassic.{sid}"] = pt
