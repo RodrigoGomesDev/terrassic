@@ -52,6 +52,11 @@ public class NotebookScreen extends Screen {
     private static String lastSpecies = null;
     private static int lastKatarinaPage = 0;
     private static int lastReportPage = 0;
+    private static String lastEra = null;
+    private static String lastDiet = null;
+    private static int lastListPage = 0;
+    /** Species buttons per page of the Guide list. */
+    private static final int LIST_ROWS = 10;
 
     private final Map<String, LivingEntity> models = new HashMap<>();
     private String tab;
@@ -86,21 +91,92 @@ public class NotebookScreen extends Screen {
                     .bounds(this.left + W - 80, this.top + H - 24, 70, 16).build());
         }
         if (this.tab.equals("guide")) {
-            int y = this.top + 20;
-            for (GuideSpecies s : GuideSpecies.ALL) {
-                int level = ClientResearch.get().level(s.id());
-                Component name = level >= Knowledge.SIGHTED ? Component.translatable("entity.terrassic." + s.id())
-                        : Component.translatable("notebook.terrassic.guide.unknown");
-                Button b = Button.builder(name, button -> {
-                    lastSpecies = s.id();
-                    this.scroll = 0;
-                    this.rebuildWidgets();
-                }).bounds(this.left + 8, y, 104, 12).build();
-                b.active = !s.id().equals(this.selectedSpecies());
-                this.addRenderableWidget(b);
-                y += 13;
+            this.guideList();
+        }
+    }
+
+    /**
+     * Guide tab, left column: era and diet filters (each button cycles through the values present in the Guide,
+     * starting with "all"), one page of species buttons and the page turner. Built for hundreds of species.
+     */
+    private void guideList() {
+        int x = this.left + 8;
+        List<String> eras = values(true);
+        List<String> diets = values(false);
+        Component era = lastEra == null ? Component.translatable("notebook.terrassic.guide.all_eras")
+                : Component.translatable("era.terrassic." + lastEra);
+        Component diet = lastDiet == null ? Component.translatable("notebook.terrassic.guide.all_diets")
+                : Component.translatable("diet.terrassic." + lastDiet);
+        this.addRenderableWidget(Button.builder(era, b -> {
+            lastEra = next(eras, lastEra);
+            lastListPage = 0;
+            this.rebuildWidgets();
+        }).bounds(x, this.top + 18, 104, 12).build());
+        this.addRenderableWidget(Button.builder(diet, b -> {
+            lastDiet = next(diets, lastDiet);
+            lastListPage = 0;
+            this.rebuildWidgets();
+        }).bounds(x, this.top + 31, 104, 12).build());
+
+        List<GuideSpecies> shown = filtered();
+        int pages = Math.max(1, (shown.size() + LIST_ROWS - 1) / LIST_ROWS);
+        lastListPage = Mth.clamp(lastListPage, 0, pages - 1);
+        int y = this.top + 47;
+        for (GuideSpecies s : shown.subList(lastListPage * LIST_ROWS, Math.min(shown.size(), (lastListPage + 1) * LIST_ROWS))) {
+            int level = ClientResearch.get().level(s.id());
+            Component name = level >= Knowledge.SIGHTED ? Component.translatable("entity.terrassic." + s.id())
+                    : Component.translatable("notebook.terrassic.guide.unknown");
+            Button b = Button.builder(name, button -> {
+                lastSpecies = s.id();
+                this.scroll = 0;
+                this.rebuildWidgets();
+            }).bounds(x, y, 104, 12).build();
+            b.active = !s.id().equals(this.selectedSpecies());
+            this.addRenderableWidget(b);
+            y += 13;
+        }
+        if (pages > 1) {
+            Button prev = Button.builder(Component.literal("<"), b -> {
+                lastListPage--;
+                this.rebuildWidgets();
+            }).bounds(x, this.top + H - 20, 18, 12).build();
+            Button next = Button.builder(Component.literal(">"), b -> {
+                lastListPage++;
+                this.rebuildWidgets();
+            }).bounds(x + 86, this.top + H - 20, 18, 12).build();
+            prev.active = lastListPage > 0;
+            next.active = lastListPage < pages - 1;
+            this.addRenderableWidget(prev);
+            this.addRenderableWidget(next);
+        }
+    }
+
+    /** The eras (or diets) used by the Guide, in Guide order. */
+    private static List<String> values(boolean era) {
+        List<String> out = new ArrayList<>();
+        for (GuideSpecies s : GuideSpecies.ALL) {
+            String v = era ? s.era() : s.diet();
+            if (!out.contains(v)) {
+                out.add(v);
             }
         }
+        return out;
+    }
+
+    /** Cycles null ("all") -> first value -> ... -> last value -> null. */
+    private static String next(List<String> values, String current) {
+        int i = current == null ? -1 : values.indexOf(current);
+        return i + 1 < values.size() ? values.get(i + 1) : null;
+    }
+
+    private static List<GuideSpecies> filtered() {
+        List<GuideSpecies> out = new ArrayList<>();
+        for (GuideSpecies s : GuideSpecies.ALL) {
+            if ((lastEra == null || lastEra.equals(s.era())) && (lastDiet == null || lastDiet.equals(s.diet()))) {
+                out.add(s);
+            }
+        }
+        return out;
     }
 
     private void select(String id) {
@@ -224,6 +300,14 @@ public class NotebookScreen extends Screen {
         }
         g.drawString(this.font, Component.translatable("notebook.terrassic.guide.count", recorded, GuideSpecies.ALL.size()),
                 this.left + 10, this.top + 8, INK_SOFT, false);
+        int shown = filtered().size();
+        int pages = Math.max(1, (shown + LIST_ROWS - 1) / LIST_ROWS);
+        if (shown == 0) {
+            this.text(g, Component.translatable("notebook.terrassic.guide.empty"), this.left + 10, this.top + 49, 100, INK_SOFT);
+        } else if (pages > 1) {
+            Component label = Component.translatable("notebook.terrassic.guide.page", lastListPage + 1, pages);
+            g.drawString(this.font, label, this.left + 60 - this.font.width(label) / 2, this.top + H - 18, INK_SOFT, false);
+        }
 
         GuideSpecies s = GuideSpecies.byId(this.selectedSpecies());
         int level = k.level(s.id());
