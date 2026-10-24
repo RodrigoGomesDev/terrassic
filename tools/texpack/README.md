@@ -31,6 +31,9 @@ O `build.py` falha se uma textura ficar a mais de 14 de brilho ou 20 de contrast
 | `workshop.py` | Bancada, fornalha e tocha |
 | `masonry.py` | Construção e chão: fiadas de pedra (musgo, rachaduras, amonite entalhada), tijolos, musgo, terra arada, caminho com pegada, palha, neve, cana, vitória-régia |
 | `flowers.py` | As 12 flores pequenas em formas de angiosperma primitiva (taça de magnólia, aberta, sininhos, umbela, estrela, tulipa), mantendo a cor do corante |
+| `terrain.py` | Terreno dos biomas: areia e arenito vermelhos (garra em foice no entalhado), 17 terracotas, adobe e barro com palha, raízes do mangue, gelos, neve fofa, rocha de gotejamento, micélio |
+| `fungi.py` | Fungos e sub-bosque: blocos de cogumelo gigante, cogumelos pequenos, arbusto de frutinhas (4 estágios), raízes pendentes, líquen de caverna. `sprite()` aceita letras como cores fixas |
+| `filters.py` | Filtro da era (camada D): números por era, o programa GLSL e a mesma gradação em numpy para a prévia |
 | `rocks.py` | Rochas do vanilla (cristais, lapilli, lâminas) e os 16 minérios em veios sobre a pedra e a ardósia do pacote |
 | `build.py` | Tabela textura do vanilla -> desenho, blockstates com variantes sorteadas, `pack.mcmeta`, `pack.png` e conferências |
 | `pack_lang.py` | Nome e descrição de cada pacote nos 3 idiomas (o `gen_resources.py` junta no lang do mod) |

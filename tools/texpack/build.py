@@ -12,7 +12,8 @@ lichen on oak, moss on jungle), the leaves, the ground plants (horsetails and fe
 furnace and the torch. Batch 3 adds the vanilla rocks (granite, diorite, andesite, tuff, deepslate, calcite)
 and the sixteen ores, in natural veins on the pack's own stone and deepslate, plus the chest. Batch 3b adds the
 building and ground blocks (stone bricks, bricks, moss, farmland, path, hay, snow, sugar cane, lily pad);
-batch 3c the twelve small flowers in early-angiosperm shapes. The pack also carries the era filter (filters.py):
+batch 3c the twelve small flowers in early-angiosperm shapes; batch 3d the ground of the biomes (laterite sand, red
+sandstone, terracotta, mud, roots, ice, flowstone, mycelium) and the fungi and undergrowth. The pack also carries the era filter (filters.py):
 a post chain the mod draws over the world, a light warm and faded colour grade.
 The pack name and description are lang keys of the mod (pack.terrassic.<era>), so they read in all three languages.
 """
@@ -30,8 +31,10 @@ import preview as P  # noqa: E402
 import leaves as LV  # noqa: E402
 import plants as PL  # noqa: E402
 import flowers as FL  # noqa: E402
+import fungi as FG  # noqa: E402
 import masonry as MS  # noqa: E402
 import rocks as RK  # noqa: E402
+import terrain as TR  # noqa: E402
 import tex as T  # noqa: E402
 import woods as WD  # noqa: E402
 import workshop as WS  # noqa: E402
@@ -88,6 +91,13 @@ for _name, _img in FL.ALL.items():
 # batch 3b: building and ground (cutouts and the path side are not seamless tiles)
 for _name, _img in MS.ALL.items():
     CRETACEO[_name] = (_img, _name not in ("sugar_cane", "lily_pad", "dirt_path_side", "chiseled_stone_bricks"))
+# batch 3d: the ground of the biomes (sands, terracotta, mud, roots, ice) and fungi and undergrowth
+NOT_TILES = {"red_sandstone", "cut_red_sandstone", "chiseled_red_sandstone", "mycelium_side", "mangrove_roots_side",
+             "mangrove_roots_top", "ice"}  # banded sides like the yellow sandstone; cutouts; see-through ice
+for _name, _img in TR.ALL.items():
+    CRETACEO[_name] = (_img, _name not in NOT_TILES)
+for _name, _img in FG.ALL.items():
+    CRETACEO[_name] = (_img, _name.endswith("_block") or _name in ("mushroom_stem", "mushroom_block_inside"))
 
 # entity textures (64x64 atlases): path under assets/minecraft/textures/ -> image
 CRETACEO_ENTITY = {f"entity/chest/{k}": v for k, v in WS.CHESTS.items()}
@@ -188,7 +198,7 @@ def check(name, img, natural):
 # the workshop faces are drawings (tools on wood, a lit kiln, a torch), judged by eye rather than by the numbers
 # deep coal and iron: our deepslate holds fewer, smaller blebs than vanilla's big spots, by design
 OFF_TARGET = {"grass_block_side", "crafting_table_side", "crafting_table_front", "furnace_front_on", "torch",
-              "deepslate_coal_ore", "deepslate_iron_ore"} | set(FL.ALL)
+              "deepslate_coal_ore", "deepslate_iron_ore", "mycelium_side"} | set(FL.ALL)
 # flowers are small drawings whose colour is their dye: judged by eye, like the workshop
 
 
@@ -391,6 +401,59 @@ def preview_batch3(era, table):
     save_png(P.sheet(meadow, f"Terrassic: pacote {NAMES[era]}, flores", cols=6), os.path.join(PREVIEWS, f"{era}_flores.png"))
 
 
+def preview_batch3d(era, table):
+    tx = {k: v[0] for k, v in table.items()}
+    save_png(P.sheet([(n, tx[n]) for n in TR.ALL], f"Terrassic: pacote {NAMES[era]}, terreno dos biomas", cols=8),
+             os.path.join(PREVIEWS, f"{era}_terreno.png"))
+    items = []
+    for n in FG.ALL:
+        bg = Image.new("RGBA", (16, 16), (110, 150, 80, 255))
+        bg.alpha_composite(tx[n])
+        items.append((n, bg))
+    save_png(P.sheet(items, f"Terrassic: pacote {NAMES[era]}, fungos e arbustos", cols=6),
+             os.path.join(PREVIEWS, f"{era}_fungos.png"))
+    # three small landscapes: a badland mesa, a mangrove shore, an ice field
+    gtop = P.tint(tx["grass_block_top"], GRASS_TINT)
+    gside = P.over(tx["grass_block_side"], P.tint(tx["grass_block_side_overlay"], GRASS_TINT))
+    strata = ["terracotta", "orange_terracotta", "yellow_terracotta", "white_terracotta", "red_terracotta",
+              "brown_terracotta", "light_gray_terracotta"]
+    mesa = {}
+    for x in range(4):
+        for z in range(4):
+            mesa[(x, 0, z)] = (tx["red_sand"],) * 3
+    for x in range(2):
+        for z in range(2):
+            for y in range(1, 6 - x - z):
+                c = tx[strata[y % len(strata)]]
+                mesa[(x, y, z)] = (c, c, c)
+    mesa[(3, 1, 3)] = (tx["red_sandstone_top"], tx["red_sandstone"], tx["red_sandstone"])
+    mesa[(2, 1, 3)] = (tx["red_sandstone_top"], tx["chiseled_red_sandstone"], tx["chiseled_red_sandstone"])
+    shore = {}
+    for x in range(4):
+        for z in range(4):
+            shore[(x, 0, z)] = (tx["mud"],) * 3 if x + z > 2 else (gtop, gside, gside)
+    shore[(2, 1, 2)] = (tx["muddy_mangrove_roots_top"], tx["muddy_mangrove_roots_side"], tx["muddy_mangrove_roots_side"])
+    shore[(3, 1, 2)] = (tx["mangrove_roots_top"], tx["mangrove_roots_side"], tx["mangrove_roots_side"])
+    shore[(3, 1, 3)] = (tx["packed_mud"],) * 3
+    shore[(3, 2, 3)] = (tx["mud_bricks"],) * 3
+    shore[(0, 1, 0)] = (tx["mycelium_top"], tx["mycelium_side"], tx["mycelium_side"])
+    shore[(1, 1, 0)] = (tx["red_mushroom_block"],) * 3
+    shore[(0, 1, 1)] = (tx["mushroom_stem"],) * 3
+    shore[(0, 2, 1)] = (tx["brown_mushroom_block"],) * 3
+    field = {}
+    for x in range(4):
+        for z in range(4):
+            field[(x, 0, z)] = (tx["packed_ice"],) * 3 if (x + z) % 3 else (tx["blue_ice"],) * 3
+    field[(1, 1, 1)] = (tx["powder_snow"],) * 3
+    field[(2, 1, 1)] = (tx["snow"],) * 3
+    field[(3, 1, 3)] = (tx["dripstone_block"],) * 3
+    field[(3, 2, 3)] = (tx["dripstone_block"],) * 3
+    scenes = [("mesa", P.diorama_culled(mesa, S=32, bg=SKY)), ("manguezal", P.diorama_culled(shore, S=32, bg=SKY)),
+              ("gelo", P.diorama_culled(field, S=32, bg=SKY))]
+    save_png(P.sheet_images(scenes, f"Terrassic: pacote {NAMES[era]}, paisagens", cols=3),
+             os.path.join(PREVIEWS, f"{era}_paisagens.png"))
+
+
 def write_text(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as f:
@@ -436,6 +499,7 @@ def build(era, table, extra):
     preview(era, table, extra)
     preview_batch2(era, table)
     preview_batch3(era, table)
+    preview_batch3d(era, table)
     preview_filter(era)
 
 

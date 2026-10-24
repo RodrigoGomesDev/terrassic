@@ -145,6 +145,7 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 | TX3 | **Rochas do vanilla** desenhadas pelo que são feitas (granito e diorito em cristais entrelaçados, andesito fino com fenocristais, tufo com lapilli, ardósia em lâminas, calcita com clivagem) e os **16 minérios** em veios naturais sobre a pedra e a ardósia do próprio pacote: carvão em camada, limonita enferrujada, malaquita com cobre nativo, ouro em veio de quartzo, cinábrio, lazurita com pirita, diamante em bolsão de kimberlito, esmeralda em veio de calcita | ✓ |
 | TX3b | **Construção e chão:** tijolos de pedra em fiadas lavradas à mão (com musgo, rachados e um entalhado com amonite), tijolos queimados em argamassa de cal, bloco de musgo, terra arada (seca e molhada), caminho batido com uma pegada de terópode, fardo de palha amarrado, neve; a cana-de-açúcar vira cavalinha gigante e a vitória-régia ganha folha entalhada com nervuras | ✓ |
 | TX3c | **Flores:** as 12 flores pequenas em formas das primeiras plantas com flor (taça de tépalas como a magnólia, flor aberta, sininhos, umbela, estrela, tulipa fechada), cada uma mantendo a cor que dá o corante | ✓ |
+| TX3d | **Terreno dos biomas:** areia laterítica e arenito vermelho (o entalhado traz a garra em foice de um dromeossaurídeo), as 17 terracotas como argila queimada com estratos leves em pigmentos de terra, tijolos de adobe e barro batido com palha, raízes do mangue (soltas e na lama), gelo velho rachado (translúcido), gelo compactado, gelo azul de geleira com trilhas de bolhas, neve fofa, rocha de gotejamento em camadas, micélio como manta de fungo. **Fungos e sub-bosque:** cogumelos gigantes como orelhas-de-pau com anéis de crescimento e chapéu vermelho com verrugas, caule fibroso, poros por baixo, cogumelos pequenos, o arbusto de frutinhas nos 4 estágios, raízes pendentes e um líquen pálido de caverna. O cacto e o bambu ficam de fora (não existiam no Cretáceo; o mundo Terrassic nem gera) | ✓ |
 | TX4 | Interface: botões, inventário, baús, fornalha, fundo dos menus, barra de itens, em couro, osso e pedra | ○ |
 | TX5 | Filtro da era (camada D) | ✓ |
 | TX6 | Refazer os blocos do mod com o motor novo: a thread de blocos usa `tools/texpack/api.py` e `materials.py` (decisão do Rodrigo, 24/10) | 🔄 |
@@ -167,6 +168,10 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
   sem costura, a trava de osso fica na frente e o interior aparece ao abrir.
 - Lote 3b: o caminho mostra as pegadas em sequência como uma trilha; a terra arada lê como sulcos, seca e
   molhada; a cana (cavalinha) e a vitória-régia recebem a cor do bioma.
+- Lote 3d: uma mesa (badlands) mostra os estratos de terracota coerentes entre si; o gelo comum continua
+  translúcido (dá para ver a água e o fundo) e o compactado e o azul ficam opacos; as raízes do mangue deixam ver
+  através; o arbusto de frutinhas muda nos 4 estágios e os frutos maduros aparecem; os cogumelos gigantes leem como
+  fungos (topo, caule e lado de dentro); o líquen de caverna brilha e não fica estranho na pedra do pacote.
 - Filtro (TX5): no mundo a imagem fica levemente quente e com vinheta, a mão e o HUD não mudam; `"era_filter":
   false` em `config/terrassic-packs.json` (e F3+T ou reiniciar) desliga; força 0 e 1 mudam a intensidade; desligar
   o pacote no menu desliga o filtro; com shaderpack do Iris/Oculus o filtro não aparece; nada de tela preta ao
