@@ -135,7 +135,7 @@ Legenda e regras em [README.md](README.md). Negrito = já tem versão no plano (
 | 90 | Anzu | Oviraptorossauro | 🦖 | Onívoro | 3,5 m | Onívoro médio | Defensivo | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 91 | **Citipati** | Oviraptorossauro | 🦖 | Onívoro | 3 m | Onívoro médio | Defensivo | Comida | — | Choca ovos mais rápido quando fica no ninho | v0.7 |
 | 92 | Chirostenotes | Oviraptorossauro | 🦖 | Onívoro | 2,5 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
-| 93 | **Oviraptor** | Oviraptorossauro | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Aumenta a chance de ovos dos dinos domesticados por perto | v0.7 |
+| 93 | **Oviraptor** | Oviraptorossauro | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | ✅ | Aumenta a chance de ovos dos dinos domesticados por perto | v0.7 |
 | 94 | Rinchenia | Oviraptorossauro | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 95 | Nemegtomaia | Oviraptorossauro | 🦖 | Onívoro | 2 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |
 | 96 | Corythoraptor | Oviraptorossauro | 🦖 | Onívoro | 1,6 m | Onívoro médio | Arisco | Comida | — | Coleta (frutas, sementes, fibra) |  |

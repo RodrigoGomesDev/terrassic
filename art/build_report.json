@@ -1669,5 +1669,41 @@
    "animation.troodon.tame"
   ],
   "render_scale": 1.0
+ },
+ "oviraptor": {
+  "bones": 23,
+  "cubes": 40,
+  "texture": [
+   128,
+   64
+  ],
+  "bounds_px": [
+   [
+    -6.0,
+    -0.2926536401549906,
+    -21.86886944833715
+   ],
+   [
+    6.0,
+    35.51449186126225,
+    27.0000313660801
+   ]
+  ],
+  "animations": [
+   "animation.oviraptor.idle",
+   "animation.oviraptor.walk",
+   "animation.oviraptor.run",
+   "animation.oviraptor.sit",
+   "animation.oviraptor.graze",
+   "animation.oviraptor.attack",
+   "animation.oviraptor.knocked_out",
+   "animation.oviraptor.wake",
+   "animation.oviraptor.eat",
+   "animation.oviraptor.beg",
+   "animation.oviraptor.tame",
+   "animation.oviraptor.display",
+   "animation.oviraptor.brood"
+  ],
+  "render_scale": 1.0
  }
 }

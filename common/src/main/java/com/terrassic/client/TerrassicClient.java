@@ -30,6 +30,7 @@ import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Majungasaurus;
 import com.terrassic.entity.Mosasaurus;
 import com.terrassic.entity.Opisthocoelicaudia;
+import com.terrassic.entity.Oviraptor;
 import com.terrassic.entity.Pachycephalosaurus;
 import com.terrassic.entity.Pachyrhinosaurus;
 import com.terrassic.entity.Parasaurolophus;
@@ -103,6 +104,7 @@ public final class TerrassicClient {
         renderer(ModEntities.MAJUNGASAURUS, "majungasaurus", Majungasaurus.MODEL_SCALE, Majungasaurus.SHADOW);
         renderer(ModEntities.DAKOTARAPTOR, "dakotaraptor", Dakotaraptor.MODEL_SCALE, Dakotaraptor.SHADOW);
         renderer(ModEntities.TROODON, "troodon", Troodon.MODEL_SCALE, Troodon.SHADOW);
+        renderer(ModEntities.OVIRAPTOR, "oviraptor", Oviraptor.MODEL_SCALE, Oviraptor.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

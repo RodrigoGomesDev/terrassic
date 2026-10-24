@@ -16,6 +16,17 @@ os ninhos selvagens são a forma de ter um predador antes do nocaute (v0.7): rou
 
 Nada muda para os domados: um casal domado alimentado põe um ovo comum, como antes.
 
+## O dom do ladrão de ovos (Oviraptor, fase 79)
+
+Flag `egg_boost` do gerador. Um **Oviraptor** domado, adulto e acordado, a cada 5 s, tira mais 5 s do descanso de
+procriação (`getAge() > 0`) de todo dinossauro domado adulto a 16 blocos: o casal alimentado volta a aceitar
+comida em metade do tempo e põe ovos com o dobro da frequência. As galinhas no mesmo raio têm o `eggTime`
+encurtado no mesmo ritmo. Não mexe nos selvagens nem nos filhotes. Por ter `customServerAiStep`, a flag é
+incompatível com `roar`, `display`, `scoop`, `forage` e `night_guard` na mesma espécie.
+
+Teste humano: dois dinos domados + um Oviraptor domado perto; o intervalo entre ovos deve cair pela metade;
+galinhas perto botam visivelmente mais.
+
 ## O que falta
 
 - Conquista "Ladrão de ninhos" (roubar um ovo selvagem) na aba Caderno de Campo: espera a thread de conquistas.

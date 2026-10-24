@@ -66,6 +66,7 @@ SIZES = {
     "majungasaurus":      dict(real=7.5,  scale=1.26, w=1.6, h=3.0, baby=0.3,  shadow=1.5),
     "dakotaraptor":       dict(real=5.5,  scale=1.14, w=1.0, h=2.0, baby=0.4,  shadow=0.8),
     "troodon":            dict(real=2.4,  scale=0.55, w=0.6, h=1.1, baby=0.5,  shadow=0.4),
+    "oviraptor":          dict(real=2.0,  scale=0.65, w=0.7, h=1.4, baby=0.5,  shadow=0.45),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -136,6 +137,7 @@ GUIDE = {
     "majungasaurus":      dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "dakotaraptor":       dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "troodon":            dict(era="late_cretaceous", diet="carnivore", fossil=4),
+    "oviraptor":          dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -192,6 +194,7 @@ WORLD = {
     "majungasaurus":      dict(biomes=("jungle", "savanna", "river"), weight=2, group=(1, 2), track=10),  # Madagascar's seasonal floodplain
     "dakotaraptor":       dict(biomes=("plains", "forest", "river"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain, small packs
     "troodon":            dict(biomes=("forest", "taiga", "plains"), weight=5, group=(1, 3), track=8),   # Judith River woodland, pairs
+    "oviraptor":          dict(biomes=("desert", "badlands", "savanna"), weight=5, group=(2, 4), track=8),  # the Djadochta dunes
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -427,6 +430,12 @@ SPECIES = [
       xp=10, head=(50, 40), run=0.03,
       prey="e.getBbWidth() < 0.9F && !(e instanceof Troodon)",
       nocturnal=True, night_guard=True, leap=True, prey_interval=80),
+ dict(id="oviraptor", cls="Oviraptor", base="HerbivoreDinosaur",
+      doc="Oviraptor philoceratops - 2 m toothless oviraptorosaur of the Gobi dunes, the \"egg thief\" that was brooding its own nest. A skittish omnivore in small groups, tamed with eggs, seeds or berries. A tame adult makes the tame dinosaurs and the chickens around it lay more often (docs/NINHOS.md).",
+      attrs=dict(MAX_HEALTH=18, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
+      food="Items.EGG, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES",
+      sounds=("PARROT_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.7, 0.9, 200), xp=6, run=0.03,
+      skittish=True, egg_boost=True),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -732,6 +741,32 @@ def gen(s, bounds):
     if s.get("leap"):
         imports.add("net.minecraft.world.entity.ai.goal.LeapAtTargetGoal")
         goals.append("        this.goalSelector.addGoal(2, new LeapAtTargetGoal(this, 0.4F));")
+    if s.get("egg_boost"):
+        # the egg thief's gift (docs/NINHOS.md): every five seconds a tame, grown, awake animal takes five more seconds off
+        # the breeding rest of the tame dinosaurs within sixteen blocks (eggs twice as often) and brings the chickens
+        # there to lay sooner. Owns customServerAiStep: incompatible with roar/display/scoop/forage/night_guard.
+        assert not (s.get("roar") or s.get("display") or s.get("scoop") or s.get("forage") or s.get("night_guard")), s["id"] + ": egg_boost owns customServerAiStep"
+        imports.add("net.minecraft.world.entity.animal.Chicken")
+        body.append("""    /** The egg thief's gift (docs/NINHOS.md): tame, grown and awake, every five seconds it takes five more seconds off
+     *  the breeding rest of the tame dinosaurs within sixteen blocks (so a fed pair lays twice as often) and brings
+     *  the chickens there to lay sooner. */
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.tickCount % 100 != 0 || !this.isTame() || this.isBaby() || this.isSleeping()) {
+            return;
+        }
+        for (DinosaurEntity dino : this.level().getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(16.0D),
+                e -> e != this && e.isTame() && !e.isBaby() && e.getAge() > 0)) {
+            dino.setAge(Math.max(0, dino.getAge() - 100));
+        }
+        for (Chicken chicken : this.level().getEntitiesOfClass(Chicken.class, this.getBoundingBox().inflate(16.0D))) {
+            if (!chicken.isBaby() && chicken.eggTime > 100) {
+                chicken.eggTime -= 100;
+            }
+        }
+    }
+""")
     if s.get("night_guard"):
         # the night guard (docs/GUARDA.md): a tame adult, awake and standing at night, goes for hostile mobs within ten
         # blocks (never a creeper, like the wolf); its owner within twelve blocks sees in the dark while it watches.

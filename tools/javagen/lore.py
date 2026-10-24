@@ -935,6 +935,22 @@ GUIDE = {
         note=("Os olhos dele acenderam antes da lanterna. Dormi bem pela primeira vez.",
               "Its eyes lit up before the lantern did. I slept well for the first time.",
               "Sus ojos se encendieron antes que la linterna. Dormí bien por primera vez.")),
+    "oviraptor": dict(
+        sci=("Viveu há 75 a 71 milhões de anos nas dunas do Gobi (Formação Djadochta, Mongólia). Cerca de 2 m e 35 kg: bico curto, fundo e sem dentes, como de papagaio, uma crista pequena no crânio, braços longos com três dedos e penas de asa, cauda curta com leque. Batizado \"ladrão de ovos\" em 1924 por estar sobre um ninho que se julgava de Protoceratops; o ninho era dele mesmo, e ele chocava.",
+             "Lived 75 to 71 million years ago in the Gobi dunes (Djadochta Formation, Mongolia). About 2 m and 35 kg: a short, deep, toothless parrot-like beak, a small crest on the skull, long arms with three fingers and wing feathers, a short tail with a fan. Named \"egg thief\" in 1924 for lying over a nest thought to be a Protoceratops'; the nest was its own, and it was brooding.",
+             "Vivió hace 75 a 71 millones de años en las dunas del Gobi (Formación Djadochta, Mongolia). Unos 2 m y 35 kg: pico corto, profundo y sin dientes, como de loro, una cresta pequeña en el cráneo, brazos largos con tres dedos y plumas de ala, cola corta con abanico. Bautizado \"ladrón de huevos\" en 1924 por estar sobre un nido que se creía de Protoceratops; el nido era suyo, y estaba incubando."),
+        behavior=("Deserto, badlands e savana, em grupos de dois a quatro. Arisco: foge de quem chega perto. Onívoro: bica o chão atrás de sementes e come ovos.",
+                  "Desert, badlands and savanna, in groups of two to four. Skittish: it runs from whoever comes close. Omnivore: it pecks the ground for seeds and eats eggs.",
+                  "Desierto, badlands y sabana, en grupos de dos a cuatro. Arisco: huye de quien se acerca. Omnívoro: picotea el suelo buscando semillas y come huevos."),
+        taming=("Pela mão, com ovo, sementes ou frutinhas.",
+                "By hand, with an egg, seeds or sweet berries.",
+                "A mano, con huevo, semillas o bayas."),
+        utility=("O dom do ladrão de ovos: domado, os dinossauros domados e as galinhas a 16 blocos dele põem ovos com o dobro da frequência.",
+                 "The egg thief's gift: tamed, the tame dinosaurs and the chickens within 16 blocks of it lay twice as often.",
+                 "El don del ladrón de huevos: domado, los dinosaurios domados y las gallinas a 16 bloques de él ponen huevos el doble de seguido."),
+        note=("Cem anos de má fama por um ninho que era dele. Devo-lhe um pedido de desculpas e uma cesta de ovos.",
+              "A hundred years of bad press over a nest that was its own. I owe it an apology and a basket of eggs.",
+              "Cien años de mala fama por un nido que era suyo. Le debo una disculpa y una cesta de huevos.")),
 }
 
 ERAS = {
