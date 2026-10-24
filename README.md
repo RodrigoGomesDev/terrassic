@@ -1,4 +1,4 @@
-# PrimalEra — v0.2.0
+# Terrassic — v0.2.0
 
 Mod de dinossauros para **Minecraft 1.20.1** que roda em **Fabric e Forge** (multi-loader com Architectury). Os modelos 3D são animados no estilo do Cobblemon (cubos low-poly e animações GeckoLib) e foram reconstruídos a partir de medidas reais de fósseis.
 
@@ -66,7 +66,7 @@ Os sons ainda são placeholders do vanilla (ravager, sniffer, camelo, cabra, rap
 Pré-requisito: **JDK 21** para rodar o Gradle. O mod é compilado para Java 17.
 
 ```bash
-cd ~/projects/PrimalEra
+cd ~/projects/Terrassic
 ./gradlew :fabric:runClient     # abre o jogo com o mod (Fabric)
 ./gradlew :forge:runClient      # idem (Forge)
 ./gradlew build                 # jars em fabric/build/libs e forge/build/libs
@@ -74,13 +74,13 @@ cd ~/projects/PrimalEra
 
 Para jogar fora do ambiente de desenvolvimento, coloque o jar na pasta `mods` junto com **Architectury API 9.2.x** e **GeckoLib 4.x para 1.20.1**. No Fabric, inclua também a **Fabric API**.
 
-Para testar rápido, use a aba criativa **PrimalEra** ou comandos como `/summon primalera:brachiosaurus`.
+Para testar rápido, use a aba criativa **Terrassic** ou comandos como `/summon terrassic:brachiosaurus`.
 
 ## Estrutura
 
 ```
-PrimalEra/
-├── common/src/main/java/com/primalera/
+Terrassic/
+├── common/src/main/java/com/terrassic/
 │   ├── entity/      DinosaurEntity (base: sexo, domesticação, montaria, ovos),
 │   │                HerbivoreDinosaur, PredatorDinosaur, 12 espécies, ThrownSpear
 │   ├── block/       DinoEggBlock (ovos que chocam)
@@ -88,7 +88,7 @@ PrimalEra/
 │   ├── registry/    entidades, blocos, itens, aba criativa
 │   ├── world/       spawns por bioma
 │   └── client/      DinoGeoModel (textura por sexo, ossos male_/female_/saddle), renderers
-├── common/src/main/resources/assets/primalera/   modelos, animações, texturas, sprites, lang (pt_br/en_us)
+├── common/src/main/resources/assets/terrassic/   modelos, animações, texturas, sprites, lang (pt_br/en_us)
 ├── fabric/  forge/  só o ponto de entrada de cada loader + metadados
 ├── art/<especie>/   ★ .bbmodel editáveis no Blockbench, texturas macho/fêmea, previews e GIFs
 └── tools/

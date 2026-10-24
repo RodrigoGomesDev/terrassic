@@ -1,5 +1,5 @@
 """
-PrimalEra model generator - rig primitives.
+Terrassic model generator - rig primitives.
 
 Coordinate system (same as what you see in Blockbench, "B-space"):
   * units are pixels (16 px = 1 block)

@@ -1,15 +1,15 @@
 """
-PrimalEra 16x16 pixel-art generator: spawn eggs (one unique sprite per species), dinosaur egg block textures
+Terrassic 16x16 pixel-art generator: spawn eggs (one unique sprite per species), dinosaur egg block textures
 (3 hatch stages) and archaic weapons / materials.  Everything is drawn with code (no external art).
 
-usage: python3 sprites.py   -> writes into common/src/main/resources/assets/primalera/textures/{item,block}
+usage: python3 sprites.py   -> writes into common/src/main/resources/assets/terrassic/textures/{item,block}
 """
 import math
 import os
 from PIL import Image
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-TEX = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "primalera", "textures")
+TEX = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures")
 
 
 def hexc(h, a=255):
@@ -277,6 +277,16 @@ def spawn_eggs():
     eye(cv, 10, 4, "#d89a2a")
     eggs["gallimimus"] = cv
 
+    # Pteranodon: grey-white egg with a slate wing band and a red crest sweeping back
+    cv = base_egg(None, "#77736a", "#ece6d8")
+    for x in range(3, 13):
+        if inside(cv, x, 10):
+            cv.set(x, 10, hexc("#6a5244"))
+    cv.set(4, 3, hexc("#c0482a")); cv.set(5, 3, hexc("#c0482a")); cv.set(3, 2, hexc("#e8a040")); cv.set(6, 4, hexc("#c0482a"))
+    cv.set(11, 6, hexc("#d8c08a")); cv.set(12, 6, hexc("#d8c08a")); cv.set(13, 7, hexc("#b8a070"))
+    eye(cv, 9, 5, "#d8a838")
+    eggs["pteranodon"] = cv
+
     for name, cv in eggs.items():
         cv.outline(0.45)
         cv.save(os.path.join(TEX, "item", f"{name}_spawn_egg.png"))
@@ -292,6 +302,7 @@ EGG_BLOCK = {
     "stegosaurus": ("#dfe0c4", "#5f6b3c"), "ankylosaurus": ("#d8ccb0", "#6b5f48"),
     "brachiosaurus": ("#e2e2d6", "#7f8984"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "gallimimus": ("#f0ece0", "#9c917c"),
+    "pteranodon": ("#e6e2d4", "#5c6870"),
 }
 
 

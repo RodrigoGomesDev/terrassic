@@ -345,5 +345,35 @@
    "animation.gallimimus.attack"
   ],
   "render_scale": 1.0
+ },
+ "pteranodon": {
+  "bones": 29,
+  "cubes": 44,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -54.0,
+    0.0,
+    -34.43266053145962
+   ],
+   [
+    54.0,
+    28.45032955902645,
+    12.0
+   ]
+  ],
+  "animations": [
+   "animation.pteranodon.idle",
+   "animation.pteranodon.walk",
+   "animation.pteranodon.run",
+   "animation.pteranodon.fly",
+   "animation.pteranodon.glide",
+   "animation.pteranodon.sit",
+   "animation.pteranodon.attack"
+  ],
+  "render_scale": 1.0
  }
 }

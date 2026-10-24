@@ -3,37 +3,37 @@ loaderVersion = "[47,)"
 license = "All-Rights-Reserved"
 
 [[mods]]
-modId = "primalera"
+modId = "terrassic"
 version = "${version}"
-displayName = "PrimalEra"
+displayName = "Terrassic"
 authors = "Rodrigo Gomes (Grupo Permaneo)"
-logoFile = "assets/primalera/icon.png"
+logoFile = "assets/terrassic/icon.png"
 description = '''
 Real dinosaurs rebuilt from fossil references: 12 species from the tiny Compsognathus to the giant Brachiosaurus, males and females, eggs that hatch, taming, riding and archaic weapons.
 '''
 
-[[dependencies.primalera]]
+[[dependencies.terrassic]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.primalera]]
+[[dependencies.terrassic]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,1.20.2)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.primalera]]
+[[dependencies.terrassic]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.2.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.primalera]]
+[[dependencies.terrassic]]
 modId = "geckolib"
 mandatory = true
 versionRange = "[4.4.0,)"

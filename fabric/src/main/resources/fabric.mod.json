@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "id": "primalera",
+  "id": "terrassic",
   "version": "${version}",
-  "name": "PrimalEra",
+  "name": "Terrassic",
   "description": "Real dinosaurs rebuilt from fossil references: 12 species from the tiny Compsognathus to the giant Brachiosaurus, males and females, eggs that hatch, taming, riding and archaic weapons.",
   "authors": [
     "Rodrigo Gomes (Grupo Permaneo)"
   ],
   "contact": {},
   "license": "All-Rights-Reserved",
-  "icon": "assets/primalera/icon.png",
+  "icon": "assets/terrassic/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.primalera.fabric.PrimalEraFabric"
+      "com.terrassic.fabric.TerrassicFabric"
     ]
   },
   "depends": {
