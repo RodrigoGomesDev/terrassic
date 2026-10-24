@@ -2,8 +2,57 @@
 Behaviour that is shared lives in DinosaurEntity / HerbivoreDinosaur / PredatorDinosaur; here each species only
 sets numbers, food, sounds and a few overrides. Re-run after editing SPECIES:  python3 gen_species.py
 """
+import json
 import os
-OUT = os.path.join(os.path.dirname(__file__), "..", "..", "common", "src", "main", "java", "com", "primalera", "entity")
+OUT = os.path.join(os.path.dirname(__file__), "..", "..", "common", "src", "main", "java", "com", "terrassic", "entity")
+GUIDE_OUT = os.path.join(os.path.dirname(OUT), "research", "GuideSpecies.java")
+REPORT = os.path.join(os.path.dirname(__file__), "..", "..", "art", "build_report.json")
+
+# In-game size of each species. 1 block = 1 metre, so the player (1.8 blocks) is a 1.8 m tall person.
+# scale  = renderer scale of the GeckoLib model (the model's pixel size comes from tools/modelgen,
+#          see art/build_report.json); length = scale * model length.
+# w, h   = hitbox in blocks. Kept narrower than the model on purpose: Minecraft hitboxes are square and
+#          mobs wider than ~2.5 blocks get stuck in forests. Height covers the body, not always the head.
+# baby   = size of a hatchling relative to the adult (hitbox and model).
+# shadow = shadow radius in blocks.
+# Riding offsets (ride_offset, ride_forward in SPECIES) are given at scale 1.0 and multiplied by scale.
+SIZES = {
+    #                   real length (m)  scale   w     h    baby   shadow
+    "tyrannosaurus":      dict(real=12.3, scale=1.85, w=2.5, h=4.5, baby=0.25, shadow=2.4),
+    "spinosaurus":        dict(real=14.0, scale=1.85, w=2.5, h=4.6, baby=0.25, shadow=2.4),
+    "dilophosaurus":      dict(real=7.0,  scale=1.53, w=1.2, h=2.6, baby=0.35, shadow=1.0),
+    "velociraptor":       dict(real=2.0,  scale=0.5,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
+    "compsognathus":      dict(real=1.2,  scale=0.3,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
+    "triceratops":        dict(real=9.0,  scale=1.63, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
+    "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
+    "ankylosaurus":       dict(real=7.0,  scale=1.6,  w=2.4, h=1.9, baby=0.3,  shadow=1.9),
+    # real Brachiosaurus: 18-22 m long, head 9-13 m up. Our model holds the neck very upright, so it is
+    # sized by height (~12 blocks to the head, ~15.5 long) to stay under the clouds of a normal world.
+    "brachiosaurus":      dict(real=22.0, scale=2.3,  w=3.5, h=7.0, baby=0.15, shadow=3.5),
+    "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
+    "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
+    "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
+    # Pteranodon: "real" is the wingspan. The body is small (hitbox ~ folded on the ground).
+    "pteranodon":         dict(real=6.5,  scale=1.0,  w=1.2, h=1.6, baby=0.3,  shadow=0.9),
+}
+
+# Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
+# diet: carnivore | piscivore | herbivore | omnivore. fossil = relative chance of its fossil in fossil rock.
+GUIDE = {
+    "tyrannosaurus":      dict(era="late_cretaceous", diet="carnivore", fossil=2),
+    "spinosaurus":        dict(era="late_cretaceous", diet="piscivore", fossil=2),
+    "dilophosaurus":      dict(era="jurassic",        diet="carnivore", fossil=4),
+    "velociraptor":       dict(era="late_cretaceous", diet="carnivore", fossil=4),
+    "compsognathus":      dict(era="jurassic",        diet="carnivore", fossil=3),
+    "triceratops":        dict(era="late_cretaceous", diet="herbivore", fossil=5),
+    "stegosaurus":        dict(era="jurassic",        diet="herbivore", fossil=5),
+    "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
+    "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
+    "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
+    "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
+    "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
+    "pteranodon":         dict(era="late_cretaceous", diet="piscivore", fossil=3),
+}
 
 SPECIES = [
  # id, Class, base, doc, attrs, food, sounds(ambient,hurt,death,pitch,volume,interval), extras(dict)
@@ -12,7 +61,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=160, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=16, ATTACK_KNOCKBACK=1.5, ARMOR=6, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.6, 2.0, 240), step=("RAVAGER_STEP", 0.9, 0.6),
-      xp=40, step_height=1.5, cull=3.5, head=(35, 25), rideable=True, ride_offset=2.1, ride_speed=1.1,
+      xp=40, step_height=1.5, head=(35, 25), rideable=True, ride_offset=2.1, ride_speed=1.1,
       prey="!(e instanceof Tyrannosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, prey_interval=200),
  dict(id="spinosaurus", cls="Spinosaurus", base="PredatorDinosaur",
@@ -20,27 +69,27 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=140, MOVEMENT_SPEED=0.23, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=32),
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.75, 2.0, 260), step=("RAVAGER_STEP", 0.8, 0.7),
-      xp=35, step_height=1.5, cull=3.5, head=(35, 25),
+      xp=35, step_height=1.5, head=(35, 25),
       prey="!(e instanceof DinosaurEntity) && e.isInWaterOrBubble()", roar=True, prey_interval=160, fish=True),
  dict(id="dilophosaurus", cls="Dilophosaurus", base="PredatorDinosaur",
       doc="Dilophosaurus wetherilli - mid-sized Jurassic predator with a pair of thin head crests. Flashes its crests before attacking.",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=7, FOLLOW_RANGE=24, ARMOR=2),
       food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP",
       sounds=("HOGLIN_AMBIENT", "HOGLIN_HURT", "HOGLIN_DEATH", 1.25, 1.2, 220),
-      xp=12, step_height=1.0, cull=1.5, head=(45, 30),
+      xp=12, step_height=1.0, head=(45, 30),
       prey="e.getBbWidth() < 1.0F && !(e instanceof DinosaurEntity)", display=True, prey_interval=100),
  dict(id="velociraptor", cls="Velociraptor", base="PredatorDinosaur",
       doc="Velociraptor mongoliensis - fast feathered pack hunter. When one raptor picks a target, the rest of the pack nearby joins in. Leaps at its prey and avoids T. rex.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=5, FOLLOW_RANGE=24),
       food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP",
       sounds=("FOX_SCREECH", "FOX_HURT", "FOX_DEATH", 0.8, 1.0, 200),
-      xp=8, cull=1.0, run=0.03, prey="e.getBbWidth() < 1.0F && !(e instanceof Velociraptor)", prey_interval=80, pack=True, leap=True),
+      xp=8, run=0.03, prey="e.getBbWidth() < 1.0F && !(e instanceof Velociraptor)", prey_interval=80, pack=True, leap=True),
  dict(id="compsognathus", cls="Compsognathus", base="PredatorDinosaur",
       doc="Compsognathus longipes - tiny skittish scavenger living in groups. Avoids players but the group swarms whoever hurts one of them. Can be tamed with fish, like a cat.",
       attrs=dict(MAX_HEALTH=6, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=1.5),
       food="Items.CHICKEN, Items.COD, Items.SALMON",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.2, 1.0, 120),
-      xp=2, cull=0.6, run=0.03, prey="false", hunts_players=False, feeding_tame=True, skittish=True),
+      xp=2, run=0.03, prey="false", hunts_players=False, feeding_tame=True, skittish=True),
  dict(id="triceratops", cls="Triceratops", base="HerbivoreDinosaur",
       doc="Triceratops horridus - armoured herd herbivore that charges with its horns. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.22, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
@@ -62,7 +111,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.45, 3.0, 360), step=("RAVAGER_STEP", 1.2, 0.5),
-      xp=50, step_height=1.6, cull=5.0, head=(25, 30), rideable=True, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
+      xp=50, step_height=1.6, head=(25, 30), rideable=True, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -73,26 +122,56 @@ SPECIES = [
       doc="Pachycephalosaurus wyomingensis - bipedal herbivore with a thick bony dome. Headbutts hard (huge knockback) when provoked.",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=0.28, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=3.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=16),
       food="Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.APPLE",
-      sounds=("GOAT_AMBIENT", "GOAT_HURT", "GOAT_DEATH", 0.7, 1.0, 240), xp=10, cull=1.2, run=0.02),
+      sounds=("GOAT_AMBIENT", "GOAT_HURT", "GOAT_DEATH", 0.7, 1.0, 240), xp=10, run=0.02),
  dict(id="gallimimus", cls="Gallimimus", base="HerbivoreDinosaur",
       doc="Gallimimus bullatus - ostrich-like ornithomimid, the fastest dinosaur. Flocks flee from players and predators. A very fast mount when tamed.",
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
       food="Items.WHEAT_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
-      sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.55, 1.2, 200), xp=8, cull=1.2, run=0.03,
+      sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.55, 1.2, 200), xp=8, run=0.03,
       fights=False, rideable=True, ride_offset=1.1, ride_forward=0.12, ride_speed=1.35),
+ # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
+ dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
+      doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",
+      attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.6, ATTACK_DAMAGE=4, FOLLOW_RANGE=24),
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.45, 1.4, 220), xp=12, run=0.03,
+      rideable=True, ride_offset=0.95, ride_forward=0.05, ride_speed=1.0,
+      prey="e instanceof AbstractFish"),
 ]
 
 
-def gen(s):
+def model_bounds():
+    with open(REPORT) as f:
+        return {k: v["bounds_px"] for k, v in json.load(f).items()}
+
+
+def culling(size, bounds):
+    """How far the scaled model sticks out of the hitbox, plus a margin."""
+    (x0, y0, z0), (x1, y1, z1) = bounds
+    k = size["scale"] / 16.0
+    out = max((z1 - z0) * k / 2, (x1 - x0) * k / 2) - size["w"] / 2
+    out = max(out, (y1 - y0) * k - size["h"])
+    return round(max(out, 0.0) + 0.5, 1)
+
+
+def gen(s, bounds):
     cls, base = s["cls"], s["base"]
+    size = SIZES[s["id"]]
+    s = dict(s, cull=culling(size, bounds[s["id"]]))
     imports = {
-        "com.primalera.registry.ModEntities", "net.minecraft.server.level.ServerLevel", "net.minecraft.sounds.SoundEvent",
+        "com.terrassic.registry.ModEntities", "net.minecraft.server.level.ServerLevel", "net.minecraft.sounds.SoundEvent",
         "net.minecraft.sounds.SoundEvents", "net.minecraft.world.damagesource.DamageSource", "net.minecraft.world.entity.AgeableMob",
         "net.minecraft.world.entity.EntityType", "net.minecraft.world.entity.ai.attributes.AttributeSupplier",
         "net.minecraft.world.entity.ai.attributes.Attributes", "net.minecraft.world.entity.animal.Animal",
         "net.minecraft.world.item.crafting.Ingredient", "net.minecraft.world.level.Level",
     }
     body = []
+    body.append(f"    /** Hitbox (blocks). Adult real length ~{size['real']} m. */")
+    body.append(f"    public static final float WIDTH = {size['w']}F;")
+    body.append(f"    public static final float HEIGHT = {size['h']}F;")
+    body.append("    /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */")
+    body.append(f"    public static final float MODEL_SCALE = {size['scale']}F;")
+    body.append(f"    public static final float SHADOW = {size['shadow']}F;")
     if "food_tag" in s:
         imports.add("net.minecraft.tags.ItemTags")
         body.append(f"    private static final Ingredient FOOD = Ingredient.of({s['food_tag']});")
@@ -133,6 +212,7 @@ def gen(s):
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
     elif base == "HerbivoreDinosaur" and len(extras) > 1:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
+    body.append(f"    @Override\n    protected float babyScale() {{\n        return {size['baby']}F;\n    }}\n")
     if "cull" in s:
         body.append(f"    @Override\n    protected double cullingInflate() {{\n        return {s['cull']}D;\n    }}\n")
     if "run" in s:
@@ -143,11 +223,15 @@ def gen(s):
     if s.get("rideable"):
         body.append("    @Override\n    public boolean isRideable() {\n        return true;\n    }\n")
         body.append(f"    @Override\n    protected float riddenSpeedFactor() {{\n        return {s['ride_speed']}F;\n    }}\n")
-        body.append(f"    @Override\n    public double getPassengersRidingOffset() {{\n        return {s['ride_offset']}D * (this.isBaby() ? 0.5D : 1.0D);\n    }}\n")
+        body.append(f"    @Override\n    public double getPassengersRidingOffset() {{\n        return {round(s['ride_offset'] * size['scale'], 2)}D * this.getScale();\n    }}\n")
         if s.get("ride_forward"):
-            body.append(f"    @Override\n    protected double riderForwardOffset() {{\n        return {s['ride_forward']}D;\n    }}\n")
+            body.append(f"    @Override\n    protected double riderForwardOffset() {{\n        return {round(s['ride_forward'] * size['scale'], 2)}D;\n    }}\n")
     if s.get("fights") is False:
         body.append("    @Override\n    protected boolean fightsBack() {\n        return false;\n    }\n")
+    if base == "FlyingDinosaur":
+        imports.add("net.minecraft.world.entity.LivingEntity")
+        imports.add("net.minecraft.world.entity.animal.AbstractFish")
+        body.append(f"    @Override\n    protected boolean isPrey(LivingEntity e) {{\n        return {s['prey']};\n    }}\n")
     if base == "PredatorDinosaur":
         imports.add("net.minecraft.world.entity.LivingEntity")
         body.append(f"    @Override\n    protected boolean isPrey(LivingEntity e) {{\n        return {s['prey']};\n    }}\n")
@@ -284,14 +368,58 @@ def gen(s):
     protected void playStepSound(BlockPos pos, BlockState state) {{
         this.playSound(SoundEvents.{st}, {v}F, {p}F);
     }}""")
-    src = "package com.primalera.entity;\n\n" + "\n".join(f"import {i};" for i in sorted(imports)) + "\n\n"
+    src = "package com.terrassic.entity;\n\n" + "\n".join(f"import {i};" for i in sorted(imports)) + "\n\n"
     src += f"/**\n * {s['doc']}\n *\n * Generated by tools/javagen/gen_species.py - edit the table there.\n */\n"
     src += f"public class {cls} extends {base} {{\n" + "\n".join(body) + "\n}\n"
     with open(os.path.join(OUT, cls + ".java"), "w") as f:
         f.write(src)
 
 
-if __name__ == "__main__":
+def gen_guide(bounds):
+    """research/GuideSpecies.java: one Field Guide entry per species, in roster order."""
+    rows = []
     for s in SPECIES:
-        gen(s)
+        sid, size, g = s["id"], SIZES[s["id"]], GUIDE[s["id"]]
+        (x0, y0, z0), (x1, y1, z1) = bounds[sid]
+        k = size["scale"] / 16.0
+        biggest = max((z1 - z0) * k, (y1 - y0) * k, (x1 - x0) * k)
+        gui = round(100.0 / biggest, 2)  # pixels per block so the adult fits a ~100 px box in the notebook
+        egg_only = s["base"] == "PredatorDinosaur" and not s.get("feeding_tame")
+        rows.append(f'            new GuideSpecies("{sid}", "{g["era"]}", "{g["diet"]}", {size["real"]}F, {str(bool(s.get("rideable"))).lower()}, '
+                    f'{str(egg_only).lower()}, {g["fossil"]}, {gui}F)')
+    src = f"""package com.terrassic.research;
+
+import java.util.List;
+
+/**
+ * Field Guide entry of a species: era, diet, real length (m), whether it can be ridden, whether only eggs/babies
+ * can be tamed, how common its fossil is and the scale used to draw it in the notebook (pixels per block).
+ * Names and texts are translation keys: entity.terrassic.&lt;id&gt; and guide.terrassic.&lt;id&gt;.*.
+ *
+ * Generated by tools/javagen/gen_species.py - edit the GUIDE table there.
+ */
+public record GuideSpecies(String id, String era, String diet, float length, boolean rideable, boolean eggOnly,
+                           int fossilWeight, float guiScale) {{
+    public static final List<GuideSpecies> ALL = List.of(
+{(","+chr(10)).join(rows)});
+
+    public static GuideSpecies byId(String id) {{
+        for (GuideSpecies s : ALL) {{
+            if (s.id.equals(id)) {{
+                return s;
+            }}
+        }}
+        return null;
+    }}
+}}
+"""
+    with open(GUIDE_OUT, "w") as f:
+        f.write(src)
+
+
+if __name__ == "__main__":
+    bounds = model_bounds()
+    for s in SPECIES:
+        gen(s, bounds)
+    gen_guide(bounds)
     print("generated", len(SPECIES))
