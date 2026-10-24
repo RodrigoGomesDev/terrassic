@@ -33,6 +33,8 @@ SIZES = {
     "styracosaurus":      dict(real=5.5,  scale=1.1,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
     "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
     "ankylosaurus":       dict(real=8.0,  scale=1.83, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
+    # Euoplocephalus tutus: 5.5-6 m, ~2.5 t (Arbour & Currie 2013; Paul 2010); the widest body for its length.
+    "euoplocephalus":     dict(real=6.0,  scale=1.43, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
     # 22 m length; our model holds the neck more upright than that, so the head reaches ~17 blocks.
     "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
@@ -82,6 +84,7 @@ GUIDE = {
     "styracosaurus":      dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "stegosaurus":        dict(era="jurassic",        diet="herbivore", fossil=5),
     "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
+    "euoplocephalus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
@@ -117,6 +120,7 @@ WORLD = {
     "styracosaurus":      dict(biomes=("savanna", "plains", "forest"), weight=5, group=(2, 5), track=10),  # herds at the forest edge
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
     "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
+    "euoplocephalus":     dict(biomes=("plains", "forest", "savanna"), weight=4, group=(1, 3), track=10),  # grazes the open floodplain
     "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
@@ -213,6 +217,12 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=100, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=2.0, ARMOR=16, ARMOR_TOUGHNESS=4, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food="Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.7, 1.2, 300), step=("RAVAGER_STEP", 0.5, 1.1), xp=20),
+ dict(id="euoplocephalus", cls="Euoplocephalus", base="HerbivoreDinosaur",
+      doc="Euoplocephalus tutus - 6 m armoured herbivore with bony eyelids and a tail club. Territorial: a blow of the club leaves whatever it hits slowed and weakened (stunned). Tamed with ferns and berries; a guard, not a mount.",
+      attrs=dict(MAX_HEALTH=85, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=1.8, ARMOR=14, ARMOR_TOUGHNESS=3, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
+      food="Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.MELON_SLICE",
+      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.85, 1.1, 300), step=("RAVAGER_STEP", 0.45, 1.15), xp=18,
+      hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 80, 3), ("MobEffects.WEAKNESS", 80, 0)]),
  dict(id="brachiosaurus", cls="Brachiosaurus", base="HerbivoreDinosaur",
       doc="Brachiosaurus altithorax - gigantic long-necked browser, eats leaves. Peaceful unless hurt. Rideable when tamed - the tallest mount in the game.",
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),

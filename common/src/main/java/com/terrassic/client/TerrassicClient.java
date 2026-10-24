@@ -11,6 +11,7 @@ import com.terrassic.entity.Deinosuchus;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Edmontosaurus;
 import com.terrassic.entity.Elasmosaurus;
+import com.terrassic.entity.Euoplocephalus;
 import com.terrassic.entity.Gallimimus;
 import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Hesperornis;
@@ -56,6 +57,7 @@ public final class TerrassicClient {
         renderer(ModEntities.STYRACOSAURUS, "styracosaurus", Styracosaurus.MODEL_SCALE, Styracosaurus.SHADOW);
         renderer(ModEntities.STEGOSAURUS, "stegosaurus", Stegosaurus.MODEL_SCALE, Stegosaurus.SHADOW);
         renderer(ModEntities.ANKYLOSAURUS, "ankylosaurus", Ankylosaurus.MODEL_SCALE, Ankylosaurus.SHADOW);
+        renderer(ModEntities.EUOPLOCEPHALUS, "euoplocephalus", Euoplocephalus.MODEL_SCALE, Euoplocephalus.SHADOW);
         renderer(ModEntities.BRACHIOSAURUS, "brachiosaurus", Brachiosaurus.MODEL_SCALE, Brachiosaurus.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);

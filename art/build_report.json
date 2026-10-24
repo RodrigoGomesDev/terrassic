@@ -948,5 +948,39 @@
    "animation.styracosaurus.tame"
   ],
   "render_scale": 1.0
+ },
+ "euoplocephalus": {
+  "bones": 24,
+  "cubes": 96,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -11.0,
+    7.00961204767076e-06,
+    -28.829724997213425
+   ],
+   [
+    11.0,
+    19.0,
+    38.122820579307444
+   ]
+  ],
+  "animations": [
+   "animation.euoplocephalus.idle",
+   "animation.euoplocephalus.walk",
+   "animation.euoplocephalus.run",
+   "animation.euoplocephalus.sit",
+   "animation.euoplocephalus.graze",
+   "animation.euoplocephalus.knocked_out",
+   "animation.euoplocephalus.wake",
+   "animation.euoplocephalus.eat",
+   "animation.euoplocephalus.beg",
+   "animation.euoplocephalus.tame",
+   "animation.euoplocephalus.attack"
+  ],
+  "render_scale": 1.0
  }
 }

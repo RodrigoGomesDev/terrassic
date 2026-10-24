@@ -123,7 +123,7 @@ Sistemas: **ecossistema** (cadeia alimentar por tamanho, carcaças, bandos, ninh
 | **Opisthocoelicaudia** | 🦖 | Herbívoro | Comida | ✅ | Titanossauro da Mongólia; carga média | 12 m |
 | **Dreadnoughtus** | 🦖 | Herbívoro | Comida | 🪑 | Titanossauro da Patagônia; plataforma | 26 m |
 
-Progresso: Edmontosaurus ✅ (fase 48: hadrossauro de cabeça chata com bico largo, crista carnuda nos machos e fileira de nós no dorso; manadas de 4-8, montaria; carga chega com os sistemas). Corythosaurus ✅ (fase 49: crista em elmo, chamado que acalma os herbívoros em volta, manadas de 3-6 em floresta e planície, montaria). Styracosaurus ✅ (fase 50: arquétipo ceratopsiano, chifre nasal e escudo de espinhos, investida que quebra folhas e mato no caminho, montaria).
+Progresso: Edmontosaurus ✅ (fase 48: hadrossauro de cabeça chata com bico largo, crista carnuda nos machos e fileira de nós no dorso; manadas de 4-8, montaria; carga chega com os sistemas). Corythosaurus ✅ (fase 49: crista em elmo, chamado que acalma os herbívoros em volta, manadas de 3-6 em floresta e planície, montaria). Styracosaurus ✅ (fase 50: arquétipo ceratopsiano, chifre nasal e escudo de espinhos, investida que quebra folhas e mato no caminho, montaria). Euoplocephalus ✅ (fase 51: arquétipo anquilossauro, meios-anéis no pescoço, pálpebras de osso, clava que atordoa (lentidão e fraqueza); guarda, não montaria).
 
 ## v0.7 Predadores ápice
 
