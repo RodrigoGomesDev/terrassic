@@ -27,3 +27,12 @@ no Mac, na ordem. Se algo der errado, cole o log (ou o crash report) numa sessã
 - [ ] À noite, na superfície: nada de zumbis e esqueletos (aranhas e creepers podem aparecer). Numa caverna, zumbis e esqueletos aparecem.
 - [ ] Um mundo **normal** criado depois continua igual ao de antes (mesmos biomas vanilla, dinossauros nos biomas vanilla).
 - [ ] Desempenho: andar rápido (elytra ou modo espectador) não trava mais que num mundo normal.
+
+## 2. Tela de título e carregamento (M2)
+- [ ] A tela de título mostra o panorama do Cretáceo girando devagar (Fenda, lago, dinossauros, árvores de blocos), sem costuras visíveis entre as faces.
+- [ ] O logo de pedra TERRASSIC aparece no lugar do logo do Minecraft, com "Capítulo 1 · Ecos do Fim" embaixo (traduzido).
+- [ ] A frase amarela é do Terrassic e muda a cada vez que a tela abre.
+- [ ] Criando ou carregando um mundo: aparece "Você sabia?" e uma dica embaixo do mapa de chunks, sem passar da tela.
+- [ ] Entrando num servidor ou trocando de dimensão ("Carregando terreno"): também aparece uma dica.
+- [ ] Com `"title_screen": false` em `config/terrassic-client.json`, volta a tela vanilla. Com `"loading_tips": false`, somem as dicas.
+- [ ] No Forge: a tela de título abre normalmente (botão "Mods" do Forge continua lá). Se algo do Terrassic não aparecer, o log diz qual injeção não achou o alvo.

@@ -80,7 +80,7 @@ idêntico ao mapeamento direto.
 Ordem das features: as que aparecem em mais de um bioma seguem sempre a mesma ordem (`PLANT_ORDER`, `NAMED_ORDER`
 em `gen_world.py`). Sem isso o jogo recusa o mundo com "Feature order cycle found".
 
-Arquivos compartilhados que esta frente tocou (só o mínimo):
+Arquivos compartilhados que esta frente tocou (só o mínimo; M2 só acrescentou 3 linhas no `terrassic.mixins.json`):
 - `tools/javagen/gen_species.py`: a tabela `BIOMES` (13 linhas) ganhou `|| ctx.hasTag(CretaceousBiomes.habitat(...))`.
 - `tools/javagen/gen_resources.py`: 3 linhas, para chamar `gen_world` e juntar os textos.
 - `Terrassic.java`: 1 linha (`CretaceousBiomes.init()`). `terrassic.mixins.json`: 1 linha.
@@ -90,16 +90,36 @@ Arquivos compartilhados que esta frente tocou (só o mínimo):
 | Fase | O que entra | Estado |
 |---|---|---|
 | M1 | Biomas do Cretáceo + tipo de mundo Terrassic | ✅ (falta testar no jogo, `TESTES_V08.md`) |
-| M2 | Tela de título: panorama do Cretáceo, logo de pedra, dicas com curiosidades reais | ⏭ |
-| M3 | Estruturas: Cratera de Chegada, Acampamentos da Katarina, Sítio Fossilífero, Casa do Rio, Colônia de Ninhos, Ossuário | ○ |
+| M2 | Tela de título: panorama do Cretáceo, logo de pedra, frases e dicas de carregamento com curiosidades reais | ✅ (falta ver no jogo) |
+| M3 | Estruturas: Cratera de Chegada, Acampamentos da Katarina, Sítio Fossilífero, Casa do Rio, Colônia de Ninhos, Ossuário | ⏭ |
 | M4 | Tempestades da Fenda (céu âmbar, criaturas fora de época) | ○ |
 | M5 | HUD: montaria, bando, nova espécie, nome da era | ○ |
 | M6 | Música e sons de fundo por bioma (gravações PD/CC0, no Mac) | ○ |
 
-## 5. Perguntas abertas para o Rodrigo
+## 5. Tela de título e telas de carregamento (M2)
+
+- **Panorama** (`tools/capagen/panorama.py`): o mesmo entardecer da capa, mas em volta do jogador e em blocos.
+  - No céu, a Fenda, estrelas cadentes e o vulcão fumegando.
+  - Árvores de blocos do mod (araucária, magnólia, palmeira Sabal, metassequoia), feitas com as texturas do jogo.
+  - O lago espelhando a Fenda, com a manada de Parasaurolophus na beira, o T. rex rugindo, um casal de Triceratops,
+    dois Alamosaurus ao fundo, Struthiomimus correndo, Pteranodons e um Quetzalcoatlus planando.
+  - Todos os modelos e texturas são os do mod. As 6 faces seguem o `CubeMap` vanilla e ficam em
+    `assets/terrassic/textures/gui/title/background/`.
+  - Prévias: `art/capa/panorama_vistas.png` (4 direções, como o jogo mostra) e `art/capa/panorama_preview.png` (faces abertas).
+- **Logo** (`tools/capagen/title.py`): o letreiro de pedra TERRASSIC da capa em 256x64, no lugar do logo do Minecraft,
+  com a linha "Capítulo 1 · Ecos do Fim" embaixo. Prévia da tela inteira: `art/capa/tela_titulo_preview.png`.
+- **Frases amarelas** (16) e **dicas de carregamento** (48: fatos reais das criaturas e do Cretáceo + dicas de jogo),
+  nos 3 idiomas, em `tools/javagen/menu_texts.py`. A dica aparece na criação/carregamento do mundo e em "Carregando terreno".
+- Código: `client/TerrassicTitle`, `client/ClientConfig` e os mixins de cliente `TitleScreenMixin`, `LevelLoadingScreenMixin`
+  e `ReceivingLevelScreenMixin`. Todos são opcionais (`require = 0`): se outro mod mexer na tela, fica a vanilla, sem crash.
+- Desligar: `config/terrassic-client.json` → `"title_screen": false` e/ou `"loading_tips": false`.
+- Arte nova: mostrar as prévias ao Rodrigo (regra 12 do ROADMAP). Ela não troca nenhum asset do mod, só o visual vanilla da tela de título.
+
+## 6. Perguntas abertas para o Rodrigo
 
 1. **Biomas do Cretáceo também no mundo normal?** Hoje eles só existem no tipo "Terrassic". Para misturar com o
    vanilla seria preciso um sistema de regiões próprio (sem TerraBlender, que é de terceiros).
 2. **Fortalezas do End no mundo Terrassic:** ficaram, para não fechar o End. Se preferir um Cretáceo puro, dá para tirar.
 3. **Zumbis e esqueletos nas cavernas:** ficaram, por causa dos ossos e das flechas. Se preferir trocar por criaturas
    da era também no subsolo, isso entra junto com as anomalias da Fenda.
+4. **Tela de título:** o panorama e o logo agradam? Dá para trocar a cena (manhã em vez de entardecer, outras espécies).

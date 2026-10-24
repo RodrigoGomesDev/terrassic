@@ -13,7 +13,8 @@
     words are the ones of the WORLD table in gen_species.py) and a few vanilla tags (no patrols, no wandering
     traders, map outlines, underwater music...);
   * block tags so the Cretaceous soils grow plants and spawn animals (#minecraft:dirt, #animals_spawnable_on);
-  * the lang entries (biome names and world types) in LANG, merged by gen_resources.py.
+  * the lang entries (biome names and world types) in LANG, merged by gen_resources.py, plus the texts of the title
+    and loading screens of the same front (menu_texts.py: subtitle, splashes and loading tips).
 
 Surface blocks (sand beaches, laterite in the Dry Lands, litter in the forests, mud in the swamps) come from
 world/CretaceousSurface.java, injected into the overworld surface rule by mixin/NoiseGeneratorSettingsMixin.
@@ -734,6 +735,10 @@ def main():
     soils = [f"{NS}:fern_litter", f"{NS}:needle_litter", f"{NS}:peat", f"{NS}:lateritic_soil"]
     merge_tag(os.path.join(blocks, "dirt.json"), soils)
     merge_tag(os.path.join(blocks, "animals_spawnable_on.json"), soils + [f"{NS}:cracked_mud"])
+
+    import menu_texts  # title screen and loading tips (phase M2)
+    for code, entries in menu_texts.lang().items():
+        LANG[code].update(entries)
 
     print(f"{len(BIOMES)} Cretaceous biomes, world types written ({raw_count} climate cubes -> {len(biomes)})")
 
