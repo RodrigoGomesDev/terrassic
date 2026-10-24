@@ -9,7 +9,8 @@ the vanilla blockstates, so every block of stone, dirt, sand and gravel picks on
 (no visible repetition). Extra drawings live in the pack under assets/terrassic/.../cretaceo/.
 Batch 2 adds the eight woods (bark, rings, stripped, planks, with rare log variants: amber resin on spruce,
 lichen on oak, moss on jungle), the leaves, the ground plants (horsetails and ferns), the crafting table, the
-furnace and the torch.
+furnace and the torch. Batch 3 adds the vanilla rocks (granite, diorite, andesite, tuff, deepslate, calcite)
+and the sixteen ores, in natural veins on the pack's own stone and deepslate.
 The pack name and description are lang keys of the mod (pack.terrassic.<era>), so they read in all three languages.
 """
 import json
@@ -24,6 +25,7 @@ import cretaceo as C  # noqa: E402
 import preview as P  # noqa: E402
 import leaves as LV  # noqa: E402
 import plants as PL  # noqa: E402
+import rocks as RK  # noqa: E402
 import tex as T  # noqa: E402
 import woods as WD  # noqa: E402
 import workshop as WS  # noqa: E402
@@ -71,6 +73,12 @@ for _name, _img in WD.ALL.items():
         CRETACEO[_name] = (_img, not _name.endswith("_top"))
 for _name, _img in list(LV.ALL.items()) + list(PL.ALL.items()) + list(WS.ALL.items()):
     CRETACEO[_name] = (_img, False)
+# batch 3: rocks and ores
+for _name, _img in RK.ALL.items():
+    CRETACEO[_name] = (_img, True)
+
+# entity textures (64x64 atlases): path under assets/minecraft/textures/ -> image
+CRETACEO_ENTITY = {f"entity/chest/{k}": v for k, v in WS.CHESTS.items()}
 
 # extra drawings used by the weighted blockstates: name -> image
 CRETACEO_EXTRA = {
@@ -166,7 +174,9 @@ def check(name, img, natural):
 
 # the turf strip of grass_block_side sits under the tinted overlay, so its own luma is never seen;
 # the workshop faces are drawings (tools on wood, a lit kiln, a torch), judged by eye rather than by the numbers
-OFF_TARGET = {"grass_block_side", "crafting_table_side", "crafting_table_front", "furnace_front_on", "torch"}
+# deep coal and iron: our deepslate holds fewer, smaller blebs than vanilla's big spots, by design
+OFF_TARGET = {"grass_block_side", "crafting_table_side", "crafting_table_front", "furnace_front_on", "torch",
+              "deepslate_coal_ore", "deepslate_iron_ore"}
 
 
 def run_checks(table, extra):
@@ -248,8 +258,7 @@ def pack_icon(table):
 
 def preview(era, table, extra):
     items = [(name, img) for name, (img, _) in table.items()] + list(extra.items())
-    P.sheet(items, f"Terrassic: pacote {NAMES[era]} (texturas do vanilla redesenhadas)", cols=9).save(
-        os.path.join(PREVIEWS, f"{era}_texturas.png"))
+    save_png(P.sheet(items, f"Terrassic: pacote {NAMES[era]} (texturas do vanilla redesenhadas)", cols=9), os.path.join(PREVIEWS, f"{era}_texturas.png"))
     g = (142, 170, 82)
     top = P.tint(table["grass_block_top"][0], g)
     side = P.over(table["grass_block_side"][0], P.tint(table["grass_block_side_overlay"][0], g))
@@ -288,7 +297,7 @@ def preview(era, table, extra):
     blocks[(1, 3, 1)] = (tx["clay"],) * 3
     blocks[(7, 4, 9)] = (tx["rooted_dirt"],) * 3
     blocks[(8, 5, 2)] = (stn[0], stn[0], extra["stone_fossil"])
-    P.diorama(blocks, S=48).save(os.path.join(PREVIEWS, f"{era}_diorama.png"))
+    save_png(P.diorama(blocks, S=48), os.path.join(PREVIEWS, f"{era}_diorama.png"))
 
 
 FOLIAGE = {"oak": (119, 171, 47), "dark_oak": (119, 171, 47), "birch": (128, 167, 85), "spruce": (97, 153, 97),
@@ -309,7 +318,7 @@ def preview_batch2(era, table):
                  (f"stripped_{w}_log", tx[f"stripped_{w}_log"]), (f"stripped_{w}_log_top", tx[f"stripped_{w}_log_top"]),
                  (f"{w}_planks", tx[f"{w}_planks"])]
     rows += [(v[0], WD.ALL[v[0]]) for v in LOG_VARIANTS.values()]
-    P.sheet(rows, f"Terrassic: pacote {NAMES[era]}, madeiras", cols=10).save(os.path.join(PREVIEWS, f"{era}_madeiras.png"))
+    save_png(P.sheet(rows, f"Terrassic: pacote {NAMES[era]}, madeiras", cols=10), os.path.join(PREVIEWS, f"{era}_madeiras.png"))
     # one small tree of each wood on a patch of grass
     scenes = []
     for w in woods:
@@ -326,16 +335,37 @@ def preview_batch2(era, table):
                         b[(x, y, z)] = (lf, lf, lf)
         b[(1, 5, 1)] = (lf, lf, lf)
         scenes.append((w, P.diorama_culled(b, S=32, bg=SKY)))
-    P.sheet_images(scenes, f"Terrassic: pacote {NAMES[era]}, árvores", cols=4).save(
-        os.path.join(PREVIEWS, f"{era}_arvores.png"))
+    save_png(P.sheet_images(scenes, f"Terrassic: pacote {NAMES[era]}, árvores", cols=4), os.path.join(PREVIEWS, f"{era}_arvores.png"))
     plants = ["grass", "fern", "tall_grass_top", "tall_grass_bottom", "large_fern_top", "large_fern_bottom", "vine",
               "dead_bush", "crafting_table_top", "crafting_table_side", "crafting_table_front", "furnace_top",
               "furnace_side", "furnace_front", "furnace_front_on", "torch"]
     tinted = {"grass", "fern", "tall_grass_top", "tall_grass_bottom", "large_fern_top", "large_fern_bottom"}
     items = [(n, P.tint(tx[n], GRASS_TINT) if n in tinted else P.tint(tx[n], FOLIAGE["oak"]) if n == "vine" else tx[n])
              for n in plants]
-    P.sheet(items, f"Terrassic: pacote {NAMES[era]}, plantas e oficina", cols=8).save(
-        os.path.join(PREVIEWS, f"{era}_plantas_oficina.png"))
+    save_png(P.sheet(items, f"Terrassic: pacote {NAMES[era]}, plantas e oficina", cols=8), os.path.join(PREVIEWS, f"{era}_plantas_oficina.png"))
+
+
+def chest_preview():
+    """The single chest as it stands in the world, assembled from its atlas (lid over base, top, front, side)."""
+    c = np.asarray(WS.CHESTS["normal"])
+    lid, base = WS._box_faces(14, 5, 14, 0, 0), WS._box_faces(14, 10, 14, 0, 19)
+
+    def face(a, b):
+        out = np.zeros((16, 16, 4), np.uint8)
+        out[1:6, 1:15] = c[a[1]:a[3], a[0]:a[2]]
+        out[6:16, 1:15] = c[b[1]:b[3], b[0]:b[2]]
+        return Image.fromarray(out, "RGBA")
+
+    top = np.zeros((16, 16, 4), np.uint8)
+    top[1:15, 1:15] = c[0:14, 14:28]
+    return P.cube(Image.fromarray(top, "RGBA"), face(lid["south"], base["south"]), face(lid["east"], base["east"]), S=64)
+
+
+def preview_batch3(era, table):
+    items = [(n, table[n][0]) for n in RK.ALL]
+    save_png(P.sheet_images([("chest", chest_preview()), ("entity/chest/normal", P.big(WS.CHESTS["normal"], 2))],
+                            f"Terrassic: pacote {NAMES[era]}, baú", cols=2), os.path.join(PREVIEWS, f"{era}_bau.png"))
+    save_png(P.sheet(items, f"Terrassic: pacote {NAMES[era]}, rochas e minérios", cols=8), os.path.join(PREVIEWS, f"{era}_rochas_minerios.png"))
 
 
 def build(era, table, extra):
@@ -347,6 +377,8 @@ def build(era, table, extra):
         save_png(img, os.path.join(root, "assets", "minecraft", "textures", "block", f"{name}.png"))
     for name, img in extra.items():
         save_png(img, os.path.join(root, "assets", "terrassic", "textures", "block", era, f"{name}.png"))
+    for path, img in CRETACEO_ENTITY.items():
+        save_png(img, os.path.join(root, "assets", "minecraft", "textures", *path.split("/")) + ".png")
     for block, entries in blockstates(era).items():
         write_json(os.path.join(root, "assets", "minecraft", "blockstates", f"{block}.json"), {"variants": {"": entries}})
     for block, variants in log_blockstates(era).items():
@@ -356,6 +388,7 @@ def build(era, table, extra):
     os.makedirs(PREVIEWS, exist_ok=True)
     preview(era, table, extra)
     preview_batch2(era, table)
+    preview_batch3(era, table)
 
 
 if __name__ == "__main__":

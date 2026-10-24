@@ -225,3 +225,70 @@ ALL = {}
 ALL["crafting_table_top"], ALL["crafting_table_side"], ALL["crafting_table_front"] = crafting_table()
 ALL["furnace_top"], ALL["furnace_side"], ALL["furnace_front"], ALL["furnace_front_on"] = furnace()
 ALL["torch"] = torch()
+
+
+# ------------------------------------------------------------------ chest (entity texture, 64x64)
+HIDE = [(96, 62, 38), (128, 86, 54), (152, 108, 70)]
+
+
+def _box_faces(w, h, d, u, v):
+    """Face rectangles (x0, y0, x1, y1) of a model box with texture offset (u, v), Minecraft's box layout."""
+    return {
+        "up": (u + d, v, u + d + w, v + d), "down": (u + d + w, v, u + d + 2 * w, v + d),
+        "west": (u, v + d, u + d, v + d + h), "north": (u + d, v + d, u + d + w, v + d + h),
+        "east": (u + d + w, v + d, u + 2 * d + w, v + d + h), "south": (u + 2 * d + w, v + d, u + 2 * d + 2 * w, v + d + h),
+    }
+
+
+def _planks_strip(seed, width, height, vertical):
+    """Boards cut to any size, by tiling the 16x16 board pattern (vertical = boards standing up)."""
+    t = planks_tones(seed)
+    if vertical:
+        t = np.rot90(t)
+    reps = (height // N + 1, width // N + 1)
+    return np.tile(t, reps)[:height, :width]
+
+
+def chest(width=14):
+    """A box of split boards on corner posts, a hide strap round the middle and a bone toggle for the lock.
+    Every face is drawn so it reads right either way up (the chest model flips some faces)."""
+    a = np.zeros((64, 64, 4), np.uint8)
+    pal = np.array(PLANK, float)
+    inner = (pal * .62).round()
+
+    def fill(rect, rgb_map):
+        x0, y0, x1, y1 = rect
+        a[y0:y1, x0:x1, :3] = rgb_map
+        a[y0:y1, x0:x1, 3] = 255
+
+    for part, (h, v, seed) in {"lid": (5, 0, 61), "base": (10, 19, 67)}.items():
+        faces = _box_faces(width, h, 14, 0, v)
+        for name, (x0, y0, x1, y1) in faces.items():
+            W, H = x1 - x0, y1 - y0
+            if name in ("up", "down"):
+                t = _planks_strip(seed + len(name), W, H, False)
+                rgb = (inner if (part == "base" and name == "up") or (part == "lid" and name == "down") else pal)[t]
+                fill((x0, y0, x1, y1), rgb)
+                a[y0:y1, x0, :3] = a[y0:y1, x1 - 1, :3] = BARK[1]          # rim of the box walls
+                a[y0, x0:x1, :3] = a[y1 - 1, x0:x1, :3] = BARK[1]
+            else:
+                t = _planks_strip(seed + 3 + len(name), W, H, True)
+                fill((x0, y0, x1, y1), pal[t])
+                for x in (x0, x1 - 1):                                       # corner posts, bark on
+                    a[y0:y1, x, :3] = BARK[0]
+                a[y0:y1, x0 + 1, :3] = BARK[2]
+                if part == "base":                                            # hide strap round the middle
+                    a[y0 + 4, x0:x1, :3] = HIDE[2]
+                    a[y0 + 5, x0:x1, :3] = HIDE[1]
+                    a[y0 + 4:y0 + 6, x0 + W // 2, :3] = HIDE[0]               # the knot
+                else:
+                    a[y0, x0:x1, :3] = a[y1 - 1, x0:x1, :3] = BARK[1]
+    # lock: a bone toggle (its little box sits in the free corner of the texture)
+    a[0:5, 0:6, :3] = BONE[1]
+    a[0:5, 0:6, 3] = 255
+    a[0, 0:6, :3] = BONE[2]
+    a[4, 0:6, :3] = BONE[0]
+    return Image.fromarray(a, "RGBA")
+
+
+CHESTS = {"normal": chest(14), "normal_left": chest(15), "normal_right": chest(15)}
