@@ -28,6 +28,7 @@ import com.terrassic.entity.Spinosaurus;
 import com.terrassic.entity.Stegosaurus;
 import com.terrassic.entity.Struthiomimus;
 import com.terrassic.entity.Styracosaurus;
+import com.terrassic.entity.Thescelosaurus;
 import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
@@ -84,6 +85,8 @@ public final class ModEntities {
             mob("parasaurolophus", Parasaurolophus::new, MobCategory.CREATURE, Parasaurolophus.WIDTH, Parasaurolophus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Pachycephalosaurus>> PACHYCEPHALOSAURUS =
             mob("pachycephalosaurus", Pachycephalosaurus::new, MobCategory.CREATURE, Pachycephalosaurus.WIDTH, Pachycephalosaurus.HEIGHT, 8);
+    public static final RegistrySupplier<EntityType<Thescelosaurus>> THESCELOSAURUS =
+            mob("thescelosaurus", Thescelosaurus::new, MobCategory.CREATURE, Thescelosaurus.WIDTH, Thescelosaurus.HEIGHT, 8);
     public static final RegistrySupplier<EntityType<Gallimimus>> GALLIMIMUS =
             mob("gallimimus", Gallimimus::new, MobCategory.CREATURE, Gallimimus.WIDTH, Gallimimus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Struthiomimus>> STRUTHIOMIMUS =
@@ -154,6 +157,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(BRACHIOSAURUS, Brachiosaurus::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
+        EntityAttributeRegistry.register(THESCELOSAURUS, Thescelosaurus::createAttributes);
         EntityAttributeRegistry.register(GALLIMIMUS, Gallimimus::createAttributes);
         EntityAttributeRegistry.register(STRUTHIOMIMUS, Struthiomimus::createAttributes);
         EntityAttributeRegistry.register(MAIASAURA, Maiasaura::createAttributes);

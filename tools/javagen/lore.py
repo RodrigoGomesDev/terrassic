@@ -647,6 +647,22 @@ GUIDE = {
         note=("Apostei corrida com o Galimimo. O meu venceu por um pescoço. Literalmente.",
               "I raced the Gallimimus. Mine won by a neck. Literally.",
               "Corrí una carrera contra el Gallimimus. El mío ganó por un cuello. Literalmente.")),
+    "thescelosaurus": dict(
+        sci=("Viveu há 68 a 66 milhões de anos na América do Norte, até o fim do Cretáceo. Ornitópode robusto de 3,5 a 4 m e uns 250 a 300 kg: cabeça pequena com bico na frente e dentes em folha nas bochechas, pescoço grosso, braços fortes de cinco dedos, pernas firmes (nada de corredor) e cauda longa e rígida. O crânio mostra um olfato enorme, visão fraca e ouvidos para sons graves: um bicho que farejava e cavava no mato baixo.",
+             "Lived 68 to 66 million years ago in North America, right up to the end of the Cretaceous. A stout ornithopod of 3.5 to 4 m and some 250 to 300 kg: a small head with a beak in front and leaf-shaped cheek teeth, a thick neck, strong five-fingered arms, sturdy legs (no sprinter) and a long stiff tail. Its skull shows a huge sense of smell, poor eyesight and ears tuned to low sounds: an animal that sniffed and dug in the undergrowth.",
+             "Vivió hace 68 a 66 millones de años en América del Norte, hasta el final del Cretácico. Ornitópodo robusto de 3,5 a 4 m y unos 250 a 300 kg: cabeza pequeña con pico delante y dientes en hoja en las mejillas, cuello grueso, brazos fuertes de cinco dedos, patas firmes (nada de corredor) y cola larga y rígida. El cráneo muestra un olfato enorme, vista débil y oídos para sonidos graves: un animal que olfateaba y cavaba en la maleza."),
+        behavior=("Anda em pares ou pequenos grupos pela floresta, planície e pântano, de nariz no chão. Não foge de tudo: encurralado, morde. Parado em terra macia, remexe o solo com os braços.",
+                  "Roams the forest, plains and swamp in pairs or small groups, nose to the ground. It does not flee from everything: cornered, it bites. Standing on soft earth, it rakes the soil with its arms.",
+                  "Anda en parejas o grupos pequeños por el bosque, la llanura y el pantano, con la nariz en el suelo. No huye de todo: acorralado, muerde. Parado en tierra blanda, remueve el suelo con los brazos."),
+        taming=("Doma-se na mão com cenoura, batata, beterraba ou samambaia. Os pares põem um ovo pequeno.",
+                "Hand-tamed with carrots, potatoes, beetroot or ferns. Pairs lay a small egg.",
+                "Se doma a mano con zanahoria, patata, remolacha o helecho. Las parejas ponen un huevo pequeño."),
+        utility=("Desenterra raízes e tubérculos: deixe-o solto em terra, areia ou cascalho e ele traz cenouras, batatas, beterrabas e raízes, e às vezes um osso. Não acha fósseis: o nariz dele é para comida.",
+                 "Digs up roots and tubers: leave it loose on dirt, sand or gravel and it brings carrots, potatoes, beetroot and roots, and now and then a bone. It finds no fossils: its nose is for food.",
+                 "Desentierra raíces y tubérculos: déjalo suelto en tierra, arena o grava y trae zanahorias, patatas, remolachas y raíces, y a veces un hueso. No encuentra fósiles: su nariz es para la comida."),
+        note=("Fareja o chão por um minuto, cava três vezes e sai com uma batata. Nunca errou.",
+              "It sniffs the ground for a minute, digs three times and comes up with a potato. It has never missed.",
+              "Olfatea el suelo un minuto, cava tres veces y sale con una patata. Nunca ha fallado.")),
 }
 
 ERAS = {

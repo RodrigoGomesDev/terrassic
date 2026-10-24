@@ -38,6 +38,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Brachiosaurus       savanna, plains                 1       1-2
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
+ *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
  *  Gallimimus          savanna, plains, desert*        6       3-6
  *  Struthiomimus       plains, savanna, forest         6       3-6
  *  Maiasaura           plains, savanna                 4       3-6
@@ -79,6 +80,7 @@ public final class ModSpawns {
         placement(ModEntities.BRACHIOSAURUS);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
+        placement(ModEntities.THESCELOSAURUS);
         placement(ModEntities.GALLIMIMUS);
         placement(ModEntities.STRUTHIOMIMUS);
         placement(ModEntities.MAIASAURA);
@@ -166,6 +168,9 @@ public final class ModSpawns {
             }
             if (taiga || hill) {
                 add(props, ModEntities.PACHYCEPHALOSAURUS.get(), 4, 2, 3);
+            }
+            if (forest || plains || swamp) {
+                add(props, ModEntities.THESCELOSAURUS.get(), 5, 2, 4);
             }
             if (savanna || plains || desert) {
                 add(props, ModEntities.GALLIMIMUS.get(), 6, 3, 6);

@@ -292,6 +292,18 @@ def spawn_eggs():
     eye(cv, 10, 8, "#c98a2a")
     eggs["pachycephalosaurus"] = cv
 
+    # Thescelosaurus: olive egg with a pale stripe round the middle, freckles and a dark beak
+    cv = base_egg(None, "#5c5a3a", "#c8c098")
+    for x in range(2, 14):
+        if inside(cv, x, 8):
+            cv.set(x, 8, hexc("#d4cc9c"))
+    for x, y in ((4, 4), (8, 3), (11, 5), (5, 11), (9, 12), (12, 10)):
+        if inside(cv, x, y):
+            cv.set(x, y, hexc("#3e3424"))
+    cv.set(12, 6, hexc("#4e4638")); cv.set(13, 6, hexc("#4e4638"))
+    eye(cv, 10, 5, "#8a6a2a")
+    eggs["thescelosaurus"] = cv
+
     # Gallimimus: pale grey egg with a black wing band and white tips, little beak
     cv = base_egg(None, "#8f8678", "#ebe4d0")
     for x in range(3, 13):
@@ -553,7 +565,7 @@ EGG_BLOCK = {
     "stegosaurus": ("#dfe0c4", "#5f6b3c"), "ankylosaurus": ("#d8ccb0", "#6b5f48"),
     "euoplocephalus": ("#d4d2b0", "#4a4e3a"),
     "brachiosaurus": ("#e2e2d6", "#7f8984"), "parasaurolophus": ("#dfe6d8", "#46584c"),
-    "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "gallimimus": ("#f0ece0", "#9c917c"),
+    "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "thescelosaurus": ("#d8d0a8", "#5c5a3a"), "gallimimus": ("#f0ece0", "#9c917c"),
     "struthiomimus": ("#f0e6d0", "#8a5a3a"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),
     "hesperornis": ("#9aa49c", "#4a5048"), "deinosuchus": ("#d8d4b0", "#3a4a2c"),

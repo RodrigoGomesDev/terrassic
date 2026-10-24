@@ -1051,5 +1051,40 @@
    "animation.struthiomimus.tame"
   ],
   "render_scale": 1.0
+ },
+ "thescelosaurus": {
+  "bones": 24,
+  "cubes": 35,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -6.0,
+    0.16265893384074026,
+    -30.117628684254928
+   ],
+   [
+    6.0,
+    29.491503068128534,
+    42.05092911210563
+   ]
+  ],
+  "animations": [
+   "animation.thescelosaurus.idle",
+   "animation.thescelosaurus.walk",
+   "animation.thescelosaurus.run",
+   "animation.thescelosaurus.sit",
+   "animation.thescelosaurus.graze",
+   "animation.thescelosaurus.attack",
+   "animation.thescelosaurus.knocked_out",
+   "animation.thescelosaurus.wake",
+   "animation.thescelosaurus.eat",
+   "animation.thescelosaurus.beg",
+   "animation.thescelosaurus.tame",
+   "animation.thescelosaurus.dig"
+  ],
+  "render_scale": 0.8
  }
 }

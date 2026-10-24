@@ -55,6 +55,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> BRACHIOSAURUS_SPAWN_EGG = egg("brachiosaurus", ModEntities.BRACHIOSAURUS);
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_SPAWN_EGG = egg("parasaurolophus", ModEntities.PARASAUROLOPHUS);
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_SPAWN_EGG = egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS);
+    public static final RegistrySupplier<Item> THESCELOSAURUS_SPAWN_EGG = egg("thescelosaurus", ModEntities.THESCELOSAURUS);
     public static final RegistrySupplier<Item> GALLIMIMUS_SPAWN_EGG = egg("gallimimus", ModEntities.GALLIMIMUS);
     public static final RegistrySupplier<Item> STRUTHIOMIMUS_SPAWN_EGG = egg("struthiomimus", ModEntities.STRUTHIOMIMUS);
     public static final RegistrySupplier<Item> MAIASAURA_SPAWN_EGG = egg("maiasaura", ModEntities.MAIASAURA);
@@ -90,6 +91,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> BRACHIOSAURUS_HIDE = hide("brachiosaurus");
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_HIDE = hide("parasaurolophus");
     public static final RegistrySupplier<Item> PACHYCEPHALOSAURUS_HIDE = hide("pachycephalosaurus");
+    public static final RegistrySupplier<Item> THESCELOSAURUS_HIDE = hide("thescelosaurus");
     public static final RegistrySupplier<Item> GALLIMIMUS_HIDE = hide("gallimimus");
     public static final RegistrySupplier<Item> STRUTHIOMIMUS_HIDE = hide("struthiomimus");
     public static final RegistrySupplier<Item> MAIASAURA_HIDE = hide("maiasaura");

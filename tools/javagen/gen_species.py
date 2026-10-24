@@ -42,6 +42,8 @@ SIZES = {
     "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
+    # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
+    "thescelosaurus":     dict(real=4.0,  scale=0.89, w=1.0, h=1.6, baby=0.35, shadow=0.8),
     "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
     "struthiomimus":      dict(real=4.3,  scale=1.07, w=1.0, h=2.4, baby=0.35, shadow=0.8),
@@ -93,6 +95,7 @@ GUIDE = {
     "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
+    "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "gallimimus":         dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "struthiomimus":      dict(era="late_cretaceous", diet="omnivore",  fossil=4),
     "maiasaura":          dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -131,6 +134,7 @@ WORLD = {
     "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
+    "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
     "struthiomimus":      dict(biomes=("plains", "savanna", "forest"), weight=6, group=(3, 6), track=10),   # flocks on the floodplain
     "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
@@ -253,6 +257,11 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=0.28, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=3.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=16),
       food="Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.APPLE",
       sounds=("GOAT_AMBIENT", "GOAT_HURT", "GOAT_DEATH", 0.7, 1.0, 240), xp=10, run=0.02),
+ dict(id="thescelosaurus", cls="Thescelosaurus", base="HerbivoreDinosaur",
+      doc="Thescelosaurus neglectus - 4 m stout ornithopod of the undergrowth, nose to the ground. Bites back when cornered. Roots in soft soil: a tame one turns up roots and tubers.",
+      attrs=dict(MAX_HEALTH=34, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ATTACK_KNOCKBACK=0.6, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=16),
+      food="Items.CARROT, Items.POTATO, Items.BEETROOT, Items.FERN",
+      sounds=("PIG_AMBIENT", "PIG_HURT", "PIG_DEATH", 0.75, 1.0, 260), xp=9, run=0.02, dig="tubers"),
  dict(id="gallimimus", cls="Gallimimus", base="HerbivoreDinosaur",
       doc="Gallimimus bullatus - ostrich-like ornithomimid, the fastest dinosaur. Flocks flee from players and predators. A very fast mount when tamed.",
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
@@ -644,13 +653,44 @@ def gen(s, bounds):
     }
 """)
     if s.get("dig"):
-        # digging: idle on soft ground it scrapes with the forefeet now and then; a tame one turns something up
+        # digging: idle on soft ground it scrapes with the forefeet now and then; a tame one turns something up.
+        # dig=True: roots, vegetables, bones, shallow fossils, flint on gravel; dig="tubers": roots and vegetables, no fossils
         imports.update({"net.minecraft.server.level.ServerLevel", "net.minecraft.core.BlockPos", "net.minecraft.core.particles.BlockParticleOption",
-                        "net.minecraft.core.particles.ParticleTypes", "net.minecraft.tags.BlockTags", "net.minecraft.world.item.Item",
-                        "net.minecraft.world.item.ItemStack", "net.minecraft.world.level.block.Blocks", "net.minecraft.world.level.block.state.BlockState",
-                        "com.terrassic.registry.ModItems", "dev.architectury.registry.registries.RegistrySupplier", "java.util.ArrayList", "java.util.List"})
+                        "net.minecraft.core.particles.ParticleTypes", "net.minecraft.tags.BlockTags",
+                        "net.minecraft.world.item.ItemStack", "net.minecraft.world.level.block.Blocks", "net.minecraft.world.level.block.state.BlockState"})
+        if s["dig"] == "tubers":
+            what = "roots and tubers"
+            loot = """        if (roll < 24) {
+            found = new ItemStack(Items.HANGING_ROOTS);
+        } else if (roll < 58) {
+            found = new ItemStack(this.random.nextBoolean() ? Items.CARROT : Items.POTATO);
+        } else if (roll < 72) {
+            found = new ItemStack(Items.BEETROOT);
+        } else if (roll < 78) {
+            found = new ItemStack(Items.BONE);
+        } else if (roll < 84 && ground.is(Blocks.GRAVEL)) {
+            found = new ItemStack(Items.FLINT);
+        }"""
+        else:
+            what = "roots, a vegetable, a bone or a shallow fossil"
+            imports.update({"net.minecraft.world.item.Item", "com.terrassic.registry.ModItems",
+                            "dev.architectury.registry.registries.RegistrySupplier", "java.util.ArrayList", "java.util.List"})
+            loot = """        if (roll < 28) {
+            found = new ItemStack(Items.HANGING_ROOTS);
+        } else if (roll < 44) {
+            found = new ItemStack(this.random.nextBoolean() ? Items.CARROT : Items.POTATO);
+        } else if (roll < 54) {
+            found = new ItemStack(Items.BEETROOT);
+        } else if (roll < 66) {
+            found = new ItemStack(Items.BONE);
+        } else if (roll < 74) {
+            List<RegistrySupplier<Item>> fossils = new ArrayList<>(ModItems.FOSSILS.values());
+            found = new ItemStack(fossils.get(this.random.nextInt(fossils.size())).get());
+        } else if (roll < 80 && ground.is(Blocks.GRAVEL)) {
+            found = new ItemStack(Items.FLINT);
+        }"""
         body.append("""    /** Digging: idle on dirt, sand, gravel or clay it scrapes with the forefeet now and then; a tame one turns up
-     *  roots, a vegetable, a bone or a shallow fossil (dropped at its feet). */
+     *  """ + what + """ (dropped at its feet). */
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
@@ -672,20 +712,7 @@ def gen(s, bounds):
         }
         int roll = this.random.nextInt(100);
         ItemStack found = ItemStack.EMPTY;
-        if (roll < 28) {
-            found = new ItemStack(Items.HANGING_ROOTS);
-        } else if (roll < 44) {
-            found = new ItemStack(this.random.nextBoolean() ? Items.CARROT : Items.POTATO);
-        } else if (roll < 54) {
-            found = new ItemStack(Items.BEETROOT);
-        } else if (roll < 66) {
-            found = new ItemStack(Items.BONE);
-        } else if (roll < 74) {
-            List<RegistrySupplier<Item>> fossils = new ArrayList<>(ModItems.FOSSILS.values());
-            found = new ItemStack(fossils.get(this.random.nextInt(fossils.size())).get());
-        } else if (roll < 80 && ground.is(Blocks.GRAVEL)) {
-            found = new ItemStack(Items.FLINT);
-        }
+""" + loot + """
         if (!found.isEmpty()) {
             this.spawnAtLocation(found);
         }
