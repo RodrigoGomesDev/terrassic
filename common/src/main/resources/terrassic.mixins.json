@@ -6,7 +6,8 @@
   "mixins": [
     "PlayerMixin",
     "NoiseGeneratorSettingsMixin",
-    "MobMixin"
+    "MobMixin",
+    "ChunkMapMixin"
   ],
   "client": [
     "client.InventoryKeyMixin",
@@ -15,7 +16,8 @@
     "client.ReceivingLevelScreenMixin",
     "client.ClientLevelMixin",
     "client.FogRendererMixin",
-    "client.LevelRendererMixin"
+    "client.LevelRendererMixin",
+    "client.WorldCreationUiStateMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -28,11 +28,13 @@ SIZES = {
     #                   real length (m)  scale   w     h    baby   shadow
     # T. rex v3 is modelled at 2x (16 px = 1 m). Adults 11-13.3 m: Stan ~12 m, Sue 12.3-12.8 m, Scotty 13 m.
     "tyrannosaurus":      dict(real=13.0, scale=1.02, w=2.6, h=4.8, baby=0.25, shadow=2.4, var=(0.85, 1.02)),
-    "spinosaurus":        dict(real=14.0, scale=1.85, w=2.5, h=4.6, baby=0.25, shadow=2.4),
+    # Spinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "spinosaurus":        dict(real=14.0, scale=0.95, w=2.5, h=4.6, baby=0.25, shadow=2.4),
     "dilophosaurus":      dict(real=7.0,  scale=1.53, w=1.2, h=2.6, baby=0.35, shadow=1.0),
     "velociraptor":       dict(real=2.07, scale=0.48,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
     "compsognathus":      dict(real=1.25, scale=0.31,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
-    "triceratops":        dict(real=9.0,  scale=1.63, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
+    # Triceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "triceratops":        dict(real=9.0,  scale=0.94, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
     "styracosaurus":      dict(real=5.5,  scale=1.1,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
     # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
@@ -49,7 +51,8 @@ SIZES = {
     "deinocheirus":       dict(real=11.0, scale=1.72, w=2.4, h=4.8, baby=0.2,  shadow=2.2),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
     # 22 m length; our model holds the neck more upright than that, so the head reaches ~17 blocks.
-    "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
+    # Brachiosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "brachiosaurus":      dict(real=22.0, scale=1.05, w=4.0, h=9.0, baby=0.12, shadow=4.5),
     # Alamosaurus sanjuanensis: 26-30 m, 30-80 t (Fowler & Sullivan 2011; Tykoski & Fiorillo 2017); head ~13 blocks up.
     "alamosaurus":        dict(real=30.0, scale=3.02, w=5.0, h=9.0, baby=0.1,  shadow=5.5),
     # Saltasaurus loricatus: 12-13 m, ~7 t (Paul 2010), the armoured titanosaur; back at ~4 blocks.
@@ -290,7 +293,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.22, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.25, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=20, rideable=True, jump=0.45, ride_offset=1.55, ride_speed=1.05),
+      xp=20, rideable=True, jump=0.45, ride_offset=2.75, ride_speed=1.05),
  dict(id="styracosaurus", cls="Styracosaurus", base="HerbivoreDinosaur",
       doc="Styracosaurus albertensis - 5.5 m horned herbivore with a spiked frill and one long nose horn. Territorial: fights back with the horn. Tamed with plants; ridden or charging at an enemy it breaks the leaves and bushes in its way.",
       attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=2.0, ARMOR=7, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=20),
@@ -341,7 +344,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.45, 3.0, 360), step=("RAVAGER_STEP", 1.2, 0.5),
-      xp=50, step_height=1.6, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=2.7, ride_forward=0.8, ride_speed=1.0),
+      xp=50, step_height=1.6, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=6.1, ride_forward=3.2, ride_speed=1.0),
  dict(id="alamosaurus", cls="Alamosaurus", base="HerbivoreDinosaur",
       doc="Alamosaurus sanjuanensis - 30 m titanosaur, the last and largest sauropod of North America. Eats leaves; peaceful unless hurt, then the whip tail cracks. Rideable when tamed (the building platform saddle comes with the v0.6 systems).",
       attrs=dict(MAX_HEALTH=360, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=20, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),

@@ -102,13 +102,20 @@ Plano B, se a camada C der problema com algum mod: recarregar o pacote da era **
 que já é uma tela cheia de luz âmbar de alguns segundos.
 
 ### Camada D · Filtro da era (o "shader" sem depender de shader)
-Um efeito de pós-processamento do próprio Minecraft (`PostChain`, o mesmo sistema da visão da aranha e do creeper,
-em `assets/terrassic/shaders/post/`), ligado pelo mod quando o jogador está numa era:
-- **Gradação de cor por era:** curva de tons, saturação, temperatura da luz (tabela da seção 4).
-- **Vinheta suave** e **grão fino de filme**, para o ar "antigo". Tudo sutil.
-- Intensidade em `config/terrassic-client.json` (0 = desligado, padrão 0,6).
+Um efeito de pós-processamento do próprio Minecraft (`PostChain`, o mesmo sistema da visão da aranha e do creeper),
+desenhado pelo mod (`common/.../client/EraFilter.java`) no fim do mundo, antes da mão e do HUD. **Pronto (TX5).**
+- **Vem dentro do pacote da era:** `assets/terrassic/shaders/post/era_cretaceo.json` (os números da era) e um único
+  programa GLSL para todas as eras, `assets/minecraft/shaders/program/terrassic_era_grade.*` (o vanilla só procura
+  programas no espaço `minecraft`). Desligar o pacote desliga o filtro. Gerado por `tools/texpack/filters.py`.
+- **Gradação do Cretáceo:** 8% menos saturação, luz quente (vermelho ×1,035, azul ×0,95), pretos um pouco
+  levantados e quentes (ar de foto antiga) e vinheta suave. Prévia: `art/texpack/previews/cretaceo_filtro.png`.
+- **Config** em `config/terrassic-packs.json`: `"era_filter": true/false` e `"era_filter_strength"` (0 a 1,
+  padrão 0,6). O arquivo é criado com esses valores na primeira vez.
+- Ganchos: Fabric `WorldRenderEvents.END` (entrypoint `client`), Forge `RenderLevelStageEvent` na fase
+  `AFTER_WEATHER`. Recarregar pacotes (F3+T) refaz o filtro.
 - **Desliga sozinho quando um shaderpack do Iris ou do Oculus está ativo** (consulta a API do Iris por reflexão, sem
   depender dele). Assim nunca briga com shaders de terceiros.
+- Grão de filme ficou de fora: em movimento parece sujeira na tela. Pode voltar como opção.
 - Com Sodium/Embeddium funciona normal (eles não mexem no pós-processamento).
 
 Para quem usa shaders: um **shaderpack próprio "Terrassic Âmbar"** para Iris/Oculus pode vir depois, como download
@@ -133,12 +140,15 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 
 | Lote | O que entra | Estado |
 |---|---|---|
-| TX1 | **Terreno:** pedra (+3 variantes), pedregulho, pedregulho com musgo, terra (+2), terra grossa, grama (topo, lado, lado com neve), podzol, cascalho (+1), areia (+1), arenito (topo, lado, base, entalhado, liso), argila, lama, terra enraizada. Mais o registro do pacote no Fabric e no Forge | 🔄 |
-| TX2 | Madeiras do vanilla (troncos e tábuas das 8 árvores), folhas, mesa de trabalho, fornalha, baú, tocha, fogueira | ○ |
-| TX3 | Minérios (veios naturais, sem cara de "loja"), pedras do vanilla (granito, diorito, andesito, tufo, ardósia) | ○ |
+| TX1 | **Terreno:** pedra (+3 variantes), pedregulho, pedregulho com musgo, terra (+2), terra grossa, grama (topo, lado, lado com neve), podzol, cascalho (+1), areia (+1), arenito (topo, lado, base, entalhado, liso), argila, lama, terra enraizada. Mais o registro do pacote no Fabric e no Forge | ✓ |
+| TX2 | **Madeiras** das 8 árvores (casca própria de cada uma, anéis fora do centro com rachadura, descascado, tábuas lascadas com cavilha) com variantes raras de tronco (resina âmbar no abeto, líquen no carvalho, musgo na selva); **folhas** por formato de folha da espécie; **plantas** do Cretáceo (o capim vira cavalinhas com samambaias baixas, a samambaia grande vira samambaia-arborescente, o cipó vira samambaia trepadeira); **bancada** de tronco com ferramentas de pedra, sílex e osso; **fornalha** de pedras e barro com fuligem e brasas; **tocha** de resina. Baú no lote 3; a fogueira fica para depois (o desenho depende do mapeamento do modelo) | ✓ |
+| TX3 | **Rochas do vanilla** desenhadas pelo que são feitas (granito e diorito em cristais entrelaçados, andesito fino com fenocristais, tufo com lapilli, ardósia em lâminas, calcita com clivagem) e os **16 minérios** em veios naturais sobre a pedra e a ardósia do próprio pacote: carvão em camada, limonita enferrujada, malaquita com cobre nativo, ouro em veio de quartzo, cinábrio, lazurita com pirita, diamante em bolsão de kimberlito, esmeralda em veio de calcita | ✓ |
+| TX3b | **Construção e chão:** tijolos de pedra em fiadas lavradas à mão (com musgo, rachados e um entalhado com amonite), tijolos queimados em argamassa de cal, bloco de musgo, terra arada (seca e molhada), caminho batido com uma pegada de terópode, fardo de palha amarrado, neve; a cana-de-açúcar vira cavalinha gigante e a vitória-régia ganha folha entalhada com nervuras | ✓ |
+| TX3c | **Flores:** as 12 flores pequenas em formas das primeiras plantas com flor (taça de tépalas como a magnólia, flor aberta, sininhos, umbela, estrela, tulipa fechada), cada uma mantendo a cor que dá o corante | ✓ |
+| TX3d | **Terreno dos biomas:** areia laterítica e arenito vermelho (o entalhado traz a garra em foice de um dromeossaurídeo), as 17 terracotas como argila queimada com estratos leves em pigmentos de terra, tijolos de adobe e barro batido com palha, raízes do mangue (soltas e na lama), gelo velho rachado (translúcido), gelo compactado, gelo azul de geleira com trilhas de bolhas, neve fofa, rocha de gotejamento em camadas, micélio como manta de fungo. **Fungos e sub-bosque:** cogumelos gigantes como orelhas-de-pau com anéis de crescimento e chapéu vermelho com verrugas, caule fibroso, poros por baixo, cogumelos pequenos, o arbusto de frutinhas nos 4 estágios, raízes pendentes e um líquen pálido de caverna. O cacto e o bambu ficam de fora (não existiam no Cretáceo; o mundo Terrassic nem gera) | ✓ |
 | TX4 | Interface: botões, inventário, baús, fornalha, fundo dos menus, barra de itens, em couro, osso e pedra | ○ |
-| TX5 | Filtro da era (camada D) | ○ |
-| TX6 | Refazer os blocos do mod com o motor novo, junto com a frente de blocos | ○ |
+| TX5 | Filtro da era (camada D) | ✓ |
+| TX6 | Refazer os blocos do mod com o motor novo: a thread de blocos usa `tools/texpack/api.py` e `materials.py` (decisão do Rodrigo, 24/10) | 🔄 |
 | TX7 | Camada C (troca por era sem recarregar) e os pacotes das outras eras | ○ (v2.0) |
 
 ## 6. Testes no jogo (só um humano consegue)
@@ -149,3 +159,21 @@ sprites separados: o gerador já escreve as peças separadas para o porte.
 - Pedra, terra, cascalho e areia em área grande não mostram repetição.
 - A grama recebe a cor dos biomas (planície, pântano, deserto do vanilla e os biomas do Cretáceo da v0.8).
 - Funciona com Sodium (Fabric) e Embeddium (Forge), com e sem shaderpack do Iris/Oculus.
+- Lote 2: troncos em pé e deitados (eixos x, y, z) mostram de vez em quando a variante (resina no abeto, líquen no
+  carvalho, musgo na selva) e o topo continua certo; folhas em gráficos "rápido" ficam escuras e cheias, sem
+  buracos pretos estranhos; cavalinhas e samambaias recebem a cor do bioma; a tocha aparece certa no chão e na
+  parede; a fornalha acesa mostra as brasas; a bancada lê como bancada (grade no topo, ferramentas nos lados).
+- Lote 3: numa caverna, cada minério se reconhece de longe pela cor do mineral; a ardósia deitada e em pé fica
+  coerente; granito, diorito e andesito ao lado da pedra do pacote não destoam; o baú simples e o duplo fecham
+  sem costura, a trava de osso fica na frente e o interior aparece ao abrir.
+- Lote 3b: o caminho mostra as pegadas em sequência como uma trilha; a terra arada lê como sulcos, seca e
+  molhada; a cana (cavalinha) e a vitória-régia recebem a cor do bioma.
+- Lote 3d: uma mesa (badlands) mostra os estratos de terracota coerentes entre si; o gelo comum continua
+  translúcido (dá para ver a água e o fundo) e o compactado e o azul ficam opacos; as raízes do mangue deixam ver
+  através; o arbusto de frutinhas muda nos 4 estágios e os frutos maduros aparecem; os cogumelos gigantes leem como
+  fungos (topo, caule e lado de dentro); o líquen de caverna brilha e não fica estranho na pedra do pacote.
+- Filtro (TX5): no mundo a imagem fica levemente quente e com vinheta, a mão e o HUD não mudam; `"era_filter":
+  false` em `config/terrassic-packs.json` (e F3+T ou reiniciar) desliga; força 0 e 1 mudam a intensidade; desligar
+  o pacote no menu desliga o filtro; com shaderpack do Iris/Oculus o filtro não aparece; nada de tela preta ao
+  redimensionar a janela, no F1, no modo espectador nem com gráficos "Fabuloso" (no Forge, em Fabuloso, a água e
+  as partículas podem ficar fora do filtro: anotar se destoar).

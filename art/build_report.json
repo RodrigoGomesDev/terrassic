@@ -35,21 +35,21 @@
  },
  "spinosaurus": {
   "bones": 24,
-  "cubes": 52,
+  "cubes": 130,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -9.0,
-    -3.0305849000663546e-05,
-    -59.08103907101546
+    -19.0,
+    -0.4039306607837405,
+    -122.2487088711055
    ],
    [
-    9.0,
-    49.0,
-    61.999976490604155
+    19.0,
+    84.0,
+    113.99997123302845
    ]
   ],
   "animations": [
@@ -65,7 +65,7 @@
    "animation.spinosaurus.beg",
    "animation.spinosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "dilophosaurus": {
   "bones": 25,
@@ -168,22 +168,22 @@
   "render_scale": 0.3
  },
  "triceratops": {
-  "bones": 25,
-  "cubes": 56,
+  "bones": 30,
+  "cubes": 139,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -11.0,
-    -0.24848177044797914,
-    -44.25544161496309
+    -22.0,
+    4.6530449083981296e-05,
+    -88.27812892663317
    ],
    [
-    11.0,
-    36.224082217454594,
-    44.2066357550258
+    22.0,
+    69.90795507224422,
+    65.57767463509177
    ]
   ],
   "animations": [
@@ -199,7 +199,7 @@
    "animation.triceratops.beg",
    "animation.triceratops.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "stegosaurus": {
   "bones": 25,
@@ -270,22 +270,22 @@
   "render_scale": 1.0
  },
  "brachiosaurus": {
-  "bones": 28,
-  "cubes": 49,
+  "bones": 30,
+  "cubes": 72,
   "texture": [
-   128,
-   256
+   512,
+   512
   ],
   "bounds_px": [
    [
-    -12.5,
-    -4.143734815780691e-06,
-    -43.918119309379335
+    -26.0,
+    1.1826288163838702e-05,
+    -173.81975715767152
    ],
    [
-    12.5,
-    82.5367379116179,
-    64.08728363697021
+    26.0,
+    214.8425995671334,
+    162.30590672592243
    ]
   ],
   "animations": [
@@ -301,7 +301,7 @@
    "animation.brachiosaurus.beg",
    "animation.brachiosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "parasaurolophus": {
   "bones": 27,

@@ -28,7 +28,10 @@ import java.nio.file.Path;
  *   "storm_creatures": 3,         // creatures from other eras that can be around each player at once
  *   "progression_mode": "normal", // v0.9, mode of new worlds: "normal", "rapido" or "livre" (docs/SALTO.md)
  *   "meteor_damage": true,        // v0.9: meteors of the ritual hurt what they hit (never blocks)
- *   "ritual_call_seconds": 30     // v0.9: meteors before the Rift Tyrant answers the ritual
+ *   "ritual_call_seconds": 30,    // v0.9: meteors before the Rift Tyrant answers the ritual
+ *   "mundo_padrao": true,         // "Criar novo mundo" opens on the Terrassic world type (docs/MUNDO.md, 10.3)
+ *   "borda": true,                // a new continent world gets a world border around its sea (10.2)
+ *   "borda_em_raios": 2.0         // distance from the middle of the continent to the border, in continent radii
  * }
  * </pre>
  */
@@ -91,6 +94,30 @@ public final class WorldConfig {
         return Math.max(5, (int) number("ritual_call_seconds", 30));
     }
 
+    /** "Criar novo mundo" opens on the Terrassic world type. */
+    public static boolean defaultWorldType() {
+        return bool("mundo_padrao", true);
+    }
+
+    /** A new continent world gets a square world border around its sea. */
+    public static boolean continentBorder() {
+        return bool("borda", true);
+    }
+
+    /** Distance from the middle of the continent to the world border, in continent radii (at least 1.1). */
+    public static double continentBorderRadii() {
+        return Math.max(1.1D, number("borda_em_raios", 2.0D));
+    }
+
+    /** A boolean from the file, or the default when the value is missing or not a boolean (never throws). */
+    private static boolean bool(String key, boolean fallback) {
+        try {
+            return get().get(key).getAsBoolean();
+        } catch (RuntimeException e) {
+            return fallback;
+        }
+    }
+
     /** A number from the file, or the default when the value is missing or not a number (never throws). */
     private static double number(String key, double fallback) {
         try {
@@ -127,6 +154,9 @@ public final class WorldConfig {
         changed |= def(cfg, "progression_mode", "normal");
         changed |= def(cfg, "meteor_damage", true);
         changed |= def(cfg, "ritual_call_seconds", 30);
+        changed |= def(cfg, "mundo_padrao", true);
+        changed |= def(cfg, "borda", true);
+        changed |= def(cfg, "borda_em_raios", 2.0D);
         if (changed) {
             try {
                 Files.createDirectories(file.getParent());

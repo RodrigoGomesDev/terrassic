@@ -20,6 +20,7 @@ SIZES in tools/javagen/gen_species.py (game exception: 1.5x the real span so a r
 Built on the pterosaur archetype (species/pterosaur.py): wing bones, folding and the animation set.
 """
 import math
+from groundfit import fit_to_ground
 from rig import track, keys, add_saddle, lowest_point
 import pterosaur
 
@@ -221,5 +222,8 @@ def build():
     low = lowest_point(m, sit["bones"])
     sit["bones"]["body"]["position"] = [[k[0], k[1], round(k[2] - low, 3), k[3]] for k in sit["bones"]["body"]["position"]]
     m._jaw_y = HEAD[0] - 2   # jaw line height, for the beak's cutting edge in pattern()
+    # keep the long snout out of the ground when it eats / strikes
+    fit_to_ground(m, "eat", ("neck1", "neck2", "skull", "body"))
+    fit_to_ground(m, "attack", ("neck1", "neck2", "skull", "body"))
     return m
 

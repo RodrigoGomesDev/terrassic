@@ -1,0 +1,59 @@
+{
+  "targets": [
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "terrassic_era_grade",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "uniforms": [
+        {
+          "name": "Strength",
+          "values": [
+            0.6
+          ]
+        },
+        {
+          "name": "Desaturation",
+          "values": [
+            0.08
+          ]
+        },
+        {
+          "name": "Warmth",
+          "values": [
+            1.035,
+            1.0,
+            0.95
+          ]
+        },
+        {
+          "name": "Fade",
+          "values": [
+            0.95
+          ]
+        },
+        {
+          "name": "Lift",
+          "values": [
+            0.03,
+            0.022,
+            0.01
+          ]
+        },
+        {
+          "name": "Vignette",
+          "values": [
+            0.4
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

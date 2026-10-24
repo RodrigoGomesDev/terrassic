@@ -115,13 +115,15 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
 - Ciência: `tools/javagen/gen_science.py` (itens, Rocha Fossilífera, Mesa, receitas, worldgen, conquistas de `conquistas.py`, `Lore.java`) e
   `tools/javagen/lore.py` (TODO o texto de história, Guia, objetivos e tela, nos 3 idiomas). Sprites em `tools/spritegen/science.py`.
   Espécie nova precisa de entrada em `GUIDE` (gen_species.py), em `lore.GUIDE` e um motivo em `FOSSIL_MOTIF` (science.py).
-- Blocos de construção: texturas em `tools/spritegen/blocks.py`, pintadas com o motor v2 `tools/spritegen/pixelkit.py`
-  (grade de ÍNDICES de tom, 4 a 6 tons por material, aglomerados sem pixel solto, relevo de 1 px: borda clara em
-  cima/esquerda, sombra embaixo/direita, junta no tom mais escuro; como as texturas vanilla) e domadas por
-  `pk.tame` no build (contraste p95-p5 de luminância até 68, perto da mediana vanilla 64; motivos fortes têm teto
-  próprio em TAME_CAPS). Meta medida no vanilla 1.20.1: 6 a 12 cores, contraste ~64, diferença entre vizinhos ~16.
-  Estilo moderno (1.14+): face calma de um tom dominante (`pk.calm`), chanfro de 2 níveis (`pk.bevel`) e
-  detalhes desenhados espalhados por ruído azul (`pk.scatter`), nunca ruído pixel a pixel.
+- Blocos de construção: texturas em `tools/spritegen/blocks.py`. As SUPERFÍCIES (pedras, madeiras, folhas, palha,
+  telhados, esteiras, vime, pau a pique, rebocos, taipa, solos, âmbar, couros e tapetes) são desenhadas pelo mesmo
+  motor dos pacotes de era, em `tools/texpack/blocos.py` (receitas nossas; tex/stamps/fit/api/materials/woods/leaves são
+  da thread de progressão, não mexa): mapa de tons com base calma + detalhes carimbados por ruído azul, paleta ajustada
+  (`fit`) para o BRILHO e o matiz do material real e o CONTRASTE do bloco vanilla do mesmo papel (`own(cor, papel)`,
+  ROLE; `drift()` lista quem passa de 40 do papel). Fósseis de crânio são assentados na pedra nova da era.
+  Os MOTIVOS desenhados (crânios, totens, pinturas, portas, vasos, tochas, plantas) ainda usam o motor v2
+  `tools/spritegen/pixelkit.py` (grade de índices de tom) domados por `pk.tame` (contraste até 68; TAME_CAPS).
+  Meta medida no vanilla 1.20.1: 6 a 12 cores, contraste ~64, diferença entre vizinhos ~16.
   Mudas e plantas ainda usam o desenho antigo; tudo o resto vem da tabela BLOCKS de `tools/javagen/gen_blocks.py` (modelos, blockstates,
   loot, receitas de bancada e cortador de pedra, tags, veios de rocha, lang pt/en/es e o Java `BuildingBlocks.java`),
   chamado por gen_resources.py. Bloco novo: linha/família em gen_blocks.py + textura em blocks.py; material novo,

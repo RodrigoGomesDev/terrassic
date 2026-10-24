@@ -1,14 +1,17 @@
 """Generates the Cretaceous world of Chapter 1 (v0.8, "Mundo Terrassic"):
 
   * the 11 biomes of the Late Cretaceous (data/terrassic/worldgen/biome/*.json) with their plants, trees,
-    rocks, colours, particles and the vanilla mobs that fit the era (no cows, villagers, zombies on the surface,
-    bats or dolphins);
+    rocks, colours, particles and only the vanilla monsters of the caves (no vanilla animal at all, no villagers,
+    no zombies on the surface);
   * the placed/configured features those biomes use (data/terrassic/worldgen/*_feature/cretaceous/...),
     built on the trees and plants of the building-block phases (gen_blocks.py);
-  * the world types "Terrassic" and "Terrassic: Large Biomes" (data/terrassic/worldgen/world_preset/*.json),
-    listed on the Create World screen. The overworld uses the vanilla terrain; only the biome map changes. The
-    biome map is the vanilla OverworldBiomeBuilder (ported below) with every vanilla biome mapped to its
-    Cretaceous counterpart, so rivers, coasts, swamps and mountains land where the terrain expects them;
+  * the world types "Terrassic", "Terrassic: Small Island" and "Terrassic: Large Continent"
+    (data/terrassic/worldgen/world_preset/*.json), listed on the Create World screen ("Terrassic" is picked by
+    default). Each is ONE continent of a given radius with the sea all around (docs/MUNDO.md, section 10): the
+    biome map is wrapped in the biome source terrassic:continente, which carries the radius, and the mod swaps the
+    vanilla continentalness for the continent's (world/continent/). The biome map is the vanilla
+    OverworldBiomeBuilder (ported below) with every vanilla biome mapped to its Cretaceous counterpart, so rivers,
+    coasts, swamps and mountains land where the terrain expects them;
   * biome tags: terrassic:cretaceous (all of them), terrassic:habitat/<word> (which species spawn there: the
     words are the ones of the WORLD table in gen_species.py) and a few vanilla tags (no patrols, no wandering
     traders, map outlines, underwater music...);
@@ -66,7 +69,10 @@ def spawn(mob, weight, lo, hi):
 MONSTERS = [spawn("minecraft:spider", 100, 4, 4), spawn("minecraft:zombie", 95, 4, 4),
             spawn("minecraft:skeleton", 100, 4, 4), spawn("minecraft:creeper", 100, 4, 4),
             spawn("minecraft:slime", 100, 4, 4), spawn("minecraft:enderman", 10, 1, 4)]
-CAVE_WATER = [spawn("minecraft:glow_squid", 10, 4, 6)]
+# No vanilla animals in the Cretaceous (docs/MUNDO.md, section 10.4): no glow squids in the caves, no fish, squids,
+# frogs or turtles in the water; the biomes get their fauna from the dinosaurs (ModSpawns, EcoSpawner) and
+# CretaceousBiomes refuses any vanilla animal another source would add.
+CAVE_WATER = []
 
 # placed features of the global overworld generation, in vanilla order (BiomeDefaultFeatures)
 BASE = {
@@ -129,9 +135,7 @@ BIOMES = {
              ("liverwort", 2), ("swamp_algae", 3), ("cretaceous_water_lily", 2), ("cretaceous_grass", 1),
              "minecraft:seagrass_swamp", "minecraft:brown_mushroom_swamp", "minecraft:red_mushroom_swamp"],
         disks=True, habitats=["swamp"], tags=["water_on_map_outlines", "has_closer_water_fog",
-                                             "allows_surface_slime_spawns"],
-        spawners=dict(creature=[spawn("minecraft:frog", 10, 2, 5)],
-                      water_ambient=[spawn("minecraft:tropical_fish", 4, 2, 4)])),
+                                             "allows_surface_slime_spawns"]),
     "redwood_forest": dict(
         names=("Redwood Forest", "Floresta de Sequoias", "Bosque de Secuoyas"),
         doc="Cool, tall forest of dawn redwoods and araucarias in the north, carpeted with needles.",
@@ -162,8 +166,7 @@ BIOMES = {
              ("cretaceous_water_lily", 1), ("cretaceous_grass", 2), ("royal_fern", -3),
              "terrassic:conglomerate_pebbles", "minecraft:seagrass_river"],
         disks=True, habitats=["river", "swamp", "jungle", "coast"],
-        tags=["water_on_map_outlines", "has_closer_water_fog"],
-        spawners=dict(water_ambient=[spawn("minecraft:tropical_fish", 6, 2, 4), spawn("minecraft:salmon", 4, 1, 4)])),
+        tags=["water_on_map_outlines", "has_closer_water_fog"]),
     "inner_sea": dict(
         names=("Inner Sea", "Mar Interior", "Mar Interior"),
         doc="The warm, shallow Western Interior Seaway: sand, seagrass and reefs.",
@@ -171,9 +174,7 @@ BIOMES = {
         sky=0x7BAEF0, fog=0xC6DCF5, water=0x3AA3D8, water_fog=0x0A3348, grass=0x8EB971, foliage=0x71A74D,
         veg=["minecraft:seagrass_warm", "minecraft:warm_ocean_vegetation"],
         disks=True, habitats=["ocean"],
-        tags=["water_on_map_outlines", "plays_underwater_music", "produces_corals_from_bonemeal"],
-        spawners=dict(water_creature=[spawn("minecraft:squid", 3, 1, 4)],
-                      water_ambient=[spawn("minecraft:tropical_fish", 25, 8, 8), spawn("minecraft:cod", 10, 3, 6)])),
+        tags=["water_on_map_outlines", "plays_underwater_music", "produces_corals_from_bonemeal"]),
     "deep_inner_sea": dict(
         names=("Deep Inner Sea", "Mar Interior Profundo", "Mar Interior Profundo"),
         doc="The deep water of the seaway, home of the mosasaurs.",
@@ -181,9 +182,7 @@ BIOMES = {
         sky=0x7BAEF0, fog=0xC6DCF5, water=0x2E7FC0, water_fog=0x061F38, grass=0x8EB971, foliage=0x71A74D,
         veg=["minecraft:seagrass_deep_warm"],
         disks=True, habitats=["ocean", "deep_sea"],
-        tags=["water_on_map_outlines", "plays_underwater_music"],
-        spawners=dict(water_creature=[spawn("minecraft:squid", 6, 1, 4)],
-                      water_ambient=[spawn("minecraft:cod", 10, 3, 6)])),
+        tags=["water_on_map_outlines", "plays_underwater_music"]),
     "cretaceous_river": dict(
         names=("Cretaceous River", "Rio do Cretáceo", "Río del Cretácico"),
         doc="Rivers with gravel and sand bars, plane trees on the banks and horsetails in the shallows.",
@@ -194,17 +193,14 @@ BIOMES = {
              ("cretaceous_grass", 1), "terrassic:quartzite_pebbles", "terrassic:gneiss_pebbles",
              "minecraft:seagrass_river"],
         disks=True, habitats=["river"],
-        tags=["water_on_map_outlines", "plays_underwater_music", "reduce_water_ambient_spawns"],
-        spawners=dict(water_creature=[spawn("minecraft:squid", 2, 1, 4)],
-                      water_ambient=[spawn("minecraft:salmon", 5, 1, 5)])),
+        tags=["water_on_map_outlines", "plays_underwater_music", "reduce_water_ambient_spawns"]),
     "cretaceous_beach": dict(
         names=("Cretaceous Shore", "Praia do Cretáceo", "Playa del Cretácico"),
         doc="Sand and limestone shores of the seaway, where pterosaurs and sea turtles come ashore.",
         temp=0.85, downfall=0.4, rain=True,
         sky=0x7BAEF0, fog=0xC6DCF5, water=0x3AA3D8, water_fog=0x0A3348, grass=0x9DB85A, foliage=0x84A33E,
         veg=["terrassic:limestone_pebbles", "terrassic:flint_pebbles"],
-        habitats=["coast"],
-        spawners=dict(creature=[spawn("minecraft:turtle", 5, 2, 5)])),
+        habitats=["coast"]),
     "cretaceous_highlands": dict(
         names=("Cretaceous Highlands", "Serras do Cretáceo", "Sierras del Cretácico"),
         doc="Mountains of bare stone and quartzite, araucarias on the slopes and lichen on the rocks.",
@@ -681,11 +677,22 @@ def biome_source():
         "erosion": param(e[3]), "weirdness": param(e[4]), "depth": [0.0, 1.0], "offset": 0.0}} for e in merged], len(entries)
 
 
-def world_preset(settings, biomes):
+# world types: id -> (noise settings, continent radius in blocks, names en/pt/es); "terrassic" is the default
+WORLD_TYPES = {
+    "terrassic": ("minecraft:overworld", 1200, ("Terrassic", "Terrassic", "Terrassic")),
+    "terrassic_small": ("minecraft:overworld", 800,
+                        ("Terrassic: Small Island", "Terrassic: Ilha Pequena", "Terrassic: Isla Pequeña")),
+    "terrassic_large": ("minecraft:large_biomes", 2000,
+                        ("Terrassic: Large Continent", "Terrassic: Continente Grande", "Terrassic: Continente Grande")),
+}
+
+
+def world_preset(settings, biomes, radius):
     return {"dimensions": {
         "minecraft:overworld": {"type": "minecraft:overworld", "generator": {
             "type": "minecraft:noise", "settings": settings,
-            "biome_source": {"type": "minecraft:multi_noise", "biomes": biomes}}},
+            "biome_source": {"type": f"{NS}:continente", "raio": radius,
+                             "biome_source": {"type": "minecraft:multi_noise", "biomes": biomes}}}},
         "minecraft:the_nether": {"type": "minecraft:the_nether", "generator": {
             "type": "minecraft:noise", "settings": "minecraft:nether",
             "biome_source": {"type": "minecraft:multi_noise", "preset": "minecraft:nether"}}},
@@ -703,15 +710,12 @@ def main():
         LANG["es_es"][f"biome.{NS}.{bid}"] = es
 
     biomes, raw_count = biome_source()
-    write(os.path.join(WG, "world_preset", "terrassic.json"), world_preset("minecraft:overworld", biomes))
-    write(os.path.join(WG, "world_preset", "terrassic_large.json"), world_preset("minecraft:large_biomes", biomes))
+    for wid, (settings, radius, names) in WORLD_TYPES.items():
+        write(os.path.join(WG, "world_preset", wid + ".json"), world_preset(settings, biomes, radius))
+        for code, name in zip(("en_us", "pt_br", "es_es"), names):
+            LANG[code][f"generator.{NS}.{wid}"] = name
     merge_tag(os.path.join(DATA, "minecraft", "tags", "worldgen", "world_preset", "normal.json"),
-              [f"{NS}:terrassic", f"{NS}:terrassic_large"])
-    for code, (a, b) in {"en_us": ("Terrassic", "Terrassic: Large Biomes"),
-                         "pt_br": ("Terrassic", "Terrassic: Biomas Grandes"),
-                         "es_es": ("Terrassic", "Terrassic: Biomas Grandes")}.items():
-        LANG[code][f"generator.{NS}.terrassic"] = a
-        LANG[code][f"generator.{NS}.terrassic_large"] = b
+              [f"{NS}:{wid}" for wid in WORLD_TYPES])
 
     # biome tags
     all_ids = [f"{NS}:{bid}" for bid in BIOMES]

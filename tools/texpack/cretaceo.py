@@ -274,12 +274,16 @@ SS_HUE, SS_SAT = 0.115, 0.29
 def ss_pal(t, name, n=5, dl=-4, dc=0):
     m, c = tgt(name, dl, dc); return fit(t, n, m, c, hue=SS_HUE, sat=SS_SAT, hue_shift=0.012, sat_shift=0.04)
 
-def sandstone_top(seed=1):
+def sandstone_top_tones(seed=1):
     v = 0.6 * T.fbm(seed, [(16, 16, 1.0)]) + 0.4 * T.fbm(seed + 1, [(4, 4, 1.0)])
     t = T.quantize(v, [.1, .3, .4, .2])
+    return t
+
+def sandstone_top(seed=1):
+    t = sandstone_top_tones(seed)
     return paint(t, ss_pal(t, 'sandstone_top', 4))
 
-def sandstone_side(seed=1):
+def sandstone_side_tones(seed=1):
     r = T.rng(seed); rows = []
     while len(rows) < N:
         h = int(r.integers(2, 5)); rows += [int(r.choice([2, 2, 3, 1]))] * h
@@ -293,19 +297,31 @@ def sandstone_side(seed=1):
     t = np.where((g > .72) & (t > 0) & (t < 4), t + 1, t)
     t = np.where((g < .2) & (t > 1), t - 1, t)
     t[0, :] = 4; t[1, :] = np.maximum(t[1, :], 3); t[N - 1, :] = np.minimum(t[N - 1, :], 1)
+    return t
+
+def sandstone_side(seed=1):
+    t = sandstone_side_tones(seed)
     return paint(t, ss_pal(t, 'sandstone'))
 
-def sandstone_bottom(seed=2):
+def sandstone_bottom_tones(seed=2):
     t = base(seed, 2, 1, 3, .2, .2, layers=((4, 4, .5), (8, 8, .5)))
     for (x, y) in poisson(seed + 2, 7, 3.6): stamp(t, x, y, ['D.', '.D'], {'D': 0})
     g = T.fbm(seed + 3, [(16, 16, 1.)])
     t = np.where((g > .75) & (t < 4) & (t > 0), t + 1, t)
+    return t
+
+def sandstone_bottom(seed=2):
+    t = sandstone_bottom_tones(seed)
     return paint(t, ss_pal(t, 'sandstone_bottom'))
 
-def cut_sandstone(seed=1):
+def cut_sandstone_tones(seed=1):
     t = base(seed, 2, 1, 3, .15, .15, layers=((8, 8, 1),))
     for top in (0, 8):
         t[top, :] = 4; t[top + 7, :] = 0; t[top + 1:top + 7, 0] = 3; t[top + 1:top + 7, N - 1] = 1
+    return t
+
+def cut_sandstone(seed=1):
+    t = cut_sandstone_tones(seed)
     return paint(t, ss_pal(t, 'cut_sandstone'))
 
 def footprint():
@@ -316,7 +332,7 @@ def footprint():
     m[5:8, 4:8] = True; m[8, 5:7] = True
     return m
 
-def chiseled_sandstone(seed=1):
+def chiseled_sandstone_tones(seed=1):
     t = base(seed, 2, 1, 3, .15, .15, layers=((8, 8, 1),))
     t[0, :] = 4; t[:, 0] = 4; t[N - 1, :] = 0; t[:, N - 1] = 0
     t[1, 1:N - 1] = 3; t[1:N - 1, 1] = 3; t[N - 2, 1:N - 1] = 1; t[1:N - 1, N - 2] = 1
@@ -324,6 +340,10 @@ def chiseled_sandstone(seed=1):
     t = np.where(cut, 1, t)
     t = np.where(cut & ~T.roll(cut, -1, -1), 0, t)
     t = np.where(T.roll(cut, -1, -1) & ~cut, 4, t)
+    return t
+
+def chiseled_sandstone(seed=1):
+    t = chiseled_sandstone_tones(seed)
     return paint(t, ss_pal(t, 'chiseled_sandstone'))
 
 # ---------------------------------------------------------------- clay, mud

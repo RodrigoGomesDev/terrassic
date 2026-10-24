@@ -4,12 +4,15 @@ import com.terrassic.Terrassic;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.EntityEvent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.horse.SkeletonHorse;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Phantom;
@@ -34,9 +37,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@code terrassic:habitat/<word>} (forest, river, savanna...), so a species added to the WORLD table of
  * gen_species.py spawns here without touching this class.
  *
- * <p>Here: the vanilla night monsters that do not belong to the era (see {@link #blocksSpawn}). In Cretaceous biomes
+ * <p>Here: the vanilla creatures that do not belong to the era (see {@link #blocksSpawn}). In Cretaceous biomes
  * zombies and skeletons only spawn below the surface (caves keep their monsters and drops), and witches, zombie
- * villagers, drowned and phantoms never spawn naturally. Spawners in monster rooms and spawn eggs are left alone.
+ * villagers, drowned and phantoms never spawn naturally. No vanilla animal spawns there at all (docs/MUNDO.md, section
+ * 10.4): the biome JSONs list none, and anything another source would add (a mod, a data pack, the skeleton horse
+ * trap of a thunderstorm) is refused too; food and resources come from the prehistoric fauna. Spawners in monster
+ * rooms and spawn eggs are left alone.
  */
 public final class CretaceousBiomes {
     public static final ResourceKey<Biome> HADROSAUR_PLAINS = key("hadrosaur_plains");
@@ -82,6 +88,9 @@ public final class CretaceousBiomes {
         if (type != MobSpawnType.NATURAL && type != MobSpawnType.CHUNK_GENERATION) {
             return false;
         }
+        if (isVanillaAnimal(mob)) {
+            return level.getBiome(mob.blockPosition()).is(CRETACEOUS);
+        }
         boolean never = mob instanceof Witch || mob instanceof ZombieVillager || mob instanceof Drowned;
         boolean blockedOnSurface = mob instanceof Zombie || mob instanceof AbstractSkeleton;
         if (!never && !blockedOnSurface) {
@@ -95,9 +104,19 @@ public final class CretaceousBiomes {
         return never || pos.getY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) - 2;
     }
 
-    /** Phantoms don't go through spawn rules (PhantomSpawner adds them directly): keep them out of the Cretaceous. */
+    /** Any creature of vanilla Minecraft that is not a monster: animals, fish, squids, bats, villagers... */
+    private static boolean isVanillaAnimal(Entity entity) {
+        return entity.getType().getCategory() != MobCategory.MONSTER
+                && "minecraft".equals(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).getNamespace());
+    }
+
+    /**
+     * Phantoms and the skeleton horse trap of thunderstorms don't go through spawn rules (they are added directly):
+     * keep them out of the Cretaceous.
+     */
     private static EventResult onAdd(Entity entity, Level level) {
-        if (entity instanceof Phantom && !level.isClientSide && level.getBiome(entity.blockPosition()).is(CRETACEOUS)) {
+        boolean outOfEra = entity instanceof Phantom || entity instanceof SkeletonHorse horse && horse.isTrap();
+        if (outOfEra && !level.isClientSide && level.getBiome(entity.blockPosition()).is(CRETACEOUS)) {
             return EventResult.interruptFalse();
         }
         return EventResult.pass();

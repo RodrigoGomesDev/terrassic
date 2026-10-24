@@ -13,11 +13,11 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
                            int fossilWeight, float guiScale) {
     public static final List<GuideSpecies> ALL = List.of(
             new GuideSpecies("tyrannosaurus", "late_cretaceous", "carnivore", 13.0F, true, true, 2, 7.68F),
-            new GuideSpecies("spinosaurus", "late_cretaceous", "piscivore", 14.0F, false, true, 2, 7.14F),
+            new GuideSpecies("spinosaurus", "late_cretaceous", "piscivore", 14.0F, false, true, 2, 7.13F),
             new GuideSpecies("dilophosaurus", "jurassic", "carnivore", 7.0F, false, true, 4, 13.06F),
             new GuideSpecies("velociraptor", "late_cretaceous", "carnivore", 2.07F, false, true, 4, 48.63F),
             new GuideSpecies("compsognathus", "jurassic", "carnivore", 1.25F, false, false, 3, 74.84F),
-            new GuideSpecies("triceratops", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 11.1F),
+            new GuideSpecies("triceratops", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 11.06F),
             new GuideSpecies("styracosaurus", "late_cretaceous", "herbivore", 5.5F, true, false, 4, 18.07F),
             new GuideSpecies("pachyrhinosaurus", "late_cretaceous", "herbivore", 8.0F, true, false, 5, 12.47F),
             new GuideSpecies("protoceratops", "late_cretaceous", "herbivore", 2.0F, false, false, 6, 49.58F),
@@ -26,7 +26,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("euoplocephalus", "late_cretaceous", "herbivore", 6.0F, false, false, 5, 16.71F),
             new GuideSpecies("therizinosaurus", "late_cretaceous", "herbivore", 10.0F, true, true, 2, 10.02F),
             new GuideSpecies("deinocheirus", "late_cretaceous", "omnivore", 11.0F, true, false, 1, 9.06F),
-            new GuideSpecies("brachiosaurus", "jurassic", "herbivore", 22.0F, true, false, 3, 4.54F),
+            new GuideSpecies("brachiosaurus", "jurassic", "herbivore", 22.0F, true, false, 3, 4.53F),
             new GuideSpecies("alamosaurus", "late_cretaceous", "herbivore", 30.0F, true, false, 2, 3.34F),
             new GuideSpecies("saltasaurus", "late_cretaceous", "herbivore", 12.0F, true, false, 3, 8.34F),
             new GuideSpecies("argentinosaurus", "late_cretaceous", "herbivore", 35.0F, true, true, 1, 2.86F),

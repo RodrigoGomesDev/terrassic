@@ -1,0 +1,42 @@
+package com.terrassic.mixin.client;
+
+import com.terrassic.config.WorldConfig;
+import com.terrassic.world.continent.ModContinent;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.presets.WorldPreset;
+import net.minecraft.world.level.levelgen.presets.WorldPresets;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+/**
+ * "Criar novo mundo" starts on the Terrassic world type instead of "Padrão" (docs/MUNDO.md, section 10.3): whenever
+ * the screen opens on the vanilla default type it switches to Terrassic (re-creating a world of another type keeps
+ * that type). The player can still pick any other type in the list, and {@code "mundo_padrao": false} in
+ * config/terrassic-world.json turns this off.
+ */
+@Mixin(WorldCreationUiState.class)
+public abstract class WorldCreationUiStateMixin {
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void terrassic$defaultToTerrassic(CallbackInfo ci) {
+        WorldCreationUiState self = (WorldCreationUiState) (Object) this;
+        Holder<WorldPreset> current = self.getWorldType().preset();
+        if (current == null || !current.is(WorldPresets.NORMAL) || !WorldConfig.defaultWorldType()) {
+            return;
+        }
+        for (WorldCreationUiState.WorldTypeEntry entry : self.getNormalPresetList()) {
+            Holder<WorldPreset> preset = entry.preset();
+            if (preset != null && preset.is(ModContinent.DEFAULT_PRESET)) {
+                self.setWorldType(entry);
+                return;
+            }
+        }
+        // the type is listed through the world_preset/normal tag; if the list is not filled yet, look it up directly
+        self.getSettings().worldgenLoadContext().registryOrThrow(Registries.WORLD_PRESET)
+                .getHolder(ModContinent.DEFAULT_PRESET)
+                .ifPresent(preset -> self.setWorldType(new WorldCreationUiState.WorldTypeEntry(preset)));
+    }
+}

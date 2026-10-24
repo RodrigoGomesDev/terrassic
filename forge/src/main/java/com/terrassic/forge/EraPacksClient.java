@@ -53,7 +53,7 @@ final class EraPacksClient {
                 mc.options.save();
             }
             done.add(id);
-            JsonObject out = new JsonObject();
+            JsonObject out = root != null ? root : new JsonObject();   // keep the other settings (era filter)
             out.add("enabled_once", done);
             Files.createDirectories(file.getParent());
             try (Writer w = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {

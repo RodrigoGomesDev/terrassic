@@ -26,7 +26,7 @@ public class Triceratops extends HerbivoreDinosaur {
     public static final float WIDTH = 2.4F;
     public static final float HEIGHT = 3.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.63F;
+    public static final float MODEL_SCALE = 0.94F;
     public static final float SHADOW = 2.0F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.LARGE_FERN);
 
@@ -78,7 +78,7 @@ public class Triceratops extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.53D * this.getScale();
+        return 2.58D * this.getScale();
     }
 
     @Override

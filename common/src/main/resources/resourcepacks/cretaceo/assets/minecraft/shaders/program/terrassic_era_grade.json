@@ -1,0 +1,112 @@
+{
+  "blend": {
+    "func": "add",
+    "srcrgb": "one",
+    "dstrgb": "zero"
+  },
+  "vertex": "sobel",
+  "fragment": "terrassic_era_grade",
+  "attributes": [
+    "Position"
+  ],
+  "samplers": [
+    {
+      "name": "DiffuseSampler"
+    }
+  ],
+  "uniforms": [
+    {
+      "name": "ProjMat",
+      "type": "matrix4x4",
+      "count": 16,
+      "values": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "name": "InSize",
+      "type": "float",
+      "count": 2,
+      "values": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "OutSize",
+      "type": "float",
+      "count": 2,
+      "values": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "name": "Strength",
+      "type": "float",
+      "count": 1,
+      "values": [
+        0.6
+      ]
+    },
+    {
+      "name": "Desaturation",
+      "type": "float",
+      "count": 1,
+      "values": [
+        0.08
+      ]
+    },
+    {
+      "name": "Warmth",
+      "type": "float",
+      "count": 3,
+      "values": [
+        1.035,
+        1.0,
+        0.95
+      ]
+    },
+    {
+      "name": "Fade",
+      "type": "float",
+      "count": 1,
+      "values": [
+        0.95
+      ]
+    },
+    {
+      "name": "Lift",
+      "type": "float",
+      "count": 3,
+      "values": [
+        0.03,
+        0.022,
+        0.01
+      ]
+    },
+    {
+      "name": "Vignette",
+      "type": "float",
+      "count": 1,
+      "values": [
+        0.4
+      ]
+    }
+  ]
+}
