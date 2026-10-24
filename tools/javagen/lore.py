@@ -711,6 +711,22 @@ GUIDE = {
         note=("Ele pesca melhor que eu. Com as mãos. Isso não devia me incomodar tanto.",
               "It fishes better than I do. With its hands. That should not bother me as much as it does.",
               "Pesca mejor que yo. Con las manos. Eso no debería molestarme tanto.")),
+    "alamosaurus": dict(
+        sci=("Viveu há 70 a 66 milhões de anos no sudoeste da América do Norte, até o fim do Cretáceo. Titanossauro de 26 a 30 m e 30 a 80 toneladas, o último e o maior saurópode do continente: patas em coluna bem abertas, dorso nivelado, pescoço comprido para a frente, cabeça pequena e cauda em chicote. Um osteodermo achado mostra alguma armadura na pele. Dividia a terra com o T. rex e o Quetzalcoatlus.",
+             "Lived 70 to 66 million years ago in the southwest of North America, right up to the end of the Cretaceous. A titanosaur of 26 to 30 m and 30 to 80 tonnes, the last and largest sauropod of the continent: wide-set column legs, a level back, a long neck held forward, a small head and a whip tail. One osteoderm found shows some armour in its skin. It shared the land with the T. rex and the Quetzalcoatlus.",
+             "Vivió hace 70 a 66 millones de años en el suroeste de Norteamérica, hasta el final del Cretácico. Titanosaurio de 26 a 30 m y 30 a 80 toneladas, el último y mayor saurópodo del continente: patas en columna bien abiertas, lomo nivelado, cuello largo hacia delante, cabeza pequeña y cola en látigo. Un osteodermo hallado muestra algo de armadura en la piel. Compartía la tierra con el T. rex y el Quetzalcoatlus."),
+        behavior=("Pares nas badlands, savanas e desertos, comendo folhas do alto. Pacífico; machucado, gira e estala a cauda como um chicote, e o que estiver atrás dele voa.",
+                  "Pairs in the badlands, savannas and deserts, eating leaves from on high. Peaceful; hurt, it turns and cracks its tail like a whip, and whatever stands behind it goes flying.",
+                  "Parejas en las badlands, sabanas y desiertos, comiendo hojas de lo alto. Pacífico; herido, gira y restalla la cola como un látigo, y lo que esté detrás sale volando."),
+        taming=("Doma-se na mão com folhas de qualquer árvore. Os pares põem um ovo grande.",
+                "Hand-tamed with leaves of any tree. Pairs lay a large egg.",
+                "Se doma a mano con hojas de cualquier árbol. Las parejas ponen un huevo grande."),
+        utility=("A montaria mais alta do Cretáceo: do lombo dele se vê o horizonte. A sela de plataforma, para construir em cima, chega com os sistemas da v0.6.",
+                 "The tallest mount of the Cretaceous: from its back you see the horizon. The platform saddle, for building on top, arrives with the v0.6 systems.",
+                 "La montura más alta del Cretácico: desde su lomo se ve el horizonte. La silla de plataforma, para construir encima, llega con los sistemas de la v0.6."),
+        note=("Dormi no lombo dele. Acordei em outro bioma.",
+              "I slept on its back. I woke up in another biome.",
+              "Dormí en su lomo. Desperté en otro bioma.")),
 }
 
 ERAS = {

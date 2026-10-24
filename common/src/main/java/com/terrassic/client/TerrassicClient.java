@@ -1,6 +1,7 @@
 package com.terrassic.client;
 
 // BEGIN GENERATED imports
+import com.terrassic.entity.Alamosaurus;
 import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Archelon;
 import com.terrassic.entity.Baurusuchus;
@@ -69,6 +70,7 @@ public final class TerrassicClient {
         renderer(ModEntities.THERIZINOSAURUS, "therizinosaurus", Therizinosaurus.MODEL_SCALE, Therizinosaurus.SHADOW);
         renderer(ModEntities.DEINOCHEIRUS, "deinocheirus", Deinocheirus.MODEL_SCALE, Deinocheirus.SHADOW);
         renderer(ModEntities.BRACHIOSAURUS, "brachiosaurus", Brachiosaurus.MODEL_SCALE, Brachiosaurus.SHADOW);
+        renderer(ModEntities.ALAMOSAURUS, "alamosaurus", Alamosaurus.MODEL_SCALE, Alamosaurus.SHADOW);
         renderer(ModEntities.PARASAUROLOPHUS, "parasaurolophus", Parasaurolophus.MODEL_SCALE, Parasaurolophus.SHADOW);
         renderer(ModEntities.PACHYCEPHALOSAURUS, "pachycephalosaurus", Pachycephalosaurus.MODEL_SCALE, Pachycephalosaurus.SHADOW);
         renderer(ModEntities.THESCELOSAURUS, "thescelosaurus", Thescelosaurus.MODEL_SCALE, Thescelosaurus.SHADOW);

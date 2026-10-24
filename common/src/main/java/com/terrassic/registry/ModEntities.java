@@ -2,6 +2,7 @@ package com.terrassic.registry;
 
 import com.terrassic.Terrassic;
 // BEGIN GENERATED imports
+import com.terrassic.entity.Alamosaurus;
 import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Archelon;
 import com.terrassic.entity.Baurusuchus;
@@ -90,6 +91,8 @@ public final class ModEntities {
             mob("deinocheirus", Deinocheirus::new, MobCategory.CREATURE, Deinocheirus.WIDTH, Deinocheirus.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Brachiosaurus>> BRACHIOSAURUS =
             mob("brachiosaurus", Brachiosaurus::new, MobCategory.CREATURE, Brachiosaurus.WIDTH, Brachiosaurus.HEIGHT, 14);
+    public static final RegistrySupplier<EntityType<Alamosaurus>> ALAMOSAURUS =
+            mob("alamosaurus", Alamosaurus::new, MobCategory.CREATURE, Alamosaurus.WIDTH, Alamosaurus.HEIGHT, 16);
     public static final RegistrySupplier<EntityType<Parasaurolophus>> PARASAUROLOPHUS =
             mob("parasaurolophus", Parasaurolophus::new, MobCategory.CREATURE, Parasaurolophus.WIDTH, Parasaurolophus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Pachycephalosaurus>> PACHYCEPHALOSAURUS =
@@ -167,6 +170,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(THERIZINOSAURUS, Therizinosaurus::createAttributes);
         EntityAttributeRegistry.register(DEINOCHEIRUS, Deinocheirus::createAttributes);
         EntityAttributeRegistry.register(BRACHIOSAURUS, Brachiosaurus::createAttributes);
+        EntityAttributeRegistry.register(ALAMOSAURUS, Alamosaurus::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
         EntityAttributeRegistry.register(THESCELOSAURUS, Thescelosaurus::createAttributes);

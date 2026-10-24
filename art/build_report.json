@@ -1192,5 +1192,39 @@
    "animation.deinocheirus.fish"
   ],
   "render_scale": 1.0
+ },
+ "alamosaurus": {
+  "bones": 31,
+  "cubes": 60,
+  "texture": [
+   256,
+   256
+  ],
+  "bounds_px": [
+   [
+    -15.0,
+    -1.4273451647191314e-06,
+    -71.7029850711098
+   ],
+   [
+    15.0,
+    71.06995835079354,
+    86.98254337609544
+   ]
+  ],
+  "animations": [
+   "animation.alamosaurus.idle",
+   "animation.alamosaurus.walk",
+   "animation.alamosaurus.run",
+   "animation.alamosaurus.sit",
+   "animation.alamosaurus.graze",
+   "animation.alamosaurus.knocked_out",
+   "animation.alamosaurus.wake",
+   "animation.alamosaurus.eat",
+   "animation.alamosaurus.beg",
+   "animation.alamosaurus.tame",
+   "animation.alamosaurus.attack"
+  ],
+  "render_scale": 1.0
  }
 }
