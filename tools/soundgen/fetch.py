@@ -71,7 +71,7 @@ def fetch_one(sid, s):
         lic, url = commons_licence(s["url"])
         if not any(k in lic.lower() for k in OK_LICENCE):
             return f"SKIPPED: Commons licence is '{lic}', not PD/CC0", []
-        curl(url, os.path.join(folder, os.path.basename(urllib.parse.unquote(url))))
+        curl(url, os.path.join(folder, os.path.basename(urllib.parse.unquote(urllib.parse.urlparse(url).path))))
     elif s["kind"] == "file":
         curl(s["url"], os.path.join(folder, os.path.basename(s["url"])))
     elif s["kind"] == "zip":
