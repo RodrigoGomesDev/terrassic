@@ -19,7 +19,7 @@ import java.nio.file.Path;
  * missing so the file always lists every option):
  * <pre>
  * {
- *   "title_screen": true,    // Terrassic panorama, logo and splashes on the title screen
+ *   "title_screen": true,    // the Terrassic main menu in place of the vanilla title screen (docs/MENU.md)
  *   "loading_tips": true,    // a real fact or a game tip on the world loading screens
  *   "hud_mount": true,       // HUD: panel of the dinosaur you ride
  *   "hud_pack": true,        // HUD: your tamed dinosaurs nearby
