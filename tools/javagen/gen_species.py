@@ -78,6 +78,14 @@ SIZES = {
     "citipati":           dict(real=3.0,  scale=0.85, w=0.9, h=2.0, baby=0.4,  shadow=0.6),
     "mononykus":          dict(real=1.0,  scale=0.24, w=0.4, h=0.5, baby=0.5,  shadow=0.2),
     "didelphodon":        dict(real=1.0,  scale=0.26, w=0.5, h=0.4, baby=0.5,  shadow=0.3),
+    # Mesodma: ~15 cm head and body plus a tail nearly as long (Clemens 1964; Wilson 2013). Modelled large, 43 px.
+    "mesodma":            dict(real=0.25, scale=0.09, w=0.3, h=0.2, baby=0.5,  shadow=0.15),
+    # Basilemys: a 1-1.3 m box-like carapace (Dinosaur Park, Hell Creek; Brinkman 1998; Mallon & Brinkman 2011), ~1.7 m with head and tail. 74 px long at 2x.
+    "basilemys":          dict(real=1.7,  scale=0.37, w=0.9, h=0.5, baby=0.4,  shadow=0.7),
+    # Enchodus: most species 0.5-1 m (Goody 1976; Everhart 2005); the game fish at 0.8 m. 93 px long on the fish rig.
+    "enchodus":           dict(real=0.8,  scale=0.14, w=0.4, h=0.3, baby=0.4,  shadow=0.3),
+    # Lepisosteus: Hell Creek gars ~1-1.2 m (Grande 2010; Brinkman et al. 2014). 108 px long on the fish rig.
+    "lepisosteus":        dict(real=1.0,  scale=0.15, w=0.4, h=0.3, baby=0.4,  shadow=0.3),
     "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
@@ -100,6 +108,8 @@ SIZES = {
     "hatzegopteryx":      dict(real=12.0, scale=1.52, w=2.5, h=4.6, baby=0.25, shadow=2.1),
     # Ichthyornis dispar: a tern-sized toothed seabird, wingspan ~60 cm (Clarke 2004; Field et al. 2018). Modelled at 4x.
     "ichthyornis":        dict(real=0.66, scale=0.245, w=0.4, h=0.4, baby=0.5, shadow=0.2),
+    # Vegavis iaai: a small duck, ~0.7 m nose to tail, ~1 m wingspan (Clarke et al. 2005, 2016). Modelled at 4x, 47 px span.
+    "vegavis":            dict(real=0.7,  scale=0.33, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
     "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
     # Tylosaurus proriger: 12-13 m (the "Bunker" specimen KUVP 5033 ~13 m; Everhart 2005). Sleeker than the Mosasaurus.
@@ -155,6 +165,10 @@ GUIDE = {
     "citipati":           dict(era="late_cretaceous", diet="omnivore",  fossil=3),
     "mononykus":          dict(era="late_cretaceous", diet="carnivore", fossil=4),
     "didelphodon":        dict(era="late_cretaceous", diet="omnivore",  fossil=5),
+    "mesodma":            dict(era="late_cretaceous", diet="omnivore",  fossil=8),
+    "basilemys":          dict(era="late_cretaceous", diet="herbivore", fossil=7),
+    "enchodus":           dict(era="late_cretaceous", diet="carnivore", fossil=9),
+    "lepisosteus":        dict(era="late_cretaceous", diet="carnivore", fossil=8),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "thescelosaurus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
@@ -167,6 +181,7 @@ GUIDE = {
     "quetzalcoatlus":     dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "hatzegopteryx":      dict(era="late_cretaceous", diet="carnivore", fossil=1),
     "ichthyornis":        dict(era="late_cretaceous", diet="piscivore", fossil=4),
+    "vegavis":            dict(era="late_cretaceous", diet="omnivore", fossil=6),
     "mosasaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=2),
     "tylosaurus":         dict(era="late_cretaceous", diet="carnivore", fossil=3),
     "elasmosaurus":       dict(era="late_cretaceous", diet="piscivore", fossil=3),
@@ -216,6 +231,10 @@ WORLD = {
     "citipati":           dict(biomes=("desert", "badlands", "savanna"), weight=3, group=(1, 2), track=8),  # Ukhaa Tolgod, pairs on the nest
     "mononykus":          dict(biomes=("desert", "badlands", "savanna", "plains"), weight=6, group=(2, 4), track=6),  # Nemegt sands, small groups
     "didelphodon":        dict(biomes=("river", "swamp", "forest", "plains"), weight=6, group=(1, 2), track=6),  # Hell Creek riverbanks
+    "mesodma":            dict(biomes=("forest", "plains", "swamp", "river", "taiga"), weight=10, group=(2, 4), track=6),  # the "rabbit": everywhere in the litter
+    "basilemys":          dict(biomes=("plains", "river", "swamp", "coast"), weight=7, group=(1, 3), track=8),        # the land turtle of the floodplains and deltas
+    "enchodus":           dict(biomes=("ocean", "deep_sea", "coast"), weight=12, group=(3, 7), track=10),           # the commonest fish of the sea, in schools
+    "lepisosteus":        dict(biomes=("river", "swamp", "coast"), weight=10, group=(2, 4), track=8),              # the gar of the rivers and deltas
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
@@ -228,6 +247,7 @@ WORLD = {
     "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
     "ichthyornis":        dict(biomes=("coast",), weight=10, group=(3, 6), track=8),                            # flocks on the shore
+    "vegavis":            dict(biomes=("river", "swamp", "coast"), weight=10, group=(3, 6), track=8),            # the "duck": flocks on rivers, deltas and beaches
     "mosasaurus":         dict(biomes=("deep_sea",), weight=2, group=(1, 1), track=12),           # despawns like dolphins
     "tylosaurus":         dict(biomes=("deep_sea", "ocean"), weight=3, group=(1, 1), track=12),  # also the shallower open sea
     "elasmosaurus":       dict(biomes=("ocean", "deep_sea"), weight=4, group=(1, 2), track=12),  # fishes the open sea in pairs
@@ -269,7 +289,7 @@ SPECIES = [
  dict(id="spinosaurus", cls="Spinosaurus", base="PredatorDinosaur",
       doc="Spinosaurus aegyptiacus - huge river predator with a sail. Lives by rivers and swamps, hunts fish, swims well and does not drown.",
       attrs=dict(MAX_HEALTH=140, MOVEMENT_SPEED=0.23, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=32),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.75, 2.0, 260), step=("RAVAGER_STEP", 0.8, 0.7),
       xp=35, step_height=1.5, head=(35, 25),
       prey="!(e instanceof DinosaurEntity) && e.isInWaterOrBubble()", roar=True, prey_interval=160, fish=True),
@@ -289,7 +309,7 @@ SPECIES = [
  dict(id="compsognathus", cls="Compsognathus", base="PredatorDinosaur",
       doc="Compsognathus longipes - tiny skittish scavenger living in groups. Avoids players but the group swarms whoever hurts one of them. Can be tamed with fish, like a cat.",
       attrs=dict(MAX_HEALTH=6, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=1.5),
-      food="Items.CHICKEN, Items.COD, Items.SALMON, ModItems.RAW_DINO_MEAT.get()",
+      food="Items.CHICKEN, Items.COD, Items.SALMON, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.2, 1.0, 120),
       xp=2, run=0.03, prey="false", hunts_players=False, feeding_tame=True, skittish=True, pack=True),
  dict(id="triceratops", cls="Triceratops", base="HerbivoreDinosaur",
@@ -345,7 +365,7 @@ SPECIES = [
  dict(id="deinocheirus", cls="Deinocheirus", base="HerbivoreDinosaur",
       doc="Deinocheirus mirificus - 11 m humped, duck-billed ornithomimosaur of the river margins with 2.4 m arms. Omnivore: scoops fish and weed out of the water (a tame one brings them to you). Territorial: swipes with the arms. Tamed with fish or plants; a tall mount.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
-      food="Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES",
+      food="Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.5, 2.0, 320), step=("RAVAGER_STEP", 0.8, 0.6),
       xp=32, step_height=1.2, head=(30, 25), rideable=True, jump=0.4, ride_offset=2.8, ride_speed=0.95, scoop=True),
  dict(id="brachiosaurus", cls="Brachiosaurus", base="HerbivoreDinosaur",
@@ -452,7 +472,7 @@ SPECIES = [
  dict(id="troodon", cls="Troodon", base="PredatorDinosaur",
       doc="Troodon formosus - 2.4 m gracile troodontid with the biggest eyes of any dinosaur for its size: a nocturnal hunter of small prey that sleeps through the day and wakes at dusk. Avoids the big predators. Only tameable from a stolen wild egg until the knockout (v0.7); a tame one is the night guard: it attacks hostile mobs around it after dark and its owner nearby sees in the dark while it watches.",
       attrs=dict(MAX_HEALTH=20, MOVEMENT_SPEED=0.33, ATTACK_DAMAGE=4, FOLLOW_RANGE=28),
-      food="Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON, ModItems.RAW_DINO_MEAT.get()",
+      food="Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get()",
       sounds=("PARROT_AMBIENT", "FOX_HURT", "FOX_DEATH", 0.7, 0.8, 160), step=("WOLF_STEP", 0.3, 1.2),
       xp=10, head=(50, 40), run=0.03,
       prey="e.getBbWidth() < 0.9F && !(e instanceof Troodon)",
@@ -478,10 +498,35 @@ SPECIES = [
  dict(id="didelphodon", cls="Didelphodon", base="PredatorDinosaur",
       doc="Didelphodon vorax - badger-sized Hell Creek mammal with the strongest bite for its size of any mammal, the egg thief: wild ones eat the dinosaur eggs they find (and the herd turns on them), hunt small prey and keep clear of players. Tamed with eggs or meat like a cat; a tame one noses out lost eggs now and then (docs/NINHOS.md).",
       attrs=dict(MAX_HEALTH=12, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=4, FOLLOW_RANGE=16),
-      food="Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get()",
+      food="Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get()",
       sounds=("FOX_AMBIENT", "FOX_HURT", "FOX_DEATH", 0.9, 0.9, 160), step=("WOLF_STEP", 0.2, 1.3),
       xp=4, run=0.03, prey="e.getBbWidth() < 0.5F && !(e instanceof DinosaurEntity)", hunts_players=False, feeding_tame=True,
       skittish=True, egg_thief=True, prey_interval=120),
+ dict(id="mesodma", cls="Mesodma", base="PredatorDinosaur",
+      doc="Mesodma - the rabbit of the Cretaceous, a rat-sized multituberculate of the Hell Creek leaf litter: gnawing incisors, big night eyes, a long naked tail. The commonest and smallest game, out at dusk and at night; it flees everything and hunts nothing. Hand-tamed with seeds or berries like a cat; a tame one sits up and nibbles.",
+      attrs=dict(MAX_HEALTH=4, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=1, FOLLOW_RANGE=12),
+      food="Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.SWEET_BERRIES, Items.GLOW_BERRIES",
+      sounds=("RABBIT_AMBIENT", "RABBIT_HURT", "RABBIT_DEATH", 1.3, 0.5, 220), step=("RABBIT_JUMP", 0.1, 1.4),
+      xp=1, run=0.04, prey="false", hunts_players=False, feeding_tame=True, skittish=True, nocturnal=True, rear="nibble"),
+ dict(id="basilemys", cls="Basilemys", base="HerbivoreDinosaur",
+      doc="Basilemys - the big land turtle of the Cretaceous floodplains, a high box-like sculptured shell over a metre long, a hooked beak and thick clawed legs. Slow, peaceful and armoured: hurt, it pulls into the shell (the hide animation and a burst of Resistance) and only bites back. Meat and shell plates (scutes); hand-tamed with ferns, berries, kelp or melon.",
+      attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.16, ATTACK_DAMAGE=4, ARMOR=10, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=16),
+      food="Items.FERN, Items.SWEET_BERRIES, Items.KELP, Items.MELON_SLICE",
+      sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 1.0, 0.9, 320), xp=4, run=0.02, shell=True),
+ dict(id="enchodus", cls="Enchodus", base="SwimmingDinosaur",
+      doc="Enchodus - the sabre-toothed \"herring\" (an aulopiform), the commonest fish of the Cretaceous seas: a slender silver fish of under a metre with big eyes and huge fangs, in schools near the coast. The sea food fish of the Terrassic world (the cod's seat): it drops its own fish. A bold little predator that snaps at squid, small fish and anything that swims too close. Wild only (cannot be tamed).",
+      attrs=dict(MAX_HEALTH=8, MOVEMENT_SPEED=1.2, ATTACK_DAMAGE=2, FOLLOW_RANGE=16),
+      food="Items.COD, Items.TROPICAL_FISH, ModItems.ENCHODUS.get()",
+      sounds=("COD_AMBIENT", "COD_HURT", "COD_DEATH", 1.2, 0.6, 200), xp=2, run=0.06,
+      prey="e instanceof AbstractFish || e instanceof Squid",
+      prey_imports=["net.minecraft.world.entity.animal.AbstractFish", "net.minecraft.world.entity.animal.Squid"], prey_interval=100),
+ dict(id="lepisosteus", cls="Lepisosteus", base="SwimmingDinosaur",
+      doc="Lepisosteus - the gar, a living fossil already in the Cretaceous rivers: a long cylindrical fish of a metre armoured in hard diamond ganoid scales, with a long needle-toothed snout, the fins set far back and a rounded tail. It hangs still under the surface and strikes sideways at small fish. The river food fish of the Terrassic world (the salmon's seat): it drops its own fish, and its hide is the scale armour. Wild only (cannot be tamed).",
+      attrs=dict(MAX_HEALTH=10, MOVEMENT_SPEED=1.0, ATTACK_DAMAGE=3, ARMOR=4, FOLLOW_RANGE=16),
+      food="Items.COD, Items.SALMON, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
+      sounds=("COD_AMBIENT", "COD_HURT", "COD_DEATH", 0.9, 0.8, 260), xp=3, run=0.05,
+      prey="e instanceof AbstractFish", prey_imports=["net.minecraft.world.entity.animal.AbstractFish"], prey_interval=120,
+      hunts_players=False),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
       doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -532,7 +577,7 @@ SPECIES = [
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
       doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.6, ATTACK_DAMAGE=4, FOLLOW_RANGE=24),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.45, 1.4, 220), xp=12, run=0.03,
       rideable=True, ride_offset=1.9, ride_forward=0.1, ride_speed=1.0,
       prey="e instanceof AbstractFish"),
@@ -553,14 +598,20 @@ SPECIES = [
  dict(id="ichthyornis", cls="Ichthyornis", base="FlyingDinosaur",
       doc="Ichthyornis dispar - tern-sized toothed seabird of the Western Interior Seaway shores. Tamed with fish; rides on the owner's shoulder, calls out when a monster is after them and now and then dives for a fish.",
       attrs=dict(MAX_HEALTH=8, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.75, ATTACK_DAMAGE=1, FOLLOW_RANGE=20),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 1.6, 0.5, 160), xp=3, run=0.03,
       prey="e instanceof AbstractFish && e.getBbWidth() < 0.6F", prey_interval=100, shoulder=True, fisher=True),
+ dict(id="vegavis", cls="Vegavis", base="FlyingDinosaur",
+      doc="Vegavis iaai - the duck of the Cretaceous (Vega Island, Antarctica), a small relative of ducks and geese with the oldest known syrinx: it honks. Flocks on rivers, swamps and beaches; skittish, flies off when approached; the early feathers, meat and eggs (docs/FAUNA.md). Hand-tamed with seeds, berries or fish; rides on the shoulder.",
+      attrs=dict(MAX_HEALTH=8, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.7, ATTACK_DAMAGE=1, FOLLOW_RANGE=16),
+      food="Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.SWEET_BERRIES, Items.COD, ModItems.ENCHODUS.get()",
+      sounds=("GOAT_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 1.5, 0.6, 200), xp=2, run=0.03,
+      prey="false", hunts_players=False, feeding_tame=True, skittish=True, shoulder=True, call=True),
  # ---- marine reptiles (SwimmingDinosaur: smooth swimming, wild only for now)
  dict(id="mosasaurus", cls="Mosasaurus", base="SwimmingDinosaur",
       doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Gives birth to live calves, and only a calf can be tamed (fed fish); grown and saddled it is the giant aquatic mount.",
       attrs=dict(MAX_HEALTH=180, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=1.0, ARMOR=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=32),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.45, 2.0, 400), xp=40, run=0.04,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof Pteranodon",
       prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
@@ -568,7 +619,7 @@ SPECIES = [
  dict(id="tylosaurus", cls="Tylosaurus", base="SwimmingDinosaur",
       doc="Tylosaurus proriger - the top predator of the Western Interior Seaway before the Mosasaurus: slender, 13 m, small flippers and a toothless reinforced rostrum it rams prey with (the hit slows and dazes). Wild only for now (knockout taming in v0.7).",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=1.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=4, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.6, 2.0, 380), xp=36, run=0.05,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof FlyingDinosaur || e instanceof Mosasaurus && e.isBaby()",
       prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
@@ -576,34 +627,34 @@ SPECIES = [
  dict(id="elasmosaurus", cls="Elasmosaurus", base="SwimmingDinosaur",
       doc="Elasmosaurus platyurus - plesiosaur with a 7 m neck on a 10 m body, flying under water on four long paddles and snapping fish with needle teeth. Hand-tamed with fish; the first aquatic mount (look down to dive, up to surface; the rider never drowns). Gives birth to live young.",
       attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=5, ARMOR=2, KNOCKBACK_RESISTANCE=0.5, FOLLOW_RANGE=28),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("DOLPHIN_AMBIENT_WATER", "DOLPHIN_HURT", "DOLPHIN_DEATH", 0.55, 1.6, 320), xp=18, run=0.05,
       prey="e instanceof AbstractFish",
       tame="feeding", live_young=True, rideable=True, ride_offset=0.95, ride_forward=0.0, ride_speed=1.1, dive=1.2),
  dict(id="xiphactinus", cls="Xiphactinus", base="SwimmingDinosaur",
       doc="Xiphactinus audax - a 6 m predatory bony fish with a bulldog face and fangs, fast and always hungry: it swallows fish whole and lunges at anything that enters its water. Wild only (cannot be tamed).",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=1.35, ATTACK_DAMAGE=7, ARMOR=1, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=24),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("COD_AMBIENT", "COD_HURT", "COD_DEATH", 0.5, 1.6, 300), xp=14, run=0.06,
       prey="e instanceof AbstractFish || e instanceof Squid || e instanceof Ichthyornis && e.isInWater()",
       prey_imports=["net.minecraft.world.entity.animal.AbstractFish", "net.minecraft.world.entity.animal.Squid"], prey_interval=80),
  dict(id="archelon", cls="Archelon", base="SwimmingDinosaur",
       doc="Archelon ischyros - the largest turtle ever, 4.6 m long and 4 m across the flippers, a leathery shell over a rib frame and a hooked beak. Peaceful grazer of squid and seaweed that only bites back; hand-tamed with kelp or fish, lays eggs (on land, or drops the egg in the water), and carries a rider as a slow armoured aquatic mount.",
       attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.9, ATTACK_DAMAGE=6, ARMOR=14, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
-      food="Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON",
+      food="Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 0.5, 1.6, 400), xp=12, run=0.03,
       prey="e instanceof Squid", prey_imports=["net.minecraft.world.entity.animal.Squid"], hunts_players=False,
       tame="feeding", rideable=True, ride_offset=0.9, ride_forward=0.1, ride_speed=0.75, dive=0.8),
  dict(id="hesperornis", cls="Hesperornis", base="SwimmingDinosaur",
       doc="Hesperornis regalis - flightless toothed diving bird of the inland sea, 1.8 m, built like a loon: it kicks with lobed feet and spears fish under water. Rafts of them float off the coast; tamed with fish, lays small eggs. Never attacks players, only fights back.",
       attrs=dict(MAX_HEALTH=14, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=2, FOLLOW_RANGE=16),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.7, 0.6, 200), xp=4, run=0.03,
       prey="e instanceof AbstractFish && e.getBbWidth() < 0.8F", hunts_players=False, tame="feeding", dive=1.3),
  dict(id="deinosuchus", cls="Deinosuchus", base="PredatorDinosaur",
       doc="Deinosuchus riograndensis - 12 m alligator of the inland sea's shores. Basks by rivers, swamps and beaches, swims as well as it walks, and ambushes anything that comes to the water: its grip slows the victim. Egg taming only until the knockout (v0.7).",
       attrs=dict(MAX_HEALTH=160, MOVEMENT_SPEED=0.2, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=1.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=28),
-      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
+      food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get(), ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.6, 0.6),
       xp=38, step_height=1.0, head=(40, 20),
       prey="e.isInWaterOrBubble() || e.getBbWidth() < 1.6F && !(e instanceof Deinosuchus)", prey_interval=140, fish=True,
@@ -698,6 +749,8 @@ def gen(s, bounds):
         extras.append("display")
     if s.get("call"):
         extras.append("call")
+    if s.get("shell"):
+        extras.append("hide")
     if s.get("rear"):
         extras.append(s["rear"] if isinstance(s["rear"], str) else "rear")
     if s.get("dig"):
@@ -1030,6 +1083,22 @@ def gen(s, bounds):
         }
     }
 """.replace('"rear"', '"' + rear_anim + '"'))
+    if s.get("shell"):
+        assert not s.get("call"), s["id"] + ": call and shell both override hurt"
+        imports.add("net.minecraft.world.damagesource.DamageSource")
+        imports.add("net.minecraft.world.effect.MobEffectInstance")
+        imports.add("net.minecraft.world.effect.MobEffects")
+        body.append("""    /** Hurt, it pulls into the shell: the "hide" animation and four seconds of Resistance II (not while ridden). */
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && !this.level().isClientSide() && this.isAlive() && !this.isVehicle()) {
+            triggerAnim(ACTION_CONTROLLER, "hide");
+            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 80, 1));
+        }
+        return hurt;
+    }
+""")
     if s.get("call"):
         imports.add("net.minecraft.world.damagesource.DamageSource")
         call = "this.callOut()" if s.get("calm") else 'triggerAnim(ACTION_CONTROLLER, "call")'

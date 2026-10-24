@@ -13,7 +13,7 @@ as diferenças entre suas declarações de entrega e o checkout verificado.
 |---|---|---|---|
 | Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Retomar sua fase corrente; registrar aqui arquivos em uso antes de editar |
 | Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; escolher próxima fase livre e registrar escopo |
-| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores, persistência, Caderno, dimensões e respawn validados; perfil até 32 conexões e CI concluídos; integrar fauna recebida e ampliar carga gradualmente |
+| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores, persistência, Caderno, dimensões e respawn validados; CI e integração da fauna concluídas; ampliar perfil de carga estacionária gradualmente |
 | Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entregar documentação e lista de arquivos; preservar trabalho existente |
 | Aprovação visual e experiência | Rodrigo | Aparência, som, sensação de jogo e prioridades de produto | Validar os roteiros de jogo após as entregas técnicas |
 
@@ -46,6 +46,7 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Codex | `tools/validation/load_profile.py`, documentação | Concluído: perfil Fabric até 32 conexões; corrigida a ferramenta para entradas sequenciais após detectar concorrência no login vanilla. Resultados e limites em `PERFIL_LOCAL.md` |
 | Codex | `.github/workflows/validation.yml`, `tools/validation/README.md`, documentação | Concluído: CI passou na main com a nova fauna, run `40140246290`; sem deploy ou publicação de release |
 | Codex | `tools/validation/check_project.py`, `test_check_project.py`, documentação | Concluído: 481 vínculos de áudio e legendas conferidos; 18 testes passaram. Sem editar sons ou geradores |
+| Codex | `tools/validation/load_profile.py`, documentação | Em uso: medir 32, 64 e até 100 conexões estacionárias em Fabric, com limite de média de 35 ms; não valida jogadores ativos |
 | Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Concluído; arquivos liberados (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
@@ -167,3 +168,7 @@ atuais nesta entrega; o histórico Git permanece preservado.
   Conflito no quadro de reservas resolvido preservando as duas frentes. Validador: 54 espécies, 4.180 JSONs e
   1.743 chaves por idioma; build dos dois loaders com regressões passou em 27 s. A reserva da fauna 108-113 segue
   com o Claude; o perfil do Codex só lê um snapshot fixo dessas fontes.
+- Integradas as fases 109-113 recebidas em `455c1ea`: Vegavis, Mesodma, Basilemys, Enchodus e Lepisosteus.
+  A frente liberou os arquivos. Conflito de coordenação resolvido mantendo os estados de conclusão das duas frentes.
+  Integridade: 59 espécies, 4.313 JSONs, 1.810 chaves por idioma, áudio íntegro pelos vínculos/cabeçalhos;
+  build Fabric/Forge com regressões passou em 34 s. A CI da entrega recebida também passou no Linux.

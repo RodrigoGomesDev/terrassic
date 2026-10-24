@@ -42,6 +42,26 @@
       "required": false
     },
     {
+      "id": "terrassic:vegavis_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:mesodma_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:basilemys_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:enchodus_skull_trophy",
+      "required": false
+    },
+    {
+      "id": "terrassic:lepisosteus_skull_trophy",
+      "required": false
+    },
+    {
       "id": "terrassic:stegosaurus_skull_trophy",
       "required": false
     },

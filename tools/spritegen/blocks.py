@@ -1584,6 +1584,18 @@ SKULLS = {
     # the mammal: a short deep skull with a big jaw, no fenestrae
     "didelphodon": ["....ooooooo.....", "..oobbbbbbboo...", ".obbbbbeebbbbo..", "obbbbbbbbbbbbbo.",
                     "ottbbbbbbbbbbbo.", ".ottttbbbbbbbo..", "..obbbbbbbbbo...", "...ooooooooo...."],
+    # the little multituberculate: a round cranium, a big orbit and the long gnawing incisors
+    "mesodma": ["......ooooooo...", "....oobbbbbbboo.", "...obbbbbeebbbo.", "..obbbbbbeebbbo.",
+                "..obbbbbbbbbbbo.", "..ottbbbbbbbbo..", "...o.obbbbbbo...", ".....oooooooo..."],
+    # the land turtle: a blunt deep skull, a big orbit, the hooked beak
+    "basilemys": [".......oooooo...", ".....oobbbbbboo.", "...oobbbbbeebbo.", "..obbbbbbbeebbo.",
+                  ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbo..", "obbbbbbbbbbbo...", ".oooobbbbbbo....", "....oooooooo...."],
+    # the sabre-toothed herring: a pointed skull with the big orbit and the fangs at the front
+    "enchodus": [".........ooooo..", "......ooobbbbbo.", "...ooobbbbbeebo.", ".oobbbbbbbbeebo.",
+                 "obbbbbbbbbbbbbo.", "otbbbbbbbbbbbo..", "t.tooobbbbbbo...", ".....oooooooo..."],
+    # the gar: a flat skull with the orbit far back and the long needle-toothed snout
+    "lepisosteus": ["...........oooo.", ".........oobbbbo", "oooooooooobbeebo", "obbbbbbbbbbbbbbo",
+                    "otototbbbbbbbbbo", ".ooooooobbbbbbo.", "........ooooooo."],
     "maiasaura": ["..........o.....", ".........olo....", "........obbo....", "......oobbbboo..",
                   "....oobbbbbeebo.", "..oobbbbbbbeebo.", "oobbbbbbbbbbbbo.", "obbbbbbbbbbbbbo.",
                   "oobbbbbbbbbbbo..", ".obbbbbbbbbbo...", "..oooooooooo...."],
@@ -1627,6 +1639,9 @@ SKULLS.update({  # one skull per species added after the first fifteen
     "oviraptor": [".......oooo.....", "......olllo.....", ".....olbbbo.....", "....obbbbbbo....", "...obbbbbeebo...", "..obbbbbbeebo...", ".obbbbbbbbbbo...", "obbbbbbbbbbo....", ".oobbbbbbbo.....", "...ooooooo......"],
     "thescelosaurus": ["........oooo....", "......oobllbo...", "....oobbbbeebo..", "..oobbbbbbeebo..", ".obbbbbbbbbbbo..", "obbbbbbbbbbbo...", ".ootttbbbbbo....", "...oooooooo....."],
     "struthiomimus": ["..........oooo..", "........oobllbo.", "......oobbbeebo.", "....oobbbbbeebo.", "..oobbbbbbbbbbo.", "oobbbbbbbbbbbo..", "..oooobbbbbo....", "......ooooo....."],
+    # the duck: a round cranium and the long flat bill
+    "vegavis": ["..........oooo..", "........oobbbbo.", "......oobbbeebo.", "oooooobbbbbeebo.",
+                "obbbbbbbbbbbbbo.", "obbbbbbbbbbbbo..", ".oooooobbbbbo...", "........ooooo..."],
     "ichthyornis": [".........oooo...", ".......oobllbo..", ".....oobbbeebo..", "...oobbbbbeebo..", "oobbbbbbbbbbo...", "ottttttbbbbbo...", ".oooooobbbbo....", ".......oooo....."],
     "tylosaurus": [".........ooooo..", "......ooobllbo..", "...oobbbbbbbeebo", ".obbbbbbbbbbeebo", "obbbbbbbbbbbbbbo", "oobttttttttbbbbo", ".o.t.t.t.t.tbbbo", "..obbbbbbbbbbbo.", "...oooooooooooo."],
     "elasmosaurus": [".........oooo...", ".......oobllbo..", ".....oobbbeebo..", "..ooobbbbbeebo..", ".obbbbbbbbbbbo..", "tottttttbbbbo...", ".t.t.t.t.bbo....", "..oooooooo......"],
@@ -1729,9 +1744,9 @@ HIDE_PATTERN = {  # rug pattern of each species (scales by default)
     "stegosaurus": "spots", "pachycephalosaurus": "spots", "maiasaura": "spots", "leptoceratops": "spots",
     "ankylosaurus": "osteoderms", "triceratops": "big_scales", "mosasaurus": "fine_scales",
     "pteranodon": "fuzz", "quetzalcoatlus": "fuzz", "hatzegopteryx": "fuzz",
-    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz",
+    "dakotaraptor": "feathers", "troodon": "feathers", "oviraptor": "feathers", "citipati": "feathers", "mononykus": "feathers", "didelphodon": "fuzz", "mesodma": "fuzz", "basilemys": "osteoderms", "enchodus": "fine_scales", "lepisosteus": "big_scales",
     "struthiomimus": "feathers", "deinocheirus": "feathers", "therizinosaurus": "feathers",
-    "hesperornis": "feathers", "ichthyornis": "feathers",
+    "hesperornis": "feathers", "ichthyornis": "feathers", "vegavis": "feathers",
 }
 
 

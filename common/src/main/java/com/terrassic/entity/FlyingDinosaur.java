@@ -104,6 +104,10 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         return nav;
     }
 
+    /** Hook for extra goals (avoid, flee...). Called at the end of {@link #registerGoals()}. */
+    protected void addExtraGoals() {
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -122,6 +126,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 100, true, false,
                 e -> this.canHunt() && this.isPrey(e)));
+        addExtraGoals();
     }
 
     @Override

@@ -93,6 +93,8 @@ public final class ModBlocks {
         egg("citipati", ModEntities.CITIPATI, false);
         egg("mononykus", ModEntities.MONONYKUS, false);
         egg("didelphodon", ModEntities.DIDELPHODON, false);
+        egg("mesodma", ModEntities.MESODMA, false);
+        egg("basilemys", ModEntities.BASILEMYS, false);
         egg("parasaurolophus", ModEntities.PARASAUROLOPHUS, true);
         egg("pachycephalosaurus", ModEntities.PACHYCEPHALOSAURUS, false);
         egg("thescelosaurus", ModEntities.THESCELOSAURUS, false);
@@ -105,6 +107,7 @@ public final class ModBlocks {
         egg("quetzalcoatlus", ModEntities.QUETZALCOATLUS, false);
         egg("hatzegopteryx", ModEntities.HATZEGOPTERYX, false);
         egg("ichthyornis", ModEntities.ICHTHYORNIS, false);
+        egg("vegavis", ModEntities.VEGAVIS, false);
         egg("archelon", ModEntities.ARCHELON, true);
         egg("hesperornis", ModEntities.HESPERORNIS, false);
         egg("deinosuchus", ModEntities.DEINOSUCHUS, true);

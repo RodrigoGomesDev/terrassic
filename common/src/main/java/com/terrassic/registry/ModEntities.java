@@ -7,6 +7,7 @@ import com.terrassic.entity.Albertosaurus;
 import com.terrassic.entity.Ankylosaurus;
 import com.terrassic.entity.Archelon;
 import com.terrassic.entity.Argentinosaurus;
+import com.terrassic.entity.Basilemys;
 import com.terrassic.entity.Baurusuchus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Carcharodontosaurus;
@@ -23,15 +24,18 @@ import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Dreadnoughtus;
 import com.terrassic.entity.Edmontosaurus;
 import com.terrassic.entity.Elasmosaurus;
+import com.terrassic.entity.Enchodus;
 import com.terrassic.entity.Euoplocephalus;
 import com.terrassic.entity.Gallimimus;
 import com.terrassic.entity.Giganotosaurus;
 import com.terrassic.entity.Hatzegopteryx;
 import com.terrassic.entity.Hesperornis;
 import com.terrassic.entity.Ichthyornis;
+import com.terrassic.entity.Lepisosteus;
 import com.terrassic.entity.Leptoceratops;
 import com.terrassic.entity.Maiasaura;
 import com.terrassic.entity.Majungasaurus;
+import com.terrassic.entity.Mesodma;
 import com.terrassic.entity.Mononykus;
 import com.terrassic.entity.Mosasaurus;
 import com.terrassic.entity.Opisthocoelicaudia;
@@ -54,6 +58,7 @@ import com.terrassic.entity.Triceratops;
 import com.terrassic.entity.Troodon;
 import com.terrassic.entity.Tylosaurus;
 import com.terrassic.entity.Tyrannosaurus;
+import com.terrassic.entity.Vegavis;
 import com.terrassic.entity.Velociraptor;
 import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
@@ -151,6 +156,16 @@ public final class ModEntities {
             mob("mononykus", Mononykus::new, MobCategory.CREATURE, Mononykus.WIDTH, Mononykus.HEIGHT, 6);
     public static final RegistrySupplier<EntityType<Didelphodon>> DIDELPHODON =
             mob("didelphodon", Didelphodon::new, MobCategory.CREATURE, Didelphodon.WIDTH, Didelphodon.HEIGHT, 6);
+    public static final RegistrySupplier<EntityType<Mesodma>> MESODMA =
+            mob("mesodma", Mesodma::new, MobCategory.CREATURE, Mesodma.WIDTH, Mesodma.HEIGHT, 6);
+    // ---- herbivores
+    public static final RegistrySupplier<EntityType<Basilemys>> BASILEMYS =
+            mob("basilemys", Basilemys::new, MobCategory.CREATURE, Basilemys.WIDTH, Basilemys.HEIGHT, 8);
+    // ---- marine reptiles
+    public static final RegistrySupplier<EntityType<Enchodus>> ENCHODUS =
+            mob("enchodus", Enchodus::new, MobCategory.WATER_CREATURE, Enchodus.WIDTH, Enchodus.HEIGHT, 10);
+    public static final RegistrySupplier<EntityType<Lepisosteus>> LEPISOSTEUS =
+            mob("lepisosteus", Lepisosteus::new, MobCategory.WATER_CREATURE, Lepisosteus.WIDTH, Lepisosteus.HEIGHT, 8);
     // ---- herbivores
     public static final RegistrySupplier<EntityType<Parasaurolophus>> PARASAUROLOPHUS =
             mob("parasaurolophus", Parasaurolophus::new, MobCategory.CREATURE, Parasaurolophus.WIDTH, Parasaurolophus.HEIGHT, 10);
@@ -177,6 +192,8 @@ public final class ModEntities {
             mob("hatzegopteryx", Hatzegopteryx::new, MobCategory.CREATURE, Hatzegopteryx.WIDTH, Hatzegopteryx.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Ichthyornis>> ICHTHYORNIS =
             mob("ichthyornis", Ichthyornis::new, MobCategory.CREATURE, Ichthyornis.WIDTH, Ichthyornis.HEIGHT, 8);
+    public static final RegistrySupplier<EntityType<Vegavis>> VEGAVIS =
+            mob("vegavis", Vegavis::new, MobCategory.CREATURE, Vegavis.WIDTH, Vegavis.HEIGHT, 8);
     // ---- marine reptiles
     public static final RegistrySupplier<EntityType<Mosasaurus>> MOSASAURUS =
             mob("mosasaurus", Mosasaurus::new, MobCategory.WATER_CREATURE, Mosasaurus.WIDTH, Mosasaurus.HEIGHT, 12);
@@ -253,6 +270,10 @@ public final class ModEntities {
         EntityAttributeRegistry.register(CITIPATI, Citipati::createAttributes);
         EntityAttributeRegistry.register(MONONYKUS, Mononykus::createAttributes);
         EntityAttributeRegistry.register(DIDELPHODON, Didelphodon::createAttributes);
+        EntityAttributeRegistry.register(MESODMA, Mesodma::createAttributes);
+        EntityAttributeRegistry.register(BASILEMYS, Basilemys::createAttributes);
+        EntityAttributeRegistry.register(ENCHODUS, Enchodus::createAttributes);
+        EntityAttributeRegistry.register(LEPISOSTEUS, Lepisosteus::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);
         EntityAttributeRegistry.register(THESCELOSAURUS, Thescelosaurus::createAttributes);
@@ -265,6 +286,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(QUETZALCOATLUS, Quetzalcoatlus::createAttributes);
         EntityAttributeRegistry.register(HATZEGOPTERYX, Hatzegopteryx::createAttributes);
         EntityAttributeRegistry.register(ICHTHYORNIS, Ichthyornis::createAttributes);
+        EntityAttributeRegistry.register(VEGAVIS, Vegavis::createAttributes);
         EntityAttributeRegistry.register(MOSASAURUS, Mosasaurus::createAttributes);
         EntityAttributeRegistry.register(TYLOSAURUS, Tylosaurus::createAttributes);
         EntityAttributeRegistry.register(ELASMOSAURUS, Elasmosaurus::createAttributes);

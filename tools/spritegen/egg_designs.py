@@ -635,6 +635,87 @@ def didelphodon():
     return e
 
 
+def mesodma():
+    """The little multituberculate: a round grey-brown furry face, big dark eyes, round ears, a pink nose, long whiskers."""
+    e = Egg("mesodma", {"b": "#8c7a5c", "c": "#e2d8c0", "d": "#6a5a44", "n": "#d08898", "k": "#1e1410", "W": "#f0ece4", "R": MOUTH})
+    cap(e, "d", (5, 3, 26, 19), None)
+    for x0 in (7, 20):
+        e.ell((x0, 1, x0 + 4, 5), "d")
+        e.ell((x0 + 1, 2, x0 + 3, 4), "n")
+    e.ell((9, 19, 22, 33), "c", clip=True)
+    for cx in (11, 20):
+        e.ell((cx - 2, 11, cx + 2, 15), "k")
+        e.px([(cx + 1, 12)], "W")
+    e.rect((14, 20, 17, 22), "n")
+    e.line([(13, 25), (18, 25)], "R")
+    e.px([(14, 26), (15, 26), (16, 26), (17, 26)], "W")      # the gnawing incisors
+    for y in (22, 24):
+        e.line([(4, y), (11, y + 1)], "W", clip=True)
+        e.line([(20, y + 1), (27, y)], "W", clip=True)
+    return e
+
+
+def basilemys():
+    """The land turtle: a high dark sculptured carapace with the scute grid and a straw rim, the hooked beak below."""
+    e = Egg("basilemys", {"b": "#4e4a30", "c": "#c8b878", "d": "#3e3a24", "n": "#262014",
+                          "o": "#9a8c58", "O": "#8c8458", "k": "#5a5440", "s": "#7e7858", "S": "#9a9470"})
+    # the box-like carapace over the top, with the seams of the scutes and the pale rim
+    e.ell((2, 0, 29, 19), "b", clip=True)
+    for y in (5, 11):
+        e.line([(3, y), (28, y)], "O", clip=True)
+    for x in (9, 15, 21):
+        e.line([(x, 1), (x, 16)], "O", clip=True)
+    e.line([(3, 16), (28, 16)], "d", clip=True)
+    e.line([(2, 17), (29, 17)], "o", clip=True)
+    e.line([(2, 18), (29, 18)], "o", clip=True)
+    # the head below the rim: grey-brown skin, the beak hooked down, the plastron patch at the bottom
+    e.ell((9, 19, 22, 31), "s", clip=True)
+    e.ell((11, 20, 20, 25), "S", clip=True)
+    eyes(e, 23, 13)
+    e.poly([(12, 27), (19, 27), (18, 31), (16, 33), (14, 31)], "k")
+    e.line([(13, 29), (18, 29)], "n")
+    e.ell((10, 33, 21, 40), "c", clip=True)
+    return e
+
+
+def enchodus():
+    """The sabre-toothed herring: a silver egg with a blue-green cap, big gold eyes and the fangs over the lip."""
+    e = Egg("enchodus", {"b": "#b8c4c0", "c": "#eef0ea", "d": "#3c6a6e", "n": "#243236",
+                         "f": "#5a7a7c", "g": "#e0c060", "R": MOUTH})
+    e.poly([(13, 6), (15, 1), (18, 1), (18, 6)], "f")
+    _side(e, [(4, 20), (0, 23), (1, 25), (5, 23)], "f")
+    cap(e, "d", (5, 3, 26, 17), None)
+    e.ell((8, 19, 23, 36), "c", clip=True)
+    for cx in (11, 20):
+        e.ell((cx - 2, 12, cx + 2, 16), "g")
+        e.px([(cx, 14)], "n")
+    e.poly([(9, 23), (22, 23), (20, 27), (11, 27)], "R")
+    e.pal["W"] = TOOTH
+    e.px(e.mirror([(11, 21), (11, 22), (11, 23)]), "W")               # the palatine fangs
+    e.px(e.mirror([(13, 27), (13, 28), (13, 29)]), "W")               # the lower fangs outside the lip
+    return e
+
+
+def lepisosteus():
+    """The gar: an olive egg with the diamond ganoid scales, dark spots and the long needle snout drawn down the front."""
+    e = Egg("lepisosteus", {"b": "#8c9460", "c": "#d8d4b0", "d": "#4e5e34", "n": "#2e3620",
+                            "f": "#6e7848", "g": "#c8b050", "R": MOUTH})
+    e.poly([(17, 7), (19, 2), (22, 2), (22, 7)], "f")
+    _side(e, [(4, 20), (0, 23), (1, 25), (5, 23)], "f")
+    cap(e, "d", (5, 3, 26, 17), None)
+    e.ell((8, 19, 23, 36), "c", clip=True)
+    for (x, y) in ((8, 8), (13, 5), (18, 9), (23, 6), (11, 13), (20, 14)):
+        e.px([(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)], "n")      # the dark spots
+    for cx in (11, 20):
+        e.ell((cx - 1, 13, cx + 1, 15), "g")
+        e.px([(cx, 14)], "n")
+    e.poly([(13, 18), (18, 18), (17, 33), (14, 33)], "d")                  # the long snout
+    e.line([(14, 20), (14, 32)], "R")
+    e.pal["W"] = TOOTH
+    e.px([(15, 21), (15, 23), (15, 25), (15, 27), (15, 29), (15, 31)], "W")  # the needle teeth
+    return e
+
+
 def therizinosaurus():
     e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
                                    "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
@@ -775,6 +856,21 @@ def hatzegopteryx():
                      crest=((16, 7), (10, 1)), beak=(11, 15, 20, 29))
 
 
+def vegavis():
+    """The duck: chestnut head with a dark cap and a pale cheek stripe, a slate bill with a pale nail, buff speckled body."""
+    e = beaked("vegavis", {"b": "#b8a070", "c": "#e8e0c8", "d": "#7a4a2e", "n": "#2a2420",
+                           "m": "#4a5058", "M": "#6a7078"}, beak=(12, 16, 19, 27))
+    e.pal["k"] = "#2a2420"
+    e.rect((7, 2, 24, 7), "k", clip=True)                 # the dark cap
+    e.pal["w"] = "#e6d8b8"
+    e.line([(8, 11), (23, 11)], "w")                      # the pale cheek stripe
+    e.pal["s"] = "#5a4a30"
+    e.px([(9, 21), (12, 24), (20, 22), (18, 26), (11, 28), (21, 29), (15, 31)], "s")
+    e.pal["N"] = "#d8d0b8"
+    e.px([(15, 26), (16, 26)], "N")                        # the nail at the tip of the bill
+    return e
+
+
 def hesperornis():
     e = beaked("hesperornis", {"b": "#4e5864", "c": "#e8ecee", "d": "#1e2630", "n": "#1e2630",
                                "m": "#3a3632", "f": "#2a3440"}, beak=(13, 15, 18, 30))
@@ -859,7 +955,7 @@ NEW_SPECIES = ["tarbosaurus", "daspletosaurus", "albertosaurus", "giganotosaurus
                "styracosaurus", "pachyrhinosaurus", "protoceratops", "euoplocephalus", "alamosaurus",
                "saltasaurus", "argentinosaurus", "opisthocoelicaudia", "dreadnoughtus", "quetzalcoatlus",
                "hatzegopteryx", "hesperornis", "ichthyornis", "tylosaurus", "elasmosaurus", "xiphactinus",
-               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops"]
+               "archelon", "deinosuchus", "baurusuchus", "citipati", "mononykus", "didelphodon", "leptoceratops", "vegavis", "mesodma", "basilemys", "enchodus", "lepisosteus"]
 
 
 ORDER = ["tyrannosaurus", "spinosaurus", "dilophosaurus", "velociraptor", "compsognathus", "triceratops",

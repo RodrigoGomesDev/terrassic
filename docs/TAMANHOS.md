@@ -55,6 +55,11 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Mononykus (v0.7) | 1-1,2 m, ~3,5 kg (Perle et al. 1993, IGM 107/6) | novo | **1,0 x 0,45** | 0,4 x 0,5 | 50% |
 | Didelphodon (v0.7) | ~1 m com a cauda, ~5 kg (Wilson et al. 2016; crânio 12 cm) | novo | **1,0 x 0,23** | 0,5 x 0,4 | 50% |
 | Leptoceratops (v0.7, 2x) | ~2 m, 70-200 kg (Brown 1914, AMNH 5205; Sternberg 1951; Ott 2007) | novo | **2,0 x 0,66** | 0,6 x 0,7 | 50% |
+| Vegavis (v0.7, 4x) | do tamanho de uma marreca, ~0,6-0,7 m, envergadura ~1 m (Clarke et al. 2005, 2016, MLP 93-I-3-1) | novo | **0,7 x 0,4** (0,97 de envergadura) | 0,4 x 0,4 | 50% |
+| Mesodma (v0.7, 5x) | 15 cm de corpo + cauda quase igual, 20-40 g (Clemens 1964; Wilson 2013) | novo | **0,25 x 0,06** | 0,3 x 0,2 | 50% |
+| Basilemys (v0.7, 2x) | casco de 1-1,3 m, ~1,7 m com cabeça e cauda (Brinkman 1998; Mallon & Brinkman 2011) | novo | **1,7 x 0,49** | 0,9 x 0,5 | 40% |
+| Enchodus (v0.7, 5x) | a maioria das espécies 0,5-1 m, E. petrosus 1,5 m (Goody 1976; Everhart 2005) | novo | **0,8 x 0,25** | 0,4 x 0,3 | 40% |
+| Lepisosteus (v0.7, 5x) | gares de Hell Creek ~1-1,2 m (Grande 2010; Brinkman et al. 2014) | novo | **1,0 x 0,23** | 0,4 x 0,3 | 40% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

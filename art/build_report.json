@@ -1845,5 +1845,177 @@
    "animation.leptoceratops.tame"
   ],
   "render_scale": 0.5
+ },
+ "vegavis": {
+  "bones": 19,
+  "cubes": 29,
+  "texture": [
+   64,
+   128
+  ],
+  "bounds_px": [
+   [
+    -23.5,
+    -3.800684897485497e-05,
+    -20.538806535318898
+   ],
+   [
+    23.5,
+    19.511703164413742,
+    13.994693849077908
+   ]
+  ],
+  "animations": [
+   "animation.vegavis.idle",
+   "animation.vegavis.walk",
+   "animation.vegavis.run",
+   "animation.vegavis.fly",
+   "animation.vegavis.glide",
+   "animation.vegavis.sit",
+   "animation.vegavis.attack",
+   "animation.vegavis.call",
+   "animation.vegavis.knocked_out",
+   "animation.vegavis.wake",
+   "animation.vegavis.eat",
+   "animation.vegavis.beg",
+   "animation.vegavis.tame"
+  ],
+  "render_scale": 0.25
+ },
+ "mesodma": {
+  "bones": 23,
+  "cubes": 39,
+  "texture": [
+   64,
+   64
+  ],
+  "bounds_px": [
+   [
+    -3.5,
+    2.5724661690963824e-05,
+    -19.031290616454015
+   ],
+   [
+    3.5,
+    9.963282911577945,
+    24.00000613011913
+   ]
+  ],
+  "animations": [
+   "animation.mesodma.idle",
+   "animation.mesodma.walk",
+   "animation.mesodma.run",
+   "animation.mesodma.sit",
+   "animation.mesodma.graze",
+   "animation.mesodma.attack",
+   "animation.mesodma.nibble",
+   "animation.mesodma.knocked_out",
+   "animation.mesodma.wake",
+   "animation.mesodma.eat",
+   "animation.mesodma.beg",
+   "animation.mesodma.tame"
+  ],
+  "render_scale": 0.2
+ },
+ "basilemys": {
+  "bones": 23,
+  "cubes": 39,
+  "texture": [
+   256,
+   256
+  ],
+  "bounds_px": [
+   [
+    -14.0,
+    -0.13052318421546794,
+    -42.96836568985926
+   ],
+   [
+    14.0,
+    21.0,
+    31.09322974188683
+   ]
+  ],
+  "animations": [
+   "animation.basilemys.idle",
+   "animation.basilemys.walk",
+   "animation.basilemys.run",
+   "animation.basilemys.sit",
+   "animation.basilemys.graze",
+   "animation.basilemys.attack",
+   "animation.basilemys.hide",
+   "animation.basilemys.knocked_out",
+   "animation.basilemys.wake",
+   "animation.basilemys.eat",
+   "animation.basilemys.beg",
+   "animation.basilemys.tame"
+  ],
+  "render_scale": 0.5
+ },
+ "enchodus": {
+  "bones": 18,
+  "cubes": 63,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -9.459852265398013,
+    1.8734519168502461,
+    -42.0
+   ],
+   [
+    9.459852265398013,
+    34.0,
+    51.44398377718777
+   ]
+  ],
+  "animations": [
+   "animation.enchodus.idle",
+   "animation.enchodus.walk",
+   "animation.enchodus.run",
+   "animation.enchodus.sit",
+   "animation.enchodus.attack",
+   "animation.enchodus.knocked_out",
+   "animation.enchodus.wake",
+   "animation.enchodus.eat",
+   "animation.enchodus.beg",
+   "animation.enchodus.tame"
+  ],
+  "render_scale": 0.2
+ },
+ "lepisosteus": {
+  "bones": 17,
+  "cubes": 51,
+  "texture": [
+   128,
+   128
+  ],
+  "bounds_px": [
+   [
+    -7.709977175816339,
+    0.5,
+    -56.0
+   ],
+   [
+    7.709977175816339,
+    19.5,
+    52.0
+   ]
+  ],
+  "animations": [
+   "animation.lepisosteus.idle",
+   "animation.lepisosteus.walk",
+   "animation.lepisosteus.run",
+   "animation.lepisosteus.sit",
+   "animation.lepisosteus.attack",
+   "animation.lepisosteus.knocked_out",
+   "animation.lepisosteus.wake",
+   "animation.lepisosteus.eat",
+   "animation.lepisosteus.beg",
+   "animation.lepisosteus.tame"
+  ],
+  "render_scale": 0.2
  }
 }

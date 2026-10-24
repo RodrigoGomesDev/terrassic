@@ -1,0 +1,10 @@
+{
+  "category": "food",
+  "ingredient": {
+    "item": "terrassic:enchodus"
+  },
+  "result": "terrassic:cooked_enchodus",
+  "experience": 0.35,
+  "type": "minecraft:campfire_cooking",
+  "cookingtime": 600
+}
