@@ -18,9 +18,13 @@ Verifica:
 - identificador das geometrias, nomes de ossos duplicados e referências a pais inexistentes;
 - cabeçalho/dimensões PNG em relação à geometria e namespace das animações;
 - paridade de chaves entre pt_br, en_us e es_es.
+- vínculos dos arquivos Ogg próprios em `sounds.json`, cabeçalho do contêiner, referências entre eventos
+  (incluindo ciclos) e legendas `subtitles.terrassic.*` nos três idiomas. Referências vanilla ou de outros mods
+  não são resolvidas pelo validador local.
 
 Não verifica pixels, animação em execução, ciência, balanceamento, todos os vínculos entre recursos ou código Java.
-Arquivos presentes não significam conteúdo completo ou aprovado. As classes são verificadas por presença;
+Arquivos presentes não significam conteúdo completo ou aprovado. Áudio é conferido por vínculo e cabeçalho,
+sem decodificação, CRC, audição ou julgamento de volume/qualidade. As classes são verificadas por presença;
 a compilação continua sendo responsabilidade do Gradle. O PNG é verificado pelo cabeçalho, não decodificado.
 
 Os testes usam projetos mínimos temporários para confirmar aceitação de uma entrega íntegra, ausência de gravações

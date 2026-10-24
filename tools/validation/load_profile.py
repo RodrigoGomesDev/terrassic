@@ -5,7 +5,6 @@ JFR exposes periodic rolling-average tick times, not individual tick percentiles
 """
 import argparse
 import ast
-import concurrent.futures
 import json
 import os
 import platform
@@ -151,16 +150,10 @@ def main():
             for count in counts:
                 missing = count - len(clients)
                 if missing:
-                    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-                        futures = [pool.submit(add_client, index) for index in range(len(clients), count)]
-                        failures = []
-                        for future in futures:
-                            try:
-                                clients.append(future.result())
-                            except Exception as exc:
-                                failures.append(exc)
-                        if failures:
-                            raise failures[0]
+                    # 1.20.1's login nonce shares a LegacyRandomSource across Netty threads. Wait for each
+                    # JoinGame before the next handshake: this profiles steady load, not concurrent login bursts.
+                    for index in range(len(clients), count):
+                        clients.append(add_client(index))
                     for index, client in enumerate(clients):
                         server.command(f"gamemode creative {client.name}")
                         server.command(f"tp {client.name} {(index % 10) * 32} -59 {(index // 10) * 32}")

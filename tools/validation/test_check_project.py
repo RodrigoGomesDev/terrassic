@@ -34,6 +34,8 @@ class ProjectChecks(unittest.TestCase):
         self.write("common/src/main/resources/data/terrassic/loot_tables/entities/example.json", '{}')
         for locale in ("pt_br", "en_us", "es_es"):
             self.write(self.assets / f"lang/{locale}.json", '{"entity.terrassic.example": "Example"}')
+        self.write(self.assets / "sounds.json", '{"example": {"sounds": ["terrassic:example"]}}')
+        self.write(self.assets / "sounds/example.ogg", "OggSfixture")  # Header fixture, not a decodable audio file.
 
     def write(self, relative, text):
         path = self.root / relative
@@ -73,6 +75,40 @@ class ProjectChecks(unittest.TestCase):
         path = self.root / self.assets / "textures/entity/example_female.png"
         path.write_bytes(path.read_bytes()[:16] + (2).to_bytes(4, "big") * 2)
         self.assertIn("texture dimensions differ", self.errors())
+
+    def test_missing_sound_and_broken_container(self):
+        audio = self.root / self.assets / "sounds/example.ogg"
+        audio.unlink()
+        self.assertIn("missing sound file terrassic:example.ogg", self.errors())
+        audio.write_bytes(b"not Ogg")
+        self.assertIn("invalid Ogg container header", self.errors())
+
+    def test_subtitle_must_exist_in_each_language(self):
+        self.write(self.assets / "sounds.json", json.dumps({"example": {
+            "subtitle": "subtitles.terrassic.example", "sounds": []}}))
+        self.assertIn("subtitle subtitles.terrassic.example missing in es_es", self.errors())
+
+    def test_event_reference_and_cycle(self):
+        self.write(self.assets / "sounds.json", json.dumps({
+            "example": {"sounds": [{"name": "terrassic:unknown", "type": "event"}]}}))
+        self.assertIn("unknown sound event", self.errors())
+        self.write(self.assets / "sounds.json", json.dumps({
+            "example": {"sounds": [{"name": "terrassic:other", "type": "event"}]},
+            "other": {"sounds": [{"name": "terrassic:example", "type": "event"}]}}))
+        self.assertIn("cyclic sound event reference", self.errors())
+
+    def test_valid_forward_reference_and_vanilla_sound(self):
+        self.write(self.assets / "sounds.json", json.dumps({
+            "first": {"sounds": [{"name": "terrassic:example", "type": "event"}]},
+            "example": {"subtitle": "subtitles.entity.pig.ambient",
+                        "sounds": ["terrassic:example", "minecraft:entity.pig.ambient"]}}))
+        self.assertEqual(self.errors(), "")
+
+    def test_invalid_sound_resource_does_not_escape_source_tree(self):
+        self.write(self.assets / "sounds.json", json.dumps({
+            "example": {"sounds": ["terrassic:../../outside", None, {"name": "Invalid:UPPER"}]}}))
+        self.assertIn("unsafe sound resource path", self.errors())
+        self.assertIn("invalid sound resource name", self.errors())
 
 
 if __name__ == "__main__":

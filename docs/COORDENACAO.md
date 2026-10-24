@@ -13,7 +13,7 @@ as diferenças entre suas declarações de entrega e o checkout verificado.
 |---|---|---|---|
 | Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Retomar sua fase corrente; registrar aqui arquivos em uso antes de editar |
 | Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; escolher próxima fase livre e registrar escopo |
-| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores, persistência, Caderno, dimensões e respawn validados; perfil inicial concluído, medição ampliada até 32 conexões em curso |
+| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores, persistência, Caderno, dimensões e respawn validados; perfil até 32 conexões e CI concluídos; integrar fauna recebida e ampliar carga gradualmente |
 | Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entregar documentação e lista de arquivos; preservar trabalho existente |
 | Aprovação visual e experiência | Rodrigo | Aparência, som, sensação de jogo e prioridades de produto | Validar os roteiros de jogo após as entregas técnicas |
 
@@ -43,9 +43,10 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
 | Codex | `tools/validation/`, utilitários de teste em `common/src/regression/`, documentação | Concluído: conexões reais em Fabric e Forge, páginas, isolamento, negociação, reconexão e reinício passaram; fixtures Python passaram |
 | Codex | `tools/validation/load_profile.py`, `tools/validation/java/JfrSummary.java`, `local_server.py`, documentação | Concluído: perfis Fabric/Forge com 0, 4, 8 e 16 conexões; roteiro e métricas em `PERFIL_LOCAL.md`. Não equivale a jogadores ativos nem valida o alvo de 100 jogadores |
 | Codex | `tools/validation/minecraft_client.py`, `network_regression.py`, documentação | Concluído: Caderno após troca de dimensão e morte/respawn, reconexão e reinício passou em Fabric/Forge; arquivos liberados |
-| Codex | `tools/validation/load_profile.py`, documentação | Em uso: ampliar perfil Fabric para 0, 16 e 32 conexões, com 20 s de aquecimento e 30 s de gravação; sem alterar gameplay |
-| Codex | `.github/workflows/validation.yml`, `tools/validation/README.md`, documentação | Em uso: integrar verificações de recursos, fixtures, orçamento e build Fabric/Forge no GitHub Actions; sem deploy ou publicação de release |
-| Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Em uso (fases 108-113) |
+| Codex | `tools/validation/load_profile.py`, documentação | Concluído: perfil Fabric até 32 conexões; corrigida a ferramenta para entradas sequenciais após detectar concorrência no login vanilla. Resultados e limites em `PERFIL_LOCAL.md` |
+| Codex | `.github/workflows/validation.yml`, `tools/validation/README.md`, documentação | Concluído: CI passou na main com a nova fauna, run `40140246290`; sem deploy ou publicação de release |
+| Codex | `tools/validation/check_project.py`, `test_check_project.py`, documentação | Concluído: 481 vínculos de áudio e legendas conferidos; 18 testes passaram. Sem editar sons ou geradores |
+| Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Concluído; arquivos liberados (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 
 ## Levantamento inicial e entregas anteriores (histórico)
@@ -118,6 +119,17 @@ As atribuições organizam o trabalho; não significam que outras sessões já l
   Progresso anterior preservado, atualizações continuaram, Bob permaneceu independente e a introdução não repetiu.
 - Reconexão e reinício preservaram também as páginas obtidas após as transições. Sem mudança de produção.
 - Telas/renderização continuam fora do alcance desses clientes de protocolo; não declarar teste visual.
+
+### Sétima entrega: CI, áudio e ampliação do perfil
+
+- Workflow na main e em `paralelo/*`, PRs para main e disparo manual: integridade, fixtures, orçamento e build
+  dos dois loaders com regressões de pesquisa. Ações oficiais fixadas por commit; permissões de leitura.
+- Primeira execução passou todas as etapas, mas foi substituída por novo push durante a finalização.
+  A execução seguinte concluiu com sucesso: https://github.com/RodrigoGomesDev/terrassic/actions/runs/40140246290.
+- Validador também cobre arquivos de áudio próprios, cabeçalho Ogg, eventos inexistentes/cíclicos e legendas
+  próprias nos três idiomas. Não valida audição ou decodificação. 18 fixtures Python passaram.
+- Perfil Fabric até 32 conexões concluiu depois de sequenciar logins. A tentativa anterior e seus picos de tick
+  foram preservados em `PERFIL_LOCAL.md`; não declarar 100 jogadores ou comparar médias como capacidade garantida.
 
 ## Fila de engenharia, sem sobrepor as features
 

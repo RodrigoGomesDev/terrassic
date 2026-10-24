@@ -5,6 +5,7 @@ This verifies committed inputs/assets, not their visual quality or gameplay beha
 """
 import ast
 import json
+import re
 import struct
 import sys
 from pathlib import Path
@@ -37,6 +38,71 @@ def png_dimensions(path):
     if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
         raise ValueError("invalid PNG header")
     return struct.unpack(">II", header[16:24])
+
+
+def check_sounds(assets, documents, languages, fail):
+    path = assets / "sounds.json"
+    events = documents.get(path)
+    if not isinstance(events, dict):
+        fail(path, "missing or invalid sound event file")
+        return
+    references = {name: set() for name in events}
+    for event, definition in events.items():
+        if not isinstance(definition, dict) or not isinstance(definition.get("sounds"), list):
+            fail(path, f"{event}: sound definition needs a sounds list")
+            continue
+        subtitle = definition.get("subtitle")
+        if subtitle is not None:
+            if not isinstance(subtitle, str):
+                fail(path, f"{event}: invalid subtitle key")
+            elif subtitle.startswith("subtitles.terrassic."):
+                for locale, values in languages.items():
+                    if not isinstance(values, dict) or subtitle not in values:
+                        fail(path, f"{event}: subtitle {subtitle} missing in {locale}")
+        for sound in definition["sounds"]:
+            name = sound if isinstance(sound, str) else sound.get("name") if isinstance(sound, dict) else None
+            kind = sound.get("type", "file") if isinstance(sound, dict) else "file"
+            if not isinstance(name, str) or not re.fullmatch(r"(?:[a-z0-9_.-]+:)?[a-z0-9/._-]+", name):
+                fail(path, f"{event}: invalid sound resource name {name!r}")
+                continue
+            if kind not in ("file", "event"):
+                fail(path, f"{event}: invalid sound type {kind!r}")
+                continue
+            namespace, resource = name.split(":", 1) if ":" in name else ("minecraft", name)
+            if resource.startswith("/") or ".." in resource.split("/"):
+                fail(path, f"{event}: unsafe sound resource path {name!r}")
+                continue
+            if namespace != "terrassic":
+                continue  # Vanilla/optional-mod assets are not shipped in this source tree.
+            if kind == "event":
+                if resource not in events:
+                    fail(path, f"{event}: unknown sound event {name}")
+                else:
+                    references[event].add(resource)
+            else:
+                audio = assets / "sounds" / (resource + ".ogg")
+                if not audio.is_file():
+                    fail(path, f"{event}: missing sound file {name}.ogg")
+                else:
+                    with audio.open("rb") as stream:
+                        if stream.read(4) != b"OggS":
+                            fail(audio, "invalid Ogg container header")
+    visiting, checked = set(), set()
+
+    def visit(event):
+        if event in visiting:
+            fail(path, f"cyclic sound event reference: {event}")
+            return
+        if event in checked:
+            return
+        visiting.add(event)
+        for other in sorted(references[event]):
+            visit(other)
+        visiting.remove(event)
+        checked.add(event)
+
+    for event in sorted(events):
+        visit(event)
 
 
 def check(root):
@@ -139,6 +205,8 @@ def check(root):
         missing = keys - values.keys()
         if missing:
             fail(path, f"missing translations: {sorted(missing)}")
+
+    check_sounds(assets, documents, languages, fail)
 
     return errors, len(species), len(documents), len(keys)
 
