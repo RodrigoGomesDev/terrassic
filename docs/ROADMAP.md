@@ -88,7 +88,7 @@ Valem para todas as frentes. Quem pega uma fase não precisa perguntar de novo.
 | # | Versão | Criaturas | Esqueleto (arquétipo) | Estado |
 |---|---|---|---|---|
 | 1 | v0.2 | T. rex, Spinosaurus, Triceratops, Ankylosaurus, Parasaurolophus, Pachycephalosaurus, Gallimimus, Velociraptor + os 4 "vazamentos da Fenda" (Stegosaurus, Brachiosaurus, Dilophosaurus, Compsognathus) | vários | ✅ no jogo |
-| 2 | v0.3 | Pteranodon, Mosasaurus, Maiasaura | pterossauro, réptil marinho, hadrossauro | ✅ (falta `knocked_out` no Pteranodon e no Mosasaurus) |
+| 2 | v0.3 | Pteranodon, Mosasaurus, Maiasaura | pterossauro, réptil marinho, hadrossauro | ✅ (`knocked_out` completo desde a fase 40) |
 | 3 | revisão | As 12 da v0.2: deixar cada uma única e detalhada, sem clone, com o conjunto completo de animações | terópode grande ✅, hadrossauro ✅ | ⏭ |
 | 4 | v0.4 céus | Quetzalcoatlus, Hatzegopteryx (azdarquídeos), Ichthyornis (ave de ombro) | pterossauro ✅, ave ✅ | ✅ modelos, animações, Java e Guia prontos (fases 36 e 39); falta testar no jogo |
 | 5 | v0.5 Mar Interior | Mosasaurus montável, Tylosaurus, Elasmosaurus, Xiphactinus, Archelon, Hesperornis, Deinosuchus, Baurusuchus | réptil marinho, plesiossauro, peixe, tartaruga, ave mergulhadora, crocodilo | ○ |
@@ -238,7 +238,7 @@ Todas trabalham na mesma fila, a da Era 1:
 
 | Frente | Próxima fase | Arquivos principais |
 |---|---|---|
-| Modelos 3D da Era 1 | `knocked_out` no Pteranodon e no Mosasaurus; revisão das 12 da v0.2; azdarquídeos e Ichthyornis (v0.4) | `tools/modelgen/` |
+| Modelos 3D da Era 1 | ✅ `knocked_out` nas 18 espécies, revisão das 12 da v0.2, azdarquídeos e Ichthyornis (v0.4); a seguir os arquétipos do Mar Interior (v0.5) | `tools/modelgen/` |
 | Sistemas da v0.4 | Voo completo, stamina, sela por espécie, ombro, temperamentos | `common/` (entidades) |
 | Blocos e flora da Era 1 | Taxodium, feto arbóreo, plantas; depois magnólia, palmeira, sequoia, cicas | `tools/spritegen/blocks.py`, `tools/javagen/gen_blocks.py` |
 | Conquistas | Terminar a árvore nova | `tools/javagen/conquistas.py`, `docs/CONQUISTAS.md` |

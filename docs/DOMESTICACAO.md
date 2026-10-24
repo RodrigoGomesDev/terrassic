@@ -34,7 +34,7 @@ Mesmos nomes da seção "Domesticação: animações e telas" do `docs/ROSTER.md
 | Animação | Tipo | Estado |
 |---|---|---|
 | `knockout` | uma vez: cambaleia e tomba | a fazer |
-| `knocked_out` | em loop: deitada de lado, respiração lenta | **pronta nos 13 dinossauros terrestres, no Quetzalcoatlus, no Hatzegopteryx e no Ichthyornis** (falta Pteranodonte e Mosassauro). A altura é calibrada por medida (`rig.ground_lift`), então nenhum corpo afunda nem flutua |
+| `knocked_out` | em loop: deitada de lado, respiração lenta | **pronta nas 18 espécies** (o Pteranodonte migrou para o arquétipo de pterossauro e o Mosassauro ganhou a pose deitado de lado, de barbatanas recolhidas, que na água vira boiar). A altura é calibrada por medida (`rig.ground_lift`), então nenhum corpo afunda nem flutua |
 | `wake` | uma vez: levanta da pose de nocaute e sacode a cabeça | **pronta** onde há `knocked_out` (`rig.add_wake`) |
 | `eat` | uma vez: abaixa a cabeça até a comida e mastiga 4 vezes | **pronta** (`rig.add_actions`) |
 | `tame` | uma vez: sacode o corpo, cabeça pra cima e boca aberta, cauda abanando | **pronta** (`rig.add_actions`) |

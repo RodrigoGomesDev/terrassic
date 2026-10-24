@@ -432,7 +432,12 @@
    "animation.pteranodon.fly",
    "animation.pteranodon.glide",
    "animation.pteranodon.sit",
-   "animation.pteranodon.attack"
+   "animation.pteranodon.attack",
+   "animation.pteranodon.knocked_out",
+   "animation.pteranodon.wake",
+   "animation.pteranodon.eat",
+   "animation.pteranodon.beg",
+   "animation.pteranodon.tame"
   ],
   "render_scale": 1.0
  },
@@ -460,7 +465,12 @@
    "animation.mosasaurus.walk",
    "animation.mosasaurus.run",
    "animation.mosasaurus.sit",
-   "animation.mosasaurus.attack"
+   "animation.mosasaurus.attack",
+   "animation.mosasaurus.knocked_out",
+   "animation.mosasaurus.wake",
+   "animation.mosasaurus.eat",
+   "animation.mosasaurus.beg",
+   "animation.mosasaurus.tame"
   ],
   "render_scale": 1.0
  },

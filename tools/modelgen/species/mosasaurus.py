@@ -10,7 +10,7 @@ young in the water. Not a dinosaur: a marine lizard related to monitor lizards a
 Modelled ~100 px long; scale 2.4 in game -> ~15 blocks.
 """
 import math
-from rig import Model, track, keys, wave
+from rig import Model, track, keys, wave, add_knockout
 
 ID = "mosasaurus"
 
@@ -130,3 +130,12 @@ def animations(m):
         "jaw": track(rot=keys([(0, 0, 0, 0), (0.2, -38, 0, 0), (0.34, -40, 0, 0), (0.4, 0, 0, 0), (0.7, 0, 0, 0)])),
         "body": track(pos=keys([(0, 0, 0, 0), (0.2, 0, 0, 2), (0.38, 0, 0, -3), (0.7, 0, 0, 0)])),
     })
+    # knocked out (docs/DOMESTICACAO.md): rolled onto its side, flippers hanging, the tail trailing in a lazy curve;
+    # in the water it floats like this, beached it lies on the sand. Also brings wake / eat / beg / tame.
+    # (the body rolls ~90 degrees, so a pitch here curves the tail along the ground and a yaw would lift it)
+    limp = {"neck": (3, -4, 0), "skull": (2, 0, 0), "jaw": (-14, 0, 0),
+            "tail1": (-3, 0, 0), "tail2": (-5, 0, 0), "tail3": (-6, 0, 0), "tail4": (-6, 0, 0), "tail5": (-5, 0, 0),
+            # paddles swept back along the flanks (base yaw is -30/+30, so -60/+60 lays them along the body)
+            "flipper_front_l": (0, -60, 20), "flipper_front_r": (0, 60, -20),
+            "flipper_back_l": (0, -60, 20), "flipper_back_r": (0, 60, -20)}
+    add_knockout(m, roll=85, lift=0.3, shift=0.5, joints=limp, neck_down=-10)

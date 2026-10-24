@@ -68,8 +68,8 @@ Para centenas de espécies, cada família tem **um rig compartilhado** (arquéti
   A pose usa `rig.add_knockout(m, lift=..., shift=...)`, com altura e deslocamento em fração da altura do quadril.
 - O tamanho no jogo vem da escala do renderizador (`SIZES` em `tools/javagen/gen_species.py`), então o rig fica num tamanho só.
 - `species/pterosaur.py`: pterossauros (asa em 3 ossos + membranas, voo, andar de quatro com a asa dobrada, `sit` e
-  `knocked_out` com as asas recolhidas ao corpo). Usado por `quetzalcoatlus.py`; o `pteranodon.py` ainda tem o rig
-  próprio (migrar sem mudar a geometria, `checks.py`).
+  `knocked_out` com as asas recolhidas ao corpo). Usado por `quetzalcoatlus.py`, `hatzegopteryx.py` e `pteranodon.py`
+  (migrado na fase 40 sem mudar a geometria: `checks.py pteranodon` dá geo = e textura =).
 - Ordem de produção (docs/ROADMAP.md): uma era por vez, na ordem da fila; o arquétipo nasce quando a primeira espécie
   da fila precisa dele. Próximos: réptil marinho, plesiossauro, crocodilo, ceratopsiano, saurópode, anquilossauro.
 - **Cada modelo é único**: o arquétipo é só o esqueleto e as animações base; corpo, cabeça, proporções, pele e
