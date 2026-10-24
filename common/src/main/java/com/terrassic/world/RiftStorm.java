@@ -71,7 +71,7 @@ public final class RiftStorm {
     /** Scoreboard tag of the creatures that came through the Rift. */
     public static final String TAG = "terrassic_rift";
     private static final DustParticleOptions AMBER = new DustParticleOptions(new Vector3f(1.0F, 0.68F, 0.22F), 1.6F);
-    private static final int DUSK = 12600;
+    private static final long DUSK = 12600L;
     private static List<EntityType<?>> leaks;
 
     private RiftStorm() {
@@ -101,10 +101,15 @@ public final class RiftStorm {
             if (time % 100 == 0) {
                 sendBack(level, false);  // stragglers loaded after the last storm ended
             }
-            if (WorldConfig.riftStorms() && level.getDayTime() % 24000L == DUSK && !level.players().isEmpty()
-                    && time - d.lastEnd >= WorldConfig.stormMinDays() * 24000L
-                    && level.random.nextDouble() < WorldConfig.stormChance()) {
-                start(level, d);
+            // one roll per in-game day, at or after dusk (also works after /time set or with the daylight cycle off)
+            long day = level.getDayTime() / 24000L;
+            if (level.getDayTime() % 24000L >= DUSK && day != d.lastRollDay && !level.players().isEmpty()) {
+                d.lastRollDay = day;
+                d.setDirty();
+                if (WorldConfig.riftStorms() && time - d.lastEnd >= WorldConfig.stormMinDays() * 24000L
+                        && level.random.nextDouble() < WorldConfig.stormChance()) {
+                    start(level, d);
+                }
             }
             return;
         }
@@ -227,6 +232,9 @@ public final class RiftStorm {
                 return;
             }
             dino.moveTo(x + 0.5D, pos.getY(), z + 0.5D, r.nextFloat() * 360.0F, 0.0F);
+            if (!level.noCollision(dino)) {
+                continue;  // a big one would be stuck in trees or rock: try another spot
+            }
             dino.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.EVENT, null, null);
             dino.addTag(TAG);
             dino.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0, false, false));
@@ -293,6 +301,7 @@ public final class RiftStorm {
         boolean active;
         int left;
         long lastEnd = -1000000L;
+        long lastRollDay = -1L;
         final Set<UUID> survivors = new HashSet<>();
 
         static Data get(MinecraftServer server) {
@@ -304,6 +313,7 @@ public final class RiftStorm {
             tag.putBoolean("Active", this.active);
             tag.putInt("Left", this.left);
             tag.putLong("LastEnd", this.lastEnd);
+            tag.putLong("LastRollDay", this.lastRollDay);
             ListTag list = new ListTag();
             for (UUID id : this.survivors) {
                 list.add(NbtUtils.createUUID(id));
@@ -317,6 +327,7 @@ public final class RiftStorm {
             d.active = tag.getBoolean("Active");
             d.left = tag.getInt("Left");
             d.lastEnd = tag.contains("LastEnd") ? tag.getLong("LastEnd") : -1000000L;
+            d.lastRollDay = tag.contains("LastRollDay") ? tag.getLong("LastRollDay") : -1L;
             for (Tag t : tag.getList("Survivors", Tag.TAG_INT_ARRAY)) {
                 d.survivors.add(NbtUtils.loadUUID(t));
             }

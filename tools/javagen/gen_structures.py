@@ -319,7 +319,7 @@ def nest_colony(seed):
         rng.shuffle(cells)
         n_eggs = rng.randint(1, 3)
         for x, z in cells[:n_eggs]:
-            t.set(x, 1, z, "maiasaura_egg", hatch="0")
+            t.set(x, 1, z, "maiasaura_egg", extra={"wild": "true"}, hatch="0")  # wild: hatch wild, parents defend
         x, z = cells[n_eggs]
         t.set(x, 1, z, "straw_nest", facing=rng.choice(["north", "south", "east", "west"]))
     for x, z in ((7.5, 13.5), (13.5, 6.5), (3.5, 10.5), (16.5, 15.5)):
@@ -364,7 +364,13 @@ STRUCTURE_LIST = [
                                        "#minecraft:is_savanna"], "beard_thin", "nest_colony"),
 ]
 
-START_HEIGHT = {"river_house": -5}  # the house stands on stilts: its platform is 5 blocks above the template base
+# Jigsaw puts the template base at (first free block of the heightmap) + start_height - 1 (getGroundLevelDelta is 1):
+# with 0 the template's y=0 layer replaces the top block of the ground. The house stands on stilts: base 4 lower, so its
+# platform (y=5) lies in the first free layer, on the ground or on the water.
+START_HEIGHT = {"river_house": -4}
+# beard_thin reshapes the terrain to the piece's ground level (template y=1), which for the house is 4 blocks under the
+# platform: it would dig a basin around it. The stilts reach the ground on their own.
+TERRAIN = {"river_house": "none"}
 
 STRUCTURE_SETS = {
     # set: spacing, separation (chunks), salt  -- or a dict for a concentric_rings placement
@@ -485,8 +491,8 @@ def main():
               {"replace": False, "values": biomes})
         write(os.path.join(WG, "structure", sid + ".json"), {
             "type": "minecraft:jigsaw", "biomes": f"#{NS}:has_structure/{sid}", "step": "surface_structures",
-            "spawn_overrides": {}, "terrain_adaptation": adaptation, "start_pool": f"{NS}:{sid}/start", "size": 1,
-            "start_height": {"absolute": START_HEIGHT.get(sid, -1)}, "project_start_to_heightmap": "WORLD_SURFACE_WG",
+            "spawn_overrides": {}, "terrain_adaptation": TERRAIN.get(sid, adaptation), "start_pool": f"{NS}:{sid}/start",
+            "size": 1, "start_height": {"absolute": START_HEIGHT.get(sid, 0)}, "project_start_to_heightmap": "WORLD_SURFACE_WG",
             "max_distance_from_center": 80, "use_expansion_hack": False})
         sets.setdefault(set_name, []).append(sid)
     for set_name, sids in sets.items():

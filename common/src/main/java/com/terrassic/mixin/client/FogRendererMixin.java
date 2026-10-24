@@ -5,6 +5,7 @@ import com.terrassic.client.RiftStormClient;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +26,7 @@ public abstract class FogRendererMixin {
     @Inject(method = "setupColor", at = @At("TAIL"), require = 0)
     private static void terrassic$stormFog(Camera camera, float partialTick, ClientLevel level, int renderDistance,
                                            float bossColor, CallbackInfo ci) {
-        if (RiftStormClient.intensity(partialTick) <= 0.0F) {
+        if (RiftStormClient.intensity(partialTick) <= 0.0F || camera.getFluidInCamera() != FogType.NONE) {
             return;
         }
         Vec3 c = RiftStormClient.tintFog(new Vec3(fogRed, fogGreen, fogBlue), partialTick);

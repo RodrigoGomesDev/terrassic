@@ -38,27 +38,40 @@ public final class WorldConfig {
     }
 
     public static boolean riftStorms() {
-        return get().get("rift_storms").getAsBoolean();
+        try {
+            return get().get("rift_storms").getAsBoolean();
+        } catch (RuntimeException e) {
+            return true;
+        }
     }
 
     public static double stormChance() {
-        return get().get("storm_chance").getAsDouble();
+        return number("storm_chance", 0.2D);
     }
 
     public static int stormMinDays() {
-        return get().get("storm_min_days").getAsInt();
+        return (int) number("storm_min_days", 3);
     }
 
     public static int stormMinutesMin() {
-        return get().get("storm_minutes_min").getAsInt();
+        return Math.max(1, (int) number("storm_minutes_min", 3));
     }
 
     public static int stormMinutesMax() {
-        return Math.max(stormMinutesMin(), get().get("storm_minutes_max").getAsInt());
+        return Math.max(stormMinutesMin(), (int) number("storm_minutes_max", 5));
     }
 
     public static int stormCreatures() {
-        return get().get("storm_creatures").getAsInt();
+        return Math.max(0, (int) number("storm_creatures", 3));
+    }
+
+    /** A number from the file, or the default when the value is missing or not a number (never throws). */
+    private static double number(String key, double fallback) {
+        try {
+            return get().get(key).getAsDouble();
+        } catch (RuntimeException e) {
+            return fallback;
+        }
     }
 
     private static synchronized JsonObject get() {

@@ -56,8 +56,9 @@ public final class ArrivalCrater {
             int z = spawn.getZ() + (int) Math.round(Math.sin(angle) * dist);
             level.getChunk(x >> 4, z >> 4);
             BlockPos top = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, 0, z)).below();
-            if (!level.getFluidState(top).isEmpty() || !level.getFluidState(top.above()).isEmpty()) {
-                continue;  // not in water
+            if (top.getY() <= level.getMinBuildHeight() || !level.getFluidState(top).isEmpty()
+                    || !level.getFluidState(top.above()).isEmpty()) {
+                continue;  // not in water, not in the void
             }
             dig(level, top, rng);
             data.x = top.getX();
@@ -86,6 +87,9 @@ public final class ArrivalCrater {
                 int x = center.getX() + dx;
                 int z = center.getZ() + dz;
                 BlockPos surface = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, 0, z)).below();
+                if (surface.getY() <= level.getMinBuildHeight()) {
+                    continue;  // an empty (void) column or a chunk that is not loaded
+                }
                 BlockState top = level.getBlockState(surface);
                 if (top.is(BlockTags.LOGS) || top.is(BlockTags.LEAVES) || !level.getFluidState(surface).isEmpty()) {
                     continue;  // leave trees and water alone
@@ -126,7 +130,7 @@ public final class ArrivalCrater {
         BlockPos rim = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 center.offset(RADIUS + 1, 0, 0));
         BlockState basket = ours("wicker_basket", Blocks.AIR.defaultBlockState());
-        if (!basket.isAir() && level.getFluidState(rim).is(Fluids.EMPTY)) {
+        if (!basket.isAir() && rim.getY() > level.getMinBuildHeight() + 1 && level.getFluidState(rim).is(Fluids.EMPTY)) {
             if (basket.hasProperty(HorizontalDirectionalBlock.FACING)) {
                 basket = basket.setValue(HorizontalDirectionalBlock.FACING, Direction.WEST);
             }

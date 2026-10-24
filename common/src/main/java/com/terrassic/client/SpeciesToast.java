@@ -56,9 +56,18 @@ public final class SpeciesToast implements Toast {
         if (mc.level == null) {
             return null;
         }
-        return MODELS.computeIfAbsent(species, id -> {
-            Entity e = BuiltInRegistries.ENTITY_TYPE.get(Terrassic.id(id)).create(mc.level);
-            return e instanceof LivingEntity living ? living : null;
-        });
+        if (!MODELS.isEmpty() && MODELS.values().iterator().next().level() != mc.level) {
+            MODELS.clear();  // a new world or dimension: drop the old models (they hold the old level)
+        }
+        LivingEntity cached = MODELS.get(species);
+        if (cached != null) {
+            return cached;
+        }
+        Entity e = BuiltInRegistries.ENTITY_TYPE.get(Terrassic.id(species)).create(mc.level);
+        LivingEntity living = e instanceof LivingEntity l ? l : null;
+        if (living != null) {
+            MODELS.put(species, living);
+        }
+        return living;
     }
 }

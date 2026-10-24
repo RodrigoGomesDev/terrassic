@@ -7,7 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Drowned;
@@ -15,7 +16,7 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombieVillager;
-import net.minecraft.world.level.BaseSpawner;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -33,9 +34,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@code terrassic:habitat/<word>} (forest, river, savanna...), so a species added to the WORLD table of
  * gen_species.py spawns here without touching this class.
  *
- * <p>Here: the vanilla night monsters that do not belong to the era. In Cretaceous biomes zombies and skeletons only
- * spawn below the surface (caves keep their monsters and drops), and witches, zombie villagers, drowned
- * and phantoms never spawn naturally. Spawners in monster rooms are left alone.
+ * <p>Here: the vanilla night monsters that do not belong to the era (see {@link #blocksSpawn}). In Cretaceous biomes
+ * zombies and skeletons only spawn below the surface (caves keep their monsters and drops), and witches, zombie
+ * villagers, drowned and phantoms never spawn naturally. Spawners in monster rooms and spawn eggs are left alone.
  */
 public final class CretaceousBiomes {
     public static final ResourceKey<Biome> HADROSAUR_PLAINS = key("hadrosaur_plains");
@@ -68,27 +69,35 @@ public final class CretaceousBiomes {
     }
 
     public static void init() {
-        EntityEvent.LIVING_CHECK_SPAWN.register(CretaceousBiomes::checkSpawn);
+        EntityEvent.ADD.register(CretaceousBiomes::onAdd);
     }
 
-    private static EventResult checkSpawn(LivingEntity entity, LevelAccessor level, double x, double y, double z,
-                                          MobSpawnType type, BaseSpawner spawner) {
-        if (type != MobSpawnType.NATURAL && type != MobSpawnType.CHUNK_GENERATION && type != MobSpawnType.PATROL) {
-            return EventResult.pass();
+    /**
+     * Called by MobMixin from Mob.checkSpawnRules for natural and world-generation spawns: in Cretaceous biomes,
+     * zombies and skeletons only spawn below the surface (caves keep their monsters and drops), and witches, zombie
+     * villagers and drowned never spawn. (Architectury's LIVING_CHECK_SPAWN can't be used to deny a spawn: Forge and
+     * Fabric read its result the opposite way.)
+     */
+    public static boolean blocksSpawn(Mob mob, LevelAccessor level, MobSpawnType type) {
+        if (type != MobSpawnType.NATURAL && type != MobSpawnType.CHUNK_GENERATION) {
+            return false;
         }
-        boolean never = entity instanceof Witch || entity instanceof ZombieVillager || entity instanceof Drowned
-                || entity instanceof Phantom;
-        boolean blockedOnSurface = entity instanceof Zombie || entity instanceof AbstractSkeleton;
+        boolean never = mob instanceof Witch || mob instanceof ZombieVillager || mob instanceof Drowned;
+        boolean blockedOnSurface = mob instanceof Zombie || mob instanceof AbstractSkeleton;
         if (!never && !blockedOnSurface) {
-            return EventResult.pass();
+            return false;
         }
-        BlockPos pos = BlockPos.containing(x, y, z);
+        BlockPos pos = mob.blockPosition();
         if (!level.getBiome(pos).is(CRETACEOUS)) {
-            return EventResult.pass();
+            return false;
         }
         // "surface" = at the top of the column, ignoring leaves (a forest floor at night counts as surface too)
-        boolean surface = pos.getY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) - 2;
-        if (never || surface) {
+        return never || pos.getY() >= level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) - 2;
+    }
+
+    /** Phantoms don't go through spawn rules (PhantomSpawner adds them directly): keep them out of the Cretaceous. */
+    private static EventResult onAdd(Entity entity, Level level) {
+        if (entity instanceof Phantom && !level.isClientSide && level.getBiome(entity.blockPosition()).is(CRETACEOUS)) {
             return EventResult.interruptFalse();
         }
         return EventResult.pass();

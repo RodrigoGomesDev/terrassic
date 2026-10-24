@@ -3,11 +3,11 @@
   "biomes": "#terrassic:has_structure/river_house",
   "step": "surface_structures",
   "spawn_overrides": {},
-  "terrain_adaptation": "beard_thin",
+  "terrain_adaptation": "none",
   "start_pool": "terrassic:river_house/start",
   "size": 1,
   "start_height": {
-    "absolute": -5
+    "absolute": -4
   },
   "project_start_to_heightmap": "WORLD_SURFACE_WG",
   "max_distance_from_center": 80,

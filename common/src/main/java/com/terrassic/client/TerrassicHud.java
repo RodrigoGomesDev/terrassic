@@ -1,5 +1,6 @@
 package com.terrassic.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.terrassic.Terrassic;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.research.GuideSpecies;
@@ -17,7 +18,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -51,6 +54,7 @@ public final class TerrassicHud {
     private static final int PAPER = 0xE8DCC0;
 
     private static Map<String, Integer> levels;
+    private static Knowledge seenAtJoin;
     private static int baselineDelay;
     private static int titleDelay = -1;
     private static int tick;
@@ -63,7 +67,8 @@ public final class TerrassicHud {
         ClientTickEvent.CLIENT_POST.register(TerrassicHud::tick);
         ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(player -> {
             levels = null;
-            baselineDelay = 4;  // x10 ticks: wait for the server's Knowledge sync before comparing
+            seenAtJoin = ClientResearch.get();
+            baselineDelay = 20;  // x10 ticks: at most 10 s waiting for the server's Knowledge sync
             titleDelay = 60;
         });
     }
@@ -143,9 +148,11 @@ public final class TerrassicHud {
 
     private static void riftAlert(GuiGraphics g, Font font, float intensity, int width) {
         float pulse = 0.55F + 0.45F * Mth.sin(tick * 0.25F);
+        RenderSystem.enableBlend();
         g.setColor(1.0F, 1.0F, 1.0F, Mth.clamp(intensity * pulse + 0.2F, 0.0F, 1.0F));
         g.blit(ICONS, width / 2 - 8, 3, 0.0F, 16.0F, 16, 16, 64, 32);
         g.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableBlend();
         g.drawCenteredString(font, Component.translatable("hud.terrassic.rift_storm"), width / 2, 21, 0xFFB63C);
     }
 
@@ -170,7 +177,11 @@ public final class TerrassicHud {
         e.setXRot(0.0F);
         e.yHeadRot = 210.0F;
         e.yHeadRotO = 210.0F;
-        g.enableScissor(x, y, x + size, y + size);
+        // the scissor box is in screen coordinates and ignores the pose: move it with the pose (toasts are translated)
+        Matrix4f m = g.pose().last().pose();
+        Vector3f a = m.transformPosition(new Vector3f(x, y, 0.0F));
+        Vector3f b = m.transformPosition(new Vector3f(x + size, y + size, 0.0F));
+        g.enableScissor(Math.round(a.x()), Math.round(a.y()), Math.round(b.x()), Math.round(b.y()));
         try {
             InventoryScreen.renderEntityInInventory(g, x + size / 2, y + size - 3, scale,
                     new Quaternionf().rotateZ((float) Math.PI), null, e);
@@ -207,8 +218,9 @@ public final class TerrassicHud {
             now.put(s.id(), k.level(s.id()));
         }
         if (levels == null) {
-            // right after joining only take the baseline: no toasts for what you already knew
-            if (--baselineDelay <= 0) {
+            // right after joining only take the baseline, once the server's sync arrived (a new Knowledge object):
+            // no toasts for what you already knew
+            if (k != seenAtJoin || --baselineDelay <= 0) {
                 levels = now;
             }
             return;

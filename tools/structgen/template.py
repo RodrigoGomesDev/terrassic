@@ -63,7 +63,9 @@ class Template:
     def inside(self, x, y, z):
         return 0 <= x < self.size[0] and 0 <= y < self.size[1] and 0 <= z < self.size[2]
 
-    def set(self, x, y, z, block, nbt=None, **props):
+    def set(self, x, y, z, block, nbt=None, extra=None, **props):
+        """Place a block. `extra` = block-state properties the blockstate file does not list (it does not vary the
+        model, e.g. the "wild" flag of the eggs): written without validation."""
         if not self.inside(x, y, z):
             raise ValueError(f"{block} at {(x, y, z)} is outside the template {self.size}")
         name = block if ":" in block else "terrassic:" + block
@@ -75,7 +77,9 @@ class Template:
                     values = {"true", "false"}  # multipart files only name the "true" case of a boolean
                 if str(v).lower() not in values:
                     raise ValueError(f"{name}: bad property {k}={v} (allowed {allowed})")
-        state = (name, tuple(sorted((k, str(v).lower()) for k, v in props.items())))
+        allprops = dict(props)
+        allprops.update(extra or {})
+        state = (name, tuple(sorted((k, str(v).lower()) for k, v in allprops.items())))
         self.blocks[(x, y, z)] = (state, nbt)
 
     def get(self, x, y, z):

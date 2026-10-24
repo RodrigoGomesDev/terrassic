@@ -73,7 +73,7 @@ idêntico ao mapeamento direto.
 | Árvores e plantas dos biomas | `data/terrassic/worldgen/{configured,placed}_feature/cretaceous/` (usam as árvores e plantas de `gen_blocks.py`) |
 | Tipos de mundo | `data/terrassic/worldgen/world_preset/terrassic{,_large}.json` + `data/minecraft/tags/worldgen/world_preset/normal.json` |
 | Superfícies | `world/CretaceousSurface.java`, aplicado por `mixin/NoiseGeneratorSettingsMixin` na frente da regra de superfície do Overworld (só vale nos biomas do Cretáceo) |
-| Monstros da noite, chaves e tags | `world/CretaceousBiomes.java` |
+| Monstros da noite, chaves e tags | `world/CretaceousBiomes.java` + `mixin/MobMixin` (em `Mob.checkSpawnRules`; o `LIVING_CHECK_SPAWN` do Architectury não serve para negar spawn, porque Forge e Fabric leem o resultado ao contrário) |
 | Dinossauros por bioma | `world/ModSpawns.java` (gerado): cada condição também confere `terrassic:habitat/<palavra>` |
 | Solos do Cretáceo | `#minecraft:dirt` (serrapilheiras, turfa, solo laterítico: plantas e mudas crescem neles) e `#minecraft:animals_spawnable_on` (+ lama rachada) |
 

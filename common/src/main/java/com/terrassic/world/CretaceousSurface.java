@@ -1,6 +1,5 @@
 package com.terrassic.world;
 
-import com.google.common.collect.MapMaker;
 import com.terrassic.Terrassic;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
@@ -10,8 +9,6 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource;
 import net.minecraft.world.level.levelgen.SurfaceRules.RuleSource;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-
-import java.util.Map;
 
 import static com.terrassic.world.CretaceousBiomes.*;
 
@@ -37,18 +34,20 @@ import static com.terrassic.world.CretaceousBiomes.*;
  * </pre>
  */
 public final class CretaceousSurface {
-    private static final Map<RuleSource, RuleSource> WRAPPED = new MapMaker().weakKeys().makeMap();
     private static volatile RuleSource rules;
 
     private CretaceousSurface() {
     }
 
-    /** The given surface rule with the Cretaceous rules in front (same instance in, same instance out). */
+    /**
+     * The given surface rule with the Cretaceous rules in front. A small new object per call (once per chunk): no cache,
+     * so nothing keeps old worlds' settings alive.
+     */
     public static RuleSource wrap(RuleSource original) {
         if (original == null) {
             return null;
         }
-        return WRAPPED.computeIfAbsent(original, o -> SurfaceRules.sequence(rules(), o));
+        return SurfaceRules.sequence(rules(), original);
     }
 
     private static RuleSource rules() {
@@ -199,6 +198,9 @@ public final class CretaceousSurface {
                 SurfaceRules.ifTrue(SurfaceRules.isBiome(HIGHLANDS), highlands),
                 SurfaceRules.ifTrue(SurfaceRules.isBiome(REDWOOD_FOREST), redwood),
                 SurfaceRules.ifTrue(SurfaceRules.isBiome(MAGNOLIA_FOREST), magnolia));
-        return SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), perBiome);
+        // the biome test first: in other biomes and dimensions nothing else is evaluated
+        return SurfaceRules.ifTrue(SurfaceRules.isBiome(HADROSAUR_PLAINS, MAGNOLIA_FOREST, CYPRESS_SWAMP, REDWOOD_FOREST,
+                DRY_LANDS, RIVER_DELTA, INNER_SEA, DEEP_INNER_SEA, RIVER, BEACH, HIGHLANDS),
+                SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), perBiome));
     }
 }
