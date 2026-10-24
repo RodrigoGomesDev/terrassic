@@ -35,6 +35,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Thescelosaurus (v0.6) | 3,5-4 m, ~250-300 kg (Boyd 2014) | novo | **4,0 x 1,6** | 1,0 x 1,6 | 35% |
 | Pachyrhinosaurus (v0.6) | 6-8 m, ~4 t (Currie et al. 2008) | novo | **8,0 x 4,2** (com chifres do escudo) | 2,4 x 3,6 | 30% |
 | Therizinosaurus (v0.6) | 9-10 m, ~5 t (Zanno 2010; Paul 2010), garras de 52 cm | novo | **10,0 x 6,4** (pescoço erguido) | 2,4 x 5,0 | 20% |
+| Deinocheirus (v0.6) | 11 m, ~6,4 t (Lee et al. 2014), braços de 2,4 m | novo | **11,0 x 6,1** (pescoço erguido) | 2,4 x 4,8 | 20% |
 | Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |

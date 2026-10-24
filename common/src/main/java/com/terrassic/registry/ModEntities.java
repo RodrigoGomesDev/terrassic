@@ -8,6 +8,7 @@ import com.terrassic.entity.Baurusuchus;
 import com.terrassic.entity.Brachiosaurus;
 import com.terrassic.entity.Compsognathus;
 import com.terrassic.entity.Corythosaurus;
+import com.terrassic.entity.Deinocheirus;
 import com.terrassic.entity.Deinosuchus;
 import com.terrassic.entity.Dilophosaurus;
 import com.terrassic.entity.Edmontosaurus;
@@ -85,6 +86,8 @@ public final class ModEntities {
             mob("euoplocephalus", Euoplocephalus::new, MobCategory.CREATURE, Euoplocephalus.WIDTH, Euoplocephalus.HEIGHT, 10);
     public static final RegistrySupplier<EntityType<Therizinosaurus>> THERIZINOSAURUS =
             mob("therizinosaurus", Therizinosaurus::new, MobCategory.CREATURE, Therizinosaurus.WIDTH, Therizinosaurus.HEIGHT, 12);
+    public static final RegistrySupplier<EntityType<Deinocheirus>> DEINOCHEIRUS =
+            mob("deinocheirus", Deinocheirus::new, MobCategory.CREATURE, Deinocheirus.WIDTH, Deinocheirus.HEIGHT, 12);
     public static final RegistrySupplier<EntityType<Brachiosaurus>> BRACHIOSAURUS =
             mob("brachiosaurus", Brachiosaurus::new, MobCategory.CREATURE, Brachiosaurus.WIDTH, Brachiosaurus.HEIGHT, 14);
     public static final RegistrySupplier<EntityType<Parasaurolophus>> PARASAUROLOPHUS =
@@ -162,6 +165,7 @@ public final class ModEntities {
         EntityAttributeRegistry.register(ANKYLOSAURUS, Ankylosaurus::createAttributes);
         EntityAttributeRegistry.register(EUOPLOCEPHALUS, Euoplocephalus::createAttributes);
         EntityAttributeRegistry.register(THERIZINOSAURUS, Therizinosaurus::createAttributes);
+        EntityAttributeRegistry.register(DEINOCHEIRUS, Deinocheirus::createAttributes);
         EntityAttributeRegistry.register(BRACHIOSAURUS, Brachiosaurus::createAttributes);
         EntityAttributeRegistry.register(PARASAUROLOPHUS, Parasaurolophus::createAttributes);
         EntityAttributeRegistry.register(PACHYCEPHALOSAURUS, Pachycephalosaurus::createAttributes);

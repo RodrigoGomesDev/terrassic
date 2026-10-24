@@ -37,6 +37,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Ankylosaurus        forest, plains, badlands        3       1-2
  *  Euoplocephalus      plains, forest, savanna         4       1-3
  *  Therizinosaurus     forest, jungle, swamp, mangrove 2       1-2
+ *  Deinocheirus        river, swamp, mangrove          3       1-2
  *  Brachiosaurus       savanna, plains                 1       1-2
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
@@ -81,6 +82,7 @@ public final class ModSpawns {
         placement(ModEntities.ANKYLOSAURUS);
         placement(ModEntities.EUOPLOCEPHALUS);
         placement(ModEntities.THERIZINOSAURUS);
+        placement(ModEntities.DEINOCHEIRUS);
         placement(ModEntities.BRACHIOSAURUS);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
@@ -169,6 +171,9 @@ public final class ModSpawns {
             }
             if (forest || jungle || swamp) {
                 add(props, ModEntities.THERIZINOSAURUS.get(), 2, 1, 2);
+            }
+            if (river || swamp) {
+                add(props, ModEntities.DEINOCHEIRUS.get(), 3, 1, 2);
             }
             if (savanna || plains) {
                 add(props, ModEntities.BRACHIOSAURUS.get(), 1, 1, 2);

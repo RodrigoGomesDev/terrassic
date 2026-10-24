@@ -695,6 +695,22 @@ GUIDE = {
         note=("Foice de um metro em cada dedo, e ele usa para pegar folhas. Natureza tem senso de humor.",
               "A metre-long scythe on every finger, and it uses them to pick leaves. Nature has a sense of humour.",
               "Una guadaña de un metro en cada dedo, y las usa para coger hojas. La naturaleza tiene sentido del humor.")),
+    "deinocheirus": dict(
+        sci=("Viveu há cerca de 70 milhões de anos na Mongólia. A \"mão terrível\": por 50 anos só se conheceu um par de braços de 2,4 m; os esqueletos de 2014 mostraram o maior ornitomimossauro de todos, 11 m e 6,4 toneladas, com uma corcova de espinhas altas no dorso, bico de pato sem dentes, pescoço longo, pernas curtas de dedos largos e um leque de penas na cauda. Escamas de peixe e pedras no estômago: um onívoro que vadeava a beira dos rios.",
+             "Lived about 70 million years ago in Mongolia. The \"terrible hand\": for 50 years only a pair of 2.4 m arms was known; the 2014 skeletons showed the biggest ornithomimosaur of all, 11 m and 6.4 tonnes, with a hump of tall spines on its back, a toothless duck bill, a long neck, short broad-toed legs and a fan of feathers on the tail. Fish scales and stones in its stomach: an omnivore wading the river margins.",
+             "Vivió hace unos 70 millones de años en Mongolia. La \"mano terrible\": durante 50 años solo se conoció un par de brazos de 2,4 m; los esqueletos de 2014 mostraron el mayor ornitomimosaurio de todos, 11 m y 6,4 toneladas, con una joroba de espinas altas en el lomo, pico de pato sin dientes, cuello largo, patas cortas de dedos anchos y un abanico de plumas en la cola. Escamas de pez y piedras en el estómago: un omnívoro que vadeaba la orilla de los ríos."),
+        behavior=("Sozinho ou em par nos rios e pântanos. Parado à beira d'água, de vez em quando mergulha os dois braços e tira peixe ou algas. Territorial: quem chega perto demais leva uma varredura dos braços.",
+                  "Alone or in pairs on rivers and swamps. Standing at the water's edge, now and then it plunges both arms in and scoops out fish or weed. Territorial: whoever comes too close gets a sweep of the arms.",
+                  "Solo o en pareja en ríos y pantanos. Parado a la orilla del agua, de vez en cuando hunde los dos brazos y saca peces o algas. Territorial: quien se acerca demasiado recibe un barrido de los brazos."),
+        taming=("Doma-se na mão com bacalhau, salmão, algas, melancia ou frutas silvestres. Os pares põem um ovo grande.",
+                "Hand-tamed with cod, salmon, kelp, melon or sweet berries. Pairs lay a large egg.",
+                "Se doma a mano con bacalao, salmón, algas, sandía o bayas. Las parejas ponen un huevo grande."),
+        utility=("Pescador de pé: estacione-o na margem e ele traz bacalhau, salmão, algas e grama-do-mar. Montaria alta e tranquila para cruzar rios. Carga chega com os sistemas.",
+                 "A standing fisher: park it on the bank and it brings cod, salmon, kelp and seagrass. A tall, calm mount for crossing rivers. Cargo arrives with the systems.",
+                 "Pescador de pie: déjalo en la orilla y trae bacalao, salmón, algas y hierba marina. Montura alta y tranquila para cruzar ríos. La carga llega con los sistemas."),
+        note=("Ele pesca melhor que eu. Com as mãos. Isso não devia me incomodar tanto.",
+              "It fishes better than I do. With its hands. That should not bother me as much as it does.",
+              "Pesca mejor que yo. Con las manos. Eso no debería molestarme tanto.")),
 }
 
 ERAS = {

@@ -1156,5 +1156,41 @@
    "animation.therizinosaurus.graze"
   ],
   "render_scale": 1.0
+ },
+ "deinocheirus": {
+  "bones": 25,
+  "cubes": 54,
+  "texture": [
+   128,
+   256
+  ],
+  "bounds_px": [
+   [
+    -11.0,
+    -1.627589281127939e-07,
+    -50.705113197465764
+   ],
+   [
+    11.0,
+    56.84237410418815,
+    51.94614535045015
+   ]
+  ],
+  "animations": [
+   "animation.deinocheirus.idle",
+   "animation.deinocheirus.walk",
+   "animation.deinocheirus.run",
+   "animation.deinocheirus.roar",
+   "animation.deinocheirus.sit",
+   "animation.deinocheirus.knocked_out",
+   "animation.deinocheirus.wake",
+   "animation.deinocheirus.eat",
+   "animation.deinocheirus.beg",
+   "animation.deinocheirus.tame",
+   "animation.deinocheirus.attack",
+   "animation.deinocheirus.graze",
+   "animation.deinocheirus.fish"
+  ],
+  "render_scale": 1.0
  }
 }

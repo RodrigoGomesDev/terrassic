@@ -41,6 +41,8 @@ SIZES = {
     "euoplocephalus":     dict(real=6.0,  scale=1.43, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
     # Therizinosaurus cheloniformis: 9-10 m, ~5 t (Zanno 2010; Paul 2010); stands ~6 blocks tall with the neck up.
     "therizinosaurus":    dict(real=10.0, scale=1.94, w=2.4, h=5.0, baby=0.2,  shadow=2.0),
+    # Deinocheirus mirificus: 11 m, ~6.4 t (Lee et al. 2014); the biggest ornithomimosaur, humped and duck-billed.
+    "deinocheirus":       dict(real=11.0, scale=1.72, w=2.4, h=4.8, baby=0.2,  shadow=2.2),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
     # 22 m length; our model holds the neck more upright than that, so the head reaches ~17 blocks.
     "brachiosaurus":      dict(real=22.0, scale=3.26, w=4.0, h=9.0, baby=0.12, shadow=4.5),
@@ -98,6 +100,7 @@ GUIDE = {
     "ankylosaurus":       dict(era="late_cretaceous", diet="herbivore", fossil=4),
     "euoplocephalus":     dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "therizinosaurus":    dict(era="late_cretaceous", diet="herbivore", fossil=2),
+    "deinocheirus":       dict(era="late_cretaceous", diet="omnivore",  fossil=1),
     "brachiosaurus":      dict(era="jurassic",        diet="herbivore", fossil=3),
     "parasaurolophus":    dict(era="late_cretaceous", diet="herbivore", fossil=5),
     "pachycephalosaurus": dict(era="late_cretaceous", diet="herbivore", fossil=4),
@@ -139,6 +142,7 @@ WORLD = {
     "ankylosaurus":       dict(biomes=("forest", "plains", "badlands"), weight=3, group=(1, 2), track=10),
     "euoplocephalus":     dict(biomes=("plains", "forest", "savanna"), weight=4, group=(1, 3), track=10),  # grazes the open floodplain
     "therizinosaurus":    dict(biomes=("forest", "jungle", "swamp"), weight=2, group=(1, 2), track=12),    # browses the high canopy
+    "deinocheirus":       dict(biomes=("river", "swamp"), weight=3, group=(1, 2), track=12),                # wades the river margins
     "brachiosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 2), track=14),
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
@@ -260,6 +264,12 @@ SPECIES = [
       food="Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.MELON_SLICE",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.8, 0.6),
       xp=30, step_height=1.2, head=(30, 25), rideable=True, jump=0.5, ride_offset=2.6, ride_speed=1.0, egg_only=True, forage=True),
+ dict(id="deinocheirus", cls="Deinocheirus", base="HerbivoreDinosaur",
+      doc="Deinocheirus mirificus - 11 m humped, duck-billed ornithomimosaur of the river margins with 2.4 m arms. Omnivore: scoops fish and weed out of the water (a tame one brings them to you). Territorial: swipes with the arms. Tamed with fish or plants; a tall mount.",
+      attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
+      food="Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES",
+      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.5, 2.0, 320), step=("RAVAGER_STEP", 0.8, 0.6),
+      xp=32, step_height=1.2, head=(30, 25), rideable=True, jump=0.4, ride_offset=2.8, ride_speed=0.95, scoop=True),
  dict(id="brachiosaurus", cls="Brachiosaurus", base="HerbivoreDinosaur",
       doc="Brachiosaurus altithorax - gigantic long-necked browser, eats leaves. Peaceful unless hurt. Rideable when tamed - the tallest mount in the game.",
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
@@ -478,6 +488,8 @@ def gen(s, bounds):
         extras.append("dig")
     if s.get("musk"):
         extras.append("scent")
+    if s.get("scoop"):
+        extras.append("fish")
     if base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
     elif base == "HerbivoreDinosaur" and len(extras) > 1:
@@ -689,6 +701,53 @@ def gen(s, bounds):
                     p -> !p.isTame() && !p.isBaby())) {
                 predator.setTarget(this);
             }
+        }
+    }
+""")
+    if s.get("scoop"):
+        # fishing: idle at the water's edge it scoops with both arms now and then; a tame one brings up a fish or some weed
+        imports.update({"net.minecraft.server.level.ServerLevel", "net.minecraft.core.BlockPos", "net.minecraft.core.particles.ParticleTypes",
+                        "net.minecraft.tags.FluidTags", "net.minecraft.world.item.ItemStack"})
+        body.append("""    /** Fishing: idle within two blocks of water it scoops with both arms now and then (splash); a tame one brings up a
+     *  cod, a salmon, kelp or seagrass and drops it at its feet. */
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (this.isBaby() || this.getTarget() != null || this.isVehicle() || this.isInSittingPose() || !this.getNavigation().isDone()
+                || this.random.nextInt(700) != 0 || !(this.level() instanceof ServerLevel server)) {
+            return;
+        }
+        BlockPos feet = this.blockPosition();
+        BlockPos water = null;
+        for (BlockPos p : new BlockPos[]{feet.north(2), feet.south(2), feet.east(2), feet.west(2),
+                feet.north(2).below(), feet.south(2).below(), feet.east(2).below(), feet.west(2).below()}) {
+            if (server.getFluidState(p).is(FluidTags.WATER)) {
+                water = p;
+                break;
+            }
+        }
+        if (water == null) {
+            return;
+        }
+        triggerAnim(ACTION_CONTROLLER, "fish");
+        server.sendParticles(ParticleTypes.SPLASH, water.getX() + 0.5D, water.getY() + 1.0D, water.getZ() + 0.5D, 12, 0.4D, 0.1D, 0.4D, 0.1D);
+        this.playSound(SoundEvents.GENERIC_SPLASH, 0.6F, 1.0F);
+        if (!this.isTame()) {
+            return;
+        }
+        int roll = this.random.nextInt(100);
+        ItemStack found = ItemStack.EMPTY;
+        if (roll < 35) {
+            found = new ItemStack(Items.COD);
+        } else if (roll < 60) {
+            found = new ItemStack(Items.SALMON);
+        } else if (roll < 75) {
+            found = new ItemStack(Items.KELP);
+        } else if (roll < 85) {
+            found = new ItemStack(Items.SEAGRASS);
+        }
+        if (!found.isEmpty()) {
+            this.spawnAtLocation(found);
         }
     }
 """)
