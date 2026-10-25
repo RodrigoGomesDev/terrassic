@@ -580,22 +580,22 @@
   "render_scale": 0.5
  },
  "ichthyornis": {
-  "bones": 19,
-  "cubes": 31,
+  "bones": 20,
+  "cubes": 69,
   "texture": [
-   64,
-   128
+   128,
+   256
   ],
   "bounds_px": [
    [
-    -21.5,
-    3.42736420102413e-05,
-    -22.142707976431204
+    -46.0,
+    1.0913676195635891e-05,
+    -37.16541370700598
    ],
    [
-    21.5,
-    19.342674144356817,
-    16.0
+    46.0,
+    36.26925352366956,
+    27.0
    ]
   ],
   "animations": [
@@ -612,7 +612,7 @@
    "animation.ichthyornis.beg",
    "animation.ichthyornis.tame"
   ],
-  "render_scale": 0.25
+  "render_scale": 0.125
  },
  "tylosaurus": {
   "bones": 17,

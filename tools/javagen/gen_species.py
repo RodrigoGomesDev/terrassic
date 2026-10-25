@@ -118,7 +118,8 @@ SIZES = {
     # Hatzegopteryx v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "hatzegopteryx":      dict(real=12.0, scale=0.76, w=2.5, h=4.6, baby=0.25, shadow=2.1),
     # Ichthyornis dispar: a tern-sized toothed seabird, wingspan ~60 cm (Clarke 2004; Field et al. 2018). Modelled at 4x.
-    "ichthyornis":        dict(real=0.66, scale=0.245, w=0.4, h=0.4, baby=0.5, shadow=0.2),
+    # Ichthyornis v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "ichthyornis":        dict(real=0.66, scale=0.115, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Vegavis iaai: a small duck, ~0.7 m nose to tail, ~1 m wingspan (Clarke et al. 2005, 2016). Modelled at 4x, 47 px span.
     "vegavis":            dict(real=0.7,  scale=0.33, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).

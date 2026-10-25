@@ -28,7 +28,7 @@ public class Ichthyornis extends FlyingDinosaur {
     public static final float WIDTH = 0.4F;
     public static final float HEIGHT = 0.4F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.245F;
+    public static final float MODEL_SCALE = 0.115F;
     public static final float SHADOW = 0.2F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
