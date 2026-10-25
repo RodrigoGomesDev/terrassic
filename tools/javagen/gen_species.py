@@ -126,7 +126,8 @@ SIZES = {
     # Mosasaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "mosasaurus":         dict(real=17.0, scale=1.00, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
     # Tylosaurus proriger: 12-13 m (the "Bunker" specimen KUVP 5033 ~13 m; Everhart 2005). Sleeker than the Mosasaurus.
-    "tylosaurus":         dict(real=13.0, scale=1.58, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
+    # Tylosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "tylosaurus":         dict(real=13.0, scale=0.95, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
     # Elasmosaurus platyurus: ~10.3 m, of which ~7 m of neck (Sachs 2005). "real" is the total length.
     "elasmosaurus":       dict(real=10.3, scale=1.42, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
     # Xiphactinus audax: 4.5-6 m, the biggest of its family (Everhart 2005; the "fish within a fish" FHSM VP-333 is ~4 m).
