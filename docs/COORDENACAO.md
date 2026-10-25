@@ -1,6 +1,25 @@
 # Terrassic — coordenação entre frentes
 
-Atualizado em 24/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
+Atualizado em 25/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
+
+## Conferência Terrassic e Terrassic Sync — 25/10
+
+- `~/projects/terrassic` é o checkout de desenvolvimento, na main. Incorporados por fast-forward 52 commits
+  recebidos após `96004f7b`, até `98a5a1f0`: nocaute, Guia, telas e remasterizações. Integridade passou com
+  59 espécies, 4.319 JSONs e 1.827 chaves por idioma; build Fabric/Forge com regressões passou em 37 s.
+- `~/projects/terrassic-sync` é uma pasta de transporte, sem `.git`: bundles, LEIA-ME e prévias.
+  Os bundles antigos de base, main, v0.8 e v0.9 pertencem ao histórico anterior e não devem ser mesclados novamente.
+- `paralelo-identidade.bundle` foi verificado e lido como `sync/identidade`, sem trocar a main. Contém **quatro**
+  commits após `96004f7b` (o LEIA-ME ainda diz três): licenças/titular, fontes, kit de marca e textos da loja/Discord.
+  Fontes/arte e documentos de licença foram entregues nesse pacote, mas ainda não estão integrados na main.
+- Simulação de integração contra `98a5a1f0`: conflitos em `NotebookScreen.java`, `TerrassicTitle.java` e neste
+  quadro. Preservar a ficha do Guia/dioramas e as fontes/componentes ao conciliar. A simulação não abriu um merge
+  no checkout; as telas da entrega continuam sem validação visual no jogo.
+- A edição local de `tools/capagen/icone.py` foi preservada ao atualizar a main. Backup adicional em
+  `build/integration-backups/identity-_g6mztrn/icone.saved.py`; arte e geradores locais não foram incluídos em commits.
+- O nocaute já foi entregue por `db12c4c3`; o handoff antigo abaixo precede essa implementação. Persistência e
+  interação do novo sistema ainda precisam de testes específicos. O perfil anterior chegou a 100 conexões
+  estacionárias, documentado em `PERFIL_LOCAL.md`; não valida jogadores ativos nem as remasterizações novas.
 
 Este quadro organiza responsáveis, arquivos compartilhados e evidências de entrega. O roadmap continua em
 `ROADMAP.md`; este arquivo não muda decisões de produto. Cada sessão deve ler o quadro antes de editar.

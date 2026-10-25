@@ -96,6 +96,24 @@ monotônica: aquecimento da JVM, atividade das criaturas, população e pausas v
 O resultado de 32 não demonstra que adicionar jogadores reduz custo, nem permite extrapolar para 100 jogadores
 ativos. Em particular, as duas execuções de 30 s tiveram picos acima de 35 ms na etapa de 16 conexões.
 
+## Execução até 100 conexões estacionárias, 24/10/2026
+
+Resultado recuperado e conferido em 25/10: `build/load-profile/fabric-mnk5t98q/`, SHA original registrado
+`c42f0b9b44efa38828ec0b59a3785f0ec6ca6e66`. O histórico foi reescrito por outra sessão depois dessa execução;
+o `source.tar` da gravação preserva os inputs efetivamente compilados. Esta revisão antecede o nocaute e as
+remasterizações recebidas em 25/10. Aquecimento de 20 s e gravação de 30 s por etapa, logins sequenciais.
+
+| Conexões | Criaturas do mod | Eventos JFR | Média das janelas (ms) | Máximo das janelas (ms) |
+|---:|---:|---:|---:|---:|
+| 32 | 117 | 30 | 11,919 | 35,597 |
+| 64 | 178 | 30 | 6,899 | 16,399 |
+| 100 | 222 | 30 | 7,404 | 28,503 |
+
+As três etapas concluíram; clientes encerrados e mundo salvo às 19:59 do dia 24/10. Nenhuma média ultrapassou
+o limite configurado de 35 ms. São conexões criativas estacionárias em mundo plano com distâncias 4/4; não
+equivalem a 100 jogadores explorando, construindo ou combatendo. As médias não monotônicas reforçam os limites
+de comparação já descritos. O resultado não substitui perfil spark, cliente completo ou teste prolongado.
+
 ## Próximas medições
 
 Comparar repetições mais longas na mesma revisão; depois medir exploração do continente, sobrevivência,
