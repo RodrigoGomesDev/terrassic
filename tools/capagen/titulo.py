@@ -18,6 +18,19 @@ def title(text="TERRASSIC", finish="pedra", texel=2, age=1.0):
     return letreiro.image(text, ALIASES.get(finish, finish), s=texel * 5, age=age)
 
 
+def title_in(W, H, finish="pedra", text="TERRASSIC", align="left", top=None, age=1.0):
+    """The title at the largest whole block size that fits a W x H texture (one block of air around it), on a
+    transparent W x H canvas: left-aligned or centred; centred vertically, or `top` px from the top. For game textures
+    of a fixed size."""
+    f = ALIASES.get(finish, finish)
+    w1, h1 = letreiro.image(text, f, s=1, age=0, pad=1).size
+    s = max(1, min(W // w1, H // h1))
+    t = letreiro.image(text, f, s=s, age=age, pad=1)
+    out = Image.new("RGBA", (W, H))
+    out.alpha_composite(t, ((W - t.width) // 2 if align == "center" else 0, (H - t.height) // 2 if top is None else top))
+    return out
+
+
 SLOGANS = {
     "pt_br": "O PASSADO ACORDOU.",
     "en_us": "THE PAST HAS AWOKEN.",

@@ -4,7 +4,8 @@ Textures of the Terrassic main menu (client/title/TerrassicMenuScreen.java, docs
   textures/gui/title/menu/fundo_<cena>.png  1920x1080 scene behind the menu (rendered by menu_cenas.py with the
                                             Blender backend of tools/capagen), with the left side and the bottom
                                             darkened so the title, the options and the placard stay readable
-  textures/gui/title/menu/titulo.png        the TERRASSIC title of the cover (tools/capagen/titulo.py, finish "pedra")
+  textures/gui/title/menu/titulo.png        the TERRASSIC title in Degraus, like the covers (tools/capagen/titulo.py,
+                                            finish "pedra"), on the 950x150 canvas TerrassicMenuScreen expects
   textures/gui/title/menu/icones.png        16x16 option icons (icones.py): one column per icon, rows idle/hover/dim
 
 usage:
@@ -57,7 +58,7 @@ def main(scene_dir):
         background(os.path.join(scene_dir, scene + ".png")).save(os.path.join(OUT, f"fundo_{scene}.png"), optimize=True)
     icon_atlas().save(os.path.join(OUT, "icones.png"))
     import titulo
-    titulo.title("TERRASSIC", finish="pedra", texel=2).save(os.path.join(OUT, "titulo.png"), optimize=True)
+    titulo.title_in(950, 150, "pedra").save(os.path.join(OUT, "titulo.png"), optimize=True)  # TITLE_W x TITLE_H
     print("menu textures written to", OUT)
 
 

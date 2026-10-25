@@ -123,7 +123,8 @@ Propostas geradas por `tools/capagen/brand.py` em `art/identidade/marca/`:
 **Degraus** é a letra dos letreiros (capas, banners, site): glifos em `tools/fontgen/degraus.py` (A a Z, números,
 pontuação e os acentos do português e do espanhol, grade de 11 linhas), desenho em `tools/capagen/letreiro.py` (degraus,
 desgaste, acabamento, contorno e extrusão; o mesmo do site, pixel a pixel). As capas usam Degraus no TERRASSIC e no
-slogan (`tools/capagen/titulo.py`). Não é fonte de interface: dentro do jogo os títulos continuam em Entalhe.
+slogan (`tools/capagen/titulo.py`), e a tela de título do jogo usa o mesmo letreiro. Não é fonte de interface: os
+títulos dentro das telas continuam em Entalhe.
 
 O ícone do selo (`icone_proposta.png`) continua só proposta: o `icon.png` do jogo é o T. rex da capa "Caçada"
 (aprovado em 25/10, `docs/CAPA.md`).
@@ -147,8 +148,9 @@ O ícone do selo (`icone_proposta.png`) continua só proposta: o `icon.png` do j
    telas de carga e domesticação que vierem (v0.7).
 2. **Pacote de texturas do Cretáceo** (`TEXTURAS_ERA.md`): menus e inventários do vanilla em basalto e âmbar dentro do
    pacote embutido (opcional, ligado no mundo Terrassic).
-3. Trocar o letreiro da tela de título pelo Degraus (aprovado em 25/10): `textures/gui/title/menu/titulo.png` (950x150,
-   gerado por `tools/menugen/menu_assets.py` com `titulo.title`) e `textures/gui/title/terrassic.png` (256x64).
+3. Feito em 25/10: a tela de título usa o Degraus. `textures/gui/title/terrassic.png` (512x128, desenhado como 256x64,
+   `tools/capagen/title.py`) e `textures/gui/title/menu/titulo.png` (950x150, `tools/menugen/menu_assets.py`), os dois
+   por `titulo.title_in`, que encaixa o letreiro no tamanho que o Java espera.
 4. Site e redes (marco "Lançamento"): as fontes em TrueType (`art/identidade/fontes/`) nos títulos e na interface do
    site, a prancha como guia, molduras de "ficha de campo" para revelar espécies.
 5. Fontes: ícones de interface como glifos (coração, fome, pegada) para usar dentro do texto; versão "Entalhe" de 24 px

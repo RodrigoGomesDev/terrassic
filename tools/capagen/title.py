@@ -3,7 +3,7 @@ Title-screen art (v0.8, phase M2): the TERRASSIC logo the title screen draws ins
 of the whole screen (panorama as the game shows it + logo + subtitle) for review.
 
 usage:  python3 panorama.py && python3 title.py
-        -> common/src/main/resources/assets/terrassic/textures/gui/title/terrassic.png  (256x64, drawn 1:1)
+        -> common/src/main/resources/assets/terrassic/textures/gui/title/terrassic.png  (512x128, drawn as 256x64)
         -> art/capa/tela_titulo_preview.png and art/capa/panorama_vistas.png (four directions of the panorama)
 """
 import math
@@ -18,6 +18,7 @@ sys.path.insert(0, HERE)
 
 import logo  # noqa: E402
 import panorama as P  # noqa: E402
+import titulo  # noqa: E402
 
 TITLE = os.path.join(P.r3.ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures", "gui", "title")
 PREVIEW = os.path.join(P.r3.ROOT, "art", "capa", "tela_titulo_preview.png")
@@ -25,14 +26,10 @@ VIEWS = os.path.join(P.r3.ROOT, "art", "capa", "panorama_vistas.png")
 
 
 def logo_texture():
-    """256x64 RGBA: the stone wordmark with the Rift's crack and an amber glow, centred, top 4 px of margin."""
-    mark = logo.wordmark("TERRASSIC", block=4, depth=2)
-    canvas = Image.new("RGBA", (256, 64), (0, 0, 0, 0))
-    x, y = (256 - mark.width) // 2, 6
-    layer = Image.new("RGBA", (256, 64), (0, 0, 0, 0))
-    layer.paste(mark, (x, y), mark)
-    canvas = Image.alpha_composite(canvas, logo.glow(layer, 3, strength=0.55))
-    return Image.alpha_composite(canvas, layer)
+    """512x128 RGBA: TERRASSIC in Degraus (the title face), centred. TerrassicTitle draws it as 256x64 GUI units, so the
+    texture is twice that: one texture pixel per screen pixel at GUI scale 2. Set high, to leave room for the
+    chapter line drawn under it."""
+    return titulo.title_in(512, 128, "pedra", align="center", top=2)
 
 
 def view(spin, W=854, H=480):
@@ -72,7 +69,7 @@ def preview(tex):
     grad = np.zeros((H * scale, W * scale, 4), np.uint8)
     grad[..., 3] = (np.linspace(0, 1, H * scale) ** 2 * 120).astype(np.uint8)[:, None]
     bg = Image.alpha_composite(bg, Image.fromarray(grad, "RGBA"))
-    big = tex.resize((256 * scale, 64 * scale), Image.NEAREST)
+    big = tex.resize((256 * scale, 64 * scale), Image.NEAREST)  # the game draws it at 256x64 GUI units
     bg.alpha_composite(big, ((W * scale - big.width) // 2, 30 * scale - 6 * scale))
     d = ImageDraw.Draw(bg)
     cap = logo.up(logo.caption("CAPITULO 1 - ECOS DO FIM"), scale)
