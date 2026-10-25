@@ -475,22 +475,22 @@
   "render_scale": 0.5
  },
  "maiasaura": {
-  "bones": 27,
-  "cubes": 49,
+  "bones": 28,
+  "cubes": 67,
   "texture": [
-   128,
+   256,
    256
   ],
   "bounds_px": [
    [
-    -9.5,
-    2.3649910577258316e-05,
-    -42.69406222922195
+    -15.0,
+    -1.8170048859847816e-05,
+    -73.79448256938159
    ],
    [
-    9.5,
-    31.0,
-    56.11652063190722
+    15.0,
+    55.699703827016535,
+    99.35249538655133
    ]
   ],
   "animations": [
@@ -507,7 +507,7 @@
    "animation.maiasaura.beg",
    "animation.maiasaura.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "quetzalcoatlus": {
   "bones": 30,

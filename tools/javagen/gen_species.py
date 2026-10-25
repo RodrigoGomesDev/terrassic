@@ -101,7 +101,8 @@ SIZES = {
     "gallimimus":         dict(real=6.0,  scale=1.02, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
     "struthiomimus":      dict(real=4.3,  scale=1.07, w=1.0, h=2.4, baby=0.35, shadow=0.8),
-    "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
+    # Maiasaura v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "maiasaura":          dict(real=9.0,  scale=0.83, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
     "edmontosaurus":      dict(real=12.0, scale=1.93, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
     # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
@@ -569,7 +570,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=65, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ARMOR=3, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
-      rideable=True, jump=0.6, ride_offset=1.45, ride_speed=1.05, call=True, nurse=True),
+      rideable=True, jump=0.6, ride_offset=2.55, ride_forward=0.8, ride_speed=1.05, call=True, nurse=True),
  dict(id="edmontosaurus", cls="Edmontosaurus", base="HerbivoreDinosaur",
       doc="Edmontosaurus annectens - 12 m flat-headed duckbill, the biggest of the hadrosaurs, grazing in large herds on the plains. Tamed with plants; a steady riding and pack mount (the cargo inventory arrives with the v0.6 systems).",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),

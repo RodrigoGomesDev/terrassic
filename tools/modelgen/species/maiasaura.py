@@ -1,32 +1,270 @@
 """
-Maiasaura peeblesorum  (Late Cretaceous, Two Medicine Formation, Montana)
+Maiasaura peeblesorum  (Campanian, Two Medicine Formation, Montana)
 
-Reference (Wikipedia): length ~9 m, mass ~3 t; a flat-headed hadrosaur (no hollow crest) with a small solid
-spiky crest in front of the eyes, a broad duck-like beak, heavy body; walked on four legs and could run on two.
-Known from big nesting colonies ("Egg Mountain") with eggs, hatchlings and juveniles: the young stayed in the
-nest and were fed by the adults, hence the name "good mother lizard".
+Reference:
+  - Size (Horner & Makela 1979; Horner 1983; Woodward et al. 2015): adults ~9 m long, ~2.5-4 t; known from
+    hundreds of individuals of every age, so its growth is the best known of any dinosaur (adult size in ~8 years).
+  - Nesting (Horner & Makela 1979, "Egg Mountain"): colonies of bowl-shaped nests ~2 m wide set about an adult's
+    length apart, 30-40 eggs each; the hatchlings (~40 cm) had poorly finished leg joints and stayed in the nest,
+    so the adults brought them food: "good mother lizard".
+  - Skull (Brachylophosaurini, with Brachylophosaurus): flat-headed, no hollow crest; a small solid spike-like
+    crest formed by the nasals and prefrontals rises in front of the eyes; a long deep snout ending in a broad,
+    slightly downturned duck bill (keratin) in front of grinding dental batteries.
+  - Body (hadrosaurids): deep and heavy, highest over the hips; light forelimbs with the middle fingers in a hoofed
+    "mitten"; long hind legs with three broad hoofed toes; a deep tail stiffened by ossified tendons. Walked on four
+    legs and ran on two.
+  - Skin: none known for Maiasaura; its close relative Brachylophosaurus ("Leonardo", a mummy) shows the pebbly
+    tubercle mosaic of hadrosaurs. Earth tones with dark blotches here, a ground-nester's camouflage.
 
-Same build as the Parasaurolophus (both hadrosaurs) but heavier, with a short deep snout and the little crest.
-Males have a taller crest ("male_display").
+v2x (2026-10-24, remaster at the T. rex v3 level): its own model (no longer the shared hadrosaur rig), modelled
+at 16 px = 1 m (one texture pixel = one vanilla pixel in game). The head is ~1.2x the real proportion. Built
+from the same hadrosaurid construction rules as the Parasaurolophus but heavier, with its own head and no tube.
+Males carry a taller crest spike ("male_display").
 """
-import hadrosaur
+import math
+from rig import Model, wave, sinx, track, keys, add_knockout, add_saddle, lowest_point
+from quadruped import quad_gait, quad_sit
+from groundfit import fit_to_ground
 
 ID = "maiasaura"
-SPEC = dict(
-    palette={"dorsal": "#5a4a36", "flank": "#8c7a58", "belly": "#e0d6b6", "limb": "#6a5a42", "limb_top": "#7c6a4e",
-             "claw": "#38312a", "claw_base": "#38312a", "beak": "#3e362e", "crest": "#9a5a32", "crest_band": "#d8a860",
-             "spot": "#3e3226", "tooth": "#d8d0b8", "mouth": "#6e3330", "gum": "#4e2622", "eye": "#b8862c", "pupil": "#140f0a"},
-    sexes={"male": {"crest": "#a8502a", "crest_band": "#e8b060"},
-           "female": {"dorsal": "#62553e", "flank": "#968660", "crest": "#7c6648", "crest_band": "#b8a078"}},
-    belly=(7.5, 11),                              # heavier than the Parasaurolophus
-    snout=(-3, -3, -12, 3, 3, -6),                # short deep snout
-    bill=(-3.5, -3, -14, 3.5, 0, -12),            # broad duck bill
-    jaw=(-3, -5, -13, 3, -3, -3),
-    crest=[(-1, 3, -6, 1, 5, -2)],                # small solid crest in front of the eyes
-    male_crest=[(-1, 5, -5, 1, 6, -3)],
-    pattern="blotches",
-)
+K = 2.0
+HEAD = 1.2
+
+
+def _cell(P, size):
+    a, b, c = P[0] / size, P[1] / size, P[2] / size
+    row = math.floor(b)
+    a += 0.5 * (row % 2)
+    c += 0.5 * (row % 2)
+    fa, fb, fc = a - math.floor(a), b - math.floor(b), c - math.floor(c)
+    edge = min(fa, 1 - fa, fb, 1 - fb, fc, 1 - fc)
+    h = (math.floor(a) * 73856093 ^ row * 19349663 ^ math.floor(c) * 83492791) & 1023
+    return edge, h
+
+
+def pattern(model, tx, rgb, region):
+    """Pebbly tubercle mosaic with patches of feature scales, irregular dark blotches over the back and flanks
+    (a ground-nester's camouflage), a pale throat and belly; the crest spike banded at its tip."""
+    P, cube, pal = tx.P, tx.cube, tx.pal
+    tag = cube.tag
+    if tag in ("claw", "eye", "mouth", "beak", "saddle"):
+        return rgb
+    if tag == "crest":
+        return pal["crest_band"].copy() if tx.face == "up" else rgb * (0.9 if (tx.i + tx.j) % 3 == 0 else 1.0)
+    if tag in ("skin", "limb"):
+        if tag == "limb" and cube.bone.startswith(("toes", "hand")) and tx.face != "down":
+            return rgb * (0.86 if int(math.floor(P[2])) % 2 == 0 else 1.0)
+        if region in ("dorsal", "flank") and not cube.bone.startswith("jaw"):
+            bl = math.sin(P[2] * 0.42 + 2.1 * math.sin(P[1] * 0.21 + P[0] * 0.17)) * math.sin(P[1] * 0.35 + P[2] * 0.13)
+            if bl > 0.42 and (region == "dorsal" or tx.cy > 0.35):
+                rgb = pal["spot"] * (0.95 if (tx.i + tx.j) % 2 else 1.0)       # blotches
+        big, hb = _cell(P, 3.0)
+        if hb % 6 == 0 and region == "flank":
+            return rgb * (0.88 if big < 0.12 else 1.1)                       # feature scales
+        edge, _h = _cell(P, 1.5)
+        if edge < 0.13:
+            rgb = rgb * 0.92                                                  # pebbly tubercles
+    return rgb
+
+
+PALETTE = {"dorsal": "#5a4a36", "flank": "#8c7a58", "belly": "#e0d6b6", "limb": "#6a5a42", "limb_top": "#7c6a4e",
+           "claw": "#38312a", "claw_base": "#38312a", "beak": "#56493b", "crest": "#9a5a32", "crest_band": "#d8a860",
+           "spot": "#3e3226", "tooth": "#d8d0b8", "mouth": "#6e3330", "gum": "#4e2622", "eye": "#b8862c", "pupil": "#140f0a"}
+SEXES = {"male": {"crest": "#a8502a", "crest_band": "#e8b060"},
+         "female": {"dorsal": "#62553e", "flank": "#968660", "crest": "#7c6648", "crest_band": "#b8a078"}}
+MOUTH_UP, MOUTH_DOWN = {"faces": {"up": "mouth"}}, {"faces": {"down": "mouth"}}
+
+BODY = (40, 12)                                      # hip joint
+TORSO = [("hips", (-11, 26, -2, 11, 46, 24)), ("belly", (-13.5, 20, -26, 13.5, 43, 0)),
+         ("chest", (-10, 21, -40, 10, 37, -24)), ("belly_low", (-10, 17, -32, 10, 20, -4)),
+         ("back", (-7, 43, -24, 7, 46, -2)), ("sacrum", (-6, 46, -2, 6, 49, 22)),
+         ("withers", (-6, 36, -38, 6, 40, -24)), ("shoulder", (-7, 40, -30, 7, 43, -22)),
+         ("rump", (-8, 30, 22, 8, 45, 28))]
+NECK = ([(33, -38), (43, -48), (50, -56)], [(11, 13), (9, 11)])
+SKULL_PITCH = -22          # head pointing forward and a little down from the rising neck
+TAIL = ([(43, 26), (42, 40), (40, 54), (37, 68), (33, 82), (30, 96)], [(11, 18), (9, 15), (7, 11), (5, 8), (3, 5)])
+LEG_X, LEG = 9, ([(40, 12), (22, 4), (8, 11), (2, 11)], [(11, 18, -1), (8, 11, 0, "limb"), (7, 7, 0, "limb")])
+ARM_X, ARM = 8, ([(27, -33), (15, -31), (4, -33)], [(5, 7), (4, 5, 0, "limb")])
+SADDLE = (46, -22, -4, 15, 14, 14)   # top_y, z0, z1, width, body half width, flap
+GRAZE = (-66, -24, 46)      # neck1, neck2, skull: the bill reaches the ground, the head stays inclined
+SIT_HIND = (50, -95, 45)
+SIT_SPLAY = (14, -24)         # resting: thigh and shin roll out (deg)
+RUN_LEAN = 9               # bipedal run: the chest rises off the forelimbs
 
 
 def build():
-    return hadrosaur.build(ID, SPEC)
+    m = Model(ID, render_scale=0.5)
+    m.palette = dict(PALETTE)
+    m.sexes = SEXES
+    m.pattern = pattern
+    m.bone("root", None, (0, 0, 0))
+    m.bone("body", "root", (0, *BODY))
+    for name, (x0, y0, z0, x1, y1, z1) in TORSO:
+        m.box("body", (x0, y0, z0), (x1, y1, z1), name=name)
+
+    # --- neck: arched, rising from the chest
+    pts, secs = NECK
+    neck = m.chain(["neck1", "neck2"], "body", 0, pts, "-z", secs, overlap=(3.0, 2.0))
+    ay, az = neck["end"]
+    h = lambda v: int(round(v * HEAD))
+    m.bone("head", "neck2", (0, ay, az))
+    m.bone("skull", "head", (0, ay, az), (SKULL_PITCH - neck["abs"], 0, 0))
+    m.bone("jaw", "skull", (0, ay + h(-4), az + h(-3)))
+
+    def at(x, y, z):
+        return (h(x), ay + h(y), az + h(z))
+
+    def B(bone, name, box, tag="skin", **kw):
+        x0, y0, z0, x1, y1, z1 = box
+        return m.box(bone, at(x0, y0, z0), at(x1, y1, z1), tag=tag, name=name, **kw)
+
+    def SM(name, box, tag="skin", **kw):
+        x0, y0, z0, x1, y1, z1 = box
+        B("skull", name + "_l", box, tag, **kw)
+        B("skull", name + "_r", (-x1, y0, z0, -x0, y1, z1), tag, **kw)
+
+    # --- head (head px, x HEAD): flat-topped, a long deep snout, a broad slightly downturned bill, the small solid
+    # crest spike rising from the nasals in front of the eyes
+    B("skull", "braincase", (-3, -2, -5, 3, 4, 1), paint=MOUTH_DOWN)
+    B("skull", "cheeks", (-3.5, -4, -9, 3.5, 2, -4), paint=MOUTH_DOWN)
+    B("skull", "snout", (-2.5, -4, -14, 2.5, 2, -9), paint=MOUTH_DOWN)
+    B("skull", "nasal_ridge", (-1.5, 2, -12, 1.5, 3, -6))
+    B("skull", "bill", (-3.5, -4.5, -16.5, 3.5, -1.5, -14), tag="beak")
+    B("skull", "bill_top", (-3, -1.5, -16, 3, 0, -14), tag="beak")
+    SM("brow", (2.5, 3, -7, 3.5, 4, -3))
+    B("skull", "crest_base", (-1, 3, -10, 1, 5, -5), tag="crest")     # a low solid ridge rising to a short spike
+    B("skull", "crest", (-1, 5, -9, 1, 6, -6.5), tag="crest")
+    m.bone("male_display", "skull", (0, ay, az))
+    B("male_display", "crest_tip", (-1, 6, -8.5, 1, 7, -7.5), tag="crest")
+    B("jaw", "jaw", (-2.5, -6.5, -14, 2.5, -4, -3), paint=MOUTH_UP)
+    B("jaw", "predentary", (-3.5, -6.5, -17, 3.5, -5, -14), tag="beak")
+    m.decals += [{"kind": "eye", "bones": ["skull"], "pos": at(3.5, 1, -5.5), "r": 1.0, "side": 1},
+                 {"kind": "eye", "bones": ["skull"], "pos": at(-3.5, 1, -5.5), "r": 1.0, "side": -1},
+                 {"kind": "spot", "bones": ["skull"], "pos": at(2.5, -0.5, -12.5), "r": 1.2, "rx": 1.4, "mul": 0.5, "side": 1},
+                 {"kind": "spot", "bones": ["skull"], "pos": at(-2.5, -0.5, -12.5), "r": 1.2, "rx": 1.4, "mul": 0.5, "side": -1}]
+
+    # --- hind legs: long, knee forward, three broad hoofed toes
+    lpts, lsecs = LEG
+
+    def leg(side, sx):
+        x = LEG_X * sx
+        ch = m.chain([f"thigh_{side}", f"shin_{side}", f"foot_{side}"], "root", x, lpts, "-y", lsecs, overlap=(3.0, 2.0))
+        by, bz = ch["end"]
+        m.bone(f"toes_{side}", f"foot_{side}", (x, by, bz), (-ch["abs"], 0, 0))
+        T = f"toes_{side}"
+        m.box(T, (x - 4, by - 2, bz - 2), (x + 4, by, bz + 3), tag="limb", name="heel_pad")
+        for dx, length in ((-4, 4), (-1, 6), (2, 4)):
+            a, b = sorted((x + dx * sx, x + (dx + 2) * sx))
+            m.box(T, (a, by - 2, bz - 2 - length), (b, by, bz - 2), tag="limb", name="toe")
+            m.box(T, (a, by - 2, bz - 4 - length), (b, by - 1, bz - 2 - length), tag="claw", name="hoof")
+    m.sym(leg)
+
+    # --- forelimbs: light, the three middle fingers in a hoofed mitten, the fifth free
+    apts, asecs = ARM
+
+    def arm(side, sx):
+        x = ARM_X * sx
+        ch = m.chain([f"upperarm_{side}", f"forearm_{side}"], "body", x, apts, "-y", asecs, overlap=(2.0, 1.0))
+        by, bz = ch["end"]
+        m.bone(f"hand_{side}", f"forearm_{side}", (x, by, bz), (-ch["abs"], -8 * sx, 0))
+        H = f"hand_{side}"
+        m.box(H, (x - 3, by - 2, bz - 4), (x + 3, by + 1, bz + 2), tag="limb", name="mitten")
+        m.box(H, (x - 3, by - 2, bz - 5), (x + 3, by - 1, bz - 4), tag="claw", name="hoof")
+        a = x + 3 * sx
+        m.box(H, (min(a, a + sx), by - 1, bz - 3), (max(a, a + sx), by + 1, bz), tag="limb", name="finger5")
+    m.sym(arm)
+
+    # --- tail: tall and flat-sided, held straight out by the ossified tendons
+    tpts, tsecs = TAIL
+    tail = m.chain(["tail1", "tail2", "tail3", "tail4", "tail5"], "body", 0, tpts, "+z", tsecs, overlap=(2.0, 1.0))
+    ty, tz = tail["end"]
+    m.box("tail5", (-1, ty - 2, tz), (1, ty + 2, tz + 3), name="tail_tip")
+
+    add_saddle(m, "body", *SADDLE)
+    animations(m)
+    return m
+
+
+def siny_(a, ph=0.0):
+    return lambda p: (0, a * math.sin(2 * math.pi * (p + ph)), 0)
+
+
+def animations(m):
+    Li = 4.0
+    idle = {
+        "body": track(rot=wave(8, sinx(0.5), Li), pos=wave(8, lambda p: (0, 0.25 * K * math.sin(2 * math.pi * p), 0), Li)),
+        "neck1": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * p), 3 * math.sin(2 * math.pi * (p + 0.3)), 0), Li)),
+        "neck2": track(rot=wave(8, lambda p: (1.2 * math.sin(2 * math.pi * (p + 0.1)), 1.5 * math.sin(2 * math.pi * (p + 0.4)), 0), Li)),
+        "skull": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * (p + 0.2)), 0, 0), Li)),
+        "jaw": track(rot=wave(8, lambda p: (-4 * max(0.0, math.sin(4 * math.pi * p)), 0, 0), Li)),
+    }
+    for i in range(5):
+        idle[f"tail{i+1}"] = track(rot=wave(8, siny_(2 + 0.8 * i, -0.08 * i), Li))
+    m.anim("idle", Li, True, idle)
+    # walk on four legs
+    Lc, bob = 1.5, 0.6 * K
+    t = quad_gait(Lc, 20, 16)
+    t["body"] = track(rot=wave(8, lambda p: (0, 1.5 * math.sin(2 * math.pi * p), 1.5 * math.sin(2 * math.pi * p)), Lc),
+                      pos=wave(8, lambda p: (0, bob * math.cos(4 * math.pi * p) - bob * 0.5, 0), Lc))
+    t["neck1"] = track(rot=wave(8, lambda p: (-2 * 0.6 * math.cos(4 * math.pi * p), 0, 0), Lc))
+    for i in range(5):
+        t[f"tail{i+1}"] = track(rot=wave(8, siny_(2.5 + 0.8 * i, 0.25 - 0.08 * i), Lc))
+    m.anim("walk", Lc, True, t)
+    # run on two legs: the chest rises, the forelimbs fold, the tail balances straight out
+    Lc, bob = 0.8, 1.0 * K
+    t = {k: v for k, v in quad_gait(Lc, 34, 0).items() if not k.startswith(("upperarm", "forearm", "hand"))}
+    t["body"] = track(rot=wave(8, lambda p: (RUN_LEAN, 1.5 * math.sin(2 * math.pi * p), 1.2 * math.sin(2 * math.pi * p)), Lc),
+                      pos=wave(8, lambda p: (0, bob * math.cos(4 * math.pi * p), 0), Lc))
+    for side in ("l", "r"):
+        t[f"upperarm_{side}"] = track(rot=keys([(0, -20, 0, 0), (Lc, -20, 0, 0)]))
+        t[f"forearm_{side}"] = track(rot=keys([(0, 45, 0, 0), (Lc, 45, 0, 0)]))
+    t["neck1"] = track(rot=wave(8, lambda p: (-RUN_LEAN * 0.8 - 2 * math.cos(4 * math.pi * p), 0, 0), Lc))
+    t["tail1"] = track(rot=wave(8, lambda p: (-RUN_LEAN * 0.7, 2 * math.sin(2 * math.pi * (p + 0.25)), 0), Lc))
+    for i in range(1, 5):
+        t[f"tail{i+1}"] = track(rot=wave(8, siny_(2 + 0.6 * i, 0.2 - 0.06 * i), Lc))
+    m.anim("run", Lc, True, t)
+    # attack (only when cornered): rear back and shove with the chest and the head
+    m.anim("attack", 0.9, False, {
+        "neck1": track(rot=keys([(0, 0, 0, 0), (0.3, 10, 0, 0), (0.5, -14, 0, 0), (0.9, 0, 0, 0)])),
+        "skull": track(rot=keys([(0, 0, 0, 0), (0.3, 8, 0, 0), (0.5, -12, 0, 0), (0.9, 0, 0, 0)])),
+        "body": track(rot=keys([(0, 0, 0, 0), (0.3, 6, 0, 0), (0.5, -2, 0, 0), (0.9, 0, 0, 0)]),
+                      pos=keys([(0, 0, 0, 0), (0.3, 0, 0, 1.0 * K), (0.5, 0, 0, -2.5 * K), (0.9, 0, 0, 0)])),
+        "upperarm_l": track(rot=keys([(0, 0, 0, 0), (0.3, -20, 0, 0), (0.5, 4, 0, 0), (0.9, 0, 0, 0)])),
+        "upperarm_r": track(rot=keys([(0, 0, 0, 0), (0.3, -20, 0, 0), (0.5, 4, 0, 0), (0.9, 0, 0, 0)])),
+    })
+    m.anim("sit", 4.0, True, quad_sit(m, 17, hind=SIT_HIND, neck=10))
+    sit = m.animations[-1]                       # the folded hind legs lie beside the belly, not inside it
+    for side, sg in (("l", 1), ("r", -1)):
+        for bone, roll in (("thigh", SIT_SPLAY[0]), ("shin", SIT_SPLAY[1])):
+            tr = sit["bones"][f"{bone}_{side}"]
+            tr["rotation"] = [[k[0], k[1], k[2], k[3] + sg * roll] for k in tr["rotation"]]
+    low = lowest_point(m, sit["bones"])
+    for bone, tr in sit["bones"].items():
+        if "position" in tr and (bone == "body" or bone.startswith("thigh")):
+            tr["position"] = [[k[0], k[1], round(k[2] - low, 3), k[3]] for k in tr["position"]]
+    jk = [(0, 0, 0, 0), (0.6, 0, 0, 0)]
+    for k in range(6):
+        t0 = 0.75 + k * 0.3
+        jk += [(t0, -10, 0, 0), (t0 + 0.15, -2, 0, 0)]
+    jk += [(2.8, 0, 0, 0)]
+    m.anim("graze", 2.8, False, {
+        "neck1": track(rot=keys([(0, 0, 0, 0), (0.6, GRAZE[0], 0, 0), (2.3, GRAZE[0], 0, 0), (2.8, 0, 0, 0)])),
+        "neck2": track(rot=keys([(0, 0, 0, 0), (0.6, GRAZE[1], 0, 0), (2.3, GRAZE[1], 0, 0), (2.8, 0, 0, 0)])),
+        "skull": track(rot=keys([(0, 0, 0, 0), (0.6, GRAZE[2], 0, 0), (2.3, GRAZE[2], 0, 0), (2.8, 0, 0, 0)])),
+        "jaw": track(rot=keys(jk)),
+    })
+    # call: neck up, head raised, a low bellow (the nasal vestibule)
+    m.anim("call", 1.6, False, {
+        "neck1": track(rot=keys([(0, 0, 0, 0), (0.35, 16, 0, 0), (1.3, 16, 0, 0), (1.6, 0, 0, 0)])),
+        "neck2": track(rot=keys([(0, 0, 0, 0), (0.35, 8, 0, 0), (1.3, 8, 0, 0), (1.6, 0, 0, 0)])),
+        "skull": track(rot=keys([(0, 0, 0, 0), (0.35, 14, 0, 0), (1.3, 14, 0, 0), (1.6, 0, 0, 0)])),
+        "jaw": track(rot=keys([(0, 0, 0, 0), (0.35, -16, 0, 0), (1.25, -16, 0, 0), (1.5, 0, 0, 0)])),
+    })
+    add_knockout(m)
+    for a in m.animations:      # eat / beg / tame come from the 1x set: scale their position keys
+        if a["name"].split(".")[-1] in ("eat", "beg", "tame"):
+            for tr in a["bones"].values():
+                if "position" in tr:
+                    tr["position"] = [[k[0]] + [round(v * K, 3) for v in k[1:]] for k in tr["position"]]
+    fit_to_ground(m, "graze", ("neck1", "neck2", "skull"))
+    fit_to_ground(m, "eat", ("neck1", "neck2", "skull", "body"))
