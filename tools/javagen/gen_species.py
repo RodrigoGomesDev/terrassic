@@ -138,6 +138,7 @@ SIZES = {
     # Archelon v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "archelon":           dict(real=4.6, scale=1.01, w=2.2, h=1.1, baby=0.25, shadow=1.6),
     # Hesperornis regalis: up to 1.8 m long (Marsh 1880; Bell & Chiappe 2015). Modelled at 2x.
+    # Hesperornis v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "hesperornis":        dict(real=1.8, scale=0.39, w=0.6, h=0.6, baby=0.4,  shadow=0.4),
     # Deinosuchus riograndensis: 10.6 m well measured (Cossette & Brochu 2020), up to 12 m in older estimates (Schwimmer 2002).
     "deinosuchus":        dict(real=12.0, scale=1.64, w=2.6, h=1.4, baby=0.2,  shadow=2.2),
