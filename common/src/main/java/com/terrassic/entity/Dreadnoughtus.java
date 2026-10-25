@@ -27,7 +27,7 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
     public static final float WIDTH = 4.5F;
     public static final float HEIGHT = 9.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 2.69F;
+    public static final float MODEL_SCALE = 0.95F;
     public static final float SHADOW = 5.0F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
@@ -95,7 +95,7 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 9.15D * this.getScale();
+        return 5.03D * this.getScale();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.54D;
+        return 2.28D;
     }
 
     @Override

@@ -79,7 +79,8 @@ SIZES = {
     # Opisthocoelicaudia v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "opisthocoelicaudia": dict(real=12.0, scale=0.93, w=2.6, h=3.6, baby=0.15, shadow=2.8),
     # Dreadnoughtus schrani: 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015); the 11 m neck carried high.
-    "dreadnoughtus":      dict(real=26.0, scale=2.69, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
+    # Dreadnoughtus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "dreadnoughtus":      dict(real=26.0, scale=0.95, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
     "giganotosaurus":     dict(real=13.0, scale=1.75, w=2.4, h=4.4, baby=0.25, shadow=2.3),
     "carcharodontosaurus": dict(real=12.5, scale=1.80, w=2.4, h=4.6, baby=0.25, shadow=2.3),
     "carnotaurus":        dict(real=8.0,  scale=1.30, w=1.8, h=3.4, baby=0.3,  shadow=1.6),
@@ -438,7 +439,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=420, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 400), step=("RAVAGER_STEP", 1.3, 0.45),
-      xp=56, step_height=1.8, head=(20, 30), rideable=True, platform=True, jump=0.0, ride_offset=3.4, ride_forward=0.2, ride_speed=0.95, call=True),
+      xp=56, step_height=1.8, head=(20, 30), rideable=True, platform=True, jump=0.0, ride_offset=5.3, ride_forward=2.4, ride_speed=0.95, call=True),
  dict(id="giganotosaurus", cls="Giganotosaurus", base="PredatorDinosaur",
       doc="Giganotosaurus carolinii - 13 m carcharodontosaur of the dry lands, as long as the T. rex and leaner, with a long low skull and blade teeth. Hunts in loose pairs; the more it bleeds the harder it bites (rage). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.2, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
