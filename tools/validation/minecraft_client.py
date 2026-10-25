@@ -158,6 +158,7 @@ class LocalClient:
         self.dimension = None
         self.forge_messages = {}
         self.entities = {}  # Spawned entity UUID -> current protocol id, scoped to this connection.
+        self.island_map = None
         self.error = None
         self._closing = False
         self._compression = -1
@@ -182,7 +183,7 @@ class LocalClient:
             self._socket.sendall(varint(len(body)) + body)
 
     def _register(self):
-        channels = ["terrassic:research_sync", "terrassic:intro"]
+        channels = ["terrassic:research_sync", "terrassic:intro", "terrassic:island_map"]
         if self.supports_delta:
             channels.append("terrassic:research_delta")
         physical = ["architectury:network", "fml:play", "fml:handshake", "fml:loginwrapper"] if self.loader == "forge" else []
@@ -256,6 +257,23 @@ class LocalClient:
                     channel = read_utf(packet)
                     if channel == "architectury:network":
                         channel = read_utf(packet)
+                    if channel == "terrassic:island_map":
+                        size, extent, sea = (read_varint(packet) for _ in range(3))
+                        if size != 128 or extent <= 0:
+                            raise ValueError("unexpected island map dimensions")
+                        arrays = []
+                        for _ in range(2):
+                            length = read_varint(packet)
+                            if length != size * size:
+                                raise ValueError("invalid island map array length")
+                            data = packet.read(length)
+                            if len(data) != length:
+                                raise EOFError("incomplete island map array")
+                            arrays.append(data)
+                        with self._condition:
+                            self.island_map = {"size": size, "extent": extent, "sea_level": sea,
+                                               "heights": arrays[0], "kinds": arrays[1]}
+                            self._condition.notify_all()
                     if channel in ("terrassic:research_sync", "terrassic:research_delta", "terrassic:intro"):
                         with self._condition:
                             if channel == "terrassic:intro":

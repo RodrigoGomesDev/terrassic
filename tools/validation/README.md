@@ -45,6 +45,9 @@ Comandos e limites em [`docs/CADERNO_DADOS.md`](../../docs/CADERNO_DADOS.md). Es
 eficiência, progresso, dono e bônus de vida. Comandos e limites em
 [`docs/TESTES_NOCAUTE.md`](../../docs/TESTES_NOCAUTE.md); requer EULA explícita e servidor descartável.
 
+`island_map_regression.py` cria um continente Terrassic real, recebe o levantamento por socket e confere cache e
+pacote após reiniciar o servidor. Comandos e limites em [`docs/TESTES_MAPA.md`](../../docs/TESTES_MAPA.md).
+
 `load_profile.py` aumenta a carga por etapas em um servidor descartável compilado a partir de uma revisão fixa.
 Registra eventos reais de ticks pelo JFR integrado, sem mods de perfil adicionais. Comandos, resultados e
 limites em [`docs/PERFIL_LOCAL.md`](../../docs/PERFIL_LOCAL.md).
