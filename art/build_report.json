@@ -1054,21 +1054,21 @@
  },
  "thescelosaurus": {
   "bones": 24,
-  "cubes": 35,
+  "cubes": 68,
   "texture": [
    128,
    128
   ],
   "bounds_px": [
    [
-    -6.0,
-    0.16265893384074026,
-    -30.117628684254928
+    -7.0,
+    4.553887690351674e-06,
+    -38.88200362326126
    ],
    [
-    6.0,
-    29.491503068128534,
-    42.05092911210563
+    7.0,
+    30.480842505899673,
+    45.07602117034106
    ]
   ],
   "animations": [
@@ -1085,7 +1085,7 @@
    "animation.thescelosaurus.tame",
    "animation.thescelosaurus.dig"
   ],
-  "render_scale": 0.8
+  "render_scale": 0.5
  },
  "pachyrhinosaurus": {
   "bones": 26,

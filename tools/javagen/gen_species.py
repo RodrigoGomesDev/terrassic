@@ -99,7 +99,8 @@ SIZES = {
     # Pachycephalosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "pachycephalosaurus": dict(real=4.5,  scale=0.82, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
-    "thescelosaurus":     dict(real=4.0,  scale=0.89, w=1.0, h=1.6, baby=0.35, shadow=0.8),
+    # Thescelosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "thescelosaurus":     dict(real=4.0,  scale=0.76, w=1.0, h=1.6, baby=0.35, shadow=0.8),
     # Gallimimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "gallimimus":         dict(real=6.0,  scale=1.02, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
