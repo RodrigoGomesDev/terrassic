@@ -30,6 +30,9 @@ Fauna 108-113 integrada: 59 espécies. Nocaute v0.7 também integrado (`DOMESTIC
 eficiência, erva, zarabatana e dardo. Codex validou 18 casos de persistência/interação nos dois loaders, incluindo
 correções de eficiência antes da primeira comida e dano rejeitado (`TESTES_NOCAUTE.md`); consultar as reservas antes de alterar
 `DinosaurEntity`. Ainda faltam inventário de alimentação, boleadeira e informações de dificuldade no Guia.
+Regressão complementar de zarabatana e domesticação aquática em `docs/TESTES_DARDOS.md`: dose de torpor em alvo
+acordado agora depende de dano aceito; disparos reais, munição, cooldown e reinício têm roteiro próprio. Consultar
+o quadro para os resultados e reservas, sem confundir conexão de protocolo com revisão visual.
 Identidade de `terrassic-sync` integrada na main em `e4bbe9ef`: fontes, botões, marca proposta, licenças e textos.
 Ícone e letreiro ativos preservados; fontes/telas ainda exigem revisão visual no jogo. Sync é transporte de bundles,
 não outro checkout: seu LEIA-ME já registra a integração; não repetir merges dos bundles antigos.

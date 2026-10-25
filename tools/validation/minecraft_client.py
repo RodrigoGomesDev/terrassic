@@ -159,6 +159,7 @@ class LocalClient:
         self.forge_messages = {}
         self.entities = {}  # Spawned entity UUID -> current protocol id, scoped to this connection.
         self.island_map = None
+        self._use_sequence = 0
         self.error = None
         self._closing = False
         self._compression = -1
@@ -312,6 +313,10 @@ class LocalClient:
         entity_id = self.entities[str(entity_uuid)]
         action = varint(1) if attack else varint(0) + varint(0)  # ATTACK, or INTERACT with MAIN_HAND.
         self.send(16, varint(entity_id) + action + b"\x00")  # Not sneaking.
+
+    def use_item(self):
+        self._use_sequence += 1
+        self.send(50, varint(0) + varint(self._use_sequence))  # MAIN_HAND and block-prediction sequence.
 
     def close(self):
         self._closing = True

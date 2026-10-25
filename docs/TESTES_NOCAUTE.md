@@ -54,6 +54,7 @@ Para testar uma correção ainda não commitada, sobrepõe apenas `DinosaurEntit
 do servidor durante o teste. O JSON também lista os resultados de cada condição; erros encerram com código não zero.
 
 As fixtures começam inconscientes por NBT: este roteiro não valida o disparo da zarabatana, a colisão do dardo,
-o preenchimento inicial do torpor, a animação ou a leitura das barras no cliente completo. Esses cenários, além de
-nocaute na água, combate e diferentes espécies, continuam na fila funcional. Não confundir protocolo conectado
-com revisão visual ou uma partida de sobrevivência.
+o preenchimento inicial do torpor, a animação ou a leitura das barras no cliente completo. O roteiro complementar
+`TESTES_DARDOS.md` cobre disparos terrestres e manutenção/domesticação aquática após reinício. Combate aquático
+desde um animal acordado, animações, barras e diferentes espécies continuam na fila funcional. Não confundir
+protocolo conectado com revisão visual ou uma partida de sobrevivência.

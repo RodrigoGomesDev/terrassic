@@ -27,6 +27,12 @@ Backup recuperável dos dois históricos e dos arquivos locais em
 O ícone e o letreiro ativos foram preservados; propostas continuam em `art/identidade/marca/`.
 Fontes e telas ainda precisam de revisão visual no jogo; build e conferência de arquivos não substituem isso.
 
+Atualização recebida durante os testes de dardos: `890fef2d`/`d064276d` (fase 167, letreiro Degraus nas capas,
+banner e kit de marca) incorporada por fast-forward. Não houve regeneração de arte nem alteração nos arquivos
+locais de marca; a implementação da zarabatana não se sobrepõe a essa entrega.
+A entrega seguinte, `cdbb23bd` (tela de título em Degraus), também foi incorporada por fast-forward. As duas
+entregas passaram na CI de origem; o novo letreiro ativo passa a ser o entregue pela própria frente de identidade.
+
 ## Conferência Terrassic e Terrassic Sync — 25/10
 
 - `~/projects/terrassic` é o checkout de desenvolvimento, na main. Incorporados por fast-forward 52 commits
@@ -217,8 +223,9 @@ integrados em `e4bbe9ef`, incluindo empacotamento nos JARs; a integração está
    separados. Registrar e publicar a reserva antes de alterar a classe-base e os geradores; preservar as regressões.
 2. **Claude secundário / identidade:** revisão de legibilidade e navegação das telas em pt-BR, inglês e espanhol;
    testar também dietas, loot e habitats da fauna v0.7. Novos pacotes em `paralelo/*`, com checkout separado.
-3. **Codex:** integrar entregas novas e testar disparo/colisão da zarabatana, nocaute na água e comportamento de IA;
-   depois medir exploração do continente com geração de chunks e clientes em movimento. O teste de 100 conexões
+3. **Codex:** concluir a regressão de dardos/água (`TESTES_DARDOS.md`); próximas reservas podem cobrir eclosão e
+   imprinting, nocaute aquático desde o animal acordado e comportamento de IA. Depois medir exploração do
+   continente com geração de chunks e clientes em movimento. O teste de 100 conexões
    estacionárias não valida esses cenários.
 
 Nocaute: `TESTES_NOCAUTE.md` registra as duas falhas reproduzidas e as correções. Os 18 casos completos passaram

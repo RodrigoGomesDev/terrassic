@@ -53,10 +53,8 @@ public class TranqDart extends AbstractArrow implements ItemSupplier {
             }
             return;
         }
+        // Awake targets receive the dose in DinosaurEntity.hurt, after the engine accepts the hit.
         super.onHitEntity(result);
-        if (!this.level().isClientSide() && target instanceof DinosaurEntity dino && dino.isAlive()) {
-            dino.addTorpor(dose(dino.maxTorpor()), this.getOwner());
-        }
     }
 
     @Override

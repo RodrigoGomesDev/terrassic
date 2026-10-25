@@ -767,7 +767,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         float torporHit = 0.0F;
         if (!this.level().isClientSide() && !this.isTame()) {
-            if (source.getDirectEntity() instanceof Player striker && source.getEntity() == striker) {
+            if (source.getDirectEntity() instanceof TranqDart) {
+                // The dose is delivered only when the arrow's hit is accepted, like other torpor-producing blows.
+                torporHit = TranqDart.dose(this.maxTorpor());
+            } else if (source.getDirectEntity() instanceof Player striker && source.getEntity() == striker) {
                 ItemStack weapon = striker.getMainHandItem();
                 if (weapon.getItem() instanceof ClubItem) {
                     torporHit = amount * 2.5F;   // a club stuns: much torpor, half the wound
