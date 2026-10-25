@@ -127,9 +127,16 @@ def forest(textures, W, H):
         if (x, height(x, z) + 1, z) not in world.blocks:
             world.plants.append((x, height(x, z) + 1, z, "fern" if rng.random() < .45 else "grass_plant", 1))
     atlas, uv = vx.atlas(textures)
+    # Structural checks, independent of whether the final picture merely looks voxel-like.
+    assert all(all(float(c).is_integer() for c in xyz) for xyz in world.blocks)
+    for _, corners, _ in vx.FACES.values():
+        assert all(c in (0, 1) for corner in corners for c in corner)
+    audit = {"blocks": len(world.blocks), "integer_grid": True, "block_dimensions": [1, 1, 1],
+             "terrain_and_trees": "unit cubes", "plants": "Minecraft crossed planes; not solid blocks",
+             "texture_sizes": {name: list(tex.shape[:2]) for name, tex in textures.items()}}
     scene = cn.Shot(W, H)
     scene.add(gl.Mesh(world.mesh(uv), atlas))
-    return scene, height
+    return scene, height, audit
 
 
 LOOK = dict(top=(0.25, 0.40, 0.62), mid=(0.63, 0.68, 0.72), hor=(0.98, 0.79, 0.54),
@@ -145,27 +152,41 @@ def main():
     parser.add_argument("--out", type=Path, default=ROOT / "art/menu_vanilla/v1")
     parser.add_argument("--width", type=int, default=1280)
     parser.add_argument("--samples", type=int, default=32)
-    parser.add_argument("--scene", choices=["confronto", "nevoa"], default="confronto")
+    parser.add_argument("--scene", choices=["confronto", "nevoa", "jurassico"], default="confronto")
+    parser.add_argument("--golden", action="store_true", help="Warmer cinematic lighting without changing geometry")
     args = parser.parse_args()
     W, H = args.width, round(args.width * 9 / 16)
     cn.SAMPLES = args.samples
     # Render wider and crop the left portion, just like menu_cenas.py's Cycles lens shift.
     print("Building voxel scenery from local vanilla textures", flush=True)
-    scene, height = forest(vanilla_textures(args.client_jar), round(W * 1.28), H)
+    scene, height, audit = forest(vanilla_textures(args.client_jar), round(W * 1.28), H)
     evidence = []
     if args.scene == "confronto":
         place(scene, "tyrannosaurus", "attack", .28, (91, height(91, 83) + 1, 83), 90, 12.5, evidence)
         place(scene, "triceratops", "attack", .42, (78, height(78, 84) + 1, 84), -90, 9.0, evidence)
+    elif args.scene == "jurassico":
+        place(scene, "brachiosaurus", "idle", 0, (91, height(91, 79) + 1, 79), 65, 22.0, evidence)
+        place(scene, "stegosaurus", "idle", 0, (77, height(77, 86) + 1, 86), -70, 9.0, evidence)
     else:
         place(scene, "tyrannosaurus", "walk", .25, (85, height(85, 84) + 1, 84), 135, 12.5, evidence)
     print("Original geometry verified; starting Cycles", flush=True)
-    image = cn.shoot(scene, (73, 67.5, 104), (84, 68, 83), 45, (-.55, .38, -.75), LOOK,
-                     None, None, None, fog_box=((75, 78, 65), (155, 34, 150)), exposure=.45)
+    look = dict(LOOK)
+    sun = (-.55, .38, -.75)
+    if args.golden:
+        look.update(hor=(1.0, .68, .30), mid=(.64, .63, .66), glow=(1.0, .61, .20),
+                    sun_col=(1.0, .72, .40), fog_col=(.90, .78, .61),
+                    sky_strength=1.1, sun_strength=6.0, fill=1.3, fog_scale=.45)
+        sun = (.65, .28, -.7)
+    camera = (68, 71, 120) if args.scene == "jurassico" else (73, 67.5, 104)
+    target = (85, 72, 82) if args.scene == "jurassico" else (84, 68, 83)
+    image = cn.shoot(scene, camera, target, 45, sun, look,
+                     None, None, None, fog_box=((75, 78, 65), (155, 34, 150)), exposure=.65 if args.golden else .45)
     args.out.mkdir(parents=True, exist_ok=True)
     output = args.out / (args.scene + ".png")
     image.crop((0, 0, W, H)).save(output)
     metadata = {"method": "Blender Cycles; original packaged Terrassic geometry, animations and textures",
                 "scene": args.scene, "size": [W, H], "samples": args.samples,
+                "world_audit": audit, "lighting": "golden" if args.golden else "original",
                 "vanilla_client_sha256": fingerprint(args.client_jar), "models": evidence,
                 "output_sha256": fingerprint(output)}
     output.with_suffix(".json").write_text(json.dumps(metadata, indent=2) + "\n")

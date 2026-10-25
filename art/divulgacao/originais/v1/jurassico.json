@@ -1,0 +1,97 @@
+{
+  "method": "Blender Cycles; original packaged Terrassic geometry, animations and textures",
+  "scene": "jurassico",
+  "size": [
+    1280,
+    720
+  ],
+  "samples": 24,
+  "world_audit": {
+    "blocks": 70156,
+    "integer_grid": true,
+    "block_dimensions": [
+      1,
+      1,
+      1
+    ],
+    "terrain_and_trees": "unit cubes",
+    "plants": "Minecraft crossed planes; not solid blocks",
+    "texture_sizes": {
+      "grass_top": [
+        16,
+        16
+      ],
+      "grass_side": [
+        16,
+        16
+      ],
+      "dirt": [
+        16,
+        16
+      ],
+      "stone": [
+        16,
+        16
+      ],
+      "sand": [
+        16,
+        16
+      ],
+      "gravel": [
+        16,
+        16
+      ],
+      "log": [
+        16,
+        16
+      ],
+      "log_top": [
+        16,
+        16
+      ],
+      "leaves": [
+        16,
+        16
+      ],
+      "fern": [
+        16,
+        16
+      ],
+      "grass_plant": [
+        16,
+        16
+      ]
+    }
+  },
+  "lighting": "golden",
+  "vanilla_client_sha256": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
+  "models": [
+    {
+      "species": "brachiosaurus",
+      "animation": "idle",
+      "fraction": 0,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 72,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/brachiosaurus.geo.json": "4321fd64f88c7821186a43e32870b5dfd56f535fd77057d6ba87525e47934158",
+        "common/src/main/resources/assets/terrassic/animations/entity/brachiosaurus.animation.json": "a0ccf8e22843d40ef2c880a784a58f9aff3d9f223ad2186b450f3e323454fac0",
+        "common/src/main/resources/assets/terrassic/textures/entity/brachiosaurus_male.png": "6656058111615c6d6dd3d45047a652ad0ffdddf047cb78d1f3778d8c51c507dc"
+      }
+    },
+    {
+      "species": "stegosaurus",
+      "animation": "idle",
+      "fraction": 0,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 144,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/stegosaurus.geo.json": "466da0c0e0c72f9d7ce9324d62bc1baadd42cbd0ddd6d2ba5361589f0989618f",
+        "common/src/main/resources/assets/terrassic/animations/entity/stegosaurus.animation.json": "370a510b59d520b82c1dec6c57eec8ff9d1ca4a007eff75614187e629998cd42",
+        "common/src/main/resources/assets/terrassic/textures/entity/stegosaurus_male.png": "46b16ad8ec14f2c6b7a7a66f8ac5f91539a3143c4a59e5e9c799934554946d08"
+      }
+    }
+  ],
+  "output_sha256": "948bd7c8dde975da031c403d55e45460c0eed9e23c834be07922671289bcfac1"
+}

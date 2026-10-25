@@ -1,0 +1,52 @@
+[
+  {
+    "file": "01_cretaceo_superior.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "d64fffc80abaf90e145afb14200b6ba3c15a5a17f60a4172856aa10587c929eb",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-788257ad-f2af-4081-a68b-218cd6a80a43.png",
+    "type": "ilustração promocional por IA",
+    "chapter_status": "era atual",
+    "approval": "reprovada pelo Rodrigo: animais reinterpretados e geometria irregular"
+  },
+  {
+    "file": "02_cretaceo_inferior.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "66c78c36103536ef74b058695ef1e0389d903a1ce62b0a9d1e7cbf33f9c01a9f",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-d57798e1-0c33-4422-95c0-5e93b3c59005.png",
+    "type": "ilustração promocional por IA",
+    "chapter_status": "planejado",
+    "approval": "reprovada pelo Rodrigo: animais reinterpretados e geometria irregular"
+  },
+  {
+    "file": "03_jurassico.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "0e21d339fe2227c6899de864260772f6ec50e9cdca415c9a0f1d3f6bbc68445e",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-ed07c4a0-360f-4d5d-a35e-3b1872a9beb7.png",
+    "type": "ilustração promocional por IA",
+    "chapter_status": "planejado",
+    "approval": "reprovada pelo Rodrigo: animais reinterpretados e geometria irregular"
+  },
+  {
+    "file": "04_triassico.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "2be728973f143ddb0d1cf22b9ec732c8bb68eb9149a8f7eaa0d3165680d02660",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-dcefdc75-c2d2-46f7-9af8-a0dad8a38427.png",
+    "type": "ilustração promocional por IA",
+    "chapter_status": "planejado",
+    "approval": "reprovada pelo Rodrigo: animais reinterpretados e geometria irregular"
+  },
+  {
+    "file": "05_era_do_gelo.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "a3b21752a54e3b695eacb373c08028caf1f3ef9011c1138c725a91907867e741",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-1e39a392-49e5-4eae-830c-34ba362fc68a.png",
+    "type": "ilustração promocional por IA",
+    "chapter_status": "planejado",
+    "approval": "reprovada pelo Rodrigo: animais reinterpretados e geometria irregular"
+  }
+]

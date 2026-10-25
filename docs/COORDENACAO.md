@@ -12,6 +12,13 @@ os animais foram reinterpretados e os blocos continuam incoerentes. `art/divulga
 é histórico reprovado, não material pronto para publicação. Codex reserva também `tools/menugen/menu_vanilla.py`
 e `art/divulgacao/originais/v1/`: render com assets originais, auditoria da grade e hashes das fontes.
 
+Menu integrado em `ce78a44d`, mantendo a confirmação expressa do Rodrigo de que somente o lote
+promocional foi reprovado. Duas prévias originais concluídas em 1280×720: confronto e fauna jurássica.
+Round-trip passou para Tyrannosaurus/Triceratops (139 cubos cada), Brachiosaurus (72) e Stegosaurus (144).
+Grade de 70.156 blocos unitários e hashes das fontes/saídas conferidos. Imagens inspecionadas; acabamento
+de luz/contraste e aprovação visual pendentes. Não são screenshots. Demais períodos aguardam modelos
+originais; não publicar o lote IA reprovado como representação do conteúdo do jogo.
+
 Foco atual pedido pelo Rodrigo: Codex assume os fundos do menu/interface; Claude não mexe nessa frente por
 enquanto. Após comparar as propostas, Rodrigo selecionou explicitamente a imagem cinematográfica de confronto
 T. rex × Triceratops como referência: reduzir a poluição visual, usar sol quadrado Minecraft e criar ambientes
