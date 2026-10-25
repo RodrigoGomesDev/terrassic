@@ -63,7 +63,7 @@ as diferenças entre suas declarações de entrega e o checkout verificado.
 |---|---|---|---|
 | Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Nocaute básico integrado; próximos pacotes: inventário de alimentação, boleadeira e territórios (`DOMESTICACAO.md`). Preservar os testes do Codex e reservar os arquivos compartilhados antes de implementar |
 | Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; próxima frente independente: roteiros e validação funcional da fauna v0.7 (dietas, loot, reprodução e habitats), sem disputar os arquivos do nocaute |
-| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Perfil estacionário até 100 concluído; agora regressão de nocaute, eficiência e persistência (`TESTES_NOCAUTE.md`); depois disparo/colisão e comportamento com jogadores |
+| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Nocaute 18/18 e dardos/água 22/22 passaram nos dois loaders; próximas reservas: eclosão/imprinting, combate aquático desde o animal acordado e comportamento com jogadores |
 | Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entrega integrada; próxima revisão: legibilidade das fontes e navegação das telas nos três idiomas, preservando a arte existente |
 | Aprovação visual e experiência | Rodrigo | Aparência, som, sensação de jogo e prioridades de produto | Validar os roteiros de jogo após as entregas técnicas |
 
@@ -95,7 +95,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 | Responsável | Arquivos | Estado |
 |---|---|---|
-| Codex | `TranqDart.java`, `BlowgunItem.java`, `DinosaurEntity.java`, `SwimmingDinosaur.java` (somente estabilidade se houver falha reproduzida), `tools/validation/minecraft_client.py`, novo roteiro de dardos/água e documentação | Em uso em 25/10: disparo real, munição, cooldown, colisão, alvo protegido, manutenção do nocaute e domesticação aquática após reinício; sem alterar modelos ou balanceamento |
+| Codex | `TranqDart.java`, `BlowgunItem.java`, `DinosaurEntity.java`, `SwimmingDinosaur.java` (somente estabilidade se houver falha reproduzida), `tools/validation/minecraft_client.py`, novo roteiro de dardos/água e documentação | Concluído em `36b21fb4`/`fbb144b3`: dose em alvo acordado depende de dano aceito; 22/22 passaram em Fabric e Forge, incluindo disparo submerso, alimentação e reinício. Build conjunta passou em 1 min 33 s; fontes conferidas por hash. Sem mudança de balanceamento, modelos ou respiração; arquivos liberados |
 | Codex | `IslandMap.java` (leitura), `tools/validation/minecraft_client.py`, `island_map_regression.py`, documentação | Concluído em 25/10: continente real, transporte, reinício e cache sem regravação passaram em Fabric/Forge. Mesmos vetores nos dois loaders; sem mudar a implementação, desenho ou layout do mapa |
 | Codex | `DinosaurEntity.java` (persistência/penalidade do nocaute), `tools/validation/minecraft_client.py`, novo `knockout_regression.py`, `CLAUDE.md`, `README.md` e documentação de coordenação/testes | Concluído em 25/10: dois bugs reproduzidos e corrigidos; regressão real 18/18 passou em Fabric e Forge, com recarga, alimentar/acordar/domesticar. Build passou em 49 s; arquivos liberados, sem mudar balanceamento, modelos ou interface |
 | Codex | Integração de `sync/identidade`: `NotebookScreen.java`, `TerrassicTitle.java`, `common/build.gradle` (empacotar documentos entregues), `README.md` (links oficiais), coordenação e revisão dos arquivos mesclados | Concluído em 25/10: ficha à direita, dioramas, painel de dicas, fontes e componentes preservados; build dos dois loaders e verificações passaram; arquivos liberados. Arquivos locais de marca fora do commit |
@@ -223,7 +223,7 @@ integrados em `e4bbe9ef`, incluindo empacotamento nos JARs; a integração está
    separados. Registrar e publicar a reserva antes de alterar a classe-base e os geradores; preservar as regressões.
 2. **Claude secundário / identidade:** revisão de legibilidade e navegação das telas em pt-BR, inglês e espanhol;
    testar também dietas, loot e habitats da fauna v0.7. Novos pacotes em `paralelo/*`, com checkout separado.
-3. **Codex:** concluir a regressão de dardos/água (`TESTES_DARDOS.md`); próximas reservas podem cobrir eclosão e
+3. **Codex:** regressão de dardos/água concluída (`TESTES_DARDOS.md`); próximas reservas podem cobrir eclosão e
    imprinting, nocaute aquático desde o animal acordado e comportamento de IA. Depois medir exploração do
    continente com geração de chunks e clientes em movimento. O teste de 100 conexões
    estacionárias não valida esses cenários.
@@ -245,6 +245,13 @@ A CI da main conjunta também passou: https://github.com/RodrigoGomesDev/terrass
 
 Próximas verificações do mapa: visualização e coordenadas fora do Overworld, dimensões grandes e interrupção do
 levantamento ao fechar o servidor. Esses casos não foram cobertos pelo roteiro de transporte/cache.
+
+Atualização `9b60910b` integrada em `fbb144b3`: a seta e as coordenadas do mapa são ocultadas fora do Overworld,
+com mensagem traduzida. Código revisado e build conjunta passou; a troca de dimensão no cliente renderizado ainda
+precisa ser conferida. Integridade final passou com 59 espécies, 4.322 JSONs e 1.845 chaves por idioma.
+Dardos: `fabric-flkx1fyi` e `forge-jjugws9u` passaram 22/22 em `build/dart-regression/`, com as mesmas fontes de
+produção verificadas por hash. Detalhes, baseline e limites em `TESTES_DARDOS.md`. O nocaute inicial do Mosassauro
+é fixture por NBT; combate aquático completo desde um animal acordado continua pendente.
 
 O plano mestre também define o projeto como pessoal. As referências empresariais foram removidas dos arquivos
 atuais nesta entrega; o histórico Git permanece preservado.

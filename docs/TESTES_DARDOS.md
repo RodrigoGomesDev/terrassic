@@ -50,6 +50,11 @@ a revisão base e cada resultado. `source.tar`, logs e mundo descartável ficam 
 As primeiras execuções corrigidas passaram 20/20 em Fabric (`fabric-p0auup__`) e Forge (`forge-63w61o4v`),
 incluindo salvamento e reinício. A build Fabric/Forge com regressões de pesquisa passou em 3 min 38 s.
 A execução ampliada no Fabric (`fabric-flkx1fyi`) passou 22/22, incluindo os dois casos de disparo submerso.
+No Forge, `forge-jjugws9u` também passou 22/22, incluindo reinício, dose submersa e atualização do Caderno.
+Os SHA-256 das quatro fontes testadas nos dois loaders conferem com as classes entregues em `36b21fb4`.
 As tentativas paralelas `fabric-629llyay` e `forge-h9ifleck` atingiram timeout durante a preparação do Gradle,
 antes de iniciar Minecraft, e não contam como validação de gameplay. As repetições foram feitas em sequência.
 A build conjunta com as novas texturas da tela de título também passou, em 2 min 36 s.
+Após integrar a correção de dimensões do mapa (`9b60910b`), a build conjunta passou novamente, em 1 min 33 s.
+Integridade final: 59 espécies, 4.322 JSONs e 1.845 chaves nos três idiomas; 18 testes Python e orçamento de
+1.000 agendas/10.000 grupos passaram. As duas texturas novas de título foram conferidas por bytes nos JARs finais.
