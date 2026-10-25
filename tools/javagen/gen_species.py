@@ -129,7 +129,8 @@ SIZES = {
     # Tylosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "tylosaurus":         dict(real=13.0, scale=0.95, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
     # Elasmosaurus platyurus: ~10.3 m, of which ~7 m of neck (Sachs 2005). "real" is the total length.
-    "elasmosaurus":       dict(real=10.3, scale=1.42, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
+    # Elasmosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "elasmosaurus":       dict(real=10.3, scale=0.83, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
     # Xiphactinus audax: 4.5-6 m, the biggest of its family (Everhart 2005; the "fish within a fish" FHSM VP-333 is ~4 m).
     "xiphactinus":        dict(real=6.0, scale=1.16, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
     # Archelon ischyros: 4.6 m long, 4 m flipper to flipper (Wieland 1896/1902; YPM 3000), the largest turtle ever.
@@ -644,7 +645,7 @@ SPECIES = [
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("DOLPHIN_AMBIENT_WATER", "DOLPHIN_HURT", "DOLPHIN_DEATH", 0.55, 1.6, 320), xp=18, run=0.05,
       prey="e instanceof AbstractFish",
-      tame="feeding", live_young=True, rideable=True, ride_offset=0.95, ride_forward=0.0, ride_speed=1.1, dive=1.2),
+      tame="feeding", live_young=True, rideable=True, ride_offset=1.25, ride_forward=0.0, ride_speed=1.1, dive=1.2),
  dict(id="xiphactinus", cls="Xiphactinus", base="SwimmingDinosaur",
       doc="Xiphactinus audax - a 6 m predatory bony fish with a bulldog face and fangs, fast and always hungry: it swallows fish whole and lunges at anything that enters its water. Wild only (cannot be tamed).",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=1.35, ATTACK_DAMAGE=7, ARMOR=1, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=24),
