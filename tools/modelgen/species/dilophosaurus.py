@@ -132,11 +132,12 @@ def build():
         ey, ez = ch["end"]
         F = f"forearm_{side}"
         m.box(F, (x - 1, ey - 1.5, ez - 1), (x + 1, ey + 1.5, ez + 1), tag="limb", name="hand")
-        for dy, L in ((1, 3), (0, 4), (-1, 3)):                                # digits I-III and their claws
-            m.box(F, (x - 0.5, ey + dy - 0.5, ez - 1 - L), (x + 0.5, ey + dy + 0.5, ez - 1), tag="limb", name="finger")
-            m.box(F, (x - 0.5, ey + dy - 0.5, ez - 3 - L), (x + 0.5, ey + dy + 0.5, ez - 1 - L), tag="claw",
-                  name="hand_claw", paint={"axis": "-z"})
-        m.box(F, (x - 0.5, ey - 2.5, ez - 2), (x + 0.5, ey - 1.5, ez - 1), tag="limb", name="finger_iv")
+        # digits I-III and their claws carry on along the forearm's line (its frame is unposed: -y runs down the arm)
+        for dz, L in ((-1, 3), (0, 4), (1, 3)):
+            m.box(F, (x - 0.5, ey - 1.5 - L, ez + dz - 0.5), (x + 0.5, ey - 1.5, ez + dz + 0.5), tag="limb", name="finger")
+            m.box(F, (x - 0.5, ey - 3.5 - L, ez + dz - 0.5), (x + 0.5, ey - 1.5 - L, ez + dz + 0.5), tag="claw",
+                  name="hand_claw", paint={"axis": "-y"})
+        m.box(F, (x - 1, ey - 2.5, ez + 0.5), (x, ey - 1.5, ez + 1.5), tag="limb", name="finger_iv")
     m.sym(arm)
 
     # --- legs: long, three toes with claws, a small hallux behind
