@@ -121,10 +121,11 @@ def build():
         ey, ez = ch["end"]
         F = f"forearm_{side}"
         m.box(F, (x - 1, ey - 1, ez - 1), (x + 1, ey + 1, ez + 1), tag="limb", name="hand")
-        for dy in (0.5, -0.5):
-            m.box(F, (x - 1, ey + dy - 0.5, ez - 4), (x, ey + dy + 0.5, ez - 1), tag="limb", name="finger")
-        m.box(F, (x, ey - 0.5, ez - 4), (x + 1, ey + 0.5, ez - 1), tag="limb", name="finger")
-        m.box(F, (x - 1, ey - 1, ez - 5), (x + 1, ey + 1, ez - 4), tag="claw", name="hand_claws", paint={"axis": "-z"})
+        # the fingers hang on along the forearm's line (its frame is unposed: -y runs down the arm)
+        for dz in (-1, 0):
+            m.box(F, (x - 1, ey - 4, ez + dz), (x, ey - 1, ez + dz + 1), tag="limb", name="finger")
+        m.box(F, (x, ey - 4, ez - 0.5), (x + 1, ey - 1, ez + 0.5), tag="limb", name="finger")
+        m.box(F, (x - 1, ey - 5, ez - 1), (x + 1, ey - 4, ez + 1), tag="claw", name="hand_claws", paint={"axis": "-y"})
         xo = x + 1 * sx                                                       # in the forearm's frame +y runs back
         m.box(F, (min(xo, xo + sx), ey - 1, ez - 0.5), (max(xo, xo + sx), ey + 8, ez + 2.5), tag="feather", name="wing")
     m.sym(arm)
