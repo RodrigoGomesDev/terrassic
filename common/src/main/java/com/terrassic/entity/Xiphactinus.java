@@ -29,7 +29,7 @@ public class Xiphactinus extends SwimmingDinosaur {
     public static final float WIDTH = 1.6F;
     public static final float HEIGHT = 1.2F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.16F;
+    public static final float MODEL_SCALE = 0.95F;
     public static final float SHADOW = 1.0F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 

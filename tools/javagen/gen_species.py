@@ -132,7 +132,8 @@ SIZES = {
     # Elasmosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "elasmosaurus":       dict(real=10.3, scale=0.83, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
     # Xiphactinus audax: 4.5-6 m, the biggest of its family (Everhart 2005; the "fish within a fish" FHSM VP-333 is ~4 m).
-    "xiphactinus":        dict(real=6.0, scale=1.16, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
+    # Xiphactinus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "xiphactinus":        dict(real=6.0, scale=0.95, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
     # Archelon ischyros: 4.6 m long, 4 m flipper to flipper (Wieland 1896/1902; YPM 3000), the largest turtle ever.
     "archelon":           dict(real=4.6, scale=1.18, w=2.2, h=1.1, baby=0.25, shadow=1.6),
     # Hesperornis regalis: up to 1.8 m long (Marsh 1880; Bell & Chiappe 2015). Modelled at 2x.
