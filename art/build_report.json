@@ -69,21 +69,21 @@
  },
  "dilophosaurus": {
   "bones": 25,
-  "cubes": 42,
+  "cubes": 84,
   "texture": [
    128,
-   128
+   256
   ],
   "bounds_px": [
    [
-    -5.0,
-    -0.14989446755437008,
-    -36.07991813871589
+    -7.5,
+    -3.1824492671949043e-06,
+    -47.17517221265863
    ],
    [
-    5.0,
-    33.23879977934128,
-    44.00004408120612
+    7.5,
+    52.471274507091444,
+    61.07964350225384
    ]
   ],
   "animations": [
@@ -99,7 +99,7 @@
    "animation.dilophosaurus.beg",
    "animation.dilophosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "velociraptor": {
   "bones": 23,
