@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/limestone_flagstone"
-    }
+    "": [
+      {
+        "model": "terrassic:block/limestone_flagstone"
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/limestone_flagstone",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

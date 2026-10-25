@@ -137,6 +137,11 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   da thread de progressão, não mexa): mapa de tons com base calma + detalhes carimbados por ruído azul, paleta ajustada
   (`fit`) para o BRILHO e o matiz do material real e o CONTRASTE do bloco vanilla do mesmo papel (`own(cor, papel)`,
   ROLE; `drift()` lista quem passa de 40 do papel). Fósseis de crânio são assentados na pedra nova da era.
+  CHÃO (padrão aprovado pelo Rodrigo em 25/10): rochas, solos e âmbar bruto vêm de `tools/texpack/chao.py` e as folhas
+  de `folhas.py`. Regra: nada pode repetir de longe. Rocha = grão fino (6 tons, `macro` <= 4; com junta <= 7,5; vítreo
+  8 a 10), solo = torrões de 2 a 3 px (`torroes.py`), cores calmas (saturação <= 0,50), junta nunca quase preta.
+  Medir com progressao/estudo/metricas.py e mostrar numa cena (estudo/cena) antes de commitar. Giro aleatório por
+  bloco nos blockstates (gen_blocks: FREE_TURN, BEDDED_TURN, TOP_TURN), como a terra e a pedra do vanilla.
   Os MOTIVOS desenhados (crânios, totens, pinturas, portas, vasos, tochas, plantas) ainda usam o motor v2
   `tools/spritegen/pixelkit.py` (grade de índices de tom) domados por `pk.tame` (contraste até 68; TAME_CAPS).
   Meta medida no vanilla 1.20.1: 6 a 12 cores, contraste ~64, diferença entre vizinhos ~16.

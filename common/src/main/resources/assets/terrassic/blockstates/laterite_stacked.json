@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/laterite_stacked"
-    }
+    "": [
+      {
+        "model": "terrassic:block/laterite_stacked"
+      },
+      {
+        "model": "terrassic:block/laterite_stacked",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/laterite_stacked_mirrored"
+      },
+      {
+        "model": "terrassic:block/laterite_stacked_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

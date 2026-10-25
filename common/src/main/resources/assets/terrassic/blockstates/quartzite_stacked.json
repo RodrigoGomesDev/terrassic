@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/quartzite_stacked"
-    }
+    "": [
+      {
+        "model": "terrassic:block/quartzite_stacked"
+      },
+      {
+        "model": "terrassic:block/quartzite_stacked",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/quartzite_stacked_mirrored"
+      },
+      {
+        "model": "terrassic:block/quartzite_stacked_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

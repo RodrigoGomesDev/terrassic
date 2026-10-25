@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/shale_pebbles"
-    }
+    "": [
+      {
+        "model": "terrassic:block/shale_pebbles"
+      },
+      {
+        "model": "terrassic:block/shale_pebbles",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/shale_pebbles",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/shale_pebbles",
+        "y": 270
+      }
+    ]
   }
 }

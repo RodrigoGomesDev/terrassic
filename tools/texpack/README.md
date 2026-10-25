@@ -26,6 +26,8 @@ O `build.py` falha se uma textura ficar a mais de 14 de brilho ou 20 de contrast
 | `api.py` | O motor em quatro chamadas: `paint(tons, "amber", alpha=...)`, `palette`, `check`, `goal` |
 | `stamps.py`, `fit.py`, `targets.py` | Base calma + detalhes por ruído azul; paleta ajustada às metas; metas do lote 1 e `measure` |
 | `woods.py` | Cascas (8 estilos), anéis fora do centro, tronco descascado, tábuas lascadas; `plates`, `wave`, `draw_line` |
+| `folhas.py` | As 9 folhas do mod no padrão aprovado em 2026-10-25: tufos redondos com luz de cima à esquerda, sombra entre eles, furinhos compactos, emenda invisível, cores calmas |
+| `torroes.py` | Torrões, lascas e grãos para solos e rochas (como a terra do vanilla), com `escolher` pela métrica de calma (macro, coerência, onda única) |
 | `leaves.py` | Copas por formas de folha da espécie, em duas camadas, com furos de verdade |
 | `plants.py`, `plantart.py` | Plantas em pixel art à mão (grades de texto) pintadas pelo ajuste: cavalinhas, samambaias, cipó |
 | `workshop.py` | Bancada, fornalha e tocha |

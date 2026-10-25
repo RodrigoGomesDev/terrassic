@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/peat"
-    }
+    "": [
+      {
+        "model": "terrassic:block/peat"
+      },
+      {
+        "model": "terrassic:block/peat",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/peat",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/peat",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/peat",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

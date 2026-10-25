@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/limestone_pebbles"
-    }
+    "": [
+      {
+        "model": "terrassic:block/limestone_pebbles"
+      },
+      {
+        "model": "terrassic:block/limestone_pebbles",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/limestone_pebbles",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/limestone_pebbles",
+        "y": 270
+      }
+    ]
   }
 }

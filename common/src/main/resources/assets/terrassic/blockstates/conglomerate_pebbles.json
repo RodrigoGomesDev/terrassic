@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/conglomerate_pebbles"
-    }
+    "": [
+      {
+        "model": "terrassic:block/conglomerate_pebbles"
+      },
+      {
+        "model": "terrassic:block/conglomerate_pebbles",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/conglomerate_pebbles",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/conglomerate_pebbles",
+        "y": 270
+      }
+    ]
   }
 }

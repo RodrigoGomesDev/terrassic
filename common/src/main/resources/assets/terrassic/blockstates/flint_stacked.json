@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/flint_stacked"
-    }
+    "": [
+      {
+        "model": "terrassic:block/flint_stacked"
+      },
+      {
+        "model": "terrassic:block/flint_stacked",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/flint_stacked_mirrored"
+      },
+      {
+        "model": "terrassic:block/flint_stacked_mirrored",
+        "y": 180
+      }
+    ]
   }
 }

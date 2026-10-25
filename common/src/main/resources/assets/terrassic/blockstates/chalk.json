@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/chalk"
-    }
+    "": [
+      {
+        "model": "terrassic:block/chalk"
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/chalk",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

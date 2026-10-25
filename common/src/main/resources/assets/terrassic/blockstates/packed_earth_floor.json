@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/packed_earth_floor"
-    }
+    "": [
+      {
+        "model": "terrassic:block/packed_earth_floor"
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/packed_earth_floor",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

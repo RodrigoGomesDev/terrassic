@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/fern_litter"
-    }
+    "": [
+      {
+        "model": "terrassic:block/fern_litter"
+      },
+      {
+        "model": "terrassic:block/fern_litter",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/fern_litter",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/fern_litter",
+        "y": 270
+      }
+    ]
   }
 }

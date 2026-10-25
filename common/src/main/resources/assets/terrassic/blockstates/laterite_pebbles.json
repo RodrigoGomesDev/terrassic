@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/laterite_pebbles"
-    }
+    "": [
+      {
+        "model": "terrassic:block/laterite_pebbles"
+      },
+      {
+        "model": "terrassic:block/laterite_pebbles",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/laterite_pebbles",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/laterite_pebbles",
+        "y": 270
+      }
+    ]
   }
 }

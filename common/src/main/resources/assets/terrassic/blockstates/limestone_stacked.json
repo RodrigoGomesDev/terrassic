@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/limestone_stacked"
-    }
+    "": [
+      {
+        "model": "terrassic:block/limestone_stacked"
+      },
+      {
+        "model": "terrassic:block/limestone_stacked",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/limestone_stacked_mirrored"
+      },
+      {
+        "model": "terrassic:block/limestone_stacked_mirrored",
+        "y": 180
+      }
+    ]
   }
 }
