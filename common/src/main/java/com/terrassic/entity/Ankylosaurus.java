@@ -27,7 +27,7 @@ public class Ankylosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.6F;
     public static final float HEIGHT = 2.1F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.83F;
+    public static final float MODEL_SCALE = 0.98F;
     public static final float SHADOW = 1.9F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES);
 

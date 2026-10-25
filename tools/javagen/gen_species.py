@@ -43,8 +43,10 @@ SIZES = {
     "protoceratops":      dict(real=2.0,  scale=0.43, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
     # Leptoceratops gracilis: ~2 m, 70-200 kg (Brown 1914; Ott 2007). Modelled at 2x (render_scale 0.5), 82 px long.
     "leptoceratops":      dict(real=2.0,  scale=0.39, w=0.6, h=0.7, baby=0.5,  shadow=0.5),
-    "stegosaurus":        dict(real=9.0,  scale=1.54, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
-    "ankylosaurus":       dict(real=8.0,  scale=1.83, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
+    # Stegosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "stegosaurus":        dict(real=9.0,  scale=0.86, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
+    # Ankylosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "ankylosaurus":       dict(real=8.0,  scale=0.98, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
     # Euoplocephalus tutus: 5.5-6 m, ~2.5 t (Arbour & Currie 2013; Paul 2010); the widest body for its length.
     "euoplocephalus":     dict(real=6.0,  scale=1.43, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
     # Therizinosaurus cheloniformis: 9-10 m, ~5 t (Zanno 2010; Paul 2010); stands ~6 blocks tall with the neck up.

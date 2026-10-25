@@ -1,102 +1,330 @@
 """
-Ankylosaurus magniventris  (Late Cretaceous, North America)
+Ankylosaurus magniventris  (Maastrichtian, Hell Creek / Lance / Scollard formations, western North America)
 
-Reference (Wikipedia): length 6-8 m, mass 4.8-8 t, very wide low body covered
-in bony plates (osteoderms) and knobs, a short wide triangular head with horns
-at the back corners, short legs, and a tail ending in a heavy bony club.
+Reference:
+  - Size (Carpenter 2004; Arbour & Mallon 2017, "Unusual cranial and postcranial anatomy in the archetypal
+    ankylosaur Ankylosaurus magniventris"): the largest ankylosaurid, ~8 m (AMNH 5214 ~6.0 m, CMN 8880 ~8 m),
+    4.8-8 t; a very wide, low body ("magniventris" = great belly), hips ~1.5 m high.
+  - Skull (AMNH 5214, 64.5 cm long x 74.5 cm wide): wider than long, triangular from above; pyramidal squamosal
+    horns at the rear corners pointing back and out, quadratojugal horns below the eyes pointing down and back;
+    the roof covered by a mosaic of small flat armour tiles (caputegulae); a blunt, wide horny beak, nostrils
+    facing out to the sides.
+  - Armour: two bony half-rings over the neck (cervical half-rings), then transverse bands of large oval,
+    low-keeled osteoderms across the back with small ossicles packed between; triangular keeled osteoderms
+    along the edge of the flanks (lower and flatter than in Edmontonia or Euoplocephalus).
+  - Tail: about half the body, the rear part a stiff "handle" of interlocking vertebrae and ossified tendons
+    carrying the club, two large rounded osteoderms on the sides and small ones at the tip (~60 cm wide).
+  - Limbs: short and stout, hind longer than fore, three short hoofed toes on the feet, five on the hands.
 
-In game: scale ~0.6 -> ~4.5 blocks long, ~1.2 blocks wide... in Minecraft
-terms a walking tank. Males have ochre-tipped scutes, females grey ones.
+v2x (2026-10-24, remaster at the T. rex v3 level): modelled at 16 px = 1 m (one texture pixel = one vanilla pixel
+in game). The head is ~1.25x the real proportion. render_scale 0.5 = authoring scale; the in-game size comes from
+SIZES in tools/javagen/gen_species.py (MODEL_SCALE ~0.9 for 8 m).
 """
 import math
-from rig import Model, track, keys
-from quadruped import hind_leg, front_leg, quad_anims
+from rig import Model, wave, sinx, track, keys, add_knockout, lowest_point
+from quadruped import quad_gait, quad_sit
+from groundfit import fit_to_ground
 
 ID = "ankylosaurus"
+K = 2.0
+HEAD = 1.25
+
+
+def _cell(P, size):
+    a, b, c = P[0] / size, P[1] / size, P[2] / size
+    row = math.floor(b)
+    a += 0.5 * (row % 2)
+    c += 0.5 * (row % 2)
+    fa, fb, fc = a - math.floor(a), b - math.floor(b), c - math.floor(c)
+    edge = min(fa, 1 - fa, fb, 1 - fb, fc, 1 - fc)
+    h = (math.floor(a) * 73856093 ^ row * 19349663 ^ math.floor(c) * 83492791) & 1023
+    return edge, h
+
+
+def pattern(model, tx, rgb, region):
+    """Osteoderms: horn-covered bone with a pale keel and a dark rim; club: pitted bone; skin between the plates:
+    a pebbly mosaic of tiny ossicles; head: armour tiles."""
+    P, cube, pal = tx.P, tx.cube, tx.pal
+    tag = cube.tag
+    if tag in ("claw", "eye", "mouth", "beak", "horn"):
+        if tag == "horn" and (tx.i + 2 * tx.j) % 5 == 0:
+            return rgb * 0.93
+        return rgb
+    if tag == "armor":
+        corner = tx.col in (0, tx.cols - 1) and tx.row in (0, tx.rows - 1)
+        if corner and tx.cols > 2 and tx.rows > 2:
+            return pal["dorsal"] * 0.9                                        # rounded corners: oval plates
+        if tx.face == "up" and abs(P[0] - getattr(cube, "keel_x", 1e9)) < 0.6:
+            return mix3(rgb, pal["scute"], 0.7)                               # pale worn keel
+        if tx.edge:
+            rgb = rgb * 0.9
+        return rgb * (1.06 if (tx.i * 3 + tx.j) % 5 == 0 else 1.0)
+    if tag == "club":
+        edge, h = _cell(P, 1.6)
+        if edge < 0.14:
+            rgb = rgb * 0.84                                                  # pits and sutures
+        if tx.face == "up" and h % 4 == 0:
+            rgb = rgb * 1.1
+        return rgb
+    if tag == "ossicles":                                                 # small bony disks packed between the plates
+        edge, h = _cell(P, 1.6)
+        return pal["tile"] * (0.8 if edge < 0.15 else 1.08 if h % 5 == 0 else 0.95)
+    if tag == "tile":
+        return rgb * (0.82 if tx.edge else 1.04)
+    if tag in ("skin", "limb"):
+        if tag == "limb" and cube.bone.startswith(("toes", "hand")) and tx.face != "down":
+            return rgb * (0.86 if int(math.floor(P[2])) % 2 == 0 else 1.0)
+        edge, h = _cell(P, 1.5 if region != "belly" else 2.0)
+        if edge < 0.14:
+            rgb = rgb * 0.9                                                   # ossicle mosaic
+        elif h % 7 == 0 and region != "belly":
+            rgb = rgb * 1.1
+    return rgb
+
+
+def mix3(a, b, t):
+    return a * (1 - t) + b * t
+
+
+PALETTE = {"dorsal": "#433e30", "flank": "#6a614b", "belly": "#b8ab88", "limb": "#544d3d", "limb_top": "#625a47",
+           "claw": "#38312a", "claw_base": "#38312a", "armor": "#9a8862", "scute": "#ddc89c",
+           "spike_base": "#7a6b50", "spike_tip": "#c9b993", "horn_base": "#7a6b50", "horn_tip": "#cbbb94",
+           "club": "#9a8a68", "tile": "#7c6f54", "beak": "#5a5044",
+           "tooth": "#d8d0b8", "mouth": "#6e3330", "gum": "#4e2622", "eye": "#b5862c", "pupil": "#140f0a"}
+SEXES = {"male": {"scute": "#e0b878", "horn_tip": "#d8c290", "armor": "#927a52"},
+         "female": {"scute": "#c2b79c", "armor": "#7d7460", "club": "#8e8470"}}
+MOUTH_UP, MOUTH_DOWN = {"faces": {"up": "mouth"}}, {"faces": {"down": "mouth"}}
+
+BODY = (24, 10)                                      # hip joint
+# (name, (x0, y0, z0, x1, y1, z1)): a wide low barrel, the back highest over the hips
+TORSO = [("pelvis", (-14, 14, -2, 14, 30, 18)), ("barrel", (-16, 11, -22, 16, 29, 0)),
+         ("chest", (-13, 12, -32, 13, 27, -20)), ("dome", (-12, 29, -20, 12, 31, 14)),
+         ("shoulder_dome", (-10, 27, -30, 10, 29, -20)), ("belly", (-13, 9, -18, 13, 11, -2)),
+         ("rump", (-11, 16, 18, 11, 28, 22))]
+NECK = ([(21, -30), (20, -36), (19, -43)], [(14, 12), (12, 10)])
+TAIL = ([(24, 20), (22, 32), (20, 43), (18, 53), (16, 67)], [(18, 14), (12, 10), (8, 6), (5, 4)])
+LEG_X, LEG = 11, ([(24, 10), (13, 6), (5, 8), (2, 8)], [(11, 13, -1), (8, 8, 0, "limb"), (9, 6, 0, "limb")])
+ARM_X, ARM = 12, ([(19, -24), (10, -22), (3, -24)], [(8, 9), (7, 7, 0, "limb")])
+# osteoderm bands across the back: z of each band, and the plates' (x, half width) on the top
+SIT_HIND = (20, -50, 30)
+SIT_SPLAY = (14, -24)      # resting: thigh and shin roll out (deg)
+BANDS = [-26, -19, -12, -5, 2, 9]
+BAND_X = [(-9.5, 2.5), (-4.5, 2.5), (0, 2), (4.5, 2.5), (9.5, 2.5)]
 
 
 def build():
-    m = Model(ID, render_scale=1.0)
-    m.palette = {
-        "dorsal": "#57503e", "flank": "#7b7056", "belly": "#b5a988",
-        "limb": "#615845", "limb_top": "#6e6450",
-        "claw": "#38312a", "claw_base": "#38312a",
-        "armor": "#6b5f48", "scute": "#c9a05a",
-        "spike_base": "#7a6a50", "spike_tip": "#ece4c8",
-        "horn_base": "#7a6a50", "horn_tip": "#ece4c8",
-        "club": "#8b7d62", "beak": "#3e362e",
-        "tooth": "#d8d0b8", "mouth": "#6e3330", "gum": "#4e2622",
-        "eye": "#b5862c", "pupil": "#140f0a",
-    }
-    m.sexes = {"male": {"scute": "#d2a456", "spike_tip": "#f4ead0"},
-               "female": {"scute": "#a69d88", "spike_tip": "#c9c0a8", "armor": "#625846"}}
-    m.bone("root", None, (0, 0, 0))
-    m.bone("body", "root", (0, 13, 6))
-    m.box("body", (-9, 7, -12), (9, 17, 12), name="body")
-    m.box("body", (-8, 17, -10), (8, 19, 10), name="shell", tag="armor")
-    for z in (-8, -4, 0, 4, 8):
-        for x in (-5, -1.5, 2, 5.5):
-            m.box("body", (x - 1, 19, z - 1), (x + 1, 20, z + 1), name="scute", tag="scute")
-    for z in (-6, -2, 2, 6, 10):
-        for sx in (1, -1):
-            x0 = 9 if sx > 0 else -11
-            m.box("body", (x0, 12, z - 1), (x0 + 2, 13, z + 1), name="spike", tag="spike", paint={"axis": "+x" if sx > 0 else "-x"})
-    for sx in (1, -1):
-        x0 = 9 if sx > 0 else -12
-        m.box("body", (x0, 13, -11), (x0 + 3, 15, -9), name="shoulder_spike", tag="spike", paint={"axis": "+x" if sx > 0 else "-x"})
-
-    neck = m.chain(["neck1", "neck2"], "body", 0, [(12, -11), (12, -14.5), (11.5, -17)], "-z",
-                   [(8, 7), (7, 6)], overlap=(1.5, 1.0))
-    ay, az = neck["end"]
-    m.bone("head", "neck2", (0, ay, az))
-    m.bone("skull", "head", (0, ay, az), (-6 - neck["abs"], 0, 0))
-
-    def R(x0, y0, z0, x1, y1, z1):
-        return (x0, ay + y0, az + z0), (x1, ay + y1, az + z1)
-    m.box("skull", *R(-5, -4, -6, 5, 2, 1), name="cranium", tag="armor", paint={"faces": {"down": "mouth"}})
-    m.box("skull", *R(-3, -4, -10, 3, 0, -6), name="snout", paint={"faces": {"down": "mouth"}})
-    m.box("skull", *R(-2, -4, -11, 2, -1, -10), name="beak", tag="beak")
-    for sx in (1, -1):
-        x = 5 * sx
-        m.box("skull", (x - 1, ay + 0, az - 1), (x + 1, ay + 2, az + 1), name="horn", tag="horn",
-              rot=(0, 0, -25 * sx), origin=(x, ay + 1, az), paint={"axis": "+x" if sx > 0 else "-x"})
-        m.box("skull", (x - 0.5, ay - 2, az - 5), (x + 0.5, ay, az - 3), name="cheek_horn", tag="horn",
-              paint={"axis": "-y"})
-    m.bone("jaw", "skull", (0, ay - 4, az - 4))
-    m.box("jaw", *R(-3, -6, -10, 3, -4, -2), name="jaw", paint={"faces": {"up": "mouth"}})
-    m.decals += [
-        {"kind": "eye", "bones": ["skull"], "pos": (5, ay + 0.0, az - 4.0), "r": 1.0, "side": 1},
-        {"kind": "eye", "bones": ["skull"], "pos": (-5, ay + 0.0, az - 4.0), "r": 1.0, "side": -1},
-    ]
-
-    m.sym(lambda s, sx: front_leg(m, s, sx, 7, [(11, -8), (5.5, -7.5), (2, -8.5)], [(5, 6, 0.0), (4, 4, 0.0, "limb")], (5, 2, 2)))
-    m.sym(lambda s, sx: hind_leg(m, s, sx, 7, [(11, 9), (6, 8), (3, 9.5), (2, 9)],
-                                 [(6, 7, 0.0), (5, 5, 0.5, "limb"), (4, 3, 0.0, "limb")], (5, 3, 2)))
-    tail = m.chain(["tail1", "tail2", "tail3"], "body", 0, [(12, 12), (12, 22), (11.5, 32), (11, 41)], "+z",
-                   [(8, 7), (5, 5), (3, 3)], overlap=(1.0, 1.0))
-    t3 = tail["segments"][2]
-    y0, z0 = t3["unposed"]
-    L = t3["len"]
-    ze = z0 + L
-    m.box("tail3", (-3.5, y0 - 2, ze - 4), (3.5, y0 + 2, ze + 1), name="club", tag="club")
-    m.box("tail3", (-4.5, y0 - 1.5, ze - 3), (-3.5, y0 + 1.5, ze), name="club_lobe", tag="club")
-    m.box("tail3", (3.5, y0 - 1.5, ze - 3), (4.5, y0 + 1.5, ze), name="club_lobe", tag="club")
-    for sx in (1, -1):
-        t1 = tail["segments"][0]
-        ty, tz = t1["unposed"]
-        x0 = 4 if sx > 0 else -6
-        m.box("tail1", (x0, ty, tz + 3), (x0 + 2, ty + 1, tz + 5), name="spike", tag="spike", paint={"axis": "+x" if sx > 0 else "-x"})
-
-    def pattern(model, tx, rgb, region):
-        P = tx.P
-        tag = tx.cube.tag
-        if tag in ("armor", "club"):
-            cell = (math.floor(P[0] / 2) + math.floor(P[2] / 2)) % 2
-            rgb = rgb * (1.08 if cell else 0.92)
-            if tx.edge:
-                rgb = rgb * 0.85
-        return rgb
+    m = Model(ID, render_scale=0.5)
+    m.palette = dict(PALETTE)
+    m.sexes = SEXES
     m.pattern = pattern
-    quad_anims(m, 3, knockout={"lift": 0.8}, walk=(2.0, 14, 14, 0.4), run=(1.1, 22, 22, 0.8), attack="tail", sit_drop=5,
-               graze_neck=-14, graze_skull=-12, sit_kw={"hind": (30, -60, 30), "front": (-25, 60, -35)})
+    m.bone("root", None, (0, 0, 0))
+    m.bone("body", "root", (0, *BODY))
+    for name, (x0, y0, z0, x1, y1, z1) in TORSO:
+        m.box("body", (x0, y0, z0), (x1, y1, z1), name=name, tag="ossicles" if "dome" in name else "skin")
+
+    def plate(bone, frm, to, keel_x=None, **kw):
+        c = m.box(bone, frm, to, tag="armor", name=kw.pop("name", "osteoderm"), **kw)
+        c.keel_x = (frm[0] + to[0]) / 2 if keel_x is None else keel_x
+        return c
+
+    # --- armour bands: oval low-keeled plates over the top, bigger ones on the shoulders of the barrel,
+    #     triangular keeled plates along the edge of the flanks
+    for i, z in enumerate(BANDS):
+        ytop = 29 if z < -20 else 31
+        for x, hw in BAND_X:
+            L = 5 if abs(x) < 6 else 6
+            plate("body", (x - hw, ytop, z - L / 2), (x + hw, ytop + 1 + (1 if abs(x) == 4.5 else 0), z + L / 2))
+        for sx in (1, -1):
+            xb = 13 if z < -20 else 15
+            plate("body", (min(xb * sx, (xb + 2) * sx), 24, z - 2.5), (max(xb * sx, (xb + 2) * sx), 29, z + 2.5),
+                  name="side_osteoderm")
+            if z > 5:
+                continue                                                      # the thigh moves here
+            # flank edge: a keeled triangular plate pointing out and a little back
+            xf = 15 if z < -20 else 16
+            o = (xf * sx, 17, z)
+            plate("body", (min(xf * sx, (xf + 3) * sx), 16, z - 2), (max(xf * sx, (xf + 3) * sx), 18, z + 2),
+                  name="flank_osteoderm", rot=(0, 18 * sx, -12 * sx), origin=o)
+            plate("body", (min((xf + 3) * sx, (xf + 5) * sx), 16.5, z - 1), (max((xf + 3) * sx, (xf + 5) * sx), 17.5, z + 1),
+                  name="flank_tip", rot=(0, 18 * sx, -12 * sx), origin=o)
+    for x in (-6, 0, 6):                                                    # small plates over the rump
+        plate("body", (x - 1.5, 31, 13.5), (x + 1.5, 32, 16.5))
+
+    # --- neck: short, two cervical half-rings of keeled plates
+    pts, secs = NECK
+    neck = m.chain(["neck1", "neck2"], "body", 0, pts, "-z", secs, overlap=(3.0, 2.0))
+    for seg, (w, hh) in zip(neck["segments"], secs):
+        sy, sz = seg["unposed"]
+        zc = sz - seg["len"] / 2
+        yt = sy + hh / 2
+        for x0, x1, y0, y1 in ((-w / 2 - 1, -w / 2 + 3, yt - 4, yt + 1), (-w / 2 + 3, -1, yt, yt + 2),
+                               (1, w / 2 - 3, yt, yt + 2), (w / 2 - 3, w / 2 + 1, yt - 4, yt + 1)):
+            plate(seg["bone"], (x0, y0, zc - 2), (x1, y1, zc + 2), name="half_ring")
+
+    ay, az = neck["end"]
+    h = lambda v: int(round(v * HEAD))
+    m.bone("head", "neck2", (0, ay, az))
+    m.bone("skull", "head", (0, ay, az), (-4 - neck["abs"], 0, 0))
+    m.bone("jaw", "skull", (0, ay + h(-3), az + h(-2)))
+
+    def at(x, y, z):
+        return (h(x), ay + h(y), az + h(z))
+
+    def B(bone, name, box, tag="skin", **kw):
+        x0, y0, z0, x1, y1, z1 = box
+        return m.box(bone, at(x0, y0, z0), at(x1, y1, z1), tag=tag, name=name, **kw)
+
+    def SM(name, box, tag="skin", **kw):
+        x0, y0, z0, x1, y1, z1 = box
+        B("skull", name + "_l", box, tag, **kw)
+        B("skull", name + "_r", (-x1, y0, z0, -x0, y1, z1), tag, **kw)
+
+    # --- skull: wider than long, triangular from above, low; a blunt wide beak
+    B("skull", "braincase", (-6, -3, -4, 6, 3, 2), paint=MOUTH_DOWN)
+    B("skull", "cheeks", (-5, -4, -8, 5, 2, -4), paint=MOUTH_DOWN)
+    B("skull", "snout", (-4, -3.5, -11, 4, 1.5, -8), paint=MOUTH_DOWN)
+    B("skull", "beak", (-2.5, -4, -12, 2.5, -1, -11), tag="beak")
+    B("skull", "rostrum", (-2.5, -1, -12, 2.5, 1, -11))
+    SM("naris", (3.5, -2.5, -11, 4.5, 0.5, -8))                            # the nostril bulges, opening sideways
+    SM("brow", (4, 2, -7, 6, 3, -3), tag="tile")                           # supraorbital armour over the eyes
+    for x, z in ((-4, -2), (0, -2), (4, -2), (-2, -5), (2, -5), (-2, -8), (2, -8), (0, -10)):   # caputegulae
+        B("skull", "caputegula", (x - 1.5, 3 if z > -6 else 2 if z > -9 else 1.5, z - 1.5,
+                                  x + 1.5, 4 if z > -6 else 3 if z > -9 else 2.5, z + 1.5), tag="tile")
+    for sx in (1, -1):
+        # squamosal horns: pyramids at the rear corners, pointing back and out
+        o = at(6 * sx, 1.5, 1)
+        r = (8, 38 * sx, 0)
+        B("skull", "squamosal_horn", (min(5 * sx, 7 * sx), 0, 0, max(5 * sx, 7 * sx), 3, 3), tag="horn",
+          rot=r, origin=o, paint={"axis": "+z"})
+        B("skull", "squamosal_tip", (min(5.5 * sx, 6.5 * sx), 1, 3, max(5.5 * sx, 6.5 * sx), 2, 5), tag="horn",
+          rot=r, origin=o, paint={"axis": "+z"})
+        # quadratojugal horns below the eyes, pointing down and back
+        o = at(5 * sx, -3, -4)
+        r = (-30, 10 * sx, 0)
+        B("skull", "qj_horn", (min(4.5 * sx, 6 * sx), -6, -5, max(4.5 * sx, 6 * sx), -3, -3), tag="horn",
+          rot=r, origin=o, paint={"axis": "-y"})
+    B("jaw", "jaw", (-4, -5.5, -11, 4, -3.5, -2), paint=MOUTH_UP)
+    B("jaw", "predentary", (-3, -5.5, -12, 3, -3.5, -11), tag="beak")
+    m.decals += [{"kind": "eye", "bones": ["skull"], "pos": at(5, 0.5, -5.5), "r": 1.0, "side": 1},
+                 {"kind": "eye", "bones": ["skull"], "pos": at(-5, 0.5, -5.5), "r": 1.0, "side": -1},
+                 {"kind": "spot", "bones": ["skull"], "pos": at(4.5, -1, -9.5), "r": 1.0, "rx": 1.0, "mul": 0.55, "side": 1},
+                 {"kind": "spot", "bones": ["skull"], "pos": at(-4.5, -1, -9.5), "r": 1.0, "rx": 1.0, "mul": 0.55, "side": -1}]
+
+    # --- hind legs: short thick pillars, three short hoofed toes
+    lpts, lsecs = LEG
+
+    def leg(side, sx):
+        x = LEG_X * sx
+        ch = m.chain([f"thigh_{side}", f"shin_{side}", f"foot_{side}"], "root", x, lpts, "-y", lsecs, overlap=(3.0, 2.0))
+        by, bz = ch["end"]
+        m.bone(f"toes_{side}", f"foot_{side}", (x, by, bz), (-ch["abs"], 0, 0))
+        T = f"toes_{side}"
+        m.box(T, (x - 4, by - 2, bz - 2), (x + 4, by, bz + 4), tag="limb", name="heel_pad")
+        for dx, length in ((-4, 4), (-1, 5), (2, 4)):
+            a, b = sorted((x + dx * sx, x + (dx + 2) * sx))
+            m.box(T, (a, by - 2, bz - 2 - length), (b, by, bz - 2), tag="limb", name="toe")
+            m.box(T, (a, by - 2, bz - 4 - length), (b, by - 1, bz - 2 - length), tag="claw", name="hoof")
+    m.sym(leg)
+
+    # --- forelimbs: short, elbows a little out, five short hoofed fingers
+    apts, asecs = ARM
+
+    def arm(side, sx):
+        x = ARM_X * sx
+        ch = m.chain([f"upperarm_{side}", f"forearm_{side}"], "body", x, apts, "-y", asecs, overlap=(2.0, 1.0))
+        by, bz = ch["end"]
+        m.bone(f"hand_{side}", f"forearm_{side}", (x, by, bz), (-ch["abs"], -12 * sx, 0))
+        H = f"hand_{side}"
+        m.box(H, (x - 4, by - 2, bz - 2), (x + 4, by + 1, bz + 3), tag="limb", name="palm")
+        for k, dx in enumerate((-4, -2, 0, 2)):
+            a, b = sorted((x + dx * sx, x + (dx + 2) * sx))
+            m.box(H, (a, by - 2, bz - 4 + (1 if k in (0, 3) else 0)), (b, by - 1, bz - 2), tag="claw", name="hoof")
+        plate(f"upperarm_{side}", (min((x + 4 * sx), (x + 6 * sx)), 20, -26), (max(x + 4 * sx, x + 6 * sx), 25, -22),
+              name="shoulder_osteoderm")
+    m.sym(arm)
+
+    # --- tail: a muscular base with side plates, then the stiff handle and the club
+    tpts, tsecs = TAIL
+    tail = m.chain(["tail1", "tail2", "tail3", "tail4"], "body", 0, tpts, "+z", tsecs, overlap=(2.0, 1.0))
+    for seg, (w, hh) in list(zip(tail["segments"], tsecs))[:3]:
+        sy, sz = seg["unposed"]
+        n = 2 if seg["bone"] != "tail3" else 1
+        for k in range(n):
+            z = sz + (k + 0.5) * seg["len"] / n
+            for sx in (1, -1):
+                o = (w / 2 * sx, sy, z)
+                plate(seg["bone"], (min(w / 2 * sx, (w / 2 + 3) * sx), sy - 1, z - 2), (max(w / 2 * sx, (w / 2 + 3) * sx), sy + 1, z + 2),
+                      name="tail_osteoderm", rot=(0, 25 * sx, 0), origin=o)
+            plate(seg["bone"], (-1.5, sy + hh / 2, z - 2), (1.5, sy + hh / 2 + 1, z + 2), name="tail_keel")
+    ty, tz = tail["end"]
+    # club: two big rounded lateral osteoderms, a smaller pair behind them and a knob at the tip
+    m.box("tail4", (-5, ty - 3, tz - 5), (5, ty + 3, tz + 2), tag="club", name="club_core")
+    for sx in (1, -1):
+        m.box("tail4", (min(5 * sx, 7 * sx), ty - 2.5, tz - 6), (max(5 * sx, 7 * sx), ty + 2.5, tz + 1), tag="club", name="club_lobe")
+        m.box("tail4", (min(4 * sx, 6 * sx), ty - 2, tz + 2), (max(4 * sx, 6 * sx), ty + 2, tz + 4), tag="club", name="club_rear")
+    m.box("tail4", (-4, ty - 2, tz + 2), (4, ty + 2, tz + 5), tag="club", name="club_tip")
+    m.box("tail4", (-3, ty + 3, tz - 5), (3, ty + 4, tz + 1), tag="club", name="club_top")
+
+    animations(m)
     return m
+
+
+def siny_(a, ph=0.0):
+    return lambda p: (0, a * math.sin(2 * math.pi * (p + ph)), 0)
+
+
+def animations(m):
+    Li = 4.0
+    m.anim("idle", Li, True, {
+        "body": track(rot=wave(8, sinx(0.4), Li), pos=wave(8, lambda p: (0, 0.15 * K * math.sin(2 * math.pi * p), 0), Li)),
+        "neck1": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * p), 3 * math.sin(2 * math.pi * (p + 0.2)), 0), Li)),
+        "skull": track(rot=wave(8, lambda p: (1.5 * math.sin(2 * math.pi * (p + 0.25)), 0, 0), Li)),
+        "jaw": track(rot=wave(8, lambda p: (-4 * max(0.0, math.sin(4 * math.pi * p)), 0, 0), Li)),
+        "tail1": track(rot=wave(8, siny_(3), Li)), "tail2": track(rot=wave(8, siny_(3, -0.1), Li)),
+        "tail3": track(rot=wave(8, siny_(2, -0.2), Li)), "tail4": track(rot=wave(8, siny_(1, -0.3), Li)),
+    })
+    for name, Lc, Ah, Af, bob in (("walk", 2.0, 16, 16, 0.4 * K), ("run", 1.1, 24, 24, 0.8 * K)):
+        t = quad_gait(Lc, Ah, Af)
+        t["body"] = track(rot=wave(8, lambda p: (0, 1.5 * math.sin(2 * math.pi * p), 2.2 * math.sin(2 * math.pi * p)), Lc),
+                          pos=wave(8, lambda p, b=bob: (0, b * math.cos(4 * math.pi * p) - b * 0.5, 0), Lc))
+        t["neck1"] = track(rot=wave(8, lambda p, b=bob / K: (-2 * b * math.cos(4 * math.pi * p), 0, 0), Lc))
+        for i, (a, ph) in enumerate(((4, 0.25), (4, 0.15), (3, 0.05), (1, 0.0))):
+            t[f"tail{i+1}"] = track(rot=wave(8, siny_(a, ph), Lc))
+        m.anim(name, Lc, True, t)
+    # attack: the body pivots and the tail sweeps sideways; the stiff handle swings the club as one piece
+    m.anim("attack", 1.1, False, {
+        "body": track(rot=keys([(0, 0, 0, 0), (0.35, 0, 12, 0), (0.6, 0, -14, 0), (1.1, 0, 0, 0)])),
+        "tail1": track(rot=keys([(0, 0, 0, 0), (0.35, 0, 14, 0), (0.6, 0, -20, 0), (1.1, 0, 0, 0)])),
+        "tail2": track(rot=keys([(0, 0, 0, 0), (0.35, 0, 14, 0), (0.6, 0, -24, 0), (1.1, 0, 0, 0)])),
+        "tail3": track(rot=keys([(0, 0, 0, 0), (0.35, 0, 10, 0), (0.6, 0, -24, 0), (1.1, 0, 0, 0)])),
+        "tail4": track(rot=keys([(0, 0, 0, 0), (0.35, 0, 2, 0), (0.6, 0, -6, 0), (1.1, 0, 0, 0)])),
+        "neck1": track(rot=keys([(0, 0, 0, 0), (0.35, 0, -10, 0), (0.6, 0, 10, 0), (1.1, 0, 0, 0)])),
+    })
+    m.anim("sit", 4.0, True, quad_sit(m, 9, hind=SIT_HIND, front=(-25, 65, -40), neck=4))
+    sit = m.animations[-1]                       # the folded hind legs lie beside the belly, not inside it
+    for side, sg in (("l", 1), ("r", -1)):
+        for bone, roll in (("thigh", SIT_SPLAY[0]), ("shin", SIT_SPLAY[1])):
+            tr = sit["bones"][f"{bone}_{side}"]
+            tr["rotation"] = [[k[0], k[1], k[2], k[3] + sg * roll] for k in tr["rotation"]]
+    low = lowest_point(m, sit["bones"])
+    for bone, tr in sit["bones"].items():
+        if "position" in tr and (bone == "body" or bone.startswith("thigh")):
+            tr["position"] = [[k[0], k[1], round(k[2] - low, 3), k[3]] for k in tr["position"]]
+    jk = [(0, 0, 0, 0), (0.6, 0, 0, 0)]
+    for k in range(6):
+        t0 = 0.75 + k * 0.3
+        jk += [(t0, -10, 0, 0), (t0 + 0.15, -2, 0, 0)]
+    jk += [(2.8, 0, 0, 0)]
+    m.anim("graze", 2.8, False, {
+        "neck1": track(rot=keys([(0, 0, 0, 0), (0.6, -14, 0, 0), (2.3, -14, 0, 0), (2.8, 0, 0, 0)])),
+        "skull": track(rot=keys([(0, 0, 0, 0), (0.6, -12, 0, 0), (2.3, -12, 0, 0), (2.8, 0, 0, 0)])),
+        "jaw": track(rot=keys(jk)),
+    })
+    add_knockout(m, lift=0.6, neck_down=-12)          # the wide armoured body rolls only part of the way
+    for a in m.animations:      # eat / beg / tame come from the 1x set: scale their position keys
+        if a["name"].split(".")[-1] in ("eat", "beg", "tame"):
+            for tr in a["bones"].values():
+                if "position" in tr:
+                    tr["position"] = [[k[0]] + [round(v * K, 3) for v in k[1:]] for k in tr["position"]]
+    fit_to_ground(m, "graze", ("neck1", "skull"))
+    fit_to_ground(m, "eat", ("neck1", "neck2", "skull", "body"))
