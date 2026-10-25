@@ -97,7 +97,7 @@ TORSO = [("hips", (-14, 26, 4, 14, 48, 32)), ("midbody", (-16, 17, -18, 16, 46, 
 NECK = ([(30, -38), (27, -46), (23, -54)], [(12, 13), (10, 11)])
 TAIL = ([(46, 30), (46, 48), (42, 64), (37, 78), (33, 92)], [(18, 18), (13, 13), (9, 9), (5, 6)])
 LEG_X, LEG = 10, ([(38, 14), (22, 10), (8, 14), (3, 12)], [(12, 16, -1), (9, 10, 0, "limb"), (8, 7, 0, "limb")])
-ARM_X, ARM = 11, ([(24, -34), (13, -31), (4, -33)], [(9, 10), (8, 8, 0, "limb")])
+ARM_X, ARM = 11, ([(24, -34), (13, -31), (3.3, -33)], [(9, 10), (8, 8, 0, "limb")])
 # plates: (bone, where, height); "where" is z on the body, or the fraction along a neck/tail segment
 PLATES = [("neck2", 0.55, 5), ("neck1", 0.2, 6), ("neck1", 0.7, 8),
           ("body", -32, 10), ("body", -25, 12), ("body", -18, 14), ("body", -11, 16), ("body", -4, 18),
@@ -243,7 +243,7 @@ def animations(m):
     Li = 4.0
     sy = lambda a, ph=0.0: (lambda p: (0, a * math.sin(2 * math.pi * (p + ph)), 0))
     m.anim("idle", Li, True, {
-        "body": track(rot=wave(8, sinx(0.5), Li), pos=wave(8, lambda p: (0, 0.2 * K * math.sin(2 * math.pi * p), 0), Li)),
+        "body": track(pos=wave(8, lambda p: (0, 0.1 * K * (1 + math.sin(2 * math.pi * p)), 0), Li)),   # breathing rises only: the forefeet stay planted
         "neck1": track(rot=wave(8, lambda p: (2.5 * math.sin(2 * math.pi * p), 3 * math.sin(2 * math.pi * (p + 0.2)), 0), Li)),
         "skull": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * (p + 0.25)), 0, 0), Li)),
         "jaw": track(rot=wave(8, lambda p: (-5 * max(0.0, math.sin(4 * math.pi * p)), 0, 0), Li)),
@@ -253,7 +253,7 @@ def animations(m):
     for name, Lc, Ah, Af, bob in (("walk", 1.8, 18, 16, 0.5 * K), ("run", 1.0, 26, 24, 1.0 * K)):
         t = quad_gait(Lc, Ah, Af)
         t["body"] = track(rot=wave(8, lambda p: (0, 1.5 * math.sin(2 * math.pi * p), 1.8 * math.sin(2 * math.pi * p)), Lc),
-                          pos=wave(8, lambda p, b=bob: (0, b * math.cos(4 * math.pi * p) - b * 0.5, 0), Lc))
+                          pos=wave(8, lambda p, b=bob: (0, b * 0.5 * (1 + math.cos(4 * math.pi * p)), 0), Lc))
         t["neck1"] = track(rot=wave(8, lambda p, b=bob / K: (-2 * b * math.cos(4 * math.pi * p), 0, 0), Lc))
         for i in range(4):
             t[f"tail{i+1}"] = track(rot=wave(8, sy(3 + 1.5 * i, 0.25 - 0.08 * i), Lc))
