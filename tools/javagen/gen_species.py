@@ -73,7 +73,8 @@ SIZES = {
     # Saltasaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "saltasaurus":        dict(real=12.0, scale=0.96, w=2.8, h=3.8, baby=0.15, shadow=3.0),
     # Argentinosaurus huinculensis: 30-35 m, 65-75 t (Sellers et al. 2013; Paul 2019); head ~15 blocks up.
-    "argentinosaurus":    dict(real=35.0, scale=3.08, w=6.0, h=10.0, baby=0.08, shadow=6.5),
+    # Argentinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "argentinosaurus":    dict(real=35.0, scale=1.02, w=6.0, h=10.0, baby=0.08, shadow=6.5),
     # Opisthocoelicaudia skarzynskii: 11-12 m, ~8.5 t (Borsuk-Bialynicka 1977; Paul 2010); rears to 8 blocks.
     "opisthocoelicaudia": dict(real=12.0, scale=1.56, w=2.6, h=3.6, baby=0.15, shadow=2.8),
     # Dreadnoughtus schrani: 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015); the 11 m neck carried high.
@@ -423,7 +424,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=600, MOVEMENT_SPEED=0.15, ATTACK_DAMAGE=28, ATTACK_KNOCKBACK=3.0, ARMOR=12, ARMOR_TOUGHNESS=4, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.3, 3.5, 420), step=("RAVAGER_STEP", 1.6, 0.4),
-      xp=80, step_height=2.0, head=(20, 25), rideable=True, platform=True, jump=0.0, ride_offset=3.7, ride_forward=0.4, ride_speed=0.9,
+      xp=80, step_height=2.0, head=(20, 25), rideable=True, platform=True, jump=0.0, ride_offset=7.2, ride_forward=6.1, ride_speed=0.9,
       egg_only=True, trample=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 2)]),
  dict(id="opisthocoelicaudia", cls="Opisthocoelicaudia", base="HerbivoreDinosaur",
       doc="Opisthocoelicaudia skarzynskii - 12 m stocky titanosaur of the Gobi with a rod-stiff tail it props on to rear up and browse the canopy (the tripod). Peaceful; hurt, it shoves with the hips and slams a forefoot. Hand-tamed with leaves; rideable, a steady pack animal (the cargo inventory comes with the v0.6 systems).",

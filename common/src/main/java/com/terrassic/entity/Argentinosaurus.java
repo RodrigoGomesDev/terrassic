@@ -36,7 +36,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 6.0F;
     public static final float HEIGHT = 10.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 3.08F;
+    public static final float MODEL_SCALE = 1.02F;
     public static final float SHADOW = 6.5F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
@@ -75,7 +75,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 15.0D;
+        return 14.9D;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 11.4D * this.getScale();
+        return 7.34D * this.getScale();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 1.23D;
+        return 6.22D;
     }
 
     @Override
