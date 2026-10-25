@@ -32,7 +32,7 @@ public class Styracosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 1.6F;
     public static final float HEIGHT = 2.9F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.1F;
+    public static final float MODEL_SCALE = 0.86F;
     public static final float SHADOW = 1.4F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.LARGE_FERN);
 
@@ -69,7 +69,7 @@ public class Styracosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 2.5D;
+        return 2.4D;
     }
 
     @Override
@@ -84,12 +84,17 @@ public class Styracosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.65D * this.getScale();
+        return 1.81D * this.getScale();
     }
 
     @Override
     protected double jumpStrength() {
         return 0.5D;
+    }
+
+    @Override
+    protected double riderForwardOffset() {
+        return 0.17D;
     }
 
     @Override

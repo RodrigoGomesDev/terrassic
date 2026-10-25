@@ -39,7 +39,8 @@ SIZES = {
     # Triceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "triceratops":        dict(real=9.0,  scale=0.94, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
-    "styracosaurus":      dict(real=5.5,  scale=1.1,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
+    # Styracosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "styracosaurus":      dict(real=5.5,  scale=0.86,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
     # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
     "pachyrhinosaurus":   dict(real=8.0,  scale=1.5,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
@@ -345,7 +346,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=2.0, ARMOR=7, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.4, 0.9, 280), step=("RAVAGER_STEP", 0.5, 0.9),
-      xp=16, rideable=True, jump=0.5, ride_offset=1.5, ride_speed=1.1, trample=True),
+      xp=16, rideable=True, jump=0.5, ride_offset=2.1, ride_forward=0.2, ride_speed=1.1, trample=True),
  dict(id="pachyrhinosaurus", cls="Pachyrhinosaurus", base="HerbivoreDinosaur",
       doc="Pachyrhinosaurus canadensis - 8 m horned herbivore of the cold north with a bony boss instead of a nose horn. Territorial: gores with the boss. Its musk calms the herbivores around it and draws the predators onto itself. Tamed with plants; rideable, breaks the brush in its way.",
       attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
