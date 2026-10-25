@@ -276,6 +276,9 @@ desenhado a tinta no papel do caderno, como um mapa antigo de expedição.
 - **Página da direita**: legenda (9 tipos de terreno e "Você"), sua posição (X, Z) e as coordenadas do ponto sob o
   mouse quando ele passa pelo mapa.
 - Um mundo que não é continente Terrassic (ou enquanto o levantamento ainda roda) mostra só um aviso.
+- **No Nether e no End** o mapa continua sendo o da ilha (Overworld), mas a seta some e, no lugar da posição, aparece
+  "Você está longe da ilha" (as coordenadas dessas dimensões não valem no mapa). Apontado pelo roteiro do Codex
+  (`docs/TESTES_MAPA.md`).
 
 Prévia (mesmo algoritmo do Java, com um continente falso): `/mnt/project-files/mundo/previas/mapa_ilha_previa.png`,
 gerada por `tools/worldgen/mapa_preview.py`.
@@ -305,4 +308,5 @@ gerada por `tools/worldgen/mapa_preview.py`.
 5. Sair e entrar de novo no mundo: o mapa aparece na hora (veio salvo, sem novo levantamento; no log não aparece de
    novo "island map surveyed").
 6. Num mundo "Padrão" do Minecraft: a aba mostra só o aviso.
-7. As cinco abas cabem no topo do caderno nos três idiomas, em várias escalas de interface.
+7. Entrar no Nether e no End e abrir a aba: sem seta, com o aviso "Você está longe da ilha"; voltar e a seta reaparece.
+8. As cinco abas cabem no topo do caderno nos três idiomas, em várias escalas de interface.

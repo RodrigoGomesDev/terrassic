@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import static com.terrassic.client.ui.TerrassicPalette.*;
 
@@ -74,6 +75,15 @@ public final class ClientIslandMap {
         return heights != null;
     }
 
+    /**
+     * True when the player is in the Overworld, the world the map describes; in the Nether or the End their
+     * coordinates do not belong on it, so the arrow is hidden.
+     */
+    public static boolean onIsland() {
+        Player player = Minecraft.getInstance().player;
+        return player != null && player.level().dimension() == Level.OVERWORLD;
+    }
+
     /** Half the side of the mapped square, in blocks (the map covers -extent..+extent on X and Z). */
     public static int extent() {
         return extent;
@@ -111,9 +121,9 @@ public final class ClientIslandMap {
             g.drawString(font, "500 m", bx + bar + 3, by - 4, INK_SOFT, false);
         }
 
-        // the player
+        // the player, only while on the island (Overworld)
         Player player = Minecraft.getInstance().player;
-        if (player != null) {
+        if (player != null && onIsland()) {
             float px = x + (float) ((player.getX() + extent) / (2.0D * extent)) * side;
             float pz = y + (float) ((player.getZ() + extent) / (2.0D * extent)) * side;
             px = Mth.clamp(px, x + 3, x + side - 3);
