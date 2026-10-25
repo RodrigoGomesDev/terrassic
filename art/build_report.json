@@ -136,21 +136,21 @@
  },
  "compsognathus": {
   "bones": 25,
-  "cubes": 33,
+  "cubes": 53,
   "texture": [
    64,
    128
   ],
   "bounds_px": [
    [
-    -3.0,
-    -4.128006580828014e-05,
-    -25.95617861075005
+    -4.0,
+    -3.898466862839456e-05,
+    -27.152456851857025
    ],
    [
-    3.0,
-    22.825331778049367,
-    43.00867136753198
+    4.0,
+    21.205581582574162,
+    44.00867136753198
    ]
   ],
   "animations": [
@@ -165,7 +165,7 @@
    "animation.compsognathus.beg",
    "animation.compsognathus.tame"
   ],
-  "render_scale": 0.3
+  "render_scale": 0.5
  },
  "triceratops": {
   "bones": 30,
