@@ -25,7 +25,7 @@ public class Parasaurolophus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.0F;
     public static final float HEIGHT = 3.2F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.51F;
+    public static final float MODEL_SCALE = 0.88F;
     public static final float SHADOW = 1.6F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.SWEET_BERRIES);
 
@@ -66,7 +66,7 @@ public class Parasaurolophus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 4.3D;
+        return 4.2D;
     }
 
     @Override
@@ -81,12 +81,17 @@ public class Parasaurolophus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.42D * this.getScale();
+        return 2.24D * this.getScale();
     }
 
     @Override
     protected double jumpStrength() {
         return 0.65D;
+    }
+
+    @Override
+    protected double riderForwardOffset() {
+        return 0.7D;
     }
 
     @Override

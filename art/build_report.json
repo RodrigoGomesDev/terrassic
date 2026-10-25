@@ -304,22 +304,22 @@
   "render_scale": 0.5
  },
  "parasaurolophus": {
-  "bones": 27,
-  "cubes": 49,
+  "bones": 28,
+  "cubes": 74,
   "texture": [
-   128,
+   256,
    256
   ],
   "bounds_px": [
    [
-    -9.5,
-    2.3649910577258316e-05,
-    -44.65035815643529
+    -14.5,
+    -1.8170048859847816e-05,
+    -73.24190530823071
    ],
    [
-    9.5,
-    39.77686404129304,
-    56.11652063190722
+    14.5,
+    66.34274871235019,
+    99.35249538655133
    ]
   ],
   "animations": [
@@ -336,7 +336,7 @@
    "animation.parasaurolophus.beg",
    "animation.parasaurolophus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "pachycephalosaurus": {
   "bones": 24,

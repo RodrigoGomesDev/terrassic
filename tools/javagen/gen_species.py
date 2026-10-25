@@ -88,7 +88,8 @@ SIZES = {
     "enchodus":           dict(real=0.8,  scale=0.14, w=0.4, h=0.3, baby=0.4,  shadow=0.3),
     # Lepisosteus: Hell Creek gars ~1-1.2 m (Grande 2010; Brinkman et al. 2014). 108 px long on the fish rig.
     "lepisosteus":        dict(real=1.0,  scale=0.15, w=0.4, h=0.3, baby=0.4,  shadow=0.3),
-    "parasaurolophus":    dict(real=9.5,  scale=1.51, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
+    # Parasaurolophus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "parasaurolophus":    dict(real=9.5,  scale=0.88, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
     "thescelosaurus":     dict(real=4.0,  scale=0.89, w=1.0, h=1.6, baby=0.35, shadow=0.8),
@@ -534,7 +535,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.7, 1.6, 260), xp=12,
-      fights=False, rideable=True, jump=0.65, ride_offset=1.6, ride_speed=1.15, call=True),
+      fights=False, rideable=True, jump=0.65, ride_offset=2.55, ride_forward=0.8, ride_speed=1.15, call=True),
  dict(id="pachycephalosaurus", cls="Pachycephalosaurus", base="HerbivoreDinosaur",
       doc="Pachycephalosaurus wyomingensis - bipedal herbivore with a thick bony dome. Headbutts hard (huge knockback) when provoked.",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=0.28, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=3.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=16),
