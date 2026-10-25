@@ -1158,22 +1158,22 @@
   "render_scale": 0.5
  },
  "deinocheirus": {
-  "bones": 25,
-  "cubes": 54,
+  "bones": 28,
+  "cubes": 93,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -11.0,
-    -1.627589281127939e-07,
-    -50.705113197465764
+    -17.5,
+    -3.815796103690859e-05,
+    -99.98131222840188
    ],
    [
-    11.0,
-    56.84237410418815,
-    51.94614535045015
+    17.5,
+    83.19192579736398,
+    77.61262176293329
    ]
   ],
   "animations": [
@@ -1191,7 +1191,7 @@
    "animation.deinocheirus.graze",
    "animation.deinocheirus.fish"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "alamosaurus": {
   "bones": 31,

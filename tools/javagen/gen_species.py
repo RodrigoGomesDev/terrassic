@@ -60,7 +60,8 @@ SIZES = {
     # Therizinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "therizinosaurus":    dict(real=10.0, scale=1.03, w=2.4, h=5.0, baby=0.2,  shadow=2.0),
     # Deinocheirus mirificus: 11 m, ~6.4 t (Lee et al. 2014); the biggest ornithomimosaur, humped and duck-billed.
-    "deinocheirus":       dict(real=11.0, scale=1.72, w=2.4, h=4.8, baby=0.2,  shadow=2.2),
+    # Deinocheirus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "deinocheirus":       dict(real=11.0, scale=0.99, w=2.4, h=4.8, baby=0.2,  shadow=2.2),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
     # 22 m length; our model holds the neck more upright than that, so the head reaches ~17 blocks.
     # Brachiosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
@@ -396,7 +397,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
       food="Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.5, 2.0, 320), step=("RAVAGER_STEP", 0.8, 0.6),
-      xp=32, step_height=1.2, head=(30, 25), rideable=True, jump=0.4, ride_offset=2.8, ride_speed=0.95, scoop=True),
+      xp=32, step_height=1.2, head=(30, 25), rideable=True, jump=0.4, ride_offset=4.1, ride_forward=2.7, ride_speed=0.95, scoop=True),
  dict(id="brachiosaurus", cls="Brachiosaurus", base="HerbivoreDinosaur",
       doc="Brachiosaurus altithorax - gigantic long-necked browser, eats leaves. Peaceful unless hurt. Rideable when tamed - the tallest mount in the game.",
       attrs=dict(MAX_HEALTH=300, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
