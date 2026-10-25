@@ -25,7 +25,7 @@ public class Edmontosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.4F;
     public static final float HEIGHT = 3.6F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.93F;
+    public static final float MODEL_SCALE = 0.89F;
     public static final float SHADOW = 2.0F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES);
 
@@ -66,7 +66,7 @@ public class Edmontosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.4D;
+        return 5.3D;
     }
 
     @Override
@@ -81,12 +81,17 @@ public class Edmontosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.99D * this.getScale();
+        return 2.76D * this.getScale();
     }
 
     @Override
     protected double jumpStrength() {
         return 0.5D;
+    }
+
+    @Override
+    protected double riderForwardOffset() {
+        return 0.8D;
     }
 
     @Override

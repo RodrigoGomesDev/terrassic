@@ -846,22 +846,22 @@
   "render_scale": 0.5
  },
  "edmontosaurus": {
-  "bones": 27,
-  "cubes": 63,
+  "bones": 29,
+  "cubes": 127,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -9.5,
-    2.3649910577258316e-05,
-    -45.42059613641414
+    -16.0,
+    -0.07160411771162994,
+    -95.48028906429032
    ],
    [
-    9.5,
-    32.90937026250869,
-    56.11652063190722
+    16.0,
+    62.83595290340539,
+    121.26047979975856
    ]
   ],
   "animations": [
@@ -878,7 +878,7 @@
    "animation.edmontosaurus.beg",
    "animation.edmontosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "corythosaurus": {
   "bones": 27,

@@ -104,7 +104,8 @@ SIZES = {
     # Maiasaura v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "maiasaura":          dict(real=9.0,  scale=0.83, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
-    "edmontosaurus":      dict(real=12.0, scale=1.93, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
+    # Edmontosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "edmontosaurus":      dict(real=12.0, scale=0.89, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
     # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
     "corythosaurus":      dict(real=9.0,  scale=1.45, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). GAME EXCEPTION (Rodrigo 2026-10-24, so the rider
@@ -586,7 +587,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),
       food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.5, 1.8, 280), xp=14,
-      rideable=True, jump=0.5, ride_offset=1.55, ride_speed=1.0, call=True),
+      rideable=True, jump=0.5, ride_offset=3.1, ride_forward=0.9, ride_speed=1.0, call=True),
  dict(id="corythosaurus", cls="Corythosaurus", base="HerbivoreDinosaur",
       doc="Corythosaurus casuarius - 9 m helmet-crested duckbill of the wooded floodplains. Its deep call calms every herbivore around it (they stop panicking and heal a little). Tamed with plants; rideable.",
       attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
