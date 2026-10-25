@@ -259,3 +259,50 @@ esse valor; o resto (cavernas, aquíferos, minérios, regras de superfície) con
 ### 10.5 Testes no jogo
 
 Veja `docs/TESTES_V08.md`, seção 7 ("Continente").
+
+## 11. Mapa da ilha (pedido do Rodrigo, 25/10/2026)
+
+O Rodrigo pediu um mapa da ilha. Ele fica numa aba nova do Caderno de Campo, **Mapa** (entre Guia e Katarina),
+desenhado a tinta no papel do caderno, como um mapa antigo de expedição.
+
+### 11.1 O que aparece
+
+- **Página da esquerda**: o mapa do quadrado de -2R a +2R (R = raio do continente), ou seja, o continente inteiro e
+  o mar em volta até perto da borda do mundo. Norte para cima, escala de 500 m (1 bloco = 1 m), marca "N".
+- **Mar** em aguada clara (mais escura no mar profundo) com linhas de onda acompanhando a costa; **costa** em tinta;
+  **terra** sombreada pelo relevo (luz do noroeste), com uma marquinha por bioma: árvores nas florestas, tufos nos
+  pântanos e no delta, pontinhos nas terras secas, traços no planalto; rios em tinta suave; praias mais claras.
+- **Você**: seta vermelha com contorno de tinta, girando para onde o jogador olha.
+- **Página da direita**: legenda (9 tipos de terreno e "Você"), sua posição (X, Z) e as coordenadas do ponto sob o
+  mouse quando ele passa pelo mapa.
+- Um mundo que não é continente Terrassic (ou enquanto o levantamento ainda roda) mostra só um aviso.
+
+Prévia (mesmo algoritmo do Java, com um continente falso): `/mnt/project-files/mundo/previas/mapa_ilha_previa.png`,
+gerada por `tools/worldgen/mapa_preview.py`.
+
+### 11.2 Como funciona (técnico)
+
+- **Levantamento** (`world/continent/IslandMap`): quando um mundo de continente abre pela primeira vez, uma tarefa
+  em segundo plano consulta o **próprio gerador de mundo** em 128 × 128 pontos (altura do chão com
+  `getBaseHeight(OCEAN_FLOOR_WG)` e bioma com `getNoiseBiome`). **Nenhum chunk é gerado**, então o mapa mostra a ilha
+  inteira desde o começo, sem precisar explorar. Leva alguns segundos e não trava o servidor.
+- Cada bioma vira uma categoria (mar profundo, mar, praia, rio, pântano/delta, planície, floresta, planalto, terras
+  secas): os 11 biomas do Cretáceo pelo nome, qualquer outro pelas tags do Minecraft.
+- O resultado fica salvo com o mundo (`data/terrassic_island_map.dat`, uns 33 KB) e é enviado a cada jogador que
+  entra (pacote `terrassic:island_map`, uns 33 KB uma vez por entrada). Mundos que não são continente não têm mapa.
+- **Desenho** (`client/ClientIslandMap`): o cliente monta uma textura de 256 × 256 (2 pixels por ponto, com alturas
+  interpoladas) na primeira vez que a aba abre, mais uma faixa com as amostras da legenda. Sai do mundo, o mapa é
+  descartado.
+- Cores só da paleta do Caderno (`TerrassicPalette`: PAPER, PAPER_DARK, INK, INK_SOFT, BLOOD_500).
+
+### 11.3 Testes no jogo (para o Rodrigo)
+
+1. Criar um mundo Terrassic novo, esperar uns segundos, abrir o Caderno, aba **Mapa**: o continente em "C" com o
+   golfo, as ilhotas e o mar em volta; a seta vermelha no centro, onde você nasceu.
+2. Andar e virar: a seta acompanha posição e direção; "Você: X, Z" muda.
+3. Passar o mouse no mapa: as coordenadas do ponto aparecem à direita. Conferir um ponto indo até ele.
+4. Conferir se florestas, pântanos, terras secas e planalto do mapa batem com o que se vê no mundo.
+5. Sair e entrar de novo no mundo: o mapa aparece na hora (veio salvo, sem novo levantamento; no log não aparece de
+   novo "island map surveyed").
+6. Num mundo "Padrão" do Minecraft: a aba mostra só o aviso.
+7. As cinco abas cabem no topo do caderno nos três idiomas, em várias escalas de interface.
