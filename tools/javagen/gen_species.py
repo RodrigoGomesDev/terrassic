@@ -115,7 +115,8 @@ SIZES = {
     # 2021), standing as tall as a giraffe; Hatzegopteryx thambema 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017).
     # Quetzalcoatlus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "quetzalcoatlus":     dict(real=11.0, scale=0.73, w=2.5, h=5.0, baby=0.25, shadow=2.0),
-    "hatzegopteryx":      dict(real=12.0, scale=1.52, w=2.5, h=4.6, baby=0.25, shadow=2.1),
+    # Hatzegopteryx v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "hatzegopteryx":      dict(real=12.0, scale=0.76, w=2.5, h=4.6, baby=0.25, shadow=2.1),
     # Ichthyornis dispar: a tern-sized toothed seabird, wingspan ~60 cm (Clarke 2004; Field et al. 2018). Modelled at 4x.
     "ichthyornis":        dict(real=0.66, scale=0.245, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Vegavis iaai: a small duck, ~0.7 m nose to tail, ~1 m wingspan (Clarke et al. 2005, 2016). Modelled at 4x, 47 px span.
@@ -604,7 +605,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.28, FLYING_SPEED=0.62, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.0, ARMOR=3, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=32),
       food="Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.5, 2.0, 320), xp=32, run=0.04,
-      rideable=True, ride_offset=2.15, ride_forward=0.0, ride_speed=0.85, egg_only=True,
+      rideable=True, ride_offset=4.3, ride_forward=0.0, ride_speed=0.85, egg_only=True,
       prey="e.getBbWidth() < 1.6F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=160),
  dict(id="ichthyornis", cls="Ichthyornis", base="FlyingDinosaur",
       doc="Ichthyornis dispar - tern-sized toothed seabird of the Western Interior Seaway shores. Tamed with fish; rides on the owner's shoulder, calls out when a monster is after them and now and then dives for a fish.",

@@ -546,21 +546,21 @@
  },
  "hatzegopteryx": {
   "bones": 29,
-  "cubes": 47,
+  "cubes": 98,
   "texture": [
-   128,
+   256,
    256
   ],
   "bounds_px": [
    [
-    -63.0,
-    -0.12790841218199667,
-    -48.4276726914282
+    -126.0,
+    -0.07021643140674172,
+    -95.81345737752054
    ],
    [
-    63.0,
-    52.16627464982567,
-    12.0
+    126.0,
+    103.98525204787595,
+    28.0
    ]
   ],
   "animations": [
@@ -577,7 +577,7 @@
    "animation.hatzegopteryx.beg",
    "animation.hatzegopteryx.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "ichthyornis": {
   "bones": 19,
