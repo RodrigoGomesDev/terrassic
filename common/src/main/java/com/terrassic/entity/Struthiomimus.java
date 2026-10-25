@@ -25,7 +25,7 @@ public class Struthiomimus extends HerbivoreDinosaur {
     public static final float WIDTH = 1.0F;
     public static final float HEIGHT = 2.4F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.07F;
+    public static final float MODEL_SCALE = 0.81F;
     public static final float SHADOW = 0.8F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES, Items.EGG);
 
@@ -79,7 +79,7 @@ public class Struthiomimus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.07D * this.getScale();
+        return 1.5D * this.getScale();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Struthiomimus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.11D;
+        return 0.16D;
     }
 
     @Override

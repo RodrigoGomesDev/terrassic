@@ -103,7 +103,8 @@ SIZES = {
     # Gallimimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "gallimimus":         dict(real=6.0,  scale=1.02, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
-    "struthiomimus":      dict(real=4.3,  scale=1.07, w=1.0, h=2.4, baby=0.35, shadow=0.8),
+    # Struthiomimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "struthiomimus":      dict(real=4.3,  scale=0.81, w=1.0, h=2.4, baby=0.35, shadow=0.8),
     # Maiasaura v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "maiasaura":          dict(real=9.0,  scale=0.83, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
@@ -579,7 +580,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=26, MOVEMENT_SPEED=0.37, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
       food="Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES, Items.EGG",
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.7, 1.1, 200), xp=8, run=0.03,
-      fights=False, rideable=True, jump=0.9, ride_offset=1.0, ride_forward=0.1, ride_speed=1.45),
+      fights=False, rideable=True, jump=0.9, ride_offset=1.85, ride_forward=0.2, ride_speed=1.45),
  dict(id="maiasaura", cls="Maiasaura", base="HerbivoreDinosaur",
       doc="Maiasaura peeblesorum - the \"good mother\" hadrosaur. Lives in nesting colonies; babies of any species near an adult grow twice as fast. Rideable when tamed.",
       attrs=dict(MAX_HEALTH=65, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ARMOR=3, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=20),

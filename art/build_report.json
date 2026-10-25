@@ -1020,21 +1020,21 @@
  },
  "struthiomimus": {
   "bones": 27,
-  "cubes": 50,
+  "cubes": 73,
   "texture": [
    128,
-   128
+   256
   ],
   "bounds_px": [
    [
-    -4.5,
-    -2.124604247464827e-05,
-    -26.348072234245002
+    -7.0,
+    -4.5670594374547235e-05,
+    -30.579103166677704
    ],
    [
-    4.5,
-    36.79413511090813,
-    37.99998109612815
+    7.0,
+    58.56119653603022,
+    54.985259375015
    ]
   ],
   "animations": [
@@ -1050,7 +1050,7 @@
    "animation.struthiomimus.beg",
    "animation.struthiomimus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "thescelosaurus": {
   "bones": 24,
