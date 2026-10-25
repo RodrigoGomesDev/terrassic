@@ -714,22 +714,22 @@
   "render_scale": 0.5
  },
  "archelon": {
-  "bones": 12,
-  "cubes": 23,
+  "bones": 13,
+  "cubes": 44,
   "texture": [
    128,
    256
   ],
   "bounds_px": [
    [
-    -34.25715410244066,
-    1.0,
-    -34.0
+    -40.58145873125188,
+    0.0,
+    -42.99996538225954
    ],
    [
-    34.25715410244066,
+    40.58145873125188,
     14.0,
-    28.06105952210926
+    30.151387726054804
    ]
   ],
   "animations": [
@@ -744,7 +744,7 @@
    "animation.archelon.beg",
    "animation.archelon.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "hesperornis": {
   "bones": 16,

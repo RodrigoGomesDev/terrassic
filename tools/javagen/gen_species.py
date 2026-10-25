@@ -135,7 +135,8 @@ SIZES = {
     # Xiphactinus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "xiphactinus":        dict(real=6.0, scale=0.95, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
     # Archelon ischyros: 4.6 m long, 4 m flipper to flipper (Wieland 1896/1902; YPM 3000), the largest turtle ever.
-    "archelon":           dict(real=4.6, scale=1.18, w=2.2, h=1.1, baby=0.25, shadow=1.6),
+    # Archelon v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "archelon":           dict(real=4.6, scale=1.01, w=2.2, h=1.1, baby=0.25, shadow=1.6),
     # Hesperornis regalis: up to 1.8 m long (Marsh 1880; Bell & Chiappe 2015). Modelled at 2x.
     "hesperornis":        dict(real=1.8, scale=0.39, w=0.6, h=0.6, baby=0.4,  shadow=0.4),
     # Deinosuchus riograndensis: 10.6 m well measured (Cossette & Brochu 2020), up to 12 m in older estimates (Schwimmer 2002).

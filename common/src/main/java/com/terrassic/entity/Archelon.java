@@ -29,7 +29,7 @@ public class Archelon extends SwimmingDinosaur {
     public static final float WIDTH = 2.2F;
     public static final float HEIGHT = 1.1F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.18F;
+    public static final float MODEL_SCALE = 1.01F;
     public static final float SHADOW = 1.6F;
     private static final Ingredient FOOD = Ingredient.of(Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
@@ -65,7 +65,7 @@ public class Archelon extends SwimmingDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 1.9D;
+        return 2.0D;
     }
 
     @Override
@@ -85,12 +85,12 @@ public class Archelon extends SwimmingDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.06D * this.getScale();
+        return 0.91D * this.getScale();
     }
 
     @Override
     protected double riderForwardOffset() {
-        return 0.12D;
+        return 0.1D;
     }
 
     @Override
