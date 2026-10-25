@@ -95,7 +95,8 @@ SIZES = {
     "pachycephalosaurus": dict(real=4.5,  scale=0.82, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
     "thescelosaurus":     dict(real=4.0,  scale=0.89, w=1.0, h=1.6, baby=0.35, shadow=0.8),
-    "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),
+    # Gallimimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "gallimimus":         dict(real=6.0,  scale=1.02, w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
     "struthiomimus":      dict(real=4.3,  scale=1.07, w=1.0, h=2.4, baby=0.35, shadow=0.8),
     "maiasaura":          dict(real=9.0,  scale=1.45, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
@@ -553,7 +554,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
       food="Items.WHEAT_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.55, 1.2, 200), xp=8, run=0.03,
-      fights=False, rideable=True, jump=0.8, ride_offset=1.1, ride_forward=0.12, ride_speed=1.35),
+      fights=False, rideable=True, jump=0.8, ride_offset=2.1, ride_forward=0.3, ride_speed=1.35),
  dict(id="struthiomimus", cls="Struthiomimus", base="HerbivoreDinosaur",
       doc="Struthiomimus altus - 4.3 m ostrich mimic of the floodplains. Flocks flee from danger. Omnivore, tamed with seeds, berries or eggs; the lightest and fastest mount.",
       attrs=dict(MAX_HEALTH=26, MOVEMENT_SPEED=0.37, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),

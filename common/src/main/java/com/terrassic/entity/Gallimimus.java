@@ -25,7 +25,7 @@ public class Gallimimus extends HerbivoreDinosaur {
     public static final float WIDTH = 1.2F;
     public static final float HEIGHT = 2.6F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.54F;
+    public static final float MODEL_SCALE = 1.02F;
     public static final float SHADOW = 0.9F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.SWEET_BERRIES, Items.APPLE);
 
@@ -79,7 +79,7 @@ public class Gallimimus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.69D * this.getScale();
+        return 2.14D * this.getScale();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Gallimimus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.18D;
+        return 0.31D;
     }
 
     @Override
