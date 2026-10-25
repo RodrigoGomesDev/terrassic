@@ -20,6 +20,13 @@ Verificação de integridade sem gerar arquivos: `python3 -B tools/validation/ch
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/terrassic)
 - [Wiki no GitHub](https://github.com/RodrigoGomesDev/terrassic/wiki)
 
+## Estado da main de desenvolvimento
+
+A main contém 59 espécies, o sistema básico de nocaute e a identidade visual integrada. Isso não altera a versão
+declarada `0.2.0` nem significa um novo lançamento. O elenco e os exemplos abaixo descrevem a v0.2 original;
+o estado das entregas e os testes atuais estão no [quadro de coordenação](docs/COORDENACAO.md) e no
+[roadmap](docs/ROADMAP.md). Build, testes de servidor e aprovação visual são verificações distintas.
+
 ![Elenco v0.2](art/preview_sheet.png)
 
 ![Ovos geradores, armas e materiais](art/items_sheet.png)

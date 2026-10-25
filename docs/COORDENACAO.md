@@ -55,16 +55,17 @@ as diferenças entre suas declarações de entrega e o checkout verificado.
 
 | Frente | Responsável | Escopo | Próxima entrega |
 |---|---|---|---|
-| Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Após a fauna 108-113: nocaute v0.7 (`DOMESTICACAO.md`); reservar base de entidades, itens, rede e geradores antes de implementar |
+| Features complexas | Claude principal | Sistemas e conteúdo na ordem da era atual | Nocaute básico integrado; próximos pacotes: inventário de alimentação, boleadeira e territórios (`DOMESTICACAO.md`). Preservar os testes do Codex e reservar os arquivos compartilhados antes de implementar |
 | Features paralelas | Claude secundário | Pacotes isolados em `paralelo/*`, com checkout separado | v0.9 integrada; próxima frente independente: roteiros e validação funcional da fauna v0.7 (dietas, loot, reprodução e habitats), sem disputar os arquivos do nocaute |
-| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Servidores, persistência, Caderno, dimensões e respawn validados; CI e integração da fauna concluídas; ampliar perfil de carga estacionária gradualmente |
-| Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entregar documentação e lista de arquivos; preservar trabalho existente |
+| Integração e qualidade técnica | Codex | Integração na main, build dos dois loaders, validação de recursos, estabilidade e desempenho | Perfil estacionário até 100 concluído; agora regressão de nocaute, eficiência e persistência (`TESTES_NOCAUTE.md`); depois disparo/colisão e comportamento com jogadores |
+| Identidade visual | Frente de identidade já existente | Marca, paleta, fontes, logo e arte correspondente | Entrega integrada; próxima revisão: legibilidade das fontes e navegação das telas nos três idiomas, preservando a arte existente |
 | Aprovação visual e experiência | Rodrigo | Aparência, som, sensação de jogo e prioridades de produto | Validar os roteiros de jogo após as entregas técnicas |
 
 As atribuições organizam o trabalho; não significam que outras sessões já leram ou confirmaram este quadro.
 
-Handoff após a fauna: o sistema de torpor/nocaute ainda não está em `DinosaurEntity`; o plano e os critérios estão
-em `DOMESTICACAO.md`. A frente principal pode seguir por esse pacote complexo. A paralela começa conferindo os
+Handoff após a fauna: o sistema básico de torpor/nocaute já está em `DinosaurEntity`; critérios e pendências estão
+em `DOMESTICACAO.md`. Codex validou persistência e interação; a principal pode preparar os pacotes restantes,
+consultando as reservas atuais da classe-base. A paralela começa conferindo os
 seis animais recém-entregues contra `FAUNA.md`, registra resultados e só reserva código se encontrar um problema.
 Codex continua com integração, dados, rede e desempenho. Identidade mantém a arte e o acabamento das interfaces.
 Todas as frentes fazem fetch, leem este quadro e conferem a CI antes de abrir trabalho; não recriar sistemas já
@@ -88,6 +89,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 | Responsável | Arquivos | Estado |
 |---|---|---|
+| Codex | `DinosaurEntity.java` (persistência/penalidade do nocaute), `tools/validation/minecraft_client.py`, novo `knockout_regression.py`, `CLAUDE.md`, `README.md` e documentação de coordenação/testes | Concluído em 25/10: dois bugs reproduzidos e corrigidos; regressão real 18/18 passou em Fabric e Forge, com recarga, alimentar/acordar/domesticar. Build passou em 49 s; arquivos liberados, sem mudar balanceamento, modelos ou interface |
 | Codex | Integração de `sync/identidade`: `NotebookScreen.java`, `TerrassicTitle.java`, `common/build.gradle` (empacotar documentos entregues), `README.md` (links oficiais), coordenação e revisão dos arquivos mesclados | Concluído em 25/10: ficha à direita, dioramas, painel de dicas, fontes e componentes preservados; build dos dois loaders e verificações passaram; arquivos liberados. Arquivos locais de marca fora do commit |
 | Codex | `AGENTS.md`, `docs/COORDENACAO.md`, `docs/PLANO_MESTRE.md`, `tools/validation/`, autoria em README/CLAUDE/metadados, ponte no roadmap | Concluído; arquivos liberados; sem alteração de sistemas de gameplay |
 | Codex | Testes isolados de servidor; `tools/validation/`, `EcoSpawner.java`, `SpawnBudget.java`, classes-base de IA e persistência (`DinosaurEntity.java`, `HerbivoreDinosaur.java`, `PredatorDinosaur.java`, `DinoEggBlock.java`), docs e ponte de validação em AGENTS/CLAUDE | Concluído; arquivos liberados. Servidores/regressões Fabric e Forge, orçamento e build passaram; arte e tabelas de espécies preservadas |
@@ -98,13 +100,13 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 | Codex | `tools/validation/load_profile.py`, documentação | Concluído: perfil Fabric até 32 conexões; corrigida a ferramenta para entradas sequenciais após detectar concorrência no login vanilla. Resultados e limites em `PERFIL_LOCAL.md` |
 | Codex | `.github/workflows/validation.yml`, `tools/validation/README.md`, documentação | Concluído: CI passou na main com a nova fauna, run `40140246290`; sem deploy ou publicação de release |
 | Codex | `tools/validation/check_project.py`, `test_check_project.py`, documentação | Concluído: 481 vínculos de áudio e legendas conferidos; 18 testes passaram. Sem editar sons ou geradores |
-| Codex | `tools/validation/load_profile.py`, documentação | Em uso: medir 32, 64 e até 100 conexões estacionárias em Fabric, com limite de média de 35 ms; não valida jogadores ativos |
-| Codex | `CLAUDE.md`, linha da fauna em `ROADMAP.md`, documentação de contexto | Em uso: atualizar contagem de espécies e estados verificados de entrega, sem mudar a estratégia ou a fila de produto |
+| Codex | `tools/validation/load_profile.py`, documentação | Concluído: 32, 64 e 100 conexões estacionárias em Fabric, resultados em `PERFIL_LOCAL.md`; não valida jogadores ativos |
+| Codex | `CLAUDE.md`, linha da fauna em `ROADMAP.md`, documentação de contexto | Concluído; contexto atualizado com as entregas efetivamente integradas, preservando a fila de produto |
 | Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Concluído; arquivos liberados (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 | Claude (nuvem, menu e arte 3D) | `client/title/TerrassicMenuScreen.java`, `client/TerrassicTitle.java` (só `renderTip`), `mixin/client/LevelLoadingScreenMixin.java`, `ReceivingLevelScreenMixin.java`, `client/GuideHabitats.java`, `client/NotebookScreen.java` (só o diorama e o layout da aba Guia), `tools/menugen/`, `docs/MENU.md` | Concluído: telas de carregamento com as cenas da galeria; dioramas de habitat em gravura atrás do modelo vivo do Guia de Campo (paleta do Caderno, sem trocar a arte da identidade); página da espécie do Guia na página da direita, depois da lombada; arquivos liberados com o commit. Ainda não visto no jogo |
 | Claude (nuvem, nocaute v0.7) | `DinosaurEntity.java`, `SwimmingDinosaur.java`, novos `TranqDart.java` e `BlowgunItem.java`, `ModItems`, `ModEntities`, `TerrassicClient` (1 linha), `gen_resources.py`, `sprites.py`, `lore.py`, lang, `docs/DOMESTICACAO.md` | Concluído com o commit: domesticação por nocaute (torpor, nocaute, alimentar derrubado, eficiência, acordar), zarabatana, dardo e erva sonífera; arquivos liberados. Ainda não testado no jogo |
-| Claude secundário (identidade visual) | Branch `paralelo/identidade` (base `96004f7b`, main após a reescrita de histórico): `client/ui/` (paleta, componentes, `TerrassicButton`, `TerrassicFonts`), telas `RulesScreen`, `NotebookScreen`, `IntroScreen`, `TerrassicHud`, `SpeciesToast`, `TerrassicTitle`, `ClientConfig`, `assets/terrassic/font/`, `textures/font/`, `tools/fontgen/`, `tools/capagen/brand.py` e `ui_mock.py`, `art/identidade/`, `docs/IDENTIDADE.md`; licença (`LICENSE`, `COPYING`, `LICENSE-ASSETS.md`, `CLA.md`, campo `license` dos metadados), linhas de licença/identidade em `CLAUDE.md`, `README.md`, `ESTRATEGIA.md` e `ROADMAP.md` (T3.6, perguntas) | Entregue para integração: compila (common, stubs), `check_project.py` passou; **não testado no jogo** (fontes e telas precisam de revisão visual do Rodrigo). Letreiro da tela de título e `icon.png` não foram trocados (propostas em `art/identidade/marca/`) |
+| Claude secundário (identidade visual) | Branch `paralelo/identidade` (base `96004f7b`, main após a reescrita de histórico): `client/ui/` (paleta, componentes, `TerrassicButton`, `TerrassicFonts`), telas `RulesScreen`, `NotebookScreen`, `IntroScreen`, `TerrassicHud`, `SpeciesToast`, `TerrassicTitle`, `ClientConfig`, `assets/terrassic/font/`, `textures/font/`, `tools/fontgen/`, `tools/capagen/brand.py` e `ui_mock.py`, `art/identidade/`, `docs/IDENTIDADE.md`; licença (`LICENSE`, `COPYING`, `LICENSE-ASSETS.md`, `CLA.md`, campo `license` dos metadados), linhas de licença/identidade em `CLAUDE.md`, `README.md`, `ESTRATEGIA.md` e `ROADMAP.md` (T3.6, perguntas) | Integrada na main em `e4bbe9ef`; build Fabric/Forge e integridade passaram. Fontes e telas ainda precisam de revisão visual no jogo. Letreiro da tela de título e `icon.png` não foram trocados (propostas em `art/identidade/marca/`) |
 
 ## Levantamento inicial e entregas anteriores (histórico)
 
@@ -204,8 +206,26 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 O plano mestre anexado pelo Rodrigo cita `docs/estudos/`, `docs/IDENTIDADE.md`, licença LGPL do código e documentos
 de permissões dos assets. Estudos e identidade não estavam na conferência inicial e foram recebidos durante esta
-sessão, como registrado abaixo. Os arquivos de licença/permissões anunciados no plano ainda precisam ser entregues;
-esta frente não os recriou nem declarou uma licença diferente da que existe nos metadados.
+sessão, como registrado abaixo. Os documentos de licença/permissões chegaram no bundle de identidade e foram
+integrados em `e4bbe9ef`, incluindo empacotamento nos JARs; a integração está registrada no início deste quadro.
+
+## Próximos passos por frente — 25/10
+
+1. **Claude principal:** inventário de alimentação da criatura derrubada, boleadeira e territórios, em pacotes
+   separados. Registrar e publicar a reserva antes de alterar a classe-base e os geradores; preservar as regressões.
+2. **Claude secundário / identidade:** revisão de legibilidade e navegação das telas em pt-BR, inglês e espanhol;
+   testar também dietas, loot e habitats da fauna v0.7. Novos pacotes em `paralelo/*`, com checkout separado.
+3. **Codex:** integrar entregas novas e testar disparo/colisão da zarabatana, nocaute na água e comportamento de IA;
+   depois medir exploração do continente com geração de chunks e clientes em movimento. O teste de 100 conexões
+   estacionárias não valida esses cenários.
+
+Nocaute: `TESTES_NOCAUTE.md` registra as duas falhas reproduzidas e as correções. Os 18 casos completos passaram
+nos dois loaders, inclusive dono, progresso, bônus e alimentação após reinício. Arte e barras no cliente completo
+continuam fora desse teste. O LEIA-ME de `terrassic-sync` também foi atualizado, com backup, para registrar a
+identidade já integrada; não repetir os merges antigos.
+
+Reservas que precisem ser vistas pela frente remota devem ser publicadas na main antes de trabalho prolongado.
+Uma reserva no arquivo local, sem commit/push, ainda não é visível para a sessão em nuvem.
 
 O plano mestre também define o projeto como pessoal. As referências empresariais foram removidas dos arquivos
 atuais nesta entrega; o histórico Git permanece preservado.

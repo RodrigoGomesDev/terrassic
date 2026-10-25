@@ -41,6 +41,10 @@ de entidades após reiniciar um mundo temporário nos dois loaders.
 páginas por UUID, snapshot/delta, dimensões, morte/respawn, reconexão e persistência após reinício; suporta FML3 do Forge.
 Comandos e limites em [`docs/CADERNO_DADOS.md`](../../docs/CADERNO_DADOS.md). Esses clientes não renderizam o jogo.
 
+`knockout_regression.py` usa fixtures de nocaute, cliques reais de alimentação, salvamento e reinício para conferir
+eficiência, progresso, dono e bônus de vida. Comandos e limites em
+[`docs/TESTES_NOCAUTE.md`](../../docs/TESTES_NOCAUTE.md); requer EULA explícita e servidor descartável.
+
 `load_profile.py` aumenta a carga por etapas em um servidor descartável compilado a partir de uma revisão fixa.
 Registra eventos reais de ticks pelo JFR integrado, sem mods de perfil adicionais. Comandos, resultados e
 limites em [`docs/PERFIL_LOCAL.md`](../../docs/PERFIL_LOCAL.md).

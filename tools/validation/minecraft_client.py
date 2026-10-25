@@ -157,6 +157,7 @@ class LocalClient:
         self.respawn_packets = 0
         self.dimension = None
         self.forge_messages = {}
+        self.entities = {}  # Spawned entity UUID -> current protocol id, scoped to this connection.
         self.error = None
         self._closing = False
         self._compression = -1
@@ -229,7 +230,13 @@ class LocalClient:
                         else:
                             self.send(2, varint(transaction) + b"\x00")
                     continue
-                if packet_id == 40 and not self._registered:  # JoinGame: the server's play listener is now installed.
+                if packet_id == 1:  # AddEntity: protocol id followed by the entity UUID.
+                    entity_id = read_varint(packet)
+                    entity_uuid = str(uuid.UUID(bytes=packet.read(16)))
+                    with self._condition:
+                        self.entities[entity_uuid] = entity_id
+                        self._condition.notify_all()
+                elif packet_id == 40 and not self._registered:  # JoinGame: the server's play listener is now installed.
                     self._register()
                     self._registered = True
                 elif packet_id == 35:  # KeepAlive
@@ -282,6 +289,11 @@ class LocalClient:
 
     def request_respawn(self):
         self.send(7, varint(0))  # ServerboundClientCommandPacket, PERFORM_RESPAWN.
+
+    def interact_entity(self, entity_uuid, attack=False):
+        entity_id = self.entities[str(entity_uuid)]
+        action = varint(1) if attack else varint(0) + varint(0)  # ATTACK, or INTERACT with MAIN_HAND.
+        self.send(16, varint(entity_id) + action + b"\x00")  # Not sneaking.
 
     def close(self):
         self._closing = True

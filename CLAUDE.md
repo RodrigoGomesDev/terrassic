@@ -3,7 +3,7 @@
 Leia `AGENTS.md`, `docs/COORDENACAO.md`, este arquivo e o README.md antes de começar. Responda em português.
 Autor do projeto: Rodrigo Gomes. Faça os commits no nome dele.
 
-## Coordenação atual (24/10/2026)
+## Coordenação atual (25/10/2026)
 
 Projeto pessoal do Rodrigo, sem vínculo com qualquer empresa. A entrega consolidada fica na **main**.
 Claude principal: features complexas na main. Claude secundário: features isoladas em `paralelo/*` com checkout
@@ -23,10 +23,16 @@ o snapshot completo. Leia `docs/CADERNO_DADOS.md` antes de alterar o conheciment
 use `addPage()`. Regressões de dados/protocolo fazem parte da build (`:common:researchRegression`).
 Entregas seguintes: clientes locais de protocolo passaram em Fabric e Forge com páginas por UUID, snapshot/delta,
 troca de dimensão, morte/respawn, reconexão e reinício (`CADERNO_DADOS.md`). Perfis JFR locais passaram até
-16 conexões nos dois loaders e 32 no Fabric (`PERFIL_LOCAL.md`); são clientes estacionários sem renderização,
+16 conexões nos dois loaders e 100 no Fabric (`PERFIL_LOCAL.md`); são clientes estacionários sem renderização,
 não uma validação de 100 jogadores ativos. A CI no GitHub valida integridade, fixtures, orçamento e build dos dois
 loaders, incluindo regressões de pesquisa. `tools/validation/README.md` reúne os comandos.
-Fauna 108-113 integrada: 59 espécies; próximo sistema complexo previsto é o nocaute v0.7 (`DOMESTICACAO.md`).
+Fauna 108-113 integrada: 59 espécies. Nocaute v0.7 também integrado (`DOMESTICACAO.md`): torpor, alimentar derrubado,
+eficiência, erva, zarabatana e dardo. Codex validou 18 casos de persistência/interação nos dois loaders, incluindo
+correções de eficiência antes da primeira comida e dano rejeitado (`TESTES_NOCAUTE.md`); consultar as reservas antes de alterar
+`DinosaurEntity`. Ainda faltam inventário de alimentação, boleadeira e informações de dificuldade no Guia.
+Identidade de `terrassic-sync` integrada na main em `e4bbe9ef`: fontes, botões, marca proposta, licenças e textos.
+Ícone e letreiro ativos preservados; fontes/telas ainda exigem revisão visual no jogo. Sync é transporte de bundles,
+não outro checkout: seu LEIA-ME já registra a integração; não repetir merges dos bundles antigos.
 Licença: código LGPL-3.0 (`LICENSE` + `COPYING`), assets All Rights Reserved com permissões explícitas
 (`LICENSE-ASSETS.md`), contribuições pelo `CLA.md`. Commits: **Rodrigo Gomes <rodrigogomessims@gmail.com>**, sem linha
 de coautoria de IA (pedido do Rodrigo, 24/10/2026).

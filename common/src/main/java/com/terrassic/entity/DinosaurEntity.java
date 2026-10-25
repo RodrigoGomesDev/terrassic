@@ -629,6 +629,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         if (this.tameProgress > 0.0F) {
             tag.putFloat("TameProgress", this.tameProgress);
+        }
+        // Wounds can lower effectiveness before the first meal; it already belongs to the unconscious animal.
+        if (this.isKnockedOut() || this.tameProgress > 0.0F) {
             tag.putInt("TameEffectiveness", this.tameEffectiveness);
         }
         if (this.tamer != null) {
@@ -775,14 +778,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     torporHit = amount * 0.1F;   // edges and points wound, they hardly stun
                 }
             }
-            if (this.isKnockedOut() && amount > 0.0F) {
-                this.tameEffectiveness = Math.max(20, this.tameEffectiveness - 10);
-            }
         }
         if (!this.level().isClientSide()) {
             amount = Rules.damageTaken(this, source, amount);
         }
         boolean hurt = super.hurt(source, amount);
+        if (hurt && amount > 0.0F && !this.level().isClientSide() && !this.isTame() && this.isKnockedOut()) {
+            this.tameEffectiveness = Math.max(20, this.tameEffectiveness - 10);
+        }
         if (hurt && torporHit > 0.0F && this.isAlive()) {
             this.addTorpor(torporHit, source.getEntity());
         }
