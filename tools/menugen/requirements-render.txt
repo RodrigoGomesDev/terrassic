@@ -1,0 +1,4 @@
+bpy==5.0.1
+numpy==1.26.4
+Pillow==13.0.0
+moderngl==5.13.0

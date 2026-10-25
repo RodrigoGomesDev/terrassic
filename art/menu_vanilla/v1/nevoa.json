@@ -1,0 +1,26 @@
+{
+  "method": "Blender Cycles; original packaged Terrassic geometry, animations and textures",
+  "scene": "nevoa",
+  "size": [
+    960,
+    540
+  ],
+  "samples": 32,
+  "vanilla_client_sha256": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
+  "models": [
+    {
+      "species": "tyrannosaurus",
+      "animation": "walk",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 139,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/tyrannosaurus.geo.json": "4d34acf90e0d539674b5a64e9c018b7004e0ad4eb856b3d9a75d809a7d86981b",
+        "common/src/main/resources/assets/terrassic/animations/entity/tyrannosaurus.animation.json": "237aa849610870ea777ff2b2dec0bf6e27c0a2b52274e5e5f9da805e2a05c7f1",
+        "common/src/main/resources/assets/terrassic/textures/entity/tyrannosaurus_male.png": "8e547ac75aa27a3a8d556e1a0e8f9d705a19820d245a1769bb568c5b8d32b2bc"
+      }
+    }
+  ],
+  "output_sha256": "699288c765d5886c75d2ae78d4020e745ae28c39f4b201e2fafec358361c1cc2"
+}

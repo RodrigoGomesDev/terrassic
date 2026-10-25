@@ -1,0 +1,39 @@
+{
+  "method": "Blender Cycles; original packaged Terrassic geometry, animations and textures",
+  "scene": "confronto",
+  "size": [
+    960,
+    540
+  ],
+  "samples": 32,
+  "vanilla_client_sha256": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
+  "models": [
+    {
+      "species": "tyrannosaurus",
+      "animation": "attack",
+      "fraction": 0.28,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 139,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/tyrannosaurus.geo.json": "4d34acf90e0d539674b5a64e9c018b7004e0ad4eb856b3d9a75d809a7d86981b",
+        "common/src/main/resources/assets/terrassic/animations/entity/tyrannosaurus.animation.json": "237aa849610870ea777ff2b2dec0bf6e27c0a2b52274e5e5f9da805e2a05c7f1",
+        "common/src/main/resources/assets/terrassic/textures/entity/tyrannosaurus_male.png": "8e547ac75aa27a3a8d556e1a0e8f9d705a19820d245a1769bb568c5b8d32b2bc"
+      }
+    },
+    {
+      "species": "triceratops",
+      "animation": "attack",
+      "fraction": 0.42,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 139,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/triceratops.geo.json": "d03c2ee5469c7d4e4add5e44f1eafc39bdff844ea1e3e03b6e0d2788b6b83101",
+        "common/src/main/resources/assets/terrassic/animations/entity/triceratops.animation.json": "4e58919497c9530a813222fc020c5bf0ca0b4c5f0ef31b5aff0dcbf44f1902c5",
+        "common/src/main/resources/assets/terrassic/textures/entity/triceratops_male.png": "81bb08350fa51343f4112a0677ee8c400f43648a92f0026c326d172f49a0a7cb"
+      }
+    }
+  ],
+  "output_sha256": "21c591ac820d1914cb721e3ebace793ca23d332126fcfb10567d957efafdf790"
+}
