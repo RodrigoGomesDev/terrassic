@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/salt_crust"
-    }
+    "": [
+      {
+        "model": "terrassic:block/salt_crust"
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/salt_crust",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

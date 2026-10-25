@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/lateritic_soil"
-    }
+    "": [
+      {
+        "model": "terrassic:block/lateritic_soil"
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/lateritic_soil",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

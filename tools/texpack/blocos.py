@@ -10,6 +10,8 @@ Every texture follows the pack recipe:
   3. hue and saturation come from the material's own colour, shadows cooler, lights warmer.
 
 ROLE says which vanilla block each texture is held to; drift() lists the ones far from it.
+Since 25/10 the GROUND (rocks, soils, raw amber) comes from chao.py and the leaves from folhas.py: the style Rodrigo
+approved, made to not repeat from afar (fine grain, clods, calm colours).
 Called from tools/spritegen/blocks.py, which writes the PNGs.
 """
 import colorsys
@@ -35,13 +37,6 @@ def hsv_of(hexcol):
     return h, s, (np.array([r, g, b]) @ W)
 
 
-def pal_for(t, n, colour, ctr, dl=0.0, hue_shift=0.02, sat_shift=0.02, gamma=1.0, sat_k=1.0):
-    """Fitted ramp of n tones for tone map t: brightness and hue of `colour` (+dl), contrast ctr."""
-    h, s, lum = hsv_of(colour)
-    return fit(np.minimum(t, n - 1), n, lum + dl, ctr, hue=h, sat=s * sat_k, hue_shift=hue_shift,
-               sat_shift=sat_shift, gamma=gamma)
-
-
 def pal(t, mat, role=None, n=5, dl=0.0, mask=None):
     """Ramp of n tones fitted to material `mat` (materials.py): its own brightness and hue; with `role`, the
     contrast of that vanilla block instead (a wall of chalk has the contrast of stone_bricks, not of calcite)."""
@@ -62,152 +57,15 @@ ROLE = {}  # texture name -> vanilla role (filled by each family)
 
 
 # ------------------------------------------------------------------ rocks
-# id: own colour (mid tone of the real rock), vanilla role of the natural face, surface detail
-ROCKS = {
-    "limestone": {"colour": "#bdb49a", "role": "andesite", "detail": "fossils", "layers": ((2, 6, .5), (4, 12, .3), (8, 16, .2))},
-    "shale": {"colour": "#4a4e54", "role": "deepslate", "detail": "laminae", "layers": ((1, 8, .5), (2, 16, .3), (4, 16, .2))},
-    "chalk": {"colour": "#dcdad2", "role": "stone", "detail": "cracks", "layers": ((2, 4, .5), (4, 8, .3), (8, 16, .2))},
-    "flint": {"colour": "#d6d2c5", "role": "stone", "detail": "nodules", "layers": ((2, 4, .5), (4, 8, .3), (8, 16, .2))},
-    "laterite": {"colour": "#86432a", "role": "tuff", "detail": "pores", "layers": ((4, 4, .6), (8, 8, .4))},
-    "quartzite": {"colour": "#b7a199", "role": "andesite", "detail": "sparkle", "layers": ((2, 6, .5), (4, 8, .3), (8, 16, .2))},
-    "gneiss": {"colour": "#77787d", "role": "deepslate", "detail": "bands", "layers": ((2, 4, .5), (4, 8, .3))},
-    "conglomerate": {"colour": "#857258", "role": "granite", "detail": "clasts", "layers": ((4, 4, .6), (8, 8, .4))},
-}
-SEED = {rid: 101 + 17 * i for i, rid in enumerate(ROCKS)}
-
-
-def ledges(t, seed, count, rmin, lo=1, hi=3, long=(2, 6)):
-    """Little lit ledges with a shadow under them, the stroke vanilla stone is made of."""
-    r = T.rng(seed)
-    for (x, y) in poisson(seed + 2, count, rmin):
-        L = int(r.integers(*long))
-        bot = ('.' + 'D' * (L - 1)) if r.random() < .5 else 'D' * (L - 1)
-        stamp(t, x, y, ['L' * L, bot], {'L': hi, 'D': lo if r.random() < .6 else max(0, lo - 1)})
-    return t
-
-
-def rock_tones(rid):
-    """Tone map (0..4) of the natural rock face with its own surface detail; extras use tones >= 5."""
-    R = ROCKS[rid]
-    s = SEED[rid]
-    t = base(s, 2, 1, 3, .18, .16, layers=R["layers"])
-    d = R["detail"]
-    r = T.rng(s + 5)
-    if d == "laminae":  # shale: thin flat beds, each with its own tone, split by dark partings
-        rows = []
-        while len(rows) < N:
-            rows += [int(r.choice([1, 2, 2, 3]))] * int(r.integers(1, 4))
-        t = np.array(rows[:N])[:, None].repeat(N, 1)
-        g = T.fbm(s + 3, [(4, 16, .6), (8, 16, .4)])
-        t = np.where((g > .7) & (t < 4), t + 1, t)
-        for y in range(N):
-            if rows[y] != rows[(y + 1) % N] and r.random() < .7:
-                gate = T.fbm(s + 40 + y, [(4, 1, 1)])[0] > .35
-                t[y, gate] = 0
-        ledges(t, s, 4, 5.0, lo=0, hi=4, long=(3, 7))
-    elif d == "bands":  # gneiss: wavy light and dark bands (foliation)
-        ys, xs = np.mgrid[0:N, 0:N]
-        wave = ys + 4.0 * T.fbm(s + 9, [(2, 1, .6), (4, 2, .4)]) + 1.2 * T.fbm(s + 10, [(8, 4, 1)])
-        band = (np.floor(wave / 2.0).astype(int)) % 4
-        t = np.array([1, 2, 3, 2])[band]
-        t = np.where((band == 2) & (T.fbm(s, [(8, 8, 1)]) > .5), 4, t)
-        t = np.where((band == 0) & (T.fbm(s + 1, [(8, 8, 1)]) > .55), 0, t)
-        t = T.cleanup(t, 2)
-    else:
-        ledges(t, s, 7, 4.6)
-        for (x, y) in poisson(s + 3, 5, 3.0):
-            stamp(t, x, y, ['L.', '.D'], {'L': 3, 'D': 1})
-    if d == "fossils":  # limestone: tiny shells and crinoid bits, lit rim, dark core
-        for i, (x, y) in enumerate(poisson(s + 7, 4, 6.5)):
-            shp = [[".LL", "L.D", ".DD"], ["LL", "DD"], ["L.L", ".D."], ["LLL", "D.D"]][i % 4]
-            stamp(t, x, y, shp, {'L': 4, 'D': 0})
-    elif d == "cracks":  # chalk: a few hairline cracks, soft and short
-        for (x, y) in poisson(s + 7, 3, 7.0):
-            xx, yy = x, y
-            for k in range(int(r.integers(3, 6))):
-                t[yy % N, xx % N] = 0
-                if k == 0:
-                    t[(yy - 1) % N, xx % N] = 4
-                xx += 1
-                yy += int(r.choice([0, 0, 1, -1]))
-    elif d == "nodules":  # flint nodules (own dark ramp, tones 5..8) in the chalk
-        for i, (x, y) in enumerate(poisson(s + 7, 4, 7.0)):
-            shp = [[".AB.", "ABBC", ".CC."], [".AB", "ABC", "CC."], ["AB.", "BBC", ".CC"], ["AB", "BC"]][i % 4]
-            stamp(t, x, y, shp, {'A': 8, 'B': 7, 'C': 6})
-            stamp(t, x + 1, y + len(shp), ['DD'], {'D': 1})
-    elif d == "pores":  # laterite: dark pores with a lit lower rim, ochre specks (tones 5, 6)
-        for (x, y) in poisson(s + 7, 9, 3.4):
-            stamp(t, x, y, ['P', 'L'], {'P': 0, 'L': 4})
-        for i, (x, y) in enumerate(poisson(s + 8, 6, 4.0)):
-            stamp(t, x, y, [['O'], ['OQ']][i % 2], {'O': 5, 'Q': 6})
-    elif d == "sparkle":  # quartzite: fused grains, a few glints
-        for (x, y) in poisson(s + 7, 7, 3.8):
-            t[y, x] = 5
-    elif d == "clasts":  # conglomerate: rounded pebbles of other rocks in a sandy matrix
-        t = np.minimum(t, 3)
-        CL = [[".ab.", "abbc", ".cc."], ["ab", "bc"], [".ab", "abc", "bc."], ["abb", "bcc"]]
-        for i, (x, y) in enumerate(poisson(s + 7, 7, 4.4)):
-            k = 5 + 3 * (i % 4)
-            stamp(t, x, y, CL[i % 4], {'a': k + 2, 'b': k + 1, 'c': k})
-            stamp(t, x + 1, y + len(CL[i % 4]), ['D'], {'D': 0})
-    return t
+# drawn in chao.py (fine grain, approved 25/10): base, stacked, flagstone, pebbles, mossy stacked per rock
+ROCKS = ("limestone", "shale", "chalk", "flint", "laterite", "quartzite", "gneiss", "conglomerate")
 
 
 CLAST_COLOURS = ["#cfc8b8", "#3e3a38", "#b08c5a", "#9a8a84"]  # quartz, chert, sandstone, granite
 
 
-def rock_extras(rid, t):
-    """Fitted ramps for the detail tones above 4."""
-    d = ROCKS[rid]["detail"]
-    if d == "nodules":
-        return pal_for(np.array([[0, 1, 2]]), 3, "#3e4550", 40)  # 5..7 -> dark flint, 8 lit edge
-    if d == "pores":
-        return [T.hexrgb("#c4923e"), T.hexrgb("#a87430")]
-    if d == "sparkle":
-        return [T.hexrgb("#efe4dc")]
-    if d == "clasts":
-        out = []
-        for c in CLAST_COLOURS:
-            out += pal_for(np.array([[0, 1, 2]]), 3, c, 46)
-        return out
-    return []
-
-
-def rock_pal(rid, t, role=None, n=5, dl=0.0):
-    mat = "chalk" if rid == "flint" else rid  # the flint block is chalk with flint nodules in it
-    return pal(np.where(np.asarray(t) > 4, 2, t), mat, role, n, dl)
-
-
-def rock(rid):
-    t = rock_tones(rid)
-    pal = rock_pal(rid, t)
-    ex = rock_extras(rid, t)
-    if ROCKS[rid]["detail"] == "nodules":
-        ex = ex + [T.hexrgb("#6a7280")]
-    return img(t, pal + ex)
-
-
 # ---- dry-laid stones: courses of squared stones, each with its own body tone, lit top/left rim, shadowed
 # bottom/right rim and a dark joint; the rock's own grain shows inside each stone
-def course_cells(seed, heights=(5, 5, 6), lengths=(5, 8)):
-    r = T.rng(seed)
-    idx = np.zeros((N, N), int)
-    k = 0
-    y = 0
-    for h in heights:
-        off = int(r.integers(0, N))
-        x = 0
-        while x < N:
-            L = int(r.integers(*lengths))
-            L = min(L, N - x) if N - x - L >= 3 or N - x <= lengths[1] else L
-            for xx in range(x, min(N, x + L)):
-                idx[y:y + h, (xx + off) % N] = k
-            k += 1
-            x += L
-        y += h
-    return idx
-
-
 def bevel(idx, round_corners=True):
     gap = T.cell_edges(idx)
     if round_corners:  # knock the corner pixel of each stone into the joint, so stones look worn, not cut
@@ -222,121 +80,16 @@ def bevel(idx, round_corners=True):
     return gap, hi, lo
 
 
-def stones_tones(seed, idx, inner, body_choice=(2, 2, 3, 3, 1)):
-    r = T.rng(seed)
-    gap, hi, lo = bevel(idx)
-    body = r.choice(body_choice, idx.max() + 1)[idx]
-    t = np.where(inner > 4, inner, np.clip(body + (inner - 2), 1, 4))  # grain of the rock inside each stone
-    t = np.where(hi & (t <= 4), np.minimum(body + 1, 4), t)
-    t = np.where(lo & (t <= 4), np.maximum(body - 1, 1), t)
-    t[gap] = 0
-    return t, gap
-
-
-def stacked(rid):
-    s = SEED[rid] + 1000
-    idx = course_cells(s)
-    inner = np.where(rock_tones(rid) > 4, rock_tones(rid), base(s, 2, 1, 3, .12, .12, layers=((4, 4, .6), (8, 8, .4))))
-    t, gap = stones_tones(s, idx, inner)
-    pal = rock_pal(rid, t, "stone_bricks", dl=-4)
-    return img(t, pal + rock_extras(rid, t) + ([T.hexrgb("#6a7280")] if ROCKS[rid]["detail"] == "nodules" else []))
-
-
-def flagstone(rid):
-    s = SEED[rid] + 2000
-    pts = [(x + .5, y + .5) for (x, y) in poisson(s + 11, 7, 5.0)]
-    idx, _, _ = T.voronoi(pts, warp=T.fbm(s + 1, [(4, 4, .6), (8, 8, .4)]), warp_amp=1.6)
-    inner = base(s, 2, 1, 3, .08, .08, layers=((2, 2, .6), (4, 4, .4)))
-    t, gap = stones_tones(s, idx, inner, (2, 2, 3))
-    for (x, y) in poisson(s + 3, 4, 4.0):
-        if not gap[y, x] and not gap[(y + 1) % N, x] and t[y, x] > 1:
-            stamp(t, x, y, ['L', 'D'], {'L': 4, 'D': 1})
-    return img(t, rock_pal(rid, t, "stone_bricks", dl=4))
-
-
 MOSS = ["#3d4f2a", "#506a32", "#66843c", "#7d9a48"]
-
-
-def grow(seed, starts, size, hbias=2.0, down=1.5, block=None):
-    """Organic clumps: each start grows pixel by pixel into a random free neighbour, sideways more readily than
-    up or down (hbias) and down more than up (down), the way moss or lichen creeps over a face."""
-    r = T.rng(seed)
-    m = np.zeros((N, N), bool)
-    for (x, y) in starts:
-        cells = [(x, y)]
-        m[y, x] = True
-        for _ in range(int(r.integers(size[0], size[1] + 1)) - 1):
-            cand, w = [], []
-            for (cx, cy) in cells:
-                for dx, dy, wt in ((1, 0, hbias), (-1, 0, hbias), (0, 1, down), (0, -1, 1.0)):
-                    nx, ny = (cx + dx) % N, (cy + dy) % N
-                    if not m[ny, nx] and (block is None or not block[ny, nx]):
-                        cand.append((nx, ny)); w.append(wt)
-            if not cand:
-                break
-            w = np.array(w) / sum(w)
-            nx, ny = cand[int(r.choice(len(cand), p=w))]
-            m[ny, nx] = True
-            cells.append((nx, ny))
-    return close(m)
-
-
-def close(m, need=5, passes=2):
-    """Fill the pinholes a random growth leaves: a free pixel mostly surrounded by the clump joins it."""
-    for _ in range(passes):
-        m = m | (T.neighbours(m.astype(int), True).sum(axis=0) >= need)
-    return m
-
-
-def moss_mask(seed, gap, count=7):
-    """Moss starts in the horizontal joints, where water runs, and creeps over the stones around them."""
-    hj = gap & T.roll(gap, 0, 1) & T.roll(gap, 0, -1)
-    starts = [(x, y) for (x, y) in poisson(seed + 1, 80, 3.4) if hj[y, x]][:count]
-    return T.cleanup(grow(seed, starts, (12, 26), hbias=1.4, down=1.3).astype(int), 2).astype(bool)
-
-
-def mossy(rid):
-    s = SEED[rid] + 1000
-    idx = course_cells(s)
-    inner = base(s, 2, 1, 3, .12, .12, layers=((4, 4, .6), (8, 8, .4)))
-    t, gap = stones_tones(s, idx, inner)
-    p = rock_pal(rid, t, "stone_bricks", dl=-6)
-    mm = moss_mask(s + 7, gap)
-    mv = np.full((N, N), 2)
-    for i, (x, y) in enumerate(poisson(s + 8, 9, 2.6)):  # a few darker tufts and lit tips inside the clumps
-        mv[y, x] = 1 if i % 2 else 3
-    mv = np.where(T.roll(~mm, -1, 0) & mm, 3, mv)  # lit top of each clump
-    mv = np.where(T.roll(~mm, 1, 0) & mm, 0, mv)  # dark lower lip
-    mv = np.where(gap & mm, np.minimum(mv, 1), mv)
-    t = np.where(mm, 5 + mv, t)
-    stone_l = float(np.mean([np.array(c) @ W for c in p]))
-    moss = fit(mv[mm], 4, min(100.0, stone_l * .62), 40, hue=.21, sat=.55, hue_shift=.03, sat_shift=.06)
-    return img(t, p + moss)
 
 
 SOIL = "#6a5640"
 
 
-def pebbles(rid):
-    """Loose pebbles of the rock (gravel role): a bed of rounded stones, each lit on its upper left and shaded on
-    its lower right, with dark soil showing in the gaps."""
-    s = SEED[rid] + 3000
-    pts = [(x + .5, y + .5) for (x, y) in poisson(s + 11, 26, 3.0)]
-    idx, _, _ = T.voronoi(pts, sx=.9, warp=T.fbm(s + 1, [(8, 8, 1)]), warp_amp=1.1)
-    gap, hi, lo = bevel(idx)
-    r = T.rng(s)
-    body = r.choice([1, 2, 2, 3], len(pts))[idx]
-    t = np.where(hi, np.minimum(body + 1, 4), np.where(lo, np.maximum(body - 1, 1), body))
-    t = np.where(gap, 5, t)
-    from fit import colour_at
-    rp = rock_pal(rid, np.where(gap, 0, t), "gravel", dl=-4)
-    soil = [tuple(np.array(rp[0]) * .62 + np.array([92, 72, 52]) * .25)]  # earth between the stones, under the darkest
-    return img(t, rp + soil)
-
-
 def rock_textures(rid):
-    out = {rid: rock(rid), f"{rid}_stacked": stacked(rid), f"{rid}_flagstone": flagstone(rid),
-           f"mossy_{rid}_stacked": mossy(rid), f"{rid}_pebbles": pebbles(rid)}
+    """Fine grain since 25/10 (chao.py, the style Rodrigo approved): nothing that repeats from afar."""
+    import chao
+    out = chao.rock_textures(rid)
     ROLE.update({rid: material("chalk" if rid == "flint" else rid).ref, f"{rid}_stacked": "stone_bricks", f"{rid}_flagstone": "stone_bricks",
                  f"mossy_{rid}_stacked": "mossy_stone_bricks", f"{rid}_pebbles": "gravel"})
     return out
@@ -455,21 +208,9 @@ def planks_img(tid):
 
 
 def leaves_img(tid):
-    _, _, leaf_c, _, _, style, holes, rmin = WOODS[tid]
-    LV.SHAPES[tid] = LEAF_SHAPES[style]
-    LV.SPECIES[tid] = (None, holes, rmin, None)
-    t, op = LV.canopy(tid, WSEED[tid] + 9)
-    extra = []
-    if tid == "magnolia":  # a few big cream flowers with a pink blush at the base
-        for (x, y) in poisson(WSEED[tid] + 30, 3, 6.0):
-            stamp(t, x, y, [".67.", "6776", ".88."], {'6': 6, '7': 5, '8': 7})
-            stamp(op, x, y, [".67.", "6776", ".88."], {'6': True, '7': True, '8': True})
-        extra = [T.hexrgb("#f6f0ea"), T.hexrgb("#e2d8ce"), T.hexrgb("#d8a8b8")]
-    p = wood_fit(t, leaf_c, 80, 5, sat_shift=.08, hue_shift=.03, mask=op & (t < 5))
-    out = np.asarray(img(t, p + extra)).copy()
-    out[..., 3] = np.where(op, 255, 0)
-    out[~op, :3] = (np.array(p[0]) * .6).round()
-    return Image.fromarray(out, "RGBA")
+    """Leaves in simple clumps with one light (folhas.py, the engine thread's, approved 25/10)."""
+    import folhas
+    return folhas.leaf(tid)
 
 
 def wood_textures(tid):
@@ -850,7 +591,8 @@ def amber_tones(kind, seed=800):
 
 
 def amber_family(inclusions):
-    out = {"amber_block": paint(amber_tones("raw"), AMBER_MAT),
+    import chao
+    out = {"amber_block": chao.amber_block(),
            "polished_amber": paint(amber_tones("polished"), AMBER_MAT),
            "amber_mosaic": paint(amber_tones("mosaic"), AMBER_MAT.like(dc=24))}
     t = base(810, 2, 1, 3, .2, .2, layers=((4, 2, .6), (8, 4, .4)))
@@ -871,73 +613,10 @@ def amber_family(inclusions):
 
 
 # ------------------------------------------------------------------ soils
-SOIL = "#634a34"
-FERN_BITS = ["#5a3e1e", "#7a5428", "#94683a", "#4a6a2a", "#6a8a38"]
-NEEDLE_BITS = ["#6a3a1a", "#8a4e22", "#a8642c", "#c47c3a"]
-DARK = [['D'], ['DD'], ['D.', '.D'], ['DD', 'D.'], ['D', 'D']]
-LIGHT = [['L'], ['LL'], ['L.', '.L']]
-
-
-def dirt_tones(seed, dark=18, light=12):
-    t = base(seed, 2, 1, 3, .16, .14, layers=((4, 4, .6), (8, 8, .4)))
-    r = T.rng(seed + 1)
-    for (x, y) in poisson(seed + 2, dark, 2.8):
-        stamp(t, x, y, DARK[int(r.integers(len(DARK)))], {'D': 0 if r.random() < .5 else 1})
-    for (x, y) in poisson(seed + 3, light, 3.0):
-        stamp(t, x, y, LIGHT[int(r.integers(len(LIGHT)))], {'L': 4 if r.random() < .5 else 3})
-    return t
-
-
-def litter(kind, side, seed):
-    t = dirt_tones(seed, 10, 6)
-    bits = FERN_BITS if kind == "fern" else NEEDLE_BITS
-    nb = len(bits)
-    dirs = [(1, 0), (1, 1), (-1, 1)] if kind == "fern" else [(1, 1), (1, -1), (1, 0), (0, 1)]
-    rows = set(range(0, 4)) if side else None
-    strokes(t, seed + 5, 40 if not side else 16, 2.0 if not side else 1.6, dirs, (2, 5),
-            lambda r: 5 + int(r.integers(nb)), shadow=0, rows=rows)
-    if side:
-        r = T.rng(seed + 6)
-        t[0] = np.where(r.random(N) < .7, 5 + r.integers(0, 3, N), t[0])
-        t[4:] = np.where(t[4:] >= 5, 2, t[4:])
-        t[4] = np.where(t[3] >= 5, 0, t[4])
-    return paint(t, own(SOIL, "dirt", dc=-12), extra=extras(bits))
-
-
 def soil_family():
-    out = {"fern_litter": litter("fern", False, 900), "fern_litter_side": litter("fern", True, 901),
-           "needle_litter": litter("needle", False, 902), "needle_litter_side": litter("needle", True, 903)}
-    # cracked mud: pale polygons curling up at the edges (lit rims), deep cracks between them
-    pts = [(x + .5, y + .5) for (x, y) in poisson(910, 8, 4.6)]
-    idx, _, _ = T.voronoi(pts, warp=T.fbm(911, [(8, 8, 1)]), warp_amp=1.4)
-    gap, hi, lo = bevel(idx)
-    inner = base(912, 2, 1, 3, .15, .15, layers=((4, 4, .6), (8, 8, .4)))
-    t = np.where(hi, 4, np.where(lo, 1, inner))
-    t[gap] = 0
-    out["cracked_mud"] = paint(t, own("#928066", "mud_bricks", dc=6))
-    # volcanic ash: fine grey grain in soft drifts, a few dark cinders and glassy specks
-    v = 0.7 * T.fbm(913, [(16, 16, 1.0)]) + 0.3 * T.fbm(914, [(4, 4, 1.0)])
-    t = T.quantize(v, [.08, .22, .38, .22, .10])
-    for (x, y) in poisson(915, 5, 4.5):
-        stamp(t, x, y, ['5', '0'], {'5': 5, '0': 0})
-    out["volcanic_ash"] = paint(t, own("#827e78", "sand", dc=14), extra=extras(["#3a3634"]))
-    # peat: wet half-rotten fibres lying flat, a few paler root threads
-    t = base(916, 2, 1, 3, .22, .18, layers=((2, 8, .5), (4, 16, .5)))
-    strokes(t, 917, 16, 2.4, [(1, 0), (1, 0), (1, 1)], (3, 6), 1)
-    strokes(t, 918, 5, 5, [(1, 0), (1, 1)], (3, 5), 4)
-    out["peat"] = paint(t, own("#4a3826", "mud", dc=18))
-    # lateritic soil: red iron-rich crumbs with small hard nodules (dark, lit on top)
-    t = dirt_tones(919)
-    for (x, y) in poisson(920, 7, 4.2):
-        stamp(t, x, y, ['5', '0'], {'5': 5, '0': 0})
-    out["lateritic_soil"] = paint(t, own("#7a3420", "dirt", dc=-10), extra=extras(["#c47850"]))
-    # salt crust: white crystalline polygons with raised rims over grey sand
-    pts = [(x + .5, y + .5) for (x, y) in poisson(921, 9, 4.2)]
-    idx, _, _ = T.voronoi(pts, warp=T.fbm(922, [(8, 8, 1)]), warp_amp=1.2)
-    gap, hi, lo = bevel(idx, round_corners=False)
-    inner = base(923, 2, 1, 3, .2, .15, layers=((4, 4, .6), (8, 8, .4)))
-    t = np.where(gap, 4, np.where(lo, 0, np.where(hi, 3, inner)))
-    out["salt_crust"] = paint(t, own("#c4beb0", "calcite", dc=-26))
+    """Clods and calm colours since 25/10 (chao.py, the style Rodrigo approved)."""
+    import chao
+    out = chao.soil_family()
     ROLE.update({k: "dirt" for k in out})
     ROLE.update({"cracked_mud": "mud_bricks", "volcanic_ash": "sand", "peat": "mud", "salt_crust": "calcite"})
     return out

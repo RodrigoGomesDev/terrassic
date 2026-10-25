@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/flint_nodules"
-    }
+    "": [
+      {
+        "model": "terrassic:block/flint_nodules"
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/flint_nodules",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

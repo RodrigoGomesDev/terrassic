@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/conglomerate"
-    }
+    "": [
+      {
+        "model": "terrassic:block/conglomerate"
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/conglomerate",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

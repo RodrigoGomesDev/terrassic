@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/needle_litter"
-    }
+    "": [
+      {
+        "model": "terrassic:block/needle_litter"
+      },
+      {
+        "model": "terrassic:block/needle_litter",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/needle_litter",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/needle_litter",
+        "y": 270
+      }
+    ]
   }
 }

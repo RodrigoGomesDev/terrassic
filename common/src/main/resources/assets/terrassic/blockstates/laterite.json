@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/laterite"
-    }
+    "": [
+      {
+        "model": "terrassic:block/laterite"
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/laterite",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

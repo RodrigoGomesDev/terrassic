@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/cracked_mud"
-    }
+    "": [
+      {
+        "model": "terrassic:block/cracked_mud"
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/cracked_mud",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

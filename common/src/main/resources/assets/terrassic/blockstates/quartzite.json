@@ -1,7 +1,78 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/quartzite"
-    }
+    "": [
+      {
+        "model": "terrassic:block/quartzite"
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 90
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 90,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 90,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 90,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 180
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 180,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 180,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 180,
+        "y": 270
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 270
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 270,
+        "y": 90
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 270,
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/quartzite",
+        "x": 270,
+        "y": 270
+      }
+    ]
   }
 }

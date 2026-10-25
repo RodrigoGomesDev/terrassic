@@ -539,17 +539,38 @@ def variant(model_name, x=0, y=0, uvlock=False):
     return v
 
 
+# Random turn per block, like vanilla dirt and stone (the game picks one variant per position), so a texture does not
+# repeat over a big floor or wall. FREE: the 16 x/y turns of netherrack (isotropic textures). BEDDED: only mirrored
+# and turned 180 (layered rock and courses of stone keep running level). TOP: the top face turns (columns, carpets).
+FREE_TURN = ({"lateritic_soil", "volcanic_ash", "peat", "packed_earth_floor", "cracked_mud", "salt_crust", "amber_block",
+              "laterite", "chalk", "quartzite", "conglomerate", "flint_nodules"} | {f"{r}_flagstone" for r in ROCKS})
+BEDDED_TURN = ({"shale", "limestone", "gneiss"} | {f"{r}_stacked" for r in ROCKS} | {f"mossy_{r}_stacked" for r in ROCKS})
+TOP_TURN = {"fern_litter", "needle_litter"} | {f"{r}_pebbles" for r in ROCKS}
+
+
+def turned(bid, tex=None):
+    """The blockstate variant(s) of a full block: a list the game picks from at random, or the one model."""
+    if bid in FREE_TURN:
+        return [variant(bid, x, y) for x in (0, 90, 180, 270) for y in (0, 90, 180, 270)]
+    if bid in BEDDED_TURN:
+        model(f"{bid}_mirrored", "minecraft:block/cube_mirrored_all", all=t(tex))
+        return [variant(name, 0, y) for name in (bid, f"{bid}_mirrored") for y in (0, 180)]
+    if bid in TOP_TURN:
+        return [variant(bid, 0, y) for y in (0, 90, 180, 270)]
+    return variant(bid)
+
+
 # ------------------------------------------------------------- models and blockstates, per kind
 def gen_cube(bid, tex):
     model(bid, "minecraft:block/cube_all", all=t(tex))
-    write(f"{A}/blockstates/{bid}.json", {"variants": {"": variant(bid)}})
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"": turned(bid, tex)}})
     return m(bid)
 
 
 def gen_column(bid, tex):
     side, end = tex
     model(bid, "minecraft:block/cube_column", side=t(side), end=t(end))
-    write(f"{A}/blockstates/{bid}.json", {"variants": {"": variant(bid)}})
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"": turned(bid)}})
     return m(bid)
 
 
@@ -633,7 +654,7 @@ def gen_pane(bid, tex):
 
 def gen_carpet(bid, tex):
     model(bid, "minecraft:block/carpet", wool=t(tex))
-    write(f"{A}/blockstates/{bid}.json", {"variants": {"": variant(bid)}})
+    write(f"{A}/blockstates/{bid}.json", {"variants": {"": turned(bid)}})
     return m(bid)
 
 

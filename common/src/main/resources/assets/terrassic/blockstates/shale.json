@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "terrassic:block/shale"
-    }
+    "": [
+      {
+        "model": "terrassic:block/shale"
+      },
+      {
+        "model": "terrassic:block/shale",
+        "y": 180
+      },
+      {
+        "model": "terrassic:block/shale_mirrored"
+      },
+      {
+        "model": "terrassic:block/shale_mirrored",
+        "y": 180
+      }
+    ]
   }
 }
