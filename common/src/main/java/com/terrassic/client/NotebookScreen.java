@@ -324,6 +324,7 @@ public class NotebookScreen extends Screen {
         // picture (sighted and up) or a question mark over the silhouette level
         int picBottom = y0 + 70;
         if (level >= Knowledge.SIGHTED) {
+            GuideHabitats.render(g, s.id(), x, y0, width, picBottom + 2 - y0); // habitat diorama behind the model
             LivingEntity model = this.model(s.id());
             if (model != null) {
                 int scale = Math.max(4, Math.round(s.guiScale() * 0.6F));

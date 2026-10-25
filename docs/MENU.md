@@ -43,6 +43,20 @@ vanilla ficarem legíveis (`TerrassicMenuScreen.renderBackdrop`, chamado por `Le
 basalto da identidade (`TerrassicTitle.renderTip` com `TerrassicUi.slab`). Com `"title_screen": false` volta a terra
 do vanilla; `"loading_tips": false` tira só a dica.
 
+## Guia de Campo: dioramas de habitat
+
+Aprovado pelo Rodrigo em 25/10/2026. Na página de cada espécie do Guia de Campo, atrás do modelo 3D vivo, fica um
+diorama do habitat dela: uma cena de blocos sem animal, renderizada no Blender e impressa como gravura em tinta sobre
+o papel do Caderno, com as bordas sumindo no papel, bem clara para o modelo colorido ler primeiro.
+
+- Seis habitats (`textures/gui/notebook/habitat_<nome>.png`, 744×288, quatro vezes a caixa da figura): **floresta**
+  (metassequoias na neblina), **planície** (samambaias e araucárias), **rio** (margens com palmeiras), **seco**
+  (areia e laterita com cicadáceas), **litoral** (falésias de giz) e **mar** (mar aberto).
+- `client/GuideHabitats.java` diz o habitat de cada espécie (sem entrada, a espécie fica na planície);
+  `NotebookScreen` desenha o diorama antes do modelo.
+- Gerador: `tools/menugen/habitats.py` (`BACKEND=cycles SAMPLES=64 python3 -B habitats.py ../capagen <saída>`), que
+  usa as cenas e as luzes de `menu_cenas.py` e aplica a gravura com as cores `INK`, `INK_SOFT` e `PAPER` da paleta.
+
 ## Arquivos
 
 - Tela: `common/src/main/java/com/terrassic/client/title/TerrassicMenuScreen.java` (registrada em `TerrassicClient`).
@@ -72,3 +86,5 @@ Para pôr outra cena: uma função nova em `menu_cenas.py`, o id em `SCENES` de 
 - [ ] Criar um mundo novo e abrir um existente: a cena aparece atrás do mapa de chunks, a porcentagem lê bem e a dica
       fica na laje de basalto, sem cortar o texto em janela pequena.
 - [ ] Entrar num servidor e passar por um portal do Nether: "Carregando terreno..." também mostra a cena.
+- [ ] Guia de Campo: espécies de floresta, planície, rio, seco, litoral e mar mostram o diorama certo atrás do modelo;
+      o modelo continua girando com o mouse e o texto embaixo não muda de lugar; nada aparece para espécie desconhecida.
