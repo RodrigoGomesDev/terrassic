@@ -144,7 +144,8 @@ SIZES = {
     # Deinosuchus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "deinosuchus":        dict(real=12.0, scale=1.05, w=2.6, h=1.4, baby=0.2,  shadow=2.2),
     # Baurusuchus salgadoensis: ~3.5 m (Carvalho, Campos & Nobre 2005), a land crocodylomorph on upright legs.
-    "baurusuchus":        dict(real=3.5, scale=0.78, w=1.0, h=1.0, baby=0.3,  shadow=0.9),
+    # Baurusuchus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "baurusuchus":        dict(real=3.5, scale=0.73, w=1.0, h=1.0, baby=0.3,  shadow=0.9),
 }
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.

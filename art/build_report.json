@@ -813,22 +813,22 @@
   "render_scale": 0.5
  },
  "baurusuchus": {
-  "bones": 17,
-  "cubes": 40,
+  "bones": 18,
+  "cubes": 76,
   "texture": [
    128,
    128
   ],
   "bounds_px": [
    [
-    -9.894141003279682,
-    0.36184427528454927,
+    -9.394141003279682,
+    -0.03815572471545284,
     -32.000037347491265
    ],
    [
-    9.894141003279682,
-    20.00000383434762,
-    39.97380005493274
+    9.394141003279682,
+    21.00000383434762,
+    45.06911985204568
    ]
   ],
   "animations": [
@@ -843,7 +843,7 @@
    "animation.baurusuchus.beg",
    "animation.baurusuchus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "edmontosaurus": {
   "bones": 27,

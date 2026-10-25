@@ -29,7 +29,7 @@ public class Baurusuchus extends PredatorDinosaur {
     public static final float WIDTH = 1.0F;
     public static final float HEIGHT = 1.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.78F;
+    public static final float MODEL_SCALE = 0.73F;
     public static final float SHADOW = 0.9F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.CHICKEN, Items.MUTTON, ModItems.RAW_DINO_MEAT.get());
 
