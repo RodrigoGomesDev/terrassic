@@ -145,7 +145,7 @@ def build():
 
     # --- neck: short and thick, mostly under the frill
     pts, secs = NECK
-    neck = m.chain(["neck1", "neck2"], "body", 0, pts, "-z", secs, overlap=(3.0, 2.0))
+    neck = m.chain(["neck1", "neck2"], "body", 0, pts, "-z", secs, overlap=(2.0, 0.5))
     y1, z1 = neck["segments"][0]["unposed"]
     m.box("neck1", (-8, y1 - 12, z1 - 7), (8, y1 - 9, z1 + 1), name="dewlap")
     ay, az = neck["end"]
