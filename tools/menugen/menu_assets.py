@@ -25,7 +25,7 @@ sys.path.insert(0, HERE)
 
 import icones  # noqa: E402
 
-SCENES = ["nevoa"]
+SCENES = ["nevoa", "triceratops", "espinossauro", "pteranodonte"]
 ICON_ORDER = ["singleplayer", "multiplayer", "mods", "options", "quit", "language", "accessibility", "rules"]
 SHADE = np.array([12, 11, 10], float)
 

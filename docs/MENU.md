@@ -12,9 +12,12 @@ Fabric e no Forge:
 - **Fundo:** uma cena do Cretáceo Superior feita com os blocos e os modelos do próprio mod e renderizada no Blender
   (Cycles), com sombras, luz rebatendo e névoa de verdade. A primeira é **"Névoa"**: o T. rex saindo da neblina da manhã
   entre metassequoias gigantes. A cena preenche a tela e desliza devagar para os lados (2 minutos ida e volta). O lado
-  esquerdo e a parte de baixo já vêm escurecidos na imagem, para o texto ficar legível.
-- **No alto, à esquerda:** o letreiro de pedra **TERRASSIC** da capa, um traço âmbar e o slogan **"O passado acordou."**
-  (traduzido).
+  esquerdo e a parte de baixo já vêm escurecidos na imagem, para o texto ficar legível. Galeria (uma sorteada por
+  abertura): **"Névoa"** (T. rex), **"Triceratops"** (pastando numa clareira de araucárias ao fim da tarde),
+  **"Espinossauro"** (pescando no raso de um rio com névoa) e **"Pteranodonte"** (planando rente ao mar ao longo de
+  falésias de giz).
+- **No alto, à esquerda:** o letreiro de pedra **TERRASSIC** da capa, um traço âmbar e o slogan **"The past has awoken."**
+  (em inglês em todos os idiomas, como na capa).
 - **Opções**, alinhadas ao letreiro, cada uma com um ícone próprio de 16×16 no mesmo estilo:
   pegada de terópode (Um jogador), duas pegadas (Multijogador), controles com o fragmento de âmbar (Regras do
   Terrassic), amonite (Mods), martelo de geólogo (Opções) e arco de pedra (Sair do jogo, depois do divisor da
@@ -51,7 +54,7 @@ Para pôr outra cena: uma função nova em `menu_cenas.py`, o id em `SCENES` de 
 - [ ] Um jogador, Multijogador (com o aviso de segurança na primeira vez), Regras do Terrassic (volta para o menu ao
       fechar), Opções e Sair funcionam.
 - [ ] Forge: Mods abre a lista de mods. Fabric com Mod Menu: abre a lista; sem Mod Menu, a opção não aparece.
-- [ ] Idioma: trocar para English e Español muda as opções, as dicas, o slogan e a plaquinha.
+- [ ] Idioma: trocar para English e Español muda as opções, as dicas e a plaquinha (o slogan fica em inglês).
 - [ ] Acessibilidade abre; o copyright abre os créditos.
 - [ ] Sair de um mundo volta para este menu (não para o do Minecraft).
 - [ ] Janela pequena (854×480), escala de interface 3 e 4, e tela cheia em 1080p e 1440p: nada se sobrepõe (opções

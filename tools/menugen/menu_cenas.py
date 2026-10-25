@@ -22,11 +22,6 @@ import cenas as cn  # noqa: E402
 import voxels as vx  # noqa: E402
 from pixel import noise2d  # noqa: E402
 
-GOLDEN = dict(top=(0.30, 0.42, 0.66), mid=(0.70, 0.66, 0.62), hor=(1.0, 0.82, 0.58), glow=(1.0, 0.72, 0.40),
-              sun_col=(1.40, 1.08, 0.74), sky_amb=(0.46, 0.48, 0.60), gnd_amb=(0.30, 0.26, 0.20),
-              fog_col=(0.90, 0.74, 0.56), fog_density=0.0045, fog_height=66, water_sky=(0.98, 0.80, 0.58),
-              water_deep=(0.10, 0.16, 0.18), clouds=0.45, sun_size=0.0008)
-
 LAKE_MIST = dict(cn.MIST, fog_density=0.011, fog_height=68, water_sky=(0.80, 0.82, 0.78),
                  water_deep=(0.08, 0.13, 0.13), glow=(1.0, 0.84, 0.60), sun_size=0.0006)
 
@@ -111,110 +106,138 @@ def triceratops(W=1920, H=1080):
              float(os.environ.get("YAW", 120)), 9.0, rim=0.7)
     cam = (cx + 0.5, cn.ground(height, cx, cz, 1) + float(os.environ.get("CAMY", 1.9)), cz + 0.5)
     target = (tx - 1, ty + 2.3, tz)
-    sun = tuple(float(v) for v in os.environ.get("SUN", "-0.55,0.22,-0.80").split(","))
+    sun = tuple(float(v) for v in os.environ.get("SUN", "0.55,0.45,0.70").split(","))
     return frame(scene, cam, target, 44, sun, GOLDEN, ((tx, ty, tz - 20), 90), (tx, ty + 2, tz),
                  ((tx, 80, tz - 40), (240, 40, 240)), float(os.environ.get("SHIFT", 0.30)), W, H,
                  lambda col, depth: cn.vignette(cn.bloom(cn.dof(col, depth, 18, 8, 4.0, 90), 210, 18, 0.3), 0.3))
 
 
 def espinossauro(W=1920, H=1080):
-    """Um Spinosaurus pescando no raso de um delta quente de manhã, palmeiras e fetos-arborescentes, névoa úmida."""
+    """Um Spinosaurus pescando no raso de um rio largo de manhã, palmeiras e fetos-arborescentes nas margens, névoa úmida.
+    A câmera fica rente à água, no meio do rio, e o rio some na névoa à esquerda."""
     rng = np.random.default_rng(31)
-    nx, nz = 220, 220
+    nx, nz = 220, 240
     hn = noise2d(nz, nx, 28, rng, 4)
-    channel = lambda x, z: abs((x - 100) - 18 * math.sin(z / 26.0))  # noqa: E731
-    sx, sz = 104, 120
-    cx, cz = sx + 7, sz + 18
+    mid = lambda z: 100 + 9 * math.sin(z / 41.0)  # noqa: E731
+    sz = 128
+    sx = mid(sz) + 3
+    cz = sz + 22
+    cx = mid(cz) - 2
 
     def height(x, z):
-        base = 62 + hn[z % nz, x % nx] * 2.2
-        d = channel(x, z)
-        if d < 14:
-            base = 58.6 + d * 0.12
-        elif d < 22:
-            base = min(base, 60 + (d - 14) * 0.3)
-        return base
+        bank = 62.4 + hn[z % nz, x % nx] * 1.8
+        d = abs(x - mid(z))
+        if d < 12:
+            return 58.4 + d * 0.12
+        if d < 26:
+            return 59.9 + (d - 12) / 14.0 * (bank - 59.9)
+        return bank
 
     world = vx.World()
     vx.terrain(world, 0, 0, nx, nz, height, sea=60, under="soil",
-               top_fn=lambda x, z: "mud" if hn[z % nz, x % nx] < -0.25 else "grass")
-    view = cn.clear_of((cx, cz), (sx - 12, sz - 60), 9)
-    for _ in range(170):
+               top_fn=lambda x, z: "mud" if hn[z % nz, x % nx] < -0.2 else "grass")
+    view = cn.clear_of((cx, cz), (sx, sz - 60), 8)
+    for _ in range(230):
         x, z = int(rng.uniform(4, nx - 4)), int(rng.uniform(4, nz - 4))
         y = int(round(height(x, z))) + 1
-        if y <= 62 or not view(x, z) or math.hypot(x - sx, z - sz) < 10:
+        if y <= 62 or not view(x, z):
             continue
         k = rng.random()
-        if k < 0.55:
+        if k < 0.5:
             sabal(world, x, y, z, int(rng.uniform(6, 11)), rng)
-        elif k < 0.8:
+        elif k < 0.75:
             vx.tree_fern(world, x, y, z, int(rng.uniform(4, 7)), rng)
         else:
-            vx.conifer(world, x, y, z, int(rng.uniform(12, 18)), rng, log="taxodium_log", leaves="taxodium_leaves")
-    kinds = ["horsetail"] * 4 + ["tall_horsetail"] * 2 + ["royal_fern"] * 2 + ["cretaceous_grass"] * 3 + ["clubmoss"]
-    near = cn.clear_of((cx, cz), (sx, sz), 2.5)
-    for _ in range(6000):
+            vx.conifer(world, x, y, z, int(rng.uniform(14, 22)), rng, log="taxodium_log", leaves="taxodium_leaves")
+    kinds = ["horsetail"] * 4 + ["tall_horsetail"] * 3 + ["royal_fern"] * 2 + ["cretaceous_grass"] * 3 + ["clubmoss"]
+    for _ in range(8000):
         x, z = int(rng.uniform(0, nx)), int(rng.uniform(0, nz))
         h = int(round(height(x, z)))
-        if h > 60 and (x, h + 1, z) not in world.blocks and (x, h, z) in world.blocks and near(x, z):
+        if h > 60 and (x, h + 1, z) not in world.blocks and (x, h, z) in world.blocks and view(x, z):
             kind = kinds[int(rng.integers(len(kinds)))]
             world.plants.append((x, h + 1, z, kind, rng.uniform(1.6, 2.1) if kind.startswith("tall_") else rng.uniform(0.8, 1.2)))
     scene = cn.scene_from(world, W, H)
-    sy = 59.8  # wading: the feet in the shallows
+    sy = 59.0  # wading: the legs in the river up to the knees
     cn.place(scene, "spinosaurus", os.environ.get("ANIM", "idle"), float(os.environ.get("T", 0.3)), (sx, sy, sz),
-             float(os.environ.get("YAW", 125)), 14.0, rim=0.6)
-    cam = (cx + 0.5, 61.6 + float(os.environ.get("CAMY", 1.6)), cz + 0.5)
-    target = (sx - 2, sy + 3.2, sz)
-    sun = tuple(float(v) for v in os.environ.get("SUN", "-0.45,0.35,-0.85").split(","))
-    return frame(scene, cam, target, 46, sun, DELTA, ((sx, 62, sz - 20), 100), (sx, sy + 3, sz),
+             float(os.environ.get("YAW", 120)), 14.0, rim=0.6)
+    cam = (cx + 0.5, 61.0 + float(os.environ.get("CAMY", 1.4)), cz + 0.5)
+    target = (sx - 2, sy + 4.0, sz)
+    sun = tuple(float(v) for v in os.environ.get("SUN", "-0.55,0.35,-0.75").split(","))
+    return frame(scene, cam, target, 46, sun, DELTA, ((sx, 62, sz - 20), 100), (sx, sy + 4, sz),
                  ((sx, 78, sz - 40), (240, 36, 240)), float(os.environ.get("SHIFT", 0.30)), W, H,
                  lambda col, depth: cn.vignette(cn.bloom(cn.dof(col, depth, 20, 8, 3.5, 90), 205, 22, 0.3), 0.3))
 
 
 def pteranodonte(W=1920, H=1080):
-    """Um Pteranodon planando rente ao mar na alvorada, falésia de giz à direita, a colônia ao longe."""
+    """Um Pteranodon planando rente ao mar na alvorada ao longo de falésias de giz roídas pelas ondas (à direita),
+    a colônia ao longe; à esquerda só mar aberto e o brilho do sol, calmo para o letreiro."""
     rng = np.random.default_rng(41)
-    nx, nz = 220, 260
+    nx, nz, y0, ny = 240, 280, 40, 56
     hn = noise2d(nz, nx, 26, rng, 4)
-    coast = lambda z: 150 + 14 * math.sin(z / 33.0)  # noqa: E731
+    cnz = noise2d(nz, 1, 14, rng, 3)
+    ero = noise2d(nz, ny, 9, rng, 3)  # (z, y): how far the wall is eaten back
+    coast = lambda z: 150 + 12 * math.sin(z / 31.0) + cnz[z % nz, 0] * 9  # noqa: E731
 
     def height(x, z):
         d = x - coast(z)
         if d >= 0:
-            return 80 + hn[z % nz, x % nx] * 3 + min(d, 20) * 0.1
-        if d > -3:
+            return 82 + hn[z % nz, x % nx] * 3 + min(d, 30) * 0.08
+        if d > -4:
             return 61
-        return max(44, 57 + d * 0.4)
+        return max(44, 58 + d * 0.5)
+
+    X, Z, Y = np.meshgrid(np.arange(nx), np.arange(nz), np.arange(y0, y0 + ny), indexing="ij")
+    cst = np.array([coast(z) for z in range(nz)])[None, :, None]
+    top = np.array([[height(x, z) for z in range(nz)] for x in range(nx)])[:, :, None]
+    eat = ero[Z % nz, Y - y0] * 3.0 + ((Y - 60) // 5 % 2) * 0.7 + np.where((Y > 59) & (Y < 64), 2.2, 0) \
+        + np.where(Y > 78, 1.4 * (Y - 78) / 4, 0)
+    solid = ((X - cst - eat >= 0) | (X - cst < 0)) & (Y <= np.round(top))
+    stacks = [(coast(200) - 18, 200, 5.0, 74), (coast(150) - 30, 150, 3.5, 68)]
+    for sx, sz, r0, h0 in stacks:
+        rr = np.hypot(X - sx, Z - sz)
+        solid |= (rr < (r0 + ero[Z % nz, Y - y0] * 1.6) * np.clip((h0 + 4 - Y) / 14.0, 0.35, 1.0)) & (Y <= h0 - rr * 0.8)
+    band = noise2d(nz, nx, 5, rng, 2)
+
+    def block(x, y, z, depth):
+        if x - coast(z) < -1 and y <= 62 and all(math.hypot(x - sx, z - sz) > r0 + 3 for sx, sz, r0, _ in stacks):
+            return "pebbles" if y >= 59 else "gravel" if depth == 0 else "stone"
+        if depth == 0 and y > 78:
+            return "grass" if hn[z % nz, x % nx] > -0.2 else "litter"
+        if depth < 2 and y > 78:
+            return "dirt"
+        if (y - 63) % 6 == 0 and band[z % nz, x % nx] > 0.0:
+            return "shale"
+        return "chalk"
 
     world = vx.World()
-    vx.terrain(world, 0, 0, nx, nz, height, sea=60, under="chalk", rock="chalk",
-               top_fn=lambda x, z: "grass" if hn[z % nz, x % nx] > -0.3 else "litter")
-    for _ in range(40):
-        z = int(rng.uniform(5, nz - 5))
-        x = int(coast(z) + rng.uniform(6, 50))
-        if x < nx - 3:
-            vx.araucaria(world, x, int(round(height(x, z))) + 1, z, int(rng.uniform(12, 20)), rng)
-    for _ in range(1500):
+    vx.fill(world, solid, (0, 0, y0), block)
+    for _ in range(1600):
         x, z = int(rng.uniform(0, nx)), int(rng.uniform(0, nz))
-        if x - coast(z) > 2:
+        if x - coast(z) > 4:
             h = int(round(height(x, z)))
             if (x, h + 1, z) not in world.blocks and (x, h, z) in world.blocks:
                 k = ["cretaceous_grass"] * 4 + ["bracken", "clubmoss"]
                 world.plants.append((x, h + 1, z, k[int(rng.integers(len(k)))], rng.uniform(0.8, 1.2)))
+    for _ in range(30):
+        z = int(rng.uniform(5, nz - 5))
+        x = int(coast(z) + rng.uniform(10, 60))
+        if x < nx - 3 and (x, int(round(height(x, z))), z) in world.blocks:
+            vx.araucaria(world, x, int(round(height(x, z))) + 1, z, int(rng.uniform(12, 20)), rng)
+    world.water = [(-3000, -3000, 3000, 3000, 60.9)]
     scene = cn.scene_from(world, W, H)
-    cz = 240
-    cx = int(coast(cz)) - 30
-    cam = (cx + 0.5, 66.0, cz + 0.5)
-    px, py, pz = cx + 3.0, 67.0, cz - 13.0
-    cn.place(scene, cn.PTERO, "glide", 0.2, (px, py, pz), float(os.environ.get("YAW", 205)), 7.0, axis=0,
-             roll=float(os.environ.get("ROLL", -10)), rim=0.7)
-    for i, (dx, dy, dz, yw) in enumerate([(25, 14, -70, 200), (40, 8, -110, 150), (10, 20, -130, 175),
-                                          (-15, 10, -90, 220), (32, 24, -160, 185)]):
+    cz = 262
+    cx = int(coast(cz)) - 44
+    cam = (cx + 0.5, 64.0 + float(os.environ.get("CAMY", 0.0)), cz + 0.5)
+    px, py, pz = cx - 1.0, 67.4, cz - 14.0
+    cn.place(scene, cn.PTERO, "glide", 0.2, (px, py, pz), float(os.environ.get("YAW", 200)), 7.0, axis=0,
+             roll=float(os.environ.get("ROLL", -12)), rim=0.7)
+    for i, (dx, dy, dz, yw) in enumerate([(22, 16, -70, 200), (34, 8, -110, 150), (8, 22, -135, 175),
+                                          (-10, 12, -95, 220), (30, 26, -165, 185)]):
         cn.place(scene, cn.PTERO, "glide" if i % 2 else "fly", 0.3 * i, (cx + dx, 66 + dy, cz + dz), yw, 7.0, axis=0,
                  roll=float(rng.uniform(-18, 18)))
-    target = (px - 1, py + 0.5, pz)
-    sun = tuple(float(v) for v in os.environ.get("SUN", "-0.70,0.18,-0.70").split(","))
-    return frame(scene, cam, target, 46, sun, DAWN_SEA, ((px, 62, pz - 40), 120), (px, py, pz),
+    target = (px + 2, 66.0, pz - 24)
+    sun = tuple(float(v) for v in os.environ.get("SUN", "-0.70,0.16,-0.70").split(","))
+    return frame(scene, cam, target, 48, sun, DAWN_SEA, ((px, 62, pz - 40), 120), (px, py, pz),
                  ((px, 72, pz - 60), (300, 30, 300)), float(os.environ.get("SHIFT", 0.30)), W, H,
                  lambda col, depth: cn.vignette(cn.bloom(cn.dof(col, depth, 14, 6, 3.0, 160), 215, 16, 0.25), 0.25))
 

@@ -19,7 +19,7 @@ MENU = {
     "menu.terrassic.subtitle": ("Chapter 1 · Echoes of the End", "Capítulo 1 · Ecos do Fim", "Capítulo 1 · Ecos del Fin"),
     "menu.terrassic.did_you_know": ("Did you know?", "Você sabia?", "¿Sabías que...?"),
     # main menu (client/title/TerrassicMenuScreen, docs/MENU.md)
-    "menu.terrassic.slogan": ("The past has awoken.", "O passado acordou.", "El pasado despertó."),
+    "menu.terrassic.slogan": ("The past has awoken.", "The past has awoken.", "The past has awoken."),  # English everywhere (brand)
     "menu.terrassic.mods": ("Mods", "Mods", "Mods"),
     "menu.terrassic.singleplayer.hint": ("Your worlds, or a new leap", "Seus mundos, ou um novo salto",
                                          "Tus mundos, o un nuevo salto"),
@@ -37,6 +37,15 @@ MENU = {
                                         "Maastrichtiano · 68 a 66 milhões de anos",
                                         "Maastrichtiense · hace 68 a 66 millones de años"),
     "menu.terrassic.scene.nevoa.facts": ("13 m · 8 t · Laramidia", "13 m · 8 t · Laramídia", "13 m · 8 t · Laramidia"),
+    "menu.terrassic.scene.triceratops.name": ("Triceratops horridus", "Triceratops horridus", "Triceratops horridus"),
+    "menu.terrassic.scene.triceratops.when": ("Maastrichtian · 68 to 66 million years ago", "Maastrichtiano · 68 a 66 milhões de anos", "Maastrichtiense · hace 68 a 66 millones de años"),
+    "menu.terrassic.scene.triceratops.facts": ("9 m · 9 t · Laramidia", "9 m · 9 t · Laramídia", "9 m · 9 t · Laramidia"),
+    "menu.terrassic.scene.espinossauro.name": ("Spinosaurus aegyptiacus", "Spinosaurus aegyptiacus", "Spinosaurus aegyptiacus"),
+    "menu.terrassic.scene.espinossauro.when": ("Cenomanian · 99 to 94 million years ago", "Cenomaniano · 99 a 94 milhões de anos", "Cenomaniense · hace 99 a 94 millones de años"),
+    "menu.terrassic.scene.espinossauro.facts": ("14 m · 7 t · North African rivers", "14 m · 7 t · rios do norte da África", "14 m · 7 t · ríos del norte de África"),
+    "menu.terrassic.scene.pteranodonte.name": ("Pteranodon longiceps", "Pteranodon longiceps", "Pteranodon longiceps"),
+    "menu.terrassic.scene.pteranodonte.when": ("Santonian to Campanian · 86 to 84 million years ago", "Santoniano ao Campaniano · 86 a 84 milhões de anos", "Santoniense al Campaniense · hace 86 a 84 millones de años"),
+    "menu.terrassic.scene.pteranodonte.facts": ("up to 7 m wingspan · Western Interior Seaway", "até 7 m de envergadura · Mar Interior Ocidental", "hasta 7 m de envergadura · Mar Interior Occidental"),
     # HUD (phase M5)
     "hud.terrassic.rift_storm": ("Rift Storm", "Tempestade da Fenda", "Tormenta de la Grieta"),
     "hud.terrassic.era.late_cretaceous": ("Late Cretaceous", "Cretáceo Superior", "Cretácico Superior"),

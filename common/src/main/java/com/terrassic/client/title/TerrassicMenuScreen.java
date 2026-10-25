@@ -61,7 +61,8 @@ public class TerrassicMenuScreen extends Screen {
     private static final int BG_H = 1080;
 
     /** The scenes of the menu; one is picked each time the game starts. */
-    private static final List<Scene> SCENES = List.of(new Scene("nevoa"));
+    private static final List<Scene> SCENES = List.of(new Scene("nevoa"), new Scene("triceratops"), new Scene("espinossauro"),
+            new Scene("pteranodonte"));
 
     private static final int ICON_COLUMNS = 8;
     private static final int LEFT = 24;
