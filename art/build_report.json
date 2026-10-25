@@ -950,38 +950,38 @@
   "render_scale": 0.5
  },
  "euoplocephalus": {
-  "bones": 24,
-  "cubes": 96,
+  "bones": 25,
+  "cubes": 205,
   "texture": [
-   128,
+   256,
    256
   ],
   "bounds_px": [
    [
-    -11.0,
-    7.00961204767076e-06,
-    -28.829724997213425
+    -19.057588324924488,
+    -0.019662621649566225,
+    -58.03318748589823
    ],
    [
-    11.0,
-    19.0,
-    38.122820579307444
+    19.057588324924488,
+    34.0,
+    71.1718944724951
    ]
   ],
   "animations": [
    "animation.euoplocephalus.idle",
    "animation.euoplocephalus.walk",
    "animation.euoplocephalus.run",
+   "animation.euoplocephalus.attack",
    "animation.euoplocephalus.sit",
    "animation.euoplocephalus.graze",
    "animation.euoplocephalus.knocked_out",
    "animation.euoplocephalus.wake",
    "animation.euoplocephalus.eat",
    "animation.euoplocephalus.beg",
-   "animation.euoplocephalus.tame",
-   "animation.euoplocephalus.attack"
+   "animation.euoplocephalus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "protoceratops": {
   "bones": 26,

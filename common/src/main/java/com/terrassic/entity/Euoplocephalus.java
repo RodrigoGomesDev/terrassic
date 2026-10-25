@@ -31,7 +31,7 @@ public class Euoplocephalus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.0F;
     public static final float HEIGHT = 1.8F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.43F;
+    public static final float MODEL_SCALE = 0.74F;
     public static final float SHADOW = 1.6F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.MELON_SLICE);
 

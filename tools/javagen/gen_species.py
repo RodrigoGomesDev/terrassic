@@ -52,7 +52,8 @@ SIZES = {
     # Ankylosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "ankylosaurus":       dict(real=8.0,  scale=0.98, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
     # Euoplocephalus tutus: 5.5-6 m, ~2.5 t (Arbour & Currie 2013; Paul 2010); the widest body for its length.
-    "euoplocephalus":     dict(real=6.0,  scale=1.43, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
+    # Euoplocephalus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "euoplocephalus":     dict(real=6.0,  scale=0.74, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
     # Therizinosaurus cheloniformis: 9-10 m, ~5 t (Zanno 2010; Paul 2010); stands ~6 blocks tall with the neck up.
     "therizinosaurus":    dict(real=10.0, scale=1.94, w=2.4, h=5.0, baby=0.2,  shadow=2.0),
     # Deinocheirus mirificus: 11 m, ~6.4 t (Lee et al. 2014); the biggest ornithomimosaur, humped and duck-billed.
