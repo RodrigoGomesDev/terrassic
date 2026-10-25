@@ -44,7 +44,8 @@ SIZES = {
     # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
     "pachyrhinosaurus":   dict(real=8.0,  scale=1.5,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
-    "protoceratops":      dict(real=2.0,  scale=0.43, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
+    # Protoceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "protoceratops":      dict(real=2.0,  scale=0.38, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
     # Leptoceratops gracilis: ~2 m, 70-200 kg (Brown 1914; Ott 2007). Modelled at 2x (render_scale 0.5), 82 px long.
     "leptoceratops":      dict(real=2.0,  scale=0.39, w=0.6, h=0.7, baby=0.5,  shadow=0.5),
     # Stegosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.

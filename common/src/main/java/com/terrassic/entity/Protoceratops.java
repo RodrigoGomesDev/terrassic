@@ -37,7 +37,7 @@ public class Protoceratops extends HerbivoreDinosaur {
     public static final float WIDTH = 0.7F;
     public static final float HEIGHT = 0.8F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.43F;
+    public static final float MODEL_SCALE = 0.38F;
     public static final float SHADOW = 0.5F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.CARROT, Items.BEETROOT, Items.FERN);
 
@@ -79,7 +79,7 @@ public class Protoceratops extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 1.2D;
+        return 1.1D;
     }
 
     @Override
