@@ -32,7 +32,7 @@ public class Therizinosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.4F;
     public static final float HEIGHT = 5.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.94F;
+    public static final float MODEL_SCALE = 1.03F;
     public static final float SHADOW = 2.0F;
     private static final Ingredient FOOD = Ingredient.of(Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.MELON_SLICE);
 
@@ -95,12 +95,17 @@ public class Therizinosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 5.04D * this.getScale();
+        return 4.33D * this.getScale();
     }
 
     @Override
     protected double jumpStrength() {
         return 0.5D;
+    }
+
+    @Override
+    protected double riderForwardOffset() {
+        return 0.41D;
     }
 
     @Override

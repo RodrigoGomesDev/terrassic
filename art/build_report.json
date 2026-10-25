@@ -1123,22 +1123,22 @@
   "render_scale": 0.5
  },
  "therizinosaurus": {
-  "bones": 25,
-  "cubes": 64,
+  "bones": 28,
+  "cubes": 95,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -10.5,
-    -0.48868663143668467,
-    -43.21053983992334
+    -17.5,
+    -3.815796103028006e-05,
+    -79.06276130319105
    ],
    [
-    10.5,
-    52.82262544249214,
-    39.12792414974783
+    17.5,
+    91.52042288793326,
+    76.54842443932577
    ]
   ],
   "animations": [
@@ -1155,7 +1155,7 @@
    "animation.therizinosaurus.attack",
    "animation.therizinosaurus.graze"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "deinocheirus": {
   "bones": 25,

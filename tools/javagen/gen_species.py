@@ -57,7 +57,8 @@ SIZES = {
     # Euoplocephalus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "euoplocephalus":     dict(real=6.0,  scale=0.74, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
     # Therizinosaurus cheloniformis: 9-10 m, ~5 t (Zanno 2010; Paul 2010); stands ~6 blocks tall with the neck up.
-    "therizinosaurus":    dict(real=10.0, scale=1.94, w=2.4, h=5.0, baby=0.2,  shadow=2.0),
+    # Therizinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "therizinosaurus":    dict(real=10.0, scale=1.03, w=2.4, h=5.0, baby=0.2,  shadow=2.0),
     # Deinocheirus mirificus: 11 m, ~6.4 t (Lee et al. 2014); the biggest ornithomimosaur, humped and duck-billed.
     "deinocheirus":       dict(real=11.0, scale=1.72, w=2.4, h=4.8, baby=0.2,  shadow=2.2),
     # real Brachiosaurus: 18-22 m long, head ~13 m up (Giraffatitan mount in Berlin: 13.3 m). Sized by the
@@ -389,7 +390,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=140, MOVEMENT_SPEED=0.2, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=5, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
       food="Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.MELON_SLICE",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.8, 0.6),
-      xp=30, step_height=1.2, head=(30, 25), rideable=True, jump=0.5, ride_offset=2.6, ride_speed=1.0, egg_only=True, forage=True),
+      xp=30, step_height=1.2, head=(30, 25), rideable=True, jump=0.5, ride_offset=4.2, ride_forward=0.4, ride_speed=1.0, egg_only=True, forage=True),
  dict(id="deinocheirus", cls="Deinocheirus", base="HerbivoreDinosaur",
       doc="Deinocheirus mirificus - 11 m humped, duck-billed ornithomimosaur of the river margins with 2.4 m arms. Omnivore: scoops fish and weed out of the water (a tame one brings them to you). Territorial: swipes with the arms. Tamed with fish or plants; a tall mount.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
