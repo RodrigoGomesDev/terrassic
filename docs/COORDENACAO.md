@@ -3,9 +3,10 @@
 Atualizado em 25/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
 
 Foco atual pedido pelo Rodrigo: Codex assume os fundos do menu/interface; Claude não mexe nessa frente por
-enquanto. Propostas de IA em `art/menu_ia/v1/` não foram aprovadas: Rodrigo gostou da luz e das cenas, mas exige
-os modelos originais e aparência mais Minecraft vanilla. Próxima entrega: render determinístico com os assets
-reais, preservando os quatro fundos ativos, o letreiro e a implementação da interface durante a validação.
+enquanto. Após comparar as propostas, Rodrigo selecionou explicitamente a imagem cinematográfica de confronto
+T. rex × Triceratops como referência: reduzir a poluição visual, usar sol quadrado Minecraft e criar ambientes
+semelhantes para apresentação. Essa seleção orienta `art/menu_ia/v2/`; não aprova automaticamente toda a v1 nem
+substitui os fundos ativos. Os renders de modelos originais em `art/menu_vanilla/v1/` continuam disponíveis.
 
 ## Links oficiais — informados pelo Rodrigo em 25/10
 
@@ -100,6 +101,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 | Responsável | Arquivos | Estado |
 |---|---|---|
+| Codex | `art/menu_ia/v2/` e documentação de coordenação | Entregues três propostas para apresentação: floresta/confronto refinada, rio com Espinossauro e falésias com Pteranodonte. Sol quadrado, nuvens em blocos e menor poluição visual; PNGs 1672×941 conferidos visualmente, prompts e hashes salvos. Sem alteração do menu ativo; escolha e legibilidade na interface ainda pendentes |
 | Codex | `tools/menugen/menu_vanilla.py`, ambiente reproduzível em `requirements-render.txt`, propostas em `art/menu_vanilla/v1/` e documentação | Prévias de confronto e exploração entregues para validação: 960×540, 32 amostras Cycles, modelos/texturas/animações empacotados e cenário com texturas vanilla lidas do cliente local. Round-trip de geometria dos dois animais (139 cubos cada) e hashes das fontes/saídas passaram; integridade 59 espécies/4.341 JSONs/1.845 chaves passou. Sem mudança dos fundos ativos; render final e legibilidade no jogo dependem da escolha visual |
 | Codex | Novas propostas em `art/menu_ia/`, prompts e documentação desta proposta | Não aprovadas pelo Rodrigo: cenas e iluminação agradaram, mas o estilo deve ser mais Minecraft vanilla e usar os modelos originais. Três PNGs 1672×941 preservados apenas como estudo; não integrar ao menu. Substituídas como direção de trabalho pelo render determinístico em `art/menu_vanilla/` |
 | Codex | `TranqDart.java`, `BlowgunItem.java`, `DinosaurEntity.java`, `SwimmingDinosaur.java` (somente estabilidade se houver falha reproduzida), `tools/validation/minecraft_client.py`, novo roteiro de dardos/água e documentação | Concluído em `36b21fb4`/`fbb144b3`: dose em alvo acordado depende de dano aceito; 22/22 passaram em Fabric e Forge, incluindo disparo submerso, alimentação e reinício. Build conjunta passou em 1 min 33 s; fontes conferidas por hash. Sem mudança de balanceamento, modelos ou respiração; arquivos liberados |

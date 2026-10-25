@@ -1,0 +1,29 @@
+{
+  "method": "built-in image_gen; reference-guided edits and environment variants",
+  "status": "propostas para apresentacao; nao integradas ao jogo",
+  "reference": "art/menu_ia/v2/referencia_rodrigo.png",
+  "reference_sha256": "d1dab52e5748d3f2eb8d192210c1f6c4b905f9b166f36268ea1dfbcc6fb90236",
+  "images": [
+    {
+      "file": "floresta_confronto.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "1a3e119daca197b219a0f8f0d56d7b26eebc47ec783406179ab0c5b89331a015",
+      "bytes": 2173052
+    },
+    {
+      "file": "rio_espinossauro.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "215fc27f2f08807db24486b143484030a3724f98ff878ff9df00d707727675d5",
+      "bytes": 2160432
+    },
+    {
+      "file": "falesias_pteranodonte.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "1e55d50fdcda0f6695c2280f82201c8a4943898317f4f0216bc6633189b2e9a4",
+      "bytes": 1871999
+    }
+  ]
+}
