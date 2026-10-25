@@ -89,6 +89,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 | Responsável | Arquivos | Estado |
 |---|---|---|
+| Codex | `IslandMap.java` (somente estabilidade de dados, se houver falha reproduzida), `tools/validation/minecraft_client.py`, novo roteiro de mapa, documentação | Em uso em 25/10: validar geração do levantamento, pacote recebido e cache após reinício num mundo Terrassic descartável; sem alterar desenho ou layout da aba |
 | Codex | `DinosaurEntity.java` (persistência/penalidade do nocaute), `tools/validation/minecraft_client.py`, novo `knockout_regression.py`, `CLAUDE.md`, `README.md` e documentação de coordenação/testes | Concluído em 25/10: dois bugs reproduzidos e corrigidos; regressão real 18/18 passou em Fabric e Forge, com recarga, alimentar/acordar/domesticar. Build passou em 49 s; arquivos liberados, sem mudar balanceamento, modelos ou interface |
 | Codex | Integração de `sync/identidade`: `NotebookScreen.java`, `TerrassicTitle.java`, `common/build.gradle` (empacotar documentos entregues), `README.md` (links oficiais), coordenação e revisão dos arquivos mesclados | Concluído em 25/10: ficha à direita, dioramas, painel de dicas, fontes e componentes preservados; build dos dois loaders e verificações passaram; arquivos liberados. Arquivos locais de marca fora do commit |
 | Codex | `AGENTS.md`, `docs/COORDENACAO.md`, `docs/PLANO_MESTRE.md`, `tools/validation/`, autoria em README/CLAUDE/metadados, ponte no roadmap | Concluído; arquivos liberados; sem alteração de sistemas de gameplay |
@@ -226,6 +227,10 @@ identidade já integrada; não repetir os merges antigos.
 
 Reservas que precisem ser vistas pela frente remota devem ser publicadas na main antes de trabalho prolongado.
 Uma reserva no arquivo local, sem commit/push, ainda não é visível para a sessão em nuvem.
+
+Mapa recebido em `ef976e28`/`2f6ee171`: nova aba do Caderno, levantamento no servidor e imagem dinâmica no cliente.
+Integrado sem conflito com o nocaute. Integridade passou com 59 espécies, 4.322 JSONs e 1.844 chaves por idioma;
+build conjunta passou em 34 s. Próxima verificação do Codex: transporte e persistência do mapa num continente real.
 
 O plano mestre também define o projeto como pessoal. As referências empresariais foram removidas dos arquivos
 atuais nesta entrega; o histórico Git permanece preservado.
