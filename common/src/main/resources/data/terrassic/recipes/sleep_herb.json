@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "WF"
+  ],
+  "key": {
+    "W": {
+      "item": "terrassic:cretaceous_water_lily"
+    },
+    "F": {
+      "item": "terrassic:shelf_fungus"
+    }
+  },
+  "result": {
+    "item": "terrassic:sleep_herb",
+    "count": 2
+  }
+}

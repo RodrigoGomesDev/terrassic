@@ -94,6 +94,10 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "cooked_enchodus": ("Cooked Enchodus", "Enchodus Assado", "Enchodus Asado", "item/generated"),
     "lepisosteus": ("Raw Gar", "Peixe-agulha Cru", "Pejelagarto Crudo", "item/generated"),
     "cooked_lepisosteus": ("Cooked Gar", "Peixe-agulha Assado", "Pejelagarto Asado", "item/generated"),
+    # knockout taming (docs/DOMESTICACAO.md)
+    "blowgun": ("Blowgun", "Zarabatana", "Cerbatana", "item/handheld"),
+    "tranq_dart": ("Narcotic Dart", "Dardo de Narcótico", "Dardo Narcótico", "item/generated"),
+    "sleep_herb": ("Sleep Herb", "Erva Sonífera", "Hierba Somnífera", "item/generated"),
 }
 
 LANG_EXTRA = {
@@ -113,6 +117,11 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s dropped its cargo chest",
         "message.terrassic.hungry": "%s is hungry",
         "message.terrassic.platform": "%s wears the platform saddle: four aboard, anyone may climb on, you drive",
+        "entity.terrassic.tranq_dart": "Narcotic Dart",
+        "message.terrassic.knocked_out": "%s collapsed, unconscious! Feed it its food while it sleeps",
+        "message.terrassic.ko_status": "%s · torpor %s/%s · taming %s%% · effectiveness %s%%",
+        "message.terrassic.ko_woke": "%s woke up, angry!",
+        "message.terrassic.ko_tamed": "%s wakes up tame. Taming effectiveness: %s%%",
         "sex.terrassic.male": "male",
         "sex.terrassic.female": "female",
     },
@@ -132,6 +141,11 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s largou o baú de carga",
         "message.terrassic.hungry": "%s está com fome",
         "message.terrassic.platform": "%s leva a sela de plataforma: quatro a bordo, qualquer um pode subir, você conduz",
+        "entity.terrassic.tranq_dart": "Dardo de Narcótico",
+        "message.terrassic.knocked_out": "%s desabou, desacordado! Dê a comida dele enquanto dorme",
+        "message.terrassic.ko_status": "%s · torpor %s/%s · domesticação %s%% · eficiência %s%%",
+        "message.terrassic.ko_woke": "%s acordou bravo!",
+        "message.terrassic.ko_tamed": "%s acorda domesticado. Eficiência da domesticação: %s%%",
         "sex.terrassic.male": "macho",
         "sex.terrassic.female": "fêmea",
     },
@@ -151,6 +165,11 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s soltó el baúl de carga",
         "message.terrassic.hungry": "%s tiene hambre",
         "message.terrassic.platform": "%s lleva la silla de plataforma: cuatro a bordo, cualquiera puede subir, tú conduces",
+        "entity.terrassic.tranq_dart": "Dardo Narcótico",
+        "message.terrassic.knocked_out": "¡%s se desplomó, inconsciente! Dale su comida mientras duerme",
+        "message.terrassic.ko_status": "%s · torpor %s/%s · domesticación %s%% · eficacia %s%%",
+        "message.terrassic.ko_woke": "¡%s despertó, furioso!",
+        "message.terrassic.ko_tamed": "%s despierta domesticado. Eficacia de la domesticación: %s%%",
         "sex.terrassic.male": "macho",
         "sex.terrassic.female": "hembra",
     },
@@ -264,6 +283,11 @@ def main():
     shaped("horn_spear", ["  H", " T ", "S  "], {"H": "terrassic:triceratops_horn", "T": "minecraft:string", "S": "minecraft:stick"}, "terrassic:horn_spear")
     shaped("rex_tooth_dagger", ["T", "L"], {"T": "terrassic:rex_tooth", "L": "minecraft:leather"}, "terrassic:rex_tooth_dagger")
     shaped("tail_club", [" C", "S "], {"C": "terrassic:ankylosaurus_club", "S": "minecraft:stick"}, "terrassic:tail_club")
+    # knockout taming (docs/DOMESTICACAO.md): a reed tube, darts tipped with flint and the sleep herb, which is
+    # brewed from the Cretaceous water lily (sedative, like its living relatives) and shelf fungus
+    shaped("blowgun", ["  R", " R ", "R  "], {"R": "terrassic:rush"}, "terrassic:blowgun")
+    shaped("tranq_dart", ["F", "H", "E"], {"F": "minecraft:flint", "H": "terrassic:sleep_herb", "E": "minecraft:feather"}, "terrassic:tranq_dart", 4)
+    shaped("sleep_herb", ["WF"], {"W": "terrassic:cretaceous_water_lily", "F": "terrassic:shelf_fungus"}, "terrassic:sleep_herb", 2)
 
     def cooked(raw, result):
         """Furnace, smoker and campfire, like vanilla meat (the loot's furnace_smelt function uses the smelting one)."""

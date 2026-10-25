@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "F",
+    "H",
+    "E"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "H": {
+      "item": "terrassic:sleep_herb"
+    },
+    "E": {
+      "item": "minecraft:feather"
+    }
+  },
+  "result": {
+    "item": "terrassic:tranq_dart",
+    "count": 4
+  }
+}

@@ -56,6 +56,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import com.terrassic.item.ClubItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -137,6 +138,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** A creature "of the Rift" (v0.9): amber cracks and eyes glowing on the model (client/RiftLayer). */
     private static final EntityDataAccessor<Boolean> DATA_RIFT =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Unconscious from torpor (knockout taming, docs/DOMESTICACAO.md); synced for the knocked_out pose. */
+    private static final EntityDataAccessor<Boolean> DATA_KNOCKED_OUT =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DATA_HUNGER =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_SLEEPING =
@@ -198,6 +202,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private BlockPos migrationTarget;
     /** Placed by the ecosystem spawner (EcoSpawner): despawns when far from every player while wild and unnamed. */
     private boolean roamer;
+    /** Knockout taming (docs/DOMESTICACAO.md): torpor fills with blunt blows and narcotics and drains over time;
+     *  full, the animal collapses. Fed while unconscious it builds taming progress; every wound taken meanwhile costs
+     *  effectiveness, which sets the health bonus it wakes up with. Server side only (the pose is synced). */
+    private float torpor;
+    private float tameProgress;
+    private int tameEffectiveness = 100;
+    private UUID tamer;
+    private RawAnimation knockedOutAnim;
+    private static final UUID TAMING_BONUS_ID = UUID.fromString("6c0f3b8e-2d5a-4c71-9a43-1f5e8d7b2a90");
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -522,6 +535,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_PLATFORM, false);
         this.entityData.define(DATA_RIFT, false);
         this.entityData.define(DATA_HUNGER, 70);
+        this.entityData.define(DATA_KNOCKED_OUT, false);
         this.entityData.define(DATA_SLEEPING, false);
         this.entityData.define(DATA_SIZE, 1.0F);
         this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
@@ -607,6 +621,19 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         tag.putFloat("Size", this.getAdultSize());
         tag.putFloat("BirthSize", this.entityData.get(DATA_BIRTH_SIZE));
+        if (this.torpor > 0.0F) {
+            tag.putFloat("Torpor", this.torpor);
+        }
+        if (this.isKnockedOut()) {
+            tag.putBoolean("KnockedOut", true);
+        }
+        if (this.tameProgress > 0.0F) {
+            tag.putFloat("TameProgress", this.tameProgress);
+            tag.putInt("TameEffectiveness", this.tameEffectiveness);
+        }
+        if (this.tamer != null) {
+            tag.putUUID("Tamer", this.tamer);
+        }
         if (this.cargo != null) {
             ListTag list = new ListTag();
             for (int i = 0; i < this.cargo.getContainerSize(); i++) {
@@ -635,6 +662,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.sated = tag.getInt("Sated");
         this.roamer = tag.getBoolean("Roamer");
         this.setRift(tag.getBoolean("Rift"));
+        this.torpor = tag.getFloat("Torpor");
+        this.entityData.set(DATA_KNOCKED_OUT, tag.getBoolean("KnockedOut"));
+        this.tameProgress = tag.getFloat("TameProgress");
+        this.tameEffectiveness = tag.contains("TameEffectiveness") ? tag.getInt("TameEffectiveness") : 100;
+        this.tamer = tag.hasUUID("Tamer") ? tag.getUUID("Tamer") : null;
         if (tag.contains("Hunger")) {
             this.setHunger(tag.getInt("Hunger"));
         }
@@ -686,12 +718,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.sitAnim = RawAnimation.begin().thenLoop(anim("sit"));
         this.broodAnim = RawAnimation.begin().thenLoop(anim("brood"));
 
-        controllers.add(new AnimationController<>(this, "movement", 6, this::movementAnimation));
+        this.knockedOutAnim = RawAnimation.begin().thenLoop(anim("knocked_out"));
+        controllers.add(new AnimationController<>(this, "movement", 6, state -> this.isKnockedOut()
+                ? state.setAndContinue(this.knockedOutAnim) : this.movementAnimation(state)));
 
         AnimationController<DinosaurEntity> action = new AnimationController<>(this, ACTION_CONTROLLER, 3, state -> PlayState.STOP);
         action.triggerableAnim("attack", RawAnimation.begin().thenPlay(anim("attack")));
         action.triggerableAnim("eat", RawAnimation.begin().thenPlay(anim("eat")));
         action.triggerableAnim("beg", RawAnimation.begin().thenPlay(anim("beg")));
+        action.triggerableAnim("wake", RawAnimation.begin().thenPlay(anim("wake")));
+        action.triggerableAnim("tame", RawAnimation.begin().thenPlay(anim("tame")));
         for (String extra : extraActions()) {
             action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
         }
@@ -726,10 +762,31 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (source.getEntity() instanceof Player player && Research.isStudied(player, this.speciesId())) {
             amount *= 1.2F;
         }
+        float torporHit = 0.0F;
+        if (!this.level().isClientSide() && !this.isTame()) {
+            if (source.getDirectEntity() instanceof Player striker && source.getEntity() == striker) {
+                ItemStack weapon = striker.getMainHandItem();
+                if (weapon.getItem() instanceof ClubItem) {
+                    torporHit = amount * 2.5F;   // a club stuns: much torpor, half the wound
+                    amount *= 0.5F;
+                } else if (weapon.isEmpty()) {
+                    torporHit = 2.0F + amount * 2.0F;
+                } else {
+                    torporHit = amount * 0.1F;   // edges and points wound, they hardly stun
+                }
+            }
+            if (this.isKnockedOut() && amount > 0.0F) {
+                this.tameEffectiveness = Math.max(20, this.tameEffectiveness - 10);
+            }
+        }
         if (!this.level().isClientSide()) {
             amount = Rules.damageTaken(this, source, amount);
         }
-        return super.hurt(source, amount);
+        boolean hurt = super.hurt(source, amount);
+        if (hurt && torporHit > 0.0F && this.isAlive()) {
+            this.addTorpor(torporHit, source.getEntity());
+        }
+        return hurt;
     }
 
     /** The bite or blow, scaled by the world rules when the target is not a creature (a creature target scales it
@@ -897,6 +954,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         ItemStack stack = player.getItemInHand(hand);
         boolean client = this.level().isClientSide();
 
+        if (this.isKnockedOut()) {
+            return this.interactKnockedOut(player, hand, stack);
+        }
+
         // anyone may climb onto a platform saddle as a passenger (only the owner drives)
         if (this.isTame() && this.isPlatform() && !this.isOwnedBy(player) && !this.isBaby() && stack.isEmpty()
                 && !player.isSecondaryUseActive() && !player.isPassenger() && this.canAddPassenger(player)) {
@@ -1052,6 +1113,167 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 Component.translatable(this.isFemale() ? "sex.terrassic.female" : "sex.terrassic.male")), true);
     }
 
+    // ------------------------------------------------------------------ knockout taming (docs/DOMESTICACAO.md)
+
+    public boolean isKnockedOut() {
+        return this.entityData.get(DATA_KNOCKED_OUT);
+    }
+
+    /** Torpor needed to knock it out: grows with its health, so the giants need a long fight or a volley of darts. */
+    public float maxTorpor() {
+        return Math.max(10.0F, this.getMaxHealth());
+    }
+
+    public float getTorpor() {
+        return this.torpor;
+    }
+
+    /** Big biters wake up faster (the plan's "top predators wake sooner"). */
+    protected boolean wakesFast() {
+        AttributeInstance attack = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        return attack != null && attack.getBaseValue() >= 8.0D;
+    }
+
+    /** Food bites a knocked-out animal needs to be tamed (prime meat counts double). */
+    public float tameGoal() {
+        return Mth.clamp(this.getMaxHealth() / 8.0F, 3.0F, 30.0F);
+    }
+
+    /** What an unconscious animal accepts from the hand (its usual food). */
+    protected boolean koFood(ItemStack stack) {
+        return this.isFood(stack);
+    }
+
+    /** Adds torpor (blunt blows, fists, narcotic darts); a wild animal whose gauge fills collapses. */
+    public void addTorpor(float amount, Entity by) {
+        if (this.level().isClientSide() || this.isTame() || amount <= 0.0F || !this.isAlive()) {
+            return;
+        }
+        this.torpor = Math.min(this.maxTorpor(), this.torpor + amount);
+        if (!this.isKnockedOut() && this.torpor >= this.maxTorpor()) {
+            this.knockOut(by);
+        }
+    }
+
+    private void knockOut(Entity by) {
+        this.entityData.set(DATA_KNOCKED_OUT, true);
+        this.tameEffectiveness = 100;
+        this.navigation.stop();
+        this.setTarget(null);
+        this.setAggressive(false);
+        this.setSleeping(false);
+        this.ejectPassengers();
+        if (this.isPassenger()) {
+            this.stopRiding();
+        }
+        this.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 1.0F, 0.6F);
+        if (by instanceof Player player) {
+            this.tamer = player.getUUID();
+            player.displayClientMessage(Component.translatable("message.terrassic.knocked_out", this.getDisplayName()), true);
+        }
+    }
+
+    /** Drains the torpor; an unconscious animal wakes when it reaches zero (half the taming progress is lost). */
+    private void torporTick() {
+        float max = this.maxTorpor();
+        if (this.isKnockedOut()) {
+            // about 2.5 minutes asleep from a full gauge (1.5 for the big biters) unless kept down with narcotics
+            this.torpor -= max / ((this.wakesFast() ? 90.0F : 150.0F) * 20.0F);
+            if (this.torpor <= 0.0F) {
+                this.wakeUp();
+            } else if (this.tickCount % 60 == 0 && this.level() instanceof ServerLevel server) {
+                server.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, this.getX(),
+                        this.getY() + this.getBbHeight() * 0.6D, this.getZ(), 1, 0.2D, 0.1D, 0.2D, 0.0D);
+            }
+        } else {
+            this.torpor = Math.max(0.0F, this.torpor - max * 0.02F / 20.0F);   // awake: 2% of the gauge a second
+        }
+    }
+
+    private void wakeUp() {
+        this.torpor = 0.0F;
+        this.entityData.set(DATA_KNOCKED_OUT, false);
+        this.tameProgress *= 0.5F;
+        triggerAnim(ACTION_CONTROLLER, "wake");
+        Player tamer = this.tamer != null ? this.level().getPlayerByUUID(this.tamer) : null;
+        if (tamer != null && tamer.distanceToSqr(this) < 48.0D * 48.0D) {
+            tamer.displayClientMessage(Component.translatable("message.terrassic.ko_woke", this.getDisplayName()), true);
+            if (!tamer.getAbilities().instabuild && this.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+                this.setTarget(tamer);
+            }
+        }
+    }
+
+    private InteractionResult interactKnockedOut(Player player, InteractionHand hand, ItemStack stack) {
+        boolean client = this.level().isClientSide();
+        if (stack.is(ModItems.SLEEP_HERB.get())) {
+            if (!client) {
+                this.usePlayerItem(player, hand, stack);
+                this.torpor = Math.min(this.maxTorpor(), this.torpor + this.maxTorpor() * 0.35F);
+                this.playSound(SoundEvents.GENERIC_EAT, 0.6F, 0.8F);
+                this.knockoutStatus(player);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        if (this.koFood(stack)) {
+            if (!client) {
+                float bite = stack.is(ModItems.RAW_PRIME_MEAT.get()) ? 2.0F : 1.0F;
+                if (Research.isStudied(player, this.speciesId())) {
+                    bite *= 1.25F;   // studied: it knows what the animal likes best
+                }
+                bite *= (float) Rules.of(this.level()).get(Rule.TAMING_SPEED);
+                this.usePlayerItem(player, hand, stack);
+                this.tamer = player.getUUID();
+                this.tameProgress += bite;
+                this.feed(10);
+                triggerAnim(ACTION_CONTROLLER, "eat");
+                this.playSound(SoundEvents.GENERIC_EAT, 0.7F, 0.9F);
+                if (this.tameProgress >= this.tameGoal()) {
+                    this.finishKnockoutTaming(player);
+                } else {
+                    this.knockoutStatus(player);
+                }
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        if (!client) {
+            this.knockoutStatus(player);
+        }
+        return InteractionResult.sidedSuccess(client);
+    }
+
+    /** The gauges on the action bar: torpor, taming progress and effectiveness. */
+    private void knockoutStatus(Player player) {
+        int progress = Mth.floor(100.0F * Math.min(1.0F, this.tameProgress / this.tameGoal()));
+        player.displayClientMessage(Component.translatable("message.terrassic.ko_status", this.getDisplayName(),
+                Mth.ceil(this.torpor), Mth.ceil(this.maxTorpor()), progress, this.tameEffectiveness), true);
+    }
+
+    /** Wakes up tame: full health plus a bonus of up to 20% for an effective taming (few wounds while asleep). */
+    private void finishKnockoutTaming(Player player) {
+        int effectiveness = this.tameEffectiveness;
+        this.entityData.set(DATA_KNOCKED_OUT, false);
+        this.torpor = 0.0F;
+        this.tameProgress = 0.0F;
+        this.tamer = null;
+        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            health.removeModifier(TAMING_BONUS_ID);
+            health.addPermanentModifier(new AttributeModifier(TAMING_BONUS_ID, "Knockout taming effectiveness",
+                    health.getBaseValue() * 0.2D * effectiveness / 100.0D, AttributeModifier.Operation.ADDITION));
+        }
+        this.setHealth(this.getMaxHealth());
+        this.tameBy(player);
+        triggerAnim(ACTION_CONTROLLER, "tame");
+        player.sendSystemMessage(Component.translatable("message.terrassic.ko_tamed", this.getDisplayName(), effectiveness));
+    }
+
+    /** Unconscious: no goals, no steering (LivingEntity skips the AI of an immobile mob). */
+    @Override
+    protected boolean isImmobile() {
+        return super.isImmobile() || this.isKnockedOut();
+    }
+
     // ------------------------------------------------------------------ shoulder perch
 
     /** True while riding on a player's shoulder. */
@@ -1075,6 +1297,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         if (!this.level().isClientSide() && this.sated > 0) {
             this.sated--;
+        }
+        if (!this.level().isClientSide() && this.isAlive() && (this.torpor > 0.0F || this.isKnockedOut())) {
+            this.torporTick();
         }
         if (!this.level().isClientSide() && this.isAlive()) {
             this.growthTick();

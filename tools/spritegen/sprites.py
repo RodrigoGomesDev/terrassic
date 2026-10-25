@@ -1319,6 +1319,67 @@ def fishes():
     return out
 
 
+# ------------------------------------------------------------------ knockout taming tools (docs/DOMESTICACAO.md)
+REED = hexc("#a8a060"); REED_L = hexc("#ccc488"); REED_D = hexc("#6e6a3a"); REED_N = hexc("#5a5630")
+DART_G = hexc("#5f8a3c"); FEATHER = hexc("#eae6dc"); FEATHER_D = hexc("#a8a49a")
+HERB_ROWS = [
+    "................",
+    "......vv..v.....",
+    ".....vVVv.vv....",
+    "....vVyVv.vVv...",
+    ".....vVVv.vyv...",
+    "......vv.vvVv...",
+    "...gg..g..vv....",
+    "..gGg..g.g..gg..",
+    "...gGg.gGg.gGg..",
+    "....gGgGgGgGg...",
+    ".....gGsGsGg....",
+    "......ssSss.....",
+    ".......gGg......",
+    "......gG.Gg.....",
+    ".....g.....g....",
+    "................",
+]
+
+
+def taming_tools():
+    """The reed blowgun, the narcotic dart and the sleep herb (water lily flowers tied with shelf fungus fibre)."""
+    out = {}
+    cv = Canvas()
+    for i in range(12):
+        x, y = 2 + i, 13 - i
+        node = i in (3, 7)
+        cv.set(x, y, REED_N if node else REED_L)
+        cv.set(x + 1, y, REED_N if node else REED)
+        cv.set(x + 1, y + 1, REED_D)
+    cv.set(14, 1, REED_D); cv.set(14, 2, REED_N)            # the open muzzle
+    for i in range(2):                                      # the leather mouthpiece wrap
+        cv.set(2 + i, 13 - i, LEATHER); cv.set(3 + i, 13 - i, LEATHER_D)
+    out["blowgun"] = cv
+
+    cv = Canvas()
+    for i in range(7):
+        x, y = 5 + i, 10 - i
+        cv.set(x, y, DART_G if i in (3, 4) else WOOD_L)
+        if i < 6:
+            cv.set(x + 1, y + 1, WOOD if i not in (3, 4) else shade(DART_G, 0.75))
+    for (x, y) in ((12, 3), (13, 2), (12, 2), (13, 1)):     # the flint point
+        cv.set(x, y, FLINT_L if (x + y) % 2 else FLINT)
+    cv.set(13, 3, FLINT_D)
+    for (x, y, c) in ((3, 11, FEATHER), (4, 10, FEATHER), (2, 12, FEATHER_D), (4, 12, FEATHER), (5, 11, FEATHER_D),
+                      (3, 13, FEATHER_D), (2, 11, FEATHER_D), (5, 12, FEATHER)):
+        cv.set(x, y, c)
+    out["tranq_dart"] = cv
+
+    pal = {"v": hexc("#8a7ac8"), "V": hexc("#b8a8ec"), "y": hexc("#f0d860"), "g": hexc("#4e7a3a"), "G": hexc("#6e9c4c"),
+           "s": STRING, "S": hexc("#b8b098")}
+    out["sleep_herb"] = fish_sprite(HERB_ROWS, pal)
+    for name, c in out.items():
+        c.outline(0.42)
+        c.save(os.path.join(TEX, "item", f"{name}.png"))
+    return out
+
+
 # ------------------------------------------------------------------ hides
 FUZZY = {"velociraptor", "dakotaraptor", "troodon", "oviraptor", "citipati", "mononykus", "gallimimus", "compsognathus", "pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "hesperornis"}  # feathers / pycnofibres
 HIDE_ROWS = {2: ((4, 5), (10, 11)), 3: ((3, 12),), 4: ((2, 13),), 5: ((2, 13),), 6: ((2, 13),), 7: ((2, 13),),
@@ -1392,6 +1453,7 @@ if __name__ == "__main__":
     weapons()
     meats()
     fishes()
+    taming_tools()
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)

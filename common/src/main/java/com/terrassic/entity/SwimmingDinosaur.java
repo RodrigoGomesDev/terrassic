@@ -104,20 +104,17 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
-        if (this.tameable()) {
-            this.goalSelector.addGoal(1, new RestInWaterGoal(this));
-        }
+        this.goalSelector.addGoal(1, new RestInWaterGoal(this));   // tame ones (hand-fed or knocked out) rest when told
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.3D, true));
+        this.goalSelector.addGoal(3, new FollowOwnerSwimGoal(this, 1.2D, 10.0F, Math.max(3.0F, this.getBbWidth() * 1.5F)));
         if (this.tameable()) {
-            this.goalSelector.addGoal(3, new FollowOwnerSwimGoal(this, 1.2D, 10.0F, Math.max(3.0F, this.getBbWidth() * 1.5F)));
             this.goalSelector.addGoal(4, new TemptGoal(this, 1.1D, this.food(), false));
         }
         this.goalSelector.addGoal(5, new RandomSwimmingGoal(this, 1.0D, 30));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        if (this.tameable()) {
-            this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-            this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        }
+        // tame ones (hand-fed or knocked out) defend their owner
+        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 20, true, false,
                 e -> this.huntsPlayers() && this.canHunt() && (e.isInWaterOrBubble() || e.getVehicle() instanceof Boat)));
@@ -136,9 +133,14 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     }
 
     @Override
+    protected boolean koFood(ItemStack stack) {
+        return this.food().test(stack);
+    }
+
+    @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!this.tameable()) {
-            // wild only until knockout taming (v0.7)
+        if (!this.tameable() && !this.isTame() && !this.isKnockedOut()) {
+            // wild: tamed only by knockout (docs/DOMESTICACAO.md)
             return InteractionResult.PASS;
         }
         return super.mobInteract(player, hand);

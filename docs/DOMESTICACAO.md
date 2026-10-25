@@ -1,6 +1,25 @@
 # Domesticação por nocaute (plano)
 
-Status: planejado para a **v0.7** (ver `docs/ROSTER.md`, linha 127). Pedido do Rodrigo em 24/10/2026: domar por nocaute como no ARK, com animação de nocaute nos bichos. Nada disto entra na v0.3; os modelos novos já saem com a animação `knocked_out` pronta.
+Status: **implementado** (torpor, nocaute, alimentar derrubado, eficiência, acordar; zarabatana, dardo de narcótico e erva sonífera; ver "O que já está no jogo"). Era: planejado para a **v0.7** (ver `docs/ROSTER.md`, linha 127). Pedido do Rodrigo em 24/10/2026: domar por nocaute como no ARK, com animação de nocaute nos bichos. Nada disto entra na v0.3; os modelos novos já saem com a animação `knocked_out` pronta.
+
+## O que já está no jogo
+- **Torpor** (só em criaturas selvagens): máximo = a vida máxima (mínimo 10). Clava: 2,5x o dano em torpor e metade do
+  dano. Punho: 2 + 2x o dano. Lâminas e pontas: só 10% do dano. Dardo de narcótico: 14 + 6% do máximo, ferida mínima.
+  Acordada, o torpor cai 2% do máximo por segundo.
+- **Nocaute** com o torpor cheio: pose `knocked_out`, sem IA nem movimento (`isImmobile`). Dorme ~2,5 min com a barra
+  cheia (1,5 min para quem morde com 8 ou mais de dano); erva sonífera (+35%) e dardos recarregam sem ferir.
+- **Alimentar**: clique com a comida da espécie; carne nobre vale 2 porções; estudada no Guia vale +25%; a regra
+  "velocidade de domesticação" multiplica. Meta: vida máxima / 8 porções (de 3 a 30). Clique com outra coisa mostra
+  torpor, progresso e eficiência na barra de ação.
+- **Eficiência**: começa em 100%; cada ferida enquanto dorme tira 10 (mínimo 20). Domada, ganha até +20% de vida
+  máxima (modificador permanente) e acorda com a vida cheia, animação `tame`.
+- **Acordar** sem terminar: animação `wake`, metade do progresso some, e quem morde parte para cima de quem a derrubou.
+- Os répteis marinhos que não se domavam (Mosassauro, Tilossauro...) agora se domam só assim; domados seguem o dono,
+  descansam quando mandados e o defendem.
+- Receitas: zarabatana = 3 juncos na diagonal; erva sonífera (2) = lírio-d'água do Cretáceo + orelha-de-pau;
+  dardo de narcótico (4) = sílex + erva sonífera + pena.
+- Ainda não: boleadeira, inventário de comida da criatura derrubada e a dificuldade de nocaute no Guia (arquivos do Guia
+  reservados ao Codex).
 
 ## As três formas de domar
 | Forma | Para quem | Como |

@@ -14,6 +14,7 @@ import com.terrassic.item.ClayJarItem;
 import com.terrassic.item.SketchCharcoalItem;
 import com.terrassic.item.SketchItem;
 import com.terrassic.item.SpearItem;
+import com.terrassic.item.BlowgunItem;
 import com.terrassic.research.GuideSpecies;
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -223,6 +224,13 @@ public final class ModItems {
             () -> new SwordItem(ModTiers.REX_TOOTH, 3, -1.8F, new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> TAIL_CLUB = ITEMS.register("tail_club",
             () -> new ClubItem(ModTiers.ANKYLO_CLUB, 6, -3.4F, 1.2F, new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    // knockout taming (docs/DOMESTICACAO.md): the reed blowgun, its narcotic darts and the sleep herb
+    public static final RegistrySupplier<Item> BLOWGUN = ITEMS.register("blowgun",
+            () -> new BlowgunItem(new Item.Properties().durability(96).arch$tab(ModTabs.MAIN)));
+    public static final RegistrySupplier<Item> TRANQ_DART = ITEMS.register("tranq_dart",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));
+    public static final RegistrySupplier<Item> SLEEP_HERB = ITEMS.register("sleep_herb",
+            () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));
 
     // ---- riding gear: the platform saddle of the titans (docs/CARGA.md): four aboard, anyone may climb on
     public static final RegistrySupplier<Item> PLATFORM_SADDLE = ITEMS.register("platform_saddle",
