@@ -10,10 +10,15 @@ Textures of the Terrassic main menu (client/title/TerrassicMenuScreen.java, docs
 
 usage:
   BACKEND=cycles SAMPLES=96 python3 -B menu_cenas.py ../capagen /tmp/cenas nevoa --wip <folder with tyrannosaurus_v3.py>
-  python3 -B menu_assets.py /tmp/cenas
+  python3 -B menu_assets.py --approved
+
+Current approved scenes are copied from art/menu_ia/v3 at 1672x941.
+Legacy render helpers below are retained for archival use; they are not the active pipeline.
 """
 import os
 import sys
+import shutil
+from pathlib import Path
 
 import numpy as np
 from PIL import Image
@@ -27,6 +32,8 @@ sys.path.insert(0, HERE)
 import icones  # noqa: E402
 
 SCENES = ["nevoa", "triceratops", "espinossauro", "pteranodonte"]
+APPROVED = {"confronto": "floresta_confronto.png", "espinossauro": "rio_espinossauro.png",
+            "pteranodonte": "falesias_pteranodonte.png"}
 ICON_ORDER = ["singleplayer", "multiplayer", "mods", "options", "quit", "language", "accessibility", "rules"]
 SHADE = np.array([12, 11, 10], float)
 
@@ -62,5 +69,22 @@ def main(scene_dir):
     print("menu textures written to", OUT)
 
 
+def install_approved():
+    """Install approved images byte-for-byte; shading is applied by the game, not baked into artwork."""
+    source = Path(ROOT) / "art/menu_ia/v3"
+    for filename in APPROVED.values():
+        with Image.open(source / filename) as img:
+            if img.size != (1672, 941):
+                raise ValueError(f"Unexpected approved background size: {filename}: {img.size}")
+            img.verify()
+    Path(OUT).mkdir(parents=True, exist_ok=True)
+    for scene, filename in APPROVED.items():
+        shutil.copyfile(source / filename, Path(OUT) / f"fundo_{scene}.png")
+    print("Approved backgrounds installed; title and icons preserved.")
+
+
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if sys.argv[1:] == ["--approved"]:
+        install_approved()
+    else:
+        raise SystemExit("Use --approved for current backgrounds. Legacy main(scene_dir) is archival only.")

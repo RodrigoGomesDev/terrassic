@@ -9,13 +9,11 @@
 O menu principal do Minecraft é trocado por uma tela própria (`client/title/TerrassicMenuScreen.java`), igual no
 Fabric e no Forge:
 
-- **Fundo:** uma cena do Cretáceo Superior feita com os blocos e os modelos do próprio mod e renderizada no Blender
-  (Cycles), com sombras, luz rebatendo e névoa de verdade. A primeira é **"Névoa"**: o T. rex saindo da neblina da manhã
-  entre metassequoias gigantes. A cena preenche a tela e desliza devagar para os lados (2 minutos ida e volta). O lado
-  esquerdo e a parte de baixo já vêm escurecidos na imagem, para o texto ficar legível. Galeria (uma sorteada por
-  abertura): **"Névoa"** (T. rex), **"Triceratops"** (pastando numa clareira de araucárias ao fim da tarde),
-  **"Espinossauro"** (pescando no raso de um rio com névoa) e **"Pteranodonte"** (planando rente ao mar ao longo de
-  falésias de giz).
+- **Fundo:** três ilustrações aprovadas pelo Rodrigo em 25/10/2026 (`art/menu_ia/v3/`):
+  confronto T. rex × Triceratops, Espinossauro no rio e Pteranodonte nas falésias. PNGs originais
+  de 1672×941 copiados sem alteração; são ilustrações por IA, não capturas ou renders exatos dos modelos.
+  Uma cena é sorteada por inicialização do jogo, com movimento lateral lento. O jogo aplica um
+  sombreado à esquerda e no rodapé para preservar a leitura sem modificar os arquivos aprovados.
 - **No alto, à esquerda:** o letreiro de pedra **TERRASSIC** da capa, um traço âmbar e o slogan **"The past has awoken."**
   (em inglês em todos os idiomas, como na capa).
 - **Opções**, alinhadas ao letreiro, cada uma com um ícone próprio de 16×16 no mesmo estilo:
@@ -60,15 +58,26 @@ o papel do Caderno, com as bordas sumindo no papel, bem clara para o modelo colo
 ## Arquivos
 
 - Tela: `common/src/main/java/com/terrassic/client/title/TerrassicMenuScreen.java` (registrada em `TerrassicClient`).
-- Texturas: `assets/terrassic/textures/gui/title/menu/` (`fundo_nevoa.png` 1920×1080, `titulo.png`, `icones.png` com
+- Texturas: `assets/terrassic/textures/gui/title/menu/` (`fundo_confronto.png`, `fundo_espinossauro.png`, `fundo_pteranodonte.png` 1672×941, `titulo.png`, `icones.png` com
   uma coluna por ícone e as linhas normal/destacado/apagado).
 - Geradores (`tools/menugen/`): `menu_cenas.py` monta e renderiza as cenas com o `tools/capagen` (gl.py para prévia
   rápida, `BACKEND=cycles` para a imagem final), `icones.py` desenha os ícones, `menu_assets.py` grava as texturas.
 - Textos: `tools/javagen/menu_texts.py` (`menu.terrassic.slogan`, `menu.terrassic.<opção>.hint`,
   `menu.terrassic.scene.<cena>.*`), em pt_br, en_us e es_es.
 
-Para pôr outra cena: uma função nova em `menu_cenas.py`, o id em `SCENES` de `menu_assets.py` e de
-`TerrassicMenuScreen`, e as três linhas da plaquinha em `menu_texts.py`. O jogo sorteia uma cena por abertura.
+Para reinstalar os fundos aprovados, sem regenerar marca ou ícones:
+
+```sh
+build/menu-render-venv/bin/python -B tools/menugen/menu_assets.py --approved
+```
+
+A fonte canônica é `art/menu_ia/v3/`. O instalador verifica o tamanho e copia os três PNGs
+sem alterar seus bytes. Os geradores Blender antigos permanecem como histórico; sua saída
+não deve sobrescrever automaticamente as escolhas aprovadas. Para adicionar cenas, manter
+`APPROVED`, `TerrassicMenuScreen.SCENES`, dimensões e textos de plaquinha em concordância.
+
+Validação de 25/10: integridade e orçamento passaram; build Fabric/Forge passou em 36 s.
+Revisão da tela dentro do jogo, em diferentes resoluções e escalas, permanece pendente.
 
 ## Testes no jogo (para o Rodrigo)
 

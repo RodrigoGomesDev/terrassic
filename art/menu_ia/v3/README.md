@@ -1,7 +1,7 @@
 # Fundos — revisão geométrica, 25/10/2026
 
 Propostas editadas com a ferramenta integrada image_gen. Originais v2 preservados.
-Nenhum fundo ativo do jogo foi substituído. Prompts integrais em `PROMPTS.md`; arquivos,
+Rodrigo aprovou a aplicação ao menu em 25/10/2026; os três PNGs agora são os fundos ativos. Prompts integrais em `PROMPTS.md`; arquivos,
 dimensões e hashes em `manifest.json`.
 
 ## Auditoria visual
@@ -26,5 +26,6 @@ originais não estão certificados. Não anunciar como capturas do jogo ou como 
 validados. Para garantia estrutural, reconstruir os cenários em uma grade real e renderizar
 os modelos do projeto, usando estas imagens como referência de composição e iluminação.
 
-Pendente: revisão do Rodrigo em tamanho integral e escolha antes de aplicação ao menu.
-Não houve build nem teste no jogo: esta entrega modifica apenas propostas de arte e documentação.
+Aprovação visual recebida; integração ao menu compilada nos dois loaders. A reprovação posterior das
+imagens dos períodos não inclui estes três fundos (Rodrigo confirmou explicitamente).
+Teste visual da interface dentro do jogo permanece pendente.

@@ -39,8 +39,7 @@ import java.util.function.Supplier;
 /**
  * The Terrassic main menu (docs/MENU.md), in place of the vanilla title screen on Fabric and Forge.
  *
- * <p>A scene of the Late Cretaceous fills the screen (rendered in Blender from the mod's own blocks and models by
- * tools/menugen; it drifts slowly sideways), with the stone TERRASSIC title of the cover and the slogan at the top
+ * <p>An approved illustrated scene fills the screen (art/menu_ia/v3; it drifts slowly sideways), with the stone TERRASSIC title of the cover and the slogan at the top
  * left, a column of options with their own icons under it, and a museum placard of the animal in the scene at the
  * bottom right. The highlighted option (mouse or keyboard) lights up in amber with a band and a short hint. Language
  * and accessibility sit as icons at the top right; the Mojang copyright opens the credits, as in vanilla. Realms is
@@ -58,11 +57,11 @@ public class TerrassicMenuScreen extends Screen {
     private static final ResourceLocation ICONS = Terrassic.id(TEX + "icones.png");
     private static final int TITLE_W = 950;
     private static final int TITLE_H = 150;
-    private static final int BG_W = 1920;
-    private static final int BG_H = 1080;
+    private static final int BG_W = 1672;
+    private static final int BG_H = 941;
 
     /** The scenes of the menu; one is picked each time the game starts. */
-    private static final List<Scene> SCENES = List.of(new Scene("nevoa"), new Scene("triceratops"), new Scene("espinossauro"),
+    private static final List<Scene> SCENES = List.of(new Scene("confronto"), new Scene("espinossauro"),
             new Scene("pteranodonte"));
 
     private static final int ICON_COLUMNS = 8;
@@ -207,6 +206,14 @@ public class TerrassicMenuScreen extends Screen {
         g.pose().translate(x, y, 0.0F);
         g.blit(scene.background(), 0, 0, w, h, 0.0F, 0.0F, BG_W, BG_H, BG_W, BG_H);
         g.pose().popPose();
+        // Keep the approved source artwork intact; shade behind controls at render time.
+        int shadeWidth = Math.max(1, (int) (this.width * 0.60F));
+        for (int column = 0; column < shadeWidth; column++) {
+            float strength = (float) Math.pow(1.0F - column / (float) shadeWidth, 1.3) * 0.78F;
+            g.fill(column, 0, column + 1, this.height, alpha(BASALT_950, (int) (255 * strength)));
+        }
+        g.fillGradient(0, (int) (this.height * 0.72F), this.width, this.height,
+                alpha(BASALT_950, 0), alpha(BASALT_950, 190));
     }
 
     /**

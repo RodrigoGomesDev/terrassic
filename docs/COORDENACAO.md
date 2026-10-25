@@ -2,11 +2,22 @@
 
 Atualizado em 25/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
 
+Entrega Codex: Rodrigo aprovou os três fundos v3 e autorizou sua aplicação. Escopo: tela do menu,
+instalador em `tools/menugen/`, textos da plaquinha e idiomas, três texturas e `docs/MENU.md`.
+Também preparar `art/divulgacao/periodos/v1/` para as páginas das lojas: ilustrações promocionais,
+com os capítulos futuros identificados como planejados, sem apresentá-las como screenshots do jogo.
+
+Correção de rumo durante a entrega: Rodrigo reprovou as cinco imagens promocionais geradas porque
+os animais foram reinterpretados e os blocos continuam incoerentes. `art/divulgacao/periodos/v1/`
+é histórico reprovado, não material pronto para publicação. Codex reserva também `tools/menugen/menu_vanilla.py`
+e `art/divulgacao/originais/v1/`: render com assets originais, auditoria da grade e hashes das fontes.
+
 Foco atual pedido pelo Rodrigo: Codex assume os fundos do menu/interface; Claude não mexe nessa frente por
 enquanto. Após comparar as propostas, Rodrigo selecionou explicitamente a imagem cinematográfica de confronto
 T. rex × Triceratops como referência: reduzir a poluição visual, usar sol quadrado Minecraft e criar ambientes
-semelhantes para apresentação. Essa seleção orienta `art/menu_ia/v2/`; não aprova automaticamente toda a v1 nem
-substitui os fundos ativos. Os renders de modelos originais em `art/menu_vanilla/v1/` continuam disponíveis.
+semelhantes para apresentação. A revisão `art/menu_ia/v3/` foi aprovada depois e aplicada ao menu. A confirmação mais recente preserva
+esses três fundos; a reprovação refere-se somente às cinco imagens novas dos períodos. Os renders de
+modelos originais em `art/menu_vanilla/v1/` continuam disponíveis.
 
 ## Links oficiais — informados pelo Rodrigo em 25/10
 
@@ -14,8 +25,11 @@ Entrega Codex — revisão geométrica dos fundos (25/10): `art/menu_ia/v3/` e d
 Rodrigo aprovou a direção visual da v2, mas apontou erros nos blocos. Revisar terreno da floresta,
 margens do rio e falésias, preservando cenas e iluminação. A conferência estética anterior não validou
 a geometria voxel. Três edições inspecionadas, PNGs conferidos e originais preservados; detalhes e limites
-em `art/menu_ia/v3/README.md`. Fundos ativos permanecem inalterados. Geometria exata e modelos originais
-não certificados por geração raster; aprovação final pendente. Entrega no commit desta atualização.
+em `art/menu_ia/v3/README.md`. Aprovação visual recebida e três fundos aplicados. Geometria exata e
+modelos originais não certificados por geração raster; escolha visual expressa do Rodrigo mantida.
+Integridade: 59 espécies, 4.341 JSONs, 1.848 chaves; orçamento passou; build offline Fabric/Forge
+com regressões passou em 36 s. Os três PNGs foram comparados byte a byte aos dois JARs finais.
+Revisão visual da interface no jogo permanece pendente. Entrega no commit desta atualização.
 
 - Modrinth: https://modrinth.com/mod/terrassic
 - CurseForge: https://www.curseforge.com/minecraft/mc-mods/terrassic
