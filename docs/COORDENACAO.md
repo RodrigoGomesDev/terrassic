@@ -10,6 +10,13 @@ substitui os fundos ativos. Os renders de modelos originais em `art/menu_vanilla
 
 ## Links oficiais — informados pelo Rodrigo em 25/10
 
+Entrega Codex — revisão geométrica dos fundos (25/10): `art/menu_ia/v3/` e documentação das propostas.
+Rodrigo aprovou a direção visual da v2, mas apontou erros nos blocos. Revisar terreno da floresta,
+margens do rio e falésias, preservando cenas e iluminação. A conferência estética anterior não validou
+a geometria voxel. Três edições inspecionadas, PNGs conferidos e originais preservados; detalhes e limites
+em `art/menu_ia/v3/README.md`. Fundos ativos permanecem inalterados. Geometria exata e modelos originais
+não certificados por geração raster; aprovação final pendente. Entrega no commit desta atualização.
+
 - Modrinth: https://modrinth.com/mod/terrassic
 - CurseForge: https://www.curseforge.com/minecraft/mc-mods/terrassic
 - Wiki: https://github.com/RodrigoGomesDev/terrassic/wiki

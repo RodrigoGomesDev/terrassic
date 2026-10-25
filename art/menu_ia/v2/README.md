@@ -1,5 +1,8 @@
 # Galeria v2 — referência escolhida pelo Rodrigo
 
+Revisão posterior: Rodrigo apontou erros na geometria dos blocos. A conferência estética desta
+rodada não validou a grade voxel. Correções propostas e limitações estão em [v3](../v3/README.md).
+
 Em 25/10/2026, depois de comparar as propostas, Rodrigo anexou novamente a cena cinematográfica de
 T. rex × Triceratops e pediu uma versão menos poluída, com sol mais Minecraft, além de ambientes semelhantes
 para apresentação. Essa escolha atualiza a direção visual; não equivale a aprovar toda a primeira galeria.

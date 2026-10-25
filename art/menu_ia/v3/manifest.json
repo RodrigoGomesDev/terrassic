@@ -1,0 +1,29 @@
+[
+  {
+    "file": "floresta_confronto.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "1db36d3cfdff3b919ca93df7817824e1de5d04c5d340741daf7e3beb56526e54",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-054f6278-53e9-4c71-8c95-41367b08ad54.png",
+    "reference": "../v2/floresta_confronto.png",
+    "status": "proposta revisada; geometria exata não certificada"
+  },
+  {
+    "file": "rio_espinossauro.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "7e9a9982293679560878b417e6d3bd1b1c6f7e302bbe03e58a6214853d0c4096",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-0c259f6c-4f71-4ee1-a64e-16ae388204fc.png",
+    "reference": "../v2/rio_espinossauro.png",
+    "status": "proposta revisada; geometria exata não certificada"
+  },
+  {
+    "file": "falesias_pteranodonte.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "ca3bb2ec0184bf8dfad030765f6196cd015c4f90e8fd893ca62211d311c88a4a",
+    "source": "/Users/rodrigogs/.codex/generated_images/01a16f8a-631f-7c52-bf64-71b0782ca641/exec-4c8e9a76-043e-41f2-b571-07384f5a155a.png",
+    "reference": "../v2/falesias_pteranodonte.png",
+    "status": "proposta revisada; geometria exata não certificada"
+  }
+]
