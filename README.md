@@ -14,6 +14,12 @@ Projeto pessoal, sem vínculo empresarial. Para colaborar entre sessões de IA, 
 [`AGENTS.md`](AGENTS.md) e o [quadro de coordenação](docs/COORDENACAO.md).
 Verificação de integridade sem gerar arquivos: `python3 -B tools/validation/check_project.py`.
 
+## Links oficiais
+
+- [Modrinth](https://modrinth.com/mod/terrassic)
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/terrassic)
+- [Wiki no GitHub](https://github.com/RodrigoGomesDev/terrassic/wiki)
+
 ![Elenco v0.2](art/preview_sheet.png)
 
 ![Ovos geradores, armas e materiais](art/items_sheet.png)
@@ -146,6 +152,18 @@ Use `git log` para ver o histórico.
   - Configuração de spawn.
 - **v0.4**: Ciclo de fome e sono, territórios, variantes de cor por bioma, ninhos.
 - **Portes**: 1.21.x. A lógica fica em `common/`; a principal mudança é a versão do GeckoLib e as APIs de item/registro.
+
+## Licença
+
+- **Código** (Java, scripts de `tools/`, build): **GNU LGPL 3.0** (`LICENSE` + `COPYING`).
+- **Assets** (modelos, animações, texturas, sons, fontes próprias, logo, história, textos e nomes): **All Rights
+  Reserved**, com permissões explícitas em `LICENSE-ASSETS.md`: **modpacks são livres** (baixando dos projetos oficiais
+  no Modrinth e no CurseForge), vídeos e lives são livres com monetização, addons são livres sem usar os assets nem o
+  logo. Ports não oficiais e reenvio do jar não são permitidos.
+- Contribuições seguem o acordo em `CLA.md`.
+- Autor e titular: Rodrigo Gomes.
+
+NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.
 
 ## Referências
 

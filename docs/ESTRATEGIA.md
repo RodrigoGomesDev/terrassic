@@ -49,7 +49,7 @@ O risco não é falta de ideia; é **executar com qualidade, desempenho e contin
 | Integração | Modpack não precisa de código para ajustar: dietas por tag, espécies e spawns por datapack, Jade e EMI/JEI, licença que permite modpack | lista de integração (estudo 03 §6) |
 | Narrativa e ciência | Campanha por eras no nível do Twilight Forest e Guia de Campo no nível da Pokédex/Ponder | conquistas e Caderno completos por era |
 | Continuidade | Mais de uma pessoa com acesso a tudo; licença que deixa a comunidade portar se o projeto parar | README, licença, GitHub da organização |
-| Marca | Nome, domínios e @ garantidos antes do primeiro post; Discord, site com bestiário gerado dos dados e trailer em cada versão grande | lista "fazer agora" (§5) |
+| Marca | Identidade própria completa (paleta, fontes, logo); no fim do roadmap, domínios, redes, Discord, site com bestiário gerado dos dados e trailer em cada versão grande | §5 |
 
 ## 3. Os pilares de diferenciação e onde o Terrassic está
 
@@ -80,37 +80,35 @@ O Rodrigo deixou a frente decidir (24/10/2026). Ficam valendo até alguém regis
 | D6 | **Integrações opcionais** (nunca dependência obrigatória): Jade/WTHIT, EMI (+ JEI/REI), tags `c:`, FTB Quests (documentar os IDs das conquistas), claims (FTB Chunks / OPAC), permissões (fabric-permissions-api / PermissionAPI) | 03 §5-6, ESCOPO "um mod só" |
 | D7 | **Identidade visual "Âmbar e Basalto"** (`docs/IDENTIDADE.md`): basalto, pedra, osso, âmbar como único acento, papel do caderno; nada de ciano/vidro/hexágono (ARK) nem vermelho-amarelo-preto (filme) | pedido do Rodrigo; 05 §4.3 |
 | D8 | **Posicionamento:** "o mod de dinossauros para quem leva dinossauros a sério" (ciência e escala real) como guarda-chuva; a aventura da Katarina nos trailers. Slogan: **"Atravesse a Fenda." / "Cross the Rift." / "Cruza la Grieta."** Ciência como padrão, silhuetas icônicas preservadas, variantes de pele e pena por resource pack | 01 §4.6, 05 §4.1-4.2 |
-| D9 | **Nome: manter "Terrassic"** (já está em tudo), com a ressalva legal do §5. Reservas se um advogado vetar: **Paleorift** ou **Mesorift** | 05 §3 |
+| D9 | **Nome: manter "Terrassic"** (já está em tudo; projetos criados no Modrinth e no CurseForge), com a ressalva legal do §4. Reservas se um advogado vetar: **Paleorift** ou **Mesorift** | 05 §3 |
 | D10 | **Nomes de versão:** capítulo nas grandes (v1.0 "Ecos do Fim"...), tema nas médias, **"Leva"** nas expansões de bestiário depois da v1.0, builds de teste **"Ensaio"** (`1.0.0-ensaio.3`), revelação de espécie como **"Ficha nº 027"**. Mascote: **Sílex**, um Compsognathus curioso (já no mod) | 05 §4.4-4.5 |
 | D11 | **Desempenho é requisito de produto:** cada versão sai com um perfil do spark num mundo de teste e um número de MSPT por jogadores, publicado no changelog | 01 §5.2 item 1, 03 §2 |
 
-**Decisões e pendências do estudo** (o plano recebido e `COORDENACAO.md` registram as decisões posteriores):
-1. **Titular da marca e dos direitos:** **Definido: Rodrigo Gomes, pessoa física, sem vínculo empresarial.**
-2. **Registro no INPI** de "TERRASSIC" nas classes 9 e 41 (depois 25 e 28). Atenção: **"TERRASSIC" já é marca
-   registrada nos EUA** por uma empresa de produtos de terrário para répteis (reg. 7724465 e 7733103, mar/2025), fora do
-   ramo de jogos; e terrassic.com é de uma loja de paisagismo na Índia. Para um mod grátis o risco parece baixo; para
-   merch e registro nos EUA, consultar um advogado de marcas.
-3. **Licença final.** Recomendação: **código LGPL-3.0 (ou MIT) + todos os assets All Rights Reserved** (modelos,
-   texturas, sons, história, nomes, logo), com permissões explícitas (modpacks livres baixando do Modrinth/CurseForge,
-   vídeos livres com monetização, addons livres sem usar o logo, ports não oficiais proibidos) e um CLA a favor do
-   titular. É o modelo do Aether e do Create. Hoje o `fabric.mod.json` diz All-Rights-Reserved e nada permite modpacks.
-4. **Compras:** domínios (sugestão: terrassic.net ou terrassic.gg como principal, com terrassic.dev e terrassicmod.com
-   redirecionando; os quatro primeiros pareciam livres em 24/10/2026) e o registro dos @ nas redes.
+**Decisões do Rodrigo (24/10/2026)** (o plano recebido, `PLANO_MESTRE.md`, e `COORDENACAO.md` registram o que veio depois):
+1. **Titular: Rodrigo Gomes, pessoa física.** O projeto é pessoal e **não pode ser vinculado a empresa nenhuma** (nem
+   em código, créditos, licença, site ou redes).
+2. **Licença (aplicada):** código **LGPL-3.0** (`LICENSE` + `COPYING`) e todos os assets **All Rights Reserved** com
+   permissões explícitas (`LICENSE-ASSETS.md`: modpacks livres baixando do Modrinth/CurseForge, vídeos livres com
+   monetização, addons livres sem usar o logo nem parecer oficial, ports não oficiais proibidos) e um CLA a favor do
+   titular (`CLA.md`). O `fabric.mod.json` e o `mods.toml` já dizem isso.
+3. **Projetos criados no Modrinth e no CurseForge** (o slug já está garantido).
+4. **Ficam para depois, quando houver produto entregável** (fim do roadmap, marco "Lançamento"): registro no INPI,
+   advogado sobre a marca "TERRASSIC" registrada nos EUA para produtos de terrário (fora do ramo de jogos), domínios e
+   perfis nas redes sociais.
 
-## 5. Fazer agora, antes de qualquer post público
+## 5. Antes do primeiro post público (quando houver produto entregável)
 
-1. Registrar os domínios e garantir os @ (YouTube, TikTok, Instagram, X, Bluesky, Reddit, GitHub "terrassic", Twitch)
-   e os projetos-rascunho `modrinth.com/mod/terrassic` e `curseforge.com/minecraft/mc-mods/terrassic`. Um e-mail
-   contato@ e imprensa@ no domínio.
-2. Decidir o titular, depositar no INPI e falar com um advogado sobre o registro americano.
-3. Decidir a licença, publicar as permissões e o CLA, trocar o campo `license` do `fabric.mod.json`.
-4. Colocar o disclaimer obrigatório da Mojang no README, nas páginas do mod e no site: *"NOT AN OFFICIAL MINECRAFT
-   PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT."*, com o responsável e um e-mail.
-5. Revisar o ícone (sem T. rex de perfil dentro do anel) e criar o monograma para avatar (`IDENTIDADE.md` §5).
-6. Criar o Discord fechado com a estrutura do estudo 05 §5.1 e convidar 5 a 10 testadores.
-7. Montar o press kit v0 (logo SVG, ícone, paleta, textos do `RESUMO.md`) e o storyboard do trailer a partir das 9
-   cenas do `CAPA.md`.
-8. Começar a gravar clipes curtos de cada animação nova: viram o estoque do primeiro mês público.
+Nada disto é urgente: o Rodrigo deixou marca, domínios e redes para o fim do roadmap. Feito agora: titular definido,
+licença aplicada, projetos no Modrinth e no CurseForge.
+
+1. Disclaimer obrigatório da Mojang no README (já está), nas páginas do Modrinth e do CurseForge e no site: *"NOT AN
+   OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT."*, com o responsável e um e-mail.
+2. Revisar o ícone (sem T. rex de perfil dentro do anel) e adotar o monograma para avatar (`IDENTIDADE.md`).
+3. Press kit (logo, monograma, paleta, as fontes próprias, textos do `RESUMO.md`) e storyboard do trailer a partir das
+   9 cenas do `CAPA.md`.
+4. Ir gravando clipes curtos de cada animação nova: viram o estoque do primeiro mês público.
+5. **Na reta final (marco "Lançamento"):** domínios, perfis nas redes, Discord aberto, INPI e consulta sobre a marca
+   americana.
 
 ## 6. Briefing para a sessão principal (o que fazer, em ordem)
 
@@ -143,11 +141,11 @@ Qualidade" das criaturas e devem andar junto com a remodelagem.
 
 | Período | Mod | Marca e comunidade |
 |---|---|---|
-| Nov/2026 | Passe de escala (itens 1-3, 8-9); testes da v0.3-v0.9 no jogo | "Fazer agora" (§5); Discord fechado |
-| Dez/2026 - Jan/2027 | Passe de Qualidade das criaturas (itens 4-7) junto com a remodelagem; nocaute (v0.7); camada de plataforma (item 13) | "Fichas de campo" semanais começando pequeno; recrutar 20-30 testadores |
-| Fev - Abr/2027 | **Port para 1.21.1 NeoForge + Fabric**; dados por jogador, claims, integrações (itens 11-14) | **Alpha fechada** ("Ensaio") no Discord; bestiário no site; licença e CLA publicados |
-| Mai - Jun/2027 | Polimento do Capítulo 1 completo; perfis de spark públicos | **Early Access público e gratuito** no Modrinth e CurseForge (1.21.1 + 1.20.1); post no r/feedthebeast; 10-20 criadores |
-| Jul - Set/2027 | Hitbox multiparte e navegação de gigantes (item 10); balanceamento | modpack oficial "Terrassic + desempenho"; afiliado de hospedagem; produção do trailer |
+| Nov/2026 | Passe de escala (itens 1-3, 8-9); testes da v0.3-v0.9 no jogo | identidade visual completa (paleta, fontes, kit de marca) |
+| Dez/2026 - Jan/2027 | Passe de Qualidade das criaturas (itens 4-7) junto com a remodelagem; nocaute (v0.7); camada de plataforma (item 13) | testadores convidados direto pelo Rodrigo |
+| Fev - Abr/2027 | **Port para 1.21.1 NeoForge + Fabric**; dados por jogador, claims, integrações (itens 11-14) | **Alpha fechada** ("Ensaio") com testadores convidados |
+| Mai - Jun/2027 | Polimento do Capítulo 1 completo; perfis de spark públicos | **Early Access gratuito** nas páginas que já existem no Modrinth e no CurseForge (1.21.1 + 1.20.1) |
+| Jul - Set/2027 | Hitbox multiparte e navegação de gigantes (item 10); balanceamento | **Lançamento da marca:** domínios, redes, Discord aberto, site com bestiário, INPI; modpack oficial; produção do trailer |
 | Out/2027 (alvo) | **v1.0 "Ecos do Fim"** | lançamento coordenado: trailer em pt/en/es, site, Reddit, lives |
 | 2º semestre/2027 | Escolha e port para a 26.x-alvo (GeckoLib 5) | — |
 | 2028+ | v2.0 "Penas e Cinzas"; avaliar Bedrock via publishing partner | — |

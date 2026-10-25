@@ -47,7 +47,7 @@ public class IntroScreen extends Screen {
         int y = this.height / 2 - Lore.INTRO_LINES * 12;
         for (int i = 0; i < Lore.INTRO_LINES; i++) {
             int alpha = alpha(t - i * LINE_MS);
-            List<FormattedCharSequence> lines = this.font.split(Component.translatable("intro.terrassic.line." + i), this.width - 60);
+            List<FormattedCharSequence> lines = this.font.split(com.terrassic.client.ui.TerrassicFonts.ui("intro.terrassic.line." + i), this.width - 60);
             for (FormattedCharSequence line : lines) {
                 if (alpha > 8) {
                     g.drawString(this.font, line, (this.width - this.font.width(line)) / 2, y, (alpha << 24) | 0xE8C890, false);
@@ -59,14 +59,14 @@ public class IntroScreen extends Screen {
         long eraAt = Lore.INTRO_LINES * LINE_MS;
         int eraAlpha = alpha(t - eraAt);
         if (eraAlpha > 8) {
-            Component era = Component.translatable("intro.terrassic.era");
+            Component era = com.terrassic.client.ui.TerrassicFonts.title(Component.translatable("intro.terrassic.era"));
             g.pose().pushPose();
             g.pose().translate(this.width / 2.0F, y + 14, 0.0F);
-            g.pose().scale(1.6F, 1.6F, 1.0F);
+            g.pose().scale(1.25F, 1.25F, 1.0F);
             g.drawString(this.font, era, -this.font.width(era) / 2, 0, (eraAlpha << 24) | 0xF0A030, false);
             g.pose().popPose();
         }
-        Component skip = Component.translatable("intro.terrassic.skip");
+        Component skip = com.terrassic.client.ui.TerrassicFonts.ui("intro.terrassic.skip");
         g.drawString(this.font, skip, this.width - this.font.width(skip) - 8, this.height - 14, 0x80A08870, false);
         if (t > eraAt + END_HOLD_MS) {
             this.onClose();

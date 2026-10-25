@@ -2,9 +2,18 @@
 
 > Pedido do Rodrigo (24/10/2026): o mod precisa de uma identidade própria. A tela de Regras estava com cara de ARK
 > (vidro escuro, linhas ciano, favos de mel, cantos chanfrados) e isso não pode continuar.
+> Depois (24/10/2026): "quero uma fonte totalmente nova, tipografia única, tudo único, uma identidade predominante".
 > Base: a capa (`docs/CAPA.md`), a paleta levantada no estudo de marca (`docs/estudos/05_MARCA_COMUNIDADE.md` §4.3) e as
-> regras de pixel dos blocos (`docs/TEXTURAS_ERA.md`). Prévias: `art/identidade/paleta.png` e `art/identidade/tela_regras.png`
-> (geradas por `tools/capagen/ui_mock.py`, que espelha o código pixel a pixel).
+> regras de pixel dos blocos (`docs/TEXTURAS_ERA.md`). Tudo é desenhado por código e é asset do Terrassic (All Rights
+> Reserved, `LICENSE-ASSETS.md`).
+>
+> | Prévia | Arquivo | Gerada por |
+> |---|---|---|
+> | Prancha da marca | `art/identidade/marca/prancha.png` | `tools/capagen/brand.py` |
+> | Tela de Regras | `art/identidade/tela_regras.png` | `tools/capagen/ui_mock.py` (espelha o código pixel a pixel) |
+> | Página do Caderno (Katarina) | `art/identidade/tela_caderno.png` | `tools/capagen/ui_mock.py` |
+> | Paleta | `art/identidade/paleta.png` | `tools/capagen/ui_mock.py` |
+> | Espécimes das fontes | `art/identidade/fontes/especime_*.png` | `tools/fontgen/build.py` |
 
 ## 1. A ideia em uma frase
 
@@ -72,13 +81,49 @@ Implementados em `client/ui/TerrassicUi.java`. Toda tela nova usa estes pedaços
 
 Regras de composição:
 - **Uma cor de acento só.** O âmbar indica "isto age ou está selecionado". Se tudo é âmbar, nada é.
-- **Texto em caixa normal**, nunca tudo em maiúsculas (o ARK grita; o caderno anota).
-- **Fonte do jogo** em toda a interface (legível e compatível com pacotes de recurso); a fonte de blocos própria do
-  letreiro só no logotipo.
+- **Texto em caixa normal**, nunca tudo em maiúsculas (o ARK grita; o caderno anota). A exceção são os títulos em
+  "Entalhe", que é uma inscrição e só tem maiúsculas.
+- **As fontes próprias** (§4) em todas as telas do mod: Sedimento na interface, Entalhe nos títulos, Caderno no que a
+  Katarina escreveu. Os números das caixas de texto ficam na fonte do jogo (o cursor do vanilla mede com ela).
 - **Ícones** 8x8 ou 16x16 com contorno escuro de 1 px e paleta curta (como `tools/capagen/hud_icons.py`).
 - **Som de interface:** cliques do vanilla; confirmações importantes com o sino de ametista (já usado no Altar).
 
-## 4. O que já mudou no código (branch paralelo/v0.9-salto)
+## 4. Tipografia: três fontes próprias
+
+Desenhadas pixel a pixel em `tools/fontgen/` (uma grade de `#` por letra), com acentos do português e do espanhol
+compostos pelo gerador (`À Á Â Ã Ä Ç È É Ê Ë Í Ñ Ó Ô Õ Ú Ü ¡ ¿ º ª` e as minúsculas). Saem como fontes bitmap do
+Minecraft (`assets/terrassic/font/*.json` + `textures/font/*.png`; acentuadas numa folha mais alta, como o vanilla) e
+como **TrueType** para o site e o material de marca (`art/identidade/fontes/*.ttf`, contornos traçados dos pixels).
+O que uma fonte não desenhou cai para a fonte do jogo (provedor `reference` para `minecraft:default`), então nenhum
+texto some. Desligar: `"terrassic_fonts": false` em `config/terrassic-client.json`.
+
+| Fonte | Uso | Desenho |
+|---|---|---|
+| **Sedimento** (8 px) | interface: Regras, botões, abas, Caderno, HUD, avisos, dicas, abertura | Letra **talhada e condensada**: maiúsculas de 4 px (o vanilla usa 5), formas redondas com o **canto superior esquerdo reto** (a entrada do cinzel) e os outros três cortados; `i`, `l` e `1` com bandeira; `l` e `t` terminam numa curva para a direita; descendentes curvam para a esquerda |
+| **Entalhe** (12 px, só maiúsculas) | títulos de tela, título da era, nomes de página, letreiro | **Inscrição em pedra**: hastes de 2 px e traços horizontais de 1 px (contraste de letra romana entalhada), serifas que abrem na base e no topo, o mesmo canto superior esquerdo reto da família, 2 px entre letras |
+| **Caderno** (8 px) | o que a Katarina escreveu: páginas, a nota pessoal do Guia | **Letra de mão** da família: nasce da Sedimento, os cantos são arredondados (caneta não corta como cinzel), a metade de cima inclina 1 px para a direita e as letras que mais mudam à mão têm desenho próprio (a e g de um andar, e laçado, f com cauda, t cruzado) |
+
+No código: `client/ui/TerrassicFonts` (`ui(...)`, `title(...)`, `hand(...)`), já aplicado na tela de Regras (título em
+Entalhe), no Caderno de Campo (títulos de página em Entalhe, texto e guia em Sedimento, páginas e notas da Katarina em
+Caderno, o Relatório do Incidente "datilografado" em Sedimento), na abertura (era em Entalhe), no HUD (título da era em
+Entalhe), no aviso de nova espécie, na tela de título e nas dicas de carregamento.
+
+## 5. A marca
+
+Propostas geradas por `tools/capagen/brand.py` em `art/identidade/marca/`:
+
+| Peça | O que é |
+|---|---|
+| **Letreiro** (`letreiro.png`) | TERRASSIC em Entalhe, cada pixel virando um bloco de pedra entalhada (calcário com aresta clara e sombra), contorno de basalto e um **veio de âmbar** cortando as letras |
+| **Monograma** (`monograma.png`) | um T de âmbar em Entalhe numa laje de basalto com os 4 cravos: avatar, favicon, marca d'água |
+| **Selo do Altar** (`selo.png`) | o anel de 4 pedras em pé e 4 ossos em volta do núcleo de âmbar, sobre o crepúsculo: carimbo, merch, tela de carregamento. **Sem dinossauro**, para não lembrar o logo de um certo filme |
+| **Ícone** (`icone_proposta.png`) | o selo em 512 px, proposto para trocar o ícone atual (T. rex dentro do anel) |
+| **Prancha** (`prancha.png`) | tudo junto: letreiro, slogan nos 3 idiomas, monograma, selo, paleta e as três fontes |
+
+O letreiro e o ícone novos **não substituem** o letreiro da tela de título nem o `icon.png` sem o "ok" do Rodrigo
+(regra 12 do ROADMAP).
+
+## 6. O que já mudou no código
 
 - `client/ui/TerrassicPalette` e `client/ui/TerrassicUi` (novos).
 - **Tela de Regras** (`RulesScreen`): saiu o vidro ciano com favos e cantos chanfrados; entrou a laje de basalto com veio
@@ -87,15 +132,18 @@ Regras de composição:
 - **Toast de nova espécie**: laje própria no lugar da moldura de conquista do vanilla, retrato num poço.
 - **HUD**: painel e barras com a paleta (basalto, borda âmbar, vida `BLOOD_500`, fome `AMBER_600`, alerta da Fenda `RIFT_500`).
 - **Caderno de Campo**: as cores de papel, couro e tinta agora vêm da paleta (mesmos tons de antes).
+- **Fontes próprias** em todas essas telas (§4) e **botões de couro** no Caderno de Campo (`client/ui/TerrassicButton`):
+  as abas, os filtros, a lista de espécies e o virar de página deixaram o botão cinza do vanilla; a aba aberta e a
+  espécie escolhida aparecem na cor da página.
 
-## 5. Próximos passos de identidade
+## 7. Próximos passos de identidade
 
 1. Passar o resto das telas pela paleta: tela de abertura (`IntroScreen`), Caderno (componentes), Mesa de Pesquisa,
    telas de carga e domesticação que vierem (v0.7).
 2. **Pacote de texturas do Cretáceo** (`TEXTURAS_ERA.md`): menus e inventários do vanilla em basalto e âmbar dentro do
    pacote embutido (opcional, ligado no mundo Terrassic).
-3. **Logotipo em três versões** (estudo 05 §4.3): letreiro completo, monograma "T" de pedra com âmbar (avatar e favicon)
-   e o selo do Altar (o anel com os 4 âmbares, sem dinossauro). O ícone atual com o T. rex dentro do anel deve ser
-   revisto para fugir da composição do logo de Jurassic Park.
-4. Kit de marca para o site e o Discord: paleta acima, tipografia de apoio OFL (Inter ou Atkinson Hyperlegible para
-   texto, uma manuscrita discreta para as anotações da Katarina), molduras de "ficha de campo" para revelar espécies.
+3. Com o "ok" do Rodrigo: trocar o letreiro da tela de título e o `icon.png` pelas peças do §5.
+4. Site e redes (marco "Lançamento"): as fontes em TrueType (`art/identidade/fontes/`) nos títulos e na interface do
+   site, a prancha como guia, molduras de "ficha de campo" para revelar espécies.
+5. Fontes: ícones de interface como glifos (coração, fome, pegada) para usar dentro do texto; versão "Entalhe" de 24 px
+   para o letreiro animado da tela de título.

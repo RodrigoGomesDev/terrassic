@@ -22,6 +22,8 @@ dependencies {
 // so the release jar does not carry them twice.
 processResources {
     exclude 'resourcepacks/**'
+    // The loader metadata references these documents; ship the delivered originals in both final jars.
+    from(rootProject.files('LICENSE', 'COPYING', 'LICENSE-ASSETS.md'))
 }
 
 // Data regressions run against the real mapped Minecraft/NBT classes, with no extra test-framework dependency.

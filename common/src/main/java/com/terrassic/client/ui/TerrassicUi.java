@@ -92,7 +92,24 @@ public final class TerrassicUi {
         if (hot && active && !primary) {
             g.fill(x + 1, y + h - 2, x + w - 1, y + h - 1, AMBER_600);
         }
-        g.drawCenteredString(font, label, x + w / 2, y + (h - 8) / 2 + 1, rgb(text));
+        g.drawCenteredString(font, TerrassicFonts.ui(label), x + w / 2, y + (h - 8) / 2 + 1, rgb(text));
+    }
+
+    /** A leather button of the Field Notebook; a selected tab shows the colour of the page. */
+    public static void leather(GuiGraphics g, Font font, int x, int y, int w, int h, Component label,
+                               boolean active, boolean hot, boolean selected) {
+        int face = selected ? PAPER : hot && active ? 0xFF6E4428 : LEATHER;
+        g.fill(x, y, x + w, y + h, INK);
+        g.fill(x + 1, y + 1, x + w - 1, y + h - (selected ? 0 : 1), face);
+        g.fill(x + 1, y + 1, x + w - 1, y + 2, selected ? 0xFFF4EAD0 : 0xFF7A4E2E);
+        if (!selected) {
+            // stitches along the bottom edge
+            for (int sx = x + 3; sx < x + w - 3; sx += 3) {
+                g.fill(sx, y + h - 3, sx + 1, y + h - 2, 0xFFA07040);
+            }
+        }
+        int text = selected ? INK : !active ? INK_SOFT : hot ? AMBER_300 : PAPER;
+        g.drawCenteredString(font, TerrassicFonts.ui(label), x + w / 2, y + (h - 8) / 2 + 1, rgb(text));
     }
 
     /** A tab: stone label; the selected one sits raised with an amber underline. */
@@ -105,7 +122,7 @@ public final class TerrassicUi {
             g.fill(x, y, x + w, y + h, BASALT_700);
         }
         int color = selected ? AMBER_500 : hot ? STONE_200 : STONE_400;
-        g.drawCenteredString(font, label, x + w / 2, y + (h - 8) / 2, rgb(color));
+        g.drawCenteredString(font, TerrassicFonts.ui(label), x + w / 2, y + (h - 8) / 2, rgb(color));
     }
 
     /**

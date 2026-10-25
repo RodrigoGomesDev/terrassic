@@ -2,6 +2,7 @@ package com.terrassic.client;
 
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
+import com.terrassic.client.ui.TerrassicFonts;
 import com.terrassic.client.ui.TerrassicUi;
 import com.terrassic.network.RulesNetwork;
 import dev.architectury.networking.NetworkManager;
@@ -175,9 +176,9 @@ public class RulesScreen extends Screen {
         int right = this.left + this.panelW;
         int bottom = this.top + this.panelH;
         TerrassicUi.slab(g, this.left, this.top, right, bottom);
-        g.drawString(this.font, this.title, this.left + 14, this.top + 9, rgb(AMBER_500));
-        Component sub = Component.translatable(this.world ? "rules.terrassic.ui.world" : "rules.terrassic.ui.defaults");
-        g.drawString(this.font, sub, this.left + 14, this.top + 19, rgb(STONE_400), false);
+        g.drawString(this.font, TerrassicFonts.title(this.title), this.left + 14, this.top + 8, rgb(AMBER_500));
+        Component sub = TerrassicFonts.ui(this.world ? "rules.terrassic.ui.world" : "rules.terrassic.ui.defaults");
+        g.drawString(this.font, sub, right - 14 - this.font.width(sub), this.top + 12, rgb(STONE_400), false);
         TerrassicUi.divider(g, this.left + 12, right - 12, this.listTop - 6);
         TerrassicUi.divider(g, this.left + 12, right - 12, this.listBottom + 3);
 
@@ -195,14 +196,14 @@ public class RulesScreen extends Screen {
             TerrassicUi.scrollbar(g, right - 9, this.listTop, this.listBottom, barY, barH);
         }
         if (!this.editable) {
-            g.drawCenteredString(this.font, Component.translatable("rules.terrassic.ui.read_only"), this.width / 2,
+            g.drawCenteredString(this.font, TerrassicFonts.ui("rules.terrassic.ui.read_only"), this.width / 2,
                     this.listBottom - 10, rgb(AMBER_300));
         }
         super.render(g, mouseX, mouseY, partialTick);
 
         for (Row row : this.rows) {
             if (row.labelHovered(mouseX, mouseY)) {
-                g.renderTooltip(this.font, this.font.split(Component.translatable(row.rule.tipKey()), 220), mouseX, mouseY);
+                g.renderTooltip(this.font, this.font.split(TerrassicFonts.ui(row.rule.tipKey()), 220), mouseX, mouseY);
             }
         }
     }
@@ -275,7 +276,7 @@ public class RulesScreen extends Screen {
             if (!this.box.visible) {
                 return;
             }
-            String name = Component.translatable(this.rule.langKey()).getString();
+            Component name = TerrassicFonts.ui(this.rule.langKey());
             g.drawString(font, name, x, this.y + 1, rgb(STONE_200), false);
             if (this.rule.defaultValue != RulesScreen.this.edited.get(this.rule)) {
                 // changed from the default: a small amber mark after the name
@@ -285,7 +286,7 @@ public class RulesScreen extends Screen {
         }
 
         boolean labelHovered(int mx, int my) {
-            int w = RulesScreen.this.font.width(Component.translatable(this.rule.langKey()).getString()) + 8;
+            int w = RulesScreen.this.font.width(TerrassicFonts.ui(this.rule.langKey())) + 8;
             return this.box.visible && mx >= RulesScreen.this.left + 14 && mx <= RulesScreen.this.left + 14 + w
                     && my >= this.y && my <= this.y + 10;
         }

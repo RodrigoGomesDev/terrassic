@@ -27,6 +27,9 @@ troca de dimensão, morte/respawn, reconexão e reinício (`CADERNO_DADOS.md`). 
 não uma validação de 100 jogadores ativos. A CI no GitHub valida integridade, fixtures, orçamento e build dos dois
 loaders, incluindo regressões de pesquisa. `tools/validation/README.md` reúne os comandos.
 Fauna 108-113 integrada: 59 espécies; próximo sistema complexo previsto é o nocaute v0.7 (`DOMESTICACAO.md`).
+Licença: código LGPL-3.0 (`LICENSE` + `COPYING`), assets All Rights Reserved com permissões explícitas
+(`LICENSE-ASSETS.md`), contribuições pelo `CLA.md`. Commits: **Rodrigo Gomes <rodrigogomessims@gmail.com>**, sem linha
+de coautoria de IA (pedido do Rodrigo, 24/10/2026).
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
@@ -152,6 +155,10 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   "Cretaceous food"); o loot de toda espécie troca beef/mutton/chicken pela carne própria (`MEAT`/`PRIME`/`SEA_MEAT` em
   gen_resources.py, receitas de forno/defumador/fogueira), sprites em `sprites.py` (`meats()`). Fauna de caça do Cretáceo
   (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus) substitui os animais vanilla do mundo Terrassic.
+- Identidade visual (`docs/IDENTIDADE.md`): toda tela do mod usa a paleta `client/ui/TerrassicPalette`, os componentes
+  `client/ui/TerrassicUi`/`TerrassicButton` (nunca o botão cinza do vanilla) e as fontes próprias via
+  `client/ui/TerrassicFonts`: Sedimento (interface), Entalhe (títulos), Caderno (o que a Katarina escreveu). Fontes geradas
+  por `tools/fontgen/build.py` (bitmap do Minecraft + TrueType em `art/identidade/fontes/`); kit de marca por `tools/capagen/brand.py`.
 - Tudo é autoral e gerado por código; referências só de medidas (Wikipedia). Não copiar arte de terceiros.
 
 ## Espécies (12)

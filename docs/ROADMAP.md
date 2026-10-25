@@ -213,7 +213,7 @@ Dunkleosteus, Megalodon (opcional) e as versões "da Fenda" de criaturas de outr
 | T3.2 | HUD próprio com retratos dos nossos modelos: montaria (vida, stamina, carga), bando, nova espécie, nome da era, temperatura, alerta da Fenda, objetivos; tudo configurável | v0.8 | ✅ M5 (9da2414): montaria, bando, toast de espécie nova, título da era, alerta da Fenda (`terrassic-client.json`) |
 | T3.3 | Pacote de texturas próprio embutido e opcional (vanilla mais rústico, menus e inventários em couro, osso e pedra, fonte do Caderno) | v0.8 | ○ |
 | T3.4 | Motor de céu, névoa, partículas e música por era (o conteúdo de cada era fica na seção da era) | v0.8 | ○ |
-| T3.6 | **Identidade visual "Âmbar e Basalto"** (pedido do Rodrigo): paleta única (`client/ui/TerrassicPalette`) e componentes desenhados por código (`client/ui/TerrassicUi`: laje, poço, botão, aba, controle, divisor); Regras, toast, HUD e Caderno já convertidos (`docs/IDENTIDADE.md`) | v0.9 | 🔄 primeiras telas feitas (frente paralela); faltam abertura, Mesa, telas da v0.7 e o logo em 3 versões |
+| T3.6 | **Identidade visual "Âmbar e Basalto"** (pedido do Rodrigo): paleta única (`client/ui/TerrassicPalette`), componentes desenhados por código (`client/ui/TerrassicUi`, `TerrassicButton`), **três fontes próprias** (Sedimento na interface, Entalhe nos títulos, Caderno na letra da Katarina; `tools/fontgen`, também em TrueType) e kit de marca (letreiro, monograma, selo do Altar, prancha; `tools/capagen/brand.py`). Regras, Caderno, abertura, HUD, toast, título e dicas convertidos (`docs/IDENTIDADE.md`) | v0.9 | 🔄 feito na frente paralela; falta o "ok" do Rodrigo para trocar o letreiro da tela de título e o ícone, e as telas da v0.7 |
 | T3.5 | **Regras do mundo estilo ARK + ecossistema denso** (pedido do Rodrigo): tela "Regras do Terrassic" com 21 regras por mundo (dificuldade, dano, resistências, XP, domesticação, chocagem, crescimento, fome, ninhos, migração, densidade por terrestres/voadores/marinhos); spawner próprio que mantém rebanhos, bandos no céu e o mar cheio ao redor de cada jogador (`docs/REGRAS.md`) | v0.8 | ✅ código; teste no jogo pendente |
 
 ### T4. Idiomas
@@ -289,9 +289,9 @@ Dunkleosteus, Megalodon (opcional) e as versões "da Fenda" de criaturas de outr
 ### T12. Marca e comunidade (`docs/estudos/05_MARCA_COMUNIDADE.md`)
 | Fase | O que entra | Estado |
 |---|---|---|
-| T12.1 | Nome e direitos: titular, INPI (classes 9 e 41), consulta sobre a marca "TERRASSIC" registrada nos EUA (terrários), domínios e @ | ❓ (Rodrigo) |
-| T12.2 | Licença (código LGPL-3.0 ou MIT + assets ARR + permissões + CLA) e disclaimer da Mojang | ❓ (Rodrigo) |
-| T12.3 | Discord fechado com a estrutura do estudo, beta testers ("Ensaio"), moderação por idioma | ○ |
+| T12.1 | Nome e direitos: titular Rodrigo (pessoa física) ✅; projetos no Modrinth e CurseForge ✅; INPI, consulta sobre a marca "TERRASSIC" dos EUA (terrários), domínios e @ no marco "Lançamento" | 🔄 |
+| T12.2 | Licença: código LGPL-3.0 + assets ARR + permissões + CLA (`LICENSE`, `LICENSE-ASSETS.md`, `CLA.md`), disclaimer da Mojang no README | ✅ |
+| T12.3 | Testadores convidados ("Ensaio"); Discord com a estrutura do estudo só no marco "Lançamento" | ○ |
 | T12.4 | Site com bestiário gerado dos dados do mod (Astro, 3 idiomas), devlog, press kit; wiki.gg quando houver editores | ○ |
 | T12.5 | "Fichas de campo" semanais, devlog quinzenal, trailer em cada versão grande; mascote Sílex | ○ |
 | T12.6 | Early Access público e gratuito (mai/2027), modpack oficial, afiliado de hospedagem, parceria com criadores | ○ |
@@ -345,8 +345,9 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 | Marco | Quando | Critério para passar |
 |---|---|---|
 | **Passe de escala** | nov/2026 | T9.1, T9.2 e T10.1 feitos; mundo de teste com spark mostra MSPT estável com o spawner cheio |
-| **Alpha fechada** ("Ensaio", Discord) | fev-abr/2027 | v0.3-v0.9 testadas no jogo; Passe de Qualidade (T8.1-T8.4) nas espécies do núcleo; licença e nome resolvidos (T12.1-T12.2); port 1.21.1 em andamento |
+| **Alpha fechada** ("Ensaio", Discord) | fev-abr/2027 | v0.3-v0.9 testadas no jogo; Passe de Qualidade (T8.1-T8.4) nas espécies do núcleo; licença aplicada ✅; port 1.21.1 em andamento |
 | **Early Access público** (grátis) | mai-jun/2027 | 1.21.1 NeoForge + Fabric e 1.20.1; nenhum bug de persistência conhecido; integrações T10.2; site com bestiário e press kit |
+| **Lançamento da marca** | jul-set/2027 | produto entregável (Early Access estável): domínios, redes, Discord aberto, site com bestiário, INPI e consulta sobre a marca americana |
 | **v1.0 "Ecos do Fim"** | out/2027 (alvo) | Capítulo 1 completo jogável do começo ao fim; T8.7 nos gigantes; perfil do spark publicado; trailer nos 3 idiomas |
 
 ## 9. Perguntas abertas para o Rodrigo
@@ -356,10 +357,9 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 3. **Testes no jogo** (só um humano faz): `docs/TESTES_V03.md`, tamanhos reais, ouvir os sons, conferir os 3 idiomas.
 4. **Guia CONTRIBUTING** para a segunda conta: escrevo?
 5. **Renascer na era** em que o jogador morreu (cama da era ou Altar), em vez de voltar ao mundo normal?
-6. **Titular definido:** Rodrigo Gomes, pessoa física, sem vínculo empresarial. Registro e consulta de marca ficam
-   para o marco de lançamento, conforme o plano recebido (`PLANO_MESTRE.md`).
-7. **Licença** do código e dos assets e as permissões para modpacks (recomendação em `ESTRATEGIA.md` §4).
-8. **Domínios e @** (sugestão: terrassic.net ou terrassic.gg como principal).
+6. ~~Titular, licença, domínios~~ **decidido (24/10/2026):** titular Rodrigo pessoa física, projeto sem vínculo com
+   empresa; licença código LGPL-3.0 + assets All Rights Reserved com permissões (aplicada); projetos já criados no
+   Modrinth e no CurseForge; INPI, domínios e redes ficam para o marco "Lançamento" (fim do roadmap), conforme o plano recebido (`PLANO_MESTRE.md`).
 
 ## 10. Documentos de cada assunto
 

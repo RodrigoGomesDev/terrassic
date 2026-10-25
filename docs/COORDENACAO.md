@@ -2,6 +2,31 @@
 
 Atualizado em 25/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
 
+## Links oficiais — informados pelo Rodrigo em 25/10
+
+- Modrinth: https://modrinth.com/mod/terrassic
+- CurseForge: https://www.curseforge.com/minecraft/mc-mods/terrassic
+- Wiki: https://github.com/RodrigoGomesDev/terrassic/wiki
+
+## Integração da identidade — 25/10
+
+Entrega `8ee3b7e3` (`sync/identidade`) conciliada com a main, incluindo os quatro commits de licença/titular,
+tipografia, kit de marca e textos de loja/Discord. A ficha do Guia continua à direita, os dioramas foram mantidos,
+assim como o painel de basalto das dicas; fontes e botões próprios foram combinados com esse layout.
+Os documentos de licença entregues são empacotados nos dois JARs finais, com os mesmos bytes dos arquivos fonte.
+Os links oficiais acima também estão no README; não houve publicação de páginas ou mensagens externas.
+
+Evidências: build Fabric/Forge com regressões passou em 2 min 2 s; integridade de 59 espécies/4.322 JSONs/1.827
+chaves passou; 18 testes Python e 10.000 cenários de orçamento passaram. Comparação antes da atualização de
+documentação confirmou 95 arquivos locais intactos, 50 arquivos exclusivos da identidade iguais à entrega e
+439 arquivos exclusivos da main preservados. Seis atlas bitmap têm referências e grades válidas; os nove recursos
+de fonte e os três documentos de licença foram conferidos por conteúdo dentro dos JARs.
+
+Backup recuperável dos dois históricos e dos arquivos locais em
+`build/integration-backups/identity-merge-kq8zkgdi/` (`source.bundle`, `manifest.json`, `local-files/`).
+O ícone e o letreiro ativos foram preservados; propostas continuam em `art/identidade/marca/`.
+Fontes e telas ainda precisam de revisão visual no jogo; build e conferência de arquivos não substituem isso.
+
 ## Conferência Terrassic e Terrassic Sync — 25/10
 
 - `~/projects/terrassic` é o checkout de desenvolvimento, na main. Incorporados por fast-forward 52 commits
@@ -11,7 +36,7 @@ Atualizado em 25/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem víncu
   Os bundles antigos de base, main, v0.8 e v0.9 pertencem ao histórico anterior e não devem ser mesclados novamente.
 - `paralelo-identidade.bundle` foi verificado e lido como `sync/identidade`, sem trocar a main. Contém **quatro**
   commits após `96004f7b` (o LEIA-ME ainda diz três): licenças/titular, fontes, kit de marca e textos da loja/Discord.
-  Fontes/arte e documentos de licença foram entregues nesse pacote, mas ainda não estão integrados na main.
+  Fontes/arte e documentos de licença foram entregues nesse pacote; integração concluída nesta entrega, descrita acima.
 - Simulação de integração contra `98a5a1f0`: conflitos em `NotebookScreen.java`, `TerrassicTitle.java` e neste
   quadro. Preservar a ficha do Guia/dioramas e as fontes/componentes ao conciliar. A simulação não abriu um merge
   no checkout; as telas da entrega continuam sem validação visual no jogo.
@@ -63,7 +88,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 | Responsável | Arquivos | Estado |
 |---|---|---|
-| Codex | Integração de `sync/identidade`: `NotebookScreen.java`, `TerrassicTitle.java`, coordenação e revisão dos arquivos mesclados | Em uso em 25/10: preservar ficha à direita, dioramas, painel de dicas, fontes e componentes; backup completo em `build/integration-backups/identity-merge-kq8zkgdi/`; arquivos locais de marca fora do commit |
+| Codex | Integração de `sync/identidade`: `NotebookScreen.java`, `TerrassicTitle.java`, `common/build.gradle` (empacotar documentos entregues), `README.md` (links oficiais), coordenação e revisão dos arquivos mesclados | Concluído em 25/10: ficha à direita, dioramas, painel de dicas, fontes e componentes preservados; build dos dois loaders e verificações passaram; arquivos liberados. Arquivos locais de marca fora do commit |
 | Codex | `AGENTS.md`, `docs/COORDENACAO.md`, `docs/PLANO_MESTRE.md`, `tools/validation/`, autoria em README/CLAUDE/metadados, ponte no roadmap | Concluído; arquivos liberados; sem alteração de sistemas de gameplay |
 | Codex | Testes isolados de servidor; `tools/validation/`, `EcoSpawner.java`, `SpawnBudget.java`, classes-base de IA e persistência (`DinosaurEntity.java`, `HerbivoreDinosaur.java`, `PredatorDinosaur.java`, `DinoEggBlock.java`), docs e ponte de validação em AGENTS/CLAUDE | Concluído; arquivos liberados. Servidores/regressões Fabric e Forge, orçamento e build passaram; arte e tabelas de espécies preservadas |
 | Codex | `research/Knowledge.java`, `ResearchData.java`, `Research.java`, `network/ModNetwork.java` e delta NBT, `client/ClientHooks.java`/`ClientResearch.java` (só recepção de dados), `common/build.gradle`, testes e documentação | Concluído; build e regressões de dados/protocolo passaram. Sem alterações de interface/arte ou novas features narrativas |
@@ -79,6 +104,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
 | Claude (nuvem, menu e arte 3D) | `client/title/TerrassicMenuScreen.java`, `client/TerrassicTitle.java` (só `renderTip`), `mixin/client/LevelLoadingScreenMixin.java`, `ReceivingLevelScreenMixin.java`, `client/GuideHabitats.java`, `client/NotebookScreen.java` (só o diorama e o layout da aba Guia), `tools/menugen/`, `docs/MENU.md` | Concluído: telas de carregamento com as cenas da galeria; dioramas de habitat em gravura atrás do modelo vivo do Guia de Campo (paleta do Caderno, sem trocar a arte da identidade); página da espécie do Guia na página da direita, depois da lombada; arquivos liberados com o commit. Ainda não visto no jogo |
 | Claude (nuvem, nocaute v0.7) | `DinosaurEntity.java`, `SwimmingDinosaur.java`, novos `TranqDart.java` e `BlowgunItem.java`, `ModItems`, `ModEntities`, `TerrassicClient` (1 linha), `gen_resources.py`, `sprites.py`, `lore.py`, lang, `docs/DOMESTICACAO.md` | Concluído com o commit: domesticação por nocaute (torpor, nocaute, alimentar derrubado, eficiência, acordar), zarabatana, dardo e erva sonífera; arquivos liberados. Ainda não testado no jogo |
+| Claude secundário (identidade visual) | Branch `paralelo/identidade` (base `96004f7b`, main após a reescrita de histórico): `client/ui/` (paleta, componentes, `TerrassicButton`, `TerrassicFonts`), telas `RulesScreen`, `NotebookScreen`, `IntroScreen`, `TerrassicHud`, `SpeciesToast`, `TerrassicTitle`, `ClientConfig`, `assets/terrassic/font/`, `textures/font/`, `tools/fontgen/`, `tools/capagen/brand.py` e `ui_mock.py`, `art/identidade/`, `docs/IDENTIDADE.md`; licença (`LICENSE`, `COPYING`, `LICENSE-ASSETS.md`, `CLA.md`, campo `license` dos metadados), linhas de licença/identidade em `CLAUDE.md`, `README.md`, `ESTRATEGIA.md` e `ROADMAP.md` (T3.6, perguntas) | Entregue para integração: compila (common, stubs), `check_project.py` passou; **não testado no jogo** (fontes e telas precisam de revisão visual do Rodrigo). Letreiro da tela de título e `icon.png` não foram trocados (propostas em `art/identidade/marca/`) |
 
 ## Levantamento inicial e entregas anteriores (histórico)
 
