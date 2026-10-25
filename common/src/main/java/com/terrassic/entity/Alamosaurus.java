@@ -27,7 +27,7 @@ public class Alamosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 5.0F;
     public static final float HEIGHT = 9.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 3.02F;
+    public static final float MODEL_SCALE = 1.01F;
     public static final float SHADOW = 5.5F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
@@ -90,7 +90,7 @@ public class Alamosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 9.66D * this.getScale();
+        return 6.46D * this.getScale();
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Alamosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 1.81D;
+        return 4.44D;
     }
 
     @Override

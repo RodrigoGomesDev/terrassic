@@ -1194,38 +1194,38 @@
   "render_scale": 0.5
  },
  "alamosaurus": {
-  "bones": 31,
-  "cubes": 60,
+  "bones": 33,
+  "cubes": 80,
   "texture": [
-   256,
-   256
+   512,
+   1024
   ],
   "bounds_px": [
    [
-    -15.0,
-    -1.4273451647191314e-06,
-    -71.7029850711098
+    -35.0,
+    -4.664744832555007e-05,
+    -251.71160969478288
    ],
    [
-    15.0,
-    71.06995835079354,
-    86.98254337609544
+    35.0,
+    172.55262348463782,
+    222.31689437954722
    ]
   ],
   "animations": [
    "animation.alamosaurus.idle",
    "animation.alamosaurus.walk",
    "animation.alamosaurus.run",
+   "animation.alamosaurus.attack",
    "animation.alamosaurus.sit",
    "animation.alamosaurus.graze",
    "animation.alamosaurus.knocked_out",
    "animation.alamosaurus.wake",
    "animation.alamosaurus.eat",
    "animation.alamosaurus.beg",
-   "animation.alamosaurus.tame",
-   "animation.alamosaurus.attack"
+   "animation.alamosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "saltasaurus": {
   "bones": 28,

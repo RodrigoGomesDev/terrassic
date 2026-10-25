@@ -67,7 +67,8 @@ SIZES = {
     # Brachiosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "brachiosaurus":      dict(real=22.0, scale=1.05, w=4.0, h=9.0, baby=0.12, shadow=4.5),
     # Alamosaurus sanjuanensis: 26-30 m, 30-80 t (Fowler & Sullivan 2011; Tykoski & Fiorillo 2017); head ~13 blocks up.
-    "alamosaurus":        dict(real=30.0, scale=3.02, w=5.0, h=9.0, baby=0.1,  shadow=5.5),
+    # Alamosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "alamosaurus":        dict(real=30.0, scale=1.01, w=5.0, h=9.0, baby=0.1,  shadow=5.5),
     # Saltasaurus loricatus: 12-13 m, ~7 t (Paul 2010), the armoured titanosaur; back at ~4 blocks.
     "saltasaurus":        dict(real=12.0, scale=1.81, w=2.8, h=3.8, baby=0.15, shadow=3.0),
     # Argentinosaurus huinculensis: 30-35 m, 65-75 t (Sellers et al. 2013; Paul 2019); head ~15 blocks up.
@@ -409,7 +410,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=360, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=20, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 380), step=("RAVAGER_STEP", 1.3, 0.45),
-      xp=60, step_height=1.8, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=3.2, ride_forward=0.6, ride_speed=0.95),
+      xp=60, step_height=1.8, head=(25, 30), rideable=True, platform=True, jump=0.0, ride_offset=6.4, ride_forward=4.4, ride_speed=0.95),
  dict(id="saltasaurus", cls="Saltasaurus", base="HerbivoreDinosaur",
       doc="Saltasaurus loricatus - 12 m armoured titanosaur: oval osteoderms over a skin of bony pebbles, a short neck and a low wide body. Herd animal; hurt, it rears and stomps. Eats leaves; rideable when tamed, a living tank.",
       attrs=dict(MAX_HEALTH=220, MOVEMENT_SPEED=0.19, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=18, ARMOR_TOUGHNESS=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
