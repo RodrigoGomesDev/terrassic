@@ -135,10 +135,11 @@ def build():
         ey, ez = ch["end"]
         F = f"forearm_{side}"
         m.box(F, (x - 0.5, ey - 1, ez - 1), (x + 0.5, ey + 1, ez + 1), tag="limb", name="hand")
-        for k, (dy, L) in enumerate(((0.5, 2), (-0.5, 3), (-1.5, 2))):          # digits I-III and their claws
-            m.box(F, (x - 0.5, ey + dy - 0.5, ez - 1 - L), (x + 0.5, ey + dy + 0.5, ez - 1), tag="limb", name="finger")
-            m.box(F, (x - 0.5, ey + dy - 0.5, ez - 2 - L), (x + 0.5, ey + dy + 0.5, ez - 1 - L), tag="claw", name="hand_claw",
-                  paint={"axis": "-z"})
+        # digits I-III and their claws carry on along the forearm's line (its frame is unposed: -y runs down the arm)
+        for k, (dz, L) in enumerate(((-1, 2), (0, 3), (1, 2))):
+            m.box(F, (x - 0.5, ey - 1 - L, ez + dz - 0.5), (x + 0.5, ey - 1, ez + dz + 0.5), tag="limb", name="finger")
+            m.box(F, (x - 0.5, ey - 2 - L, ez + dz - 0.5), (x + 0.5, ey - 1 - L, ez + dz + 0.5), tag="claw", name="hand_claw",
+                  paint={"axis": "-y"})
         # the folded wing: in the forearm's frame +y runs back along the arm and +z hangs below it
         xo = x + 0.5 * sx
         m.box(F, (min(xo, xo + sx), ey - 1, ez - 0.5), (max(xo, xo + sx), ey + 8, ez + 1.5), tag="feather", name="primaries")
