@@ -104,7 +104,7 @@ TORSO = [("pelvis", (-14, 14, -2, 14, 30, 18)), ("barrel", (-16, 11, -22, 16, 29
 NECK = ([(21, -30), (20, -36), (19, -43)], [(14, 12), (12, 10)])
 TAIL = ([(24, 20), (22, 32), (20, 43), (18, 53), (16, 67)], [(18, 14), (12, 10), (8, 6), (5, 4)])
 LEG_X, LEG = 11, ([(24, 10), (13, 6), (5, 8), (2, 8)], [(11, 13, -1), (8, 8, 0, "limb"), (9, 6, 0, "limb")])
-ARM_X, ARM = 12, ([(19, -24), (10, -22), (3, -24)], [(8, 9), (7, 7, 0, "limb")])
+ARM_X, ARM = 12, ([(19, -24), (10, -22), (2.2, -24)], [(8, 9), (7, 7, 0, "limb")])
 # osteoderm bands across the back: z of each band, and the plates' (x, half width) on the top
 SIT_HIND = (20, -50, 30)
 SIT_SPLAY = (14, -24)      # resting: thigh and shin roll out (deg)
@@ -276,7 +276,7 @@ def siny_(a, ph=0.0):
 def animations(m):
     Li = 4.0
     m.anim("idle", Li, True, {
-        "body": track(rot=wave(8, sinx(0.4), Li), pos=wave(8, lambda p: (0, 0.15 * K * math.sin(2 * math.pi * p), 0), Li)),
+        "body": track(pos=wave(8, lambda p: (0, 0.075 * K * (1 + math.sin(2 * math.pi * p)), 0), Li)),   # breathing rises only: the forefeet stay planted
         "neck1": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * p), 3 * math.sin(2 * math.pi * (p + 0.2)), 0), Li)),
         "skull": track(rot=wave(8, lambda p: (1.5 * math.sin(2 * math.pi * (p + 0.25)), 0, 0), Li)),
         "jaw": track(rot=wave(8, lambda p: (-4 * max(0.0, math.sin(4 * math.pi * p)), 0, 0), Li)),
@@ -286,7 +286,7 @@ def animations(m):
     for name, Lc, Ah, Af, bob in (("walk", 2.0, 16, 16, 0.4 * K), ("run", 1.1, 24, 24, 0.8 * K)):
         t = quad_gait(Lc, Ah, Af)
         t["body"] = track(rot=wave(8, lambda p: (0, 1.5 * math.sin(2 * math.pi * p), 2.2 * math.sin(2 * math.pi * p)), Lc),
-                          pos=wave(8, lambda p, b=bob: (0, b * math.cos(4 * math.pi * p) - b * 0.5, 0), Lc))
+                          pos=wave(8, lambda p, b=bob: (0, b * 0.5 * (1 + math.cos(4 * math.pi * p)), 0), Lc))
         t["neck1"] = track(rot=wave(8, lambda p, b=bob / K: (-2 * b * math.cos(4 * math.pi * p), 0, 0), Lc))
         for i, (a, ph) in enumerate(((4, 0.25), (4, 0.15), (3, 0.05), (1, 0.0))):
             t[f"tail{i+1}"] = track(rot=wave(8, siny_(a, ph), Lc))
