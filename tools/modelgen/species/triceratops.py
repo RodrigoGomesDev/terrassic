@@ -27,6 +27,7 @@ tools/javagen/gen_species.py (MODEL_SCALE ~0.95 for 9 m).
 import math
 from rig import Model, wave, sinx, track, keys, add_knockout, add_saddle, lowest_point
 from quadruped import quad_gait, quad_sit
+from groundfit import fit_to_ground
 
 ID = "triceratops"
 K = 2.0  # position keys of the 1x animation set are scaled by this
@@ -115,7 +116,7 @@ TAIL = ([(46, 24), (42, 38), (37, 50), (31, 62)], [(16, 16), (10, 11), (6, 6)])
 LEG_X = 13
 LEG = ([(40, 8), (22, -1), (8, 4), (3, 2)], [(14, 20, -1), (11, 12, 0, "limb"), (9, 8, 0, "limb")])
 ARM_X = 15
-ARM = ([(31, -31), (17, -26), (4, -30)], [(10, 12), (9, 9, 0, "limb")])
+ARM = ([(31, -31), (17, -26), (3.6, -30)], [(10, 12), (9, 9, 0, "limb")])
 HEAD = 1.35                # skull size relative to the real proportion
 SKULL_PITCH = -10          # face pitched down from the neck line
 GRAZE = (-10, -6)          # neck, skull when grazing (the beak just reaches the ground)
@@ -297,7 +298,7 @@ def siny_(a, ph=0.0):
 def animations(m):
     Li = 4.0
     idle = {
-        "body": track(rot=wave(8, sinx(0.5), Li), pos=wave(8, lambda p: (0, 0.25 * K * math.sin(2 * math.pi * p), 0), Li)),
+        "body": track(pos=wave(8, lambda p: (0, 0.125 * K * (1 + math.sin(2 * math.pi * p)), 0), Li)),   # breathing rises only: the forefeet stay planted
         "neck1": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * p), 2 * math.sin(2 * math.pi * (p + 0.3)), 0), Li)),
         "skull": track(rot=wave(8, lambda p: (1.5 * math.sin(2 * math.pi * (p + 0.2)), 0, 0), Li)),
         "jaw": track(rot=wave(8, lambda p: (-4 * max(0.0, math.sin(4 * math.pi * p)), 0, 0), Li)),
@@ -309,7 +310,7 @@ def animations(m):
     for name, Lc, Ah, Af, bob in (("walk", 1.8, 18, 18, 0.6 * K), ("run", 0.9, 28, 28, 1.1 * K)):
         t = quad_gait(Lc, Ah, Af)
         t["body"] = track(rot=wave(8, lambda p: (0, 1.5 * math.sin(2 * math.pi * p), 1.5 * math.sin(2 * math.pi * p)), Lc),
-                          pos=wave(8, lambda p, b=bob: (0, b * math.cos(4 * math.pi * p) - b * 0.5, 0), Lc))
+                          pos=wave(8, lambda p, b=bob: (0, b * 0.5 * (1 + math.cos(4 * math.pi * p)), 0), Lc))
         t["neck1"] = track(rot=wave(8, lambda p, b=bob / K: (-2 * b * math.cos(4 * math.pi * p), 0, 0), Lc))
         t["tail1"] = track(rot=wave(8, siny_(4, 0.25), Lc))
         t["tail2"] = track(rot=wave(8, siny_(5, 0.15), Lc))
@@ -343,3 +344,5 @@ def animations(m):
             for tr in a["bones"].values():
                 if "position" in tr:
                     tr["position"] = [[k[0]] + [round(v * K, 3) for v in k[1:]] for k in tr["position"]]
+    for nm in ("graze", "eat", "attack"):      # the beak and the chewing jaw stay out of the ground
+        fit_to_ground(m, nm, ("neck1", "neck2", "skull", "jaw"))
