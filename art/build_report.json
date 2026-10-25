@@ -1296,38 +1296,38 @@
   "render_scale": 0.5
  },
  "opisthocoelicaudia": {
-  "bones": 29,
-  "cubes": 52,
+  "bones": 30,
+  "cubes": 61,
   "texture": [
    256,
-   128
+   512
   ],
   "bounds_px": [
    [
-    -13.5,
-    -3.8765019892094115e-05,
-    -55.04535131896149
+    -21.0,
+    -1.0372360799953772e-05,
+    -105.03878979893618
    ],
    [
-    13.5,
-    37.35182067042154,
-    67.82622242453976
+    21.0,
+    53.17913107304188,
+    102.02496266480954
    ]
   ],
   "animations": [
    "animation.opisthocoelicaudia.idle",
    "animation.opisthocoelicaudia.walk",
    "animation.opisthocoelicaudia.run",
+   "animation.opisthocoelicaudia.attack",
    "animation.opisthocoelicaudia.sit",
+   "animation.opisthocoelicaudia.graze",
    "animation.opisthocoelicaudia.knocked_out",
    "animation.opisthocoelicaudia.wake",
    "animation.opisthocoelicaudia.eat",
    "animation.opisthocoelicaudia.beg",
-   "animation.opisthocoelicaudia.tame",
-   "animation.opisthocoelicaudia.attack",
-   "animation.opisthocoelicaudia.graze"
+   "animation.opisthocoelicaudia.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "dreadnoughtus": {
   "bones": 34,

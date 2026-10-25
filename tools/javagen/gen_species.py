@@ -76,7 +76,8 @@ SIZES = {
     # Argentinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "argentinosaurus":    dict(real=35.0, scale=1.02, w=6.0, h=10.0, baby=0.08, shadow=6.5),
     # Opisthocoelicaudia skarzynskii: 11-12 m, ~8.5 t (Borsuk-Bialynicka 1977; Paul 2010); rears to 8 blocks.
-    "opisthocoelicaudia": dict(real=12.0, scale=1.56, w=2.6, h=3.6, baby=0.15, shadow=2.8),
+    # Opisthocoelicaudia v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "opisthocoelicaudia": dict(real=12.0, scale=0.93, w=2.6, h=3.6, baby=0.15, shadow=2.8),
     # Dreadnoughtus schrani: 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015); the 11 m neck carried high.
     "dreadnoughtus":      dict(real=26.0, scale=2.69, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
     "giganotosaurus":     dict(real=13.0, scale=1.75, w=2.4, h=4.4, baby=0.25, shadow=2.3),
@@ -431,7 +432,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=200, MOVEMENT_SPEED=0.2, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.5, ARMOR=8, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.6, 2.2, 320), step=("RAVAGER_STEP", 0.9, 0.65),
-      xp=36, step_height=1.5, head=(30, 30), rideable=True, jump=0.0, ride_offset=2.2, ride_forward=0.1, ride_speed=1.0, forage=True),
+      xp=36, step_height=1.5, head=(30, 30), rideable=True, jump=0.0, ride_offset=2.6, ride_forward=1.8, ride_speed=1.0, forage=True),
  dict(id="dreadnoughtus", cls="Dreadnoughtus", base="HerbivoreDinosaur",
       doc="Dreadnoughtus schrani - 26 m titanosaur that fears nothing: an 11 m neck carried high over a huge shoulder. Hurt, it bellows and swings the neck like a crane boom, the head knocking whatever stands at its side. Hand-tamed with leaves; rideable (the building platform saddle comes with the v0.6 systems).",
       attrs=dict(MAX_HEALTH=420, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=2.0, ARMOR=10, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),

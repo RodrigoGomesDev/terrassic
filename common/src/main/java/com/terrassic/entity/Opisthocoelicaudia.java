@@ -32,7 +32,7 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
     public static final float WIDTH = 2.6F;
     public static final float HEIGHT = 3.6F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.56F;
+    public static final float MODEL_SCALE = 0.93F;
     public static final float SHADOW = 2.8F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
@@ -95,7 +95,7 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 3.43D * this.getScale();
+        return 2.42D * this.getScale();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.16D;
+        return 1.67D;
     }
 
     @Override
