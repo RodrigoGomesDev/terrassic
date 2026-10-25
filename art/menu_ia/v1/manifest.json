@@ -1,0 +1,27 @@
+{
+  "method": "built-in image_gen; AI-assisted variations using existing Terrassic renders as references",
+  "status": "propostas para validacao; nao integradas ao menu",
+  "images": [
+    {
+      "file": "confronto_trex_triceratops.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "c4f668192e3f3ac0b6e437319b004bdcac3059be6bb076e47f6823226dce7e08",
+      "bytes": 2324601
+    },
+    {
+      "file": "disputa_espinossauros.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "6fb636c7ca211bcbb4e4a940624d42960e091568da4a8e4f0093375baff214ac",
+      "bytes": 2072865
+    },
+    {
+      "file": "voo_falesias.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "9441ad2ace8313e592c01de691fc1f55d5c7dd5ce9afd3d8755a75b1c5da78b4",
+      "bytes": 2206090
+    }
+  ]
+}

@@ -2,6 +2,10 @@
 
 Atualizado em 25/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
 
+Foco atual pedido pelo Rodrigo: Codex assume os fundos do menu/interface; Claude não mexe nessa frente por
+enquanto. Primeira entrega: três propostas assistidas por IA em `art/menu_ia/v1/`, apresentadas para validação.
+Preservados os quatro fundos ativos, o letreiro e a implementação da interface durante a escolha das imagens.
+
 ## Links oficiais — informados pelo Rodrigo em 25/10
 
 - Modrinth: https://modrinth.com/mod/terrassic
@@ -95,6 +99,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 | Responsável | Arquivos | Estado |
 |---|---|---|
+| Codex | Novas propostas em `art/menu_ia/`, prompts e documentação desta proposta | Propostas entregues em `art/menu_ia/v1/`: T. rex × Triceratops, disputa de espinossauros e voo nas falésias, com área livre para interface. Três PNGs 1672×941, prompts e hashes registrados. Aguardam validação visual do Rodrigo; sem alteração dos fundos ativos ou do HUD em jogo. Integração e teste de legibilidade são a próxima etapa desta frente |
 | Codex | `TranqDart.java`, `BlowgunItem.java`, `DinosaurEntity.java`, `SwimmingDinosaur.java` (somente estabilidade se houver falha reproduzida), `tools/validation/minecraft_client.py`, novo roteiro de dardos/água e documentação | Concluído em `36b21fb4`/`fbb144b3`: dose em alvo acordado depende de dano aceito; 22/22 passaram em Fabric e Forge, incluindo disparo submerso, alimentação e reinício. Build conjunta passou em 1 min 33 s; fontes conferidas por hash. Sem mudança de balanceamento, modelos ou respiração; arquivos liberados |
 | Codex | `IslandMap.java` (leitura), `tools/validation/minecraft_client.py`, `island_map_regression.py`, documentação | Concluído em 25/10: continente real, transporte, reinício e cache sem regravação passaram em Fabric/Forge. Mesmos vetores nos dois loaders; sem mudar a implementação, desenho ou layout do mapa |
 | Codex | `DinosaurEntity.java` (persistência/penalidade do nocaute), `tools/validation/minecraft_client.py`, novo `knockout_regression.py`, `CLAUDE.md`, `README.md` e documentação de coordenação/testes | Concluído em 25/10: dois bugs reproduzidos e corrigidos; regressão real 18/18 passou em Fabric e Forge, com recarga, alimentar/acordar/domesticar. Build passou em 49 s; arquivos liberados, sem mudar balanceamento, modelos ou interface |
