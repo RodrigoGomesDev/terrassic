@@ -30,7 +30,7 @@ public class Mosasaurus extends SwimmingDinosaur {
     public static final float WIDTH = 3.0F;
     public static final float HEIGHT = 2.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 2.21F;
+    public static final float MODEL_SCALE = 1.0F;
     public static final float SHADOW = 2.3F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
@@ -87,12 +87,12 @@ public class Mosasaurus extends SwimmingDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.1D * this.getScale();
+        return 2.4D * this.getScale();
     }
 
     @Override
     protected double riderForwardOffset() {
-        return -0.22D;
+        return -0.25D;
     }
 
     @Override

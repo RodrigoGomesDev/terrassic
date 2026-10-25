@@ -119,7 +119,8 @@ SIZES = {
     # Vegavis iaai: a small duck, ~0.7 m nose to tail, ~1 m wingspan (Clarke et al. 2005, 2016). Modelled at 4x, 47 px span.
     "vegavis":            dict(real=0.7,  scale=0.33, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
-    "mosasaurus":         dict(real=17.0, scale=2.21, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
+    # Mosasaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "mosasaurus":         dict(real=17.0, scale=1.00, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
     # Tylosaurus proriger: 12-13 m (the "Bunker" specimen KUVP 5033 ~13 m; Everhart 2005). Sleeker than the Mosasaurus.
     "tylosaurus":         dict(real=13.0, scale=1.58, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
     # Elasmosaurus platyurus: ~10.3 m, of which ~7 m of neck (Sachs 2005). "real" is the total length.
@@ -623,7 +624,7 @@ SPECIES = [
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.45, 2.0, 400), xp=40, run=0.04,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof Pteranodon",
       prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
-      tame="baby", live_young=True, rideable=True, ride_offset=0.95, ride_forward=-0.1, ride_speed=1.0, dive=1.0),
+      tame="baby", live_young=True, rideable=True, ride_offset=2.4, ride_forward=-0.25, ride_speed=1.0, dive=1.0),
  dict(id="tylosaurus", cls="Tylosaurus", base="SwimmingDinosaur",
       doc="Tylosaurus proriger - the top predator of the Western Interior Seaway before the Mosasaurus: slender, 13 m, small flippers and a toothless reinforced rostrum it rams prey with (the hit slows and dazes). Wild only for now (knockout taming in v0.7).",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=1.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=4, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
