@@ -35,7 +35,7 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.4F;
     public static final float HEIGHT = 3.6F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.5F;
+    public static final float MODEL_SCALE = 1.0F;
     public static final float SHADOW = 2.0F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES);
 
@@ -92,12 +92,17 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.4D * this.getScale();
+        return 2.95D * this.getScale();
     }
 
     @Override
     protected double jumpStrength() {
         return 0.45D;
+    }
+
+    @Override
+    protected double riderForwardOffset() {
+        return 0.2D;
     }
 
     @Override

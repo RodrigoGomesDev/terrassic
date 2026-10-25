@@ -1088,22 +1088,22 @@
   "render_scale": 0.5
  },
  "pachyrhinosaurus": {
-  "bones": 26,
-  "cubes": 66,
+  "bones": 27,
+  "cubes": 130,
   "texture": [
-   128,
-   256
+   256,
+   512
   ],
   "bounds_px": [
    [
-    -12.0,
-    -0.24857554789431546,
-    -43.507522801884775
+    -20.254799096739777,
+    -0.027601619008803535,
+    -70.2161446634613
    ],
    [
-    12.0,
-    43.80950237385089,
-    42.06012467806892
+    20.254799096739777,
+    60.82512968328255,
+    58.57771875732307
    ]
   ],
   "animations": [
@@ -1113,14 +1113,14 @@
    "animation.pachyrhinosaurus.attack",
    "animation.pachyrhinosaurus.sit",
    "animation.pachyrhinosaurus.graze",
-   "animation.pachyrhinosaurus.scent",
    "animation.pachyrhinosaurus.knocked_out",
    "animation.pachyrhinosaurus.wake",
    "animation.pachyrhinosaurus.eat",
    "animation.pachyrhinosaurus.beg",
-   "animation.pachyrhinosaurus.tame"
+   "animation.pachyrhinosaurus.tame",
+   "animation.pachyrhinosaurus.scent"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "therizinosaurus": {
   "bones": 25,

@@ -42,7 +42,8 @@ SIZES = {
     # Styracosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "styracosaurus":      dict(real=5.5,  scale=0.86,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
     # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
-    "pachyrhinosaurus":   dict(real=8.0,  scale=1.5,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
+    # Pachyrhinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "pachyrhinosaurus":   dict(real=8.0,  scale=1.0,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
     # Protoceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "protoceratops":      dict(real=2.0,  scale=0.38, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
@@ -356,7 +357,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.1, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=22, rideable=True, jump=0.45, ride_offset=1.6, ride_speed=1.05, trample=True, musk=True),
+      xp=22, rideable=True, jump=0.45, ride_offset=2.95, ride_forward=0.2, ride_speed=1.05, trample=True, musk=True),
  dict(id="protoceratops", cls="Protoceratops", base="HerbivoreDinosaur",
       doc="Protoceratops andrewsi - sheep-sized frilled herbivore of the dunes. Bites back when bothered. Digs in soft ground: a tame one turns up roots, bones and shallow fossils.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ATTACK_KNOCKBACK=0.5, ARMOR=3, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=16),
