@@ -27,7 +27,7 @@ public class Saltasaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.8F;
     public static final float HEIGHT = 3.8F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.81F;
+    public static final float MODEL_SCALE = 0.96F;
     public static final float SHADOW = 3.0F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
@@ -91,7 +91,7 @@ public class Saltasaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 4.16D * this.getScale();
+        return 2.78D * this.getScale();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class Saltasaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.36D;
+        return 2.02D;
     }
 
     @Override

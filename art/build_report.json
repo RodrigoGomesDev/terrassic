@@ -1228,38 +1228,38 @@
   "render_scale": 0.5
  },
  "saltasaurus": {
-  "bones": 28,
-  "cubes": 87,
+  "bones": 30,
+  "cubes": 112,
   "texture": [
    256,
-   256
+   512
   ],
   "bounds_px": [
    [
-    -13.5,
-    -4.8276235561427443e-05,
-    -48.86326712954678
+    -21.0,
+    -5.7575467301905935e-05,
+    -103.13466628491088
    ],
    [
-    13.5,
-    42.1109621602499,
-    57.10430108066146
+    21.0,
+    65.38783963171326,
+    96.11099299555669
    ]
   ],
   "animations": [
    "animation.saltasaurus.idle",
    "animation.saltasaurus.walk",
    "animation.saltasaurus.run",
+   "animation.saltasaurus.attack",
    "animation.saltasaurus.sit",
    "animation.saltasaurus.graze",
    "animation.saltasaurus.knocked_out",
    "animation.saltasaurus.wake",
    "animation.saltasaurus.eat",
    "animation.saltasaurus.beg",
-   "animation.saltasaurus.tame",
-   "animation.saltasaurus.attack"
+   "animation.saltasaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "argentinosaurus": {
   "bones": 33,

@@ -70,7 +70,8 @@ SIZES = {
     # Alamosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "alamosaurus":        dict(real=30.0, scale=1.01, w=5.0, h=9.0, baby=0.1,  shadow=5.5),
     # Saltasaurus loricatus: 12-13 m, ~7 t (Paul 2010), the armoured titanosaur; back at ~4 blocks.
-    "saltasaurus":        dict(real=12.0, scale=1.81, w=2.8, h=3.8, baby=0.15, shadow=3.0),
+    # Saltasaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "saltasaurus":        dict(real=12.0, scale=0.96, w=2.8, h=3.8, baby=0.15, shadow=3.0),
     # Argentinosaurus huinculensis: 30-35 m, 65-75 t (Sellers et al. 2013; Paul 2019); head ~15 blocks up.
     "argentinosaurus":    dict(real=35.0, scale=3.08, w=6.0, h=10.0, baby=0.08, shadow=6.5),
     # Opisthocoelicaudia skarzynskii: 11-12 m, ~8.5 t (Borsuk-Bialynicka 1977; Paul 2010); rears to 8 blocks.
@@ -416,7 +417,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=220, MOVEMENT_SPEED=0.19, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=18, ARMOR_TOUGHNESS=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food_tag="ItemTags.LEAVES",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.55, 2.4, 340), step=("RAVAGER_STEP", 1.0, 0.6),
-      xp=40, step_height=1.5, head=(30, 30), rideable=True, jump=0.0, ride_offset=2.3, ride_forward=0.2, ride_speed=1.0),
+      xp=40, step_height=1.5, head=(30, 30), rideable=True, jump=0.0, ride_offset=2.9, ride_forward=2.1, ride_speed=1.0),
  dict(id="argentinosaurus", cls="Argentinosaurus", base="HerbivoreDinosaur",
       doc="Argentinosaurus huinculensis - 35 m titanosaur, the largest land animal of the mod: a house that walks. Clears the brush in its path when it moves with purpose; hurt, it lifts a forefoot and treads, and the ground shakes (slowness). Egg-tamed for now (knockout taming comes in v0.7); rideable, the platform saddle comes with the v0.6 systems.",
       attrs=dict(MAX_HEALTH=600, MOVEMENT_SPEED=0.15, ATTACK_DAMAGE=28, ATTACK_KNOCKBACK=3.0, ARMOR=12, ARMOR_TOUGHNESS=4, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
