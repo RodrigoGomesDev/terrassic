@@ -113,7 +113,8 @@ SIZES = {
     "pteranodon":         dict(real=7.25, scale=0.8, w=1.9, h=2.5, baby=0.3,  shadow=1.5),
     # Azhdarchids: "real" is the wingspan. Quetzalcoatlus northropi 10-11 m (Witton & Habib 2010; Andres & Langston
     # 2021), standing as tall as a giraffe; Hatzegopteryx thambema 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017).
-    "quetzalcoatlus":     dict(real=11.0, scale=1.47, w=2.5, h=5.0, baby=0.25, shadow=2.0),
+    # Quetzalcoatlus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "quetzalcoatlus":     dict(real=11.0, scale=0.73, w=2.5, h=5.0, baby=0.25, shadow=2.0),
     "hatzegopteryx":      dict(real=12.0, scale=1.52, w=2.5, h=4.6, baby=0.25, shadow=2.1),
     # Ichthyornis dispar: a tern-sized toothed seabird, wingspan ~60 cm (Clarke 2004; Field et al. 2018). Modelled at 4x.
     "ichthyornis":        dict(real=0.66, scale=0.245, w=0.4, h=0.4, baby=0.5, shadow=0.2),
@@ -596,7 +597,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.3, FLYING_SPEED=0.7, ATTACK_DAMAGE=9, ARMOR=2, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=32),
       food="Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.6, 1.8, 300), xp=28, run=0.04,
-      rideable=True, ride_offset=2.25, ride_forward=0.0, ride_speed=0.9, egg_only=True,
+      rideable=True, ride_offset=4.5, ride_forward=0.0, ride_speed=0.9, egg_only=True,
       prey="e.getBbWidth() < 1.0F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=140),
  dict(id="hatzegopteryx", cls="Hatzegopteryx", base="FlyingDinosaur",
       doc="Hatzegopteryx thambema - robust azhdarchid from Hateg Island with a very wide skull and a short, massive neck; the island's top predator, taking prey the size of a horse. Egg-tamed for now (knockout taming comes in v0.7); a heavy combat flyer.",

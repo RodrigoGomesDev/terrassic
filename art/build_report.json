@@ -511,21 +511,21 @@
  },
  "quetzalcoatlus": {
   "bones": 30,
-  "cubes": 48,
+  "cubes": 103,
   "texture": [
-   128,
-   128
+   256,
+   256
   ],
   "bounds_px": [
    [
-    -60.0,
-    1.11991812870008e-06,
-    -44.264707313087044
+    -120.0,
+    1.2966973432311563e-05,
+    -90.10034456384
    ],
    [
-    60.0,
-    71.00692512316138,
-    10.0
+    120.0,
+    138.24481959138498,
+    24.0
    ]
   ],
   "animations": [
@@ -542,7 +542,7 @@
    "animation.quetzalcoatlus.beg",
    "animation.quetzalcoatlus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "hatzegopteryx": {
   "bones": 29,

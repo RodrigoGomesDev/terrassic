@@ -28,7 +28,7 @@ public class Quetzalcoatlus extends FlyingDinosaur {
     public static final float WIDTH = 2.5F;
     public static final float HEIGHT = 5.0F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.47F;
+    public static final float MODEL_SCALE = 0.73F;
     public static final float SHADOW = 2.0F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
 
@@ -65,7 +65,7 @@ public class Quetzalcoatlus extends FlyingDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 4.8D;
+        return 4.7D;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Quetzalcoatlus extends FlyingDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 3.31D * this.getScale();
+        return 3.29D * this.getScale();
     }
 
     @Override
