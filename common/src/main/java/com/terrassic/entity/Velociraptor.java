@@ -29,7 +29,7 @@ public class Velociraptor extends PredatorDinosaur {
     public static final float WIDTH = 0.7F;
     public static final float HEIGHT = 0.9F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.48F;
+    public static final float MODEL_SCALE = 0.46F;
     public static final float SHADOW = 0.4F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get());
 

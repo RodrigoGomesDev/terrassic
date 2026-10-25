@@ -31,7 +31,8 @@ SIZES = {
     # Spinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "spinosaurus":        dict(real=14.0, scale=0.95, w=2.5, h=4.6, baby=0.25, shadow=2.4),
     "dilophosaurus":      dict(real=7.0,  scale=1.53, w=1.2, h=2.6, baby=0.35, shadow=1.0),
-    "velociraptor":       dict(real=2.07, scale=0.48,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
+    # Velociraptor v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "velociraptor":       dict(real=2.07, scale=0.46,  w=0.7, h=0.9, baby=0.5,  shadow=0.4),
     "compsognathus":      dict(real=1.25, scale=0.31,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
     # Triceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "triceratops":        dict(real=9.0,  scale=0.94, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
