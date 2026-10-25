@@ -57,6 +57,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 | Codex | `CLAUDE.md`, linha da fauna em `ROADMAP.md`, documentação de contexto | Em uso: atualizar contagem de espécies e estados verificados de entrega, sem mudar a estratégia ou a fila de produto |
 | Claude (nuvem, fauna v0.7) | `gen_species.py`, `gen_resources.py`, `lore.py`, `egg_designs.py`, `sprites.py`, `blocks.py`, `science.py`, `build_all.py`, registros (`ModEntities`, `ModItems`, `ModBlocks`, `BuildingBlocks`), lang, `ROADMAP.md`, `ROSTER.md`, `TAMANHOS.md`, `FAUNA.md`, bestiário; fases 108-113 (Leptoceratops, Vegavis, Mesodma, Basilemys, Enchodus, Lepisosteus), uma espécie por fase sobre a anterior | Concluído; arquivos liberados (fases 108-113) |
 | Claude principal / secundário / identidade | A registrar pelas próprias sessões | Escopo exato ainda não confirmado |
+| Claude (nuvem, menu e arte 3D) | `client/title/TerrassicMenuScreen.java`, `client/TerrassicTitle.java` (só `renderTip`), `mixin/client/LevelLoadingScreenMixin.java`, `ReceivingLevelScreenMixin.java`, `docs/MENU.md` | Concluído: telas de carregamento com as cenas 3D da galeria e a dica na laje da identidade (paleta e `TerrassicUi`, sem trocar a arte da identidade); arquivos liberados com o commit. Ainda não visto no jogo |
 
 ## Levantamento inicial e entregas anteriores (histórico)
 

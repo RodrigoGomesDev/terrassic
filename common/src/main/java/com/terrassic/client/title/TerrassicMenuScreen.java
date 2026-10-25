@@ -9,6 +9,7 @@ import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.platform.Platform;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -75,6 +76,8 @@ public class TerrassicMenuScreen extends Screen {
 
     private static boolean firstShow = true;
     private static Scene scene;
+    /** The scene behind the loading screens; picked again each time the menu opens. */
+    private static Scene loading;
 
     private final long openedAt = Util.getMillis();
     private final boolean fadeIn;
@@ -89,6 +92,7 @@ public class TerrassicMenuScreen extends Screen {
         super(Component.translatable("narrator.screen.title"));
         this.fadeIn = firstShow;
         firstShow = false;
+        loading = null;
         if (scene == null) {
             scene = SCENES.get((int) (Math.random() * SCENES.size()));
         }
@@ -203,6 +207,23 @@ public class TerrassicMenuScreen extends Screen {
         g.pose().translate(x, y, 0.0F);
         g.blit(scene.background(), 0, 0, w, h, 0.0F, 0.0F, BG_W, BG_H, BG_W, BG_H);
         g.pose().popPose();
+    }
+
+    /**
+     * A scene of the gallery behind a loading screen (creating or opening a world, "Loading terrain..."), still and
+     * dimmed with basalt so the chunk map, the percentage and the tip read on it. Called by the loading screen mixins
+     * in place of the vanilla dirt.
+     */
+    public static void renderBackdrop(GuiGraphics g, int width, int height) {
+        if (loading == null) {
+            loading = SCENES.get((int) (Math.random() * SCENES.size()));
+            Minecraft.getInstance().getTextureManager().getTexture(loading.background()).setFilter(true, false);
+        }
+        float scale = Math.max(width / (float) BG_W, height / (float) BG_H);
+        int w = Mth.ceil(BG_W * scale);
+        int h = Mth.ceil(BG_H * scale);
+        g.blit(loading.background(), (width - w) / 2, (height - h) / 2, w, h, 0.0F, 0.0F, BG_W, BG_H, BG_W, BG_H);
+        g.fill(0, 0, width, height, alpha(BASALT_950, 115));
     }
 
     /** Museum placard of the animal in the scene, right-aligned at the bottom right. */

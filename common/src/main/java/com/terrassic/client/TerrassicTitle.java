@@ -1,6 +1,8 @@
 package com.terrassic.client;
 
 import com.terrassic.Terrassic;
+import com.terrassic.client.ui.TerrassicPalette;
+import com.terrassic.client.ui.TerrassicUi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.CubeMap;
@@ -26,7 +28,6 @@ public final class TerrassicTitle {
 
     private static final RandomSource RANDOM = RandomSource.create();
     private static final int LOGO_Y = 30;
-    private static final int AMBER = 0xFFB63C;
     private static final int PAPER = 0xE8DCC0;
 
     private TerrassicTitle() {
@@ -54,17 +55,25 @@ public final class TerrassicTitle {
         return n == 0 ? null : Component.translatable("tip.terrassic." + RANDOM.nextInt(n));
     }
 
-    /** Draws "Did you know?" and the tip, wrapped, near the bottom of a loading screen. */
+    /**
+     * Draws "Did you know?" and the tip, wrapped, on a basalt slab near the bottom of a loading screen
+     * (docs/IDENTIDADE.md: TerrassicUi.slab, amber title, stone text).
+     */
     public static void renderTip(GuiGraphics graphics, Component tip, int width, int height) {
         if (tip == null) {
             return;
         }
         var font = Minecraft.getInstance().font;
-        List<FormattedCharSequence> lines = font.split(tip, Math.min(320, width - 40));
-        int y = height - 16 - lines.size() * 10;
-        graphics.drawCenteredString(font, Component.translatable("menu.terrassic.did_you_know"), width / 2, y - 14, AMBER);
+        int panel = Math.min(320, width - 20);
+        List<FormattedCharSequence> lines = font.split(tip, panel - 20);
+        int y1 = height - 8;
+        int y0 = y1 - 26 - lines.size() * 10;
+        TerrassicUi.slab(graphics, (width - panel) / 2, y0, (width + panel) / 2, y1);
+        graphics.drawCenteredString(font, Component.translatable("menu.terrassic.did_you_know"), width / 2, y0 + 9,
+                TerrassicPalette.rgb(TerrassicPalette.AMBER_500));
+        int y = y0 + 21;
         for (FormattedCharSequence line : lines) {
-            graphics.drawCenteredString(font, line, width / 2, y, PAPER);
+            graphics.drawCenteredString(font, line, width / 2, y, TerrassicPalette.rgb(TerrassicPalette.STONE_200));
             y += 10;
         }
     }

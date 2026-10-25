@@ -34,6 +34,15 @@ Fabric e no Forge:
 - **Realms** não aparece (o Realms não roda mods). Sem a frase amarela (splash).
 - `"title_screen": false` em `config/terrassic-client.json` volta ao menu do Minecraft.
 
+## Telas de carregamento
+
+Criar ou abrir um mundo e "Carregando terreno..." (entrar num servidor, trocar de dimensão) mostram uma cena da
+galeria no lugar da terra do Minecraft, parada e escurecida com basalto para o mapa de chunks e a porcentagem do
+vanilla ficarem legíveis (`TerrassicMenuScreen.renderBackdrop`, chamado por `LevelLoadingScreenMixin` e
+`ReceivingLevelScreenMixin`). A cena é sorteada de novo a cada volta ao menu. A dica "Você sabia?" fica numa laje de
+basalto da identidade (`TerrassicTitle.renderTip` com `TerrassicUi.slab`). Com `"title_screen": false` volta a terra
+do vanilla; `"loading_tips": false` tira só a dica.
+
 ## Arquivos
 
 - Tela: `common/src/main/java/com/terrassic/client/title/TerrassicMenuScreen.java` (registrada em `TerrassicClient`).
@@ -60,3 +69,6 @@ Para pôr outra cena: uma função nova em `menu_cenas.py`, o id em `SCENES` de 
 - [ ] Janela pequena (854×480), escala de interface 3 e 4, e tela cheia em 1080p e 1440p: nada se sobrepõe (opções
       abaixo do slogan, acima do rodapé), a cena cobre a tela toda.
 - [ ] `"title_screen": false` em `config/terrassic-client.json` traz o menu do Minecraft de volta.
+- [ ] Criar um mundo novo e abrir um existente: a cena aparece atrás do mapa de chunks, a porcentagem lê bem e a dica
+      fica na laje de basalto, sem cortar o texto em janela pequena.
+- [ ] Entrar num servidor e passar por um portal do Nether: "Carregando terreno..." também mostra a cena.

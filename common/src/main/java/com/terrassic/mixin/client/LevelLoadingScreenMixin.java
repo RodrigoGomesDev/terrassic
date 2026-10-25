@@ -2,6 +2,7 @@ package com.terrassic.mixin.client;
 
 import com.terrassic.client.ClientConfig;
 import com.terrassic.client.TerrassicTitle;
+import com.terrassic.client.title.TerrassicMenuScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -31,5 +32,15 @@ public abstract class LevelLoadingScreenMixin extends Screen {
             this.terrassic$tip = TerrassicTitle.randomTip();
         }
         TerrassicTitle.renderTip(graphics, this.terrassic$tip, this.width, this.height);
+    }
+
+    /** A 3D scene of the menu gallery in place of the dirt (docs/MENU.md), unless the vanilla title is chosen. */
+    @Override
+    public void renderDirtBackground(GuiGraphics graphics) {
+        if (ClientConfig.titleScreen()) {
+            TerrassicMenuScreen.renderBackdrop(graphics, this.width, this.height);
+        } else {
+            super.renderDirtBackground(graphics);
+        }
     }
 }
