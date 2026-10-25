@@ -110,3 +110,21 @@ def caption(text, color="#f3e6c8", shadow="#1a1018"):
 
 def up(im, k):
     return im.resize((im.width * k, im.height * k), Image.NEAREST)
+
+
+def clean_wordmark(text, cell, color="#f3ead6", shadow=(20, 14, 18, 150), gap=1, spacing=1, bold=False):
+    """Plain blocky letters from the 5x7 font: solid colour and a soft drop shadow, nothing else.
+    bold doubles every vertical stroke (chunkier letters for the title)."""
+    cells, (cw, ch) = layout(text, gap * spacing + (1 if bold else 0))
+    if bold:
+        cells = sorted(set(cells) | {(x + 1, y) for (x, y) in cells})
+        cw += 1
+    sh = max(1, cell // 4)
+    im = Image.new("RGBA", (cw * cell + sh, ch * cell + sh), (0, 0, 0, 0))
+    px = np.zeros((im.height, im.width, 4), np.uint8)
+    fc = tuple(int(v) for v in hexrgb(color)) + (255,)
+    for (x, y) in cells:
+        px[y * cell + sh:(y + 1) * cell + sh, x * cell + sh:(x + 1) * cell + sh] = shadow
+    for (x, y) in cells:
+        px[y * cell:(y + 1) * cell, x * cell:(x + 1) * cell] = fc
+    return Image.fromarray(px, "RGBA")

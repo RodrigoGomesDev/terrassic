@@ -103,11 +103,11 @@ Dinosaurios a tamaño real que puedes domar, montar y volar, en un mod original 
 
 | Arquivo | Uso |
 |---|---|
-| `art/capa/terrassic_banner_1920x1080.png` | Banner e galeria (Modrinth, CurseForge), topo do README |
-| `art/capa/terrassic_icon_512.png` | Ícone do projeto (fundo escuro) |
+| `art/capa/terrassic_banner_1920x1080.png` | Banner principal (Modrinth, CurseForge), topo do README: a capa "Caçada" |
+| `art/capa/terrassic_capa_cacada.png` e `terrassic_capa_neblina.png` | As duas capas principais (galeria) |
+| `art/capa/terrassic_icon_512.png` | Ícone do projeto |
 | `art/capa/terrassic_icon_512_transparente.png` | Ícone com fundo transparente |
 
-A capa é toda gerada por código e autoral: o cenário (céu do entardecer, a Fenda, vulcão, lago, araucárias e samambaias)
-é pixel art desenhado em `tools/capagen/scene.py`; o letreiro usa a fonte de blocos própria (`font.py`, `logo.py`);
-e os dinossauros são os **modelos do próprio mod**, renderizados com as texturas e animações do jogo (`render3d.py`).
-Para gerar de novo: `cd tools/capagen && python3 banner.py && python3 icon.py` (precisa de `pillow` e `numpy`).
+A capa é toda gerada por código e autoral: os cenários são montados com os blocos do próprio mod, os dinossauros são os
+**modelos atuais do mod** com as animações do jogo, e a imagem é renderizada com path tracing no Blender.
+Como gerar de novo: ver `docs/CAPA.md`.

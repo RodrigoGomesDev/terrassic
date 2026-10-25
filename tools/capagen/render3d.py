@@ -26,11 +26,24 @@ def norm(v):
     return v / np.linalg.norm(v)
 
 
-def load(name, sex="male"):
-    """(rig, texture, model) of a species, using the texture the mod ships."""
+def load(name, sex="male", extra_path=None):
+    """(rig, texture, model) of a species, painted from its modelgen code, so the cover always shows the current model.
+    extra_path: a folder with a proposed species file (e.g. a model still waiting for approval) that wins over species/."""
+    import asyncio
+    from paint import make_shader, paint_model
+    from pybench import PyBench
+    if extra_path:
+        sys.path.insert(0, extra_path)
     model = importlib.import_module(name).build()
     spec = model.spec()
-    tex = Image.open(os.path.join(TEXTURES, f"{name}_{sex}.png")).convert("RGBA")
+
+    async def paint():
+        async with PyBench() as bb:
+            dump = await bb.build(spec)
+            pal = dict(model.palette)
+            pal.update((getattr(model, "sexes", None) or {}).get(sex, {}))
+            return paint_model(model, dump, make_shader(pal, model.pattern, model.decals))
+    tex = asyncio.run(paint()).convert("RGBA")
     return Rig(spec), tex, model
 
 

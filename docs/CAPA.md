@@ -1,15 +1,50 @@
 # Terrassic: arte de divulgação
 
-## O que já existe (aprovado em 24/10/2026)
+## O que já existe (aprovado em 25/10/2026)
 
 | Arquivo | Uso |
 |---|---|
-| `art/capa/terrassic_banner_1920x1080.png` | Banner e galeria (Modrinth, CurseForge), topo do README |
-| `art/capa/terrassic_icon_512.png` | Ícone do projeto, T. rex de corpo inteiro saindo do anel do Altar do Salto (fundo escuro) |
-| `art/capa/terrassic_icon_512_transparente.png` | O mesmo ícone com fundo transparente |
+| `art/capa/terrassic_banner_1920x1080.png` | Banner principal (Modrinth, CurseForge), topo do README. É a capa "Caçada" |
+| `art/capa/terrassic_capa_cacada.png` | Capa "Caçada": T. rex e Triceratops frente a frente no entardecer, manadas correndo ao fundo |
+| `art/capa/terrassic_capa_neblina.png` | Capa "Neblina": um T. rex espreitando um Alamosaurus na floresta fria e enevoada |
+| `art/capa/terrassic_capa_*_sem_titulo.png` | As duas capas sem letreiro (galeria, posts, fundos) |
+| `art/capa/terrassic_icon_512.png` | Ícone do projeto: o T. rex da capa "Caçada" rugindo contra o entardecer |
+| `art/capa/terrassic_icon_512_transparente.png` | Só o T. rex, fundo transparente |
+| `common/src/main/resources/assets/terrassic/icon.png` | O mesmo ícone em 128x128, mostrado na lista de mods do jogo |
 
-Tudo gerado por `tools/capagen/` (`python3 banner.py && python3 icon.py`): cenário em pixel art, letreiro com a fonte de
-blocos própria e os modelos do mod renderizados com as texturas e animações do jogo. Os textos da página estão em `docs/RESUMO.md`.
+O slogan das capas é em inglês ("THE PAST HAS AWOKEN."), em todas, por decisão do Rodrigo (vende melhor no geral).
+As capas antigas em pixel art (banner de 24/10, ícone do anel do Altar do Salto) foram substituídas; `banner.py`, `icon.py`
+e `scene.py` ficam só como referência (rodar `icon.py` sobrescreve o ícone novo).
+
+### Como as capas são feitas (`tools/capagen/`)
+
+Os cenários são montados **com os blocos do próprio mod** (texturas do jogo, 1 bloco = 1 metro) e os dinossauros são os
+**modelos atuais do mod**, pintados direto do código de `tools/modelgen` e posados com as animações do jogo. A imagem
+final é renderizada com path tracing no Blender (Cycles): sol com sombra suave, luz rebatida, neblina volumétrica com
+raios de sol, água com transparência. Nada é pintado à mão nem copiado.
+
+| Arquivo | O que faz |
+|---|---|
+| `voxels.py` | Mundo de blocos: terreno, rochas, árvores (araucária, conífera, samambaia), plantas, malha dos dinossauros |
+| `cenas.py` | As cenas (`cacada`, `espreita` = Neblina, e outras: `ribeira`, `vale`, `manada`, `costa`, `falesia`) |
+| `blend.py` | Renderização no Blender Cycles (céu, sol, neblina, água, câmera com profundidade de campo) |
+| `gl.py` | Prévia rápida em OpenGL (segundos), para acertar câmera e composição antes do render final |
+| `capas.py` | Põe o letreiro TERRASSIC (`titulo.py`) e o slogan sobre a cena |
+| `icone.py` | O ícone, com a mesma cena e luz da capa "Caçada" |
+
+Precisa de `pillow`, `numpy` e `bpy` (`pip install bpy`, o Blender como módulo Python; versão 5.x, Python 3.13).
+Para gerar de novo (cerca de 20 a 45 minutos por capa em 4 núcleos):
+
+```
+cd tools/capagen
+BACKEND=cycles SAMPLES=128 SS=1.5 VSTEP=1 python3 -B cenas.py cacada espreita   # -> art/capa/cenas/
+python3 -B capas.py cacada espreita    # -> art/capa/terrassic_capa_cacada.png e terrassic_capa_espreita.png (= Neblina)
+SAMPLES=128 python3 -B icone.py   # -> ícones 512 (opaco e transparente)
+```
+
+Prévia rápida de uma cena: `xvfb-run -a -s "-screen 0 1920x1080x24" python3 -B cenas.py cacada --small`
+(ou `BACKEND=cycles SAMPLES=32 ... --small`, cerca de 1 minuto). O menu do jogo (`tools/menugen`) usa as mesmas peças.
+Os textos da página estão em `docs/RESUMO.md`.
 
 ## Próximo passo: imagens dentro do jogo (plano, ainda não feito)
 

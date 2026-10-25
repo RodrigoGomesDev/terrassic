@@ -56,3 +56,38 @@ def layout(text, gap=1):
                     cells.append((x + dx, y))
         x += len(g[0]) + gap
     return cells, (x - gap, 7)
+
+
+# accented capitals for pt/es captions: base glyph + a mark above (2 rows) or a cedilla below
+MARKS = {"´": ["...#.", "..#.."], "`": [".#...", "..#.."], "^": ["..#..", ".#.#."], "~": [".#.#.", "#.#.."]}
+ACCENTED = {"Á": ("A", "´"), "À": ("A", "`"), "Â": ("A", "^"), "Ã": ("A", "~"), "É": ("E", "´"), "Ê": ("E", "^"),
+            "Í": ("I", "´"), "Ó": ("O", "´"), "Ô": ("O", "^"), "Õ": ("O", "~"), "Ú": ("U", "´"), "Ñ": ("N", "~"),
+            "Ç": ("C", ","), "¡": ("!", ""), "!": ("!", "")}
+GLYPHS.setdefault("!", ["#", "#", "#", "#", "#", ".", "#"])
+GLYPHS.setdefault(",", [".", ".", ".", ".", ".", "#", "#"])
+
+
+def layout_text(text, gap=1):
+    """Like layout(), with accents: 11 rows (2 for marks above, 7 for the letter, 2 for a cedilla below)."""
+    cells, x = [], 0
+    for ch in text.upper():
+        base, mark = ACCENTED.get(ch, (ch, ""))
+        g = GLYPHS[base]
+        w = len(g[0])
+        for y, row in enumerate(g):
+            for dx, c in enumerate(row):
+                if c == "#":
+                    cells.append((x + dx, y + 2))
+        if mark in MARKS:
+            m = MARKS[mark]
+            off = (w - 5) // 2
+            for y, row in enumerate(m):
+                for dx, c in enumerate(row):
+                    if c == "#" and 0 <= dx + off < w + 1:
+                        cells.append((x + dx + off, y))
+        elif mark == ",":
+            cells += [(x + w // 2, 9), (x + w // 2 - 1, 10)]
+        if ch == "¡":
+            cells = [c for c in cells if not (x <= c[0] < x + w)] + [(x, 2), (x, 4), (x, 5), (x, 6), (x, 7), (x, 8)]
+        x += w + gap
+    return cells, (x - gap, 11)
