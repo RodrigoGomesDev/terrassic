@@ -27,7 +27,7 @@ public class Corythosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 2.0F;
     public static final float HEIGHT = 3.3F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.45F;
+    public static final float MODEL_SCALE = 0.83F;
     public static final float SHADOW = 1.6F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES);
 
@@ -83,12 +83,17 @@ public class Corythosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.25D * this.getScale();
+        return 2.12D * this.getScale();
     }
 
     @Override
     protected double jumpStrength() {
         return 0.6D;
+    }
+
+    @Override
+    protected double riderForwardOffset() {
+        return 0.66D;
     }
 
     @Override

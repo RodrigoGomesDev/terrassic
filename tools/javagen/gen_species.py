@@ -107,7 +107,8 @@ SIZES = {
     # Edmontosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "edmontosaurus":      dict(real=12.0, scale=0.89, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
     # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
-    "corythosaurus":      dict(real=9.0,  scale=1.45, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
+    # Corythosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "corythosaurus":      dict(real=9.0,  scale=0.83, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). GAME EXCEPTION (Rodrigo 2026-10-24, so the rider
     # fits): drawn 1.5x real, ~10.8 m wingspan and 3 m standing, still below the azhdarchids (11 and 12 m).
     # v3 is modelled at 2x (16 px = 1 m) like the T. rex.
@@ -593,7 +594,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
-      fights=False, rideable=True, jump=0.6, ride_offset=1.55, ride_speed=1.1, call=True, calm=True),
+      fights=False, rideable=True, jump=0.6, ride_offset=2.55, ride_forward=0.8, ride_speed=1.1, call=True, calm=True),
  # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
       doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",

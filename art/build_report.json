@@ -881,22 +881,22 @@
   "render_scale": 0.5
  },
  "corythosaurus": {
-  "bones": 27,
-  "cubes": 58,
+  "bones": 28,
+  "cubes": 102,
   "texture": [
    128,
-   256
+   512
   ],
   "bounds_px": [
    [
-    -9.5,
-    2.3649910577258316e-05,
-    -43.46430020920079
+    -15.0,
+    -0.07737015435298994,
+    -74.07009247448559
    ],
    [
-    9.5,
-    37.029872100563196,
-    56.11652063190722
+    15.0,
+    61.43669070767981,
+    99.24773047592682
    ]
   ],
   "animations": [
@@ -913,7 +913,7 @@
    "animation.corythosaurus.beg",
    "animation.corythosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "styracosaurus": {
   "bones": 26,
