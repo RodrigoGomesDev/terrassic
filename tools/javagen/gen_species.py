@@ -141,7 +141,8 @@ SIZES = {
     # Hesperornis v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "hesperornis":        dict(real=1.8, scale=0.39, w=0.6, h=0.6, baby=0.4,  shadow=0.4),
     # Deinosuchus riograndensis: 10.6 m well measured (Cossette & Brochu 2020), up to 12 m in older estimates (Schwimmer 2002).
-    "deinosuchus":        dict(real=12.0, scale=1.64, w=2.6, h=1.4, baby=0.2,  shadow=2.2),
+    # Deinosuchus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "deinosuchus":        dict(real=12.0, scale=1.05, w=2.6, h=1.4, baby=0.2,  shadow=2.2),
     # Baurusuchus salgadoensis: ~3.5 m (Carvalho, Campos & Nobre 2005), a land crocodylomorph on upright legs.
     "baurusuchus":        dict(real=3.5, scale=0.78, w=1.0, h=1.0, baby=0.3,  shadow=0.9),
 }

@@ -780,22 +780,22 @@
   "render_scale": 0.5
  },
  "deinosuchus": {
-  "bones": 18,
-  "cubes": 44,
+  "bones": 20,
+  "cubes": 160,
   "texture": [
-   128,
+   256,
    256
   ],
   "bounds_px": [
    [
-    -17.92820323027551,
-    8.180792478835599e-17,
-    -46.0
+    -25.660254037844386,
+    -2.5529789980253448e-15,
+    -63.0
    ],
    [
-    17.92820323027551,
-    16.0,
-    71.07383416923005
+    25.660254037844386,
+    22.5,
+    119.1369646487103
    ]
   ],
   "animations": [
@@ -810,7 +810,7 @@
    "animation.deinosuchus.beg",
    "animation.deinosuchus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.5
  },
  "baurusuchus": {
   "bones": 17,
