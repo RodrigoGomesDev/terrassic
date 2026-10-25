@@ -120,15 +120,18 @@ def wordmark(bg, x, y, cell, sub=None, sub_cell=None, color="#f3ead6", shadow=(2
         bg.alpha_composite(s, (sx, y + word.height + cell * 2))
 
 
-def title_block(bg, x, y, finish="pedra", lang="pt_br", texel=2):
-    """TERRASSIC title + a thin amber rule + the slogan, left-aligned at (x, y)."""
+def title_block(bg, x, y, finish="pedra", lang="pt_br", texel=2, slogan_finish="osso"):
+    """TERRASSIC title + a thin amber rule + the slogan, left-aligned at (x, y). Returns the box it covers."""
     t = titulo.title(finish=finish, texel=texel)
     bg.alpha_composite(t, (x, y))
-    s = titulo.slogan(titulo.SLOGANS[lang], cell=texel * 2)
-    ry = y + t.height + texel * 8
+    s = titulo.slogan(titulo.SLOGANS[lang], cell=texel * 2, finish=slogan_finish)
+    pad = 3 * texel * 5                      # the title image keeps 3 blocks of air around the letters
+    ry = y + t.height - pad + texel * 10
     rule = Image.new("RGBA", (texel * 40, texel * 2), (232, 150, 60, 255))
-    bg.alpha_composite(rule, (x + texel * 6, ry))
-    bg.alpha_composite(s, (x + texel * 6, ry + texel * 8))
+    bg.alpha_composite(rule, (x + pad, ry))
+    spad = 3 * max(2, round(texel * 2 * 0.75))
+    bg.alpha_composite(s, (x + pad - spad, ry + texel * 7 - spad))
+    return (x, y, x + max(t.width, s.width), ry + texel * 7 - spad + s.height)
 
 
 # ------------------------------------------------------------------ direction A: sunset, backlit T. rex

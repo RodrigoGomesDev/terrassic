@@ -13,6 +13,8 @@
 | `common/src/main/resources/assets/terrassic/icon.png` | O mesmo ícone em 128x128, mostrado na lista de mods do jogo |
 
 O slogan das capas é em inglês ("THE PAST HAS AWOKEN."), em todas, por decisão do Rodrigo (vende melhor no geral).
+O letreiro e o slogan usam o **Degraus**, a letra de título aprovada em 25/10/2026 (`docs/IDENTIDADE.md` §5), no
+acabamento pedra; o slogan vai em osso, menor e com desgaste leve para ler bem.
 As capas antigas em pixel art (banner de 24/10, ícone do anel do Altar do Salto) foram substituídas; `banner.py`, `icon.py`
 e `scene.py` ficam só como referência (rodar `icon.py` sobrescreve o ícone novo).
 
@@ -29,7 +31,7 @@ raios de sol, água com transparência. Nada é pintado à mão nem copiado.
 | `cenas.py` | As cenas (`cacada`, `espreita` = Neblina, e outras: `ribeira`, `vale`, `manada`, `costa`, `falesia`) |
 | `blend.py` | Renderização no Blender Cycles (céu, sol, neblina, água, câmera com profundidade de campo) |
 | `gl.py` | Prévia rápida em OpenGL (segundos), para acertar câmera e composição antes do render final |
-| `capas.py` | Põe o letreiro TERRASSIC (`titulo.py`) e o slogan sobre a cena |
+| `capas.py` | Põe o letreiro TERRASSIC e o slogan em Degraus (`titulo.py`, `letreiro.py`) sobre a cena |
 | `icone.py` | O ícone, com a mesma cena e luz da capa "Caçada" |
 
 Precisa de `pillow`, `numpy` e `bpy` (`pip install bpy`, o Blender como módulo Python; versão 5.x, Python 3.13).
@@ -79,5 +81,5 @@ As próximas eras ganham as cenas delas quando forem jogáveis.
 
 - Lê os prints escolhidos de `art/capa/prints/` (PNG direto do jogo, sem edição de pintura).
 - Corta em 16:9 e exporta 1920x1080 para a galeria e 960x540 para o README.
-- Opcional: faixa de legenda com a fonte de blocos do letreiro, em pt-BR, en-US e es-ES (uma imagem por idioma).
+- Opcional: faixa de legenda com o Degraus, em pt-BR, en-US e es-ES (uma imagem por idioma).
 - Gera `art/capa/galeria_<cena>_<idioma>.png` e uma folha de contato para aprovação.

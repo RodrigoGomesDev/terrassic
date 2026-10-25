@@ -49,8 +49,9 @@ def capa(scene, lang):
     W, H = img.size
     fx, fy, finish, dark = LAYOUT[scene]
     x, y = int(W * fx), int(H * fy)
-    img = shade_behind(img, (x + 20, y + 10, x + 930, y + 250), dark)
-    img = img.convert("RGBA")
+    probe = Image.new("RGBA", (W, H))
+    x0, y0, x1, y1 = title_block(probe, x, y, finish, lang)       # measure, then shade behind it
+    img = shade_behind(img, (x0 + 20, y0 + 10, x1 - 20, y1 - 10), dark).convert("RGBA")
     title_block(img, x, y, finish, lang)
     return img.convert("RGB")
 
