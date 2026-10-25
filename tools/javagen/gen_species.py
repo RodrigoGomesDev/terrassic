@@ -90,7 +90,8 @@ SIZES = {
     "lepisosteus":        dict(real=1.0,  scale=0.15, w=0.4, h=0.3, baby=0.4,  shadow=0.3),
     # Parasaurolophus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "parasaurolophus":    dict(real=9.5,  scale=0.88, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
-    "pachycephalosaurus": dict(real=4.5,  scale=0.96, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
+    # Pachycephalosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
+    "pachycephalosaurus": dict(real=4.5,  scale=0.82, w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
     "thescelosaurus":     dict(real=4.0,  scale=0.89, w=1.0, h=1.6, baby=0.35, shadow=0.8),
     "gallimimus":         dict(real=6.0,  scale=1.54, w=1.2, h=2.6, baby=0.35, shadow=0.9),

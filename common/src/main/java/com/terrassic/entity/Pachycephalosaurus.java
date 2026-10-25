@@ -25,7 +25,7 @@ public class Pachycephalosaurus extends HerbivoreDinosaur {
     public static final float WIDTH = 1.0F;
     public static final float HEIGHT = 1.9F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.96F;
+    public static final float MODEL_SCALE = 0.82F;
     public static final float SHADOW = 0.8F;
     private static final Ingredient FOOD = Ingredient.of(Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.APPLE);
 

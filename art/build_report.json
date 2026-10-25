@@ -340,21 +340,21 @@
  },
  "pachycephalosaurus": {
   "bones": 24,
-  "cubes": 43,
+  "cubes": 90,
   "texture": [
    128,
-   128
+   256
   ],
   "bounds_px": [
    [
-    -6.0,
-    -0.38300637678448757,
-    -30.563717520841802
+    -7.5,
+    -2.813961828751437e-05,
+    -41.56595697811482
    ],
    [
-    6.0,
-    35.45901266884374,
-    44.00001258866713
+    7.5,
+    35.68420118627679,
+    46.10860472321931
    ]
   ],
   "animations": [
@@ -370,7 +370,7 @@
    "animation.pachycephalosaurus.beg",
    "animation.pachycephalosaurus.tame"
   ],
-  "render_scale": 0.667
+  "render_scale": 0.5
  },
  "gallimimus": {
   "bones": 25,
