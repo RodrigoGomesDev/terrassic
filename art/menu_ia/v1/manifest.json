@@ -1,6 +1,6 @@
 {
   "method": "built-in image_gen; AI-assisted variations using existing Terrassic renders as references",
-  "status": "propostas para validacao; nao integradas ao menu",
+  "status": "nao aprovadas; apenas estudo de luz e composicao; usar modelos originais na nova frente menu_vanilla",
   "images": [
     {
       "file": "confronto_trex_triceratops.png",

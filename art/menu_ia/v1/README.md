@@ -11,7 +11,9 @@ ambiente. Os arquivos são cópias integrais da saída, sem redimensionamento, r
 As três propostas reservam o lado esquerdo para a interface. Não contêm botões ou letreiro embutidos.
 Prompts completos em `PROMPTS.md`; dimensões, bytes e hashes em `manifest.json`.
 
-Estado: apresentadas para validação do Rodrigo; não adicionadas ao sorteio nem aos recursos empacotados.
+Estado: não aprovadas pelo Rodrigo. Ele gostou das cenas e da iluminação, mas pediu aparência mais Minecraft
+vanilla e uso dos modelos originais. Mantidas somente como estudo de luz/composição; não adicionar ao sorteio
+nem aos recursos empacotados. A nova frente de render determinístico fica em `art/menu_vanilla/`.
 São interpretações artísticas assistidas por IA, não renders exatos dos modelos executados pelo Minecraft.
 Antes de integrar: validar aparência dos animais, adequar ao canvas 1920×1080, conferir o recorte e a legibilidade
 com o letreiro e os botões reais nas escalas de interface, e definir as legendas nos três idiomas.
