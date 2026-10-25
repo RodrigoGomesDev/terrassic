@@ -84,7 +84,7 @@ NECK = ([(33, -38), (43, -48), (50, -56)], [(11, 13), (9, 11)])
 SKULL_PITCH = -22          # head pointing forward and a little down from the rising neck
 TAIL = ([(43, 26), (42, 40), (40, 54), (37, 68), (33, 82), (30, 96)], [(11, 18), (9, 15), (7, 11), (5, 8), (3, 5)])
 LEG_X, LEG = 9, ([(40, 12), (22, 4), (8, 11), (2, 11)], [(11, 18, -1), (8, 11, 0, "limb"), (7, 7, 0, "limb")])
-ARM_X, ARM = 8, ([(27, -33), (15, -31), (4, -33)], [(5, 7), (4, 5, 0, "limb")])
+ARM_X, ARM = 8, ([(27, -33), (15, -31), (2, -33)], [(5, 7), (4, 5, 0, "limb")])
 SADDLE = (46, -22, -4, 15, 14, 14)   # top_y, z0, z1, width, body half width, flap
 GRAZE = (-66, -24, 46)      # neck1, neck2, skull: the bill reaches the ground, the head stays inclined
 SIT_HIND = (50, -95, 45)
@@ -192,7 +192,7 @@ def siny_(a, ph=0.0):
 def animations(m):
     Li = 4.0
     idle = {
-        "body": track(rot=wave(8, sinx(0.5), Li), pos=wave(8, lambda p: (0, 0.25 * K * math.sin(2 * math.pi * p), 0), Li)),
+        "body": track(pos=wave(8, lambda p: (0, 0.125 * K * (1 + math.sin(2 * math.pi * p)), 0), Li)),   # breathing rises only: the forefeet stay planted
         "neck1": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * p), 3 * math.sin(2 * math.pi * (p + 0.3)), 0), Li)),
         "neck2": track(rot=wave(8, lambda p: (1.2 * math.sin(2 * math.pi * (p + 0.1)), 1.5 * math.sin(2 * math.pi * (p + 0.4)), 0), Li)),
         "skull": track(rot=wave(8, lambda p: (2 * math.sin(2 * math.pi * (p + 0.2)), 0, 0), Li)),
@@ -205,7 +205,7 @@ def animations(m):
     Lc, bob = 1.5, 0.6 * K
     t = quad_gait(Lc, 20, 16)
     t["body"] = track(rot=wave(8, lambda p: (0, 1.5 * math.sin(2 * math.pi * p), 1.5 * math.sin(2 * math.pi * p)), Lc),
-                      pos=wave(8, lambda p: (0, bob * math.cos(4 * math.pi * p) - bob * 0.5, 0), Lc))
+                      pos=wave(8, lambda p: (0, bob * 0.5 * (1 + math.cos(4 * math.pi * p)), 0), Lc))
     t["neck1"] = track(rot=wave(8, lambda p: (-2 * 0.6 * math.cos(4 * math.pi * p), 0, 0), Lc))
     for i in range(5):
         t[f"tail{i+1}"] = track(rot=wave(8, siny_(2.5 + 0.8 * i, 0.25 - 0.08 * i), Lc))
@@ -228,7 +228,7 @@ def animations(m):
         "neck1": track(rot=keys([(0, 0, 0, 0), (0.3, 10, 0, 0), (0.5, -14, 0, 0), (0.9, 0, 0, 0)])),
         "skull": track(rot=keys([(0, 0, 0, 0), (0.3, 8, 0, 0), (0.5, -12, 0, 0), (0.9, 0, 0, 0)])),
         "body": track(rot=keys([(0, 0, 0, 0), (0.3, 6, 0, 0), (0.5, -2, 0, 0), (0.9, 0, 0, 0)]),
-                      pos=keys([(0, 0, 0, 0), (0.3, 0, 0, 1.0 * K), (0.5, 0, 0, -2.5 * K), (0.9, 0, 0, 0)])),
+                      pos=keys([(0, 0, 0, 0), (0.3, 0, 0.5 * K, 1.0 * K), (0.5, 0, 0.9 * K, -2.5 * K), (0.9, 0, 0, 0)])),
         "upperarm_l": track(rot=keys([(0, 0, 0, 0), (0.3, -20, 0, 0), (0.5, 4, 0, 0), (0.9, 0, 0, 0)])),
         "upperarm_r": track(rot=keys([(0, 0, 0, 0), (0.3, -20, 0, 0), (0.5, 4, 0, 0), (0.9, 0, 0, 0)])),
     })
