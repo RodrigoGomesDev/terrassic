@@ -152,6 +152,7 @@ public final class TerrassicClient {
         ClientHooks.init();
         BuildingBlocksClient.init();
         TerrassicMenuScreen.register(); // the Terrassic main menu (docs/MENU.md)
+        ClientIslandMap.register(); // the island map of the Field Notebook (docs/MUNDO.md, section 11)
     }
 
     private static <T extends DinosaurEntity> void renderer(RegistrySupplier<EntityType<T>> type, String id, float scale, float shadow) {

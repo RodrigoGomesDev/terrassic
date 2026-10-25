@@ -25,14 +25,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The Field Notebook (docs/HISTORIA.md, section 9): one screen with four tabs.
+ * The Field Notebook (docs/HISTORIA.md, section 9): one screen with five tabs.
  * <ul>
  *   <li><b>Journal</b>: the 12 objectives of the chapter in 4 themes, with a hint on hover, and the amber fragments.</li>
  *   <li><b>Guide</b>: every species, revealed level by level (Knowledge.SILHOUETTE .. TAMED).</li>
+ *   <li><b>Map</b>: the map of the island, with its legend and where the player is ({@link ClientIslandMap},
+ *       docs/MUNDO.md, section 11).</li>
  *   <li><b>Katarina</b>: the pages of her notebook found so far, in day order.</li>
  *   <li><b>Report</b>: the "Incident Report" the player starts with.</li>
  * </ul>
- * Everything is drawn with plain fills and text (no texture), on a parchment-coloured page. The content comes from
+ * Everything is drawn with plain fills and text on a parchment-coloured page; only the Guide's habitat dioramas and
+ * the map are textures. The content comes from
  * {@link ClientResearch}.
  */
 public class NotebookScreen extends Screen {
@@ -46,7 +49,10 @@ public class NotebookScreen extends Screen {
     private static final int INK_SOFT = com.terrassic.client.ui.TerrassicPalette.INK_SOFT;
     private static final int DONE = 0xFF3C7A2E;
     private static final int AMBER = 0xFFB86E10;
-    private static final String[] TABS = {"journal", "guide", "katarina", "report"};
+    private static final int BLOOD = com.terrassic.client.ui.TerrassicPalette.BLOOD_500;
+    private static final String[] TABS = {"journal", "guide", "map", "katarina", "report"};
+    /** Legend of the map, in the order of IslandMap's biome categories (DEEP_SEA .. DRY). */
+    private static final String[] MAP_KINDS = {"deep_sea", "sea", "beach", "river", "swamp", "plains", "forest", "highlands", "dry"};
 
     /** Remembered between openings. */
     private static String lastTab = "journal";
@@ -79,7 +85,7 @@ public class NotebookScreen extends Screen {
     protected void init() {
         this.left = (this.width - W) / 2;
         this.top = (this.height - H) / 2;
-        int tabW = 70;
+        int tabW = 58; // five tabs: 5 x 58 + 4 x 4 = 306 of the 320 of the book
         for (int i = 0; i < TABS.length; i++) {
             String id = TABS[i];
             Button b = Button.builder(Component.translatable("notebook.terrassic.tab." + id), button -> this.select(id))
@@ -227,6 +233,7 @@ public class NotebookScreen extends Screen {
         g.fill(this.left + W / 2 - 1, this.top + 4, this.left + W / 2 + 1, this.top + H - 4, PAPER_DARK);
         switch (this.tab) {
             case "guide" -> this.renderGuide(g, mouseX, mouseY);
+            case "map" -> this.renderMap(g, mouseX, mouseY);
             case "katarina" -> this.renderKatarina(g);
             case "report" -> this.renderReport(g);
             default -> this.renderJournal(g, mouseX, mouseY);
@@ -427,6 +434,47 @@ public class NotebookScreen extends Screen {
             Entity e = type.create(this.minecraft.level);
             return e instanceof LivingEntity living ? living : null;
         });
+    }
+
+    // ---- Map
+
+    /** The map on the left page; its legend, the player's position and the point under the mouse on the right one. */
+    private void renderMap(GuiGraphics g, int mouseX, int mouseY) {
+        int side = W / 2 - 20;
+        int mx = this.left + 10;
+        int my = this.top + 22;
+        this.heading(g, Component.translatable("map.terrassic.title"), mx, this.top + 8);
+        ClientIslandMap.render(g, this.font, mx, my, side);
+        if (!ClientIslandMap.available()) {
+            return;
+        }
+        this.text(g, Component.translatable("map.terrassic.note"), mx, my + side + 6, side, INK_SOFT);
+
+        int x = this.left + W / 2 + 10;
+        int width = W / 2 - 20;
+        int y = this.top + 8;
+        this.heading(g, Component.translatable("map.terrassic.legend"), x, y);
+        y += 14;
+        for (int k = 0; k < MAP_KINDS.length; k++) {
+            ClientIslandMap.swatch(g, k, x, y, 12, 8);
+            g.drawString(this.font, Component.translatable("map.terrassic.kind." + MAP_KINDS[k]), x + 16, y, INK, false);
+            y += 11;
+        }
+        g.fill(x + 3, y, x + 9, y + 8, INK);
+        g.fill(x + 4, y + 1, x + 8, y + 7, BLOOD);
+        g.drawString(this.font, Component.translatable("map.terrassic.you"), x + 16, y, INK, false);
+        y += 16;
+
+        int extent = ClientIslandMap.extent();
+        if (this.minecraft != null && this.minecraft.player != null) {
+            y = this.text(g, Component.translatable("map.terrassic.position", Mth.floor(this.minecraft.player.getX()),
+                    Mth.floor(this.minecraft.player.getZ())), x, y, width, INK);
+        }
+        if (mouseX >= mx && mouseX < mx + side && mouseY >= my && mouseY < my + side) {
+            int wx = Math.round(((mouseX - mx + 0.5F) / side * 2.0F - 1.0F) * extent);
+            int wz = Math.round(((mouseY - my + 0.5F) / side * 2.0F - 1.0F) * extent);
+            this.text(g, Component.translatable("map.terrassic.cursor", wx, wz), x, y + 2, width, INK_SOFT);
+        }
     }
 
     // ---- Katarina and Report: one page at a time
