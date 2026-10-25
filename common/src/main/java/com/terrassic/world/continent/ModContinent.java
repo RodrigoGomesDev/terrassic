@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
  *       when such a level starts.</li>
  *   <li>WorldCreationUiStateMixin (client) opens "Criar novo mundo" on {@link #DEFAULT_PRESET}.</li>
  *   <li>{@link #closeTheSea}: the world border of a new continent world.</li>
+ *   <li>{@link IslandMap}: the map of the island in the Field Notebook (docs/MUNDO.md, section 11).</li>
  * </ul>
  */
 public final class ModContinent {
@@ -52,6 +53,7 @@ public final class ModContinent {
         DENSITY_FUNCTION_TYPES.register("continente", ContinentDensity.CODEC::codec);
         DENSITY_FUNCTION_TYPES.register();
         LifecycleEvent.SERVER_STARTED.register(ModContinent::closeTheSea);
+        IslandMap.init();
     }
 
     /** Radius in blocks of the continent this level is built on, or 0 for any other world. */

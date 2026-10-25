@@ -6,6 +6,7 @@
   menu.terrassic.scene.<id>.*  museum placard of each main-menu scene: the animal, when and where it lived
   menu.terrassic.did_you_know  header of the loading tips
   splash.terrassic.<n>         the yellow splash on the title screen (short)
+  map.terrassic.*              the "Map" tab of the Field Notebook (client/ClientIslandMap, docs/MUNDO.md section 11)
   tip.terrassic.<n>            one tip per loading screen: real facts about the creatures and the Cretaceous,
                                and game tips. Facts follow the Field Guide sources (Wikipedia articles of each
                                species and the literature cited there); estimates are said as estimates.
@@ -53,6 +54,33 @@ MENU = {
     "hud.terrassic.species.sighted": ("New species sighted", "Nova espécie avistada", "Nueva especie avistada"),
     "hud.terrassic.species.studied": ("Species studied", "Espécie estudada", "Especie estudiada"),
     "hud.terrassic.species.tamed": ("Species tamed", "Espécie domesticada", "Especie domesticada"),
+}
+
+# the island map, "Map" tab of the Field Notebook (client/NotebookScreen, client/ClientIslandMap)
+MAP = {
+    "notebook.terrassic.tab.map": ("Map", "Mapa", "Mapa"),
+    "map.terrassic.title": ("Map of the island", "Mapa da ilha", "Mapa de la isla"),
+    "map.terrassic.legend": ("Legend", "Legenda", "Leyenda"),
+    "map.terrassic.kind.deep_sea": ("Deep sea", "Mar profundo", "Mar profundo"),
+    "map.terrassic.kind.sea": ("Sea", "Mar", "Mar"),
+    "map.terrassic.kind.beach": ("Beach", "Praia", "Playa"),
+    "map.terrassic.kind.river": ("River", "Rio", "Río"),
+    "map.terrassic.kind.swamp": ("Swamp and delta", "Pântano e delta", "Pantano y delta"),
+    "map.terrassic.kind.plains": ("Plains", "Planície", "Llanura"),
+    "map.terrassic.kind.forest": ("Forest", "Floresta", "Bosque"),
+    "map.terrassic.kind.highlands": ("Highlands", "Planalto", "Altiplano"),
+    "map.terrassic.kind.dry": ("Dry lands", "Terras secas", "Tierras secas"),
+    "map.terrassic.you": ("You", "Você", "Tú"),
+    "map.terrassic.position": ("You: X %s, Z %s", "Você: X %s, Z %s", "Tú: X %s, Z %s"),
+    "map.terrassic.cursor": ("Point: X %s, Z %s", "Ponto: X %s, Z %s", "Punto: X %s, Z %s"),
+    "map.terrassic.note": ("North is up · 1 block = 1 m", "Norte para cima · 1 bloco = 1 m",
+                           "Norte arriba · 1 bloque = 1 m"),
+    "map.terrassic.none": ("No map of this world yet. Only Terrassic continent worlds are surveyed, a few seconds "
+                           "after the world opens.",
+                           "Ainda não há mapa deste mundo. Só os mundos de continente Terrassic são levantados, "
+                           "alguns segundos depois que o mundo abre.",
+                           "Todavía no hay mapa de este mundo. Solo se levantan los mundos de continente Terrassic, "
+                           "unos segundos después de abrir el mundo."),
 }
 
 SPLASHES = [
@@ -228,6 +256,7 @@ def lang():
     """{code: {key: text}} for the three languages."""
     out = {"en_us": {}, "pt_br": {}, "es_es": {}}
     entries = dict(MENU)
+    entries.update(MAP)
     entries.update({f"splash.terrassic.{i}": t for i, t in enumerate(SPLASHES)})
     entries.update({f"tip.terrassic.{i}": t for i, t in enumerate(TIPS)})
     for key, (en, pt, es) in entries.items():
