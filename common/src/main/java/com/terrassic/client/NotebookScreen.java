@@ -58,6 +58,8 @@ public class NotebookScreen extends Screen {
     private static int lastListPage = 0;
     /** Species buttons per page of the Guide list. */
     private static final int LIST_ROWS = 10;
+    /** Width of the Guide's list column on the left page (it ends before the spine at W / 2). */
+    private static final int LIST_W = W / 2 - 18;
 
     private final Map<String, LivingEntity> models = new HashMap<>();
     private String tab;
@@ -112,12 +114,12 @@ public class NotebookScreen extends Screen {
             lastEra = next(eras, lastEra);
             lastListPage = 0;
             this.rebuildWidgets();
-        }).bounds(x, this.top + 18, 104, 12).build());
+        }).bounds(x, this.top + 18, LIST_W, 12).build());
         this.addRenderableWidget(Button.builder(diet, b -> {
             lastDiet = next(diets, lastDiet);
             lastListPage = 0;
             this.rebuildWidgets();
-        }).bounds(x, this.top + 31, 104, 12).build());
+        }).bounds(x, this.top + 31, LIST_W, 12).build());
 
         List<GuideSpecies> shown = filtered();
         int pages = Math.max(1, (shown.size() + LIST_ROWS - 1) / LIST_ROWS);
@@ -131,7 +133,7 @@ public class NotebookScreen extends Screen {
                 lastSpecies = s.id();
                 this.scroll = 0;
                 this.rebuildWidgets();
-            }).bounds(x, y, 104, 12).build();
+            }).bounds(x, y, LIST_W, 12).build();
             b.active = !s.id().equals(this.selectedSpecies());
             this.addRenderableWidget(b);
             y += 13;
@@ -144,7 +146,7 @@ public class NotebookScreen extends Screen {
             Button next = Button.builder(Component.literal(">"), b -> {
                 lastListPage++;
                 this.rebuildWidgets();
-            }).bounds(x + 86, this.top + H - 20, 18, 12).build();
+            }).bounds(x + LIST_W - 18, this.top + H - 20, 18, 12).build();
             prev.active = lastListPage > 0;
             next.active = lastListPage < pages - 1;
             this.addRenderableWidget(prev);
@@ -307,13 +309,14 @@ public class NotebookScreen extends Screen {
             this.text(g, Component.translatable("notebook.terrassic.guide.empty"), this.left + 10, this.top + 49, 100, INK_SOFT);
         } else if (pages > 1) {
             Component label = Component.translatable("notebook.terrassic.guide.page", lastListPage + 1, pages);
-            g.drawString(this.font, label, this.left + 60 - this.font.width(label) / 2, this.top + H - 18, INK_SOFT, false);
+            g.drawString(this.font, label, this.left + 8 + LIST_W / 2 - this.font.width(label) / 2, this.top + H - 18, INK_SOFT, false);
         }
 
         GuideSpecies s = GuideSpecies.byId(this.selectedSpecies());
         int level = k.level(s.id());
-        int x = this.left + 124;
-        int width = W - 134;
+        // the species page is the right page: from past the spine to the right margin
+        int x = this.left + W / 2 + 8;
+        int width = W / 2 - 18;
         int y0 = this.top + 8;
         if (level == Knowledge.UNKNOWN) {
             this.heading(g, Component.translatable("notebook.terrassic.guide.unknown"), x, y0);
