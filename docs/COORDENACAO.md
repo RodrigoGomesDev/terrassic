@@ -63,6 +63,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 | Responsável | Arquivos | Estado |
 |---|---|---|
+| Codex | Integração de `sync/identidade`: `NotebookScreen.java`, `TerrassicTitle.java`, coordenação e revisão dos arquivos mesclados | Em uso em 25/10: preservar ficha à direita, dioramas, painel de dicas, fontes e componentes; backup completo em `build/integration-backups/identity-merge-kq8zkgdi/`; arquivos locais de marca fora do commit |
 | Codex | `AGENTS.md`, `docs/COORDENACAO.md`, `docs/PLANO_MESTRE.md`, `tools/validation/`, autoria em README/CLAUDE/metadados, ponte no roadmap | Concluído; arquivos liberados; sem alteração de sistemas de gameplay |
 | Codex | Testes isolados de servidor; `tools/validation/`, `EcoSpawner.java`, `SpawnBudget.java`, classes-base de IA e persistência (`DinosaurEntity.java`, `HerbivoreDinosaur.java`, `PredatorDinosaur.java`, `DinoEggBlock.java`), docs e ponte de validação em AGENTS/CLAUDE | Concluído; arquivos liberados. Servidores/regressões Fabric e Forge, orçamento e build passaram; arte e tabelas de espécies preservadas |
 | Codex | `research/Knowledge.java`, `ResearchData.java`, `Research.java`, `network/ModNetwork.java` e delta NBT, `client/ClientHooks.java`/`ClientResearch.java` (só recepção de dados), `common/build.gradle`, testes e documentação | Concluído; build e regressões de dados/protocolo passaram. Sem alterações de interface/arte ou novas features narrativas |
