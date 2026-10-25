@@ -1327,6 +1327,7 @@
   "itemGroup.terrassic.science": "Terrassic: Ciencia",
   "leap.terrassic.no_destination": "La luz se apaga... y la Grieta no se abre. El Capítulo %s, el Cretácico Inferior, llega en una próxima versión de Terrassic. Nada se pierde: el Altar sigue abierto para ti.",
   "map.terrassic.cursor": "Punto: X %s, Z %s",
+  "map.terrassic.elsewhere": "Estás lejos de la isla, en otra dimensión.",
   "map.terrassic.kind.beach": "Playa",
   "map.terrassic.kind.deep_sea": "Mar profundo",
   "map.terrassic.kind.dry": "Tierras secas",

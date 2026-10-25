@@ -1327,6 +1327,7 @@
   "itemGroup.terrassic.science": "Terrassic: Ciência",
   "leap.terrassic.no_destination": "A luz se apaga... e a Fenda não se abre. O Capítulo %s, o Cretáceo Inferior, chega numa próxima versão do Terrassic. Nada se perde: o Altar continua aberto para você.",
   "map.terrassic.cursor": "Ponto: X %s, Z %s",
+  "map.terrassic.elsewhere": "Você está longe da ilha, em outra dimensão.",
   "map.terrassic.kind.beach": "Praia",
   "map.terrassic.kind.deep_sea": "Mar profundo",
   "map.terrassic.kind.dry": "Terras secas",

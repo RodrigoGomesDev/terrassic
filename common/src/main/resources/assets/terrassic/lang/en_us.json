@@ -1327,6 +1327,7 @@
   "itemGroup.terrassic.science": "Terrassic: Science",
   "leap.terrassic.no_destination": "The light fades... and the Rift does not open. Chapter %s, the Early Cretaceous, arrives in a future version of Terrassic. Nothing is lost: the altar stays open for you.",
   "map.terrassic.cursor": "Point: X %s, Z %s",
+  "map.terrassic.elsewhere": "You are away from the island, in another dimension.",
   "map.terrassic.kind.beach": "Beach",
   "map.terrassic.kind.deep_sea": "Deep sea",
   "map.terrassic.kind.dry": "Dry lands",

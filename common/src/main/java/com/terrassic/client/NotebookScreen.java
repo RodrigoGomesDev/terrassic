@@ -476,7 +476,9 @@ public class NotebookScreen extends Screen {
         y += 16;
 
         int extent = ClientIslandMap.extent();
-        if (this.minecraft != null && this.minecraft.player != null) {
+        if (!ClientIslandMap.onIsland()) {
+            y = this.text(g, Component.translatable("map.terrassic.elsewhere"), x, y, width, INK_SOFT);
+        } else if (this.minecraft != null && this.minecraft.player != null) {
             y = this.text(g, Component.translatable("map.terrassic.position", Mth.floor(this.minecraft.player.getX()),
                     Mth.floor(this.minecraft.player.getZ())), x, y, width, INK);
         }
