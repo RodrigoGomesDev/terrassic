@@ -146,6 +146,9 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   8 a 10), solo = torrões de 2 a 3 px (`torroes.py`), cores calmas (saturação <= 0,50), junta nunca quase preta.
   Medir com progressao/estudo/metricas.py e mostrar numa cena (estudo/cena) antes de commitar. Giro aleatório por
   bloco nos blockstates (gen_blocks: FREE_TURN, BEDDED_TURN, TOP_TURN), como a terra e a pedra do vanilla.
+  MADEIRAS (troncos, descascados, tábuas) vêm de `tools/texpack/madeira.py` (veios longos, 4 tábuas, anéis de 2 px,
+  saturação ~0,48) e PAREDES e TELHADOS (rebocos, pau a pique, enxaimel, caiado, taipa, palhas, esteiras) de
+  `tools/texpack/paredes.py`, no mesmo padrão calmo (cena da aldeia: progressao/estudo/cena/cena4.py).
   Os MOTIVOS desenhados (crânios, totens, pinturas, portas, vasos, tochas, plantas) ainda usam o motor v2
   `tools/spritegen/pixelkit.py` (grade de índices de tom) domados por `pk.tame` (contraste até 68; TAME_CAPS).
   Meta medida no vanilla 1.20.1: 6 a 12 cores, contraste ~64, diferença entre vizinhos ~16.

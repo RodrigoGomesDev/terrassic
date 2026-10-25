@@ -37,21 +37,6 @@ def hsv_of(hexcol):
     return h, s, (np.array([r, g, b]) @ W)
 
 
-def pal(t, mat, role=None, n=5, dl=0.0, mask=None):
-    """Ramp of n tones fitted to material `mat` (materials.py): its own brightness and hue; with `role`, the
-    contrast of that vanilla block instead (a wall of chalk has the contrast of stone_bricks, not of calcite)."""
-    m = material(mat)
-    if role:
-        m = m.like(dc=m.dc + target(role)[1] - target(m.ref)[1])
-    if dl:
-        m = m.like(dl=m.dl + dl)
-    return api.palette(np.clip(np.asarray(t), 0, n - 1), m, mask, n=n)
-
-
-def img(t, pal, alpha=None):
-    return T.colorize(np.asarray(t), pal, alpha)
-
-
 # texture name -> the vanilla block whose contrast it is held to (see drift())
 ROLE = {}  # texture name -> vanilla role (filled by each family)
 
@@ -61,7 +46,6 @@ ROLE = {}  # texture name -> vanilla role (filled by each family)
 ROCKS = ("limestone", "shale", "chalk", "flint", "laterite", "quartzite", "gneiss", "conglomerate")
 
 
-CLAST_COLOURS = ["#cfc8b8", "#3e3a38", "#b08c5a", "#9a8a84"]  # quartz, chert, sandstone, granite
 
 
 # ---- dry-laid stones: courses of squared stones, each with its own body tone, lit top/left rim, shadowed
@@ -80,10 +64,8 @@ def bevel(idx, round_corners=True):
     return gap, hi, lo
 
 
-MOSS = ["#3d4f2a", "#506a32", "#66843c", "#7d9a48"]
 
 
-SOIL = "#6a5640"
 
 
 def rock_textures(rid):
@@ -99,112 +81,8 @@ def rock_textures(rid):
 import leaves as LV  # noqa: E402
 import woods as WD  # noqa: E402
 
-# id: bark colour, wood colour, leaf colour (mid tones of the real tree), bark style, ring spacing,
-# leaf shapes (leaves.CH letters: H lit, B leaf, D shade, V vein), see-through share, leaf spacing
-WOODS = {
-    "araucaria": ("#5a4a3b", "#cdb07e", "#2f5632", "scales", 2.3, "spiky", .30, 1.8),
-    "ginkgo": ("#615a50", "#d6c29a", "#5e8a2c", "furrows", 2.5, "fans", .34, 2.4),
-    "metasequoia": ("#723a25", "#bf8266", "#517c36", "fibres", 2.2, "feathery", .36, 1.7),
-    "taxodium": ("#5b5045", "#c49f75", "#4c6b31", "fibres", 2.4, "feathery", .36, 1.7),
-    "tree_fern": ("#43321f", "#83623e", "#46732c", "fern_bases", 2.0, "fronds", .38, 2.0),
-    "sabal": ("#6e6150", "#ccb48c", "#507230", "palm_bases", 2.6, "palm", .40, 2.6),
-    "magnolia": ("#6e6a62", "#d8c49e", "#305a34", "smooth", 2.3, "broad", .26, 2.4),
-    "podocarpus": ("#6c442d", "#cc985c", "#365e2a", "fibres", 2.2, "narrow", .32, 1.9),
-    "platanus": ("#8c866a", "#d2b490", "#527c30", "patches", 2.4, "lobed", .28, 2.6),
-}
-WSEED = {tid: 500 + 13 * i for i, tid in enumerate(WOODS)}
-BARK_CTR = {"scales": 56, "furrows": 60, "fibres": 50, "fern_bases": 62, "palm_bases": 58, "smooth": 38, "patches": 64}
-
-LEAF_SHAPES = {
-    "spiky": [["H..", ".B.", "..D"], ["..H", ".B.", "D.."], ["HB.", ".BD", "..D"], [".H.", "HBB", ".D."]],
-    "fans": [["HHHB", "BBBD", ".VD.", ".V.."], [".HHB", "HBBD", ".VD.", "..V."], ["HHB", "BBD", ".V."]],
-    "feathery": [["H.H.H.", "VVVVVV", ".D.D.D"], ["H.H.H", "VVVVV", "D.D.D"], [".H.H", "VVVV", "D.D."]],
-    "fronds": [["H.H.H.H", "BVBVBVB", "D.D.D.D"], ["H.H.H", "BVBVB", "D.D.D"]],
-    "palm": [["H...", ".H..", "..B.", "...D"], ["...H", "..H.", ".B..", "D..."], ["HHHH", "BBBB", "DDDD"],
-             ["H.....", ".HB...", "...BD.", ".....D"]],
-    "broad": [[".HH.", "HBBB", "BVBD", ".DD."], [".HB", "HBD", "BDD", "D.."], ["HHB.", "BBVD", ".DD."]],
-    "narrow": [["HB", "BD", "BD", "D."], [".H", "HB", "BD", "D."], ["H.", "B.", "BD", ".D"]],
-    "lobed": [[".H.H.", "HBBBB", ".BVBD", "..DD."], ["H.H", "BBB", "BVD", ".D."]],
-}
-
-
-def bark_tones(tid):
-    style = WOODS[tid][3]
-    s = WSEED[tid]
-    r = T.rng(s)
-    if style == "scales":  # araucaria: wide shingled scales, the plates of the motor's spruce
-        t, _ = WD.bark_spruce(s)
-        return t
-    if style == "furrows":  # ginkgo: deep braided furrows
-        t, _ = WD.bark_oak(s)
-        return np.minimum(t, 5)
-    if style == "smooth":  # magnolia: thin smooth bark, soft mottling, short lenticels
-        t = WD.streak_base(s, 3, 2, 4, .25, .2, layers=((4, 8, .6), (8, 16, .4)))
-        for (x, y) in poisson(s + 2, 8, 3.6):
-            L = int(r.integers(2, 4))
-            stamp(t, x, y, ['1' * L, '4' * L], {'1': 1, '4': 4})
-        return T.cleanup(t, 1, keep=(t <= 1))
-    if style == "patches":  # platanus: bark flaking off in patches, each with its own tone and a shadowed edge
-        t, gap = WD.plates(s, 3, 3, 1.0, 1.0, jitter=.9, warp_amp=2.0, bodies=(2, 3, 4, 4))
-        t[gap] = 1
-        return T.cleanup(t, 1)
-    if style in ("fern_bases", "palm_bases"):  # trunk clad in old leaf stubs set in a diamond lattice
-        t = WD.streak_base(s, 2, 1, 3, .25, .2, layers=((8, 2, .6), (16, 4, .4)))
-        palm = style == "palm_bases"
-        step_y, step_x = (6, 8) if palm else (4, 8)
-        shp = ["..55..", ".5443.", "544332", ".3221.", "..10.."] if palm else [".54.", "5401", ".21."]
-        for row, cy in enumerate(range(0, N, step_y)):
-            for cx in range(0 if row % 2 == 0 else step_x // 2, N, step_x):
-                stamp(t, cx - len(shp[0]) // 2, cy, shp, {c: int(c) for c in "012345"})
-        return t
-    # fibres: long vertical strips peeling off, each strip lit on its left edge, a dark crevice on its right
-    t = WD.streak_base(s, 3, 2, 4, .3, .15, layers=((8, 1, .6), (16, 2, .4)))
-    for i, x0 in enumerate(range(1, N, 3)):
-        xs = WD.wave(s + 10 + i, x0 + int(r.integers(-1, 2)), 0.5, 0.3)
-        g = T.value_noise(s + 20 + i, 1, 4)[:, 0]
-        WD.draw_line(t, xs, 0 if i % 2 else 1, side=(None, 4), present=g > .3)
-    for (x, y) in poisson(s + 3, 3, 5):  # a loose strip curling off
-        stamp(t, x, y, ['5', '5', '5', '1'], {'5': 5, '1': 1})
-    return T.cleanup(t, 1)
-
-
-def wood_fit(t, colour, ctr, n, dl=0.0, gamma=1.0, hue_shift=.02, sat_shift=.05, mask=None):
-    h, sat, lum = hsv_of(colour)
-    sample = np.asarray(t)[mask] if mask is not None else np.ravel(t)
-    return fit(np.minimum(sample, n - 1), n, lum + dl, ctr, h, sat, hue_shift=hue_shift, sat_shift=sat_shift,
-               gamma=gamma)
-
-
-def bark_img(tid):
-    t = bark_tones(tid)
-    return img(t, wood_fit(t, WOODS[tid][0], BARK_CTR[WOODS[tid][3]], 6, sat_shift=.06))
-
-
-def log_top_img(tid, stripped=False):
-    """Off-centre rings with a drying check (the motor's rings), heartwood darker; the rim is the bark seen end-on,
-    or a darker sapwood band once stripped."""
-    bark_c, wood_c, _, _, spacing, _, _, _ = WOODS[tid]
-    t, edge = WD.rings_tones(WSEED[tid] + 3, spacing, bark=True)
-    inner = ~edge
-    p = wood_fit(t, wood_c, 52, 5, dl=-8, mask=inner)
-    out = np.asarray(img(t, p)).copy()
-    if stripped:
-        out[edge, :3] = np.array(p[1])
-    else:
-        b = np.asarray(bark_img(tid))[edge].astype(float)
-        b[:, :3] = b[:, :3] * (1 - WD.RIM_MIX) + np.array(p[1]) * WD.RIM_MIX
-        out[edge] = b.round().astype(np.uint8)
-    return Image.fromarray(out, "RGBA")
-
-
-def stripped_img(tid):
-    t = WD.stripped_tones(WSEED[tid] + 5)
-    return img(t, wood_fit(t, WOODS[tid][1], 37, 4, dl=-6, hue_shift=.012, sat_shift=.04))
-
-
-def planks_img(tid):
-    t = WD.planks_tones(WSEED[tid] + 7)
-    return img(t, wood_fit(t, WOODS[tid][1], 62, 5, dl=-22, gamma=.55))
+# drawn in madeira.py (bark, ends, stripped, planks) and folhas.py (leaves), calm style approved 25/10
+WOODS = ("araucaria", "ginkgo", "metasequoia", "taxodium", "tree_fern", "sabal", "magnolia", "podocarpus", "platanus")
 
 
 def leaves_img(tid):
@@ -214,9 +92,10 @@ def leaves_img(tid):
 
 
 def wood_textures(tid):
-    out = {f"{tid}_log": bark_img(tid), f"{tid}_log_top": log_top_img(tid),
-           f"stripped_{tid}_log": stripped_img(tid), f"stripped_{tid}_log_top": log_top_img(tid, True),
-           f"{tid}_hewn_planks": planks_img(tid), f"{tid}_leaves": leaves_img(tid)}
+    """Bark, ends, stripped and planks from madeira.py (calm style, 25/10); leaves from folhas.py."""
+    import madeira
+    out = madeira.textures(tid)
+    out[f"{tid}_leaves"] = leaves_img(tid)
     ROLE.update({f"{tid}_log": "oak_log", f"{tid}_log_top": "oak_log_top", f"stripped_{tid}_log": "stripped_oak_log",
                  f"stripped_{tid}_log_top": "stripped_oak_log_top", f"{tid}_hewn_planks": "oak_planks",
                  f"{tid}_leaves": "oak_leaves"})
@@ -269,72 +148,14 @@ def strokes(t, seed, count, rmin, dirs, length, tone, shadow=None, rows=None):
 
 
 # ------------------------------------------------------------------ thatch, roofs, mats, wicker
-STRAW, REED, FERN_DRY, CYCAD_DRY = "#a08848", "#8a7e45", "#715628", "#55632e"
-
-
-def bundles(seed, ties=False):
-    """Two courses of bundles (8 px, like the bands of the hay bale): a deep shadow under the lip of the course
-    above, upright stalks in their own tones, ragged sun-bleached tips, a stray stalk or two across."""
-    r = T.rng(seed)
-    t = np.zeros((N, N), int)
-    for c in range(2):
-        y0 = c * 8
-        col = T.quantize(T.fbm(seed + c, [(16, 1, .7), (8, 1, .3)])[0], [.25, .45, .3]) + 1
-        col = np.roll(col, int(r.integers(N)))
-        for x in range(N):
-            tip = int(r.choice([5, 6, 6, 7, 7]))
-            for k in range(8):
-                v = 0 if k == 0 else 1 if k == 1 else (4 if (x + k) % 2 else 3) if k >= tip else col[x]
-                if ties and k in (3, 4) and x % 4 == 1:
-                    v = 1
-                t[y0 + k, x] = v
-        for (x, y) in poisson(seed + 10 + c, 4, 3.5):  # dark gaps between stalks
-            for k in range(2, 2 + int(r.integers(2, 4))):
-                t[y0 + k, x] = max(0, t[y0 + k, x] - 1) if k < 6 else t[y0 + k, x]
-        for (x, y) in poisson(seed + 20 + c, 2, 6):  # stray stalk lying across
-            yy = y0 + 3 + y % 3
-            stamp(t, x, yy, ['4..', '14.', '.14', '..1'][:2] if r.random() < .5 else ['44.', '.14'], {'4': 4, '1': 1})
-    return t
-
-
-def fronds(seed):
-    """Two courses of dried fronds overlapping like shingles: a midrib, leaflets slanting down both sides, each
-    leaflet lit on its upper edge, the lip of the course above throwing a shadow."""
-    r = T.rng(seed)
-    t = np.ones((N, N), int)
-    for c in range(2):
-        y0 = c * 8
-        for f in range(2):
-            mx = (f * 8 + c * 4 + 3 + int(r.integers(-1, 2))) % N
-            for k in range(1, 8):
-                y = y0 + k
-                t[y, mx] = 4
-                for side in (-1, 1):
-                    for d in range(1, 4):
-                        t[y, (mx + side * d) % N] = (3, 2, 1)[(k + d) % 3]
-        t[y0, :] = 0
-        for (x, y) in poisson(seed + 5 + c, 3, 4):  # a broken leaflet shows the darker course under it
-            t[y0 + 1 + y % 6, x] = 0
-    return t
-
-
-def roof_top(seed, dirs):
-    t = base(seed, 2, 1, 3, .2, .18, layers=((2, 8, .5), (4, 16, .5)))
-    return strokes(t, seed + 3, 22, 2.4, dirs, (2, 5), lambda r: int(r.choice([3, 4, 4])), shadow=1)
+STRAW, REED = "#a08848", "#8a7e45"
 
 
 def thatch_family():
+    """Thatch roofs from paredes.py (calm style, 25/10); the woven mats are drawn here and only calmed there."""
+    import paredes
     side_role, top_role = "hay_block_side", "hay_block_top"
-    out = {
-        "thatch": paint(bundles(701), own(STRAW, side_role, dc=-26)),
-        "thatch_top": paint(roof_top(702, [(1, 0), (0, 1), (1, 1), (1, -1)]), own(STRAW, top_role)),
-        "reed_thatch": paint(bundles(703, ties=True), own(REED, side_role, dc=-30)),
-        "reed_thatch_top": paint(roof_top(704, [(1, 0), (1, 0), (1, 1)]), own(REED, top_role)),
-        "fern_thatch": paint(fronds(705), own(FERN_DRY, side_role, dc=-30)),
-        "fern_thatch_top": paint(roof_top(706, [(1, 0), (1, 1), (1, -1)]), own(FERN_DRY, top_role)),
-        "cycad_thatch": paint(fronds(707), own(CYCAD_DRY, side_role, dc=-34)),
-        "cycad_thatch_top": paint(roof_top(708, [(1, 0), (1, 1), (1, -1)]), own(CYCAD_DRY, top_role)),
-    }
+    out = {}
     # straw mat: 4 px strips over and under, three straws to a strip, the end that dives under in shade
     ys, xs = np.mgrid[0:N, 0:N]
     horiz = ((xs // 4) + (ys // 4)) % 2 == 0
@@ -364,51 +185,16 @@ def thatch_family():
         t[y] = np.where(xs[0] % 2, 5, 6)
         t[y + 1] = np.where(xs[0] % 2, 0, t[y + 1])
     out["reed_mat"] = paint(t, own(REED, side_role, dc=-30), extra=extras(["#4a3a22", "#6e5a3a"]))
+    out = {k: paredes.recolour(im, .40) for k, im in out.items()}
+    out.update(paredes.thatch())
     ROLE.update({k: (side_role if k.endswith(("thatch",)) or k == "reed_mat" or k == "wicker_block" else top_role)
                  for k in out})
     return out
 
 
 # ------------------------------------------------------------------ daub, plaster, earth
-DAUB = "#957b5c"
-STICKS = ["#3a2814", "#54391d", "#6e4d2a", "#87623a"]
-TIMBER = ["#2e2014", "#46321f", "#5e452c", "#76593a"]
-EARTH = "#73573d"
 
 
-def daub_tones(seed, sticks=True):
-    """Hand-pressed clay: lumps lit on top with a shadow under, straw in the clay (tone 5), a drying crack and,
-    where the clay fell away, the woven sticks underneath (tones 6..9)."""
-    t = base(seed, 2, 1, 3, .2, .2, layers=((4, 4, .6), (8, 8, .4)))
-    for (x, y) in poisson(seed + 1, 12, 3.0):
-        stamp(t, x, y, ['L', 'D'] if (x + y) % 3 else ['LL', 'DD'], {'L': 3, 'D': 1})
-    strokes(t, seed + 2, 8, 3.5, [(1, 0), (1, 1), (1, -1)], (2, 4), 5)
-    r = T.rng(seed + 3)
-    x, y = int(r.integers(N)), int(r.integers(N))
-    for _ in range(8):
-        if t[y % N, x % N] < 5:
-            t[y % N, x % N] = 0
-            if t[(y + 1) % N, x % N] < 5:
-                t[(y + 1) % N, x % N] = 4
-        x += int(r.choice([1, 1, 0]))
-        y += int(r.choice([1, 0, 0, -1]))
-    if sticks:
-        x0, y0 = int(r.integers(N)), int(r.integers(N))
-        for j in range(5):
-            for i in range(6):
-                if i in (0, 5) and j in (0, 4):
-                    continue
-                t[(y0 + j) % N, (x0 + i) % N] = (8 if j % 2 == 0 else 6) if i != 2 else (9 if j % 2 else 7)
-        for i in range(6):
-            if t[(y0 - 1) % N, (x0 + i) % N] < 5:
-                t[(y0 - 1) % N, (x0 + i) % N] = 4
-            if t[(y0 + 5) % N, (x0 + i) % N] < 5:
-                t[(y0 + 5) % N, (x0 + i) % N] = 0
-    return t
-
-
-DAUB_MAT = own(DAUB, "packed_mud", dc=22)
-DAUB_EXTRA = ["#c8b27a"] + STICKS
 
 
 def beams(kind):
@@ -423,75 +209,12 @@ def beams(kind):
     return b
 
 
-def wattle(kind):
-    t = daub_tones(720 + len(kind), sticks=False)
-    b = beams(kind)
-    grain = T.quantize(T.fbm(730 + len(kind), [(8, 2, .6), (16, 4, .4)]), [.3, .4, .3])
-    lit = (~T.roll(b, -1, 0) | ~T.roll(b, 0, -1)) & b
-    dark = (~T.roll(b, 1, 0) | ~T.roll(b, 0, 1)) & b
-    tb = np.clip(1 + grain + (lit & ~dark) - (dark & ~lit), 0, 3)
-    shadow = ~b & (T.roll(b, -1, 0) | T.roll(b, 0, -1)) & (t < 5)
-    t = np.where(shadow, np.maximum(t - 2, 0), t)
-    t = np.where(b, 10 + tb, t)
-    return paint(t, DAUB_MAT, extra=DAUB_EXTRA + extras(TIMBER))
-
-
-PLASTERS = {"clay_plaster": "#a38868", "red_ochre_plaster": "#8e3f28", "yellow_ochre_plaster": "#b88b3a",
-            "charcoal_plaster": "#33302d", "chalk_whitewash": "#dcd8ce"}
-
-
-def plaster_tones(seed):
-    """Hand-smoothed plaster: one main tone in broad soft patches, trowel strokes (a lit ridge with a soft shade
-    under it) where a stroke ended, one hairline crack with a lit lip."""
-    t = base(seed, 2, 1, 3, .16, .16, layers=((2, 4, .6), (4, 8, .4)))
-    r = T.rng(seed)
-    for (x, y) in poisson(seed + 1, 4, 5.5):
-        L = int(r.integers(3, 6))
-        stamp(t, x, y, ['3' * L, '.' + '1' * (L - 2)], {'3': 3, '1': 1})
-    x, y = int(r.integers(N)), int(r.integers(N))
-    for _ in range(6):
-        t[y % N, x % N] = 0
-        t[(y + 1) % N, x % N] = 4
-        x += 1
-        y += int(r.choice([1, 0, 0, -1]))
-    return t
 
 
 def earth_family():
-    out = {"wattle_and_daub": paint(daub_tones(740), DAUB_MAT, extra=DAUB_EXTRA)}
-    for kind, name in (("cross", "cross_braced_wattle"), ("frame", "timber_framed_wattle")):
-        out[name] = wattle(kind)
-    # whitewash: chalk over daub, worn through in patches
-    t = daub_tones(741, sticks=False)
-    worn = T.fbm(742, [(4, 4, .6), (8, 8, .4)]) < .15
-    t = np.where(worn & (t < 5), 10 + np.minimum(t, 4), np.where(t < 5, np.minimum(t + 1, 4), t))
-    dp = api.palette(np.arange(5)[None], DAUB_MAT, n=5)
-    out["whitewashed_wattle"] = paint(t, own(PLASTERS["chalk_whitewash"], "packed_mud", dc=10),
-                                      extra=DAUB_EXTRA + list(dp))
-    for i, (pid, c) in enumerate(PLASTERS.items()):
-        if pid == "chalk_whitewash":
-            continue
-        out[pid] = paint(plaster_tones(750 + i), own(c, "packed_mud", dc=6))
-    # rammed earth: horizontal lifts of tamped soil, each its own shade, a dark seam with the lit top of the next
-    t = base(760, 2, 1, 3, .18, .18, layers=((4, 2, .6), (8, 4, .4)))
-    lifts = [0, 4, 7, 12, 16]
-    for i in range(4):
-        y0, y1 = lifts[i], lifts[i + 1]
-        t[y0:y1] = np.clip(t[y0:y1] + (0, 1, 0, 1)[i] - 1 + 1, 0, 4)
-        t[y1 - 1, :] = np.where(np.arange(N) % 7, 0, 1)
-        t[y0, :] = np.minimum(t[y0, :] + 1, 4)
-    for (x, y) in poisson(761, 6, 4):
-        stamp(t, x, y, ['ab', 'c.'], {'a': 6, 'b': 5, 'c': 0})
-    out["rammed_earth"] = paint(t, own(EARTH, "packed_mud", dc=30), extra=extras(["#6a665c", "#8e897e"]))
-    # beaten earth floor: soft clumps worn smooth, straw bits, the odd pebble
-    t = base(762, 2, 1, 3, .18, .16, layers=((4, 4, .6), (8, 8, .4)))
-    for (x, y) in poisson(763, 10, 3.2):
-        stamp(t, x, y, ['L', 'D'], {'L': 3, 'D': 1})
-    strokes(t, 764, 7, 4, [(1, 0), (0, 1)], (2, 3), lambda r: int(r.choice([5, 6])))
-    for (x, y) in poisson(765, 3, 6):
-        stamp(t, x, y, ['c', 'd'], {'c': 7, 'd': 0})
-    out["packed_earth_floor"] = paint(t, own("#806048", "packed_mud", dc=18),
-                                      extra=extras(["#b09a60", "#8e7846", "#8a857a"]))
+    """Plasters, daub, timber frames, whitewash and rammed earth from paredes.py (calm style, 25/10)."""
+    import paredes
+    out = paredes.earth()
     ROLE.update({k: "packed_mud" for k in out})
     return out
 
@@ -556,7 +279,6 @@ def hide(pattern, colour, seed=1, muted=0.35):
     return paint(hide_tones(pattern, seed), m)
 
 
-GENERIC_HIDES = {"rawhide": ("#bba07c", "plain"), "tanned_hide": ("#644128", "plain")}
 
 
 # ------------------------------------------------------------------ amber
