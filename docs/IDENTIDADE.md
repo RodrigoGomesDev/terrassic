@@ -114,14 +114,19 @@ Propostas geradas por `tools/capagen/brand.py` em `art/identidade/marca/`:
 
 | Peça | O que é |
 |---|---|
-| **Letreiro** (`letreiro.png`) | TERRASSIC em Entalhe, cada pixel virando um bloco de pedra entalhada (calcário com aresta clara e sombra), contorno de basalto e um **veio de âmbar** cortando as letras |
-| **Monograma** (`monograma.png`) | um T de âmbar em Entalhe numa laje de basalto com os 4 cravos: avatar, favicon, marca d'água |
+| **Letreiro** (`letreiro.png`) | TERRASSIC em **Degraus**, a letra de título aprovada em 25/10/2026: maiúsculas pesadas de pedra gasta, cada letra num degrau, acabamento pedra. As quatro versões (basalto, âmbar, osso, pedra), o alfabeto e palavras de exemplo ficam em `letreiro/` |
+| **Monograma** (`monograma.png`) | um T de âmbar em Degraus numa laje de basalto com os 4 cravos: avatar, favicon, marca d'água |
 | **Selo do Altar** (`selo.png`) | o anel de 4 pedras em pé e 4 ossos em volta do núcleo de âmbar, sobre o crepúsculo: carimbo, merch, tela de carregamento. **Sem dinossauro**, para não lembrar o logo de um certo filme |
 | **Ícone** (`icone_proposta.png`) | o selo em 512 px, proposto para trocar o ícone atual (T. rex dentro do anel) |
 | **Prancha** (`prancha.png`) | tudo junto: letreiro, slogan nos 3 idiomas, monograma, selo, paleta e as três fontes |
 
-O letreiro e o ícone novos **não substituem** o letreiro da tela de título nem o `icon.png` sem o "ok" do Rodrigo
-(regra 12 do ROADMAP).
+**Degraus** é a letra dos letreiros (capas, banners, site): glifos em `tools/fontgen/degraus.py` (A a Z, números,
+pontuação e os acentos do português e do espanhol, grade de 11 linhas), desenho em `tools/capagen/letreiro.py` (degraus,
+desgaste, acabamento, contorno e extrusão; o mesmo do site, pixel a pixel). As capas usam Degraus no TERRASSIC e no
+slogan (`tools/capagen/titulo.py`). Não é fonte de interface: dentro do jogo os títulos continuam em Entalhe.
+
+O ícone do selo (`icone_proposta.png`) continua só proposta: o `icon.png` do jogo é o T. rex da capa "Caçada"
+(aprovado em 25/10, `docs/CAPA.md`).
 
 ## 6. O que já mudou no código
 
@@ -142,7 +147,8 @@ O letreiro e o ícone novos **não substituem** o letreiro da tela de título ne
    telas de carga e domesticação que vierem (v0.7).
 2. **Pacote de texturas do Cretáceo** (`TEXTURAS_ERA.md`): menus e inventários do vanilla em basalto e âmbar dentro do
    pacote embutido (opcional, ligado no mundo Terrassic).
-3. Com o "ok" do Rodrigo: trocar o letreiro da tela de título e o `icon.png` pelas peças do §5.
+3. Trocar o letreiro da tela de título pelo Degraus (aprovado em 25/10): `textures/gui/title/menu/titulo.png` (950x150,
+   gerado por `tools/menugen/menu_assets.py` com `titulo.title`) e `textures/gui/title/terrassic.png` (256x64).
 4. Site e redes (marco "Lançamento"): as fontes em TrueType (`art/identidade/fontes/`) nos títulos e na interface do
    site, a prancha como guia, molduras de "ficha de campo" para revelar espécies.
 5. Fontes: ícones de interface como glifos (coração, fome, pegada) para usar dentro do texto; versão "Entalhe" de 24 px

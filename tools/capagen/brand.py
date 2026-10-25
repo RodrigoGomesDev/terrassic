@@ -2,8 +2,8 @@
 Terrassic brand kit (docs/IDENTIDADE.md §5), drawn by code with the mod's own typefaces (tools/fontgen) and palette
 (client/ui/TerrassicPalette):
 
-  art/identidade/marca/letreiro.png      the wordmark: TERRASSIC in "Entalhe", carved stone with an amber vein
-  art/identidade/marca/monograma.png     the monogram: an amber T carved in a basalt slab (avatar, favicon)
+  art/identidade/marca/letreiro.png      the wordmark: TERRASSIC in "Degraus", the title face (letreiro.py), in stone
+  art/identidade/marca/monograma.png     the monogram: an amber Degraus T carved in a basalt slab (avatar, favicon)
   art/identidade/marca/selo.png          the Altar seal: the ring of stones and bones around the amber (no dinosaur)
   art/identidade/marca/icone_proposta.png  a 512 px mod icon proposal (seal + monogram), to replace the current one
                                            only after Rodrigo approves it (ROADMAP rule 12)
@@ -21,6 +21,10 @@ from PIL import Image, ImageDraw, ImageFilter
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "fontgen"))
 import build as fontbuild  # noqa: E402
+import degraus  # noqa: E402
+
+sys.path.insert(0, HERE)
+import letreiro  # noqa: E402
 
 OUT = os.path.join(HERE, "..", "..", "art", "identidade", "marca")
 
@@ -102,10 +106,9 @@ def carve(mask, w, h, s, seed="terrassic", vein=True):
     return base
 
 
-def wordmark(scale=6):
-    f = fontbuild.FONTS["entalhe"]
-    mask, w, h = text_mask(f, "TERRASSIC")
-    return carve(mask, w, h, scale)
+def wordmark(scale=6, finish="pedra"):
+    """TERRASSIC in Degraus, the approved title face (2026-10-25)."""
+    return letreiro.image("TERRASSIC", finish, s=scale)
 
 
 def slab(size, inset=0):
@@ -126,20 +129,19 @@ def slab(size, inset=0):
 
 
 def monogram():
-    """32 x 32: an amber T in "Entalhe" (scaled x2) carved in a basalt slab."""
-    f = fontbuild.FONTS["entalhe"]
+    """32 x 32: an amber T in "Degraus" (scaled x2) carved in a basalt slab."""
     img = slab(32)
-    g = f.glyph("T")
+    rows = degraus.GLYPHS["T"]
     px = img.load()
-    ox, oy = (32 - g.width * 2) // 2, (32 - 10 * 2) // 2
-    for gy, row in enumerate(g.rows[:10]):
+    ox, oy = (32 - len(rows[0]) * 2) // 2, (32 - len(rows) * 2) // 2
+    for gy, row in enumerate(rows):
         for gx, c in enumerate(row):
             if c != "#":
                 continue
             for sy in range(2):
                 for sx in range(2):
                     X, Y = ox + gx * 2 + sx, oy + gy * 2 + sy
-                    top = gy == 0 or g.rows[gy - 1][gx] != "#"
+                    top = gy == 0 or rows[gy - 1][gx] != "#"
                     col = P["AMBER_300"] if (top and sy == 0) else P["AMBER_500"] if sx == 0 else P["AMBER_600"]
                     px[X, Y] = rgba(col)
                     # carved shadow under and right of each stroke
