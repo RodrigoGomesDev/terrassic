@@ -6,6 +6,10 @@ Entregas de 26/10 na main: `4e31cb72` (fonte, voo e locomoção), `5f8129d5` (po
 e navegação anfíbia) e `255b7ff0` (pranchas atualizadas para lojas). Build e regressões passaram;
 revisão visual no jogo e aprovação das novas pranchas continuam com Rodrigo, conforme os roteiros abaixo.
 
+Entregas adicionais de 26/10: `837088f8` corrige a copa da magnólia e registra a auditoria de 144 árvores
+nos dois loaders; `181fa9da` entrega a edição 2 das quatro pranchas, com 59 modelos originais, três idiomas
+e catálogo 4K. Árvores já salvas não são reescritas. Fontes, recursos, PNGs e pacote foram conferidos.
+
 Entrega Codex: Rodrigo aprovou os três fundos v3 e autorizou sua aplicação. Escopo: tela do menu,
 instalador em `tools/menugen/`, textos da plaquinha e idiomas, três texturas e `docs/MENU.md`.
 Também preparar `art/divulgacao/periodos/v1/` para as páginas das lojas: ilustrações promocionais,
