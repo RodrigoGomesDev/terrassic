@@ -1,0 +1,966 @@
+{
+  "species": 59,
+  "rideable_species": 32,
+  "method": "original-model software rendering; native composition",
+  "palette_sha256": "ef402dd9932b41f64cc5b9fe631eaabba124d74f7695428b999cb917b113b7a4",
+  "wordmark_sha256": "c7617bfd5f7f4a8faa5d6d4f238977baf43059b1aa90840f48264fe8aa2bf3ba",
+  "species_table_sha256": "926776a65f751880e9a5187f8c7ed500f5acfcdadff588ad9aab7b186bf44cb9",
+  "font_sources": {
+    "tools/fontgen/build.py": "48122d7c18494e99abe70472dd07ed5b77022d4ae09fbf055fafdddc8eef2a0f",
+    "tools/fontgen/entalhe.py": "c05aaeb56c2e6b80a6fa7b284e30d8e07881144b7c45ec68a16185a1139ab9db",
+    "tools/fontgen/pixfont.py": "a711b9c60baf7fc3c745590d082a9ca70f123591d2117733ade9eb615a258c3d",
+    "tools/fontgen/caderno.py": "b06eb3f989ebb87e656d2affa7a5aefa3e9146152d3df1ffd5178d93c5b91afa",
+    "tools/fontgen/sedimento.py": "9d1a48b69c249a3a8439372b8489d41e0c2dbffcd13b00ad6c0232e7eb465981",
+    "tools/fontgen/degraus.py": "2b843a16de6723af611144247746c5e8159de7b67de0070234fd0bdc6aca15bc"
+  },
+  "models": [
+    {
+      "species": "tyrannosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 139,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/tyrannosaurus.geo.json": "4d34acf90e0d539674b5a64e9c018b7004e0ad4eb856b3d9a75d809a7d86981b",
+        "common/src/main/resources/assets/terrassic/animations/entity/tyrannosaurus.animation.json": "237aa849610870ea777ff2b2dec0bf6e27c0a2b52274e5e5f9da805e2a05c7f1",
+        "common/src/main/resources/assets/terrassic/textures/entity/tyrannosaurus_male.png": "8e547ac75aa27a3a8d556e1a0e8f9d705a19820d245a1769bb568c5b8d32b2bc"
+      },
+      "female_texture_sha256": "0e3a57239d2f6e680229ad36d40c00d7e418643cb120dd31fdc8e1322ccdcc43"
+    },
+    {
+      "species": "spinosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 130,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/spinosaurus.geo.json": "96d3e25ca693f21b86ea1ccf8a22088f57deaf40faf836c1cc10d9c0f3e059b2",
+        "common/src/main/resources/assets/terrassic/animations/entity/spinosaurus.animation.json": "f47d1445f1042a30d30c037c1ad91e56db9e82c51a89e1bf7ce0a7c18b5851e1",
+        "common/src/main/resources/assets/terrassic/textures/entity/spinosaurus_male.png": "128ee701e99b8c4549005a04a43f62d3f3d1494d333a34fd4c1159800d2d23f9"
+      },
+      "female_texture_sha256": "86e5c6c5c892139238e1d751da7b742d17e21130d1d7e3a8e3dd67bc8fb6e361"
+    },
+    {
+      "species": "dilophosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 84,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/dilophosaurus.geo.json": "3faa178b9ef75761d1c403011dc844d6ba52cdad4afcd353e29efab09f778f3f",
+        "common/src/main/resources/assets/terrassic/animations/entity/dilophosaurus.animation.json": "523799abb879c19610f1b660d3b0aa4bcb183404531f04852d0bedfa65465011",
+        "common/src/main/resources/assets/terrassic/textures/entity/dilophosaurus_male.png": "acf06ea4dc5534e5f15ddf64b815aa877dfc61e76f6759c3989d72729a49955e"
+      },
+      "female_texture_sha256": "e00322f67308d2355630f121f77e97eb4baf4bbb5e15f6cd920429a67844dd11"
+    },
+    {
+      "species": "velociraptor",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 70,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/velociraptor.geo.json": "e44141c0f01fae4a5041729d7139305c59f7f03902736b281aa894165dbb42f9",
+        "common/src/main/resources/assets/terrassic/animations/entity/velociraptor.animation.json": "4f2c02340d60b514c0cacc3a40c9ad67cef6154edff708c769e3d9ade61deaf1",
+        "common/src/main/resources/assets/terrassic/textures/entity/velociraptor_male.png": "2d3a4c53f15e68aee878db705410df7dd5708675cad67696b8ff80a7a712121d"
+      },
+      "female_texture_sha256": "b04aab92892a301a17b534d7991ff552f3f36486f70a5f13a3b88a5d5f9fed53"
+    },
+    {
+      "species": "compsognathus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 53,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/compsognathus.geo.json": "f9077f8040ecd18eef6b57b23ca40ee60bbcee17e66537d218d83fb3756ad736",
+        "common/src/main/resources/assets/terrassic/animations/entity/compsognathus.animation.json": "0fa50ee64b68eac2c12be2a22550a12301eb203e342c7a9afc81ccbdbff33d05",
+        "common/src/main/resources/assets/terrassic/textures/entity/compsognathus_male.png": "a0c614f1c641c9a98225a92be93050b4c1387970eae7f1f26cb81d4feadf0f5c"
+      },
+      "female_texture_sha256": "73f71da829390e5be7a849c4a6ad24292d5b72700b7736c7f356bec915bb549b"
+    },
+    {
+      "species": "triceratops",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 139,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/triceratops.geo.json": "d03c2ee5469c7d4e4add5e44f1eafc39bdff844ea1e3e03b6e0d2788b6b83101",
+        "common/src/main/resources/assets/terrassic/animations/entity/triceratops.animation.json": "4e58919497c9530a813222fc020c5bf0ca0b4c5f0ef31b5aff0dcbf44f1902c5",
+        "common/src/main/resources/assets/terrassic/textures/entity/triceratops_male.png": "81bb08350fa51343f4112a0677ee8c400f43648a92f0026c326d172f49a0a7cb"
+      },
+      "female_texture_sha256": "6971dff0ab6269d92c77093f079523ece3c3ae8658cd4e347ba9e9048d1dd5e9"
+    },
+    {
+      "species": "styracosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 134,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/styracosaurus.geo.json": "b74e6d787c24882d535ff632dfa71a6b5bdb6466cbaafb404ea1c9a5e1af5de9",
+        "common/src/main/resources/assets/terrassic/animations/entity/styracosaurus.animation.json": "a3821f4470231698ecd3a4e3e553a89d710c6465e9adfa38c6f85aefa6d90b66",
+        "common/src/main/resources/assets/terrassic/textures/entity/styracosaurus_male.png": "087646a9a904a536a3ac8fa627a20eb2cc08cea3b2482f57e68fee8dc7abedce"
+      },
+      "female_texture_sha256": "bbc4d5d8b8a562064f3f312ddb5fabf9dc61dd134477ca3ffa233fec64f6bbcb"
+    },
+    {
+      "species": "pachyrhinosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 130,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/pachyrhinosaurus.geo.json": "a12f3a7388eee338dbe3fbe1b4f4fdf904f6328f1f49a52685e8def44ea47fc3",
+        "common/src/main/resources/assets/terrassic/animations/entity/pachyrhinosaurus.animation.json": "a239c21a1aaf1f70e177e5702d8b83780a7d5f0e64fcfeba933255b1477bc75e",
+        "common/src/main/resources/assets/terrassic/textures/entity/pachyrhinosaurus_male.png": "409bb3534600ac8a54afe7a26f8f5333200a9c8904deba1690938184b27aa2af"
+      },
+      "female_texture_sha256": "bf6df1fc1d5a0cd76adbccc90bc3e8a02a19ea5058237c222c313aa050a59359"
+    },
+    {
+      "species": "protoceratops",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 100,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/protoceratops.geo.json": "eec4c995ed124d39a5fbf73206247a01a7d68b225e76e2ab24d32383288f8ae3",
+        "common/src/main/resources/assets/terrassic/animations/entity/protoceratops.animation.json": "96b8de9e1e50e70b451fa7d4fddc3c7d385e2b6a46ec8c0792250e0a48a6c9c0",
+        "common/src/main/resources/assets/terrassic/textures/entity/protoceratops_male.png": "ba135b44b187e2786bf25100ecf3ef58f53ee2147c0dc963e1f041638bcc2575"
+      },
+      "female_texture_sha256": "5e9f825a376e95d1b4e981e271180675b9265b12f0f3c21f90b2c796eab35e9a"
+    },
+    {
+      "species": "leptoceratops",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 53,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/leptoceratops.geo.json": "4b67de3bb89439a16e42a0562f91f539fe4ca144b02e0c0781d9d944fea933ff",
+        "common/src/main/resources/assets/terrassic/animations/entity/leptoceratops.animation.json": "59b1e4540bfc896589bbc1d2e5e7336949fc006091687a4941f7e3c1856e50a1",
+        "common/src/main/resources/assets/terrassic/textures/entity/leptoceratops_male.png": "7b5d471df9d6280c25cf85430c2a9536708105d7b49688c9f5310b7881ee9d1c"
+      },
+      "female_texture_sha256": "c9dcaf7a69ffa167ce3eba0e4cf25741690645d4d15ad55dee128a23a8d01765"
+    },
+    {
+      "species": "stegosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 144,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/stegosaurus.geo.json": "466da0c0e0c72f9d7ce9324d62bc1baadd42cbd0ddd6d2ba5361589f0989618f",
+        "common/src/main/resources/assets/terrassic/animations/entity/stegosaurus.animation.json": "370a510b59d520b82c1dec6c57eec8ff9d1ca4a007eff75614187e629998cd42",
+        "common/src/main/resources/assets/terrassic/textures/entity/stegosaurus_male.png": "46b16ad8ec14f2c6b7a7a66f8ac5f91539a3143c4a59e5e9c799934554946d08"
+      },
+      "female_texture_sha256": "a4226212662f29712927d0387ae1ae354b2ee4d6c040af565ff4ac5b50a0cf29"
+    },
+    {
+      "species": "ankylosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 169,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/ankylosaurus.geo.json": "149c9e080cfbc0b919647a0fef11e04f96cb5dbd0a9d137408df2a4d7557b599",
+        "common/src/main/resources/assets/terrassic/animations/entity/ankylosaurus.animation.json": "d10896aa87700e07c9df061280b24cc22974245010b14504d26cdf9fecb9a6eb",
+        "common/src/main/resources/assets/terrassic/textures/entity/ankylosaurus_male.png": "32c4239bca3ee14d4ffabc2e7b9a738a7832a7af6c13c2fc4ee79b6f37cb3655"
+      },
+      "female_texture_sha256": "d11b64a8e555b68f17cf66a2d23449a3563eab223a2f1ea4c5d36c6ef00b9707"
+    },
+    {
+      "species": "euoplocephalus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 205,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/euoplocephalus.geo.json": "cbf45b734ca4c02df9e1876a5c97e7a32673f4bab5517a2baddb4051fd61550c",
+        "common/src/main/resources/assets/terrassic/animations/entity/euoplocephalus.animation.json": "5a38245356343d478e3365e130efd55c66e7cb5a282ef32b28019663eb97c869",
+        "common/src/main/resources/assets/terrassic/textures/entity/euoplocephalus_male.png": "af423182a1c0c0d51447a98e06b4dded36de5ef05481f7eec13e86c0bc75c080"
+      },
+      "female_texture_sha256": "15dc260b6eb96c137c93e3cf9f051f1093dfe3f74ec6f2bd18ba089dcd1bc592"
+    },
+    {
+      "species": "therizinosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 95,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/therizinosaurus.geo.json": "b32c7dea2bfeadf10827ef9bafb8895e1099b2b63eaf624ddb16667f440ad3ce",
+        "common/src/main/resources/assets/terrassic/animations/entity/therizinosaurus.animation.json": "f4dd70e5876abd3a37a00af43589aaf54baa9116ddd574207f72981045f3a5d5",
+        "common/src/main/resources/assets/terrassic/textures/entity/therizinosaurus_male.png": "4d9d19fcd6f78aa9f4676988608b09834e456b84a859122bcb93cf39c21a1b8e"
+      },
+      "female_texture_sha256": "d5e19bca005461fd827dbbdede7955323a52b8760c0b057a52f4fdc980db59e5"
+    },
+    {
+      "species": "deinocheirus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 93,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/deinocheirus.geo.json": "8de514dbba4b68daa9381b7313d2a8d14230289e7069adb74baad46828cbe98f",
+        "common/src/main/resources/assets/terrassic/animations/entity/deinocheirus.animation.json": "8b80062950a78b9963ed24ddf819fda1dff2ba2bc35d9ad46e30673cbe692dca",
+        "common/src/main/resources/assets/terrassic/textures/entity/deinocheirus_male.png": "6a37ddc738d3c361e97a34d12275a433a9e6c33e98357d2b0ac8337bb9738bd3"
+      },
+      "female_texture_sha256": "362f214619ff6135a9bb5735af645c94f7c9152351d19fdd169d179dcd604463"
+    },
+    {
+      "species": "brachiosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 72,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/brachiosaurus.geo.json": "4321fd64f88c7821186a43e32870b5dfd56f535fd77057d6ba87525e47934158",
+        "common/src/main/resources/assets/terrassic/animations/entity/brachiosaurus.animation.json": "a0ccf8e22843d40ef2c880a784a58f9aff3d9f223ad2186b450f3e323454fac0",
+        "common/src/main/resources/assets/terrassic/textures/entity/brachiosaurus_male.png": "6656058111615c6d6dd3d45047a652ad0ffdddf047cb78d1f3778d8c51c507dc"
+      },
+      "female_texture_sha256": "852556448980b7375088e3102e5dd75d249c8b8369bb86045c2f76954bc4a616"
+    },
+    {
+      "species": "alamosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 80,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/alamosaurus.geo.json": "738c630468eb775fd2249b3d6508cc7e59874fdd9ac3ccbe3302b93d28121037",
+        "common/src/main/resources/assets/terrassic/animations/entity/alamosaurus.animation.json": "8158af5511af86f1221eb54b57cdb26ebf952bdfee98c4ed6f4160ff16d584ce",
+        "common/src/main/resources/assets/terrassic/textures/entity/alamosaurus_male.png": "08bf8d4bb06e8944345916f63026aea59cdce2ad8685e21599cb724407eeebde"
+      },
+      "female_texture_sha256": "a4a6445db673fc560be6d52818511ee5b48e101707b181b5a18ee5a9de913260"
+    },
+    {
+      "species": "saltasaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 112,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/saltasaurus.geo.json": "f77759095652f053bf4510282c47fa8c37560c6ce61f3d529a192647d29360a6",
+        "common/src/main/resources/assets/terrassic/animations/entity/saltasaurus.animation.json": "e20da7d024c5c92b2db6326a6f587347426f31bc08dfd95aad3e132ecfe06882",
+        "common/src/main/resources/assets/terrassic/textures/entity/saltasaurus_male.png": "e6322ffaa48baf4ed61c04391448caee3b1df61d2857a293b07ddb1ceedbc27b"
+      },
+      "female_texture_sha256": "4f4c7c581dfd622bf791a073f61dcbf018659635c579f7b6bee182e50a8b5491"
+    },
+    {
+      "species": "argentinosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 88,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/argentinosaurus.geo.json": "c219141a07d5682693b7df7815759361d7bafd9718d0b1d428c34a27348bc89d",
+        "common/src/main/resources/assets/terrassic/animations/entity/argentinosaurus.animation.json": "4cd44cdbf036ea076525806298e2728f5b1405a7cf278ddc6558fe3597ae0596",
+        "common/src/main/resources/assets/terrassic/textures/entity/argentinosaurus_male.png": "9faba8358a1f9724b7be317843331d8566929a15cb1e209058f5ed7f71908397"
+      },
+      "female_texture_sha256": "3d37c055e4eb9ed2932e3d8b5d6f2218a2c2e67f55d0005c4acb82ddc631575f"
+    },
+    {
+      "species": "opisthocoelicaudia",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 61,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/opisthocoelicaudia.geo.json": "4bb4a4b73be8684de1fa4314d4cb23c64876e12891c3423015f13116aba3706a",
+        "common/src/main/resources/assets/terrassic/animations/entity/opisthocoelicaudia.animation.json": "b2d5cc76e5f3df8ac844ad860ae8aeca67cfc186adb332a5945dca6952b74962",
+        "common/src/main/resources/assets/terrassic/textures/entity/opisthocoelicaudia_male.png": "b8f6683027be995a135d169611f07154aed0c82f4e3770e336c38a15de8e6781"
+      },
+      "female_texture_sha256": "1ba2b79dcbd4ab0086b974a622c6b68cf9e56428d8c9250ec13dd057b92bd4e3"
+    },
+    {
+      "species": "dreadnoughtus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 72,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/dreadnoughtus.geo.json": "8c794076c8c83efaf9d483412299580397e1c175bc5ffc4ba03218e1ba026c57",
+        "common/src/main/resources/assets/terrassic/animations/entity/dreadnoughtus.animation.json": "63daad5ee3ff3246f9d18377d8bf1ae0440d60c70f0790b5edc7c6ec9b918cff",
+        "common/src/main/resources/assets/terrassic/textures/entity/dreadnoughtus_male.png": "3ff3ba3411f18a1d1cc8a47ff4a901e134f03f566994c6194f80fa5a033dbc3c"
+      },
+      "female_texture_sha256": "3836e7d59ac9d89108fc9fbe5173ec091918fc17c88bcad9bed6a2cbc4094e3b"
+    },
+    {
+      "species": "giganotosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 55,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/giganotosaurus.geo.json": "a2a1c32644894c68283a5583aba7398860bcd5edec425029ade71a68a7ec088a",
+        "common/src/main/resources/assets/terrassic/animations/entity/giganotosaurus.animation.json": "280984c35d9620b70496c9f9506869ad2d4b9d1a378ce6932a137ef3bb605c64",
+        "common/src/main/resources/assets/terrassic/textures/entity/giganotosaurus_male.png": "e3eb236a93296783aba0616c4f758010f1da25e3bc68c88d870b84c629986f66"
+      },
+      "female_texture_sha256": "2836db702f3cf1fb0ad48e6e1f44d5347856d0379bd63f763c797eb973670b55"
+    },
+    {
+      "species": "carcharodontosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 56,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/carcharodontosaurus.geo.json": "6d5f2635a658e27ac6b10dea9b185a2a43390cec72b8fb33eb8510e2b5869b1a",
+        "common/src/main/resources/assets/terrassic/animations/entity/carcharodontosaurus.animation.json": "244148fd2cf17fdb23e7d53323b6042d0d1c29b51542f699fb3b5bfcbc82c23b",
+        "common/src/main/resources/assets/terrassic/textures/entity/carcharodontosaurus_male.png": "7dd148eb4bf2f674a96ce188d14e1573c14b33ff32c8ba2ca0936bb6898752a6"
+      },
+      "female_texture_sha256": "50f80848200d096c2706153f2b663c1fa2a1a2751b0cbc49e9fd1fd3fe202350"
+    },
+    {
+      "species": "carnotaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 74,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/carnotaurus.geo.json": "f9688175e270c814f82772a841ecbe878d7cbc6ff01814e49d959cd1cfb64fc1",
+        "common/src/main/resources/assets/terrassic/animations/entity/carnotaurus.animation.json": "127113aa3aae7941e5a6dd12fa7b5e3b3e63ebc580bfbb51a3abd51a4734c344",
+        "common/src/main/resources/assets/terrassic/textures/entity/carnotaurus_male.png": "33c9dd3a0f510e69d6e53520f7915b9ce56e952a39e9f785427750a9ac9d3e1f"
+      },
+      "female_texture_sha256": "6f0ec0b239f76cae8402e70f330941b357791e840d8798764db3a5e83d2f11d7"
+    },
+    {
+      "species": "tarbosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 53,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/tarbosaurus.geo.json": "b710f5115bb5524292ca6e883bd3a95ecd83c3fdf89716a18ba972ff8335c0ab",
+        "common/src/main/resources/assets/terrassic/animations/entity/tarbosaurus.animation.json": "919f87abe8f62b082a6d1ec57bc319d9247d5576efca65cb086d2eaf881f8c63",
+        "common/src/main/resources/assets/terrassic/textures/entity/tarbosaurus_male.png": "40079c9bcfbb48449f0646f1acb59eae04b90dfd281b66de4459f664bbf69eac"
+      },
+      "female_texture_sha256": "4a09d815b8f76715a413b7e273ff5c983e8c598c250ef9e295d85118900e94cf"
+    },
+    {
+      "species": "daspletosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 54,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/daspletosaurus.geo.json": "ed0f2bb6a9f6cb412dd005906ef6c657c569370daca6dbe2879d12f0cd53904f",
+        "common/src/main/resources/assets/terrassic/animations/entity/daspletosaurus.animation.json": "db85bc27614786649f19e93b9319fa330403b5e5232e95b6908ca7d6f7ee775b",
+        "common/src/main/resources/assets/terrassic/textures/entity/daspletosaurus_male.png": "500e97564ee3a3f1e41fc8de334c1edf0d5662ec362fdf50b01373b601f8b571"
+      },
+      "female_texture_sha256": "4469c85aed43b9b29d02e73ebe8c650de624b35bfd732dbaa723f86816e8fd26"
+    },
+    {
+      "species": "albertosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 52,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/albertosaurus.geo.json": "fff8c2c8316680318b06b9f8404dd558eb9666075876942749263b0ee9564924",
+        "common/src/main/resources/assets/terrassic/animations/entity/albertosaurus.animation.json": "c4c3d3fe46c1b988e4b5378d37c6c671fc8c194f921ac232d99baa58811e0ff7",
+        "common/src/main/resources/assets/terrassic/textures/entity/albertosaurus_male.png": "c9ce9ce4439f0381b627e2c39302cbc48c532865f1d3a2f4f5e487ce0fbcb169"
+      },
+      "female_texture_sha256": "902f4b7143f7e7cc7e438ea55bdece2f5d3a2aab40e3314854236fd40eb90e4c"
+    },
+    {
+      "species": "majungasaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 70,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/majungasaurus.geo.json": "d8890dcd17042b260757a66793137fa97ad0d0660c9a784321d008d67c0a4eb2",
+        "common/src/main/resources/assets/terrassic/animations/entity/majungasaurus.animation.json": "abcf84058f605e4b8243e3bb32511c62dd8dc6579d61fbfcf08d2e22d8636853",
+        "common/src/main/resources/assets/terrassic/textures/entity/majungasaurus_male.png": "73bf3177b5c81cd0893eb96b28eb7dc02a914899a4d81d17b629e03bae7b9b5c"
+      },
+      "female_texture_sha256": "6d5af906ef411ba3a531b6dab836ddc7c8350c8d67312c1b4d5dac7ce4de3d03"
+    },
+    {
+      "species": "dakotaraptor",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 44,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/dakotaraptor.geo.json": "d38f90c042ab7e92b142223014b7db3ae462c8341fc4dac6eb6908a843974037",
+        "common/src/main/resources/assets/terrassic/animations/entity/dakotaraptor.animation.json": "2bbc78cd04a8dc6e703a8b5d148760622e94fc99f40378f27f0b6e1e9abc28f2",
+        "common/src/main/resources/assets/terrassic/textures/entity/dakotaraptor_male.png": "de411ac1daf563d1215019e480d06516a5612dd6a38cc79e4fc0125d6cb16b69"
+      },
+      "female_texture_sha256": "cad5b7b6df9bba20c2b0b3080cb4a96ba89ad486d38fb19a5451b535cdd97d73"
+    },
+    {
+      "species": "troodon",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 37,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/troodon.geo.json": "133a08211cceb5c2a927c94ceb5fd882b9462c716df0943cee9eda4898e28895",
+        "common/src/main/resources/assets/terrassic/animations/entity/troodon.animation.json": "88bb09ba1d7200ab86bc634fc2ee75aadc7317c75d01ed09793ca05ee623895f",
+        "common/src/main/resources/assets/terrassic/textures/entity/troodon_male.png": "b63dc307f1303ad66f11558614534ffb1fef8e479c987cf9692aa875cc2fdf31"
+      },
+      "female_texture_sha256": "0ce3dd0c810311cca11c87999c861b9e2e9a6a4625f0561d7a28f8651e300868"
+    },
+    {
+      "species": "oviraptor",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 40,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/oviraptor.geo.json": "b3870213962bb1dd5b84f7f56ede0ddf056928489dc4695077d36bc0abf2d28e",
+        "common/src/main/resources/assets/terrassic/animations/entity/oviraptor.animation.json": "acedf33d1e501ae5190ea1fe0cb51076d49c22a2489ad478e54b55bef89d4576",
+        "common/src/main/resources/assets/terrassic/textures/entity/oviraptor_male.png": "dc52c76f772e257e5adc4f7caca3a7eb850c5532364952872655b246cb032a9a"
+      },
+      "female_texture_sha256": "e01cbc82d0611d543307d58412bf4efd02dbb187e228e3f1749cb900c921ae42"
+    },
+    {
+      "species": "citipati",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 42,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/citipati.geo.json": "549075fc5addbb26632b2bcca1b3096543411cbaae8a9264a87d5a6307aedbd8",
+        "common/src/main/resources/assets/terrassic/animations/entity/citipati.animation.json": "b7b03ffe6011dc2b440ec1c7f0b3dbca9d4cb2e8da3231b26f2bf30093dade91",
+        "common/src/main/resources/assets/terrassic/textures/entity/citipati_male.png": "a8aacd5743c7389cf5a8d5d253748296c7cf1969c7fa3bbdbe8c10abe98b692d"
+      },
+      "female_texture_sha256": "9ce5b9cb72d004d7a74de8eda59b293a3e5a835fb11ee20175f78bde93d53204"
+    },
+    {
+      "species": "mononykus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 36,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/mononykus.geo.json": "413c6de6f52704647adcd4d914bd9192db9eaa417b998b6e381fd57a02c211be",
+        "common/src/main/resources/assets/terrassic/animations/entity/mononykus.animation.json": "0693400a0593d7253625639309d82fe4700dc111fa792d7ef514b383d38b957b",
+        "common/src/main/resources/assets/terrassic/textures/entity/mononykus_male.png": "4f735c9a9b5200ed5364bf46eb9ef8eafcf959b1a72decbd4f168ba31104d079"
+      },
+      "female_texture_sha256": "1aac841bbc9d9357fea2aac9c50138de14b734c669b9e5d858ab21ad775e852c"
+    },
+    {
+      "species": "didelphodon",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 41,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/didelphodon.geo.json": "34bb4204819b77013f50aafadbbfa66304672bff85fb531289a54af227ca3a5c",
+        "common/src/main/resources/assets/terrassic/animations/entity/didelphodon.animation.json": "8998d770ffe46ef6e19e668700f327a4c11d36d0b162898e761c38614419a2a9",
+        "common/src/main/resources/assets/terrassic/textures/entity/didelphodon_male.png": "a4957f9151da250c04a0040e1f8da4b58c38872d817bcab6aee5aebd8919e6a4"
+      },
+      "female_texture_sha256": "cc4f352c0fb9a0e6d4ab1984eed1e72487c5f5b994f4acc3c0bdd6d803291443"
+    },
+    {
+      "species": "mesodma",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 39,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/mesodma.geo.json": "5b4ff283dbaac48ffb0fffb665f4d28b4a45c29ab9b58480ce05c26d357142e8",
+        "common/src/main/resources/assets/terrassic/animations/entity/mesodma.animation.json": "cdf5a605dd7c505a0c1f5ed9f5b345af2c2f307853dc99bb3d096a5a6961723a",
+        "common/src/main/resources/assets/terrassic/textures/entity/mesodma_male.png": "f8aa5d4120fbf39e7f63df7cab0c1307d970ec79d7ba9565703a5983e366b680"
+      },
+      "female_texture_sha256": "aa8ce7aa3e7fc749ec2e802f1d71faf38345bf1c2617dd8cff7da113f0a6b577"
+    },
+    {
+      "species": "basilemys",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 39,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/basilemys.geo.json": "4b02cc01afb20c1df70673b1a06696f3abbd0795f9352a387ce5f90143a372f2",
+        "common/src/main/resources/assets/terrassic/animations/entity/basilemys.animation.json": "8c5545655d24e676e9a91b72afefedd84858a4f6cb4207582986ae4975be25b1",
+        "common/src/main/resources/assets/terrassic/textures/entity/basilemys_male.png": "abbcc8668703c91facedd6164ba585a3a0299c9466ff319a14af7352c657df6f"
+      },
+      "female_texture_sha256": "36096e44e9b8c717601430434eb622ab8cd19e5cf92a538cdc42e277220bf95a"
+    },
+    {
+      "species": "enchodus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 63,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/enchodus.geo.json": "307bc8e00f40c5a4ca1324a1f5aa21b4a3d73bfd98b937025354a8b0f6084f07",
+        "common/src/main/resources/assets/terrassic/animations/entity/enchodus.animation.json": "026aeff00650253f1d0257dac5bed0d38c094256a7148e234b67a554491631dc",
+        "common/src/main/resources/assets/terrassic/textures/entity/enchodus_male.png": "5a5464411d5f6bacc5f426cab19eed2919ac37c1cbb7c3e3f10ea1ea22ec70a8"
+      },
+      "female_texture_sha256": "8e161b3a17a7926feace60509f6e389cb25ffd8a3c72086345f0b7060222bb02"
+    },
+    {
+      "species": "lepisosteus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 51,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/lepisosteus.geo.json": "eeccd4bc910d2f475043e35f62d1025c4f627c49a76333580dfd5514f47c53eb",
+        "common/src/main/resources/assets/terrassic/animations/entity/lepisosteus.animation.json": "757bf86626aa29a66fe0a8a2e65447d6ec6d5a230afd39e6e0e9ba85df9bdeca",
+        "common/src/main/resources/assets/terrassic/textures/entity/lepisosteus_male.png": "f8e5387feba28d55d8380bea373340678eb3b67863257d6e919bf1f1a9e8aacc"
+      },
+      "female_texture_sha256": "4ddb30b529560c4b7a61493e3bbf3b29b0a7681865490b6429df848e6db1c967"
+    },
+    {
+      "species": "parasaurolophus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 74,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/parasaurolophus.geo.json": "52afcb119ac82c1e5cfacf1e2835c84b57e4e3be30841657fe2c3a980733b3f5",
+        "common/src/main/resources/assets/terrassic/animations/entity/parasaurolophus.animation.json": "8e9dedac09792da7cc8a116e32d1764fe0f262b1a2a1cf4e376e2f13462b3e83",
+        "common/src/main/resources/assets/terrassic/textures/entity/parasaurolophus_male.png": "7c37fd9add085989b617d8fe857a8376a6a359e8a6a024a735ee53051b1d928d"
+      },
+      "female_texture_sha256": "620abae52eda116a79e7ba173cf03061b4fd2b7a91c920cda593518a42ed8fb9"
+    },
+    {
+      "species": "pachycephalosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 90,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/pachycephalosaurus.geo.json": "989e438a322a7f69f30a777dd46d62a488f9289a9e07b9116ff0afef8c42574c",
+        "common/src/main/resources/assets/terrassic/animations/entity/pachycephalosaurus.animation.json": "ca3c24505d86b573e66cd234adbbbff1bcfb40a213f2ab99735a4b62059fdb19",
+        "common/src/main/resources/assets/terrassic/textures/entity/pachycephalosaurus_male.png": "234fbd84ad3a1fbdd136f5f45e1eb9f12d62a01694376cf2db05148fa05c36e1"
+      },
+      "female_texture_sha256": "1f0fa55c4955a7588c63b46240f29298a250ef0e85a7facbc54550823656dee2"
+    },
+    {
+      "species": "thescelosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 68,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/thescelosaurus.geo.json": "49f4373d7c5f96a9883c5c42c1527c35d02a7a09425ec99deb57a063d1eab6c3",
+        "common/src/main/resources/assets/terrassic/animations/entity/thescelosaurus.animation.json": "bae9b9cfc596c45471fe815eeb6b12608f94a2a81a397621f19e39f82dfa2694",
+        "common/src/main/resources/assets/terrassic/textures/entity/thescelosaurus_male.png": "287eeb0f726833ceb5487a0bf30bb9b0167a000577f138ede7bde7d8381d250f"
+      },
+      "female_texture_sha256": "11bb918cbfb07d05283c9e635ac9195062e151c438aab4c6cd53482c0e7a7a97"
+    },
+    {
+      "species": "gallimimus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 64,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/gallimimus.geo.json": "72f5e890fd1c829eeea55e8184b37d5088347c187637ba0b10ca1fb244116956",
+        "common/src/main/resources/assets/terrassic/animations/entity/gallimimus.animation.json": "321f258a0a693c0fe8d0ff862ace3e54da3cd080d0df31b69bde92de92362cad",
+        "common/src/main/resources/assets/terrassic/textures/entity/gallimimus_male.png": "8285f0c8b5119c1d9c539cdd3dff4fed8809a88bd25805e416dfceba14509fa6"
+      },
+      "female_texture_sha256": "560924cb06118a899bbb899114cb190b43489153c900714009e80725e804bf13"
+    },
+    {
+      "species": "struthiomimus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 73,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/struthiomimus.geo.json": "4a20aa2b6993f240ce5ae735dc3c73d9ade868b538ddae572f682a32443a3b57",
+        "common/src/main/resources/assets/terrassic/animations/entity/struthiomimus.animation.json": "7eafd74ae07a3e1cd911213d043ff54f564838980c3769152a7dd57d774b6989",
+        "common/src/main/resources/assets/terrassic/textures/entity/struthiomimus_male.png": "9e7c84dfa3c69adab02183e0b95797fc5e06914a199c8948c8a3d8a2bdfe5a49"
+      },
+      "female_texture_sha256": "f1f4db9facbc8774548c5cce1ef94b37f2ee9ff5fb0735a8950b00e6ff2d7eef"
+    },
+    {
+      "species": "maiasaura",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 67,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/maiasaura.geo.json": "c7c51cd129199758ead011aca1b8f1931caf49f5093142972ed7fd19f874acaf",
+        "common/src/main/resources/assets/terrassic/animations/entity/maiasaura.animation.json": "9347ad9b4fdd7a5e619a5124a31af5281e8b6e595c6bcac2251fab5e706ae58a",
+        "common/src/main/resources/assets/terrassic/textures/entity/maiasaura_male.png": "8029829c90b014c5a50e1f951822cfabff645c3b37b4b9cebd17bb3a52919637"
+      },
+      "female_texture_sha256": "fcb763f216cce54cd4642e8594d4f9f6fb5e4ae8ca5b11d53961bf359ef68a5b"
+    },
+    {
+      "species": "edmontosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 127,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/edmontosaurus.geo.json": "80a2c9e779db3bb46af9877969ff2fbc610db3c9b7368e04547ef95dda08fca6",
+        "common/src/main/resources/assets/terrassic/animations/entity/edmontosaurus.animation.json": "d34874ab5bea7beef6f24bb9266ca9de90338ba2fc36a36dadc335eb6ae02b7d",
+        "common/src/main/resources/assets/terrassic/textures/entity/edmontosaurus_male.png": "4f5831370094fb6e6abc1e94e0b2532355eb1064c919bdcd971863f2257007f6"
+      },
+      "female_texture_sha256": "35786b83ebc6205649ce367ef422e00157f72ce5a68fd4656e82ff2ed7011af7"
+    },
+    {
+      "species": "corythosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 102,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/corythosaurus.geo.json": "27ef4429580073865460b12b0b7ecd2eb34428d70bd5b52ce3fd27e156533f65",
+        "common/src/main/resources/assets/terrassic/animations/entity/corythosaurus.animation.json": "f126f19a9fcaf2cec598c54068bbbfdad18d4a1396c3f2254287858da43998e9",
+        "common/src/main/resources/assets/terrassic/textures/entity/corythosaurus_male.png": "b11e4ce09391840ed2adcefbb044f4af93e340aeffedbef0af0d4eaf5d81070b"
+      },
+      "female_texture_sha256": "4e294f44794fb5e2050b6afae3885157890bae433332236608b5d9cb0918ef9e"
+    },
+    {
+      "species": "pteranodon",
+      "animation": "glide",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 91,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/pteranodon.geo.json": "6c1243047b2abf26ca7a7eb4acf63167889fe8a3a975f6604d680f611f0a7571",
+        "common/src/main/resources/assets/terrassic/animations/entity/pteranodon.animation.json": "96ab1bce0fc8901ffdaf688d29ca55269cf29ca594cf9445cbef0fdfcf786962",
+        "common/src/main/resources/assets/terrassic/textures/entity/pteranodon_male.png": "008ef9fa5ded6f629a3922cbb50fd66b0e6a9193ee50deeb4640873c1c47f29e"
+      },
+      "female_texture_sha256": "4f2dee83b8452c1be5fc488f15c6ca25c8794b7d5e6a6687893a56112e5ce1a7"
+    },
+    {
+      "species": "quetzalcoatlus",
+      "animation": "glide",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 103,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/quetzalcoatlus.geo.json": "beb809fbbb58c29d4140d356a1e444e5a799a6556100fcb8169702c283d7f68f",
+        "common/src/main/resources/assets/terrassic/animations/entity/quetzalcoatlus.animation.json": "d56577ee3601b33445bc999e44170f68314747ac4f4b92547d57c4b8608dfad7",
+        "common/src/main/resources/assets/terrassic/textures/entity/quetzalcoatlus_male.png": "b38cd1bdf6af3bb726b7e45fe580d05c5e7d6c225be53145943b9685f5d3bce1"
+      },
+      "female_texture_sha256": "6c44c0bbbba5860f288951460340a6c14747999c2af605dff8a7da1d14b89871"
+    },
+    {
+      "species": "hatzegopteryx",
+      "animation": "glide",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 98,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/hatzegopteryx.geo.json": "e668e79c52a2f24eeb9e584b6952d39f89c839a7ba916cd6ede69a49b1eed173",
+        "common/src/main/resources/assets/terrassic/animations/entity/hatzegopteryx.animation.json": "7c8a91d6f160dd66d69c11ca23f3dee9cfab8d2a0931d4ebb205dfc4c07e09ca",
+        "common/src/main/resources/assets/terrassic/textures/entity/hatzegopteryx_male.png": "da53623ac503f15fc3e2f5d35e2cb52a0ffa88183f042e17fca7aa33807c3af6"
+      },
+      "female_texture_sha256": "86b5c278346b22dbdece7e77a29ceec80cf179481cfe881c97ad3de6b218c09b"
+    },
+    {
+      "species": "ichthyornis",
+      "animation": "glide",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 69,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/ichthyornis.geo.json": "3e879876c32a65e4ce81173d60796502f6f85ea1d278aa50ab85710b27644cce",
+        "common/src/main/resources/assets/terrassic/animations/entity/ichthyornis.animation.json": "c3785faef74c388dd9d1e4d1adc23fb02d793aa6875a04b10a1a94208321c448",
+        "common/src/main/resources/assets/terrassic/textures/entity/ichthyornis_male.png": "b3f6978889ea5bafc4ec43ae754fa35f41d22496902d949c62f569e912d8fdff"
+      },
+      "female_texture_sha256": "a6c747460526034b3a99a177b2a9c4c4821f5467a5e10f8e9f010e13e5eacd2a"
+    },
+    {
+      "species": "vegavis",
+      "animation": "glide",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 29,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/vegavis.geo.json": "da5cf2bb5ee7c540496de957e442d2bcdf74923c69b64336e5d70e3c054ff775",
+        "common/src/main/resources/assets/terrassic/animations/entity/vegavis.animation.json": "1b44845e26c134478d236f6231f74796c0727765e7abe65fd209a52427cd9c90",
+        "common/src/main/resources/assets/terrassic/textures/entity/vegavis_male.png": "83435693aa2f22032e9fa61a0baa5f6539660854be6e85995a7142f4afbbb63a"
+      },
+      "female_texture_sha256": "83983045660d17fd5b90bc51300bee4483a229a1338edeff28862dc1e72a18e4"
+    },
+    {
+      "species": "mosasaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 88,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/mosasaurus.geo.json": "efe1dc36e59eace4b7e37cf555402d5d9ed523a358d3cb672ea1e553ee916c3c",
+        "common/src/main/resources/assets/terrassic/animations/entity/mosasaurus.animation.json": "0022b0f8033d1c0698b7c471d980ffd959edd5ceacf59c57ad4e82c864059e36",
+        "common/src/main/resources/assets/terrassic/textures/entity/mosasaurus_male.png": "124075dff7c64553228f59105d98e6abf7f926f94e80a6bad529305dc2f95fc5"
+      },
+      "female_texture_sha256": "c57a5cca91890183f485c5d73011df71ffbecfbe9389f6680290abfb2bf83aec"
+    },
+    {
+      "species": "tylosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 84,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/tylosaurus.geo.json": "a6195dbadbee361d0e5e160f8f07ce4548c23f4dad9d794be34b9659df97e331",
+        "common/src/main/resources/assets/terrassic/animations/entity/tylosaurus.animation.json": "f7bf8afdadb7d56857b82b4b4ef3c1044869cde9b2a5544df4475ec155d7371e",
+        "common/src/main/resources/assets/terrassic/textures/entity/tylosaurus_male.png": "da9ab9ae1fc8520d18211f2b47fc3dc20ee7f5640493fd84af78be9672520d28"
+      },
+      "female_texture_sha256": "e30b6a939b739a8d65b661c9fde1994b832f563e8255750af274cd0c3a4002ee"
+    },
+    {
+      "species": "elasmosaurus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 57,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/elasmosaurus.geo.json": "7806b36a801328812c2b8d5f6e0f5de95bfa3e83d27d9711fdf2fc888f317606",
+        "common/src/main/resources/assets/terrassic/animations/entity/elasmosaurus.animation.json": "a0c1293dac4085de621c1baf0222efb5a2e1e09118e80f44e737f051aa17ce78",
+        "common/src/main/resources/assets/terrassic/textures/entity/elasmosaurus_male.png": "f749d17c35a6152df18e4e6b489c8669e794f279a793b4726669fd8efafdfdd5"
+      },
+      "female_texture_sha256": "be058c462a72eff62a92c04af8fce2e98eff9d4ece8c50a321000bb18c0b6432"
+    },
+    {
+      "species": "xiphactinus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 59,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/xiphactinus.geo.json": "3ef9992838d8e4f3257bfd5610d41d779c2c154dc776929d4becd0ff9229c4af",
+        "common/src/main/resources/assets/terrassic/animations/entity/xiphactinus.animation.json": "bceca02ff7fbe5420e5a86c1249b871ab2f6e4ea5a28fe53cf4b4d3b5c7f4a3b",
+        "common/src/main/resources/assets/terrassic/textures/entity/xiphactinus_male.png": "b51c9a25d4ab0c7ecbfec3f0bd30fae39cf1acae94af1c42c8fd94cfd24b3b0b"
+      },
+      "female_texture_sha256": "a47c615e1bd6e3985e89fae067432d176e01644af72a1db54a7fc91811c732f4"
+    },
+    {
+      "species": "archelon",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 44,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/archelon.geo.json": "82f5d8a2b85f0e59f8d91042e3939f4925a464ef5c4002f1c819b5122e4c1ec9",
+        "common/src/main/resources/assets/terrassic/animations/entity/archelon.animation.json": "bae365f033af712c43fb1fc889183df263abb5d6cdf47880b568084f0318f48f",
+        "common/src/main/resources/assets/terrassic/textures/entity/archelon_male.png": "0e5e3e8272c85914ff8edb31f978fd4c807da5a564479aa60234958a72d495a8"
+      },
+      "female_texture_sha256": "a601267aaa5d0ecd5e92cd2fa48833152c7032c2299e3e692c7b5d4f566f7654"
+    },
+    {
+      "species": "hesperornis",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 36,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/hesperornis.geo.json": "eaa1445319f7c0c372b0744bbb0923d94803948614d7e608c031e57bd6d300b1",
+        "common/src/main/resources/assets/terrassic/animations/entity/hesperornis.animation.json": "65edebce971a3375897ebb9d0bc979bc0b803750ec8cff71b74f1e91ace189b9",
+        "common/src/main/resources/assets/terrassic/textures/entity/hesperornis_male.png": "0f85530d247bfa3f74a32600de83050daf484c04d5e01fecea8688d93e918bfe"
+      },
+      "female_texture_sha256": "ea20f7562645bb320bf2a7a729469ca31dc314b192cf075794053b04b09d20cf"
+    },
+    {
+      "species": "deinosuchus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 160,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/deinosuchus.geo.json": "ff2e2f10a09728e8267898284857d035be935df67d5670f01937265e0bf8d204",
+        "common/src/main/resources/assets/terrassic/animations/entity/deinosuchus.animation.json": "b20e286c43d9a19a53faf10afb5d25a94f3d1e07e09c517ff215262366ef5ccc",
+        "common/src/main/resources/assets/terrassic/textures/entity/deinosuchus_male.png": "28436dc2bb90b2c1a34d48dcde6fa9cc89dff4c6c35c3212cdf40713027e0672"
+      },
+      "female_texture_sha256": "5135e466bbf6c8cc26eff2017e6320a88a4c18648c66c981df345d57da21ec7a"
+    },
+    {
+      "species": "baurusuchus",
+      "animation": "idle",
+      "fraction": 0.25,
+      "sex": "male",
+      "geometry_roundtrip": true,
+      "cubes": 76,
+      "sources": {
+        "common/src/main/resources/assets/terrassic/geo/entity/baurusuchus.geo.json": "5379eacb25a31f4886bb3d3159878003fec778a63295d72e6b627ca0b84b095e",
+        "common/src/main/resources/assets/terrassic/animations/entity/baurusuchus.animation.json": "65bbcf5feeed151b7e483b18fde76804354c2672f6fa82760f33de4114502593",
+        "common/src/main/resources/assets/terrassic/textures/entity/baurusuchus_male.png": "c10d17d16a8b9cc0c674776a95867044d1277d3f3c7488c8855626486d6efe17"
+      },
+      "female_texture_sha256": "8314a16113a1a306d4ebfb70fef437b476bcdf258ef873613942bb861a371170"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "apex_en_us_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "e6ff8a86c39d79bc8ac4ce4490809c1c014da4d3e889ec2c13291646075a77b3"
+    },
+    {
+      "file": "apex_pt_br_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "7863c34f3e32672c8770cdf59d1f906bd5e08e3e76e4ec85166bd88c180cc25c"
+    },
+    {
+      "file": "apex_es_es_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "04636d85e0bfba8a2cbb0f5f1ba3d8921253560b3ac7f758afd465f737727201"
+    },
+    {
+      "file": "sky_en_us_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "7d8794bf69911d55ea525212b562d2e547b95488be5becaf1846b173fb3ab50f"
+    },
+    {
+      "file": "sky_pt_br_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "25cd9073d31b2495462455803eded4dd872e4498178f95d8cce243d3aa1e8b9b"
+    },
+    {
+      "file": "sky_es_es_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "bcc488fa43563c2c42366275a6b7dd0cf0d5a4515f68e9449da5cb5b0b2a5a9f"
+    },
+    {
+      "file": "herd_en_us_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "f8d184e94286e52804ffb6ceb07a66ccb65ca2ca41c22b6bbe09c089f0c1d75a"
+    },
+    {
+      "file": "herd_pt_br_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "11a2c323f2e867c2be62e35e65ae6d7e78fa341801b8ed3b1647fa5f492a63f0"
+    },
+    {
+      "file": "herd_es_es_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "8dc4e1f56b2c8b3ddcd2261e603d07f476afcb3e28e8008eb2c8391d4558e4ae"
+    },
+    {
+      "file": "catalog_en_us_3840x2160.png",
+      "size": [
+        3840,
+        2160
+      ],
+      "sha256": "d33bfcd51e7d1fe71ff16f41e4a9afc9eb0b60ee60ca999c468959a5e4779122"
+    },
+    {
+      "file": "catalog_en_us_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "3777425b0681f6b396c638c94d31d6b5aef3f60704fa54eac272f127f1dbf37e"
+    },
+    {
+      "file": "catalog_pt_br_3840x2160.png",
+      "size": [
+        3840,
+        2160
+      ],
+      "sha256": "d877b731c596e11aebb6090c8b8b82f669881406eb20aed2db23191d4f8e24f2"
+    },
+    {
+      "file": "catalog_pt_br_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "611aeacd4989aeccf837d538087ced8e5cc801dba70dd215b76c6ebb09e2db18"
+    },
+    {
+      "file": "catalog_es_es_3840x2160.png",
+      "size": [
+        3840,
+        2160
+      ],
+      "sha256": "1c276b30f913c32c8e52e209debb169fa85f70bec1c2fcaebd7294886008fbf5"
+    },
+    {
+      "file": "catalog_es_es_1920x1080.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "b00b3128d535cb6a616c87fe111a447586e17cdc5f10f6dbf8a7c44e76c5973d"
+    }
+  ]
+}
