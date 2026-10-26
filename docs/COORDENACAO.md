@@ -135,6 +135,10 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
+Registro Codex — 26/10: Rodrigo pediu guardar para o futuro a ideia de um vídeo curto passeando
+por vários dinossauros. Briefing em `CAPA.md`; não iniciar produção agora. Nova descrição e summary
+das lojas serão apresentados em português para validação antes de substituir os textos publicados.
+
 Entrega Codex — capa v3 (26/10): laranja e iluminação com aparência de shader, sol quadrado, nuvens
 retangulares e meteoros pixelados em `art/divulgacao/capa/v3/`. Fundo editado por imagegen integrado;
 letreiro original grande composto por `tools/capagen/store_cover_v3.py`. Três idiomas e ZIP conferidos;

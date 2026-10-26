@@ -1,5 +1,16 @@
 # Terrassic: arte de divulgação
 
+## Ideia futura — vídeo de apresentação da fauna
+
+Pedido de Rodrigo em 26/10/2026: um vídeo curto passeando por muitos dinossauros do Terrassic,
+mostrando os animais e o mundo. Guardar a ideia; produção ainda não iniciada.
+
+Direção inicial: movimentos de câmera suaves, alternando manadas, grandes predadores, voadores
+e fauna marinha, com os modelos originais do mod e a identidade atual. Definir duração, roteiro,
+trilha e formato quando Rodrigo retomar. Caminho inicial sugerido: capturar cenas no próprio jogo,
+montar uma primeira versão e só depois avaliar renderizações extras. Cenas precisam ser preparadas
+para controlar fauna, luz, enquadramento e estabilidade; não gerar animação por IA que altere os modelos.
+
 ## Reformulação da capa Caçada — 26/10/2026
 
 Pedido atual do Rodrigo: adaptar também a capa principal à identidade entregue. Nova versão em
