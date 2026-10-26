@@ -1,6 +1,10 @@
 # Terrassic — coordenação entre frentes
 
-Atualizado em 25/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
+Atualizado em 26/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
+
+Entregas de 26/10 na main: `4e31cb72` (fonte, voo e locomoção), `5f8129d5` (população regional
+e navegação anfíbia) e `255b7ff0` (pranchas atualizadas para lojas). Build e regressões passaram;
+revisão visual no jogo e aprovação das novas pranchas continuam com Rodrigo, conforme os roteiros abaixo.
 
 Entrega Codex: Rodrigo aprovou os três fundos v3 e autorizou sua aplicação. Escopo: tela do menu,
 instalador em `tools/menugen/`, textos da plaquinha e idiomas, três texturas e `docs/MENU.md`.
