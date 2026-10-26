@@ -135,6 +135,12 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
+Entrega Codex — capa v3 (26/10): laranja e iluminação com aparência de shader, sol quadrado, nuvens
+retangulares e meteoros pixelados em `art/divulgacao/capa/v3/`. Fundo editado por imagegen integrado;
+letreiro original grande composto por `tools/capagen/store_cover_v3.py`. Três idiomas e ZIP conferidos;
+fundo e capa inglesa inspecionados. Imagem nativa 1672×941 redimensionada para entrega 1920×1080;
+geometria exata não certificada após edição raster. Aprovação estética pendente; v2 e jogo preservados.
+
 Entrega Codex — 26/10: capa Caçada reformulada em `tools/capagen/store_cover.py` e
 `art/divulgacao/capa/v2/`. Cena anterior sem título preservada geometricamente, cor revisada,
 letreiro atual e Sedimento; quatro PNGs 1920×1080 (três idiomas e fundo sem texto), ZIP e hashes

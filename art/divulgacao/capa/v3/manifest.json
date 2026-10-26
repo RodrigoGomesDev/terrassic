@@ -1,0 +1,29 @@
+{
+  "method": "Built-in imagegen lighting and sky edit, exact original wordmark composited separately",
+  "native_generated_size": [
+    1672,
+    941
+  ],
+  "delivery_size": [
+    1920,
+    1080
+  ],
+  "resampled": true,
+  "screenshot": false,
+  "geometry_exactness_certified": false,
+  "sources": {
+    "art/divulgacao/capa/v3/cena_ia_original.png": "d167f7e4115cffcca48355341cfd78d3e0f48c165533559447689d405f37f762",
+    "common/src/main/resources/assets/terrassic/textures/gui/title/menu/titulo.png": "c7617bfd5f7f4a8faa5d6d4f238977baf43059b1aa90840f48264fe8aa2bf3ba",
+    "common/src/main/java/com/terrassic/client/ui/TerrassicPalette.java": "ef402dd9932b41f64cc5b9fe631eaabba124d74f7695428b999cb917b113b7a4",
+    "tools/capagen/store_cover_v3.py": "7e6a045c4ba1c79e5070624c5a463b7fd4b94919a2da459b432a7e0e08babb7b",
+    "tools/capagen/store_cards.py": "730dce4c539f7e3aedc8246e9838838b628b0842c39d70d21d22289ee9a777b1",
+    "tools/capagen/store_cover.py": "3807b0f42a0263cbd8e0f0f0a6b9dfe10fbe76f5cb8d48a408649d8f9e45a138",
+    "tools/fontgen/sedimento.py": "9d1a48b69c249a3a8439372b8489d41e0c2dbffcd13b00ad6c0232e7eb465981",
+    "tools/fontgen/pixfont.py": "a711b9c60baf7fc3c745590d082a9ca70f123591d2117733ade9eb615a258c3d"
+  },
+  "outputs": {
+    "terrassic_capa_en_us_1920x1080.png": "3c27871b8799c3a74d18af86e07ebbf5ae73d0984def17821692a42e1b750372",
+    "terrassic_capa_es_es_1920x1080.png": "305c4d83d9a83f76f0ac62328de20a1266b75c3a87c72589ab06176105ed0284",
+    "terrassic_capa_pt_br_1920x1080.png": "a5289c23a9f424ace33073eb8c911747f5f0bd851ba0a01c4b729a7790c9f16b"
+  }
+}
