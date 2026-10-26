@@ -1,5 +1,13 @@
 # Terrassic: arte de divulgação
 
+## Reformulação da capa Caçada — 26/10/2026
+
+Pedido atual do Rodrigo: adaptar também a capa principal à identidade entregue. Nova versão em
+`art/divulgacao/capa/v2/`, com letreiro ativo, Sedimento, céu de crepúsculo e laranja menos dominante.
+Reaproveita o render sem título, sem alterar a geometria da cena. Inglês principal, alternativas em
+português/espanhol e fundo sem texto; detalhes e limites no README da pasta. Imagens e pacote
+conferidos; aprovação estética pendente. Os arquivos anteriores abaixo permanecem preservados.
+
 ## O que já existe (aprovado em 25/10/2026)
 
 | Arquivo | Uso |

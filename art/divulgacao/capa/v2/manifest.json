@@ -1,0 +1,20 @@
+{
+  "method": "Pointwise colour grading and original brand overlay; scene geometry unchanged.",
+  "screenshot": false,
+  "default_language": "en_us",
+  "sources": {
+    "art/capa/terrassic_capa_cacada_sem_titulo.png": "0b0c5ec271f50177a161c18b1c515896c71a89a6b3f5a8fd2cd1e57660af97fe",
+    "common/src/main/resources/assets/terrassic/textures/gui/title/menu/titulo.png": "c7617bfd5f7f4a8faa5d6d4f238977baf43059b1aa90840f48264fe8aa2bf3ba",
+    "common/src/main/java/com/terrassic/client/ui/TerrassicPalette.java": "ef402dd9932b41f64cc5b9fe631eaabba124d74f7695428b999cb917b113b7a4",
+    "tools/capagen/store_cover.py": "3807b0f42a0263cbd8e0f0f0a6b9dfe10fbe76f5cb8d48a408649d8f9e45a138",
+    "tools/capagen/store_cards.py": "730dce4c539f7e3aedc8246e9838838b628b0842c39d70d21d22289ee9a777b1",
+    "tools/fontgen/sedimento.py": "9d1a48b69c249a3a8439372b8489d41e0c2dbffcd13b00ad6c0232e7eb465981",
+    "tools/fontgen/pixfont.py": "a711b9c60baf7fc3c745590d082a9ca70f123591d2117733ade9eb615a258c3d"
+  },
+  "outputs": {
+    "cacada_sem_titulo_1920x1080.png": "eb9598c3107d150380a75cfc97413c1f070c209551a92bf467306f8838bdd3fe",
+    "terrassic_capa_en_us_1920x1080.png": "1c3cd86c2873a6c86e3ef0f84d45e5bf1ba0fb45d0fefcc7f27fdca11f2b5f83",
+    "terrassic_capa_es_es_1920x1080.png": "58ac34678c75d83906b82437c88b90e79e6485d0b00fb0f3994a34fe24888e63",
+    "terrassic_capa_pt_br_1920x1080.png": "a050ba84a970b04b56e4ad6bf1b84143e567f4b556347b2c64640baea9678bd1"
+  }
+}

@@ -135,6 +135,12 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
+Entrega Codex — 26/10: capa Caçada reformulada em `tools/capagen/store_cover.py` e
+`art/divulgacao/capa/v2/`. Cena anterior sem título preservada geometricamente, cor revisada,
+letreiro atual e Sedimento; quatro PNGs 1920×1080 (três idiomas e fundo sem texto), ZIP e hashes
+conferidos. Arte inglesa inspecionada; acabamento aguarda Rodrigo. Capas antigas e marca local
+preservadas; sem alterar jogo ou publicar nas lojas. Arquivos liberados.
+
 | Responsável | Arquivos | Estado |
 |---|---|---|
 | Codex | `tools/javagen/gen_blocks.py` (somente configurações das árvores), configured features correspondentes, regressão de árvores e documentação | Concluído: offset da copa de magnólia 0→2 na fonte e recurso. Falha reproduzida em 5/5 originais; correção passou em 72 árvores no Fabric e 72 no Forge, incluindo nove famílias. Build em 51 s; fontes/JSONs/JARs conferidos. Não houve alteração de árvores salvas; roteiro em `TESTES_ARVORES.md` |
