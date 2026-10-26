@@ -153,7 +153,8 @@ WOODS = {
     # Magnolia: one of the first flowering trees, a rounded crown on a medium trunk, in forests
     "magnolia": (("Magnolia", "Magnólia", "Magnolia"), "TERRACOTTA_WHITE", "STONE",
                  {"trunk_placer": {"type": "minecraft:fancy_trunk_placer", "base_height": 6, "height_rand_a": 3, "height_rand_b": 0},
-                  "foliage_placer": {"type": "minecraft:blob_foliage_placer", "radius": 3, "offset": 0, "height": 3},
+                  # Fancy branches end above the attachment's blob cap at offset 0/1. Lift the rounded crown.
+                  "foliage_placer": {"type": "minecraft:blob_foliage_placer", "radius": 3, "offset": 2, "height": 3},
                   "minimum_size": {"type": "minecraft:two_layers_feature_size", "limit": 1, "lower_size": 0, "upper_size": 1}},
                  ("minecraft:is_forest",), 6),
     # Podocarpus: a narrow evergreen of mountain and rain forests

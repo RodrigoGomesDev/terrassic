@@ -60,6 +60,10 @@ Evidências e limites em [`docs/TESTES_MOVIMENTO.md`](../../docs/TESTES_MOVIMENT
 da contagem anterior e rotação de câmera, permitindo spawn real depois de remover apenas as fixtures do teste.
 Auditoria, parâmetros e limites em [`docs/POPULACAO_VOADORES.md`](../../docs/POPULACAO_VOADORES.md).
 
+`tree_regression.py` gera árvores em servidor descartável e lê as paletas dos chunks salvos para
+identificar pontas de troncos verticais sem cobertura de folhas. Compara configurações de magnólia
+e revisa as nove famílias. Evidências e limites em [`docs/TESTES_ARVORES.md`](../../docs/TESTES_ARVORES.md).
+
 `load_profile.py` aumenta a carga por etapas em um servidor descartável compilado a partir de uma revisão fixa.
 Registra eventos reais de ticks pelo JFR integrado, sem mods de perfil adicionais. Comandos, resultados e
 limites em [`docs/PERFIL_LOCAL.md`](../../docs/PERFIL_LOCAL.md).
