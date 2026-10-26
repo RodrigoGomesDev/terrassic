@@ -16,10 +16,9 @@ import java.util.List;
  * <p>A soaring flight lasts one to three minutes ({@link FlyingDinosaur#isSoaring()}); then the animal glides down and
  * rests for a while before taking off again. It flies by daylight only (by night for nocturnal species). The flock
  * is every soaring wild one of the species within 32 blocks: the one with the lowest entity id leads, picking
- * waypoints 24 to 56 blocks ahead, 14 to 40 blocks over the ground, turning gently and heading back when it strays
- * 72 blocks from where it took off; the others hold a place of their own around the leader's waypoint, so the flock
- * keeps its shape. It steers the move control straight at the waypoint (no path finding up there), climbing over
- * whatever it bumps into, and never pulls an unloaded chunk in.
+ * waypoints 24 to 56 blocks ahead, 18 to 30 blocks over the ground, heading home after straying 72 blocks.
+ * Followers trail the leader's movement with separation rather than converge on its waypoint. FlightSteering
+ * maintains forward speed and limits yaw changes; terrain targets only query chunks already loaded.
  */
 public class SoarGoal extends Goal {
     private static final double FLOCK_RANGE = 32.0D;
@@ -27,14 +26,18 @@ public class SoarGoal extends Goal {
 
     private final FlyingDinosaur bird;
     private int retarget;
+    private int flockRefresh;
+    private FlyingDinosaur cachedLeader;
+    private List<? extends FlyingDinosaur> neighbours = List.of();
+    private Vec3 waypoint;
 
     public SoarGoal(FlyingDinosaur bird) {
         this.bird = bird;
-        this.setFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     private boolean free() {
-        return !this.bird.isTame() && !this.bird.isBaby() && !this.bird.isOrderedToSit() && !this.bird.isVehicle()
+        return !this.bird.isTame() && !this.bird.isBaby() && !this.bird.isKnockedOut() && !this.bird.isOrderedToSit() && !this.bird.isVehicle()
                 && !this.bird.isPassenger() && !this.bird.isSleeping() && !this.bird.isLeashed() && this.bird.getTarget() == null
                 && !this.bird.isSleepTime();
     }
@@ -44,7 +47,9 @@ public class SoarGoal extends Goal {
         if (!this.free() || this.bird.isResting()) {
             return false;
         }
-        return this.bird.isSoaring() || this.bird.getRandom().nextInt(reducedTickDelay(200)) == 0;
+        // A wild adult already airborne must recover flight immediately, including after loading an old world.
+        return this.bird.isSoaring() || this.bird.isFlying()
+                || this.bird.getRandom().nextInt(reducedTickDelay(200)) == 0;
     }
 
     @Override
@@ -63,53 +68,93 @@ public class SoarGoal extends Goal {
             this.bird.beginSoar();
         }
         this.bird.getNavigation().stop();
+        this.bird.setCruising(true);
         if (this.bird.onGround() || this.bird.isInWater()) {
             Vec3 v = this.bird.getDeltaMovement();
             this.bird.setDeltaMovement(v.x, 0.6D, v.z);
         }
         this.retarget = 0;
+        this.flockRefresh = 0;
+        this.waypoint = null;
     }
 
     @Override
     public void stop() {
-        if (!this.bird.isSoaring()) {
+        this.bird.setCruising(false);
+        this.bird.setSoarTarget(null);
+        this.neighbours = List.of();
+        this.cachedLeader = null;
+        this.waypoint = null;
+        if (!this.bird.isSoaring() || this.bird.isSleepTime()) {
             this.bird.endSoar();
         }
     }
 
     @Override
     public void tick() {
-        Vec3 target = this.bird.getSoarTarget();
+        if (--this.flockRefresh <= 0) {
+            this.flockRefresh = 10;
+            this.refreshFlock();
+        }
+        Vec3 target = this.waypoint;
+        if (this.bird.onGround() && this.bird.soarTicksLeft() < 200) {
+            this.bird.endSoar();
+            return;
+        }
         if (this.bird.horizontalCollision && target != null) {
             // climb over the hill or tree in the way
-            target = new Vec3(target.x, Math.max(target.y, this.bird.getY()) + 6.0D, target.z);
-            this.bird.setSoarTarget(target);
+            target = new Vec3(target.x, Math.min(this.bird.level().getMaxBuildHeight() - 4,
+                    Math.max(target.y, this.bird.getY() + 6.0D)), target.z);
         }
-        if (target == null || --this.retarget <= 0 || this.bird.position().distanceToSqr(target) < 16.0D) {
+        if (target == null || --this.retarget <= 0 || this.bird.position().distanceToSqr(target) < 144.0D) {
             target = this.pickTarget();
-            this.bird.setSoarTarget(target);
         }
         if (target != null) {
-            double speed = this.bird.position().distanceToSqr(target) > 400.0D ? 1.15D : 1.0D;
-            this.bird.getMoveControl().setWantedPosition(target.x, target.y, target.z, speed);
+            // A close neighbour changes the heading gradually, rather than pushing everyone into one waypoint.
+            Vec3 separation = Vec3.ZERO;
+            for (FlyingDinosaur other : this.neighbours) {
+                if (!other.isAlive()) continue;
+                double gap = Math.max(5.0D, (this.bird.getBbWidth() + other.getBbWidth()) * 1.5D);
+                Vec3 away = this.bird.position().subtract(other.position());
+                double distance = away.length();
+                if (distance < gap) {
+                    if (distance < 0.01D) {
+                        away = Vec3.directionFromRotation(0, this.bird.getId() < other.getId() ? 90 : -90);
+                    } else {
+                        away = away.scale(1.0D / distance);
+                    }
+                    separation = separation.add(away.scale((gap - distance) / gap));
+                }
+            }
+            if (separation.lengthSqr() > 1.0D) separation = separation.normalize();
+            Vec3 steering = target.add(separation.scale(18.0D));
+            this.bird.setSoarTarget(steering);
+            // Keep the unmodified waypoint separately: separation must not accumulate every tick.
+            this.waypoint = target;
         }
     }
 
     /** The leader's next waypoint, or a place around the leader's for a follower. */
     private Vec3 pickTarget() {
         FlyingDinosaur leader = this.leader();
-        if (leader != this.bird && leader.getSoarTarget() != null) {
-            // a place of its own in the formation, fixed by its uuid
+        if (leader != this.bird && leader.isCruising() && this.bird.soarTicksLeft() >= 200) {
+            // Follow the leader's motion with a loose trailing formation, not its destination.
             long seed = this.bird.getUUID().getLeastSignificantBits();
-            double ox = ((seed & 15L) - 7.5D) * 0.9D;
-            double oy = (((seed >> 4) & 7L) - 3.5D) * 0.6D;
-            double oz = (((seed >> 8) & 15L) - 7.5D) * 0.9D;
+            Vec3 forward = Vec3.directionFromRotation(0, leader.getYRot());
+            Vec3 side = new Vec3(forward.z, 0, -forward.x);
+            double gap = Math.max(7.0D, this.bird.getBbWidth() * 2.0D);
+            double lateral = ((seed & 1) == 0 ? -1 : 1) * gap * (1.0D + ((seed >>> 1) & 3) * 0.5D);
+            double behind = gap * (1.0D + ((seed >>> 3) & 3));
             this.retarget = 10;
-            return leader.getSoarTarget().add(ox, oy, oz);
+            Vec3 formation = leader.position().add(forward.scale(28.0D - behind)).add(side.scale(lateral))
+                    .add(0, (((seed >>> 5) & 3) - 1.5D) * 1.5D, 0);
+            if (this.bird.level().hasChunk(Mth.floor(formation.x) >> 4, Mth.floor(formation.z) >> 4)) {
+                return formation;
+            }
         }
         this.retarget = 100 + this.bird.getRandom().nextInt(100);
         Vec3 home = this.bird.getSoarHome();
-        float yaw = this.bird.getYRot() + (this.bird.getRandom().nextFloat() * 140.0F - 70.0F);
+        float yaw = this.bird.getYRot() + (this.bird.getRandom().nextFloat() * 70.0F - 35.0F);
         boolean strayed = home != null && Math.hypot(home.x - this.bird.getX(), home.z - this.bird.getZ()) > STRAY;
         boolean ending = this.bird.soarTicksLeft() < 200;
         if (home != null && (strayed || ending)) {
@@ -136,22 +181,26 @@ public class SoarGoal extends Goal {
             }
         }
         int ground = this.bird.level().getHeight(Heightmap.Types.MOTION_BLOCKING, bx, bz);
-        double y = ground + 14 + this.bird.getRandom().nextInt(27);
+        double y = ending ? ground + 0.5D : ground + 18 + this.bird.getRandom().nextInt(13);
         y = Math.min(y, this.bird.level().getMaxBuildHeight() - 8);
         return new Vec3(x, y, z);
     }
 
     /** The soaring wild one of the species with the lowest id within flock range (this bird if none is lower). */
     private FlyingDinosaur leader() {
+        return this.cachedLeader != null && this.cachedLeader.isAlive() ? this.cachedLeader : this.bird;
+    }
+
+    private void refreshFlock() {
         FlyingDinosaur best = this.bird;
         AABB box = this.bird.getBoundingBox().inflate(FLOCK_RANGE);
-        List<? extends FlyingDinosaur> flock = this.bird.level().getEntitiesOfClass(this.bird.getClass(), box,
-                e -> e != this.bird && e.isSoaring() && !e.isTame() && !e.isBaby());
-        for (FlyingDinosaur other : flock) {
+        this.neighbours = this.bird.level().getEntitiesOfClass(this.bird.getClass(), box,
+                e -> e != this.bird && e.isCruising() && !e.isTame() && !e.isBaby());
+        for (FlyingDinosaur other : this.neighbours) {
             if (other.getId() < best.getId()) {
                 best = other;
             }
         }
-        return best;
+        this.cachedLeader = best;
     }
 }

@@ -47,4 +47,15 @@ tasks.register('researchRegression', JavaExec) {
 
 tasks.named('check') {
     dependsOn tasks.named('researchRegression')
+    dependsOn tasks.named('movementRegression')
+}
+
+tasks.register('movementRegression', JavaExec) {
+    dependsOn tasks.named('regressionClasses')
+    classpath = sourceSets.regression.runtimeClasspath
+    mainClass = 'com.terrassic.entity.MovementRegression'
+    workingDir = layout.buildDirectory.dir('regression-run').get().asFile
+    doFirst {
+        workingDir.mkdirs()
+    }
 }

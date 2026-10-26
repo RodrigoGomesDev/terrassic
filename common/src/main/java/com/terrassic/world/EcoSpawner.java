@@ -199,11 +199,15 @@ public final class EcoSpawner {
         int count = Math.min(budget, groupSize(data, random));
         int spawned = 0;
         SpawnGroupData group = null;
+        double spacing = Math.max(4.0D, data.type.getWidth() * 1.75D);
+        double groupAngle = random.nextDouble() * Math.PI * 2;
         for (int i = 0; i < count; i++) {
             BlockPos at = pos;
             if (i > 0) {
-                int ax = x + random.nextInt(9) - 4;
-                int az = z + random.nextInt(9) - 4;
+                double angle = groupAngle + i * 2.399963229728653D;
+                double radius = spacing * Math.sqrt(i);
+                int ax = x + Mth.floor(Math.cos(angle) * radius);
+                int az = z + Mth.floor(Math.sin(angle) * radius);
                 if (!level.isPositionEntityTicking(new BlockPos(ax, pos.getY(), az))) {
                     continue;
                 }
@@ -251,11 +255,15 @@ public final class EcoSpawner {
         int count = Math.min(budget, Math.max(2, groupSize(data, random)));
         float heading = random.nextFloat() * 360.0F;
         Vec3 dir = Vec3.directionFromRotation(0.0F, heading);
+        Vec3 side = new Vec3(dir.z, 0, -dir.x);
+        double spacing = Math.max(8.0D, data.type.getWidth() * 2.5D);
         int spawned = 0;
         for (int i = 0; i < count; i++) {
-            double px = x + 0.5D + (i == 0 ? 0.0D : random.nextGaussian() * 3.0D);
+            int row = (i + 1) / 2;
+            double lateral = i == 0 ? 0 : (i % 2 == 0 ? -1 : 1) * row * spacing;
+            double px = x + 0.5D + side.x * lateral - dir.x * row * spacing * 0.7D;
             double py = y + (i == 0 ? 0.0D : random.nextGaussian() * 1.5D);
-            double pz = z + 0.5D + (i == 0 ? 0.0D : random.nextGaussian() * 3.0D);
+            double pz = z + 0.5D + side.z * lateral - dir.z * row * spacing * 0.7D;
             if (Math.abs(py - playerY) > RADIUS || !level.isPositionEntityTicking(BlockPos.containing(px, py, pz))) {
                 continue;
             }

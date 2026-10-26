@@ -1,6 +1,8 @@
 package com.terrassic.entity;
 
 import com.terrassic.entity.ai.SoarGoal;
+import com.terrassic.entity.ai.FlightSteering;
+import com.terrassic.entity.ai.SoaringMoveControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvent;
@@ -12,7 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
@@ -83,10 +84,11 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     /** Where the soaring flight heads now, and where the animal first took off (it does not stray far from it). */
     private Vec3 soarTarget;
     private Vec3 soarHome;
+    private boolean cruising;
 
     protected FlyingDinosaur(EntityType<? extends FlyingDinosaur> type, Level level) {
         super(type, level);
-        this.moveControl = new FlyingMoveControl(this, 20, false);
+        this.moveControl = new SoaringMoveControl(this);
     }
 
     /** Breeding / taming food. Must return a static constant (used during construction). */
@@ -118,7 +120,22 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(8, new SoarGoal(this));
-        this.goalSelector.addGoal(9, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomFlyingGoal(this, 1.0D) {
+            @Override
+            public boolean canUse() {
+                return allowed() && super.canUse();
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                return allowed() && super.canContinueToUse();
+            }
+
+            private boolean allowed() {
+                return !FlyingDinosaur.this.isResting() && !FlyingDinosaur.this.isKnockedOut()
+                        && (FlyingDinosaur.this.isTame() || FlyingDinosaur.this.isBaby() || !FlyingDinosaur.this.isSleepTime());
+            }
+        });
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
@@ -150,10 +167,15 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     @Override
     public void aiStep() {
+        // Immobilized mobs can skip goal/controller updates: release lift before vanilla applies physics.
+        if (!this.level().isClientSide() && this.isKnockedOut()) {
+            if (this.cruising) this.endSoar();
+            this.setNoGravity(false);
+        }
         super.aiStep();
         // unridden: fall slowly with the wings open, like a parrot
         Vec3 v = this.getDeltaMovement();
-        if (!this.isVehicle() && !this.onGround() && v.y < 0.0D) {
+        if (!this.isVehicle() && !this.isCruising() && !this.isResting() && !this.isKnockedOut() && !this.onGround() && v.y < 0.0D) {
             this.setDeltaMovement(v.multiply(1.0D, 0.6D, 1.0D));
         }
         if (this.flapTicks < 100) {
@@ -174,6 +196,18 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     public boolean isSoaring() {
         return this.soarTicks > 0;
+    }
+
+    /** True only while SoarGoal actually owns movement, never during combat, riding or torpor. */
+    public boolean isCruising() {
+        return this.cruising && !this.isKnockedOut() && !this.isVehicle() && !this.isPassenger();
+    }
+
+    public void setCruising(boolean cruising) {
+        this.cruising = cruising;
+        if (!cruising) {
+            this.setNoGravity(false);
+        }
     }
 
     public boolean isResting() {
@@ -197,11 +231,13 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         this.beginSoar();
         this.soarTicks += 1200;
         this.soarHome = this.position();
-        this.setDeltaMovement(heading.scale(0.3D));
+        this.setDeltaMovement(heading.normalize().scale(0.35D));
+        this.soarTarget = this.position().add(heading.normalize().scale(40.0D));
     }
 
     /** The flight is over: glide down and rest for half a minute to a minute and a half. */
     public void endSoar() {
+        this.setCruising(false);
         this.soarTicks = 0;
         this.restTicks = 600 + this.random.nextInt(1200);
         this.soarTarget = null;
@@ -247,7 +283,9 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         }
         if (this.isFlying() && !this.isPassenger()) {
             Vec3 v = this.getDeltaMovement();
-            boolean gliding = v.y < -0.03D && this.flapTicks > 15 && v.horizontalDistanceSqr() > 0.01D;
+            // Level cruising also alternates wing beats and gliding; phase differs between animals.
+            boolean gliding = v.y < 0.035D && v.horizontalDistanceSqr() > 0.04D
+                    && (this.tickCount + this.getId() * 7) % 100 > 30;
             return state.setAndContinue(gliding ? this.glideAnim : this.flyAnim);
         }
         return super.movementAnimation(state);
@@ -270,6 +308,35 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     @Override
     public void travel(Vec3 input) {
+        if (this.isCruising() && !this.level().isClientSide()) {
+            Vec3 target = this.soarTarget != null ? this.soarTarget
+                    : this.position().add(Vec3.directionFromRotation(0, this.getYRot()).scale(32));
+            FlightSteering.Step step = FlightSteering.step(this.position(), this.getDeltaMovement(), this.getYRot(),
+                    target, this.getAttributeValue(Attributes.FLYING_SPEED));
+            this.setYRot(step.yaw());
+            this.yBodyRot = this.getYRot();
+            this.yHeadRot = this.getYRot();
+            this.setXRot(Mth.rotLerp(0.15F, this.getXRot(),
+                    (float) (-Mth.atan2(step.velocity().y, step.velocity().horizontalDistance()) * Mth.RAD_TO_DEG)));
+            this.setDeltaMovement(step.velocity());
+            this.move(MoverType.SELF, step.velocity());
+            this.calculateEntityAnimation(true);
+            this.tryCheckInsideBlocks();
+            return;
+        }
+        if (!this.level().isClientSide() && this.isResting() && this.isFlying() && !this.isVehicle()
+                && !this.isKnockedOut() && !this.isSleeping() && this.getTarget() == null) {
+            // Finish a flight by gliding forward and losing height, instead of braking to an airborne standstill.
+            Vec3 v = this.getDeltaMovement();
+            double speed = Math.max(0.20D, v.horizontalDistance() * 0.985D);
+            Vec3 forward = Vec3.directionFromRotation(0, this.getYRot()).scale(speed);
+            v = new Vec3(forward.x, Math.max(-0.16D, Math.min(v.y, -0.04D) - 0.008D), forward.z);
+            this.setDeltaMovement(v);
+            this.move(MoverType.SELF, v);
+            this.calculateEntityAnimation(true);
+            this.tryCheckInsideBlocks();
+            return;
+        }
         if (!(this.isVehicle() && this.getControllingPassenger() instanceof Player rider)) {
             super.travel(input);
             return;

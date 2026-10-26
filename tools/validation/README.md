@@ -52,6 +52,10 @@ pacote após reiniciar o servidor. Comandos e limites em [`docs/TESTES_MAPA.md`]
 manutenção submersa, além de alimentação e persistência de um animal aquático após reinício. Comandos e limites
 em [`docs/TESTES_DARDOS.md`](../../docs/TESTES_DARDOS.md).
 
+`movement_regression.py` mede voo, separação das manadas e transições para planeio/torpor em servidor real.
+`./gradlew :common:movementRegression` exercita 10.000 passos do controlador de produção e integra a build.
+Evidências e limites em [`docs/TESTES_MOVIMENTO.md`](../../docs/TESTES_MOVIMENTO.md).
+
 `load_profile.py` aumenta a carga por etapas em um servidor descartável compilado a partir de uma revisão fixa.
 Registra eventos reais de ticks pelo JFR integrado, sem mods de perfil adicionais. Comandos, resultados e
 limites em [`docs/PERFIL_LOCAL.md`](../../docs/PERFIL_LOCAL.md).

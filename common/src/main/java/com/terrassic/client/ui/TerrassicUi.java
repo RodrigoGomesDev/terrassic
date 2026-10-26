@@ -92,7 +92,7 @@ public final class TerrassicUi {
         if (hot && active && !primary) {
             g.fill(x + 1, y + h - 2, x + w - 1, y + h - 1, AMBER_600);
         }
-        g.drawCenteredString(font, TerrassicFonts.ui(label), x + w / 2, y + (h - 8) / 2 + 1, rgb(text));
+        centeredLabel(g, font, label, x + w / 2, y + (h - 8) / 2 + 1, text, !primary || !active);
     }
 
     /** A leather button of the Field Notebook; a selected tab shows the colour of the page. */
@@ -109,7 +109,14 @@ public final class TerrassicUi {
             }
         }
         int text = selected ? INK : !active ? INK_SOFT : hot ? AMBER_300 : PAPER;
-        g.drawCenteredString(font, TerrassicFonts.ui(label), x + w / 2, y + (h - 8) / 2 + 1, rgb(text));
+        centeredLabel(g, font, label, x + w / 2, y + (h - 8) / 2 + 1, text, !selected);
+    }
+
+    /** Dark lettering on amber/paper needs a single pass: vanilla's black shadow fills the counters. */
+    private static void centeredLabel(GuiGraphics g, Font font, Component label, int center, int y,
+                                      int color, boolean shadow) {
+        Component styled = TerrassicFonts.ui(label);
+        g.drawString(font, styled, center - font.width(styled) / 2, y, rgb(color), shadow);
     }
 
     /** A tab: stone label; the selected one sits raised with an amber underline. */

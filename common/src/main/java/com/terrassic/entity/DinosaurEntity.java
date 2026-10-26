@@ -214,6 +214,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
+        this.moveControl = new com.terrassic.entity.ai.DinosaurMoveControl(this);
         this.entityData.set(DATA_FEMALE, this.random.nextBoolean());
         if (!level.isClientSide()) {
             this.rollSize();
