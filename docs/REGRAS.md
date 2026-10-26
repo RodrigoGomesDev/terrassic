@@ -41,7 +41,7 @@ padrão bem mais cheia: voadores voando de verdade pelo céu, muitos animais no 
 | Criação | Frequência de migração | 1,0 | 0 a 5 | Quão seguido as manadas migram (0 = não migram) |
 | Ecossistema | Densidade de vida | 1,0 | 0 a 5 | Multiplica todos os alvos do ecossistema (0 = desliga o spawner novo) |
 | Ecossistema | Terrestres | 1,0 | 0 a 5 | Alvo de terrestres ao redor de cada jogador (18 na densidade 1) |
-| Ecossistema | Voadores | 1,0 | 0 a 5 | Alvo de voadores no céu (8) |
+| Ecossistema | Voadores | 1,0 | 0 a 5 | Alvo regional de voadores no céu (4); reposição a cada 20 s |
 | Ecossistema | Marinhos | 1,0 | 0 a 5 | Alvo de criaturas no mar (12) |
 | Ecossistema | Filhotes nos bandos | 1,0 | 0 a 5 | Parte dos bandos que é filhote (18% dos membros depois do primeiro) |
 | Ecossistema | Limite de criaturas | 400 | 50 a 2000 | Máximo de selvagens carregados no mundo (desempenho) |
@@ -60,8 +60,13 @@ Detalhes de como cada uma age no código:
 
 ## O ecossistema (spawner novo)
 
-`world/EcoSpawner`: a cada 2 segundos, para cada jogador, conta as criaturas selvagens num raio de 80 blocos em
-três tipos e, onde faltar, põe um grupo novo entre 36 e 80 blocos de distância:
+`world/EcoSpawner`: terrestres e marinhos são contados a cada 2 segundos num raio de 80 blocos;
+quando faltam, um grupo entra entre 36 e 80 blocos. Para o céu, a regra é regional: a cada 20 segundos,
+conta todos os voadores selvagens carregados até 192 blocos em X/Z, em toda a altura do mundo.
+O alvo padrão é 4, compartilhado por jogadores próximos; animais antigos e nomeados também entram
+na contagem enquanto não forem domados. Um bando novo entra a 64–112 blocos, evitando proximidade
+e a linha de visão desobstruída dos jogadores. A geração natural/de chunks não cria outros voadores
+por fora desse orçamento. Habitat, pesos e proporções de espécies continuam vindo das tabelas do bioma:
 
 - **Espécies do próprio bioma**: usa a lista de spawn do bioma (tabela WORLD do `gen_species.py`, biomas do
   Cretáceo da v0.8, `config/terrassic.json`), com os mesmos pesos e tamanhos de grupo. Cada bioma mantém sua fauna.
@@ -70,15 +75,17 @@ três tipos e, onde faltar, põe um grupo novo entre 36 e 80 blocos de distânci
 - **Mar**: grupo em água aberta e funda o bastante, entre 6 e 40 blocos abaixo do nível do mar.
 - Respeita a regra de jogo `doMobSpawning` e o limite de criaturas.
 - As criaturas postas por ele são **errantes** (salvo "Roamer"): como os dinos selvagens do ARK, somem quando
-  todos os jogadores estão a mais de 96 blocos, a não ser que sejam domesticadas ou ganhem nome. Assim a população
-  segue os jogadores em vez de se acumular. Os animais que nascem com o mundo continuam permanentes, como as vacas.
+  podem desaparecer longe dos jogadores pelo mecanismo vanilla (a regra do mod permite isso após 96 blocos).
+  Domados e nomeados são preservados. Os animais antigos/naturais permanentes continuam salvos;
+  o novo spawner os conta para impedir reposição adicional, sem limpá-los do mundo.
   Os marinhos selvagens agora só somem a mais de 64 blocos (antes sumiam a qualquer distância além de 32).
-- Errantes nascem com ninho em 1 de 20 bandos (os do mundo, 1 de 5), vezes a regra de ninhos.
+- Errantes não deixam ninhos. Populações naturais permanentes continuam seguindo a regra de ninhos.
 
 ## Voadores no céu (SoarGoal)
 
 - Selvagens adultos voam alto em **bandos**: o de menor id num raio de 32 blocos lidera, escolhendo pontos 24 a 56
-  blocos à frente, 14 a 40 acima do chão, virando aos poucos; os outros mantêm cada um seu lugar na formação.
+  blocos à frente, 18 a 30 acima do chão. Os seguidores acompanham a trajetória do líder com afastamento
+  entre vizinhos. Curvas limitadas, avanço contínuo e planeio descendente substituem as paradas nos pontos de destino.
 - Um voo dura de 1 a 3 minutos; depois planam até o chão e descansam de 30 s a 1,5 min. Nunca descem sobre o mar
   aberto (continuam voando até ter terra embaixo). Voltam para perto de onde decolaram quando se afastam 72 blocos.
 - Voam de dia (de noite os noturnos); de noite pousam. Não puxam chunks não carregados: na borda, dão a volta.

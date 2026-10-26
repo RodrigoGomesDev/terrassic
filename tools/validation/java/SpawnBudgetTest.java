@@ -46,6 +46,23 @@ public final class SpawnBudgetTest {
         require(SpawnBudget.allowance(18, 0, 400, 399) == 1, "last global slot");
         require(SpawnBudget.allowance(18, 17, 400, 0) == 1, "last local slot");
         require(SpawnBudget.allowance(18, 0, 400, 400) == 0, "full world");
+        for (int i = 0; i < 1000; i++) {
+            int hash = random.nextInt();
+            int rounds = 0;
+            for (long tick = 0; tick < SpawnBudget.SKY_PERIOD; tick++) {
+                if (SpawnBudget.isTurn(tick, hash, SpawnBudget.SKY_PERIOD)) {
+                    rounds++;
+                    require(SpawnBudget.isTurn(tick, hash, 40), "sky schedule must fall inside the player's base slot");
+                }
+            }
+            require(rounds == 1, "sky cannot replenish every two seconds");
+        }
+        require(SpawnBudget.SKY_RADIUS > SpawnBudget.SKY_MAX_DISTANCE + 64,
+                "regional count must retain birds after they leave their spawning zone");
+        require(SpawnBudget.allowance(SpawnBudget.SKY_TARGET, 40, 400, 40) == 0,
+                "existing overcrowded skies must never receive another flock");
+        require(SpawnBudget.allowance(SpawnBudget.SKY_TARGET, 4, 400, 4) == 0,
+                "nearby players share one regional sky budget");
         System.out.println("PASS: 1,000 player schedules and 10,000 group budget scenarios");
     }
 }

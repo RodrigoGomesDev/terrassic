@@ -423,9 +423,14 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     // ------------------------------------------------------------------ spawning
 
-    /** Spawn rule for coast flyers: sand, gravel, stone or grass, in daylight. */
+    /** Wild sky populations belong to EcoSpawner. Explicit placement retains the daytime ground check. */
     public static boolean checkFlyerSpawnRules(EntityType<? extends DinosaurEntity> type, LevelAccessor level,
                                                MobSpawnType reason, BlockPos pos, RandomSource random) {
+        // EcoSpawner is the population authority for wild flyers; biome tables still supply habitat/weights.
+        // Otherwise every newly generated chunk can add persistent flocks outside the regional sky budget.
+        if (reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) {
+            return false;
+        }
         BlockState below = level.getBlockState(pos.below());
         boolean ground = below.is(BlockTags.SAND) || below.is(Blocks.GRAVEL) || below.is(BlockTags.BASE_STONE_OVERWORLD)
                 || below.is(BlockTags.ANIMALS_SPAWNABLE_ON);

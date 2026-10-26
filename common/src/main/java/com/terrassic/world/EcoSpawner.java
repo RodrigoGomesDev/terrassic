@@ -22,11 +22,13 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.HitResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,12 +36,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The living ecosystem (docs/REGRAS.md, "Ecossistema"): keeps the land, the sky and the sea around every player
- * populated, the way ARK keeps its maps full, on top of the vanilla spawning (which mostly places animals once,
- * when chunks are generated).
+ * The living ecosystem (docs/REGRAS.md, "Ecossistema"). Land and sea augment vanilla populations;
+ * wild flyers use this spawner exclusively so chunk generation cannot bypass the sky budget.
  *
  * <p>Every two seconds per player, staggered by UUID, it counts wild creatures within {@link #RADIUS} blocks in three kinds
- * (land, flyers, sea) and, where a kind is below its target, spawns one group of it 36 to 80 blocks away:
+ * (land and sea) and, where a kind is below its target, spawns one group of it 36 to 80 blocks away.
+ * The sky is counted over a 192-block region and the full world height, once every twenty seconds per player,
+ * with a default shared regional target of four and insertion 64 to 112 blocks away, outside direct view:
  * <ul>
  *   <li>the species come from the biome's own spawn list (the WORLD table of gen_species.py, the Cretaceous biomes,
  *       config/terrassic.json), weighted the same way, so every biome keeps its fauna;</li>
@@ -50,7 +53,8 @@ import java.util.Map;
  * Targets scale with the world rules: {@link Rule#SPAWN_DENSITY} times the kind's own multiplier; nothing spawns
  * once the world holds {@link Rule#MAX_CREATURES} wild creatures. Creatures placed here are "roamers": like
  * ARK's wild dinos they despawn once every player is far away (DinosaurEntity.removeWhenFarAway), unless tamed or
- * named, so the population follows the players instead of piling up. The doMobSpawning game rule turns it off.
+ * named, so the population follows the players instead of piling up. Existing persistent animals count toward
+ * the target but are never culled by this spawner. The doMobSpawning game rule turns it off.
  */
 public final class EcoSpawner {
     /** Ticks between spawn rounds. */
@@ -61,7 +65,6 @@ public final class EcoSpawner {
     private static final int MAX_DISTANCE = 80;
     /** Wild creatures of each kind around a player at density 1. */
     private static final int LAND_TARGET = 18;
-    private static final int FLYER_TARGET = 8;
     private static final int SEA_TARGET = 12;
     /** Spot searches per kind per round before giving up until the next round. */
     private static final int TRIES = 4;
@@ -129,11 +132,10 @@ public final class EcoSpawner {
             AABB box = new AABB(player.getX() - RADIUS, Math.max(level.getMinBuildHeight(), player.getY() - RADIUS), player.getZ() - RADIUS,
                     player.getX() + RADIUS, Math.min(level.getMaxBuildHeight(), player.getY() + RADIUS), player.getZ() + RADIUS);
             int land = 0;
-            int flyers = 0;
             int sea = 0;
             for (DinosaurEntity d : level.getEntitiesOfClass(DinosaurEntity.class, box, e -> !e.isTame())) {
                 if (d instanceof FlyingDinosaur) {
-                    flyers++;
+                    continue;
                 } else if (d instanceof SwimmingDinosaur) {
                     sea++;
                 } else {
@@ -144,9 +146,16 @@ public final class EcoSpawner {
                 spawnRound(level, player, Kind.LAND, rules, random,
                         SpawnBudget.allowance(target(LAND_TARGET, density, rules.get(Rule.LAND_SPAWNS)), land, cap, WILD.get(level)));
             }
-            if (flyers < target(FLYER_TARGET, density, rules.get(Rule.FLYER_SPAWNS))) {
+            if (SpawnBudget.isTurn(time, player.getUUID().hashCode(), SpawnBudget.SKY_PERIOD)) {
+                // Count the whole visible sky, including birds that left the inner 80-block replenishment zone.
+                AABB sky = new AABB(player.getX() - SpawnBudget.SKY_RADIUS, level.getMinBuildHeight(),
+                        player.getZ() - SpawnBudget.SKY_RADIUS, player.getX() + SpawnBudget.SKY_RADIUS,
+                        level.getMaxBuildHeight(), player.getZ() + SpawnBudget.SKY_RADIUS);
+                int regionalFlyers = level.getEntitiesOfClass(FlyingDinosaur.class, sky,
+                        e -> e.isAlive() && !e.isTame()).size();
+                int skyTarget = target(SpawnBudget.SKY_TARGET, density, rules.get(Rule.FLYER_SPAWNS));
                 spawnRound(level, player, Kind.FLYER, rules, random,
-                        SpawnBudget.allowance(target(FLYER_TARGET, density, rules.get(Rule.FLYER_SPAWNS)), flyers, cap, WILD.get(level)));
+                        SpawnBudget.allowance(skyTarget, regionalFlyers, cap, WILD.get(level)));
             }
             if (sea < target(SEA_TARGET, density, rules.get(Rule.SEA_SPAWNS))) {
                 spawnRound(level, player, Kind.SEA, rules, random,
@@ -165,7 +174,9 @@ public final class EcoSpawner {
         }
         for (int i = 0; i < TRIES; i++) {
             double angle = random.nextDouble() * Math.PI * 2.0D;
-            double distance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
+            double distance = kind == Kind.FLYER
+                    ? SpawnBudget.SKY_MIN_DISTANCE + random.nextDouble() * (SpawnBudget.SKY_MAX_DISTANCE - SpawnBudget.SKY_MIN_DISTANCE)
+                    : MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
             int x = Mth.floor(player.getX() + Math.cos(angle) * distance);
             int z = Mth.floor(player.getZ() + Math.sin(angle) * distance);
             BlockPos column = new BlockPos(x, player.getBlockY(), z);
@@ -264,7 +275,11 @@ public final class EcoSpawner {
             double px = x + 0.5D + side.x * lateral - dir.x * row * spacing * 0.7D;
             double py = y + (i == 0 ? 0.0D : random.nextGaussian() * 1.5D);
             double pz = z + 0.5D + side.z * lateral - dir.z * row * spacing * 0.7D;
+            Vec3 position = new Vec3(px, py, pz);
             if (Math.abs(py - playerY) > RADIUS || !level.isPositionEntityTicking(BlockPos.containing(px, py, pz))) {
+                continue;
+            }
+            if (visibleOrTooClose(level, position)) {
                 continue;
             }
             if (!level.noCollision(data.type.getAABB(px, py, pz))) {
@@ -286,6 +301,20 @@ public final class EcoSpawner {
             }
         }
         return spawned;
+    }
+
+    /** Do not materialize a flock beside another player, or in an unobstructed direction they are watching. */
+    private static boolean visibleOrTooClose(ServerLevel level, Vec3 position) {
+        for (ServerPlayer player : level.players()) {
+            if (player.isSpectator()) continue;
+            Vec3 relative = position.subtract(player.getEyePosition());
+            double distance = relative.lengthSqr();
+            if (distance < SpawnBudget.SKY_MIN_DISTANCE * SpawnBudget.SKY_MIN_DISTANCE) return true;
+            if (distance < 128 * 128 && relative.normalize().dot(player.getLookAngle()) > 0.35D
+                    && level.clip(new ClipContext(player.getEyePosition(), position, ClipContext.Block.COLLIDER,
+                    ClipContext.Fluid.NONE, player)).getType() == HitResult.Type.MISS) return true;
+        }
+        return false;
     }
 
     // ------------------------------------------------------------------ sea
