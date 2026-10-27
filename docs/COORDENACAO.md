@@ -135,6 +135,17 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
+Piloto Codex — 27/10: primeiro passe do T. rex e estudo de Alex's Caves em
+`docs/estudos/07_TREX_PILOTO.md`, `tools/modelgen/pilots/` e `art/pilotos/trex/v1/`.
+Escolha desta etapa: piloto isolado para revisão visual antes de integrar classes-base. Modelo 139→147
+cubos, tórax articulado, pálpebras e camadas de volume; queda, cadáver imóvel, nocaute e recuperação em
+fases. Entrega inclui Blockbench, GIFs de comparação e diorama 3D com a logo do Terrassic. Integridade
+passou; recursos de produção intactos por hash. Não houve alteração de Java ou teste no Minecraft.
+Nenhum asset/código do Alex's Caves foi copiado; identidade local preservada. Arquivos liberados.
+Próximo passe: apoio dos pés, repouso da cabeça e caminhada no rig novo; depois integração exclusiva
+do T. rex, reservando classes-base para morte/carcaça, recuperação e olhar. As outras 58 espécies ficam
+para depois da revisão do piloto. Não instalar apenas os JSONs: o contrato de controle ainda precisa mudar.
+
 Estudo Codex — 27/10: concluída a revisão pedida pelo Rodrigo sobre morte, deitado e animações gerais.
 Entrega: `docs/estudos/06_ANIMACOES.md`, `tools/validation/audit_animations.py` e evidências em
 `art/estudos/animacoes/v1/` (relatório de 59 espécies, prancha e GIF do estado atual). Fontes de animação

@@ -1,0 +1,75 @@
+{
+  "pilot": "T. rex v1, isolated, not installed in the mod",
+  "cubes": 147,
+  "bones": 26,
+  "offline_ground_correction_range_px": [
+    -5.530065454632101,
+    18.87102296163595
+  ],
+  "production_asset_count": 4148,
+  "production_assets_sha256": "19778a591ed048cdbb93cfe71c667ee8743a55f86f46c43287379464ce981d07",
+  "clips": {
+    "death": {
+      "duration_s": 2.6,
+      "min_y_px": -0.07008188705038876,
+      "max_lowest_y_px": 0.21121769448730987
+    },
+    "knockout": {
+      "duration_s": 2.6,
+      "min_y_px": -0.07008188705038876,
+      "max_lowest_y_px": 0.21121769448730987
+    },
+    "dead": {
+      "duration_s": 1,
+      "min_y_px": -4.79047927370857e-05,
+      "max_lowest_y_px": -4.79047927370857e-05
+    },
+    "wake": {
+      "duration_s": 2.8,
+      "min_y_px": -0.13751681416615824,
+      "max_lowest_y_px": 0.22734864551164916
+    },
+    "sit": {
+      "duration_s": 4,
+      "min_y_px": 6.835555399514748e-06,
+      "max_lowest_y_px": 6.835555399514748e-06
+    },
+    "sleep": {
+      "duration_s": 4,
+      "min_y_px": 6.835555399514748e-06,
+      "max_lowest_y_px": 6.835555399514748e-06
+    },
+    "lie_down": {
+      "duration_s": 2.0,
+      "min_y_px": -0.005239041004987399,
+      "max_lowest_y_px": 0.10388791265175035
+    },
+    "stand_up": {
+      "duration_s": 2.0,
+      "min_y_px": -0.005268299588800929,
+      "max_lowest_y_px": 0.10388791265175391
+    }
+  },
+  "source_hashes": {
+    "tools/modelgen/pilots/preview_trex.py": "2e3a6aedd5049056b6d115b18b62dcab3f3fa418fa6b7545577da0b74f099ae4",
+    "tools/modelgen/pilots/trex_v1.py": "f9ebe8399f1b375c2cf586eb503426639a20db26003c89d5d61210e19b3c2262",
+    "tools/modelgen/species/tyrannosaurus.py": "72caa4e77b4601ddbff87b3198f34834773e6deb32babdedc5f2c799f708d74c"
+  },
+  "production_assets_unchanged": true,
+  "output_hashes": {
+    "README.md": "20b9987bc3aede9bff58482c2e553ad0cd6a9de8acede029ae79f3862ded634a",
+    "trex_antes_depois.gif": "5199bd8f8fd13a3241bf36b8ca077367a16e78a8b82b61333ff40ebf41768793",
+    "trex_death.gif": "467589b7221e53e95d013a9ad8cceb27f2b9e26911ab3a867771a8d1232d8130",
+    "trex_diorama.blend": "594c4eb1bc2cf5e3084d3ee689c58f1a69f07a1c769c6dc9d08d66e9446e9371",
+    "trex_diorama.png": "aa3b85319d102a98b2cef15aae88b07113c0aaa849d1cc3e9f53bc6952edec7b",
+    "trex_diorama_sem_logo.png": "f7983238bfd1bfdb8e2f2d65cada79ed7a817f8ecca8b9bdf38d793203312191",
+    "trex_lie_down.gif": "5f7f32cfcb96f4f3b413961cbac3126ed5dd7cb674e3217e62a4671247d320bb",
+    "trex_poses.png": "099fa8680fd8aedade557635fb9a3b9e7ad3610659bd5e3ea668ceda6dec5f5e",
+    "trex_wake.gif": "5a201a023c3d5545f6a4c1bca192cf09a5d4891cc9fc8170bc3bef5a391b557e",
+    "tyrannosaurus.animation.json": "34c1db70ea1e4e96c1f6d8f6b17649ce42a926b6f2070f9352457bbc0901d038",
+    "tyrannosaurus.bbmodel": "6f6e7bd2d339a0388137f0ea5b94c1f5846f510a8e468d17322bff8ce37df956",
+    "tyrannosaurus.geo.json": "1dec99f1cc146c1cd62bc4357d8560fac490d95e10eebafd5e1ca60f96899e67",
+    "tyrannosaurus_female.png": "dfe45c6572abe8a930ee463dae27370af2f2de5ba1cad2b1db18e19bd9b3b879",
+    "tyrannosaurus_male.png": "73f7c3b23948840446150acc8adf50ff129c38c73824bb95180f3f3309f3ab19"
+  }
+}
