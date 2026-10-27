@@ -1,0 +1,5163 @@
+{
+  "base_commit": "94d8014b5a764bafe4181c024bd25ce34257c86e",
+  "method": "modelgen sources, flat y=0, Catmull-Rom preview, male, no saddle; not game validation",
+  "species_count": 59,
+  "sources_unchanged": true,
+  "source_hashes": {
+    "common/src/main/java/com/terrassic/client/BuildingBlocksClient.java": "29d44eee19df58a6408ea843de927bedc356f8ac37956809a5f71eb9369f581e",
+    "common/src/main/java/com/terrassic/client/CarcassRenderer.java": "e5a01ff876f2bc90f828e127c9d868796af813767ff62cce2f2ef4c6cd5b56f2",
+    "common/src/main/java/com/terrassic/client/ClientConfig.java": "239ad9499c3984cb56b9bf72aad2ac4fbd501c81e6777340a69323cd1859aefe",
+    "common/src/main/java/com/terrassic/client/ClientHooks.java": "a26def2da46f1a8cfd1947e93db6004324f4893c719a1fae768d67694931ff64",
+    "common/src/main/java/com/terrassic/client/ClientIslandMap.java": "48b329ab19a07ec97493583ee5205c7e4fca78801509782807f2181db949efa7",
+    "common/src/main/java/com/terrassic/client/ClientResearch.java": "dc9103147b7a7bb71e431356926678250e6a15fe32982ab67d980f9defe214a2",
+    "common/src/main/java/com/terrassic/client/ClientRules.java": "d09a0b5d07ff2e4622d914b371fc583296090b31a8cbdcda0fc6edf45c73a24f",
+    "common/src/main/java/com/terrassic/client/DinoGeoModel.java": "c6cb9ab99d54664fa91525ab0a19d23eb2198fe1c466031b5af07c5d7f188171",
+    "common/src/main/java/com/terrassic/client/DinosaurRenderer.java": "9ec51520e83d60c081a7c253150aad4c32e233f15d1a76c1d99ffa536297949f",
+    "common/src/main/java/com/terrassic/client/EraFilter.java": "4fb4856da98b041759a74c3ce3b9f264817ea03f712c87107b1dd8c16c593de5",
+    "common/src/main/java/com/terrassic/client/GuideHabitats.java": "9414ae3ffa8f95502eee72d928fd141b60a3f6a274d90b2cee1198c5a25a2b8f",
+    "common/src/main/java/com/terrassic/client/IntroScreen.java": "3ab30ae1a1786f7a2a26cd6b9a8d8bd7920f435f8e2fccf6801a706cd80cea4a",
+    "common/src/main/java/com/terrassic/client/LeapClient.java": "4cc9a95fa5e378a5055c6aca648f801c458688f6a1a8ec401e5bf853332c4d4f",
+    "common/src/main/java/com/terrassic/client/MeteorRenderer.java": "8d9dec56e353330555a4d57fc013028e9070ac6f6c171a2c9b051d4ad11a95c9",
+    "common/src/main/java/com/terrassic/client/NotebookScreen.java": "ad6b2190fdd936a722efa84b2f2c921b359abf6aef2f1431d0a39e74d004d41e",
+    "common/src/main/java/com/terrassic/client/RiftLayer.java": "62abd59fa46d8e7ebd771bd84f5c5fc15a8a5d4149f0f20bc9c9f3413dacad9f",
+    "common/src/main/java/com/terrassic/client/RiftStormClient.java": "91c7f0d87059db9081785c221979430a4c25452baf8ee9518b69115a3adc1f22",
+    "common/src/main/java/com/terrassic/client/RulesScreen.java": "f01548c21a5b75f4bbb045b5492e394af737e803cea379d522d23d656ddf6d91",
+    "common/src/main/java/com/terrassic/client/SpeciesToast.java": "e15c6acd7cc4e0d92c8ed0f75085c3f5010ad18a574183058addd560442191fb",
+    "common/src/main/java/com/terrassic/client/TerrassicClient.java": "72310862131b3f85d5d226b27f5b3e4837b7abfe30260913d7a4c2ebe6ba44dd",
+    "common/src/main/java/com/terrassic/client/TerrassicHud.java": "193562c5c58e025adcd307bf537dfa50eae792758b2569d0006c593fa8585c6f",
+    "common/src/main/java/com/terrassic/client/TerrassicTitle.java": "1a480df107aca1585c329d5fe8b37c0ad17b3ef9cca31356fbf33fbc06936155",
+    "common/src/main/java/com/terrassic/client/TerrassicWorldClient.java": "79abbdf0480c0125a1a28512ee05bbe8ee6ad8cc7d450ec0ed9621d5d644cd83",
+    "common/src/main/java/com/terrassic/client/ThrownSpearRenderer.java": "61cfc07655eeea0813de05e86f9db94a43b666831782a2b779ea23d2e8b7b89d",
+    "common/src/main/java/com/terrassic/client/title/TerrassicMenuScreen.java": "7165d6bae36476d8e9099bdd49020b1f88431e8d3ab7bdef4d8ce8483fd3af54",
+    "common/src/main/java/com/terrassic/client/ui/TerrassicButton.java": "b671e51961d5e6a1ef1cb0594fe56c59278fa520650a46656ab9acb1c37f520b",
+    "common/src/main/java/com/terrassic/client/ui/TerrassicFonts.java": "e8404600aee6c73e738e5b30fb39fa59b983352ea620bbb9cf816f85f29b8675",
+    "common/src/main/java/com/terrassic/client/ui/TerrassicPalette.java": "ef402dd9932b41f64cc5b9fe631eaabba124d74f7695428b999cb917b113b7a4",
+    "common/src/main/java/com/terrassic/client/ui/TerrassicUi.java": "24c29f3cb160ce099d127b634d8e3318313eb7c184ccda402570d683fc331412",
+    "common/src/main/java/com/terrassic/entity/Alamosaurus.java": "a3ded4675d091ab6a9bf80e1366121ec04dea9d7e2b576d6f990e8ec4cb6c857",
+    "common/src/main/java/com/terrassic/entity/Albertosaurus.java": "b434004cc1ad8e2344f9535fb39cc58c6d8bb52cdc3d3db975b9e310eb1f3498",
+    "common/src/main/java/com/terrassic/entity/Ankylosaurus.java": "92f1658072f6b4013b0887d9d4e12a154203538b9887ffec4e696691584d3dbd",
+    "common/src/main/java/com/terrassic/entity/Archelon.java": "40d165cb12b11662cca5399968d56d7c6409a97f72d6e637186ae2caa1e653e7",
+    "common/src/main/java/com/terrassic/entity/Argentinosaurus.java": "4057dee47043eb9ec87fd8405a04ef7e9a35001100d2d72f8719e3c5337fe897",
+    "common/src/main/java/com/terrassic/entity/Basilemys.java": "148a40e1b8e06c0d662437cedc03f768c3733aed27fe02dfad336e386ac24de9",
+    "common/src/main/java/com/terrassic/entity/Baurusuchus.java": "2d5e4a31dbbf3a1968fdd2932e1fc33f9a6ae224799089e9db1950419a89c5ee",
+    "common/src/main/java/com/terrassic/entity/Brachiosaurus.java": "53da6ea5cc0aa93432334d5edaf4aebb16ab42fd7d69f7872aa8c47750b04a07",
+    "common/src/main/java/com/terrassic/entity/CarcassEntity.java": "465fa317efbce34e084e5beb550d3a4eaa58d9033fa33c4b345f7587a4fe3306",
+    "common/src/main/java/com/terrassic/entity/Carcharodontosaurus.java": "1da7700c9f9fb43f89c801aa2df4377b7de170bca4932884e11ed3959921659a",
+    "common/src/main/java/com/terrassic/entity/Carnotaurus.java": "db2385f879e23fe74098a80f480306021fb0238038f63af5106f9d3d04185569",
+    "common/src/main/java/com/terrassic/entity/Citipati.java": "b2f2b5b4521d6a6e08e80e9eae6f63d7518006d105598a73abde6e9963a022f0",
+    "common/src/main/java/com/terrassic/entity/Compsognathus.java": "2fcdd2f507ead89bb7a4ff41a53a5611e9e75627bfb2a29140541e39191a3fd4",
+    "common/src/main/java/com/terrassic/entity/Corythosaurus.java": "bfc0217731258fe77f658f916e10bc746224e4a4343ca7db1d40293f7d3fb024",
+    "common/src/main/java/com/terrassic/entity/Dakotaraptor.java": "75abb7f28c392070da91b430eb04e0884e2db2189985f3e6d72f2a562ee0fbb2",
+    "common/src/main/java/com/terrassic/entity/Daspletosaurus.java": "ef0b74bb06b7933b5a022cef61343f3adc8083bb8ccc39f9d765aeebe96921f3",
+    "common/src/main/java/com/terrassic/entity/Deinocheirus.java": "d224ed27672d7ace9731cd188becacc63f49181217463c9cf2dcd98142bd3a99",
+    "common/src/main/java/com/terrassic/entity/Deinosuchus.java": "6c765e6dd7a691c0ef901bd27445f2863b1ac5c1a7c9bed9f127525b4e138684",
+    "common/src/main/java/com/terrassic/entity/Didelphodon.java": "514a173985660d86d7a348bf3851cf0a73dbb240a5d9358b38aa8cd7d9657e87",
+    "common/src/main/java/com/terrassic/entity/Dilophosaurus.java": "fd6de5b591596d9e8af84c395e3beaa694825a112bef02f090b2b38d157dca77",
+    "common/src/main/java/com/terrassic/entity/DinosaurEntity.java": "32dc73779a5011da92fe2e43af651a3382fa3efcd239c1818cd417d749a48d24",
+    "common/src/main/java/com/terrassic/entity/Dreadnoughtus.java": "f47c31edd7cfaeacc34f90e8b88f308a53af22fa334b0b926aede747a7fdd011",
+    "common/src/main/java/com/terrassic/entity/Edmontosaurus.java": "3bd76502d998c3fea237d881a5aeec9f77042a3ce1e76316844750c0a9b51dbd",
+    "common/src/main/java/com/terrassic/entity/Elasmosaurus.java": "4de03895cebdb534b554109e7d1aae1d715ecd0a60ec6c9b058094d3e220c1a5",
+    "common/src/main/java/com/terrassic/entity/Enchodus.java": "d6453d0b930916d67e1beccbc5a11725870c1249065e93f3ca1fa5e73ad103f8",
+    "common/src/main/java/com/terrassic/entity/Euoplocephalus.java": "dd2ec8bb9d19ecf87b1c0cee491ced6b7c00a3a7af07b05588fd745a9630cf48",
+    "common/src/main/java/com/terrassic/entity/FlyingDinosaur.java": "ddb5dadd43c4586b535173b94be05b61cc92b562b515a36cb08c1c308e0cb023",
+    "common/src/main/java/com/terrassic/entity/Gallimimus.java": "c6aba519d0c8dd34c9dbffa0731caae78260cd0f128085cd0b5d890f12979c1e",
+    "common/src/main/java/com/terrassic/entity/Giganotosaurus.java": "7497b4f49587cca0ac80b1f8d4ae57ede48242037036f8f889617d6cf37b7267",
+    "common/src/main/java/com/terrassic/entity/Hatzegopteryx.java": "a246bf5730d7aca71d349ed80b49c72d9bd4edd80121a779c02a7b38be8f145e",
+    "common/src/main/java/com/terrassic/entity/HerbivoreDinosaur.java": "58fca1efc845fbe0e29b5c825ed397af36ba943c66c5b85090093fab9fffc3f9",
+    "common/src/main/java/com/terrassic/entity/Hesperornis.java": "41c5cee2fad78a1e965ff4a106777eff7de60cc892e786fd7fc626bb69b60778",
+    "common/src/main/java/com/terrassic/entity/Ichthyornis.java": "52794ef9be5367e43cd534c36ad9c23efdbb442635f16ed1550e2a3a9464ffaf",
+    "common/src/main/java/com/terrassic/entity/Lepisosteus.java": "b2ed54d128b169095029add17982ad63baabcca391293b75162b75e2366b724d",
+    "common/src/main/java/com/terrassic/entity/Leptoceratops.java": "6b82d958a79567fdbaf3a6760d36c9992ab1e2105d68dba50006d4045d5f3ac8",
+    "common/src/main/java/com/terrassic/entity/Maiasaura.java": "84bd4eda53949dd6b6a0dc8f38be243a258d4bbdf189a1aebdd6e5245a9387f2",
+    "common/src/main/java/com/terrassic/entity/Majungasaurus.java": "ec08eaf8cce7aab29a0ccd80224f3de003ba9ac518946556ecfdf753f40d7ba1",
+    "common/src/main/java/com/terrassic/entity/Mesodma.java": "99b0c9a65cbd02d83401b3410e7e823885d2bbea4d6d27ff7e08b222f4ef6456",
+    "common/src/main/java/com/terrassic/entity/Mononykus.java": "c3ac08c1eb8f61a1182e98beb8dfd679df5c9988872e63f49907692f2db9815d",
+    "common/src/main/java/com/terrassic/entity/Mosasaurus.java": "688fb0f5c7f2d51679479c79e8a9e1f2cded11316cc57b9e98fdc217a75ca168",
+    "common/src/main/java/com/terrassic/entity/Opisthocoelicaudia.java": "85b7634d02a7ed851919053c98f72b417238636d43a77eb8d9f192065683b1f8",
+    "common/src/main/java/com/terrassic/entity/Oviraptor.java": "b027c2041c7f3d9790ed11d51582898ad3e9c57c445cc459377ea5020b95558e",
+    "common/src/main/java/com/terrassic/entity/Pachycephalosaurus.java": "8dafea555e9b7fef43ed75c36612d808cec10350654fafdfa6854794ecaaa125",
+    "common/src/main/java/com/terrassic/entity/Pachyrhinosaurus.java": "a030b41bf34ca91349e8b1615d4bea2b21100ce52a7fef8d5a3998d63bd2fe81",
+    "common/src/main/java/com/terrassic/entity/Parasaurolophus.java": "3ea2cc6481a2486bc602d6bbff36b7e71b5bc2b9ed813a9c4b076273b8849785",
+    "common/src/main/java/com/terrassic/entity/PredatorDinosaur.java": "f85ebad0e1d8fe8484f38548b8a8d00d18375e1dd5e412da805830f20a41c01b",
+    "common/src/main/java/com/terrassic/entity/Protoceratops.java": "fb1142cdc5021cc97132e04d4e396e1e8fa5e881c1aa87b323cc7f52eb9bcebe",
+    "common/src/main/java/com/terrassic/entity/Pteranodon.java": "5c8c3162cf337425819da70689992a173c548b1f283b6841856a458d12de1151",
+    "common/src/main/java/com/terrassic/entity/Quetzalcoatlus.java": "119b37cb6eef56ab5afbcae09c465062402ef34e94d2852ea45489d2dc99a5ae",
+    "common/src/main/java/com/terrassic/entity/Saltasaurus.java": "7dc271e6ef1603f8b5cf7627020812606f11fd086dde4eac0556d01ceaf730f5",
+    "common/src/main/java/com/terrassic/entity/Spinosaurus.java": "6b3dc098fabd641fca6f5bd553d5e865f06597be4a0a73c63d1809dbd0d6b18f",
+    "common/src/main/java/com/terrassic/entity/Stegosaurus.java": "f66c4f70f4ac998cc6fdd7aa5afcf73545800aeb53756c96ad6a2a9fdae496db",
+    "common/src/main/java/com/terrassic/entity/Struthiomimus.java": "7b9d203143dfc0e345125a67b51f0f4e0c3207aa0e1979d1120aaae95cec28bd",
+    "common/src/main/java/com/terrassic/entity/Styracosaurus.java": "5cbc0c1804b422e82d20b4251d09344baa964319e9a047336dcc201e148da4ab",
+    "common/src/main/java/com/terrassic/entity/SwimmingDinosaur.java": "92db7836107a634bad1785374b6f9f629efd4f0b66a1495895aceaa5674e9608",
+    "common/src/main/java/com/terrassic/entity/Tarbosaurus.java": "fa7c2b3ba6ee9b707de50d9fc17fc1a40f9042159ed47a5064d110c5186b9720",
+    "common/src/main/java/com/terrassic/entity/Therizinosaurus.java": "899cda0f388005329d8076ab12cdfe31f944cd5fd44509962ba895465113eb9c",
+    "common/src/main/java/com/terrassic/entity/Thescelosaurus.java": "6cfec2395bf9bae38f0cc33904bec017229e59b7d318c08eff3e9cfeb4d9f2bd",
+    "common/src/main/java/com/terrassic/entity/ThrownSpear.java": "8a0c2461ab1f6fc946f59e1412518302f9c9e8154bdf5b1fe1dc0b97975de386",
+    "common/src/main/java/com/terrassic/entity/TranqDart.java": "2bd83cba1cb815ff663981bb9920708359a416bec5a8d178230e6b03c6018803",
+    "common/src/main/java/com/terrassic/entity/Triceratops.java": "3d726a000d675b9ee4e041551a2a8810f4f6c31c361f0d02a14c3309a8bc2007",
+    "common/src/main/java/com/terrassic/entity/Troodon.java": "40aac62d825290cd2e5133115262f7319614f47a057b3deb16bb63927b86d770",
+    "common/src/main/java/com/terrassic/entity/Tylosaurus.java": "cc79108d99749f173c5843b7aa5242f191757e7b01a1b55706e1984c215cbc6b",
+    "common/src/main/java/com/terrassic/entity/Tyrannosaurus.java": "8c9311d3d0157559436d31889fc824febf2869437b187c885a561722833f0fa0",
+    "common/src/main/java/com/terrassic/entity/Vegavis.java": "294cc0133612c15909347d90aacc12740a13fbcef1ec5c06a36850da33e2ee31",
+    "common/src/main/java/com/terrassic/entity/Velociraptor.java": "162531b180abae35eb52319868644697274e1a7c294e5cad03a3054a00435b1b",
+    "common/src/main/java/com/terrassic/entity/Xiphactinus.java": "16e3929b8aae141410b57b3f7380384a762bd6bcbe7489e13671f5b82f05209a",
+    "common/src/main/java/com/terrassic/entity/ai/BroodGoal.java": "e682f87e91cde9d672a08e47c0b8d535666caddc147b702397a1369749d7a13b",
+    "common/src/main/java/com/terrassic/entity/ai/DinoSleepGoal.java": "363ee2f63896de0d93edb2d0d7610aeac4822cde3e872caec792f94082b3c698",
+    "common/src/main/java/com/terrassic/entity/ai/DinosaurMoveControl.java": "35d6898761f9d29347c93782fa0725350ac0afb2e17e1f40ebcd03eb21c05efb",
+    "common/src/main/java/com/terrassic/entity/ai/EatCarcassGoal.java": "01aadcf5147c95163f9fa10f9a372f4451f31f4c995e2f3070500805e506d01e",
+    "common/src/main/java/com/terrassic/entity/ai/EggThiefGoal.java": "6b443f4dfec595088a565d675e200304692055fd2f5ba7621acb0bea747c12fe",
+    "common/src/main/java/com/terrassic/entity/ai/FlightSteering.java": "79abb558f251d9c48889f2ff1ab60646bc54551d387ca66749ef355975681eac",
+    "common/src/main/java/com/terrassic/entity/ai/FollowHerdGoal.java": "dbde6fb0eb2be9b54c033f3032cdf100e1e5e95fa43ab1d11458382d3a1c070e",
+    "common/src/main/java/com/terrassic/entity/ai/FollowOwnerPathGoal.java": "7caf68a07c3bb56aa8e8f4bad80419056dbc2e92c027b671a340303c3e6f8d14",
+    "common/src/main/java/com/terrassic/entity/ai/MigrateGoal.java": "8653d6cabcf5e4f5113f24791c1df29be72028418792906d57df6095f2b46776",
+    "common/src/main/java/com/terrassic/entity/ai/SoarGoal.java": "446198c63c746d064ac1d6538f17b148bc61d80ddeb8996cd5b237c63a90888b",
+    "common/src/main/java/com/terrassic/entity/ai/SoaringMoveControl.java": "0e120e256ce479b46f0c3df10be3ea643bd5888439ff2bf168e388d83c3a045c",
+    "common/src/main/resources/assets/terrassic/animations/entity/alamosaurus.animation.json": "8158af5511af86f1221eb54b57cdb26ebf952bdfee98c4ed6f4160ff16d584ce",
+    "common/src/main/resources/assets/terrassic/animations/entity/albertosaurus.animation.json": "c4c3d3fe46c1b988e4b5378d37c6c671fc8c194f921ac232d99baa58811e0ff7",
+    "common/src/main/resources/assets/terrassic/animations/entity/ankylosaurus.animation.json": "d10896aa87700e07c9df061280b24cc22974245010b14504d26cdf9fecb9a6eb",
+    "common/src/main/resources/assets/terrassic/animations/entity/archelon.animation.json": "bae365f033af712c43fb1fc889183df263abb5d6cdf47880b568084f0318f48f",
+    "common/src/main/resources/assets/terrassic/animations/entity/argentinosaurus.animation.json": "4cd44cdbf036ea076525806298e2728f5b1405a7cf278ddc6558fe3597ae0596",
+    "common/src/main/resources/assets/terrassic/animations/entity/basilemys.animation.json": "8c5545655d24e676e9a91b72afefedd84858a4f6cb4207582986ae4975be25b1",
+    "common/src/main/resources/assets/terrassic/animations/entity/baurusuchus.animation.json": "65bbcf5feeed151b7e483b18fde76804354c2672f6fa82760f33de4114502593",
+    "common/src/main/resources/assets/terrassic/animations/entity/brachiosaurus.animation.json": "a0ccf8e22843d40ef2c880a784a58f9aff3d9f223ad2186b450f3e323454fac0",
+    "common/src/main/resources/assets/terrassic/animations/entity/carcharodontosaurus.animation.json": "244148fd2cf17fdb23e7d53323b6042d0d1c29b51542f699fb3b5bfcbc82c23b",
+    "common/src/main/resources/assets/terrassic/animations/entity/carnotaurus.animation.json": "127113aa3aae7941e5a6dd12fa7b5e3b3e63ebc580bfbb51a3abd51a4734c344",
+    "common/src/main/resources/assets/terrassic/animations/entity/citipati.animation.json": "b7b03ffe6011dc2b440ec1c7f0b3dbca9d4cb2e8da3231b26f2bf30093dade91",
+    "common/src/main/resources/assets/terrassic/animations/entity/compsognathus.animation.json": "0fa50ee64b68eac2c12be2a22550a12301eb203e342c7a9afc81ccbdbff33d05",
+    "common/src/main/resources/assets/terrassic/animations/entity/corythosaurus.animation.json": "f126f19a9fcaf2cec598c54068bbbfdad18d4a1396c3f2254287858da43998e9",
+    "common/src/main/resources/assets/terrassic/animations/entity/dakotaraptor.animation.json": "2bbc78cd04a8dc6e703a8b5d148760622e94fc99f40378f27f0b6e1e9abc28f2",
+    "common/src/main/resources/assets/terrassic/animations/entity/daspletosaurus.animation.json": "db85bc27614786649f19e93b9319fa330403b5e5232e95b6908ca7d6f7ee775b",
+    "common/src/main/resources/assets/terrassic/animations/entity/deinocheirus.animation.json": "8b80062950a78b9963ed24ddf819fda1dff2ba2bc35d9ad46e30673cbe692dca",
+    "common/src/main/resources/assets/terrassic/animations/entity/deinosuchus.animation.json": "b20e286c43d9a19a53faf10afb5d25a94f3d1e07e09c517ff215262366ef5ccc",
+    "common/src/main/resources/assets/terrassic/animations/entity/didelphodon.animation.json": "8998d770ffe46ef6e19e668700f327a4c11d36d0b162898e761c38614419a2a9",
+    "common/src/main/resources/assets/terrassic/animations/entity/dilophosaurus.animation.json": "523799abb879c19610f1b660d3b0aa4bcb183404531f04852d0bedfa65465011",
+    "common/src/main/resources/assets/terrassic/animations/entity/dreadnoughtus.animation.json": "63daad5ee3ff3246f9d18377d8bf1ae0440d60c70f0790b5edc7c6ec9b918cff",
+    "common/src/main/resources/assets/terrassic/animations/entity/edmontosaurus.animation.json": "d34874ab5bea7beef6f24bb9266ca9de90338ba2fc36a36dadc335eb6ae02b7d",
+    "common/src/main/resources/assets/terrassic/animations/entity/elasmosaurus.animation.json": "a0c1293dac4085de621c1baf0222efb5a2e1e09118e80f44e737f051aa17ce78",
+    "common/src/main/resources/assets/terrassic/animations/entity/enchodus.animation.json": "026aeff00650253f1d0257dac5bed0d38c094256a7148e234b67a554491631dc",
+    "common/src/main/resources/assets/terrassic/animations/entity/euoplocephalus.animation.json": "5a38245356343d478e3365e130efd55c66e7cb5a282ef32b28019663eb97c869",
+    "common/src/main/resources/assets/terrassic/animations/entity/gallimimus.animation.json": "321f258a0a693c0fe8d0ff862ace3e54da3cd080d0df31b69bde92de92362cad",
+    "common/src/main/resources/assets/terrassic/animations/entity/giganotosaurus.animation.json": "280984c35d9620b70496c9f9506869ad2d4b9d1a378ce6932a137ef3bb605c64",
+    "common/src/main/resources/assets/terrassic/animations/entity/hatzegopteryx.animation.json": "7c8a91d6f160dd66d69c11ca23f3dee9cfab8d2a0931d4ebb205dfc4c07e09ca",
+    "common/src/main/resources/assets/terrassic/animations/entity/hesperornis.animation.json": "65edebce971a3375897ebb9d0bc979bc0b803750ec8cff71b74f1e91ace189b9",
+    "common/src/main/resources/assets/terrassic/animations/entity/ichthyornis.animation.json": "c3785faef74c388dd9d1e4d1adc23fb02d793aa6875a04b10a1a94208321c448",
+    "common/src/main/resources/assets/terrassic/animations/entity/lepisosteus.animation.json": "757bf86626aa29a66fe0a8a2e65447d6ec6d5a230afd39e6e0e9ba85df9bdeca",
+    "common/src/main/resources/assets/terrassic/animations/entity/leptoceratops.animation.json": "59b1e4540bfc896589bbc1d2e5e7336949fc006091687a4941f7e3c1856e50a1",
+    "common/src/main/resources/assets/terrassic/animations/entity/maiasaura.animation.json": "9347ad9b4fdd7a5e619a5124a31af5281e8b6e595c6bcac2251fab5e706ae58a",
+    "common/src/main/resources/assets/terrassic/animations/entity/majungasaurus.animation.json": "abcf84058f605e4b8243e3bb32511c62dd8dc6579d61fbfcf08d2e22d8636853",
+    "common/src/main/resources/assets/terrassic/animations/entity/mesodma.animation.json": "cdf5a605dd7c505a0c1f5ed9f5b345af2c2f307853dc99bb3d096a5a6961723a",
+    "common/src/main/resources/assets/terrassic/animations/entity/mononykus.animation.json": "0693400a0593d7253625639309d82fe4700dc111fa792d7ef514b383d38b957b",
+    "common/src/main/resources/assets/terrassic/animations/entity/mosasaurus.animation.json": "0022b0f8033d1c0698b7c471d980ffd959edd5ceacf59c57ad4e82c864059e36",
+    "common/src/main/resources/assets/terrassic/animations/entity/opisthocoelicaudia.animation.json": "b2d5cc76e5f3df8ac844ad860ae8aeca67cfc186adb332a5945dca6952b74962",
+    "common/src/main/resources/assets/terrassic/animations/entity/oviraptor.animation.json": "acedf33d1e501ae5190ea1fe0cb51076d49c22a2489ad478e54b55bef89d4576",
+    "common/src/main/resources/assets/terrassic/animations/entity/pachycephalosaurus.animation.json": "ca3c24505d86b573e66cd234adbbbff1bcfb40a213f2ab99735a4b62059fdb19",
+    "common/src/main/resources/assets/terrassic/animations/entity/pachyrhinosaurus.animation.json": "a239c21a1aaf1f70e177e5702d8b83780a7d5f0e64fcfeba933255b1477bc75e",
+    "common/src/main/resources/assets/terrassic/animations/entity/parasaurolophus.animation.json": "8e9dedac09792da7cc8a116e32d1764fe0f262b1a2a1cf4e376e2f13462b3e83",
+    "common/src/main/resources/assets/terrassic/animations/entity/protoceratops.animation.json": "96b8de9e1e50e70b451fa7d4fddc3c7d385e2b6a46ec8c0792250e0a48a6c9c0",
+    "common/src/main/resources/assets/terrassic/animations/entity/pteranodon.animation.json": "96ab1bce0fc8901ffdaf688d29ca55269cf29ca594cf9445cbef0fdfcf786962",
+    "common/src/main/resources/assets/terrassic/animations/entity/quetzalcoatlus.animation.json": "d56577ee3601b33445bc999e44170f68314747ac4f4b92547d57c4b8608dfad7",
+    "common/src/main/resources/assets/terrassic/animations/entity/saltasaurus.animation.json": "e20da7d024c5c92b2db6326a6f587347426f31bc08dfd95aad3e132ecfe06882",
+    "common/src/main/resources/assets/terrassic/animations/entity/spinosaurus.animation.json": "f47d1445f1042a30d30c037c1ad91e56db9e82c51a89e1bf7ce0a7c18b5851e1",
+    "common/src/main/resources/assets/terrassic/animations/entity/stegosaurus.animation.json": "370a510b59d520b82c1dec6c57eec8ff9d1ca4a007eff75614187e629998cd42",
+    "common/src/main/resources/assets/terrassic/animations/entity/struthiomimus.animation.json": "7eafd74ae07a3e1cd911213d043ff54f564838980c3769152a7dd57d774b6989",
+    "common/src/main/resources/assets/terrassic/animations/entity/styracosaurus.animation.json": "a3821f4470231698ecd3a4e3e553a89d710c6465e9adfa38c6f85aefa6d90b66",
+    "common/src/main/resources/assets/terrassic/animations/entity/tarbosaurus.animation.json": "919f87abe8f62b082a6d1ec57bc319d9247d5576efca65cb086d2eaf881f8c63",
+    "common/src/main/resources/assets/terrassic/animations/entity/therizinosaurus.animation.json": "f4dd70e5876abd3a37a00af43589aaf54baa9116ddd574207f72981045f3a5d5",
+    "common/src/main/resources/assets/terrassic/animations/entity/thescelosaurus.animation.json": "bae9b9cfc596c45471fe815eeb6b12608f94a2a81a397621f19e39f82dfa2694",
+    "common/src/main/resources/assets/terrassic/animations/entity/triceratops.animation.json": "4e58919497c9530a813222fc020c5bf0ca0b4c5f0ef31b5aff0dcbf44f1902c5",
+    "common/src/main/resources/assets/terrassic/animations/entity/troodon.animation.json": "88bb09ba1d7200ab86bc634fc2ee75aadc7317c75d01ed09793ca05ee623895f",
+    "common/src/main/resources/assets/terrassic/animations/entity/tylosaurus.animation.json": "f7bf8afdadb7d56857b82b4b4ef3c1044869cde9b2a5544df4475ec155d7371e",
+    "common/src/main/resources/assets/terrassic/animations/entity/tyrannosaurus.animation.json": "237aa849610870ea777ff2b2dec0bf6e27c0a2b52274e5e5f9da805e2a05c7f1",
+    "common/src/main/resources/assets/terrassic/animations/entity/vegavis.animation.json": "1b44845e26c134478d236f6231f74796c0727765e7abe65fd209a52427cd9c90",
+    "common/src/main/resources/assets/terrassic/animations/entity/velociraptor.animation.json": "4f2c02340d60b514c0cacc3a40c9ad67cef6154edff708c769e3d9ade61deaf1",
+    "common/src/main/resources/assets/terrassic/animations/entity/xiphactinus.animation.json": "bceca02ff7fbe5420e5a86c1249b871ab2f6e4ea5a28fe53cf4b4d3b5c7f4a3b",
+    "common/src/main/resources/assets/terrassic/geo/entity/alamosaurus.geo.json": "738c630468eb775fd2249b3d6508cc7e59874fdd9ac3ccbe3302b93d28121037",
+    "common/src/main/resources/assets/terrassic/geo/entity/albertosaurus.geo.json": "fff8c2c8316680318b06b9f8404dd558eb9666075876942749263b0ee9564924",
+    "common/src/main/resources/assets/terrassic/geo/entity/ankylosaurus.geo.json": "149c9e080cfbc0b919647a0fef11e04f96cb5dbd0a9d137408df2a4d7557b599",
+    "common/src/main/resources/assets/terrassic/geo/entity/archelon.geo.json": "82f5d8a2b85f0e59f8d91042e3939f4925a464ef5c4002f1c819b5122e4c1ec9",
+    "common/src/main/resources/assets/terrassic/geo/entity/argentinosaurus.geo.json": "c219141a07d5682693b7df7815759361d7bafd9718d0b1d428c34a27348bc89d",
+    "common/src/main/resources/assets/terrassic/geo/entity/basilemys.geo.json": "4b02cc01afb20c1df70673b1a06696f3abbd0795f9352a387ce5f90143a372f2",
+    "common/src/main/resources/assets/terrassic/geo/entity/baurusuchus.geo.json": "5379eacb25a31f4886bb3d3159878003fec778a63295d72e6b627ca0b84b095e",
+    "common/src/main/resources/assets/terrassic/geo/entity/brachiosaurus.geo.json": "4321fd64f88c7821186a43e32870b5dfd56f535fd77057d6ba87525e47934158",
+    "common/src/main/resources/assets/terrassic/geo/entity/carcharodontosaurus.geo.json": "6d5f2635a658e27ac6b10dea9b185a2a43390cec72b8fb33eb8510e2b5869b1a",
+    "common/src/main/resources/assets/terrassic/geo/entity/carnotaurus.geo.json": "f9688175e270c814f82772a841ecbe878d7cbc6ff01814e49d959cd1cfb64fc1",
+    "common/src/main/resources/assets/terrassic/geo/entity/citipati.geo.json": "549075fc5addbb26632b2bcca1b3096543411cbaae8a9264a87d5a6307aedbd8",
+    "common/src/main/resources/assets/terrassic/geo/entity/compsognathus.geo.json": "f9077f8040ecd18eef6b57b23ca40ee60bbcee17e66537d218d83fb3756ad736",
+    "common/src/main/resources/assets/terrassic/geo/entity/corythosaurus.geo.json": "27ef4429580073865460b12b0b7ecd2eb34428d70bd5b52ce3fd27e156533f65",
+    "common/src/main/resources/assets/terrassic/geo/entity/dakotaraptor.geo.json": "d38f90c042ab7e92b142223014b7db3ae462c8341fc4dac6eb6908a843974037",
+    "common/src/main/resources/assets/terrassic/geo/entity/daspletosaurus.geo.json": "ed0f2bb6a9f6cb412dd005906ef6c657c569370daca6dbe2879d12f0cd53904f",
+    "common/src/main/resources/assets/terrassic/geo/entity/deinocheirus.geo.json": "8de514dbba4b68daa9381b7313d2a8d14230289e7069adb74baad46828cbe98f",
+    "common/src/main/resources/assets/terrassic/geo/entity/deinosuchus.geo.json": "ff2e2f10a09728e8267898284857d035be935df67d5670f01937265e0bf8d204",
+    "common/src/main/resources/assets/terrassic/geo/entity/didelphodon.geo.json": "34bb4204819b77013f50aafadbbfa66304672bff85fb531289a54af227ca3a5c",
+    "common/src/main/resources/assets/terrassic/geo/entity/dilophosaurus.geo.json": "3faa178b9ef75761d1c403011dc844d6ba52cdad4afcd353e29efab09f778f3f",
+    "common/src/main/resources/assets/terrassic/geo/entity/dreadnoughtus.geo.json": "8c794076c8c83efaf9d483412299580397e1c175bc5ffc4ba03218e1ba026c57",
+    "common/src/main/resources/assets/terrassic/geo/entity/edmontosaurus.geo.json": "80a2c9e779db3bb46af9877969ff2fbc610db3c9b7368e04547ef95dda08fca6",
+    "common/src/main/resources/assets/terrassic/geo/entity/elasmosaurus.geo.json": "7806b36a801328812c2b8d5f6e0f5de95bfa3e83d27d9711fdf2fc888f317606",
+    "common/src/main/resources/assets/terrassic/geo/entity/enchodus.geo.json": "307bc8e00f40c5a4ca1324a1f5aa21b4a3d73bfd98b937025354a8b0f6084f07",
+    "common/src/main/resources/assets/terrassic/geo/entity/euoplocephalus.geo.json": "cbf45b734ca4c02df9e1876a5c97e7a32673f4bab5517a2baddb4051fd61550c",
+    "common/src/main/resources/assets/terrassic/geo/entity/gallimimus.geo.json": "72f5e890fd1c829eeea55e8184b37d5088347c187637ba0b10ca1fb244116956",
+    "common/src/main/resources/assets/terrassic/geo/entity/giganotosaurus.geo.json": "a2a1c32644894c68283a5583aba7398860bcd5edec425029ade71a68a7ec088a",
+    "common/src/main/resources/assets/terrassic/geo/entity/hatzegopteryx.geo.json": "e668e79c52a2f24eeb9e584b6952d39f89c839a7ba916cd6ede69a49b1eed173",
+    "common/src/main/resources/assets/terrassic/geo/entity/hesperornis.geo.json": "eaa1445319f7c0c372b0744bbb0923d94803948614d7e608c031e57bd6d300b1",
+    "common/src/main/resources/assets/terrassic/geo/entity/ichthyornis.geo.json": "3e879876c32a65e4ce81173d60796502f6f85ea1d278aa50ab85710b27644cce",
+    "common/src/main/resources/assets/terrassic/geo/entity/lepisosteus.geo.json": "eeccd4bc910d2f475043e35f62d1025c4f627c49a76333580dfd5514f47c53eb",
+    "common/src/main/resources/assets/terrassic/geo/entity/leptoceratops.geo.json": "4b67de3bb89439a16e42a0562f91f539fe4ca144b02e0c0781d9d944fea933ff",
+    "common/src/main/resources/assets/terrassic/geo/entity/maiasaura.geo.json": "c7c51cd129199758ead011aca1b8f1931caf49f5093142972ed7fd19f874acaf",
+    "common/src/main/resources/assets/terrassic/geo/entity/majungasaurus.geo.json": "d8890dcd17042b260757a66793137fa97ad0d0660c9a784321d008d67c0a4eb2",
+    "common/src/main/resources/assets/terrassic/geo/entity/mesodma.geo.json": "5b4ff283dbaac48ffb0fffb665f4d28b4a45c29ab9b58480ce05c26d357142e8",
+    "common/src/main/resources/assets/terrassic/geo/entity/mononykus.geo.json": "413c6de6f52704647adcd4d914bd9192db9eaa417b998b6e381fd57a02c211be",
+    "common/src/main/resources/assets/terrassic/geo/entity/mosasaurus.geo.json": "efe1dc36e59eace4b7e37cf555402d5d9ed523a358d3cb672ea1e553ee916c3c",
+    "common/src/main/resources/assets/terrassic/geo/entity/opisthocoelicaudia.geo.json": "4bb4a4b73be8684de1fa4314d4cb23c64876e12891c3423015f13116aba3706a",
+    "common/src/main/resources/assets/terrassic/geo/entity/oviraptor.geo.json": "b3870213962bb1dd5b84f7f56ede0ddf056928489dc4695077d36bc0abf2d28e",
+    "common/src/main/resources/assets/terrassic/geo/entity/pachycephalosaurus.geo.json": "989e438a322a7f69f30a777dd46d62a488f9289a9e07b9116ff0afef8c42574c",
+    "common/src/main/resources/assets/terrassic/geo/entity/pachyrhinosaurus.geo.json": "a12f3a7388eee338dbe3fbe1b4f4fdf904f6328f1f49a52685e8def44ea47fc3",
+    "common/src/main/resources/assets/terrassic/geo/entity/parasaurolophus.geo.json": "52afcb119ac82c1e5cfacf1e2835c84b57e4e3be30841657fe2c3a980733b3f5",
+    "common/src/main/resources/assets/terrassic/geo/entity/protoceratops.geo.json": "eec4c995ed124d39a5fbf73206247a01a7d68b225e76e2ab24d32383288f8ae3",
+    "common/src/main/resources/assets/terrassic/geo/entity/pteranodon.geo.json": "6c1243047b2abf26ca7a7eb4acf63167889fe8a3a975f6604d680f611f0a7571",
+    "common/src/main/resources/assets/terrassic/geo/entity/quetzalcoatlus.geo.json": "beb809fbbb58c29d4140d356a1e444e5a799a6556100fcb8169702c283d7f68f",
+    "common/src/main/resources/assets/terrassic/geo/entity/saltasaurus.geo.json": "f77759095652f053bf4510282c47fa8c37560c6ce61f3d529a192647d29360a6",
+    "common/src/main/resources/assets/terrassic/geo/entity/spinosaurus.geo.json": "96d3e25ca693f21b86ea1ccf8a22088f57deaf40faf836c1cc10d9c0f3e059b2",
+    "common/src/main/resources/assets/terrassic/geo/entity/stegosaurus.geo.json": "466da0c0e0c72f9d7ce9324d62bc1baadd42cbd0ddd6d2ba5361589f0989618f",
+    "common/src/main/resources/assets/terrassic/geo/entity/struthiomimus.geo.json": "4a20aa2b6993f240ce5ae735dc3c73d9ade868b538ddae572f682a32443a3b57",
+    "common/src/main/resources/assets/terrassic/geo/entity/styracosaurus.geo.json": "b74e6d787c24882d535ff632dfa71a6b5bdb6466cbaafb404ea1c9a5e1af5de9",
+    "common/src/main/resources/assets/terrassic/geo/entity/tarbosaurus.geo.json": "b710f5115bb5524292ca6e883bd3a95ecd83c3fdf89716a18ba972ff8335c0ab",
+    "common/src/main/resources/assets/terrassic/geo/entity/therizinosaurus.geo.json": "b32c7dea2bfeadf10827ef9bafb8895e1099b2b63eaf624ddb16667f440ad3ce",
+    "common/src/main/resources/assets/terrassic/geo/entity/thescelosaurus.geo.json": "49f4373d7c5f96a9883c5c42c1527c35d02a7a09425ec99deb57a063d1eab6c3",
+    "common/src/main/resources/assets/terrassic/geo/entity/triceratops.geo.json": "d03c2ee5469c7d4e4add5e44f1eafc39bdff844ea1e3e03b6e0d2788b6b83101",
+    "common/src/main/resources/assets/terrassic/geo/entity/troodon.geo.json": "133a08211cceb5c2a927c94ceb5fd882b9462c716df0943cee9eda4898e28895",
+    "common/src/main/resources/assets/terrassic/geo/entity/tylosaurus.geo.json": "a6195dbadbee361d0e5e160f8f07ce4548c23f4dad9d794be34b9659df97e331",
+    "common/src/main/resources/assets/terrassic/geo/entity/tyrannosaurus.geo.json": "4d34acf90e0d539674b5a64e9c018b7004e0ad4eb856b3d9a75d809a7d86981b",
+    "common/src/main/resources/assets/terrassic/geo/entity/vegavis.geo.json": "da5cf2bb5ee7c540496de957e442d2bcdf74923c69b64336e5d70e3c054ff775",
+    "common/src/main/resources/assets/terrassic/geo/entity/velociraptor.geo.json": "e44141c0f01fae4a5041729d7139305c59f7f03902736b281aa894165dbb42f9",
+    "common/src/main/resources/assets/terrassic/geo/entity/xiphactinus.geo.json": "3ef9992838d8e4f3257bfd5610d41d779c2c154dc776929d4becd0ff9229c4af",
+    "common/src/main/resources/assets/terrassic/textures/entity/alamosaurus_female.png": "a4a6445db673fc560be6d52818511ee5b48e101707b181b5a18ee5a9de913260",
+    "common/src/main/resources/assets/terrassic/textures/entity/alamosaurus_male.png": "08bf8d4bb06e8944345916f63026aea59cdce2ad8685e21599cb724407eeebde",
+    "common/src/main/resources/assets/terrassic/textures/entity/albertosaurus_female.png": "902f4b7143f7e7cc7e438ea55bdece2f5d3a2aab40e3314854236fd40eb90e4c",
+    "common/src/main/resources/assets/terrassic/textures/entity/albertosaurus_male.png": "c9ce9ce4439f0381b627e2c39302cbc48c532865f1d3a2f4f5e487ce0fbcb169",
+    "common/src/main/resources/assets/terrassic/textures/entity/ankylosaurus_female.png": "d11b64a8e555b68f17cf66a2d23449a3563eab223a2f1ea4c5d36c6ef00b9707",
+    "common/src/main/resources/assets/terrassic/textures/entity/ankylosaurus_male.png": "32c4239bca3ee14d4ffabc2e7b9a738a7832a7af6c13c2fc4ee79b6f37cb3655",
+    "common/src/main/resources/assets/terrassic/textures/entity/archelon_female.png": "a601267aaa5d0ecd5e92cd2fa48833152c7032c2299e3e692c7b5d4f566f7654",
+    "common/src/main/resources/assets/terrassic/textures/entity/archelon_male.png": "0e5e3e8272c85914ff8edb31f978fd4c807da5a564479aa60234958a72d495a8",
+    "common/src/main/resources/assets/terrassic/textures/entity/argentinosaurus_female.png": "3d37c055e4eb9ed2932e3d8b5d6f2218a2c2e67f55d0005c4acb82ddc631575f",
+    "common/src/main/resources/assets/terrassic/textures/entity/argentinosaurus_male.png": "9faba8358a1f9724b7be317843331d8566929a15cb1e209058f5ed7f71908397",
+    "common/src/main/resources/assets/terrassic/textures/entity/basilemys_female.png": "36096e44e9b8c717601430434eb622ab8cd19e5cf92a538cdc42e277220bf95a",
+    "common/src/main/resources/assets/terrassic/textures/entity/basilemys_male.png": "abbcc8668703c91facedd6164ba585a3a0299c9466ff319a14af7352c657df6f",
+    "common/src/main/resources/assets/terrassic/textures/entity/baurusuchus_female.png": "8314a16113a1a306d4ebfb70fef437b476bcdf258ef873613942bb861a371170",
+    "common/src/main/resources/assets/terrassic/textures/entity/baurusuchus_male.png": "c10d17d16a8b9cc0c674776a95867044d1277d3f3c7488c8855626486d6efe17",
+    "common/src/main/resources/assets/terrassic/textures/entity/brachiosaurus_female.png": "852556448980b7375088e3102e5dd75d249c8b8369bb86045c2f76954bc4a616",
+    "common/src/main/resources/assets/terrassic/textures/entity/brachiosaurus_male.png": "6656058111615c6d6dd3d45047a652ad0ffdddf047cb78d1f3778d8c51c507dc",
+    "common/src/main/resources/assets/terrassic/textures/entity/carcharodontosaurus_female.png": "50f80848200d096c2706153f2b663c1fa2a1a2751b0cbc49e9fd1fd3fe202350",
+    "common/src/main/resources/assets/terrassic/textures/entity/carcharodontosaurus_male.png": "7dd148eb4bf2f674a96ce188d14e1573c14b33ff32c8ba2ca0936bb6898752a6",
+    "common/src/main/resources/assets/terrassic/textures/entity/carnotaurus_female.png": "6f0ec0b239f76cae8402e70f330941b357791e840d8798764db3a5e83d2f11d7",
+    "common/src/main/resources/assets/terrassic/textures/entity/carnotaurus_male.png": "33c9dd3a0f510e69d6e53520f7915b9ce56e952a39e9f785427750a9ac9d3e1f",
+    "common/src/main/resources/assets/terrassic/textures/entity/citipati_female.png": "9ce5b9cb72d004d7a74de8eda59b293a3e5a835fb11ee20175f78bde93d53204",
+    "common/src/main/resources/assets/terrassic/textures/entity/citipati_male.png": "a8aacd5743c7389cf5a8d5d253748296c7cf1969c7fa3bbdbe8c10abe98b692d",
+    "common/src/main/resources/assets/terrassic/textures/entity/compsognathus_female.png": "73f71da829390e5be7a849c4a6ad24292d5b72700b7736c7f356bec915bb549b",
+    "common/src/main/resources/assets/terrassic/textures/entity/compsognathus_male.png": "a0c614f1c641c9a98225a92be93050b4c1387970eae7f1f26cb81d4feadf0f5c",
+    "common/src/main/resources/assets/terrassic/textures/entity/corythosaurus_female.png": "4e294f44794fb5e2050b6afae3885157890bae433332236608b5d9cb0918ef9e",
+    "common/src/main/resources/assets/terrassic/textures/entity/corythosaurus_male.png": "b11e4ce09391840ed2adcefbb044f4af93e340aeffedbef0af0d4eaf5d81070b",
+    "common/src/main/resources/assets/terrassic/textures/entity/dakotaraptor_female.png": "cad5b7b6df9bba20c2b0b3080cb4a96ba89ad486d38fb19a5451b535cdd97d73",
+    "common/src/main/resources/assets/terrassic/textures/entity/dakotaraptor_male.png": "de411ac1daf563d1215019e480d06516a5612dd6a38cc79e4fc0125d6cb16b69",
+    "common/src/main/resources/assets/terrassic/textures/entity/daspletosaurus_female.png": "4469c85aed43b9b29d02e73ebe8c650de624b35bfd732dbaa723f86816e8fd26",
+    "common/src/main/resources/assets/terrassic/textures/entity/daspletosaurus_male.png": "500e97564ee3a3f1e41fc8de334c1edf0d5662ec362fdf50b01373b601f8b571",
+    "common/src/main/resources/assets/terrassic/textures/entity/deinocheirus_female.png": "362f214619ff6135a9bb5735af645c94f7c9152351d19fdd169d179dcd604463",
+    "common/src/main/resources/assets/terrassic/textures/entity/deinocheirus_male.png": "6a37ddc738d3c361e97a34d12275a433a9e6c33e98357d2b0ac8337bb9738bd3",
+    "common/src/main/resources/assets/terrassic/textures/entity/deinosuchus_female.png": "5135e466bbf6c8cc26eff2017e6320a88a4c18648c66c981df345d57da21ec7a",
+    "common/src/main/resources/assets/terrassic/textures/entity/deinosuchus_male.png": "28436dc2bb90b2c1a34d48dcde6fa9cc89dff4c6c35c3212cdf40713027e0672",
+    "common/src/main/resources/assets/terrassic/textures/entity/didelphodon_female.png": "cc4f352c0fb9a0e6d4ab1984eed1e72487c5f5b994f4acc3c0bdd6d803291443",
+    "common/src/main/resources/assets/terrassic/textures/entity/didelphodon_male.png": "a4957f9151da250c04a0040e1f8da4b58c38872d817bcab6aee5aebd8919e6a4",
+    "common/src/main/resources/assets/terrassic/textures/entity/dilophosaurus_female.png": "e00322f67308d2355630f121f77e97eb4baf4bbb5e15f6cd920429a67844dd11",
+    "common/src/main/resources/assets/terrassic/textures/entity/dilophosaurus_male.png": "acf06ea4dc5534e5f15ddf64b815aa877dfc61e76f6759c3989d72729a49955e",
+    "common/src/main/resources/assets/terrassic/textures/entity/dreadnoughtus_female.png": "3836e7d59ac9d89108fc9fbe5173ec091918fc17c88bcad9bed6a2cbc4094e3b",
+    "common/src/main/resources/assets/terrassic/textures/entity/dreadnoughtus_male.png": "3ff3ba3411f18a1d1cc8a47ff4a901e134f03f566994c6194f80fa5a033dbc3c",
+    "common/src/main/resources/assets/terrassic/textures/entity/edmontosaurus_female.png": "35786b83ebc6205649ce367ef422e00157f72ce5a68fd4656e82ff2ed7011af7",
+    "common/src/main/resources/assets/terrassic/textures/entity/edmontosaurus_male.png": "4f5831370094fb6e6abc1e94e0b2532355eb1064c919bdcd971863f2257007f6",
+    "common/src/main/resources/assets/terrassic/textures/entity/elasmosaurus_female.png": "be058c462a72eff62a92c04af8fce2e98eff9d4ece8c50a321000bb18c0b6432",
+    "common/src/main/resources/assets/terrassic/textures/entity/elasmosaurus_male.png": "f749d17c35a6152df18e4e6b489c8669e794f279a793b4726669fd8efafdfdd5",
+    "common/src/main/resources/assets/terrassic/textures/entity/enchodus_female.png": "8e161b3a17a7926feace60509f6e389cb25ffd8a3c72086345f0b7060222bb02",
+    "common/src/main/resources/assets/terrassic/textures/entity/enchodus_male.png": "5a5464411d5f6bacc5f426cab19eed2919ac37c1cbb7c3e3f10ea1ea22ec70a8",
+    "common/src/main/resources/assets/terrassic/textures/entity/euoplocephalus_female.png": "15dc260b6eb96c137c93e3cf9f051f1093dfe3f74ec6f2bd18ba089dcd1bc592",
+    "common/src/main/resources/assets/terrassic/textures/entity/euoplocephalus_male.png": "af423182a1c0c0d51447a98e06b4dded36de5ef05481f7eec13e86c0bc75c080",
+    "common/src/main/resources/assets/terrassic/textures/entity/gallimimus_female.png": "560924cb06118a899bbb899114cb190b43489153c900714009e80725e804bf13",
+    "common/src/main/resources/assets/terrassic/textures/entity/gallimimus_male.png": "8285f0c8b5119c1d9c539cdd3dff4fed8809a88bd25805e416dfceba14509fa6",
+    "common/src/main/resources/assets/terrassic/textures/entity/giganotosaurus_female.png": "2836db702f3cf1fb0ad48e6e1f44d5347856d0379bd63f763c797eb973670b55",
+    "common/src/main/resources/assets/terrassic/textures/entity/giganotosaurus_male.png": "e3eb236a93296783aba0616c4f758010f1da25e3bc68c88d870b84c629986f66",
+    "common/src/main/resources/assets/terrassic/textures/entity/hatzegopteryx_female.png": "86b5c278346b22dbdece7e77a29ceec80cf179481cfe881c97ad3de6b218c09b",
+    "common/src/main/resources/assets/terrassic/textures/entity/hatzegopteryx_male.png": "da53623ac503f15fc3e2f5d35e2cb52a0ffa88183f042e17fca7aa33807c3af6",
+    "common/src/main/resources/assets/terrassic/textures/entity/hesperornis_female.png": "ea20f7562645bb320bf2a7a729469ca31dc314b192cf075794053b04b09d20cf",
+    "common/src/main/resources/assets/terrassic/textures/entity/hesperornis_male.png": "0f85530d247bfa3f74a32600de83050daf484c04d5e01fecea8688d93e918bfe",
+    "common/src/main/resources/assets/terrassic/textures/entity/ichthyornis_female.png": "a6c747460526034b3a99a177b2a9c4c4821f5467a5e10f8e9f010e13e5eacd2a",
+    "common/src/main/resources/assets/terrassic/textures/entity/ichthyornis_male.png": "b3f6978889ea5bafc4ec43ae754fa35f41d22496902d949c62f569e912d8fdff",
+    "common/src/main/resources/assets/terrassic/textures/entity/lepisosteus_female.png": "4ddb30b529560c4b7a61493e3bbf3b29b0a7681865490b6429df848e6db1c967",
+    "common/src/main/resources/assets/terrassic/textures/entity/lepisosteus_male.png": "f8e5387feba28d55d8380bea373340678eb3b67863257d6e919bf1f1a9e8aacc",
+    "common/src/main/resources/assets/terrassic/textures/entity/leptoceratops_female.png": "c9dcaf7a69ffa167ce3eba0e4cf25741690645d4d15ad55dee128a23a8d01765",
+    "common/src/main/resources/assets/terrassic/textures/entity/leptoceratops_male.png": "7b5d471df9d6280c25cf85430c2a9536708105d7b49688c9f5310b7881ee9d1c",
+    "common/src/main/resources/assets/terrassic/textures/entity/maiasaura_female.png": "fcb763f216cce54cd4642e8594d4f9f6fb5e4ae8ca5b11d53961bf359ef68a5b",
+    "common/src/main/resources/assets/terrassic/textures/entity/maiasaura_male.png": "8029829c90b014c5a50e1f951822cfabff645c3b37b4b9cebd17bb3a52919637",
+    "common/src/main/resources/assets/terrassic/textures/entity/majungasaurus_female.png": "6d5af906ef411ba3a531b6dab836ddc7c8350c8d67312c1b4d5dac7ce4de3d03",
+    "common/src/main/resources/assets/terrassic/textures/entity/majungasaurus_male.png": "73bf3177b5c81cd0893eb96b28eb7dc02a914899a4d81d17b629e03bae7b9b5c",
+    "common/src/main/resources/assets/terrassic/textures/entity/mesodma_female.png": "aa8ce7aa3e7fc749ec2e802f1d71faf38345bf1c2617dd8cff7da113f0a6b577",
+    "common/src/main/resources/assets/terrassic/textures/entity/mesodma_male.png": "f8aa5d4120fbf39e7f63df7cab0c1307d970ec79d7ba9565703a5983e366b680",
+    "common/src/main/resources/assets/terrassic/textures/entity/meteor.png": "879d06c53886f43d030132714abf4e17bfd2bb6bf7e9bcd3418bd721c2753c8c",
+    "common/src/main/resources/assets/terrassic/textures/entity/mononykus_female.png": "1aac841bbc9d9357fea2aac9c50138de14b734c669b9e5d858ab21ad775e852c",
+    "common/src/main/resources/assets/terrassic/textures/entity/mononykus_male.png": "4f735c9a9b5200ed5364bf46eb9ef8eafcf959b1a72decbd4f168ba31104d079",
+    "common/src/main/resources/assets/terrassic/textures/entity/mosasaurus_female.png": "c57a5cca91890183f485c5d73011df71ffbecfbe9389f6680290abfb2bf83aec",
+    "common/src/main/resources/assets/terrassic/textures/entity/mosasaurus_male.png": "124075dff7c64553228f59105d98e6abf7f926f94e80a6bad529305dc2f95fc5",
+    "common/src/main/resources/assets/terrassic/textures/entity/opisthocoelicaudia_female.png": "1ba2b79dcbd4ab0086b974a622c6b68cf9e56428d8c9250ec13dd057b92bd4e3",
+    "common/src/main/resources/assets/terrassic/textures/entity/opisthocoelicaudia_male.png": "b8f6683027be995a135d169611f07154aed0c82f4e3770e336c38a15de8e6781",
+    "common/src/main/resources/assets/terrassic/textures/entity/oviraptor_female.png": "e01cbc82d0611d543307d58412bf4efd02dbb187e228e3f1749cb900c921ae42",
+    "common/src/main/resources/assets/terrassic/textures/entity/oviraptor_male.png": "dc52c76f772e257e5adc4f7caca3a7eb850c5532364952872655b246cb032a9a",
+    "common/src/main/resources/assets/terrassic/textures/entity/pachycephalosaurus_female.png": "1f0fa55c4955a7588c63b46240f29298a250ef0e85a7facbc54550823656dee2",
+    "common/src/main/resources/assets/terrassic/textures/entity/pachycephalosaurus_male.png": "234fbd84ad3a1fbdd136f5f45e1eb9f12d62a01694376cf2db05148fa05c36e1",
+    "common/src/main/resources/assets/terrassic/textures/entity/pachyrhinosaurus_female.png": "bf6df1fc1d5a0cd76adbccc90bc3e8a02a19ea5058237c222c313aa050a59359",
+    "common/src/main/resources/assets/terrassic/textures/entity/pachyrhinosaurus_male.png": "409bb3534600ac8a54afe7a26f8f5333200a9c8904deba1690938184b27aa2af",
+    "common/src/main/resources/assets/terrassic/textures/entity/parasaurolophus_female.png": "620abae52eda116a79e7ba173cf03061b4fd2b7a91c920cda593518a42ed8fb9",
+    "common/src/main/resources/assets/terrassic/textures/entity/parasaurolophus_male.png": "7c37fd9add085989b617d8fe857a8376a6a359e8a6a024a735ee53051b1d928d",
+    "common/src/main/resources/assets/terrassic/textures/entity/protoceratops_female.png": "5e9f825a376e95d1b4e981e271180675b9265b12f0f3c21f90b2c796eab35e9a",
+    "common/src/main/resources/assets/terrassic/textures/entity/protoceratops_male.png": "ba135b44b187e2786bf25100ecf3ef58f53ee2147c0dc963e1f041638bcc2575",
+    "common/src/main/resources/assets/terrassic/textures/entity/pteranodon_female.png": "4f2dee83b8452c1be5fc488f15c6ca25c8794b7d5e6a6687893a56112e5ce1a7",
+    "common/src/main/resources/assets/terrassic/textures/entity/pteranodon_male.png": "008ef9fa5ded6f629a3922cbb50fd66b0e6a9193ee50deeb4640873c1c47f29e",
+    "common/src/main/resources/assets/terrassic/textures/entity/quetzalcoatlus_female.png": "6c44c0bbbba5860f288951460340a6c14747999c2af605dff8a7da1d14b89871",
+    "common/src/main/resources/assets/terrassic/textures/entity/quetzalcoatlus_male.png": "b38cd1bdf6af3bb726b7e45fe580d05c5e7d6c225be53145943b9685f5d3bce1",
+    "common/src/main/resources/assets/terrassic/textures/entity/rift_overlay.png": "d2ec4c253c539eb3d26ab0b6328d5c9c8383aea79d62027025b1fd662c8eb279",
+    "common/src/main/resources/assets/terrassic/textures/entity/saltasaurus_female.png": "4f4c7c581dfd622bf791a073f61dcbf018659635c579f7b6bee182e50a8b5491",
+    "common/src/main/resources/assets/terrassic/textures/entity/saltasaurus_male.png": "e6322ffaa48baf4ed61c04391448caee3b1df61d2857a293b07ddb1ceedbc27b",
+    "common/src/main/resources/assets/terrassic/textures/entity/spinosaurus_female.png": "86e5c6c5c892139238e1d751da7b742d17e21130d1d7e3a8e3dd67bc8fb6e361",
+    "common/src/main/resources/assets/terrassic/textures/entity/spinosaurus_male.png": "128ee701e99b8c4549005a04a43f62d3f3d1494d333a34fd4c1159800d2d23f9",
+    "common/src/main/resources/assets/terrassic/textures/entity/stegosaurus_female.png": "a4226212662f29712927d0387ae1ae354b2ee4d6c040af565ff4ac5b50a0cf29",
+    "common/src/main/resources/assets/terrassic/textures/entity/stegosaurus_male.png": "46b16ad8ec14f2c6b7a7a66f8ac5f91539a3143c4a59e5e9c799934554946d08",
+    "common/src/main/resources/assets/terrassic/textures/entity/struthiomimus_female.png": "f1f4db9facbc8774548c5cce1ef94b37f2ee9ff5fb0735a8950b00e6ff2d7eef",
+    "common/src/main/resources/assets/terrassic/textures/entity/struthiomimus_male.png": "9e7c84dfa3c69adab02183e0b95797fc5e06914a199c8948c8a3d8a2bdfe5a49",
+    "common/src/main/resources/assets/terrassic/textures/entity/styracosaurus_female.png": "bbc4d5d8b8a562064f3f312ddb5fabf9dc61dd134477ca3ffa233fec64f6bbcb",
+    "common/src/main/resources/assets/terrassic/textures/entity/styracosaurus_male.png": "087646a9a904a536a3ac8fa627a20eb2cc08cea3b2482f57e68fee8dc7abedce",
+    "common/src/main/resources/assets/terrassic/textures/entity/tarbosaurus_female.png": "4a09d815b8f76715a413b7e273ff5c983e8c598c250ef9e295d85118900e94cf",
+    "common/src/main/resources/assets/terrassic/textures/entity/tarbosaurus_male.png": "40079c9bcfbb48449f0646f1acb59eae04b90dfd281b66de4459f664bbf69eac",
+    "common/src/main/resources/assets/terrassic/textures/entity/therizinosaurus_female.png": "d5e19bca005461fd827dbbdede7955323a52b8760c0b057a52f4fdc980db59e5",
+    "common/src/main/resources/assets/terrassic/textures/entity/therizinosaurus_male.png": "4d9d19fcd6f78aa9f4676988608b09834e456b84a859122bcb93cf39c21a1b8e",
+    "common/src/main/resources/assets/terrassic/textures/entity/thescelosaurus_female.png": "11bb918cbfb07d05283c9e635ac9195062e151c438aab4c6cd53482c0e7a7a97",
+    "common/src/main/resources/assets/terrassic/textures/entity/thescelosaurus_male.png": "287eeb0f726833ceb5487a0bf30bb9b0167a000577f138ede7bde7d8381d250f",
+    "common/src/main/resources/assets/terrassic/textures/entity/triceratops_female.png": "6971dff0ab6269d92c77093f079523ece3c3ae8658cd4e347ba9e9048d1dd5e9",
+    "common/src/main/resources/assets/terrassic/textures/entity/triceratops_male.png": "81bb08350fa51343f4112a0677ee8c400f43648a92f0026c326d172f49a0a7cb",
+    "common/src/main/resources/assets/terrassic/textures/entity/troodon_female.png": "0ce3dd0c810311cca11c87999c861b9e2e9a6a4625f0561d7a28f8651e300868",
+    "common/src/main/resources/assets/terrassic/textures/entity/troodon_male.png": "b63dc307f1303ad66f11558614534ffb1fef8e479c987cf9692aa875cc2fdf31",
+    "common/src/main/resources/assets/terrassic/textures/entity/tylosaurus_female.png": "e30b6a939b739a8d65b661c9fde1994b832f563e8255750af274cd0c3a4002ee",
+    "common/src/main/resources/assets/terrassic/textures/entity/tylosaurus_male.png": "da9ab9ae1fc8520d18211f2b47fc3dc20ee7f5640493fd84af78be9672520d28",
+    "common/src/main/resources/assets/terrassic/textures/entity/tyrannosaurus_female.png": "0e3a57239d2f6e680229ad36d40c00d7e418643cb120dd31fdc8e1322ccdcc43",
+    "common/src/main/resources/assets/terrassic/textures/entity/tyrannosaurus_male.png": "8e547ac75aa27a3a8d556e1a0e8f9d705a19820d245a1769bb568c5b8d32b2bc",
+    "common/src/main/resources/assets/terrassic/textures/entity/vegavis_female.png": "83983045660d17fd5b90bc51300bee4483a229a1338edeff28862dc1e72a18e4",
+    "common/src/main/resources/assets/terrassic/textures/entity/vegavis_male.png": "83435693aa2f22032e9fa61a0baa5f6539660854be6e85995a7142f4afbbb63a",
+    "common/src/main/resources/assets/terrassic/textures/entity/velociraptor_female.png": "b04aab92892a301a17b534d7991ff552f3f36486f70a5f13a3b88a5d5f9fed53",
+    "common/src/main/resources/assets/terrassic/textures/entity/velociraptor_male.png": "2d3a4c53f15e68aee878db705410df7dd5708675cad67696b8ff80a7a712121d",
+    "common/src/main/resources/assets/terrassic/textures/entity/xiphactinus_female.png": "a47c615e1bd6e3985e89fae067432d176e01644af72a1db54a7fc91811c732f4",
+    "common/src/main/resources/assets/terrassic/textures/entity/xiphactinus_male.png": "b51c9a25d4ab0c7ecbfec3f0bd30fae39cf1acae94af1c42c8fd94cfd24b3b0b",
+    "tools/modelgen/bbdriver.py": "0b2eab5ab6741d6661d244c4736f8948b141fa71118c28e6a4ea2b59203c054a",
+    "tools/modelgen/build_all.py": "29dcb7537a82b40819a9b4a7debe47af78f82cf9bf43cd54b96ac86eb83ce14c",
+    "tools/modelgen/buried.py": "c60b8772ac58dfa1d5e5ad4fe9c8300a53274d9c02423f4c6682f47025ff2078",
+    "tools/modelgen/checks.py": "667a5462fadb6cb33923c55214a17fe1455d88e6b41d95d8f4a5c2925af52a57",
+    "tools/modelgen/contact.py": "ad12cfb49b8d1f13c52e6d7f981d5471b1b2e1637984311ef9c9b59d269fb06a",
+    "tools/modelgen/floating.py": "058664f55b2cf90e014a006c9669b07e23470d0461ac95d30c9a43957efb6fd2",
+    "tools/modelgen/groundfit.py": "3e88d49b6a48dd2e19789b2fce577520e69f97fa99f5554e76e93331cb0508d7",
+    "tools/modelgen/make_gifs.py": "2b68f61b96fad295efecbd2183a5cede49edf45a598a52c8b974a4c7b3e62a6f",
+    "tools/modelgen/paint.py": "152a0c97285206e91b5c5afbf85fcb23f759029b702b88bfb2ae0b53103b4b36",
+    "tools/modelgen/posecheck.py": "f03f6eb23b6219be273e2880950313de2774a7b66353ee383a81bd1e3b4c6f8e",
+    "tools/modelgen/preview.py": "b699ddfdc23e8b684fa40d9567e0d8914c01df66d0e63617245337707603d19c",
+    "tools/modelgen/pybench.py": "dccd654bb86a6600e3d38b2324c49307c20b0236cd0472d15a27bc8f63913a0b",
+    "tools/modelgen/review.py": "a4d6411bc9ab9b32e217a9cbe21a0111cd6cc13d81bc2ff480faacab83363a3b",
+    "tools/modelgen/rig.py": "5adb68f636379da18cc807da17bbb1a0d3089ec320f67e0f7a5a150ebaa826dc",
+    "tools/modelgen/size_sheet.py": "2c01f466414e911923653ad08fcd62835cfd87e763dc01adf749934458cc5c46",
+    "tools/modelgen/species/abelisaur.py": "b4a2a71ed5db73de653716579365e38c61733b6e8875d982fb0c9826abf913c3",
+    "tools/modelgen/species/alamosaurus.py": "c113231f9455526ec21b57f38e45c9af6bfe5cdf27b67b41e0d6ceff93a75937",
+    "tools/modelgen/species/albertosaurus.py": "204497d368eda3059baadfe296f2b078ad978fda5402ab3ba1fc21c80f66895b",
+    "tools/modelgen/species/ankylosaur.py": "5641ad2fc0f804bc7d8b9d364770289ae055836d9e673f2d8af50d0458fb1283",
+    "tools/modelgen/species/ankylosaurus.py": "f921ce5f909c7ab0de3ef682a49fbf980eb0b56b08a44feab1ff1c09353f7ba0",
+    "tools/modelgen/species/archelon.py": "cba6ceb6b4eedfd11b9fd0b42eb6b5975d6912501d3dcbbcff93776371d27ec7",
+    "tools/modelgen/species/argentinosaurus.py": "cf7ab3aa64c9438d29845dc9755f2ac31acfac872ec3b8ef4ef292cc5f4afa23",
+    "tools/modelgen/species/basilemys.py": "f5dfa2dfacd7c637de311a73e444e5f7df5ed7b3ca3fed468261f5560d80dc2a",
+    "tools/modelgen/species/baurusuchus.py": "a4d478caeb37ab091d5e0edc98fac62f3eefb37d7c2bd8b933e88f4ec04ab776",
+    "tools/modelgen/species/bird.py": "965bc7bed69844223998357c246c078b65c0fd2ba88fb9e8f978ef13dd579d4c",
+    "tools/modelgen/species/brachiosaurus.py": "5c3de6b61bfc140299f8b8875d9dd88e83085fec6b12f2fe6aac71d114dfcbc3",
+    "tools/modelgen/species/carcharodontosaurus.py": "5cf1a0a80c129459956698a00de3e2485c04a7af10f5d54a36099972672a979a",
+    "tools/modelgen/species/carnotaurus.py": "c21cb3a610492621d67290527b707f24a44daf253d75a9179fae586c3690607e",
+    "tools/modelgen/species/ceratopsian.py": "59ede0fb790ff02f358f3dfab18178c576b63ecc3f985fd82d487f0a1fd49a00",
+    "tools/modelgen/species/citipati.py": "99d9ea1476c3bc78501e26ae80f06f3658aa8920ee3beaddc93f2b164fbb3bce",
+    "tools/modelgen/species/compsognathus.py": "34362f6c68cea87fe604c7e58240f5513c5b91dbe15096b97630fee0b83f6cf7",
+    "tools/modelgen/species/corythosaurus.py": "135a06cef359655495660d1134573facce3a8acbfb03dfd36658ce0a592d0111",
+    "tools/modelgen/species/croc.py": "9d0123e63fb5a2ca177a52ed1092a292f3714faf1857d16a2adc9ed41b1a1d97",
+    "tools/modelgen/species/dakotaraptor.py": "5342ef7d419d08cc401a26b7c41403fa686d85acc2e4e83cbdbcefa6898610a9",
+    "tools/modelgen/species/daspletosaurus.py": "8b0250e9c0f0c1cf42ccf58d0fddf5ede59d629c40c2c19ae8325e7a05243c1e",
+    "tools/modelgen/species/deinocheirus.py": "ced2110f96c4e53da701e7148c0f9738af26ae426da21f1dfd200d725867fab2",
+    "tools/modelgen/species/deinosuchus.py": "d04f4aca69d94e6a234f192ba0dd9582e5ae0ed994d4d74e7d8caf1cd9df752e",
+    "tools/modelgen/species/didelphodon.py": "b675c7e41b972b82c7a14279811e6b26907deafc08a8e7b23e5b2c4e0d1321ca",
+    "tools/modelgen/species/dilophosaurus.py": "e012aa9384fab3f8e4aeee3e2a4a8872b8b26dc89d61b452563dcb357e20a30b",
+    "tools/modelgen/species/diver.py": "0504711717c1f16a158f978fd30afc73a1cbaa11061e3dd2ac7e615a52524a7d",
+    "tools/modelgen/species/dreadnoughtus.py": "32681d7b3b34ba94f754e5a1519e98aed20cd032310a4d690dcdfc82cd03bc04",
+    "tools/modelgen/species/edmontosaurus.py": "f9991546ed5f27ef8c5c5788a8bb260825693c9555c8c57f095ccceae25d6377",
+    "tools/modelgen/species/elasmosaurus.py": "1d15fdacd8b1d3ac52c6758aa33013bab1a2a48b34003e6d0173bc592b2486b3",
+    "tools/modelgen/species/enchodus.py": "778bffcb5a2475559300dbe0f14b3bdcc85ca112cd1ccc71c5c7eaad2692cd84",
+    "tools/modelgen/species/euoplocephalus.py": "9cbd3833588774229b4e587696c492f1ba9e40afe0535967ef9765de55b33ed1",
+    "tools/modelgen/species/fish.py": "a0fe4ad2b7e9c1f43d68bf62a41a1f22a1246763d30ba5c02898e2da52199f10",
+    "tools/modelgen/species/gallimimus.py": "a9a3ab957669e8e4db40cf3a005493918a3ce6766fd2aea13b17792ff5e007ea",
+    "tools/modelgen/species/giganotosaurus.py": "b5a5d9f3c83bf8f7f5908f37a824c3b2566177e5e0ef8a998ec82b26c6a760b8",
+    "tools/modelgen/species/hadrosaur.py": "049fd495d49065ffe2ead404ff8090b0dc14e61d80cee078b2a7ba77b73daeca",
+    "tools/modelgen/species/hatzegopteryx.py": "a308fd86bc88c95f06577e38b8906131bbcdc184a1fa6bfe32378a4f4937d8c9",
+    "tools/modelgen/species/hesperornis.py": "5d35e282b88353b54710d157747c8291ee6bdbea4e4b0153c147b8bef69fd7f7",
+    "tools/modelgen/species/ichthyornis.py": "34d60cae5eeeaf03daf1df57836679f4087f1e348b6edf8506a88a5bf20b9f69",
+    "tools/modelgen/species/large_theropod.py": "baf62efe28fcdf43f569dd8312ac74949853162af3ea72b08e1e78b79fbf6964",
+    "tools/modelgen/species/lepisosteus.py": "ea3aec53236300c7162c2c222dd7498c7d4bd29c7e7a442ef90effaec5a6bb9c",
+    "tools/modelgen/species/leptoceratops.py": "de13056edefc82244a6e16f5e5e9998c1810e700e2263d8f798fc50d7a7c94cd",
+    "tools/modelgen/species/maiasaura.py": "70ef2853b74d8be19f49e95550ef58499072fb662e41ed3fc82fdfb76888a500",
+    "tools/modelgen/species/majungasaurus.py": "0611f79bb09c031f38cc81b36108e8ed8c88a79f02cbdac1f0cf45d1465643e2",
+    "tools/modelgen/species/mammal.py": "e374437515796d2ef70392f847c2b14779e519f897ddb55dc4def87e35c81c21",
+    "tools/modelgen/species/marine.py": "dd77e678d3ef0202e35b52029b6a274024c2991674f8d8951c9cfc796e0e8fb9",
+    "tools/modelgen/species/mesodma.py": "245a9a78ddd2cfc845384d929b1cef32b8e9ba925faf9d647e04ed29258d7b65",
+    "tools/modelgen/species/mononykus.py": "492bf6019825007e171986b9877586ccd0ab4aea6989b1d579beb04d387de0c9",
+    "tools/modelgen/species/mosasaurus.py": "07c87078bada2c94b8dbfb22afeef3ef49aa75e5addb92bb498e9418f8552ec7",
+    "tools/modelgen/species/opisthocoelicaudia.py": "5b31f4ab8b2981ec893f44a4a2194e025c9c7047135615dd68e42540dba71bb1",
+    "tools/modelgen/species/oviraptor.py": "485203fa4c0de391df330b621cc7a62455b3e68732c532a7972c1c9d4a2fe989",
+    "tools/modelgen/species/oviraptorosaur.py": "4bfb40da34227c1071c1cc1cf26a84a2df102a283b838c24542e118efde10347",
+    "tools/modelgen/species/pachycephalosaurus.py": "032860f01a81e4b56e0cd3555e24a0c84c51ce1d9961e8a6bffe0644b6a86ba3",
+    "tools/modelgen/species/pachyrhinosaurus.py": "2b263ade1dd49cd374f32479b73a32dbad67bfce52f7b595b9106fb9008f5f09",
+    "tools/modelgen/species/parasaurolophus.py": "c9ca1e087f269564002e6327c6ac59af7b398e94046ac985d146204821ef5bfe",
+    "tools/modelgen/species/plesiosaur.py": "a513d1ebcc491d291197d5b05ef86161736b2a0c82c10146edf6d51dfae0ca60",
+    "tools/modelgen/species/protoceratops.py": "510e40583d3e265002b8b16e168468701c18271a9886bdd21b6d9b8fc3571b41",
+    "tools/modelgen/species/pteranodon.py": "b8503e89600ffb48286fa9be92a82b8e6bc214ef214db7697aa99effa4cb50e3",
+    "tools/modelgen/species/pterosaur.py": "5ce2566b9cef7633053726f471fbee214b125ef2ad6c38b988a99b032172c48f",
+    "tools/modelgen/species/quadruped.py": "895550ceb610693b0b56efde217e7b3319e941601c5d46eb19e8867ed168217b",
+    "tools/modelgen/species/quetzalcoatlus.py": "bdddcb87db660ad6a054b9f29c3ef750db63de5f2e52bdbfb734b4290f2fb67c",
+    "tools/modelgen/species/saltasaurus.py": "fd0d1ff289ba51d437706a44f87aa255118787ef6314bee8bc0984188c1805c2",
+    "tools/modelgen/species/sauropod.py": "25e00653b60cd77147024f2e3c95f34d548b39721415348d63bc190ae2cb5e43",
+    "tools/modelgen/species/smalltheropod.py": "3519cf7ff0690dbc9d19a732fdf45e001cf3e05ed0c5c628ffadf5c3cb810c95",
+    "tools/modelgen/species/spinosaurus.py": "7b377e4e0511a239080eb34b8b488f248dad7d6a90a450cd3a5cf60e60827a10",
+    "tools/modelgen/species/stegosaurus.py": "6bbe6dda937436fa122dd17a0a931a008fb3aeb23657e95925e6eacafaca855c",
+    "tools/modelgen/species/struthiomimus.py": "302ebaf78e23d023e4c1b90002e3a712f8ea8d47d5a6dd5c66430e5e167b78db",
+    "tools/modelgen/species/styracosaurus.py": "6fbf4e23cdccbba710309c8160230577d9ac7e192cddfedad15d2af32d9e50aa",
+    "tools/modelgen/species/tarbosaurus.py": "62e066953aa764b9377428695780aeaacc7c0ce3bd201285948b00bbf4a2ef6e",
+    "tools/modelgen/species/therizinosaurus.py": "efacddd531fd90b123c93f93d29c26dfb2e0f92ae2b96a22de062a8135f624d7",
+    "tools/modelgen/species/thescelosaurus.py": "3fde301b00d7b10fcb621de721a6c50d18b7f9b221329249bd1f89ef89784306",
+    "tools/modelgen/species/tortoise.py": "7e5546c73adb4910a8c47ff23ef876e28bfd8d4f005d4995d3b29d5689642353",
+    "tools/modelgen/species/triceratops.py": "e5b4573fd412d507adfeccb8bd711695c84c52ccf043d4ea1fa67a42e6b3968e",
+    "tools/modelgen/species/troodon.py": "8c35c9ed236698f1ef6d0e54243c2cd90090215ef85ff03c6eee664bbb62373b",
+    "tools/modelgen/species/turtle.py": "a4401761251fe4d13aa3d984bfc009f33b933a3f19494e4b300c8219a81cf5dd",
+    "tools/modelgen/species/tylosaurus.py": "4309a4e8d2720be1e8eef61073b640f829332e4ebd3366bab379b57aa6350bb3",
+    "tools/modelgen/species/tyrannosaurus.py": "72caa4e77b4601ddbff87b3198f34834773e6deb32babdedc5f2c799f708d74c",
+    "tools/modelgen/species/vegavis.py": "43ff2ee0be4b31be93a699d54a8fafeb122f5c7987355885033c68bf16a109e4",
+    "tools/modelgen/species/velociraptor.py": "3cc4b794413094fd485221a25841c5da401e638b89d93d5d4aad062a8c329cec",
+    "tools/modelgen/species/xiphactinus.py": "9b96d650d498dd956dfaa5a025f1ab181eb9b838416cb7d38311440a28072a2a"
+  },
+  "species": [
+    {
+      "species": "tyrannosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.486,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.002,
+          "max_of_min_y_px": -0.002,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.968,
+          "max_of_min_y_px": 0.171,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "spinosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 1.095,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.004,
+          "max_of_min_y_px": -0.004,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.559,
+          "max_of_min_y_px": 0.233,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "dilophosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "display",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.003,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.334,
+          "max_of_min_y_px": 0.009,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "velociraptor",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.383,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.301,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.97,
+          "max_of_min_y_px": 0.341,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "compsognathus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": -0.162,
+          "max_of_min_y_px": 0.0,
+          "worst_time_s": 1.5,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.005,
+          "max_of_min_y_px": 0.005,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.776,
+          "max_of_min_y_px": 0.005,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "triceratops",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.647,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.005,
+          "max_of_min_y_px": 0.302,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.753,
+          "max_of_min_y_px": 0.005,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "stegosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.724,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.301,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.045,
+          "max_of_min_y_px": 0.242,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "ankylosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 0.431,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.005,
+          "max_of_min_y_px": 0.302,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.2,
+          "max_of_min_y_px": 1.468,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "brachiosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -1.097,
+          "max_of_min_y_px": -0.005,
+          "worst_time_s": 2.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": -0.001,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -4.739,
+          "max_of_min_y_px": 0.553,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "parasaurolophus",
+      "clips": [
+        "attack",
+        "beg",
+        "call",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.744,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.004,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.668,
+          "max_of_min_y_px": 0.029,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "pachycephalosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": -0.0,
+          "worst_time_s": 2.25,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.003,
+          "max_of_min_y_px": -0.003,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.344,
+          "max_of_min_y_px": 0.04,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "gallimimus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.001,
+          "max_of_min_y_px": 0.001,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.363,
+          "max_of_min_y_px": 0.331,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "pteranodon",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "fly",
+        "glide",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.954,
+          "max_of_min_y_px": 1.516,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": 0.295,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -54.462,
+          "max_of_min_y_px": 1.953,
+          "worst_time_s": 1.0,
+          "loop": "once",
+          "endpoint_component_delta": 179.64
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "thigh_l",
+          "thigh_r",
+          "wing1_l",
+          "wing1_r",
+          "wing2_l",
+          "wing2_r",
+          "wing3_l",
+          "wing3_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "mosasaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.355,
+          "max_of_min_y_px": 0.953,
+          "worst_time_s": 1.5,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.302,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.659,
+          "max_of_min_y_px": 7.53,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "flipper_back_l",
+          "flipper_back_r",
+          "flipper_front_l",
+          "flipper_front_r",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "tail6"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "maiasaura",
+      "clips": [
+        "attack",
+        "beg",
+        "call",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.744,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.004,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.668,
+          "max_of_min_y_px": 0.029,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "quetzalcoatlus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "fly",
+        "glide",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.005,
+          "max_of_min_y_px": 0.29,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -31.446,
+          "max_of_min_y_px": 4.673,
+          "worst_time_s": 1.0,
+          "loop": "once",
+          "endpoint_component_delta": 179.64
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "thigh_l",
+          "thigh_r",
+          "wing1_l",
+          "wing1_r",
+          "wing2_l",
+          "wing2_r",
+          "wing3_l",
+          "wing3_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "hatzegopteryx",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "fly",
+        "glide",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": -0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.002,
+          "max_of_min_y_px": 0.298,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -40.233,
+          "max_of_min_y_px": 4.602,
+          "worst_time_s": 1.0,
+          "loop": "once",
+          "endpoint_component_delta": 179.64
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "thigh_l",
+          "thigh_r",
+          "wing1_l",
+          "wing1_r",
+          "wing2_l",
+          "wing2_r",
+          "wing3_l",
+          "wing3_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "ichthyornis",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "fly",
+        "glide",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.302,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -8.512,
+          "max_of_min_y_px": 1.338,
+          "worst_time_s": 0.7,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "thigh_l",
+          "thigh_r",
+          "wing1_l",
+          "wing1_r",
+          "wing2_l",
+          "wing2_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "tylosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.426,
+          "max_of_min_y_px": 1.35,
+          "worst_time_s": 1.5,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.005,
+          "max_of_min_y_px": 0.304,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.124,
+          "max_of_min_y_px": 6.645,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail3"
+        ],
+        "wake": [
+          "flipper_back_l",
+          "flipper_back_r",
+          "flipper_front_l",
+          "flipper_front_r",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "tail6"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "elasmosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -2.64,
+          "max_of_min_y_px": 0.922,
+          "worst_time_s": 3.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0.0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.003,
+          "max_of_min_y_px": 0.296,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -8.364,
+          "max_of_min_y_px": 1.548,
+          "worst_time_s": 0.8,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "neck10",
+          "neck11",
+          "neck12",
+          "neck13",
+          "neck14",
+          "neck2",
+          "neck3",
+          "neck4",
+          "neck5",
+          "neck6",
+          "neck7",
+          "neck8",
+          "neck9"
+        ],
+        "wake": [
+          "flipper_back_l",
+          "flipper_back_r",
+          "flipper_front_l",
+          "flipper_front_r",
+          "neck1",
+          "neck10",
+          "neck11",
+          "neck12",
+          "neck13",
+          "neck14",
+          "neck2",
+          "neck3",
+          "neck4",
+          "neck5",
+          "neck6",
+          "neck7",
+          "neck8",
+          "neck9",
+          "tail1",
+          "tail2",
+          "tail3"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "neck2"
+        ]
+      }
+    },
+    {
+      "species": "xiphactinus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.141,
+          "max_of_min_y_px": 1.285,
+          "worst_time_s": 2.625,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.005,
+          "max_of_min_y_px": 0.303,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.945,
+          "max_of_min_y_px": 1.186,
+          "worst_time_s": 0.85,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck",
+          "tail1",
+          "tail2",
+          "tail3"
+        ],
+        "wake": [
+          "flipper_back_l",
+          "flipper_back_r",
+          "flipper_front_l",
+          "flipper_front_r",
+          "neck",
+          "tail1",
+          "tail2",
+          "tail3"
+        ],
+        "eat": [
+          "body"
+        ]
+      }
+    },
+    {
+      "species": "archelon",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 5.0,
+          "samples": 9,
+          "min_y_px": -0.836,
+          "max_of_min_y_px": 0.161,
+          "worst_time_s": 3.75,
+          "loop": "loop",
+          "endpoint_component_delta": 0.0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.004,
+          "max_of_min_y_px": 0.037,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -23.725,
+          "max_of_min_y_px": 4.769,
+          "worst_time_s": 0.75,
+          "loop": "once",
+          "endpoint_component_delta": 172
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "flipper_front_l",
+          "flipper_front_r",
+          "neck1",
+          "neck2"
+        ],
+        "wake": [
+          "flipper_back_l",
+          "flipper_back_r",
+          "flipper_front_l",
+          "flipper_front_r",
+          "neck1",
+          "neck2",
+          "tail1",
+          "tail2"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "neck2"
+        ]
+      }
+    },
+    {
+      "species": "hesperornis",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 3.967,
+          "max_of_min_y_px": 5.0,
+          "worst_time_s": 1.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0.0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.302,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.325,
+          "max_of_min_y_px": 5.0,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "neck2",
+          "shin_l",
+          "shin_r",
+          "skull"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "neck2",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "thigh_l",
+          "thigh_r",
+          "wing_l",
+          "wing_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "neck2",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "deinosuchus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.014,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.302,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -7.506,
+          "max_of_min_y_px": 2.306,
+          "worst_time_s": 0.8,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "tail6"
+        ],
+        "wake": [
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "tail6",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "baurusuchus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.187,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.002,
+          "max_of_min_y_px": 0.297,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.95,
+          "max_of_min_y_px": 0.448,
+          "worst_time_s": 0.75,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "wake": [
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "edmontosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "call",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 0.817,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.003,
+          "worst_time_s": 3.5,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.959,
+          "max_of_min_y_px": 0.029,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail2",
+          "tail3",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "corythosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "call",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.737,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": -0.001,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.757,
+          "max_of_min_y_px": 0.093,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail2",
+          "tail3",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "styracosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.533,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.301,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.742,
+          "max_of_min_y_px": 0.069,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "euoplocephalus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 0.431,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.005,
+          "max_of_min_y_px": 0.292,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.947,
+          "max_of_min_y_px": 1.041,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "protoceratops",
+      "clips": [
+        "attack",
+        "beg",
+        "dig",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.14,
+          "max_of_min_y_px": 0.0,
+          "worst_time_s": 2.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.002,
+          "max_of_min_y_px": 0.299,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.616,
+          "max_of_min_y_px": 0.038,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "struthiomimus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.303,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.001,
+          "max_of_min_y_px": 0.001,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.649,
+          "max_of_min_y_px": 0.109,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "thescelosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "dig",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.549,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.004,
+          "max_of_min_y_px": -0.004,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.235,
+          "max_of_min_y_px": 0.099,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "pachyrhinosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "scent",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 0.602,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.001,
+          "max_of_min_y_px": 0.298,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.561,
+          "max_of_min_y_px": 0.001,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "therizinosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 1.075,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": -0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.268,
+          "max_of_min_y_px": 0.423,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "deinocheirus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "fish",
+        "graze",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 1.122,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": -0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.268,
+          "max_of_min_y_px": 0.423,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "alamosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 1.556,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.002,
+          "max_of_min_y_px": 0.002,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.627,
+          "max_of_min_y_px": 0.053,
+          "worst_time_s": 1.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "tail6"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "saltasaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.794,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.004,
+          "max_of_min_y_px": 0.004,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.378,
+          "max_of_min_y_px": 0.065,
+          "worst_time_s": 1.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "argentinosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 1.767,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": -0.001,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.737,
+          "max_of_min_y_px": 0.062,
+          "worst_time_s": 1.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "forearm_l",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "tail6",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "opisthocoelicaudia",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.77,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.003,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.378,
+          "max_of_min_y_px": 0.163,
+          "worst_time_s": 1.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "forearm_r",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5",
+          "upperarm_r"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "dreadnoughtus",
+      "clips": [
+        "attack",
+        "beg",
+        "call",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 1.435,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.003,
+          "worst_time_s": 3.5,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.552,
+          "max_of_min_y_px": 0.157,
+          "worst_time_s": 1.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4",
+          "tail5"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "giganotosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.757,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.003,
+          "max_of_min_y_px": -0.003,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.894,
+          "max_of_min_y_px": 0.004,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "carcharodontosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.004,
+          "max_of_min_y_px": 0.736,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.003,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.897,
+          "max_of_min_y_px": 0.003,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "carnotaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "charge",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.526,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": -0.001,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.734,
+          "max_of_min_y_px": 0.131,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "tarbosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.516,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.9,
+          "max_of_min_y_px": 0.007,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "daspletosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.516,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.002,
+          "max_of_min_y_px": 0.002,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.877,
+          "max_of_min_y_px": 0.024,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "albertosaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.705,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": -0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.84,
+          "max_of_min_y_px": 0.054,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "majungasaurus",
+      "clips": [
+        "attack",
+        "beg",
+        "charge",
+        "eat",
+        "idle",
+        "knocked_out",
+        "roar",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.526,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.002,
+          "max_of_min_y_px": 0.002,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.682,
+          "max_of_min_y_px": 0.002,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "tail1"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "roar": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull",
+          "tail1",
+          "tail2"
+        ]
+      }
+    },
+    {
+      "species": "dakotaraptor",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": -0.004,
+          "max_of_min_y_px": 0.439,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.001,
+          "max_of_min_y_px": 0.001,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.349,
+          "max_of_min_y_px": 0.006,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "troodon",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.442,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": -0.0,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.813,
+          "max_of_min_y_px": 0.275,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "oviraptor",
+      "clips": [
+        "attack",
+        "beg",
+        "brood",
+        "display",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": 0.423,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.036,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.913,
+          "max_of_min_y_px": 0.061,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "citipati",
+      "clips": [
+        "attack",
+        "beg",
+        "brood",
+        "display",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": 0.444,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 0.048,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.312,
+          "max_of_min_y_px": 0.094,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "mononykus",
+      "clips": [
+        "attack",
+        "beg",
+        "dig",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": -0.128,
+          "max_of_min_y_px": 0.003,
+          "worst_time_s": 1.5,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.002,
+          "max_of_min_y_px": 0.002,
+          "worst_time_s": 3.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.861,
+          "max_of_min_y_px": 0.084,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "arm_l",
+          "arm_r",
+          "body",
+          "neck1",
+          "skull"
+        ],
+        "wake": [
+          "arm_l",
+          "arm_r",
+          "foot_l",
+          "foot_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "didelphodon",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "sniff",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.416,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.005,
+          "max_of_min_y_px": 0.005,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.938,
+          "max_of_min_y_px": 0.244,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "leptoceratops",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "rear",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.158,
+          "max_of_min_y_px": -0.005,
+          "worst_time_s": 2.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.3,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -1.232,
+          "max_of_min_y_px": 0.142,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "vegavis",
+      "clips": [
+        "attack",
+        "beg",
+        "call",
+        "eat",
+        "fly",
+        "glide",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 0.0,
+          "max_of_min_y_px": 0.129,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.0,
+          "max_of_min_y_px": 0.298,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -3.161,
+          "max_of_min_y_px": 0.378,
+          "worst_time_s": 0.7,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1",
+          "skull",
+          "wing1_l",
+          "wing1_r"
+        ],
+        "wake": [
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "skull",
+          "thigh_l",
+          "thigh_r",
+          "wing1_l",
+          "wing1_r",
+          "wing2_l",
+          "wing2_r"
+        ],
+        "eat": [
+          "body",
+          "neck1",
+          "skull"
+        ]
+      }
+    },
+    {
+      "species": "mesodma",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "idle",
+        "knocked_out",
+        "nibble",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.001,
+          "max_of_min_y_px": 0.371,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.005,
+          "max_of_min_y_px": -0.005,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.714,
+          "max_of_min_y_px": 0.169,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "basilemys",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "graze",
+        "hide",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.004,
+          "max_of_min_y_px": 0.381,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.002,
+          "max_of_min_y_px": 0.299,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -2.432,
+          "max_of_min_y_px": 0.317,
+          "worst_time_s": 1.4,
+          "loop": "once",
+          "endpoint_component_delta": 82
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "neck1"
+        ],
+        "wake": [
+          "foot_l",
+          "foot_r",
+          "forearm_l",
+          "forearm_r",
+          "neck1",
+          "shin_l",
+          "shin_r",
+          "tail1",
+          "tail2",
+          "thigh_l",
+          "thigh_r",
+          "upperarm_l",
+          "upperarm_r"
+        ],
+        "eat": [
+          "body",
+          "neck1"
+        ]
+      }
+    },
+    {
+      "species": "enchodus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.0,
+          "samples": 9,
+          "min_y_px": 1.542,
+          "max_of_min_y_px": 2.256,
+          "worst_time_s": 2.625,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": -0.002,
+          "max_of_min_y_px": 0.297,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.633,
+          "max_of_min_y_px": 1.904,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "jaw",
+          "neck",
+          "operculum_l",
+          "operculum_r",
+          "pectoral_l",
+          "pectoral_r",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "wake": [
+          "dorsal",
+          "jaw",
+          "neck",
+          "operculum_l",
+          "operculum_r",
+          "pectoral_l",
+          "pectoral_r",
+          "pelvic_l",
+          "pelvic_r",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "eat": [
+          "body",
+          "jaw"
+        ]
+      }
+    },
+    {
+      "species": "lepisosteus",
+      "clips": [
+        "attack",
+        "beg",
+        "eat",
+        "idle",
+        "knocked_out",
+        "run",
+        "sit",
+        "tame",
+        "wake",
+        "walk"
+      ],
+      "source_matches_export": true,
+      "geometry_matches_export": true,
+      "knocked_out_dynamic_tracks": [
+        "body.position"
+      ],
+      "ground_probes": {
+        "sit": {
+          "length_s": 3.2,
+          "samples": 9,
+          "min_y_px": 0.2,
+          "max_of_min_y_px": 0.8,
+          "worst_time_s": 1.2,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "knocked_out": {
+          "length_s": 4.0,
+          "samples": 9,
+          "min_y_px": 0.003,
+          "max_of_min_y_px": 0.302,
+          "worst_time_s": 0.0,
+          "loop": "loop",
+          "endpoint_component_delta": 0
+        },
+        "wake": {
+          "length_s": 1.8,
+          "samples": 37,
+          "min_y_px": -0.081,
+          "max_of_min_y_px": 1.407,
+          "worst_time_s": 0.25,
+          "loop": "once",
+          "endpoint_component_delta": 85
+        }
+      },
+      "action_walk_shared_bones": {
+        "attack": [
+          "body",
+          "jaw",
+          "neck",
+          "operculum_l",
+          "operculum_r",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "wake": [
+          "jaw",
+          "neck",
+          "operculum_l",
+          "operculum_r",
+          "pectoral_l",
+          "pectoral_r",
+          "pelvic_l",
+          "pelvic_r",
+          "tail1",
+          "tail2",
+          "tail3",
+          "tail4"
+        ],
+        "eat": [
+          "body",
+          "jaw"
+        ]
+      }
+    }
+  ]
+}

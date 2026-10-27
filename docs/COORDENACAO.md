@@ -135,6 +135,16 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
+Estudo Codex — 27/10: concluída a revisão pedida pelo Rodrigo sobre morte, deitado e animações gerais.
+Entrega: `docs/estudos/06_ANIMACOES.md`, `tools/validation/audit_animations.py` e evidências em
+`art/estudos/animacoes/v1/` (relatório de 59 espécies, prancha e GIF do estado atual). Fontes de animação
+e geometria iguais aos 59 exports; 438 entradas intactas por hash. Carcaça reutiliza nocaute com movimento;
+55/59 prévias de levantar cruzam o plano y=0, incluindo casos aquáticos que exigem interpretação própria.
+Overshoot de Catmull-Rom e asas abertas durante recuperação identificados. Integridade e orçamento passaram.
+Sem regenerar assets ou mudar o jogo; build e revisão no cliente não executadas nesta etapa de estudo.
+Próxima entrega proposta: piloto Tyrannosaurus/Triceratops (apoios, morte e levantar), depois Pteranodon/
+Ichthyornis. Reservar classes-base e arquétipos antes da implementação; arquivos do estudo liberados.
+
 Registro Codex — 26/10: Rodrigo pediu guardar para o futuro a ideia de um vídeo curto passeando
 por vários dinossauros. Briefing em `CAPA.md`; não iniciar produção agora. Nova descrição e summary
 das lojas serão apresentados em português para validação antes de substituir os textos publicados.
