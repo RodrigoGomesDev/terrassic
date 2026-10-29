@@ -65,6 +65,8 @@ import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.registry.ModEntities;
+import com.terrassic.registry.ModParticles;
+import dev.architectury.registry.client.particle.ParticleProviderRegistry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.world.entity.EntityType;
@@ -150,6 +152,9 @@ public final class TerrassicClient {
         EntityRendererRegistry.register(ModEntities.TRANQ_DART, net.minecraft.client.renderer.entity.ThrownItemRenderer::new);
         EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();
+        ParticleProviderRegistry.register(ModParticles.ROAR_WAVE, RoarWaveParticle.Provider::new);
+        RoarShake.init(); // the loud roar's camera shake
+        LensOverlay.init(); // the Field Lens card (item/FieldLensItem)
         BuildingBlocksClient.init();
         TerrassicMenuScreen.register(); // the Terrassic main menu (docs/MENU.md)
         ClientIslandMap.register(); // the island map of the Field Notebook (docs/MUNDO.md, section 11)

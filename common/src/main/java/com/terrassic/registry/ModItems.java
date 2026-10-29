@@ -235,6 +235,12 @@ public final class ModItems {
     // ---- riding gear: the platform saddle of the titans (docs/CARGA.md): four aboard, anyone may climb on
     public static final RegistrySupplier<Item> PLATFORM_SADDLE = ITEMS.register("platform_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Field Lens: look at a dinosaur through it for its card, taming state included (item/FieldLensItem). */
+    public static final RegistrySupplier<Item> FIELD_LENS = ITEMS.register("field_lens",
+            () -> new com.terrassic.item.FieldLensItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.MAIN)));
+    /** The T. rex's own saddle (only it saddles a T. rex), with saddlebags: a saddled T. rex carries its cargo. */
+    public static final RegistrySupplier<Item> TYRANNOSAURUS_SADDLE = ITEMS.register("tyrannosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
 
     // ---- science: notebook, field tools, fossils (docs/HISTORIA.md, section 4)
     public static final RegistrySupplier<Item> FIELD_NOTEBOOK = ITEMS.register("field_notebook",

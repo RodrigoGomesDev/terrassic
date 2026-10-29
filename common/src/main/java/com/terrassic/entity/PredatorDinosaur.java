@@ -12,6 +12,7 @@ import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -68,6 +69,16 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         return true;
     }
 
+    /** Solitary hunters keep no herd (no FollowHerdGoal). Called during construction: return a constant. */
+    protected boolean solitary() {
+        return false;
+    }
+
+    /** The fight itself (priority 3): the vanilla melee by default. */
+    protected Goal createAttackGoal() {
+        return new MeleeAttackGoal(this, attackSpeed(), true);
+    }
+
     /** Hook for extra goals (leap, avoid...). Called at the end of {@link #registerGoals()}. */
     protected void addExtraGoals() {
     }
@@ -78,7 +89,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(1, new DinoSleepGoal(this));
         this.goalSelector.addGoal(2, new EatCarcassGoal(this));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, attackSpeed(), true));
+        this.goalSelector.addGoal(3, this.createAttackGoal());
         float stop = Math.max(2.0F, this.getBbWidth() * 1.5F);
         this.goalSelector.addGoal(4, this.getNavigation() instanceof GroundPathNavigation
                 || this.getNavigation() instanceof FlyingPathNavigation
@@ -87,7 +98,9 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(7, new FollowHerdGoal(this));
+        if (!this.solitary()) {
+            this.goalSelector.addGoal(7, new FollowHerdGoal(this));
+        }
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));

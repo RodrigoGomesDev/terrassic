@@ -1,37 +1,55 @@
 {
  "tyrannosaurus": {
-  "bones": 24,
-  "cubes": 139,
+  "bones": 23,
+  "cubes": 80,
   "texture": [
    256,
-   512
+   256
   ],
   "bounds_px": [
    [
     -22.0,
-    -0.21183195656032971,
-    -96.22481685590766
+    -5.213722713742324e-15,
+    -93.77273762503262
    ],
    [
     22.0,
-    88.50107612150622,
-    108.10174485291634
+    90.7456852827784,
+    108.00147393225161
    ]
   ],
   "animations": [
    "animation.tyrannosaurus.idle",
+   "animation.tyrannosaurus.sniff",
+   "animation.tyrannosaurus.look_back",
+   "animation.tyrannosaurus.shake",
+   "animation.tyrannosaurus.yawn",
+   "animation.tyrannosaurus.stretch",
    "animation.tyrannosaurus.walk",
    "animation.tyrannosaurus.run",
-   "animation.tyrannosaurus.attack",
+   "animation.tyrannosaurus.stalk",
+   "animation.tyrannosaurus.swim",
    "animation.tyrannosaurus.roar",
-   "animation.tyrannosaurus.sit",
-   "animation.tyrannosaurus.knocked_out",
-   "animation.tyrannosaurus.wake",
+   "animation.tyrannosaurus.roar_loud",
+   "animation.tyrannosaurus.call",
+   "animation.tyrannosaurus.threat",
+   "animation.tyrannosaurus.attack",
+   "animation.tyrannosaurus.attack_quick",
+   "animation.tyrannosaurus.stomp",
+   "animation.tyrannosaurus.hurt",
+   "animation.tyrannosaurus.death",
    "animation.tyrannosaurus.eat",
+   "animation.tyrannosaurus.drink",
+   "animation.tyrannosaurus.sit",
+   "animation.tyrannosaurus.sleep",
+   "animation.tyrannosaurus.wake",
+   "animation.tyrannosaurus.wake_sleep",
+   "animation.tyrannosaurus.knocked_out",
    "animation.tyrannosaurus.beg",
    "animation.tyrannosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.5,
+  "handmade": true
  },
  "spinosaurus": {
   "bones": 24,

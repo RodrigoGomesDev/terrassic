@@ -12,7 +12,7 @@ import java.util.List;
 public record GuideSpecies(String id, String era, String diet, float length, boolean rideable, boolean eggOnly,
                            int fossilWeight, float guiScale) {
     public static final List<GuideSpecies> ALL = List.of(
-            new GuideSpecies("tyrannosaurus", "late_cretaceous", "carnivore", 13.0F, true, true, 2, 7.68F),
+            new GuideSpecies("tyrannosaurus", "late_cretaceous", "carnivore", 13.0F, true, true, 2, 7.77F),
             new GuideSpecies("spinosaurus", "late_cretaceous", "piscivore", 14.0F, false, true, 2, 7.13F),
             new GuideSpecies("dilophosaurus", "jurassic", "carnivore", 7.0F, false, true, 4, 14.21F),
             new GuideSpecies("velociraptor", "late_cretaceous", "carnivore", 2.07F, false, true, 4, 48.27F),

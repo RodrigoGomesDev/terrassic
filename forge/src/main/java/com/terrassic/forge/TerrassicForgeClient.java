@@ -13,5 +13,6 @@ final class TerrassicForgeClient {
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, parent) -> new RulesScreen(parent, false)));
         EraFilterForge.register();
+        MountHudForge.register();
     }
 }

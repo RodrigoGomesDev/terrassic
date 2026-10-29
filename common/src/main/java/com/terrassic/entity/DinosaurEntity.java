@@ -55,6 +55,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import com.terrassic.item.ClubItem;
 import net.minecraft.world.item.Items;
@@ -192,6 +193,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private int perchWarnCooldown;
     /** While dying, the death loot is collected here for the carcass instead of being dropped. */
     private List<ItemStack> capturedLoot;
+    /** Species with a death animation: the death loot waits here until the animation ends and the carcass is laid. */
+    private List<ItemStack> pendingCarcassLoot;
     /** Ticks a meat eater stays full after a meal (it does not hunt while sated). */
     private int sated;
     /** Ticks until the hunger gauge drops by one. */
@@ -210,6 +213,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private int tameEffectiveness = 100;
     private UUID tamer;
     private RawAnimation knockedOutAnim;
+    private RawAnimation deathAnim;
+    private RawAnimation sleepAnim;
+    private RawAnimation swimAnim;
+    /** Client: playback speed of the walk / run cycle, following the real ground speed (see {@link #walkCycleSpeed()}). */
+    protected double cycleSpeed = 1.0D;
+    /** Client: hurtTime seen by the flinch controller on the previous frame (a higher value means a new hit). */
+    private int lastFlinch;
     private static final UUID TAMING_BONUS_ID = UUID.fromString("6c0f3b8e-2d5a-4c71-9a43-1f5e8d7b2a90");
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
@@ -292,7 +302,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     public void setSleeping(boolean sleeping) {
+        boolean was = this.entityData.get(DATA_SLEEPING);
         this.entityData.set(DATA_SLEEPING, sleeping);
+        if (was && !sleeping && this.hasSleepAnim() && this.isAlive() && !this.isKnockedOut() && !this.level().isClientSide()) {
+            triggerAnim(ACTION_CONTROLLER, "wake_sleep");
+        }
     }
 
     /** The species' resting hours: night for most, day for the nocturnal ones (never in the rain of a thunderstorm). */
@@ -420,6 +434,47 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Squared horizontal speed (blocks/tick) above which the run cycle is used. */
     protected double runThresholdSqr() {
         return 0.012D;
+    }
+
+    /** Ground speed (blocks per tick, at size 1.0) one cycle of the "walk" animation covers. Above 0 the cycle plays
+     *  faster or slower with the animal's real speed, so the feet do not slide; 0 = always at its authored speed. */
+    protected double walkCycleSpeed() {
+        return 0.0D;
+    }
+
+    /** Same as {@link #walkCycleSpeed()} for the "run" cycle. */
+    protected double runCycleSpeed() {
+        return 0.0D;
+    }
+
+    /** Ticks of the species' "death" animation; the body stays that long and then turns into the carcass (lying in
+     *  its knocked_out pose, which the animation ends in). 0 = the vanilla death (one second, tipping over). */
+    protected int deathAnimTicks() {
+        return 0;
+    }
+
+    public boolean hasDeathAnimation() {
+        return this.deathAnimTicks() > 0;
+    }
+
+    /** Whether the species has its own "sleep" loop and "wake_sleep" (else it sleeps in the "sit" pose). */
+    protected boolean hasSleepAnim() {
+        return false;
+    }
+
+    /** Whether the species has a "swim" cycle for deep water. */
+    protected boolean hasSwimAnim() {
+        return false;
+    }
+
+    /** Whether the species flinches (its "hurt" animation) when it takes a hit. */
+    protected boolean flinches() {
+        return false;
+    }
+
+    /** Whether a landed hit triggers "attack" (false for species whose attack goal plays the bite and times the hit). */
+    protected boolean animatesHits() {
+        return true;
     }
 
     /** Size of a baby relative to the adult. Applied to the hitbox here and to the model by DinosaurRenderer. */
@@ -723,8 +778,40 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.broodAnim = RawAnimation.begin().thenLoop(anim("brood"));
 
         this.knockedOutAnim = RawAnimation.begin().thenLoop(anim("knocked_out"));
-        controllers.add(new AnimationController<>(this, "movement", 6, state -> this.isKnockedOut()
-                ? state.setAndContinue(this.knockedOutAnim) : this.movementAnimation(state)));
+        this.deathAnim = RawAnimation.begin().thenPlayAndHold(anim("death"));
+        this.sleepAnim = RawAnimation.begin().thenLoop(anim("sleep"));
+        this.swimAnim = RawAnimation.begin().thenLoop(anim("swim"));
+        AnimationController<DinosaurEntity> movement = new AnimationController<>(this, "movement", 6, state -> {
+            if (this.hasDeathAnimation() && this.isDeadOrDying()) {
+                this.cycleSpeed = 1.0D;
+                return state.setAndContinue(this.deathAnim);
+            }
+            if (this.isKnockedOut()) {
+                this.cycleSpeed = 1.0D;
+                return state.setAndContinue(this.knockedOutAnim);
+            }
+            return this.movementAnimation(state);
+        });
+        if (this.walkCycleSpeed() > 0.0D) {
+            movement.setAnimationSpeedHandler(animal -> this.cycleSpeed);
+        }
+        controllers.add(movement);
+
+        // the flinch sits between movement and action: a bite or a roar under way wins over it
+        if (this.flinches()) {
+            RawAnimation hurtAnim = RawAnimation.begin().thenPlay(anim("hurt"));
+            controllers.add(new AnimationController<>(this, "flinch", 2, state -> {
+                if (this.hurtTime <= 0 || !this.isAlive()) {
+                    this.lastFlinch = 0;
+                    return PlayState.STOP;
+                }
+                if (this.hurtTime > this.lastFlinch) {
+                    state.getController().forceAnimationReset();
+                }
+                this.lastFlinch = this.hurtTime;
+                return state.setAndContinue(hurtAnim);
+            }));
+        }
 
         AnimationController<DinosaurEntity> action = new AnimationController<>(this, ACTION_CONTROLLER, 3, state -> PlayState.STOP);
         action.triggerableAnim("attack", RawAnimation.begin().thenPlay(anim("attack")));
@@ -732,6 +819,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         action.triggerableAnim("beg", RawAnimation.begin().thenPlay(anim("beg")));
         action.triggerableAnim("wake", RawAnimation.begin().thenPlay(anim("wake")));
         action.triggerableAnim("tame", RawAnimation.begin().thenPlay(anim("tame")));
+        if (this.hasSleepAnim()) {
+            action.triggerableAnim("wake_sleep", RawAnimation.begin().thenPlay(anim("wake_sleep")));
+        }
         for (String extra : extraActions()) {
             action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
         }
@@ -739,17 +829,43 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
+        this.cycleSpeed = 1.0D;
+        if (this.isSleeping() && this.hasSleepAnim() && !this.isPerched()) {
+            return state.setAndContinue(this.sleepAnim);
+        }
         if (this.isPerched() || this.isSleeping() || (this.isInSittingPose() && !this.isVehicle())) {
             if (this.brooder() && this.tickCount % 10 == 0) {
                 this.brooding = !this.isBaby() && this.nearestEgg(2) != null;
             }
             return state.setAndContinue(this.brooder() && this.brooding ? this.broodAnim : this.sitAnim);
         }
+        if (this.isSwimmingDeep()) {
+            return state.setAndContinue(this.swimAnim);
+        }
         if (state.isMoving()) {
             boolean running = this.isAggressive() || this.getDeltaMovement().horizontalDistanceSqr() > runThresholdSqr();
+            this.cycleSpeed = this.gaitSpeed(running ? this.runCycleSpeed() : this.walkCycleSpeed());
             return state.setAndContinue(running ? this.runAnim : this.walkAnim);
         }
         return state.setAndContinue(this.idleAnim);
+    }
+
+    /** Species with a swim cycle use it once the water is over a third of their height and the feet are off the bottom. */
+    protected boolean isSwimmingDeep() {
+        return this.hasSwimAnim() && this.isInWater() && !this.onGround()
+                && this.getFluidHeight(FluidTags.WATER) > this.getBbHeight() * 0.35D;
+    }
+
+    /** Client: playback speed for a cycle that covers {@code cycle} blocks per tick at size 1.0, from the distance the
+     *  animal really moved this tick (0.5x - 1.8x). */
+    protected double gaitSpeed(double cycle) {
+        if (cycle <= 0.0D) {
+            return 1.0D;
+        }
+        double dx = this.getX() - this.xo;
+        double dz = this.getZ() - this.zo;
+        double speed = Math.sqrt(dx * dx + dz * dz);
+        return Mth.clamp(speed / (cycle * this.getScale()), 0.5D, 1.8D);
     }
 
     @Override
@@ -815,7 +931,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         } else {
             hit = super.doHurtTarget(target);
         }
-        if (hit && !this.level().isClientSide()) {
+        if (hit && !this.level().isClientSide() && this.animatesHits()) {
             triggerAnim(ACTION_CONTROLLER, "attack");
         }
         return hit;
@@ -869,7 +985,28 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             loot = this.capturedLoot;
             this.capturedLoot = null;
         }
+        if (this.hasDeathAnimation()) {
+            this.pendingCarcassLoot = loot;  // laid when the death animation ends (tickDeath)
+            return;
+        }
         server.addFreshEntity(CarcassEntity.of(server, this, loot));
+    }
+
+    /** Species with a death animation: the body plays it to the end, then the carcass takes its place (no puff). */
+    @Override
+    protected void tickDeath() {
+        if (!this.hasDeathAnimation()) {
+            super.tickDeath();
+            return;
+        }
+        ++this.deathTime;
+        if (this.deathTime >= this.deathAnimTicks() && !this.isRemoved() && this.level() instanceof ServerLevel server) {
+            if (this.pendingCarcassLoot != null) {
+                server.addFreshEntity(CarcassEntity.of(server, this, this.pendingCarcassLoot));
+                this.pendingCarcassLoot = null;
+            }
+            this.remove(RemovalReason.KILLED);
+        }
     }
 
     @Override
@@ -885,13 +1022,36 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** The saddle item this animal wears (plain saddle or the platform saddle). */
     protected ItemStack saddleItem() {
-        return new ItemStack(this.isPlatform() ? ModItems.PLATFORM_SADDLE.get() : Items.SADDLE);
+        if (this.isPlatform()) {
+            return new ItemStack(ModItems.PLATFORM_SADDLE.get());
+        }
+        Item own = this.speciesSaddle();
+        return new ItemStack(own != null ? own : Items.SADDLE);
+    }
+
+    /** The species' own saddle, the only item that saddles it (null = the vanilla saddle). Its saddle comes with
+     *  saddlebags: a saddled animal carries its {@link #cargoRows()} rows of cargo without a chest. */
+    protected Item speciesSaddle() {
+        return null;
+    }
+
+    /** Saddled with its own saddle, whose bags hold the cargo. */
+    public boolean hasSaddlebags() {
+        return this.cargo != null && this.isSaddled() && !this.isPlatform() && this.speciesSaddle() != null;
+    }
+
+    /** The cargo can be reached: a chest strapped on, or the saddlebags of its own saddle. */
+    public boolean hasCargo() {
+        return this.isChested() || this.hasSaddlebags();
     }
 
     // ------------------------------------------------------------------ cargo
 
     /** Takes the chest off and drops it with everything in it. */
     protected void dropCargo() {
+        if (this.hasSaddlebags() && !this.level().isClientSide()) {
+            Containers.dropContents(this.level(), this, this.cargo);   // the bags go with the saddle
+        }
         if (!this.isChested()) {
             return;
         }
@@ -928,7 +1088,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** The inventory key while riding opens the cargo (vanilla sends OPEN_INVENTORY for a HasCustomInventoryScreen vehicle). */
     @Override
     public void openCustomInventoryScreen(Player player) {
-        if (!this.level().isClientSide() && this.isChested() && this.isTame() && this.isOwnedBy(player)) {
+        if (!this.level().isClientSide() && this.hasCargo() && this.isTame() && this.isOwnedBy(player)) {
             this.openCargo(player);
         }
     }
@@ -999,7 +1159,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 return InteractionResult.sidedSuccess(client);
             }
             // a chest strapped on makes a pack animal of it (the cargo inventory, docs/CARGA.md)
-            if (this.cargo != null && !this.isBaby() && !this.isChested() && stack.is(Items.CHEST)) {
+            if (this.cargo != null && !this.isBaby() && !this.isChested() && this.speciesSaddle() == null && stack.is(Items.CHEST)) {
                 if (!client) {
                     this.usePlayerItem(player, hand, stack);
                     this.setChested(true);
@@ -1010,7 +1170,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 return InteractionResult.sidedSuccess(client);
             }
             // without a saddle, sneak + empty hand opens the cargo (saddled: mount it and press the inventory key)
-            if (this.isChested() && !this.isSaddled() && stack.isEmpty() && player.isSecondaryUseActive()) {
+            if (stack.isEmpty() && player.isSecondaryUseActive() && ((this.isChested() && !this.isSaddled())
+                    || (this.hasSaddlebags() && this.isOwnedBy(player)))) {
                 if (!client) {
                     this.openCargo(player);
                 }
@@ -1028,7 +1189,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 return InteractionResult.sidedSuccess(client);
             }
             // saddle
-            if (this.isRideable() && !this.isBaby() && !this.isSaddled() && stack.is(Items.SADDLE)) {
+            if (this.isRideable() && !this.isBaby() && !this.isSaddled() && this.speciesSaddle() != null && stack.is(Items.SADDLE)) {
+                if (!client) {
+                    player.displayClientMessage(Component.translatable("message.terrassic.needs_own_saddle", this.getDisplayName(),
+                            this.speciesSaddle().getDescription()), true);
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
+            if (this.isRideable() && !this.isBaby() && !this.isSaddled()
+                    && stack.is(this.speciesSaddle() != null ? this.speciesSaddle() : Items.SADDLE)) {
                 if (!client) {
                     this.usePlayerItem(player, hand, stack);
                     this.setSaddled(true);
@@ -1039,6 +1208,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             // shears take the saddle off
             if (this.isSaddled() && !this.isVehicle() && stack.is(Items.SHEARS)) {
                 if (!client) {
+                    if (this.hasSaddlebags()) {
+                        Containers.dropContents(this.level(), this, this.cargo);
+                    }
                     this.spawnAtLocation(this.saddleItem());
                     this.setSaddled(false);
                     this.setPlatform(false);
@@ -1256,6 +1428,67 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 Mth.ceil(this.torpor), Mth.ceil(this.maxTorpor()), progress, this.tameEffectiveness), true);
     }
 
+    /** Foods each species accepts from the hand, found once by testing every item (the Field Lens lists them). */
+    private static final java.util.Map<String, List<String>> FOODS = new java.util.HashMap<>();
+
+    private List<String> acceptedFoods() {
+        return FOODS.computeIfAbsent(this.speciesId(), id -> {
+            List<String> found = new java.util.ArrayList<>();
+            for (Item item : net.minecraft.core.registries.BuiltInRegistries.ITEM) {
+                if (found.size() < 8 && item != Items.AIR && this.koFood(new ItemStack(item))) {
+                    found.add(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).toString());
+                }
+            }
+            return found;
+        });
+    }
+
+    /** What the Field Lens shows to the player looking at it (network/LensNetwork): the values only the server
+     *  knows (torpor, taming progress, effectiveness, time to wake, cargo) plus the accepted foods. */
+    public CompoundTag lensInfo(Player viewer) {
+        CompoundTag t = new CompoundTag();
+        t.putBoolean("Female", this.isFemale());
+        t.putFloat("Size", this.getAdultSize());
+        t.putBoolean("Baby", this.isBaby());
+        t.putFloat("Growth", this.isBaby() ? this.entityData.get(DATA_GROWTH) : 1.0F);
+        t.putFloat("Health", this.getHealth());
+        t.putFloat("MaxHealth", this.getMaxHealth());
+        t.putInt("Hunger", this.getHunger());
+        t.putBoolean("Tame", this.isTame());
+        t.putBoolean("Mine", this.isOwnedBy(viewer));
+        LivingEntity owner = this.getOwner();
+        if (owner != null) {
+            t.putString("Owner", owner.getName().getString());
+        }
+        t.putString("Method", this.isTame() ? "" : this.tameMethod() == TameMethod.FEEDING || this.isBaby() ? "feed" : "knockout");
+        t.putBoolean("KnockedOut", this.isKnockedOut());
+        t.putFloat("Torpor", this.torpor);
+        t.putFloat("MaxTorpor", this.maxTorpor());
+        t.putFloat("Progress", this.tameProgress);
+        t.putFloat("Goal", this.tameGoal());
+        t.putInt("Effectiveness", this.tameEffectiveness);
+        if (this.isKnockedOut()) {
+            t.putInt("WakeSeconds", Mth.ceil(this.torpor * (this.wakesFast() ? 90.0F : 150.0F) / this.maxTorpor()));
+        }
+        t.putBoolean("Saddled", this.isSaddled());
+        if (this.cargo != null && this.hasCargo()) {
+            int used = 0;
+            for (int i = 0; i < this.cargo.getContainerSize(); i++) {
+                if (!this.cargo.getItem(i).isEmpty()) {
+                    used++;
+                }
+            }
+            t.putInt("CargoUsed", used);
+            t.putInt("CargoSize", this.cargo.getContainerSize());
+        }
+        ListTag foods = new ListTag();
+        for (String id : this.acceptedFoods()) {
+            foods.add(net.minecraft.nbt.StringTag.valueOf(id));
+        }
+        t.put("Foods", foods);
+        return t;
+    }
+
     /** Wakes up tame: full health plus a bonus of up to 20% for an effective taming (few wounds while asleep). */
     private void finishKnockoutTaming(Player player) {
         int effectiveness = this.tameEffectiveness;
@@ -1354,7 +1587,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
         }
         // a chested animal helps itself to its own cargo when hungry
-        if (this.isHungry() && this.cargo != null && this.isChested() && this.tickCount % 100 == 0) {
+        if (this.isHungry() && this.cargo != null && this.hasCargo() && this.tickCount % 100 == 0) {
             for (int i = 0; i < this.cargo.getContainerSize(); i++) {
                 ItemStack stack = this.cargo.getItem(i);
                 if (!stack.isEmpty() && this.isFood(stack)) {

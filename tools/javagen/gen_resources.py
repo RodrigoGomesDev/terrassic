@@ -8,6 +8,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 RES = os.path.join(ROOT, "common", "src", "main", "resources")
 A = os.path.join(RES, "assets", "terrassic")
 D = os.path.join(RES, "data", "terrassic")
+sys.path.insert(0, os.path.join(ROOT, "tools", "spritegen"))
+from rex_extras import CUSTOM_EGGS  # noqa: E402  (eggs with their own nest model: the T. rex pair)
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -84,6 +86,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "rex_tooth_dagger": ("T. rex Tooth Dagger", "Adaga de Dente de Tiranossauro", "Daga de Diente de Tiranosaurio", "item/handheld"),
     "tail_club": ("Tail Club", "Clava de Cauda", "Garrote de Cola", "item/handheld"),
     "platform_saddle": ("Platform Saddle", "Sela de Plataforma", "Silla de Plataforma", "item/generated"),
+    # species saddles, like ARK: each big rider has its own, with its own recipe (the T. rex first)
+    "tyrannosaurus_saddle": ("T. rex Saddle", "Sela de Tiranossauro", "Silla de Tiranosaurio", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
     "raw_dino_meat": ("Raw Dino Meat", "Carne de Dinossauro Crua", "Carne de Dinosaurio Cruda", "item/generated"),
     "cooked_dino_meat": ("Cooked Dino Meat", "Carne de Dinossauro Assada", "Carne de Dinosaurio Asada", "item/generated"),
@@ -98,6 +102,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "blowgun": ("Blowgun", "Zarabatana", "Cerbatana", "item/handheld"),
     "tranq_dart": ("Narcotic Dart", "Dardo de Narcótico", "Dardo Narcótico", "item/generated"),
     "sleep_herb": ("Sleep Herb", "Erva Sonífera", "Hierba Somnífera", "item/generated"),
+    # the Field Lens: the card of the dinosaur you look at, taming included (item/FieldLensItem)
+    "field_lens": ("Field Lens", "Lupa de Campo", "Lupa de Campo", "item/handheld"),
 }
 
 LANG_EXTRA = {
@@ -175,6 +181,72 @@ LANG_EXTRA = {
     },
 }
 
+# the Field Lens card and the species saddles (client/LensOverlay, DinosaurEntity.speciesSaddle)
+LENS_LANG = {
+    "en_us": {
+        "item.terrassic.field_lens.tip": "Hold it and look at a dinosaur",
+        "item.terrassic.field_lens.tip2": "Shows health, food, owner and how to tame it",
+        "gui.terrassic.lens.young": "Young · grown %s%%",
+        "gui.terrassic.lens.adult": "Adult · size %s%%",
+        "gui.terrassic.lens.wild": "Wild",
+        "gui.terrassic.lens.yours": "Tamed · yours",
+        "gui.terrassic.lens.owner": "Tamed · %s",
+        "gui.terrassic.lens.health": "Health",
+        "gui.terrassic.lens.hunger": "Fed",
+        "gui.terrassic.lens.torpor": "Torpor",
+        "gui.terrassic.lens.taming": "Taming",
+        "gui.terrassic.lens.effectiveness": "Effectiveness: %s%%",
+        "gui.terrassic.lens.how_knockout": "Tame: knock it out, then feed it",
+        "gui.terrassic.lens.how_feed": "Tame: feed it by hand",
+        "gui.terrassic.lens.how_feed_now": "Out cold: feed it now (use food on it)",
+        "gui.terrassic.lens.eats": "Eats",
+        "gui.terrassic.lens.cargo": "Bags: %s/%s slots",
+        "message.terrassic.needs_own_saddle": "%s only takes a %s",
+    },
+    "pt_br": {
+        "item.terrassic.field_lens.tip": "Segure e olhe para um dinossauro",
+        "item.terrassic.field_lens.tip2": "Mostra vida, comida, dono e como domar",
+        "gui.terrassic.lens.young": "Filhote · %s%% crescido",
+        "gui.terrassic.lens.adult": "Adulto · tamanho %s%%",
+        "gui.terrassic.lens.wild": "Selvagem",
+        "gui.terrassic.lens.yours": "Domado · seu",
+        "gui.terrassic.lens.owner": "Domado · %s",
+        "gui.terrassic.lens.health": "Vida",
+        "gui.terrassic.lens.hunger": "Saciedade",
+        "gui.terrassic.lens.torpor": "Torpor",
+        "gui.terrassic.lens.taming": "Doma",
+        "gui.terrassic.lens.effectiveness": "Eficiência: %s%%",
+        "gui.terrassic.lens.how_knockout": "Domar: nocauteie e depois alimente",
+        "gui.terrassic.lens.how_feed": "Domar: dê comida na mão",
+        "gui.terrassic.lens.how_feed_now": "Desacordado: alimente agora (use a comida nele)",
+        "gui.terrassic.lens.eats": "Come",
+        "gui.terrassic.lens.cargo": "Bolsas: %s/%s espaços",
+        "message.terrassic.needs_own_saddle": "%s só aceita a %s",
+    },
+    "es_es": {
+        "item.terrassic.field_lens.tip": "Sostenla y mira a un dinosaurio",
+        "item.terrassic.field_lens.tip2": "Muestra vida, comida, dueño y cómo domarlo",
+        "gui.terrassic.lens.young": "Cría · %s%% crecida",
+        "gui.terrassic.lens.adult": "Adulto · tamaño %s%%",
+        "gui.terrassic.lens.wild": "Salvaje",
+        "gui.terrassic.lens.yours": "Domado · tuyo",
+        "gui.terrassic.lens.owner": "Domado · %s",
+        "gui.terrassic.lens.health": "Vida",
+        "gui.terrassic.lens.hunger": "Saciedad",
+        "gui.terrassic.lens.torpor": "Sopor",
+        "gui.terrassic.lens.taming": "Doma",
+        "gui.terrassic.lens.effectiveness": "Eficacia: %s%%",
+        "gui.terrassic.lens.how_knockout": "Domar: noquéalo y luego aliméntalo",
+        "gui.terrassic.lens.how_feed": "Domar: dale comida en la mano",
+        "gui.terrassic.lens.how_feed_now": "Inconsciente: aliméntalo ahora (usa la comida en él)",
+        "gui.terrassic.lens.eats": "Come",
+        "gui.terrassic.lens.cargo": "Alforjas: %s/%s huecos",
+        "message.terrassic.needs_own_saddle": "%s solo acepta la %s",
+    },
+}
+for _lang, _keys in LENS_LANG.items():
+    LANG_EXTRA[_lang].update(_keys)
+
 # Minecraft treats every Spanish locale as its own language and falls back to English when one is missing,
 # so the es_es file is copied to the other Spanish variants.
 SPANISH_VARIANTS = ("es_ar", "es_cl", "es_ec", "es_mx", "es_uy", "es_ve")
@@ -188,6 +260,8 @@ def write(path, data):
 
 
 def egg_model(sid, stage, large):
+    if sid in CUSTOM_EGGS:
+        return CUSTOM_EGGS[sid](sid, stage)
     tex = f"terrassic:block/{sid}_egg_{stage}"
     if large:
         els = [([4, 0, 4], [12, 9, 12]), ([5, 9, 5], [11, 12, 11]), ([6, 12, 6], [10, 13, 10])]
@@ -287,6 +361,12 @@ def main():
     # brewed from the Cretaceous water lily (sedative, like its living relatives) and shelf fungus
     shaped("blowgun", ["  R", " R ", "R  "], {"R": "terrassic:rush"}, "terrassic:blowgun")
     shaped("tranq_dart", ["F", "H", "E"], {"F": "minecraft:flint", "H": "terrassic:sleep_herb", "E": "minecraft:feather"}, "terrassic:tranq_dart", 4)
+    # the T. rex saddle: leather seat and flaps, rush padding, iron rings, and a rex tooth for the pommel
+    shaped("tyrannosaurus_saddle", ["LLL", "RTR", "I I"], {"L": "minecraft:leather", "R": "terrassic:rush",
+           "T": "terrassic:rex_tooth", "I": "minecraft:iron_ingot"}, "terrassic:tyrannosaurus_saddle")
+    # the Field Lens: an amber lens in a bone rim on a stick (item/FieldLensItem)
+    shaped("field_lens", [" G ", "BAB", " S "], {"G": "minecraft:glass_pane", "A": "terrassic:raw_amber", "B": "minecraft:bone",
+                                                  "S": "minecraft:stick"}, "terrassic:field_lens")
     shaped("sleep_herb", ["WF"], {"W": "terrassic:cretaceous_water_lily", "F": "terrassic:shelf_fungus"}, "terrassic:sleep_herb", 2)
 
     def cooked(raw, result):

@@ -29,24 +29,38 @@ def cap(e, ch, top, body):
 
 
 def tyrannosaurus():
-    e = Egg("tyrannosaurus", {"b": "#7a5c3c", "c": "#d2bc90", "d": "#3a2818", "n": "#3a2a1a",
-                               "R": MOUTH})
-    cap(e, "d", (5, 2, 26, 18), (3, 9, 28, 36))
-    for (x0, y0, x1, y1) in ((4, 15, 7, 12), (4, 19, 7, 16)):
-        e.line([(x0, y0), (x1, y1)], "n", 2, clip=True)
-        e.line([(31 - x0, y0), (31 - x1, y1)], "n", 2, clip=True)
-    # big boxy jaw
-    e.rect((6, 23, 25, 31), "c", clip=True)
-    e.line([(8, 30), (23, 30)], "C", clip=True)
-    e.pal["C"] = "#b8a074"
-    e.line([(6, 22), (25, 22)], "R")
-    e.px(e.mirror([(6, 21)]), "R")
-    e.pal["W"] = TOOTH
-    for x in (9, 13):
-        e.px(e.mirror([(x, 23), (x, 24), (x + 1, 23)]), "W")
-    eyes(e, 14, 9, iris="#f0b42a", brow="n", angry=True)
-    e.px(e.mirror([(13, 19), (12, 19)]), "n")
-    e.px(e.mirror([(10, 11), (11, 11), (12, 12)]), "n")
+    """T. rex v2 (29/10): the colours of the new model (dark green, rust bars, pale jaw), a long snout down the middle,
+    the model's eyes (dark rim, amber with a pale top, round pupil towards the snout, glint, rust brow) and the upper
+    teeth hanging over the closed jaws (no open red mouth)."""
+    e = Egg("tyrannosaurus_front", {"b": "#465036", "d": "#2a3226", "l": "#5d6840", "c": "#cbb472", "r": "#8e4022",
+                                     "n": "#1a1f18", "W": "#f1ebd4", "M": "#2a1012", "E": "#e8a92f", "e": "#b8741f",
+                                     "Y": "#ffdf6e", "p": "#130d0c", "g": "#fff3c6", "D": "#141210", "h": "#5d6840"})
+    e.ell((4, 1, 27, 19), "d", clip=True)
+    e.ell((5, 8, 26, 30), "b", clip=True)
+    # rust bars across the crown
+    for (x0, y0, x1, y1) in ((12, 2, 14, 5), (17, 2, 19, 5), (8, 5, 10, 8), (21, 5, 23, 8)):
+        e.line([(x0, y0), (x1, y1)] if x0 < 16 else [(x1, y0), (x0, y1)], "r", 2, clip=True)
+    # long snout down the middle, a shade lighter
+    e.poly([(11, 12), (20, 12), (21, 24), (10, 24)], "l", clip=True)
+    e.px(e.mirror([(13, 19)]), "n")
+    # the eyes, as on the model
+    eye = ["rrrrrr..",
+           ".DDDDDD.",
+           ".DgYppD.",
+           ".DYYppD.",
+           ".DEEEeD.",
+           "..DDDD..",
+           "..hhh..."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(3 + i, 10 + j)]) if in_egg(*q)], ch)
+    # closed jaws: the lower jaw pale, upper teeth hanging over the lip line
+    e.rect((5, 25, 26, 31), "c", clip=True)
+    e.line([(5, 24), (26, 24)], "M", clip=True)
+    for x in (7, 10, 13):
+        e.px(e.mirror([(x, 25), (x, 26)]), "W")
+    e.px(e.mirror([(x, 25) for x in (8, 11, 14)]), "W")
     return e
 
 

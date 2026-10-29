@@ -205,10 +205,10 @@ public class RiftTyrant extends Tyrannosaurus {
 
     // ------------------------------------------------------------------ the fight
 
+    /** The Roar of the Rift is the loud roar, head to the sky, with the wave in the air (entity/ApexTheropod). */
     void roarNow() {
         this.roarCooldown = 0;
-        triggerAnim(ACTION_CONTROLLER, "roar");
-        this.playSound(SoundEvents.RAVAGER_ROAR, 5.0F, 0.5F);
+        this.roarLoud();
     }
 
     private boolean enraged() {

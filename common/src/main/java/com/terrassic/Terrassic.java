@@ -9,6 +9,7 @@ import com.terrassic.registry.ModBlockEntities;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
+import com.terrassic.registry.ModParticles;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModTabs;
 import com.terrassic.research.Research;
@@ -36,6 +37,7 @@ public final class Terrassic {
     public static void init() {
         // order matters on Fabric (registered immediately): tabs, entities, blocks, then items
         ModSounds.SOUNDS.register();
+        ModParticles.PARTICLES.register();
         ModTabs.TABS.register();
         ModEntities.ENTITY_TYPES.register();
         ModBlocks.BLOCKS.register();
@@ -54,6 +56,7 @@ public final class Terrassic {
         Research.init();
         Rules.init(); // world rules in the style of ARK (docs/REGRAS.md)
         RulesNetwork.init();
+        com.terrassic.network.LensNetwork.init(); // the Field Lens card (item/FieldLensItem)
         EcoSpawner.init(); // the living ecosystem around every player
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }

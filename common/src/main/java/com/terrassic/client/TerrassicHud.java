@@ -47,8 +47,6 @@ public final class TerrassicHud {
     private static final int FIGHT = 2;
     private static final int SLEEP = 3;
     private static final int CARGO = 4;
-    private static final int HUNGER = 5;
-    private static final int HEART = 6;
     private static final int PANEL = com.terrassic.client.ui.TerrassicPalette.alpha(com.terrassic.client.ui.TerrassicPalette.BASALT_800, 0xD0);
     private static final int EDGE = com.terrassic.client.ui.TerrassicPalette.AMBER_700;
     private static final int PAPER = com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.BONE_100);
@@ -84,8 +82,7 @@ public final class TerrassicHud {
         int y = 4;
         Entity vehicle = player.getVehicle();
         if (ClientConfig.flag("hud_mount") && vehicle instanceof DinosaurEntity mount) {
-            mountPanel(g, mc.font, mount, 4, y);
-            y += 50;
+            y += mountCard(g, mc.font, mount, 4, y);
         }
         if (ClientConfig.flag("hud_pack")) {
             List<DinosaurEntity> pack = mc.level.getEntitiesOfClass(DinosaurEntity.class, player.getBoundingBox().inflate(48.0D),
@@ -119,22 +116,38 @@ public final class TerrassicHud {
         g.fill(x, y, x + Math.round(width * Mth.clamp(fraction, 0.0F, 1.0F)), y + 1, (colour & 0x00FFFFFF) | 0x60FFFFFF);
     }
 
-    private static void mountPanel(GuiGraphics g, Font font, DinosaurEntity d, int x, int y) {
-        frame(g, x, y, x + 132, y + 46);
-        g.fill(x + 3, y + 3, x + 43, y + 43, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
-        portrait(g, d, x + 3, y + 3, 40);
-        g.drawString(font, com.terrassic.client.ui.TerrassicFonts.ui(d.getDisplayName()), x + 47, y + 5, PAPER);
-        icon(g, HEART, x + 47, y + 17);
-        bar(g, x + 58, y + 19, 70, d.getHealth() / d.getMaxHealth(), com.terrassic.client.ui.TerrassicPalette.BLOOD_500);
-        icon(g, HUNGER, x + 47, y + 27);
-        bar(g, x + 58, y + 29, 70, d.getHunger() / (float) DinosaurEntity.MAX_HUNGER, com.terrassic.client.ui.TerrassicPalette.AMBER_600);
-        int ix = x + 47;
-        if (d.isChested()) {
-            icon(g, CARGO, ix, y + 36);
-            ix += 10;
+    // ------------------------------------------------------------------ mount panel
+
+    /** The mount panel: a 24 px portrait, the name, health with numbers, food, and the state icons beside it
+     *  (the vanilla mount hearts are hidden for our dinosaurs: mixin/client/GuiMixin, forge/MountHudForge). */
+    private static int mountCard(GuiGraphics g, Font font, DinosaurEntity d, int x, int y) {
+        int w = 124;
+        frame(g, x, y, x + w, y + 32);
+        g.fill(x + 3, y + 3, x + 29, y + 29, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
+        portrait(g, d, x + 4, y + 4, 24);
+        g.drawString(font, com.terrassic.client.ui.TerrassicFonts.ui(d.getDisplayName()), x + 33, y + 3, PAPER, false);
+        int bx = x + 33;
+        int bw = w - 37;
+        bar(g, bx, y + 14, bw, d.getHealth() / d.getMaxHealth(), com.terrassic.client.ui.TerrassicPalette.BLOOD_500);
+        String value = Mth.ceil(d.getHealth()) + "/" + Mth.ceil(d.getMaxHealth());
+        g.pose().pushPose();
+        g.pose().translate(bx + bw - font.width(value) * 0.75F, y + 19, 0.0F);
+        g.pose().scale(0.75F, 0.75F, 1.0F);
+        g.drawString(font, value, 0, 0, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.STONE_200), true);
+        g.pose().popPose();
+        bar(g, bx, y + 26, bw, d.getHunger() / (float) DinosaurEntity.MAX_HUNGER, com.terrassic.client.ui.TerrassicPalette.AMBER_600);
+        status(g, d, x + w + 3, y + 3);
+        return 36;
+    }
+
+    /** The little state icons beside the mount panel: cargo and sleep. */
+    private static void status(GuiGraphics g, DinosaurEntity d, int x, int y) {
+        if (d.hasCargo()) {
+            icon(g, CARGO, x, y);
+            y += 10;
         }
         if (d.isSleeping()) {
-            icon(g, SLEEP, ix, y + 36);
+            icon(g, SLEEP, x, y);
         }
     }
 

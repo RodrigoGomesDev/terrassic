@@ -19,7 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "species"))
 
-from build_all import ALL, ASSETS, clean_anim  # noqa: E402
+from build_all import ALL, ASSETS, HANDMADE, clean_anim  # noqa: E402
 from paint import make_shader, paint_model  # noqa: E402
 from pybench import PyBench  # noqa: E402
 
@@ -52,4 +52,4 @@ async def check(names):
 
 
 if __name__ == "__main__":
-    sys.exit(0 if asyncio.run(check(sys.argv[1:] or ALL)) else 1)
+    sys.exit(0 if asyncio.run(check([n for n in (sys.argv[1:] or ALL) if n not in HANDMADE])) else 1)

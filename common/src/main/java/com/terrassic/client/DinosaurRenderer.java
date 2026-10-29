@@ -33,6 +33,12 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
                 partialTick, packedLight, packedOverlay);
     }
 
+    /** Species with their own death animation fall in it; no vanilla tipping over on top. */
+    @Override
+    protected float getDeathMaxRotation(T animatable) {
+        return animatable.hasDeathAnimation() ? 0.0F : super.getDeathMaxRotation(animatable);
+    }
+
     /** A perched animal rides centred on the player; draw it on the left shoulder instead. */
     @Override
     public Vec3 getRenderOffset(T entity, float partialTick) {

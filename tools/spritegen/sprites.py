@@ -968,7 +968,10 @@ EGG_BLOCK = {
 
 def egg_blocks():
     import random
+    from rex_extras import CUSTOM_EGGS   # these have their own nest model and textures (rex_extras.main)
     for name, (shell, spot) in EGG_BLOCK.items():
+        if name in CUSTOM_EGGS:
+            continue
         rnd = random.Random(name)
         base = Canvas()
         for y in range(16):
@@ -1374,6 +1377,30 @@ def taming_tools():
     pal = {"v": hexc("#8a7ac8"), "V": hexc("#b8a8ec"), "y": hexc("#f0d860"), "g": hexc("#4e7a3a"), "G": hexc("#6e9c4c"),
            "s": STRING, "S": hexc("#b8b098")}
     out["sleep_herb"] = fish_sprite(HERB_ROWS, pal)
+
+    # the Field Lens: a disc of clear amber in a bone rim, on a stick handle wrapped in leather
+    cv = Canvas()
+    cx, cy, r = 9.5, 6.5, 4.6
+    glass, glass_l, glass_d = hexc("#c98a34"), hexc("#e2b062"), hexc("#94602a")
+    rim, rim_l, rim_d = hexc("#9c8a64"), hexc("#cdbd96"), hexc("#6e5e42")
+    for y in range(16):
+        for x in range(16):
+            d = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5
+            k = (x - cx) + (y - cy)                         # light from the top left
+            if d <= r - 1.2:
+                cv.set(x, y, glass_l if k < -2.5 else glass_d if k > 2.5 else glass)
+            elif d <= r + 0.2:
+                cv.set(x, y, rim_l if k < -4.0 else rim_d if k > 3.0 else rim)
+    for (x, y) in ((7, 5), (8, 4), (7, 4)):                 # the glint
+        cv.set(x, y, hexc("#fbeccb"))
+    cv.set(11, 9, hexc("#b8803c"))                          # a warm reflection low on the right
+    for i in range(6):                                      # the handle, down to the lower left
+        x, y = 5 - i, 10 + i
+        cv.set(x, y, WOOD_L)
+        cv.set(x + 1, y, WOOD if i else rim_d)
+    for (x, y) in ((4, 11), (3, 12)):                       # the leather wrap
+        cv.set(x, y, LEATHER); cv.set(x + 1, y, LEATHER_D)
+    out["field_lens"] = cv
     for name, c in out.items():
         c.outline(0.42)
         c.save(os.path.join(TEX, "item", f"{name}.png"))
@@ -1454,6 +1481,8 @@ if __name__ == "__main__":
     meats()
     fishes()
     taming_tools()
+    import rex_extras
+    rex_extras.main()   # the T. rex egg pair in its nest and the T. rex saddle
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)
