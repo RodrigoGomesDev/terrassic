@@ -63,7 +63,7 @@ Até 75 níveis a mais; cada um é 1 ponto para o dono gastar na tela do dino (V
 
 | Fonte | XP |
 |---|---|
-| Matar uma criatura ou mob | a vida máxima da vítima |
+| Matar uma criatura ou mob (montado ou não) | a vida máxima da vítima |
 | Levar o dono montado | 1 a cada 8 blocos |
 | Coletar itens no baú de carga | 1 a cada 4 itens |
 

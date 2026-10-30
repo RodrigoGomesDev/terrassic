@@ -59,6 +59,7 @@ public final class Terrassic {
         RulesNetwork.init();
         com.terrassic.network.LensNetwork.init(); // the Field Lens card (item/FieldLensItem)
         com.terrassic.network.DinoNetwork.init(); // v0.12: the dino screen and the mounted controls
+        com.terrassic.entity.DinosaurEntity.registerEvents(); // v0.13.2: kill experience of tame animals, both loaders
         EcoSpawner.init(); // the living ecosystem around every player
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }

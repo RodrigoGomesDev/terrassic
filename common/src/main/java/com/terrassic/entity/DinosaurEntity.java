@@ -8,6 +8,8 @@ import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModItems;
 import com.terrassic.research.Objective;
 import com.terrassic.research.Research;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.EntityEvent;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -1488,13 +1490,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
-    /** Experience for every kill: the prey's health. */
-    @Override
-    public void awardKillScore(Entity killed, int score, DamageSource source) {
-        super.awardKillScore(killed, score, source);
-        if (killed instanceof LivingEntity victim) {
-            this.gainXp(victim.getMaxHealth());
-        }
+    /** Experience for every kill: the prey's health. Read from the death event, not awardKillScore: Forge gives a
+     *  tame animal's kills to its owner (the wolf rule in LivingEntity.hurt), so the animal never heard of them. */
+    public static void registerEvents() {
+        EntityEvent.LIVING_DEATH.register((entity, source) -> {
+            if (source.getEntity() instanceof DinosaurEntity dino && dino != entity && !entity.level().isClientSide()) {
+                dino.gainXp(entity.getMaxHealth());
+            }
+            return EventResult.pass();
+        });
     }
 
     /** One point of experience every 8 blocks carried with the owner riding. */
