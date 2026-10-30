@@ -93,19 +93,24 @@ MAP = {
                            "unos segundos después de abrir el mundo."),
 }
 
+# v0.10: splashes of the story mode (config/Story.java), out of the title screen while the story is off and the
+# title screen is being redone; add them back to SPLASHES when the story returns
+STORY_SPLASHES = [
+    ("Mind the Rift!", "Cuidado com a Fenda!", "¡Cuidado con la Grieta!"),
+    ("Shooting stars tonight!", "Estrelas cadentes hoje!", "¡Estrellas fugaces esta noche!"),
+    ("Katarina, where are you?", "Katarina, cadê você?", "Katarina, ¿dónde estás?"),
+    ("Nothing crosses the Rift!", "Nada atravessa a Fenda!", "¡Nada cruza la Grieta!"),
+    ("Glowing amber!", "Âmbar brilhando!", "¡Ámbar brillante!"),
+    ("Say hi to Mate!", "Diga oi para o Mate!", "¡Saluda a Mate!"),
+]
+
 SPLASHES = [
     ("Rawr!", "Rawr!", "¡Rawr!"),
     ("1 block = 1 metre!", "1 bloco = 1 metro!", "¡1 bloque = 1 metro!"),
     ("Now with feathers!", "Agora com penas!", "¡Ahora con plumas!"),
     ("Made of stone, bone and hide!", "Feito de pedra, osso e couro!", "¡Hecho de piedra, hueso y cuero!"),
-    ("Mind the Rift!", "Cuidado com a Fenda!", "¡Cuidado con la Grieta!"),
     ("68 million years ago!", "68 milhões de anos atrás!", "¡Hace 68 millones de años!"),
-    ("Shooting stars tonight!", "Estrelas cadentes hoje!", "¡Estrellas fugaces esta noche!"),
-    ("Katarina, where are you?", "Katarina, cadê você?", "Katarina, ¿dónde estás?"),
-    ("Nothing crosses the Rift!", "Nada atravessa a Fenda!", "¡Nada cruza la Grieta!"),
-    ("Glowing amber!", "Âmbar brilhando!", "¡Ámbar brillante!"),
     ("Ride a T. rex!", "Monte um T. rex!", "¡Monta un T. rex!"),
-    ("Say hi to Mate!", "Diga oi para o Mate!", "¡Saluda a Mate!"),
     ("No villages in the Cretaceous!", "Sem vilas no Cretáceo!", "¡Sin aldeas en el Cretácico!"),
     ("Pterosaurs are not dinosaurs!", "Pterossauro não é dinossauro!", "¡Los pterosaurios no son dinosaurios!"),
     ("Birds are dinosaurs!", "Aves são dinossauros!", "¡Las aves son dinosaurios!"),
