@@ -50,8 +50,10 @@ public final class ModNetwork {
         send(player, STATE.full(player.getUUID(), knowledge.save()));
     }
 
+    /** Only what changed (DELTA). Always allowed since v0.15.4: the mod is needed on both sides, and on Forge
+     *  canPlayerReceive said false to every client (Mac test, 8 of 8), so each change went out as the whole SYNC. */
     public static void sendKnowledge(ServerPlayer player, Knowledge knowledge) {
-        send(player, STATE.update(player.getUUID(), knowledge.save(), NetworkManager.canPlayerReceive(player, DELTA)));
+        send(player, STATE.update(player.getUUID(), knowledge.save(), true));
     }
 
     private static void send(ServerPlayer player, KnowledgeSyncState.Update update) {
