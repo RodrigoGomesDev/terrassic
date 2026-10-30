@@ -102,3 +102,10 @@ As próximas eras ganham as cenas delas quando forem jogáveis.
 - Corta em 16:9 e exporta 1920x1080 para a galeria e 960x540 para o README.
 - Opcional: faixa de legenda com o Degraus, em pt-BR, en-US e es-ES (uma imagem por idioma).
 - Gera `art/capa/galeria_<cena>_<idioma>.png` e uma folha de contato para aprovação.
+
+## Capa Espreita (v4) — 30/10/2026
+
+Aprovada pelo Rodrigo: o T. rex v2 espreitando na floresta enevoada com um facho de sol no rosto, render puro no
+Blender com o modelo e as texturas do jogo. Arquivos e como gerar de novo em `art/divulgacao/capa/v4/README.md`.
+Substitui a v3 (que tinha o fundo editado por IA) nas lojas. As capas são só para loja, site e posts; o menu do jogo
+continua o do Minecraft.
