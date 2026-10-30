@@ -14,7 +14,7 @@ Código: `entity/DinoLevels.java` (nível, pontos, curva, XP) e a seção "level
 |---|---|---|---|
 | Vida | Vida máxima | +3% | +4% |
 | Ataque | Dano da mordida, chifrada, pisão | +2,5% | +2% |
-| Velocidade | Velocidade andando, correndo e voando | 0 (como no ARK) | +1% |
+| Velocidade | Velocidade andando, correndo e voando | 0 (como no ARK) | +0,5% (era +1% até a v0.15.3) |
 | Fome | Tamanho do estômago: demora mais a ter fome | +2% | +5% |
 | Torpor | Resistência ao nocaute | +3% | 0 (só conta selvagem) |
 
@@ -60,16 +60,47 @@ dano da tabela:
 ## Experiência do domado
 
 Até 75 níveis a mais; cada um é 1 ponto para o dono gastar na tela do dino (Vida, Ataque, Velocidade ou Fome).
+Balanceado na v0.15.3 (Rodrigo, 30/10/2026: "upar rápido demais"; proposta aprovada no documento
+"Balanceamento dos níveis e da XP"). Antes, cada abate dava a vida inteira da vítima, e 6 zumbis davam 4 níveis.
 
 | Fonte | XP |
 |---|---|
-| Matar uma criatura ou mob (montado ou não) | a vida máxima da vítima |
-| Levar o dono montado | 1 a cada 8 blocos |
-| Coletar itens no baú de carga | 1 a cada 4 itens |
+| Abater um bicho do mod | pelo porte (tabela abaixo) × (0,5 + nível da vítima / 80) |
+| Abater um mob do Minecraft | tabela abaixo |
+| Abater um domado (de qualquer um) | 0 |
+| Abater um filhote | um quarto |
+| Levar o dono montado | 1 a cada 20 blocos |
+| Coletar itens no baú de carga | 1 a cada 10 itens |
 
-O próximo nível pede 10 + 5 × (níveis já ganhos + 1) de XP: 15 no primeiro, 385 no último, uns 15 mil no total.
-A regra "XP dos domesticados" multiplica tudo (0 = não sobem). Ao subir, o dono vê na barra de ação "X subiu para o
-nível N: ponto novo na tela do dino", com o som de nível.
+O próximo nível pede 20 + 4n + n²/20 de XP (n = níveis de domado já ganhos): 20 no primeiro, 60 no décimo, 590 no
+último, uns 19.500 no total. A regra "XP dos domesticados" multiplica tudo (0 = não sobem).
+
+### Porte dos bichos do mod (`entity/KillXp`, pela vida da tabela da espécie)
+
+| Porte | Vida da tabela | XP no nível 40 | Espécies |
+|---|---|---|---|
+| Minúsculo | até 12 | 2 | Mesodma, Enchodus, Ichthyornis, Vegavis, Mononykus, Lepisosteus, Didelphodon, Compsognathus |
+| Pequeno | 14 a 34 | 6 | Hesperornis, Oviraptor, Leptoceratops, Troodon, Protoceratops, Velociraptor, Struthiomimus, Basilemys, Gallimimus, Pteranodon, Citipati, Thescelosaurus |
+| Médio | 40 a 70 | 15 | Pachycephalosaurus, Xiphactinus, Dakotaraptor, Baurusuchus, Parasaurolophus, Maiasaura, Corythosaurus, Elasmosaurus, Dilophosaurus |
+| Grande | 80 a 120 | 30 | Majungasaurus, Styracosaurus, Euoplocephalus, Carnotaurus, Edmontosaurus, Quetzalcoatlus, Albertosaurus, Ankylosaurus, Daspletosaurus, Hatzegopteryx, Triceratops, Archelon, Pachyrhinosaurus, Stegosaurus |
+| Gigante | 140 a 220 | 50 | Spinosaurus, Therizinosaurus, Carcharodontosaurus, Deinocheirus, Giganotosaurus, Tylosaurus, Deinosuchus, Tyrannosaurus, Tarbosaurus, Mosasaurus, Opisthocoelicaudia, Saltasaurus |
+| Colosso | 300 ou mais | 80 | Alamosaurus, Dreadnoughtus, Argentinosaurus, Brachiosaurus |
+
+Uma espécie nova entra sozinha no porte da vida dela.
+
+### Mobs do Minecraft
+
+| XP | Mobs |
+|---|---|
+| 0 | Jogadores, aldeões, mercador, golens de ferro e de neve, allays, morcegos |
+| 1 | Galinha, coelho, peixes, lulas, sapo, girino, papagaio, tartaruga, axolote, abelha, traça, endermite, slime e cubo de magma pequenos |
+| 2 | Vaca, coguvaca, porco, ovelha, cabra, cavalo, burro, mula, lhamas, lobo, raposa, golfinho, panda, urso polar, gato, jaguatirica, camelo, farejador, lavagante, cavalos esqueleto e zumbi |
+| 4 | Zumbis (husk, afogado, aldeão zumbi, piglin zumbificado), esqueletos (stray, wither), aranhas, creeper, slime e cubo de magma grandes, phantom, saqueador, piglin, vex |
+| 8 | Enderman, bruxa, vindicador, blaze, ghast, guardião, hoglin, zoglin, piglin bruto, evocador, shulker |
+| 25 | Devastador |
+| 60 / 100 / 150 / 200 | Guardião ancião / Warden / Wither / Dragão do Fim |
+
+Mob de outro mod: 4 se for monstro, 2 se não for.
 
 ## Onde aparece
 

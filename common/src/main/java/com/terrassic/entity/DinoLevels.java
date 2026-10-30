@@ -25,8 +25,9 @@ public final class DinoLevels {
     public enum Stat {
         HEALTH("health", 0.03D, 0.04D),
         ATTACK("attack", 0.025D, 0.02D),
-        /** Not drawn for wild animals (as in ARK): only the owner's points make a mount faster. */
-        SPEED("speed", 0.0D, 0.01D),
+        /** Not drawn for wild animals (as in ARK): only the owner's points make a mount faster; half a percent each
+         *  since v0.15.3 (75 points at 1% made a mount 75% faster). */
+        SPEED("speed", 0.0D, 0.005D),
         FOOD("food", 0.02D, 0.05D),
         /** Only wild animals have a use for it (resisting the knockout), so the owner does not spend points on it. */
         TORPOR("torpor", 0.03D, 0.0D);
@@ -198,9 +199,10 @@ public final class DinoLevels {
         return this.xp;
     }
 
-    /** Experience for the next tame level: 15 for the first, 385 for the last (about 15,000 in all). */
+    /** Experience for the next tame level: 20 + 4n + n²/20 (v0.15.3): 20 for the first, 60 for the tenth, 590 for
+     *  the last, about 19,500 in all. */
     public static int xpToNext(int tamedLevels) {
-        return 10 + 5 * (tamedLevels + 1);
+        return Math.round(20.0F + 4.0F * tamedLevels + tamedLevels * tamedLevels / 20.0F);
     }
 
     /** Adds experience; returns the levels gained (none past {@link #MAX_TAMED_LEVELS}). */

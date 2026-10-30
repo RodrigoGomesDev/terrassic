@@ -1216,7 +1216,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             ItemStack rest = this.cargo.addItem(stack);
             if (rest.getCount() < before) {
                 this.take(item, before - rest.getCount());
-                this.gainXp((before - rest.getCount()) * 0.25F);
+                this.gainXp((before - rest.getCount()) * 0.1F);  // one point every 10 items (v0.15.3)
                 if (rest.isEmpty()) {
                     item.discard();
                 } else {
@@ -1585,18 +1585,21 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 this.getDisplayName());
     }
 
-    /** Experience for every kill: the prey's health. Read from the death event, not awardKillScore: Forge gives a
-     *  tame animal's kills to its owner (the wolf rule in LivingEntity.hurt), so the animal never heard of them. */
+    /** Experience for every kill, from {@link KillXp} (v0.15.3: by the victim's size and level, no longer its whole
+     *  health). Read from the death event, not awardKillScore: Forge gives a tame animal's kills to its owner (the
+     *  wolf rule in LivingEntity.hurt), so the animal never heard of them. */
     public static void registerEvents() {
         EntityEvent.LIVING_DEATH.register((entity, source) -> {
             if (source.getEntity() instanceof DinosaurEntity dino && dino != entity && !entity.level().isClientSide()) {
-                dino.gainXp(entity.getMaxHealth());
+                dino.gainXp(KillXp.of(entity));
             }
             return EventResult.pass();
         });
     }
 
-    /** One point of experience every 8 blocks carried with the owner riding. */
+    /** One point of experience every 20 blocks carried with the owner riding (8 before v0.15.3). */
+    private static final double RIDE_XP_BLOCKS = 20.0D;
+
     private void rideXpTick() {
         if (!this.isTame() || !(this.getControllingPassenger() instanceof Player rider) || !this.isOwnedBy(rider)) {
             this.ridePos = null;
@@ -1608,9 +1611,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             if (step < 4.0D) {   // a teleport is not a ride
                 this.rideDistance += step;
             }
-            if (this.rideDistance >= 8.0D) {
-                int points = (int) (this.rideDistance / 8.0D);
-                this.rideDistance -= points * 8.0D;
+            if (this.rideDistance >= RIDE_XP_BLOCKS) {
+                int points = (int) (this.rideDistance / RIDE_XP_BLOCKS);
+                this.rideDistance -= points * RIDE_XP_BLOCKS;
                 this.gainXp(points);
             }
         }
