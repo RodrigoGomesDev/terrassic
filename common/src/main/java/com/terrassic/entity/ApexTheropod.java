@@ -66,6 +66,8 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     private boolean loudRoar;
     private int roarCooldown;
     private int loudCooldown = 600;
+    /** The full recharge of the loud roar under way (for the HUD's key socket). */
+    private int loudFull = 600;
     /** The rider's bite (v0.12): ticks until the jaws close, and on whom (-1 = the air). */
     private int riderBite;
     private int riderBiteTarget = -1;
@@ -231,12 +233,24 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         }
     }
 
+    /** The HUD's key socket shows the loud roar: the special fires it once its breath is back. */
+    @Override
+    protected int[] specialRecharge() {
+        return new int[]{this.loudCooldown, this.loudFull};
+    }
+
+    @Override
+    public String specialName() {
+        return "loud_roar";
+    }
+
     /** The loud roar, head to the sky, with the wave in the air. */
     public void roarLoud() {
         if (this.isRoaring() || this.level().isClientSide()) {
             return;
         }
         this.loudCooldown = 900 + this.random.nextInt(600);
+        this.loudFull = this.loudCooldown;
         this.startRoar(true);
     }
 

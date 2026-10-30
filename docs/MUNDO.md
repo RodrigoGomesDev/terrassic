@@ -167,19 +167,21 @@ blocos, direção noroeste"), com o som de cristal de ametista. Usa a tag de est
 
 ## 8. HUD (M5)
 
-`client/TerrassicHud` (+ `client/SpeciesToast`), com os modelos do mod renderizados ao vivo. Os ícones ficam em
+Desde a v0.14 o HUD tem o visual "Âmbar" e o desenho de cada peça está em `docs/HUD.md`; esta tabela resume.
+
+`client/TerrassicHud` (+ `client/SpeciesToast`, `client/HudNotices`), com os modelos do mod renderizados ao vivo. Os ícones ficam em
 `assets/terrassic/textures/gui/hud.png` (`tools/capagen/hud_icons.py`).
 
 | Parte | Quando | O que mostra |
 |---|---|---|
-| Painel de montaria | Montado num dinossauro | Retrato, nome, vida, fome, ícones de carga e de sono (canto superior esquerdo) |
-| Barra do bando | Com dinossauros seus a até 48 blocos | Até 6 cartões com retrato, vida e estado (seguindo, sentado, lutando, dormindo), como a equipe do Cobblemon |
+| Placa da montaria | Montado num dinossauro | O bicho numa gota de âmbar, nome e nível, vida, fome e o encaixe do especial (canto superior esquerdo) |
+| Avisos | Algo acontece com um bicho seu | Placa no meio da borda direita: subiu de nível, domesticado, filhote, fome, acordou, morreu (substitui a barra do bando) |
 | Nova espécie | Quando uma espécie sobe de nível no Guia | Notificação com o modelo, o nome e o nível novo. Na silhueta, só "???" |
 | Nome da era | Ao entrar no mundo (no Overworld) | "Cretáceo Superior" e "Capítulo 1 · Ecos do Fim" em letras grandes |
 | Alerta da Fenda | Durante uma Tempestade da Fenda | Fragmento de âmbar rachado pulsando no topo da tela |
 
-Liga e desliga em `config/terrassic-client.json` (`hud_mount`, `hud_pack`, `hud_new_species`, `hud_era_title`,
-`hud_rift_alert`). O F1 esconde tudo. A stamina do voo (v0.4) entra no painel quando o sistema existir.
+Liga e desliga em `config/terrassic-client.json` (`hud_style`, `hud_mount`, `hud_notices`, `hud_numbers_always`,
+`hud_new_species`, `hud_era_title`, `hud_rift_alert`). O F1 esconde tudo. A stamina entra na placa quando o sistema existir.
 
 ## 9. Perguntas abertas para o Rodrigo
 

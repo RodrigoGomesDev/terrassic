@@ -21,8 +21,10 @@ import java.nio.file.Path;
  * {
  *   "title_screen": true,    // the Terrassic main menu in place of the vanilla title screen (docs/MENU.md)
  *   "loading_tips": true,    // a real fact or a game tip on the world loading screens
- *   "hud_mount": true,       // HUD: panel of the dinosaur you ride
- *   "hud_pack": true,        // HUD: your tamed dinosaurs nearby
+ *   "hud_style": "amber",    // v0.14 HUD (docs/HUD.md): "amber" (slabs and drops of amber) or "compact"
+ *   "hud_mount": true,       // HUD: plate of the dinosaur you ride
+ *   "hud_notices": true,     // HUD: notices about your animals on the right (false = action bar, as before)
+ *   "hud_numbers_always": false, // HUD: the mount's health in numbers all the time (default: when it changes)
  *   "hud_new_species": true, // HUD: toast when a species reaches a new Field Guide level
  *   "hud_era_title": true,   // HUD: the era's name when you arrive
  *   "hud_rift_alert": true,  // HUD: pulsing amber shard during a Rift Storm
@@ -38,9 +40,11 @@ public final class ClientConfig {
     private static final Logger LOG = LoggerFactory.getLogger("terrassic");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static JsonObject root;
-    private static final String[] FLAGS = {"title_screen", "loading_tips", "hud_mount", "hud_pack", "hud_new_species",
+    private static final String[] FLAGS = {"title_screen", "loading_tips", "hud_mount", "hud_notices", "hud_new_species",
             "hud_era_title", "hud_rift_alert", "shooting_stars", "ritual_sky",
             "terrassic_fonts", "roar_shake", "mount_attack"};
+    /** The options that are off until the player turns them on. */
+    private static final String[] OFF = {"hud_numbers_always"};
 
     private ClientConfig() {
     }
@@ -53,10 +57,19 @@ public final class ClientConfig {
         return flag("loading_tips");
     }
 
-    /** Any boolean option above; missing ones count as on. */
+    /** Any boolean option above; missing ones count as their default (on, except {@link #OFF}). */
     public static boolean flag(String name) {
         JsonObject cfg = load();
-        return !cfg.has(name) || cfg.get(name).getAsBoolean();
+        if (!cfg.has(name)) {
+            return !java.util.Arrays.asList(OFF).contains(name);
+        }
+        return cfg.get(name).getAsBoolean();
+    }
+
+    /** The compact HUD style ("hud_style": "compact"); anything else is the Âmbar look. */
+    public static boolean compactHud() {
+        JsonObject cfg = load();
+        return cfg.has("hud_style") && "compact".equals(cfg.get("hud_style").getAsString());
     }
 
     private static synchronized JsonObject load() {
@@ -83,6 +96,21 @@ public final class ClientConfig {
                 cfg.addProperty(name, true);
                 changed = true;
             }
+        }
+        for (String name : OFF) {
+            if (!cfg.has(name)) {
+                cfg.addProperty(name, false);
+                changed = true;
+            }
+        }
+        if (!cfg.has("hud_style")) {
+            cfg.addProperty("hud_style", "amber");
+            changed = true;
+        }
+        // the pack bar left in v0.14 (the notices took its place)
+        if (cfg.has("hud_pack")) {
+            cfg.remove("hud_pack");
+            changed = true;
         }
         if (changed) {
             try {

@@ -2,12 +2,15 @@ package com.terrassic.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terrassic.Terrassic;
+import com.terrassic.client.ui.AmberHud;
+import com.terrassic.client.ui.TerrassicPalette;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.research.GuideSpecies;
 import com.terrassic.research.Knowledge;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,22 +19,23 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * The Terrassic HUD (ESCOPO.md "HUD próprio"; v0.8, phase M5), drawn with the mod's own models, live:
+ * The Terrassic HUD (ESCOPO.md "HUD próprio"; v0.8, phase M5; "Âmbar" look since v0.14, docs/HUD.md), drawn with the
+ * mod's own models, live. The player's own health, food, XP and jump bar stay vanilla:
  * <ul>
- *   <li><b>Mount panel</b> (top left, while riding a dinosaur): portrait, name, health, hunger, cargo and sleep.</li>
- *   <li><b>Pack bar</b> (under it): up to 6 tamed dinosaurs of yours within 48 blocks, each with health and state
- *       (following, sitting, fighting, sleeping), like a Cobblemon party.</li>
+ *   <li><b>Mount plate</b> (top left, while riding a dinosaur): the animal in a drop of amber, its name and level,
+ *       health and food cut into the stone, the health in numbers for three seconds when it changes, and the key
+ *       socket of its special filling up while it recharges. The compact style ("hud_style": "compact") draws ten
+ *       vanilla mount hearts above the food bar instead (10% each) and the special as a line of text.</li>
+ *   <li><b>Notices</b> (middle of the right edge): what happens to any of your animals ({@link HudNotices}). They
+ *       replace the old pack bar of six portraits: a player can have twenty dinosaurs.</li>
  *   <li><b>New species</b>: a toast with the portrait when a species reaches a new Field Guide level
  *       ({@link SpeciesToast}).</li>
  *   <li><b>Era title</b>: "Late Cretaceous" the first time you are in the era, once per player and world (the server
@@ -42,14 +46,9 @@ import java.util.Map;
  */
 public final class TerrassicHud {
     public static final ResourceLocation ICONS = Terrassic.id("textures/gui/hud.png");
-    private static final int FOLLOW = 0;
-    private static final int SIT = 1;
-    private static final int FIGHT = 2;
-    private static final int SLEEP = 3;
-    private static final int CARGO = 4;
-    private static final int PANEL = com.terrassic.client.ui.TerrassicPalette.alpha(com.terrassic.client.ui.TerrassicPalette.BASALT_800, 0xD0);
-    private static final int EDGE = com.terrassic.client.ui.TerrassicPalette.AMBER_700;
-    private static final int PAPER = com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.BONE_100);
+    private static final ResourceLocation VANILLA_ICONS = new ResourceLocation("textures/gui/icons.png");
+    /** Ticks the health number stays on the plate after the health changed. */
+    private static final int NUMBER_TICKS = 60;
 
     private static Map<String, Integer> levels;
     private static Knowledge seenAtJoin;
@@ -62,6 +61,9 @@ public final class TerrassicHud {
     private static final int TITLE_HOLD = 70;
     private static final int TITLE_OUT = 20;
     private static int tick;
+    private static int numberMount = -1;
+    private static float numberHealth;
+    private static int numberLeft;
 
     private TerrassicHud() {
     }
@@ -70,6 +72,7 @@ public final class TerrassicHud {
         ClientGuiEvent.RENDER_HUD.register(TerrassicHud::render);
         ClientTickEvent.CLIENT_POST.register(TerrassicHud::tick);
         ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(player -> {
+            HudNotices.clear();
             levels = null;
             seenAtJoin = ClientResearch.get();
             baselineDelay = 20;  // x10 ticks: at most 10 s waiting for the server's Knowledge sync
@@ -90,19 +93,15 @@ public final class TerrassicHud {
         if (player == null || mc.level == null || mc.options.hideGui) {
             return;
         }
-        int y = 4;
-        Entity vehicle = player.getVehicle();
-        if (ClientConfig.flag("hud_mount") && vehicle instanceof DinosaurEntity mount) {
-            y += mountCard(g, mc.font, mount, 4, y);
-        }
-        if (ClientConfig.flag("hud_pack")) {
-            List<DinosaurEntity> pack = mc.level.getEntitiesOfClass(DinosaurEntity.class, player.getBoundingBox().inflate(48.0D),
-                    d -> d.isTame() && d != vehicle && player.getUUID().equals(d.getOwnerUUID()) && d.isAlive());
-            pack.sort(Comparator.comparingDouble(player::distanceToSqr));
-            for (int i = 0; i < Math.min(6, pack.size()); i++) {
-                packCard(g, pack.get(i), 4, y + i * 30);
+        boolean compact = ClientConfig.compactHud();
+        if (ClientConfig.flag("hud_mount") && player.getVehicle() instanceof DinosaurEntity mount) {
+            if (compact) {
+                compactMount(g, mc, mount);
+            } else {
+                mountPlate(g, mc.font, mount, 4, 4);
             }
         }
+        HudNotices.render(g, mc.font, partialTick, compact);
         if (titleAge >= 0 && titleEra != null) {
             eraTitle(g, mc.font, partialTick);
         }
@@ -144,66 +143,79 @@ public final class TerrassicHud {
         g.pose().popPose();
     }
 
-    private static void frame(GuiGraphics g, int x0, int y0, int x1, int y1) {
-        g.fill(x0, y0, x1, y1, PANEL);
-        g.fill(x0, y0, x1, y0 + 1, EDGE);
-        g.fill(x0, y1 - 1, x1, y1, EDGE);
-        g.fill(x0, y0, x0 + 1, y1, EDGE);
-        g.fill(x1 - 1, y0, x1, y1, EDGE);
-    }
+    // ------------------------------------------------------------------ mount plate
 
-    private static void icon(GuiGraphics g, int index, int x, int y) {
-        g.blit(ICONS, x, y, index * 8.0F, 0.0F, 8, 8, 64, 32);
-    }
-
-    private static void bar(GuiGraphics g, int x, int y, int width, float fraction, int colour) {
-        g.fill(x, y, x + width, y + 4, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
-        g.fill(x, y, x + Math.round(width * Mth.clamp(fraction, 0.0F, 1.0F)), y + 4, colour);
-        g.fill(x, y, x + Math.round(width * Mth.clamp(fraction, 0.0F, 1.0F)), y + 1, (colour & 0x00FFFFFF) | 0x60FFFFFF);
-    }
-
-    // ------------------------------------------------------------------ mount panel
-
-    /** The mount panel: a 24 px portrait, the name, health with numbers, food, and the state icons beside it
-     *  (the vanilla mount hearts are hidden for our dinosaurs: mixin/client/GuiMixin, forge/MountHudForge). */
-    private static int mountCard(GuiGraphics g, Font font, DinosaurEntity d, int x, int y) {
-        // as wide as the name, which now carries the level ("Pteranodonte · Nv 34")
-        int w = Math.max(124, 37 + font.width(com.terrassic.client.ui.TerrassicFonts.ui(d.getDisplayName())));
-        frame(g, x, y, x + w, y + 32);
-        g.fill(x + 3, y + 3, x + 29, y + 29, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
-        portrait(g, d, x + 4, y + 4, 24);
-        g.drawString(font, com.terrassic.client.ui.TerrassicFonts.ui(d.getDisplayName()), x + 33, y + 3, PAPER, false);
-        int bx = x + 33;
-        int bw = w - 37;
-        bar(g, bx, y + 14, bw, d.getHealth() / d.getMaxHealth(), com.terrassic.client.ui.TerrassicPalette.BLOOD_500);
-        String value = Mth.ceil(d.getHealth()) + "/" + Mth.ceil(d.getMaxHealth());
-        g.pose().pushPose();
-        g.pose().translate(bx + bw - font.width(value) * 0.75F, y + 19, 0.0F);
-        g.pose().scale(0.75F, 0.75F, 1.0F);
-        g.drawString(font, value, 0, 0, com.terrassic.client.ui.TerrassicPalette.rgb(com.terrassic.client.ui.TerrassicPalette.STONE_200), true);
-        g.pose().popPose();
-        bar(g, bx, y + 26, bw, d.getHunger() / (float) DinosaurEntity.MAX_HUNGER, com.terrassic.client.ui.TerrassicPalette.AMBER_600);
-        status(g, d, x + w + 3, y + 3);
-        return 36;
-    }
-
-    /** The little state icons beside the mount panel: cargo and sleep. */
-    private static void status(GuiGraphics g, DinosaurEntity d, int x, int y) {
-        if (d.hasCargo()) {
-            icon(g, CARGO, x, y);
-            y += 10;
+    /**
+     * The mount plate (study: dirF.py plate()): a slab 145 wide, wider for a long name, with the animal in a drop of
+     * amber hanging over its left edge. Two rows for now, health and food; the third, stamina, comes with the mount
+     * stamina. The key socket on the right is the special (the loud roar), if the animal has one.
+     */
+    private static void mountPlate(GuiGraphics g, Font font, DinosaurEntity d, int x, int y) {
+        Component name = d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
+        Component dot = Component.literal(name.getString() + " · ");
+        Component level = Component.translatable("hud.terrassic.level", Math.max(1, d.getLevel()));
+        int extra = Math.max(0, 34 + AmberHud.width(font, dot) + AmberHud.width(font, level) + 6 - 145);
+        AmberHud.slab(g, "mount_plate_" + extra, x, y, 14, 0, 112 + extra, 0, 116 + extra, 3, 141 + extra, 3, 144 + extra, 7,
+                144 + extra, 32, 139 + extra, 37, 70, 37, 66, 35, 14, 35);
+        for (int i = 0; i < 9; i++) {  // an amber seam where the slab broke
+            int c = i % 4 != 0 ? TerrassicPalette.AMBER_700 : TerrassicPalette.AMBER_500;
+            g.fill(x + 126 + extra + i, y + 34 - i / 3, x + 127 + extra + i, y + 35 - i / 3, c);
         }
-        if (d.isSleeping()) {
-            icon(g, SLEEP, x, y);
+        AmberHud.amberDrop(g, x + 15, y + 19, 15, 15, 5, () -> portrait(g, d, x + 1, y + 7, 28, 26));
+        int nx = AmberHud.text(g, font, dot, x + 34, y + 5, TerrassicPalette.BONE_100);
+        AmberHud.text(g, font, level, nx, y + 5, TerrassicPalette.AMBER_500);
+        AmberHud.icon(g, AmberHud.HEART, x + 33, y + 16, 0xFFF08A70, TerrassicPalette.BLOOD_500);
+        AmberHud.groove(g, x + 41, y + 17, 62, d.getHealth() / d.getMaxHealth(), AmberHud.RED);
+        AmberHud.icon(g, AmberHud.MEAT, x + 33, y + 24, TerrassicPalette.BONE_100, 0xFFB5453A);
+        AmberHud.groove(g, x + 41, y + 25, 62, d.getHunger() / (float) DinosaurEntity.MAX_HUNGER, AmberHud.AMBER);
+        if (numberLeft > 0 || ClientConfig.flag("hud_numbers_always")) {
+            AmberHud.text(g, font, Component.literal(Mth.ceil(d.getHealth()) + "/" + Mth.ceil(d.getMaxHealth())),
+                    x + 106, y + 14, TerrassicPalette.BONE_100);
+        }
+        float charge = d.specialCharge();
+        if (charge >= 0.0F) {
+            AmberHud.chip(g, font, x + 108, y + 23, useKey(), charge);
         }
     }
 
-    private static void packCard(GuiGraphics g, DinosaurEntity d, int x, int y) {
-        frame(g, x, y, x + 28, y + 28);
-        portrait(g, d, x + 2, y + 2, 24);
-        bar(g, x + 2, y + 23, 24, d.getHealth() / d.getMaxHealth(), com.terrassic.client.ui.TerrassicPalette.BLOOD_500);
-        int state = d.isSleeping() ? SLEEP : d.isAggressive() ? FIGHT : d.isInSittingPose() ? SIT : FOLLOW;
-        icon(g, state, x + 19, y + 1);
+    /** The compact style: ten vanilla mount hearts over the food bar (10% of the health each) and the special in a
+     *  line of text over the hotbar. */
+    private static void compactMount(GuiGraphics g, Minecraft mc, DinosaurEntity d) {
+        int w = g.guiWidth();
+        int h = g.guiHeight();
+        int halves = Mth.ceil(Mth.clamp(d.getHealth() / d.getMaxHealth(), 0.0F, 1.0F) * 20.0F);
+        // on Forge the hearts did not show without these two lines (Mac test of v0.14; most likely the depth test)
+        RenderSystem.disableDepthTest();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableBlend();
+        for (int i = 0; i < 10; i++) {
+            int hx = w / 2 + 91 - i * 8 - 9;
+            int hy = h - 49;
+            g.blit(VANILLA_ICONS, hx, hy, 52, 9, 9, 9);
+            if (i * 2 + 1 < halves) {
+                g.blit(VANILLA_ICONS, hx, hy, 88, 9, 9, 9);
+            } else if (i * 2 + 1 == halves) {
+                g.blit(VANILLA_ICONS, hx, hy, 97, 9, 9, 9);
+            }
+        }
+        RenderSystem.enableDepthTest();
+        float charge = d.specialCharge();
+        if (charge >= 0.0F && d.specialName() != null) {
+            Component special = Component.translatable("hud.terrassic.special." + d.specialName());
+            Component line = charge >= 1.0F ? Component.translatable("hud.terrassic.special.ready", special)
+                    : Component.translatable("hud.terrassic.special.wait", special, Mth.ceil(d.specialTicksLeft() / 20.0F));
+            AmberHud.text(g, mc.font, line, (w - AmberHud.width(mc.font, line)) / 2, h - 60, TerrassicPalette.STONE_200);
+        }
+    }
+
+    /** The use key's letter for the key socket, or null when it is a mouse button (the socket then shows a mouse). */
+    private static String useKey() {
+        KeyMapping use = Minecraft.getInstance().options.keyUse;
+        if (use.saveString().startsWith("key.mouse")) {
+            return null;
+        }
+        String k = use.getTranslatedKeyMessage().getString();
+        return k.isEmpty() ? null : k.substring(0, 1).toUpperCase(java.util.Locale.ROOT);
     }
 
     private static void riftAlert(GuiGraphics g, Font font, float intensity, int width) {
@@ -218,6 +230,12 @@ public final class TerrassicHud {
 
     /** The live entity, scaled to fit a size x size box (by the species' real length), seen three-quarters. */
     static void portrait(GuiGraphics g, net.minecraft.world.entity.LivingEntity e, int x, int y, int size) {
+        portrait(g, e, x, y, size, size);
+    }
+
+    /** The same in a w x h box (the drops of amber are taller than wide). */
+    static void portrait(GuiGraphics g, net.minecraft.world.entity.LivingEntity e, int x, int y, int w, int h) {
+        int size = Math.min(w, h);
         float length = e.getBbWidth();
         if (e instanceof DinosaurEntity d) {
             GuideSpecies s = GuideSpecies.byId(d.speciesId());
@@ -240,10 +258,10 @@ public final class TerrassicHud {
         // the scissor box is in screen coordinates and ignores the pose: move it with the pose (toasts are translated)
         Matrix4f m = g.pose().last().pose();
         Vector3f a = m.transformPosition(new Vector3f(x, y, 0.0F));
-        Vector3f b = m.transformPosition(new Vector3f(x + size, y + size, 0.0F));
+        Vector3f b = m.transformPosition(new Vector3f(x + w, y + h, 0.0F));
         g.enableScissor(Math.round(a.x()), Math.round(a.y()), Math.round(b.x()), Math.round(b.y()));
         try {
-            InventoryScreen.renderEntityInInventory(g, x + size / 2, y + size - 3, scale,
+            InventoryScreen.renderEntityInInventory(g, x + w / 2, y + h - 3, scale,
                     new Quaternionf().rotateZ((float) Math.PI), null, e);
         } finally {
             g.disableScissor();
@@ -257,10 +275,33 @@ public final class TerrassicHud {
 
     // ------------------------------------------------------------------ events
 
+    /** The health number on the plate: three seconds after the ridden animal's health changed. */
+    private static void numberTick(Minecraft mc) {
+        if (numberLeft > 0) {
+            numberLeft--;
+        }
+        if (!(mc.player.getVehicle() instanceof DinosaurEntity d)) {
+            numberMount = -1;
+            return;
+        }
+        if (d.getId() != numberMount) {
+            numberMount = d.getId();
+            numberHealth = d.getHealth();
+            numberLeft = 0;
+        } else if (Math.abs(d.getHealth() - numberHealth) >= 0.5F) {
+            numberHealth = d.getHealth();
+            numberLeft = NUMBER_TICKS;
+        }
+    }
+
     private static void tick(Minecraft mc) {
         tick++;
         if (mc.player == null || mc.level == null) {
             return;
+        }
+        if (!mc.isPaused()) {
+            HudNotices.tick();
+            numberTick(mc);
         }
         if (titleAge >= 0 && !mc.isPaused() && ++titleAge > TITLE_IN + TITLE_HOLD + TITLE_OUT) {
             titleAge = -1;

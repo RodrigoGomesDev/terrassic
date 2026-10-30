@@ -48,6 +48,13 @@ public final class ClientHooks {
             String era = buf.readUtf();
             context.queue(() -> TerrassicHud.showEraTitle(era));
         });
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.NOTICE, (buf, context) -> {
+            int tone = buf.readVarInt();
+            Component title = buf.readComponent();
+            Component line = buf.readComponent();
+            net.minecraft.resources.ResourceLocation species = buf.readResourceLocation();
+            context.queue(() -> HudNotices.add(tone, title, line, species));
+        });
         // world rules (docs/REGRAS.md): the server's values, and the command that opens the screen
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, RulesNetwork.SYNC, (buf, context) -> {
             CompoundTag tag = buf.readNbt();

@@ -127,7 +127,7 @@ public class DinoEggBlock extends Block {
         // a wild egg hatches a wild baby: it follows the adults of its species (FollowParentGoal), no imprinting
         Player player = wild ? null : level.getNearestPlayer(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 12.0D, false);
         if (player != null) {
-            baby.tameBy(player);
+            baby.tameBy(player, true);
             baby.setOrderedToSit(false);
             if (player instanceof ServerPlayer sp) {
                 Research.objective(sp, Objective.HATCH_EGG);

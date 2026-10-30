@@ -7,6 +7,7 @@ import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
  *   <li>{@link #INTRO}: open the intro screen (first time in the world only).</li>
  *   <li>{@link #STORY}: whether the story mode is on in this world (config/Story), on join.</li>
  *   <li>{@link #ERA_TITLE}: show the era's title (TerrassicHud), the first time the player is in that era.</li>
+ *   <li>{@link #NOTICE}: a notice about one of your animals on the right of the HUD (v0.14, client/HudNotices).</li>
  * </ul>
  */
 public final class ModNetwork {
@@ -27,6 +29,12 @@ public final class ModNetwork {
     public static final ResourceLocation INTRO = Terrassic.id("intro");
     public static final ResourceLocation STORY = Terrassic.id("story");
     public static final ResourceLocation ERA_TITLE = Terrassic.id("era_title");
+    public static final ResourceLocation NOTICE = Terrassic.id("notice");
+    /** The colour of a notice's first line. */
+    public static final int NOTICE_AMBER = 0;
+    public static final int NOTICE_FERN = 1;
+    public static final int NOTICE_RIFT = 2;
+    public static final int NOTICE_BLOOD = 3;
     private static final KnowledgeSyncState STATE = new KnowledgeSyncState();
 
     private ModNetwork() {
@@ -69,5 +77,17 @@ public final class ModNetwork {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUtf(era);
         NetworkManager.sendToPlayer(player, ERA_TITLE, buf);
+    }
+
+    /** A notice on the right of the HUD: a title in the tone's colour, a line under it and the animal in amber. Always
+     *  sent as a packet (the mod is needed on both sides; on Forge canPlayerReceive said false to clients that have the
+     *  receiver); with "hud_notices": false the client itself puts it in the action bar (HudNotices.add). */
+    public static void sendNotice(ServerPlayer player, int tone, Component title, Component line, ResourceLocation species) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeVarInt(tone);
+        buf.writeComponent(title);
+        buf.writeComponent(line);
+        buf.writeResourceLocation(species);
+        NetworkManager.sendToPlayer(player, NOTICE, buf);
     }
 }

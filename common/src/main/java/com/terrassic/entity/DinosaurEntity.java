@@ -4,6 +4,7 @@ import com.terrassic.registry.ModSounds;
 import com.terrassic.block.DinoEggBlock;
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
+import com.terrassic.network.ModNetwork;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModItems;
 import com.terrassic.research.Objective;
@@ -13,6 +14,7 @@ import dev.architectury.event.events.common.EntityEvent;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -168,6 +170,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private static final UUID LEVEL_SPEED_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e313");
     /** The level, synced for the name (0 until the server has drawn it). */
     private static final EntityDataAccessor<Integer> DATA_LEVEL =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
+    /** The rider's special for the HUD's key socket (v0.14): ticks until ready in the high 16 bits, the full recharge
+     *  in the low 16 (0 = no special). Updated while someone rides it. */
+    private static final EntityDataAccessor<Integer> DATA_SPECIAL =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     /** Ticks a baby takes to grow up (vanilla age counter). */
     private static final float GROW_TICKS = 24000.0F;
@@ -678,6 +684,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
         this.entityData.define(DATA_GROWTH, 0.0F);
         this.entityData.define(DATA_LEVEL, 0);
+        this.entityData.define(DATA_SPECIAL, 0);
     }
 
     public boolean isFemale() {
@@ -1373,6 +1380,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Tames the animal for the player (feeding or egg imprinting). */
     public void tameBy(Player player) {
+        this.tameBy(player, false);
+    }
+
+    /** Tamed by the player; {@code hatched}: it just came out of an egg next to them (the notice says so). */
+    public void tameBy(Player player, boolean hatched) {
         this.tame(player);
         if (player instanceof ServerPlayer sp) {
             Research.tamed(sp, this);
@@ -1381,8 +1393,53 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setTarget(null);
         this.setOrderedToSit(true);
         this.level().broadcastEntityEvent(this, (byte) 7);
-        player.displayClientMessage(Component.translatable("message.terrassic.tamed", this.getDisplayName(),
-                Component.translatable(this.isFemale() ? "sex.terrassic.female" : "sex.terrassic.male")), true);
+        Component sex = Component.translatable(this.isFemale() ? "sex.terrassic.female" : "sex.terrassic.male");
+        this.notice(player, hatched ? ModNetwork.NOTICE_FERN : ModNetwork.NOTICE_AMBER,
+                Component.translatable(hatched ? "hud.terrassic.notice.hatched" : "hud.terrassic.notice.tamed"),
+                Component.translatable("hud.terrassic.notice.name_sex", this.getDisplayName(), sex));
+    }
+
+    /** A notice about this animal on the player's HUD (v0.14, client/HudNotices): the right side, the animal in its
+     *  drop of amber, {@code title} in the tone's colour (ModNetwork.NOTICE_*) and {@code line} under it. */
+    public void notice(LivingEntity to, int tone, Component title, Component line) {
+        if (to instanceof ServerPlayer player) {
+            ModNetwork.sendNotice(player, tone, title, line, BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+        }
+    }
+
+    /** Its owner hears of its death wherever they are, with where it lies (vanilla also says it in the chat). */
+    @Override
+    public void die(DamageSource source) {
+        if (!this.level().isClientSide() && this.isTame() && !this.isRemoved() && !this.dead) {
+            Component name = this.hasCustomName() ? this.getCustomName() : this.getType().getDescription();
+            this.notice(this.getOwner(), ModNetwork.NOTICE_BLOOD, Component.translatable("hud.terrassic.notice.died", name),
+                    Component.translatable("hud.terrassic.notice.where", this.getBlockX(), this.getBlockY(), this.getBlockZ()));
+        }
+        super.die(source);
+    }
+
+    // ------------------------------------------------------------------ the rider's special (v0.14 HUD)
+
+    /** The rider's special and its recharge, {ticks until ready, full recharge}, or null when it has none. Server. */
+    protected int[] specialRecharge() {
+        return null;
+    }
+
+    /** The special's name for the compact HUD ("hud.terrassic.special.&lt;name&gt;"), or null. */
+    public String specialName() {
+        return null;
+    }
+
+    /** Client: how charged the rider's special is (1 = ready), or -1 without one. */
+    public float specialCharge() {
+        int v = this.entityData.get(DATA_SPECIAL);
+        int full = v & 0xFFFF;
+        return full == 0 ? -1.0F : 1.0F - Math.min(1.0F, (v >>> 16) / (float) full);
+    }
+
+    /** Client: ticks until the rider's special is ready. */
+    public int specialTicksLeft() {
+        return this.entityData.get(DATA_SPECIAL) >>> 16;
     }
 
     // ------------------------------------------------------------------ levels (v0.13, docs/NIVEIS.md)
@@ -1484,10 +1541,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         this.applyLevelModifiers(false);
         this.level().playSound(null, this, SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 0.6F, 0.8F);
-        if (this.getOwner() instanceof Player owner) {
-            Component name = this.hasCustomName() ? this.getCustomName() : this.getType().getDescription();
-            owner.displayClientMessage(Component.translatable("message.terrassic.level_up", name, this.levels.level()), true);
-        }
+        this.notice(this.getOwner(), ModNetwork.NOTICE_AMBER, Component.translatable("hud.terrassic.notice.level_up"),
+                this.getDisplayName());
     }
 
     /** Experience for every kill: the prey's health. Read from the death event, not awardKillScore: Forge gives a
@@ -1606,7 +1661,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         triggerAnim(ACTION_CONTROLLER, "wake");
         Player tamer = this.tamer != null ? this.level().getPlayerByUUID(this.tamer) : null;
         if (tamer != null && tamer.distanceToSqr(this) < 48.0D * 48.0D) {
-            tamer.displayClientMessage(Component.translatable("message.terrassic.ko_woke", this.getDisplayName()), true);
+            this.notice(tamer, ModNetwork.NOTICE_RIFT, Component.translatable("hud.terrassic.notice.woke"), this.getDisplayName());
             if (!tamer.getAbilities().instabuild && this.getAttribute(Attributes.ATTACK_DAMAGE) != null) {
                 this.setTarget(tamer);
             }
@@ -1901,6 +1956,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 this.ensureLevels();
             }
             this.rideXpTick();
+            if (this.tickCount % 5 == 0 && this.getControllingPassenger() instanceof Player) {
+                int[] r = this.specialRecharge();
+                this.entityData.set(DATA_SPECIAL, r == null ? 0
+                        : Math.min(Math.max(0, r[0]), 0xFFFF) << 16 | Math.min(Math.max(1, r[1]), 0xFFFF));
+            }
         }
         if (this.pendingNest && !this.level().isClientSide()) {
             this.pendingNest = false;
@@ -1989,12 +2049,17 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.hungryMessageCooldown > 0) {
             this.hungryMessageCooldown--;
         }
-        if (this.isTame() && this.getHunger() < 30 && this.tickCount % 200 == 0 && this.getOwner() instanceof Player owner
-                && owner.distanceToSqr(this) < 64.0D) {
-            triggerAnim(ACTION_CONTROLLER, "beg");
+        if (this.isTame() && this.getHunger() < 30 && this.tickCount % 200 == 0 && this.getOwner() instanceof Player owner) {
+            boolean near = owner.distanceToSqr(this) < 64.0D;
+            if (near) {
+                triggerAnim(ACTION_CONTROLLER, "beg");
+            }
+            // the notice reaches the owner anywhere in the dimension: with twenty dinos you are not next to each one
             if (this.hungryMessageCooldown == 0) {
                 this.hungryMessageCooldown = 2400;
-                owner.displayClientMessage(Component.translatable("message.terrassic.hungry", this.getDisplayName()), true);
+                this.notice(owner, ModNetwork.NOTICE_RIFT,
+                        Component.translatable(near ? "hud.terrassic.notice.hungry" : "hud.terrassic.notice.hungry_far"),
+                        this.getDisplayName());
             }
         }
     }
