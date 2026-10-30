@@ -1922,6 +1922,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return super.getControllingPassenger();
     }
 
+    /** Extra seat height on top of {@link #getPassengersRidingOffset()} for a pose that raises the back (flight). */
+    protected double seatLift() {
+        return 0.0D;
+    }
+
     @Override
     public void positionRider(Entity passenger, Entity.MoveFunction move) {
         if (!this.hasPassenger(passenger)) {
@@ -1935,7 +1940,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
         move.accept(passenger, this.getX() - Mth.sin(yaw) * forward,
-                this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset(),
+                this.getY() + this.getPassengersRidingOffset() + this.seatLift() + passenger.getMyRidingOffset(),
                 this.getZ() + Mth.cos(yaw) * forward);
     }
 

@@ -168,6 +168,27 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         addExtraGoals();
     }
 
+    /** 0 on the ground, 1 in the air, eased over about half a second: how far the seat has risen (see {@link #seatLift()}). */
+    private float airSeat;
+
+    /** How much higher the saddle sits in flight than on the ground, in blocks at size 1 (gen_species "ride_air_lift").
+     *  The Pteranodon's flight poses lift its body 14 px above the standing pose: with the ground seat the body
+     *  closed over the rider in the air. */
+    protected double airSeatLift() {
+        return 0.0D;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.airSeat += ((this.isAirborne() ? 1.0F : 0.0F) - this.airSeat) * 0.2F;
+    }
+
+    @Override
+    protected double seatLift() {
+        return this.airSeat * this.airSeatLift() * this.getScale();
+    }
+
     @Override
     public boolean isFood(ItemStack stack) {
         return food().test(stack);

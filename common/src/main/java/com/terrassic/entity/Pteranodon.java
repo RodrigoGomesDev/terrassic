@@ -88,6 +88,11 @@ public class Pteranodon extends Pterosaur {
     }
 
     @Override
+    protected double airSeatLift() {
+        return 0.88D;
+    }
+
+    @Override
     protected double riderForwardOffset() {
         return 0.08D;
     }
