@@ -394,6 +394,8 @@ HUD_LANG = {
         "gui.terrassic.hud.hud_new_species": "New species",
         "gui.terrassic.hud.hud_era_title": "Era title",
         "gui.terrassic.hud.hud_numbers_always": "Numbers on the bars, always",
+        "gui.terrassic.hud.scale": "Size: %s",
+        "gui.terrassic.hud.scale_auto": "auto",
     },
     "pt_br": {
         "hud.terrassic.level": "Nv %s",
@@ -423,6 +425,8 @@ HUD_LANG = {
         "gui.terrassic.hud.hud_new_species": "Espécie nova",
         "gui.terrassic.hud.hud_era_title": "Título da era",
         "gui.terrassic.hud.hud_numbers_always": "Números nas barras sempre",
+        "gui.terrassic.hud.scale": "Tamanho: %s",
+        "gui.terrassic.hud.scale_auto": "automático",
     },
     "es_es": {
         "hud.terrassic.level": "Nv %s",
@@ -452,6 +456,8 @@ HUD_LANG = {
         "gui.terrassic.hud.hud_new_species": "Especie nueva",
         "gui.terrassic.hud.hud_era_title": "Título de la era",
         "gui.terrassic.hud.hud_numbers_always": "Números en las barras siempre",
+        "gui.terrassic.hud.scale": "Tamaño: %s",
+        "gui.terrassic.hud.scale_auto": "automático",
     },
 }
 for _lang, _keys in HUD_LANG.items():

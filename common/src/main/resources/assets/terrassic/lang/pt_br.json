@@ -832,6 +832,8 @@
   "gui.terrassic.hud.hud_notices": "Avisos à direita",
   "gui.terrassic.hud.hud_numbers_always": "Números nas barras sempre",
   "gui.terrassic.hud.hud_taming": "Barras de doma",
+  "gui.terrassic.hud.scale": "Tamanho: %s",
+  "gui.terrassic.hud.scale_auto": "automático",
   "gui.terrassic.hud.style": "Estilo",
   "gui.terrassic.hud.title": "HUD do Terrassic",
   "gui.terrassic.lens.adult": "Adulto · tamanho %s%%",

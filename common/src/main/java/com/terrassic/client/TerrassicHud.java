@@ -94,14 +94,20 @@ public final class TerrassicHud {
             return;
         }
         boolean compact = ClientConfig.compactHud();
-        if (ClientConfig.flag("hud_mount") && player.getVehicle() instanceof DinosaurEntity mount) {
-            if (compact) {
-                compactMount(g, mc, mount);
-            } else {
-                mountPlate(g, mc.font, mount, 4, 4);
-            }
+        // the plate and the notices are drawn one HUD step smaller than the GUI (Rodrigo 30/10: GUI 3 -> HUD 2)
+        float k = ClientConfig.hudScale(mc) / (float) mc.getWindow().getGuiScale();
+        int hw = Math.round(g.guiWidth() / k);
+        int hh = Math.round(g.guiHeight() / k);
+        g.pose().pushPose();
+        g.pose().scale(k, k, 1.0F);
+        if (ClientConfig.flag("hud_mount") && player.getVehicle() instanceof DinosaurEntity mount && !compact) {
+            mountPlate(g, mc.font, mount, 4, 4);
         }
-        HudNotices.render(g, mc.font, partialTick, compact);
+        HudNotices.render(g, mc.font, partialTick, compact, hw, hh);
+        g.pose().popPose();
+        if (ClientConfig.flag("hud_mount") && player.getVehicle() instanceof DinosaurEntity mount && compact) {
+            compactMount(g, mc, mount);  // beside the vanilla food bar, at the GUI's own scale
+        }
         if (titleAge >= 0 && titleEra != null) {
             eraTitle(g, mc.font, partialTick);
         }

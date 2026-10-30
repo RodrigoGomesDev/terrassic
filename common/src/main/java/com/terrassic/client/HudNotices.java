@@ -82,29 +82,30 @@ public final class HudNotices {
         MODELS.clear();
     }
 
-    static void render(GuiGraphics g, Font font, float partialTick, boolean compact) {
+    /** Draws the notices in a w x h space (the HUD scale, see ClientConfig.hudScale). */
+    static void render(GuiGraphics g, Font font, float partialTick, boolean compact, int w, int h) {
         if (SHOWING.isEmpty()) {
             return;
         }
         int step = compact ? COMPACT_STEP : STEP;
-        int y = (g.guiHeight() - (SHOWING.size() * step - 4)) / 2 - 6;
+        int y = (h - (SHOWING.size() * step - 4)) / 2 - 6;
         for (Notice n : SHOWING) {
             float age = n.age + partialTick;
             // slides in from the right edge and back out at the end
             float in = Mth.clamp(Math.min(age, STAY - age) / SLIDE, 0.0F, 1.0F);
             float out = (1.0F - in) * (1.0F - in);
             if (compact) {
-                compact(g, font, n, y, out);
+                compact(g, font, n, w, y, out);
             } else {
-                slab(g, font, n, y, out);
+                slab(g, font, n, w, y, out);
             }
             y += step;
         }
     }
 
-    private static void slab(GuiGraphics g, Font font, Notice n, int y, float out) {
+    private static void slab(GuiGraphics g, Font font, Notice n, int screenW, int y, float out) {
         int w = Math.max(150, 30 + Math.max(AmberHud.width(font, n.title), AmberHud.width(font, n.line)) + 8);
-        int x = g.guiWidth() - w - 4 + Math.round(out * (w + 8));
+        int x = screenW - w - 4 + Math.round(out * (w + 8));
         AmberHud.slab(g, "notice_" + w, x, y, 0, 3, 6, 0, w, 0, w, 26, w - 6, 30, 40, 30, 34, 28, 0, 28);
         LivingEntity model = model(n.species);
         AmberHud.amberDrop(g, x + 14, y + 15, 12, 11, n.seed,
@@ -114,9 +115,9 @@ public final class HudNotices {
     }
 
     /** The compact HUD: no slab, the animal itself beside two lines of text, right-aligned. */
-    private static void compact(GuiGraphics g, Font font, Notice n, int y, float out) {
+    private static void compact(GuiGraphics g, Font font, Notice n, int screenW, int y, float out) {
         int w = Math.max(AmberHud.width(font, n.title), AmberHud.width(font, n.line));
-        int x = g.guiWidth() - 4 - w + Math.round(out * (w + 40));
+        int x = screenW - 4 - w + Math.round(out * (w + 40));
         LivingEntity model = model(n.species);
         if (model != null) {
             TerrassicHud.portrait(g, model, x - 28, y - 1, 26, 16);

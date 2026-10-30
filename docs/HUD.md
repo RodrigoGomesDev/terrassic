@@ -130,6 +130,18 @@ Botão "HUD" ao lado de "Regras do Terrassic" no menu de pausa (a tela de títul
 interruptor por peça: placa da montaria, placa de nome, barras de doma, avisos à direita, espécie nova, título da era
 e números nas barras sempre. Cada mudança vai na hora para `config/terrassic-client.json`.
 
+## Tamanho (v0.14.4)
+
+O Rodrigo achou a placa da montaria e os avisos grandes demais na escala da GUI (30/10, 18:41Z) e aprovou a versão
+menor (18:44Z, prévia https://claude.ai/artifact/AyVUwoTYBrB8GHFQrGXE6j). Os dois continuam com todo o conteúdo, mas são
+desenhados um passo abaixo da escala da GUI: GUI 3 vira HUD 2 e GUI 4 vira HUD 3, sempre inteiro e no mínimo 1. Fica
+com 2/3 do tamanho, texto incluído.
+
+`"hud_scale": "auto"` em `config/terrassic-client.json`; um número de 1 a 4 fixa a escala, que nunca passa da escala
+da GUI. Na tela de opções do HUD, o botão "Tamanho" troca entre automático, 1, 2, 3 e 4.
+
+Os corações do modo compacto, a placa de nome, a Lupa, a tela do dino e o título da era ficam na escala da GUI.
+
 ## Fica para uma versão própria: a roda do apito
 
 A roda do apito da prévia (segurar H: seguir, esperar, vagar por perto, atacar meu alvo, juntar o bando, ficar

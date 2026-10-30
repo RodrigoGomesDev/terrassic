@@ -832,6 +832,8 @@
   "gui.terrassic.hud.hud_notices": "Notices on the right",
   "gui.terrassic.hud.hud_numbers_always": "Numbers on the bars, always",
   "gui.terrassic.hud.hud_taming": "Taming bars",
+  "gui.terrassic.hud.scale": "Size: %s",
+  "gui.terrassic.hud.scale_auto": "auto",
   "gui.terrassic.hud.style": "Style",
   "gui.terrassic.hud.title": "Terrassic HUD",
   "gui.terrassic.lens.adult": "Adult · size %s%%",

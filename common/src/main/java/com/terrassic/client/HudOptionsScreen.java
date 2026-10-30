@@ -42,6 +42,14 @@ public class HudOptionsScreen extends Screen {
                 b -> this.style(true), compact ? TerrassicButton.Kind.PRIMARY : TerrassicButton.Kind.STONE, compact));
         this.addRenderableWidget(new TerrassicButton(this.left + W - 84, this.top + this.h - 22, 72, 16, CommonComponents.GUI_DONE,
                 b -> this.onClose(), TerrassicButton.Kind.PRIMARY, false));
+        // the size of the mount plate and the notices (v0.14.4): automatic, then 1 to 4, round and round
+        int scale = ClientConfig.hudScaleOption();
+        Component size = Component.translatable("gui.terrassic.hud.scale", scale == 0
+                ? Component.translatable("gui.terrassic.hud.scale_auto") : Component.literal(String.valueOf(scale)));
+        this.addRenderableWidget(new TerrassicButton(this.left + 12, this.top + this.h - 22, 120, 16, size, b -> {
+            ClientConfig.setHudScaleOption((scale + 1) % 5);
+            this.rebuildWidgets();
+        }, TerrassicButton.Kind.STONE, false));
     }
 
     private void style(boolean compact) {
@@ -70,7 +78,6 @@ public class HudOptionsScreen extends Screen {
                     on ? TerrassicPalette.BONE_100 : TerrassicPalette.STONE_300);
             toggle(g, x + W - 34, yy - 1, on);
         }
-        AmberHud.text(g, this.font, Component.literal("config/terrassic-client.json"), x + 12, y + this.h - 18, TerrassicPalette.STONE_400);
         super.render(g, mouseX, mouseY, partialTick);
     }
 

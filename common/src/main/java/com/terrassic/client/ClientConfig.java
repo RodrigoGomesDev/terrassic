@@ -23,6 +23,7 @@ import java.nio.file.Path;
  *                            // code since v0.14.3, see titleScreen())
  *   "loading_tips": true,    // a real fact or a game tip on the world loading screens
  *   "hud_style": "amber",    // v0.14 HUD (docs/HUD.md): "amber" (slabs and drops of amber) or "compact"
+ *   "hud_scale": "auto",     // v0.14.4: scale of the mount plate and the notices; "auto" = one step under the GUI
  *   "hud_mount": true,       // HUD: plate of the dinosaur you ride
  *   "hud_notices": true,     // HUD: notices about your animals on the right (false = action bar, as before)
  *   "hud_numbers_always": false, // HUD: the mount's health in numbers all the time (default: when it changes)
@@ -73,6 +74,38 @@ public final class ClientConfig {
         return cfg.get(name).getAsBoolean();
     }
 
+    /**
+     * The scale of the mount plate and the notices (v0.14.4): one step under the GUI scale ("auto": GUI 3 draws them
+     * at 2, GUI 4 at 3, never under 1), or the number in "hud_scale", never over the GUI scale. Rodrigo (30/10/2026)
+     * found them too big at the GUI's own scale.
+     */
+    public static int hudScale(net.minecraft.client.Minecraft mc) {
+        int gui = Math.max(1, (int) Math.round(mc.getWindow().getGuiScale()));
+        JsonObject cfg = load();
+        if (cfg.has("hud_scale") && cfg.get("hud_scale").isJsonPrimitive() && cfg.get("hud_scale").getAsJsonPrimitive().isNumber()) {
+            return Math.max(1, Math.min(gui, cfg.get("hud_scale").getAsInt()));
+        }
+        return Math.max(1, gui - 1);
+    }
+
+    /** "hud_scale" as the options screen shows it: 0 for "auto", or 1 to 4. */
+    public static int hudScaleOption() {
+        JsonObject cfg = load();
+        if (cfg.has("hud_scale") && cfg.get("hud_scale").isJsonPrimitive() && cfg.get("hud_scale").getAsJsonPrimitive().isNumber()) {
+            return Math.max(1, Math.min(4, cfg.get("hud_scale").getAsInt()));
+        }
+        return 0;
+    }
+
+    public static synchronized void setHudScaleOption(int scale) {
+        if (scale <= 0) {
+            load().addProperty("hud_scale", "auto");
+        } else {
+            load().addProperty("hud_scale", scale);
+        }
+        save();
+    }
+
     /** The compact HUD style ("hud_style": "compact"); anything else is the Âmbar look. */
     public static boolean compactHud() {
         JsonObject cfg = load();
@@ -112,6 +145,10 @@ public final class ClientConfig {
         }
         if (!cfg.has("hud_style")) {
             cfg.addProperty("hud_style", "amber");
+            changed = true;
+        }
+        if (!cfg.has("hud_scale")) {
+            cfg.addProperty("hud_scale", "auto");
             changed = true;
         }
         // the pack bar left in v0.14 (the notices took its place)
