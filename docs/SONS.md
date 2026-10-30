@@ -1,5 +1,9 @@
 # Sons próprios do Terrassic: plano
 
+> **Desligado desde a v0.14.3 (30/10/2026):** o Rodrigo achou as vozes ruins. As vozes dos animais (chamados,
+> rugidos, ameaça, dor, morte e passos) ficam em silêncio com `"vozes": false` em `config/terrassic-world.json`, que é o
+> padrão. Nada foi apagado: `true` traz tudo de volta. Os outros sons (asas, comer, ovos, sela, carcaça) continuam.
+
 Status (24/10/2026, tarde): **vozes v2**. Cada uma das 53 espécies tem a sua própria voz, 100% sintetizada por código (nada gravado, nada de terceiros): 20 arquétipos re-vozeados para o corpo de cada espécie, mais um som assinatura por espécie (436 sons). O Rodrigo testou o piloto e achou alguns sons parecidos com aldeão e galinha: eram os sons vanilla que 48 espécies ainda usavam (galinha, papagaio, camelo, cabra, porco, raposa...) e as gravações de aves do piloto. Ver "Vozes v2" no fim. As seções abaixo contam o plano original.
 
 ## Hoje

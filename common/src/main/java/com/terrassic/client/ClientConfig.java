@@ -19,7 +19,8 @@ import java.nio.file.Path;
  * missing so the file always lists every option):
  * <pre>
  * {
- *   "title_screen": true,    // the Terrassic main menu in place of the vanilla title screen (docs/MENU.md)
+ *   "title_screen": true,    // the Terrassic main menu in place of the vanilla title screen (docs/MENU.md; off in
+ *                            // code since v0.14.3, see titleScreen())
  *   "loading_tips": true,    // a real fact or a game tip on the world loading screens
  *   "hud_style": "amber",    // v0.14 HUD (docs/HUD.md): "amber" (slabs and drops of amber) or "compact"
  *   "hud_mount": true,       // HUD: plate of the dinosaur you ride
@@ -51,8 +52,12 @@ public final class ClientConfig {
     private ClientConfig() {
     }
 
+    /** The mod's own title screen and loading screens (docs/MENU.md). Off since v0.14.3 whatever the option says:
+     *  Rodrigo (30/10/2026) wants Minecraft's own menu for now. The screens stay in the mod for when they come back. */
+    private static final boolean MENU_READY = false;
+
     public static boolean titleScreen() {
-        return flag("title_screen");
+        return MENU_READY && flag("title_screen");
     }
 
     public static boolean loadingTips() {

@@ -1,9 +1,11 @@
 package com.terrassic.entity;
 
+import com.terrassic.Terrassic;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.block.DinoEggBlock;
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
+import com.terrassic.config.WorldConfig;
 import com.terrassic.network.ModNetwork;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModItems;
@@ -22,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.WorldGenRegion;
@@ -1397,6 +1400,42 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.notice(player, hatched ? ModNetwork.NOTICE_FERN : ModNetwork.NOTICE_AMBER,
                 Component.translatable(hatched ? "hud.terrassic.notice.hatched" : "hud.terrassic.notice.tamed"),
                 Component.translatable("hud.terrassic.notice.name_sex", this.getDisplayName(), sex));
+    }
+
+    // ------------------------------------------------------------------ voices (off since v0.14.3)
+
+    /** The voices go quiet while "vozes" is off (config/WorldConfig): calls, roars, threats, hurt, death and the
+     *  mod's own steps. Wing flaps, eating, ground hits and the other sounds of things stay. */
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        if (!WorldConfig.voices() && this.isVoice(sound)) {
+            return;
+        }
+        super.playSound(sound, volume, pitch);
+    }
+
+    @Override
+    public void playAmbientSound() {
+        if (WorldConfig.voices()) {
+            super.playAmbientSound();
+        }
+    }
+
+    @Override
+    protected void playHurtSound(DamageSource source) {
+        if (WorldConfig.voices()) {
+            super.playHurtSound(source);
+        }
+    }
+
+    /** One of the mod's voices ("voice.&lt;species&gt;.*": calls, threats, hurt, death and its own steps), or this
+     *  animal's call or death sound (some borrow vanilla ones). The wing flaps of the flyers ("voice.*.flap") are not a
+     *  voice and stay (Mac test: the Pteranodon flew silent). Animals without steps of their own keep vanilla's block
+     *  steps, like any Minecraft animal. */
+    private boolean isVoice(SoundEvent sound) {
+        ResourceLocation id = sound.getLocation();
+        return id.getNamespace().equals(Terrassic.MOD_ID) && id.getPath().startsWith("voice.") && !id.getPath().endsWith(".flap")
+                || sound == this.getAmbientSound() || sound == this.getDeathSound();
     }
 
     /** A notice about this animal on the player's HUD (v0.14, client/HudNotices): the right side, the animal in its

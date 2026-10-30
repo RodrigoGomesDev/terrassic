@@ -32,7 +32,8 @@ import java.nio.file.Path;
  *   "mundo_padrao": true,         // "Criar novo mundo" opens on the Terrassic world type (docs/MUNDO.md, 10.3)
  *   "borda": true,                // a new continent world gets a world border around its sea (10.2)
  *   "borda_em_raios": 2.0,        // distance from the middle of the continent to the border, in continent radii
- *   "historia": false             // v0.10: the story mode (config/Story); off until it comes back in a future version
+ *   "historia": false,            // v0.10: the story mode (config/Story); off until it comes back in a future version
+ *   "vozes": false                // v0.14.3: the animals' voices (DinosaurEntity#playSound); off until they are remade
  * }
  * </pre>
  */
@@ -115,6 +116,12 @@ public final class WorldConfig {
         return bool("historia", false);
     }
 
+    /** v0.14.3: the animals' voices are on (calls, roars, hurt, death, steps). Off by default: Rodrigo found them
+     *  bad (30/10/2026); the sounds stay in the mod and come back when they are remade. */
+    public static boolean voices() {
+        return bool("vozes", false);
+    }
+
     /** A boolean from the file, or the default when the value is missing or not a boolean (never throws). */
     private static boolean bool(String key, boolean fallback) {
         try {
@@ -164,6 +171,7 @@ public final class WorldConfig {
         changed |= def(cfg, "borda", true);
         changed |= def(cfg, "borda_em_raios", 2.0D);
         changed |= def(cfg, "historia", false);
+        changed |= def(cfg, "vozes", false);
         if (changed) {
             try {
                 Files.createDirectories(file.getParent());

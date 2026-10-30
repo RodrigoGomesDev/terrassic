@@ -1,5 +1,9 @@
 # Menu principal Terrassic
 
+> **Desligado desde a v0.14.3 (30/10/2026):** por enquanto o mod não muda o menu do Minecraft. A tela de título, o
+> panorama, o logo e as telas de carregamento do Terrassic estão desligados no código (`ClientConfig.titleScreen()`),
+> e o botão "Regras do Terrassic" saiu da tela de título (continua no menu de pausa). Nada foi apagado.
+
 > Aprovado pelo Rodrigo em 24/10/2026 ("pra mim está perfeito esse modelo para o menu"). A tipografia (letreiro e
 > slogan) ainda vai mudar depois do estudo de tipografia da capa. Cores, texto em caixa normal, divisor e ícones seguem a
 > identidade "Âmbar e Basalto" (`docs/IDENTIDADE.md`, `client/ui/TerrassicPalette` e `TerrassicUi`).
