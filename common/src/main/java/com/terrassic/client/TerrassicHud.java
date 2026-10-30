@@ -56,6 +56,11 @@ public final class TerrassicHud {
     private static int baselineDelay;
     private static int titleDelay = -1;
     private static String titleEra;
+    /** Ticks since the era title came up (-1 = none); fades like a vanilla title: 10 in, 70 held, 20 out. */
+    private static int titleAge = -1;
+    private static final int TITLE_IN = 10;
+    private static final int TITLE_HOLD = 70;
+    private static final int TITLE_OUT = 20;
     private static int tick;
 
     private TerrassicHud() {
@@ -98,10 +103,45 @@ public final class TerrassicHud {
                 packCard(g, pack.get(i), 4, y + i * 30);
             }
         }
+        if (titleAge >= 0 && titleEra != null) {
+            eraTitle(g, mc.font, partialTick);
+        }
         float storm = RiftStormClient.intensity(partialTick);
         if (ClientConfig.flag("hud_rift_alert") && storm > 0.05F) {
             riftAlert(g, mc.font, storm, g.guiWidth());
         }
+    }
+
+    /**
+     * The era title, drawn here instead of the vanilla title: the "Entalhe" letters are wider than the vanilla font,
+     * so the vanilla title (4x) ran off both sides of the screen. Same place and fade, scaled down to fit when needed.
+     */
+    private static void eraTitle(GuiGraphics g, Font font, float partialTick) {
+        float age = titleAge + partialTick;
+        float alpha = age < TITLE_IN ? age / TITLE_IN
+                : age < TITLE_IN + TITLE_HOLD ? 1.0F : 1.0F - (age - TITLE_IN - TITLE_HOLD) / TITLE_OUT;
+        int a = Mth.clamp((int) (alpha * 255.0F), 0, 255);
+        if (a <= 8) {
+            return;
+        }
+        Component title = com.terrassic.client.ui.TerrassicFonts.title(Component.translatable("hud.terrassic.era." + titleEra));
+        Component subtitle = com.terrassic.client.ui.TerrassicFonts.ui(ClientResearch.story()
+                ? "menu.terrassic.subtitle" : "hud.terrassic.era." + titleEra + ".when");
+        int room = g.guiWidth() - 32;
+        g.pose().pushPose();
+        g.pose().translate(g.guiWidth() / 2.0F, g.guiHeight() / 2.0F, 0.0F);
+        float big = Math.min(4.0F, room / (float) Math.max(1, font.width(title)));
+        g.pose().pushPose();
+        g.pose().scale(big, big, big);
+        g.drawString(font, title, -font.width(title) / 2, -10, 0xFFFFFF | a << 24, true);
+        g.pose().popPose();
+        float small = Math.min(2.0F, room / (float) Math.max(1, font.width(subtitle)));
+        g.pose().pushPose();
+        g.pose().translate(0.0F, 2.0F, 0.0F);
+        g.pose().scale(small, small, small);
+        g.drawString(font, subtitle, -font.width(subtitle) / 2, 5, 0xFFFFFF | a << 24, true);
+        g.pose().popPose();
+        g.pose().popPose();
     }
 
     private static void frame(GuiGraphics g, int x0, int y0, int x1, int y1) {
@@ -221,12 +261,12 @@ public final class TerrassicHud {
         if (mc.player == null || mc.level == null) {
             return;
         }
+        if (titleAge >= 0 && !mc.isPaused() && ++titleAge > TITLE_IN + TITLE_HOLD + TITLE_OUT) {
+            titleAge = -1;
+        }
         if (titleDelay > 0 && mc.screen == null) {
             if (--titleDelay == 0 && ClientConfig.flag("hud_era_title") && titleEra != null) {
-                mc.gui.setTimes(10, 70, 20);
-                mc.gui.setSubtitle(com.terrassic.client.ui.TerrassicFonts.ui(ClientResearch.story()
-                        ? "menu.terrassic.subtitle" : "hud.terrassic.era." + titleEra + ".when"));
-                mc.gui.setTitle(com.terrassic.client.ui.TerrassicFonts.title(Component.translatable("hud.terrassic.era." + titleEra)));
+                titleAge = 0;
             }
         }
         if (tick % 10 != 0) {

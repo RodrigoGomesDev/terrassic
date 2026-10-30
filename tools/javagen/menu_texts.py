@@ -25,8 +25,8 @@ MENU = {
     # main menu (client/title/TerrassicMenuScreen, docs/MENU.md)
     "menu.terrassic.slogan": ("The past has awoken.", "The past has awoken.", "The past has awoken."),  # English everywhere (brand)
     "menu.terrassic.mods": ("Mods", "Mods", "Mods"),
-    "menu.terrassic.singleplayer.hint": ("Your worlds, or a new leap", "Seus mundos, ou um novo salto",
-                                         "Tus mundos, o un nuevo salto"),
+    "menu.terrassic.singleplayer.hint": ("Your worlds, or a new one", "Seus mundos, ou um mundo novo",
+                                         "Tus mundos, o uno nuevo"),
     "menu.terrassic.multiplayer.hint": ("Servers and LAN worlds", "Servidores e mundos na rede local",
                                         "Servidores y mundos en red local"),
     "menu.terrassic.rules.hint": ("Default rules for new worlds", "Regras padrão para mundos novos",
