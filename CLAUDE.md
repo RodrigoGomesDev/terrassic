@@ -212,6 +212,10 @@ Montáveis: T. rex, Triceratops, Brachiosaurus, Parasaurolophus, Gallimimus.
   (Cretáceo Superior no Overworld, Cretáceo Inferior/Penas e Cinzas, Jurássico, Triássico) + epílogo na Era do Gelo, ecossistema completo por era,
   mecânicas de cientista, avanço de capítulo com pulo, finais, mundo e livros. Aprovado pelo Rodrigo em 24/10/2026.
 - Regra 0: o Minecraft é livre. Nunca mover o jogador de era automaticamente; eras sempre abertas e revisitáveis; a história nunca bloqueia o básico.
+- **v0.10 (30/10/2026): modo história DESLIGADO, nada apagado.** A v1 estável é só o Cretáceo: dinossauros, itens, Guia de Campo e Mapa.
+  Todo código de história pergunta `config/Story.enabled()` (chave "historia" em `config/terrassic-world.json`, padrão false);
+  o cliente recebe o valor no login (`ClientResearch.story()`). Eras ativas em `config/Eras.java` (só Cretáceo): espécies de
+  outras eras ficam registradas, mas sem spawn, fora do criativo, do Guia e dos baús. Código novo de história deve passar por esses portões.
 - `docs/ESCOPO.md`: um mod só, completo e autoral (sem modpack, sem mods de terceiros além das bibliotecas GeckoLib e Architectury embutidas),
   mods complementares futuros, pacote de texturas embutido, HUD próprio e ambientação.
 - Todo texto em pt_br, en_us e es_es.

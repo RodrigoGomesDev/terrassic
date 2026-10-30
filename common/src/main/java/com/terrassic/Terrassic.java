@@ -43,6 +43,7 @@ public final class Terrassic {
         ModBlocks.BLOCKS.register();
         ModBlockEntities.BLOCK_ENTITY_TYPES.register();
         ModItems.ITEMS.register();
+        com.terrassic.config.StoryCondition.CONDITIONS.register(); // v0.10: loot condition terrassic:story
         ModEntities.registerAttributes();
         ModSpawns.init();
         ModWorldgen.init();

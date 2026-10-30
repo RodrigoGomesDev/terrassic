@@ -1,6 +1,7 @@
 package com.terrassic.leap;
 
 import com.terrassic.Terrassic;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModTabs;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -39,7 +40,7 @@ public final class LeapRegistry {
             BLOCK_ENTITIES.register("leap_altar", () -> BlockEntityType.Builder.of(LeapAltarBlockEntity::new, LEAP_ALTAR.get()).build(null));
 
     public static final RegistrySupplier<Item> LEAP_ALTAR_ITEM = ITEMS.register("leap_altar",
-            () -> new BlockItem(LEAP_ALTAR.get(), new Item.Properties().rarity(Rarity.RARE).arch$tab(ModTabs.SCIENCE)));
+            () -> new BlockItem(LEAP_ALTAR.get(), ModItems.story(new Item.Properties().rarity(Rarity.RARE), ModTabs.SCIENCE)));
 
     /** The Rift Tyrant: a T. rex of the Rift, 35% bigger (its size is set in the constructor, the type keeps the rex box). */
     public static final RegistrySupplier<EntityType<RiftTyrant>> RIFT_TYRANT = ENTITIES.register("rift_tyrant",

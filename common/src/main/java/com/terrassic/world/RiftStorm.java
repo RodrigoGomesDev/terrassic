@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import com.terrassic.config.Story;
 import com.terrassic.registry.ModSounds;
 import com.mojang.brigadier.CommandDispatcher;
 import com.terrassic.Terrassic;
@@ -105,7 +106,7 @@ public final class RiftStorm {
             if (level.getDayTime() % 24000L >= DUSK && day != d.lastRollDay && !level.players().isEmpty()) {
                 d.lastRollDay = day;
                 d.setDirty();
-                if (WorldConfig.riftStorms() && time - d.lastEnd >= WorldConfig.stormMinDays() * 24000L
+                if (WorldConfig.riftStorms() && Story.enabled() && time - d.lastEnd >= WorldConfig.stormMinDays() * 24000L
                         && level.random.nextDouble() < WorldConfig.stormChance()) {
                     start(level, d);
                 }

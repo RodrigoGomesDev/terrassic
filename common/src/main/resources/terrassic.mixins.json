@@ -7,7 +7,8 @@
     "PlayerMixin",
     "NoiseGeneratorSettingsMixin",
     "MobMixin",
-    "ChunkMapMixin"
+    "ChunkMapMixin",
+    "RecipeManagerMixin"
   ],
   "client": [
     "client.InventoryKeyMixin",

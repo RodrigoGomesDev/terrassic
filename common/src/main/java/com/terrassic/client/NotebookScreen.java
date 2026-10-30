@@ -4,6 +4,7 @@ import com.terrassic.client.ui.TerrassicButton;
 import com.terrassic.client.ui.TerrassicFonts;
 
 import com.terrassic.Terrassic;
+import com.terrassic.config.Eras;
 import com.terrassic.research.GuideSpecies;
 import com.terrassic.research.Knowledge;
 import com.terrassic.research.Lore;
@@ -54,6 +55,8 @@ public class NotebookScreen extends Screen {
     private static final int AMBER = 0xFFB86E10;
     private static final int BLOOD = com.terrassic.client.ui.TerrassicPalette.BLOOD_500;
     private static final String[] TABS = {"journal", "guide", "map", "katarina", "report"};
+    /** The tabs without the story mode (config/Story): the Diary, Katarina's pages and the Report wait for it. */
+    private static final String[] FREE_TABS = {"guide", "map"};
     /** Legend of the map, in the order of IslandMap's biome categories (DEEP_SEA .. DRY). */
     private static final String[] MAP_KINDS = {"deep_sea", "sea", "beach", "river", "swamp", "plains", "forest", "highlands", "dry"};
 
@@ -80,6 +83,24 @@ public class NotebookScreen extends Screen {
     public NotebookScreen(String tab) {
         super(Component.translatable("notebook.terrassic.title"));
         this.tab = tab != null ? tab : lastTab;
+        if (!List.of(tabs()).contains(this.tab)) {
+            this.tab = "guide";
+        }
+    }
+
+    private static String[] tabs() {
+        return ClientResearch.story() ? TABS : FREE_TABS;
+    }
+
+    /** The Field Guide's species: those of the eras in the world (config/Eras), in Guide order. */
+    private static List<GuideSpecies> species() {
+        List<GuideSpecies> out = new ArrayList<>();
+        for (GuideSpecies s : GuideSpecies.ALL) {
+            if (Eras.active(s)) {
+                out.add(s);
+            }
+        }
+        return out;
     }
 
     // ------------------------------------------------------------------ layout
@@ -89,8 +110,9 @@ public class NotebookScreen extends Screen {
         this.left = (this.width - W) / 2;
         this.top = (this.height - H) / 2;
         int tabW = 58; // five tabs: 5 x 58 + 4 x 4 = 306 of the 320 of the book
-        for (int i = 0; i < TABS.length; i++) {
-            String id = TABS[i];
+        String[] tabs = tabs();
+        for (int i = 0; i < tabs.length; i++) {
+            String id = tabs[i];
             // leather tabs; the open one shows the page colour (TerrassicButton, docs/IDENTIDADE.md)
             this.addRenderableWidget(TerrassicButton.notebook(this.left + 8 + i * (tabW + 4), this.top - 20, tabW, 18,
                     Component.translatable("notebook.terrassic.tab." + id), button -> this.select(id), id.equals(this.tab)));
@@ -163,7 +185,7 @@ public class NotebookScreen extends Screen {
     /** The eras (or diets) used by the Guide, in Guide order. */
     private static List<String> values(boolean era) {
         List<String> out = new ArrayList<>();
-        for (GuideSpecies s : GuideSpecies.ALL) {
+        for (GuideSpecies s : species()) {
             String v = era ? s.era() : s.diet();
             if (!out.contains(v)) {
                 out.add(v);
@@ -180,7 +202,7 @@ public class NotebookScreen extends Screen {
 
     private static List<GuideSpecies> filtered() {
         List<GuideSpecies> out = new ArrayList<>();
-        for (GuideSpecies s : GuideSpecies.ALL) {
+        for (GuideSpecies s : species()) {
             if ((lastEra == null || lastEra.equals(s.era())) && (lastDiet == null || lastDiet.equals(s.diet()))) {
                 out.add(s);
             }
@@ -206,8 +228,8 @@ public class NotebookScreen extends Screen {
     }
 
     private String selectedSpecies() {
-        if (lastSpecies == null || GuideSpecies.byId(lastSpecies) == null) {
-            lastSpecies = GuideSpecies.ALL.get(0).id();
+        if (lastSpecies == null || GuideSpecies.byId(lastSpecies) == null || !Eras.active(lastSpecies)) {
+            lastSpecies = species().get(0).id();
         }
         return lastSpecies;
     }
@@ -310,12 +332,13 @@ public class NotebookScreen extends Screen {
     private void renderGuide(GuiGraphics g, int mouseX, int mouseY) {
         Knowledge k = ClientResearch.get();
         int recorded = 0;
-        for (GuideSpecies s : GuideSpecies.ALL) {
+        List<GuideSpecies> all = species();
+        for (GuideSpecies s : all) {
             if (k.level(s.id()) > Knowledge.UNKNOWN) {
                 recorded++;
             }
         }
-        g.drawString(this.font, TerrassicFonts.ui("notebook.terrassic.guide.count", recorded, GuideSpecies.ALL.size()),
+        g.drawString(this.font, TerrassicFonts.ui("notebook.terrassic.guide.count", recorded, all.size()),
                 this.left + 10, this.top + 8, INK_SOFT, false);
         int shown = filtered().size();
         int pages = Math.max(1, (shown + LIST_ROWS - 1) / LIST_ROWS);

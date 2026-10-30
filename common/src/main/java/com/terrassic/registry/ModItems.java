@@ -1,6 +1,8 @@
 package com.terrassic.registry;
 
 import com.terrassic.Terrassic;
+import com.terrassic.config.Eras;
+import com.terrassic.config.Story;
 import com.terrassic.item.ClubItem;
 import com.terrassic.item.ExcavationToolItem;
 import com.terrassic.item.FieldNotebookItem;
@@ -26,6 +28,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.food.FoodProperties;
@@ -249,7 +252,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> FIELD_NOTEBOOK = ITEMS.register("field_notebook",
             () -> new FieldNotebookItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> LOOSE_PAGE = ITEMS.register("loose_page",
-            () -> new LoosePageItem(new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.SCIENCE)));
+            () -> new LoosePageItem(story(new Item.Properties().rarity(Rarity.UNCOMMON), ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> HAIR_BRUSH = ITEMS.register("hair_brush",
             () -> new ExcavationToolItem(60, 0.0F, new Item.Properties().durability(48).arch$tab(ModTabs.SCIENCE)));
     public static final RegistrySupplier<Item> FLINT_CHISEL = ITEMS.register("flint_chisel",
@@ -280,7 +283,7 @@ public final class ModItems {
         for (GuideSpecies species : GuideSpecies.ALL) {
             String id = species.id();
             FOSSILS.put(id, ITEMS.register(id + "_fossil",
-                    () -> new FossilItem(id, new Item.Properties().arch$tab(ModTabs.SCIENCE))));
+                    () -> new FossilItem(id, listed(new Item.Properties(), id, ModTabs.SCIENCE))));
         }
     }
 
@@ -288,7 +291,7 @@ public final class ModItems {
     static {
         for (Map.Entry<String, RegistrySupplier<Block>> e : ModBlocks.EGGS.entrySet()) {
             RegistrySupplier<Block> block = e.getValue();
-            ITEMS.register(e.getKey() + "_egg", () -> new BlockItem(block.get(), new Item.Properties().stacksTo(16).arch$tab(ModTabs.MAIN)));
+            ITEMS.register(e.getKey() + "_egg", () -> new BlockItem(block.get(), listed(new Item.Properties().stacksTo(16), e.getKey(), ModTabs.MAIN)));
         }
     }
 
@@ -307,12 +310,12 @@ public final class ModItems {
             if (wallTorches.containsKey(e.getKey())) {
                 RegistrySupplier<Block> wall = ModBlocks.BUILDING.get(wallTorches.get(e.getKey()));
                 ITEMS.register(e.getKey(), () -> new net.minecraft.world.item.StandingAndWallBlockItem(block.get(),
-                        wall.get(), new Item.Properties().arch$tab(ModTabs.BUILDING), net.minecraft.core.Direction.DOWN));
+                        wall.get(), listed(new Item.Properties(), e.getKey(), ModTabs.BUILDING), net.minecraft.core.Direction.DOWN));
             } else if (onWater.contains(e.getKey())) {
                 ITEMS.register(e.getKey(), () -> new net.minecraft.world.item.PlaceOnWaterBlockItem(block.get(),
-                        new Item.Properties().arch$tab(ModTabs.BUILDING)));
+                        listed(new Item.Properties(), e.getKey(), ModTabs.BUILDING)));
             } else {
-                ITEMS.register(e.getKey(), () -> new BlockItem(block.get(), new Item.Properties().arch$tab(ModTabs.BUILDING)));
+                ITEMS.register(e.getKey(), () -> new BlockItem(block.get(), listed(new Item.Properties(), e.getKey(), ModTabs.BUILDING)));
             }
         }
     }
@@ -320,15 +323,18 @@ public final class ModItems {
     private ModItems() {
     }
 
-    /** A random fossil, weighted by how common each species' fossils are (GuideSpecies.fossilWeight). */
+    /**
+     * A random fossil of a species of the active eras (config/Eras), weighted by how common each species' fossils are
+     * (GuideSpecies.fossilWeight).
+     */
     public static Item randomFossil(RandomSource random) {
         int total = 0;
         for (GuideSpecies s : GuideSpecies.ALL) {
-            total += s.fossilWeight();
+            total += Eras.active(s) ? s.fossilWeight() : 0;
         }
         int roll = random.nextInt(total);
         for (GuideSpecies s : GuideSpecies.ALL) {
-            roll -= s.fossilWeight();
+            roll -= Eras.active(s) ? s.fossilWeight() : 0;
             if (roll < 0) {
                 return FOSSILS.get(s.id()).get();
             }
@@ -337,12 +343,25 @@ public final class ModItems {
     }
 
     private static RegistrySupplier<Item> hide(String species) {
-        return ITEMS.register(species + "_hide", () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));
+        return ITEMS.register(species + "_hide", () -> new Item(listed(new Item.Properties(), species, ModTabs.MAIN)));
+    }
+
+    /**
+     * Puts the item in its creative tab, unless it is named after a species of an era that is switched off
+     * (config/Eras): such items stay registered, so saved worlds keep them, but are not listed.
+     */
+    public static Item.Properties listed(Item.Properties props, String id, RegistrySupplier<CreativeModeTab> tab) {
+        return Eras.activeName(id) ? props.arch$tab(tab) : props;
+    }
+
+    /** Puts a story item (config/Story) in its creative tab only while the story mode is on. */
+    public static Item.Properties story(Item.Properties props, RegistrySupplier<CreativeModeTab> tab) {
+        return Story.enabled() ? props.arch$tab(tab) : props;
     }
 
     private static RegistrySupplier<Item> egg(String name, RegistrySupplier<? extends EntityType<? extends Mob>> type) {
         RegistrySupplier<Item> egg = ITEMS.register(name + "_spawn_egg",
-                () -> new ArchitecturySpawnEggItem(type, 0xFFFFFF, 0xFFFFFF, new Item.Properties().arch$tab(ModTabs.MAIN)));
+                () -> new ArchitecturySpawnEggItem(type, 0xFFFFFF, 0xFFFFFF, listed(new Item.Properties(), name, ModTabs.MAIN)));
         SPAWN_EGGS.add(egg);
         return egg;
     }

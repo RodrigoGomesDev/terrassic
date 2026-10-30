@@ -17,7 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -35,7 +34,8 @@ import java.util.Map;
  *       (following, sitting, fighting, sleeping), like a Cobblemon party.</li>
  *   <li><b>New species</b>: a toast with the portrait when a species reaches a new Field Guide level
  *       ({@link SpeciesToast}).</li>
- *   <li><b>Era title</b>: "Late Cretaceous / Chapter 1 · Echoes of the End" when you arrive in the world.</li>
+ *   <li><b>Era title</b>: "Late Cretaceous" the first time you are in the era, once per player and world (the server
+ *       keeps it and sends ModNetwork.ERA_TITLE); the line under it names the chapter only with the story mode on.</li>
  *   <li><b>Rift alert</b>: a pulsing cracked amber shard (top centre) while a Rift Storm is on.</li>
  * </ul>
  * Each part can be turned off in config/terrassic-client.json; F1 hides everything, like the vanilla HUD.
@@ -55,6 +55,7 @@ public final class TerrassicHud {
     private static Knowledge seenAtJoin;
     private static int baselineDelay;
     private static int titleDelay = -1;
+    private static String titleEra;
     private static int tick;
 
     private TerrassicHud() {
@@ -67,8 +68,13 @@ public final class TerrassicHud {
             levels = null;
             seenAtJoin = ClientResearch.get();
             baselineDelay = 20;  // x10 ticks: at most 10 s waiting for the server's Knowledge sync
-            titleDelay = 60;
         });
+    }
+
+    /** The server says this is the player's first time in the era: its title, 3 s after the world (and any screen) is up. */
+    static void showEraTitle(String era) {
+        titleEra = era;
+        titleDelay = 60;
     }
 
     // ------------------------------------------------------------------ drawing
@@ -216,10 +222,11 @@ public final class TerrassicHud {
             return;
         }
         if (titleDelay > 0 && mc.screen == null) {
-            if (--titleDelay == 0 && ClientConfig.flag("hud_era_title") && mc.level.dimension() == Level.OVERWORLD) {
+            if (--titleDelay == 0 && ClientConfig.flag("hud_era_title") && titleEra != null) {
                 mc.gui.setTimes(10, 70, 20);
-                mc.gui.setSubtitle(com.terrassic.client.ui.TerrassicFonts.ui("menu.terrassic.subtitle"));
-                mc.gui.setTitle(com.terrassic.client.ui.TerrassicFonts.title(Component.translatable("hud.terrassic.era.late_cretaceous")));
+                mc.gui.setSubtitle(com.terrassic.client.ui.TerrassicFonts.ui(ClientResearch.story()
+                        ? "menu.terrassic.subtitle" : "hud.terrassic.era." + titleEra + ".when"));
+                mc.gui.setTitle(com.terrassic.client.ui.TerrassicFonts.title(Component.translatable("hud.terrassic.era." + titleEra)));
             }
         }
         if (tick % 10 != 0) {

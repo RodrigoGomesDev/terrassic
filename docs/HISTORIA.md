@@ -4,6 +4,11 @@
 > Aprovado: a premissa "O Salto"; andar para trás no tempo; a cientista se chama Katarina; todos os dinossauros, com ecossistemas completos por era; capítulos, cientista, avanço com pulo e os três finais ("está ótimo").
 > Também aprovado: regras de mundo livre (seção 0), tipo de mundo "Terrassic" + mundo normal, mundo e livros (seções 8 e 9), desenvolvimento era por era.
 > Pendente: as decisões da seção 11.
+>
+> **v0.10 (30/10/2026): o modo história está desligado** e guardado como feature futura (decisão do Rodrigo depois da v0.9).
+> Nada foi apagado: "historia": true em `config/terrassic-world.json` liga tudo de volta (abertura, Caderno com Diário e
+> Objetivos, páginas da Katarina, cratera, Tempestades da Fenda, Altar do Salto, estrelas cadentes e a aba "Ecos do Fim").
+> Com ela desligada ficam os dinossauros, os itens, o Guia de Campo e o Mapa. Ver `config/Story.java`.
 
 Este documento define a história do mod, como o jogador avança pelas eras, o que ele faz como cientista e como tudo termina. A lista de criaturas por versão continua em `docs/ROSTER.md`; aqui cada criatura ganha a sua era e o seu lugar no ecossistema.
 

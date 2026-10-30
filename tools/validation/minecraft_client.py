@@ -184,7 +184,7 @@ class LocalClient:
             self._socket.sendall(varint(len(body)) + body)
 
     def _register(self):
-        channels = ["terrassic:research_sync", "terrassic:intro", "terrassic:island_map"]
+        channels = ["terrassic:research_sync", "terrassic:intro", "terrassic:island_map", "terrassic:story", "terrassic:era_title"]
         if self.supports_delta:
             channels.append("terrassic:research_delta")
         physical = ["architectury:network", "fml:play", "fml:handshake", "fml:loginwrapper"] if self.loader == "forge" else []

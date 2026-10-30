@@ -156,7 +156,8 @@ public final class LeapClient {
 
     private static void spawnStreaks(ClientLevel level) {
         STREAKS.removeIf(s -> ticks - s.born() > s.life());
-        if (!ClientConfig.flag("shooting_stars") || level.dimension() != Level.OVERWORLD) {
+        // the shooting stars are Katarina's sign of the end: none while the story mode is off (config/Story.java)
+        if (!ClientResearch.story() || !ClientConfig.flag("shooting_stars") || level.dimension() != Level.OVERWORLD) {
             return;
         }
         if (RANDOM.nextFloat() >= rate() / 1200.0F || STREAKS.size() > 40) {

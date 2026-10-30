@@ -17,12 +17,16 @@ import net.minecraft.nbt.CompoundTag;
  *   <li>{@link #SYNC}: the whole Knowledge on join/rejoin, and for clients without delta support.</li>
  *   <li>{@link #DELTA}: only changed NBT fields, against the last snapshot sent on this connection.</li>
  *   <li>{@link #INTRO}: open the intro screen (first time in the world only).</li>
+ *   <li>{@link #STORY}: whether the story mode is on in this world (config/Story), on join.</li>
+ *   <li>{@link #ERA_TITLE}: show the era's title (TerrassicHud), the first time the player is in that era.</li>
  * </ul>
  */
 public final class ModNetwork {
     public static final ResourceLocation SYNC = Terrassic.id("research_sync");
     public static final ResourceLocation DELTA = Terrassic.id("research_delta");
     public static final ResourceLocation INTRO = Terrassic.id("intro");
+    public static final ResourceLocation STORY = Terrassic.id("story");
+    public static final ResourceLocation ERA_TITLE = Terrassic.id("era_title");
     private static final KnowledgeSyncState STATE = new KnowledgeSyncState();
 
     private ModNetwork() {
@@ -53,5 +57,17 @@ public final class ModNetwork {
 
     public static void sendIntro(ServerPlayer player) {
         NetworkManager.sendToPlayer(player, INTRO, new FriendlyByteBuf(Unpooled.buffer()));
+    }
+
+    public static void sendStory(ServerPlayer player, boolean story) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeBoolean(story);
+        NetworkManager.sendToPlayer(player, STORY, buf);
+    }
+
+    public static void sendEraTitle(ServerPlayer player, String era) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeUtf(era);
+        NetworkManager.sendToPlayer(player, ERA_TITLE, buf);
     }
 }

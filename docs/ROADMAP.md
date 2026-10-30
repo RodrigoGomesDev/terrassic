@@ -322,6 +322,12 @@ retratos dos modelos; o Altar e o chefe (v0.9) fecham o capítulo e dependem de 
 
 ## 8. Versões
 
+> **30/10/2026: plano da v1 estável do Cretáceo** (decisão do Rodrigo): a história fica desligada como feature futura e
+> a v1 sai com as 55 espécies atuais polidas, uma coisa por versão, cada uma aprovada antes da próxima:
+> v0.10 Faxina (história desligada, Jurássico desligado, título da era uma vez por jogador) 🔄 · v0.11 movimento dos grandes ○ ·
+> v0.12 teclas e tela do dino ○ · v0.13 níveis no estilo ARK ○ · v0.14 HUD ○ · v0.15 ecossistema por nicho ○ ·
+> polimento das espécies uma a uma ○ · v1 ○ · depois as 61 criaturas novas do Cretáceo. A tabela abaixo é o plano anterior.
+
 | Versão | Tema | Estado |
 |---|---|---|
 | v0.1 | Primeiro protótipo | ✅ |

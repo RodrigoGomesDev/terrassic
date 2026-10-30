@@ -105,7 +105,10 @@ def camp(variant, seed):
 # ---------------------------------------------------------------------------------------------------------------
 
 FOSSIL_SKULLS = ["tyrannosaurus", "triceratops", "edmontosaurus", "alamosaurus", "pachycephalosaurus",
-                 "ankylosaurus", "velociraptor", "stegosaurus", "brachiosaurus", "dilophosaurus"]
+                 "ankylosaurus", "velociraptor"]
+# v0.10: the Jurassic skulls stay registered but out of the structures and chests while only the Cretaceous is on
+# (config/Eras.java); put them back in FOSSIL_SKULLS when their era returns
+JURASSIC_SKULLS = ["stegosaurus", "brachiosaurus", "dilophosaurus"]
 LAYERS = ["shale", "shale", "limestone", "limestone", "chalk"]
 
 
@@ -383,9 +386,12 @@ STRUCTURE_SETS = {
                     "preferred_biomes": "#terrassic:refuge_preferred", "salt": 1958241311},
 }
 
+# v0.10: Katarina's pages only drop while the story mode is on (config/StoryCondition.java)
+STORY = [{"condition": f"{NS}:story"}]
+
 LOOT = {
     "katarina_camp": [
-        {"rolls": 1, "entries": [{"type": "minecraft:item", "name": f"{NS}:loose_page"}]},
+        {"rolls": 1, "conditions": STORY, "entries": [{"type": "minecraft:item", "name": f"{NS}:loose_page"}]},
         {"rolls": {"type": "minecraft:uniform", "min": 2, "max": 4}, "entries": [
             {"type": "minecraft:item", "name": "minecraft:cooked_cod", "weight": 4,
              "functions": [{"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 1, "max": 3}}]},
@@ -412,7 +418,7 @@ LOOT = {
         ]},
     ],
     "katarina_refuge": [
-        {"rolls": 2, "entries": [{"type": "minecraft:item", "name": f"{NS}:loose_page"}]},
+        {"rolls": 2, "conditions": STORY, "entries": [{"type": "minecraft:item", "name": f"{NS}:loose_page"}]},
         {"rolls": 1, "conditions": [{"condition": "minecraft:random_chance", "chance": 0.5}],
          "entries": [{"type": "minecraft:item", "name": f"{NS}:amber_lens"}]},
         {"rolls": {"type": "minecraft:uniform", "min": 3, "max": 5}, "entries": [
@@ -434,7 +440,7 @@ LOOT = {
                                  {"type": "minecraft:item", "name": f"{NS}:flint_chisel", "weight": 1}]},
         {"rolls": {"type": "minecraft:uniform", "min": 1, "max": 2}, "entries": [
             {"type": "minecraft:item", "name": f"{NS}:{s}_fossil"} for s in FOSSIL_SKULLS]},
-        {"rolls": 1, "conditions": [{"condition": "minecraft:random_chance", "chance": 0.5}],
+        {"rolls": 1, "conditions": STORY + [{"condition": "minecraft:random_chance", "chance": 0.5}],
          "entries": [{"type": "minecraft:item", "name": f"{NS}:loose_page"}]},
         {"rolls": {"type": "minecraft:uniform", "min": 1, "max": 3}, "entries": [
             {"type": "minecraft:item", "name": "minecraft:bone",

@@ -31,7 +31,8 @@ import java.nio.file.Path;
  *   "ritual_call_seconds": 30,    // v0.9: meteors before the Rift Tyrant answers the ritual
  *   "mundo_padrao": true,         // "Criar novo mundo" opens on the Terrassic world type (docs/MUNDO.md, 10.3)
  *   "borda": true,                // a new continent world gets a world border around its sea (10.2)
- *   "borda_em_raios": 2.0         // distance from the middle of the continent to the border, in continent radii
+ *   "borda_em_raios": 2.0,        // distance from the middle of the continent to the border, in continent radii
+ *   "historia": false             // v0.10: the story mode (config/Story); off until it comes back in a future version
  * }
  * </pre>
  */
@@ -109,6 +110,11 @@ public final class WorldConfig {
         return Math.max(1.1D, number("borda_em_raios", 2.0D));
     }
 
+    /** v0.10: the story mode is on (config/Story). Off by default: v1 is the creatures and the items only. */
+    public static boolean story() {
+        return bool("historia", false);
+    }
+
     /** A boolean from the file, or the default when the value is missing or not a boolean (never throws). */
     private static boolean bool(String key, boolean fallback) {
         try {
@@ -157,6 +163,7 @@ public final class WorldConfig {
         changed |= def(cfg, "mundo_padrao", true);
         changed |= def(cfg, "borda", true);
         changed |= def(cfg, "borda_em_raios", 2.0D);
+        changed |= def(cfg, "historia", false);
         if (changed) {
             try {
                 Files.createDirectories(file.getParent());

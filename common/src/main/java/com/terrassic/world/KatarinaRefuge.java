@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import com.terrassic.config.Story;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.Terrassic;
 import com.terrassic.entity.DinosaurEntity;
@@ -49,12 +50,14 @@ public final class KatarinaRefuge {
     public static void init() {
         InteractionEvent.INTERACT_ENTITY.register(KatarinaRefuge::touchMate);
         InteractionEvent.RIGHT_CLICK_ITEM.register(KatarinaRefuge::useLens);
+        // without the story mode (config/Story) the house stays as a place in the world and Mate can still be adopted,
+        // but the lens does not point to it and its advancements are not given
         TickEvent.SERVER_LEVEL_POST.register(KatarinaRefuge::visit);
     }
 
     /** Every 2 s: players standing in the River House get the advancement "River House". */
     private static void visit(ServerLevel level) {
-        if (level.getGameTime() % 40 != 0 || level.players().isEmpty()) {
+        if (level.getGameTime() % 40 != 0 || level.players().isEmpty() || !Story.enabled()) {
             return;
         }
         Structure house = level.registryAccess().registryOrThrow(Registries.STRUCTURE).get(RIVER_HOUSE);
@@ -86,7 +89,7 @@ public final class KatarinaRefuge {
 
     private static CompoundEventResult<ItemStack> useLens(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.isShiftKeyDown() || !stack.is(ModItems.AMBER_LENS.get())) {
+        if (!player.isShiftKeyDown() || !stack.is(ModItems.AMBER_LENS.get()) || !Story.enabled()) {
             return CompoundEventResult.pass();
         }
         if (player instanceof ServerPlayer sp && sp.level() instanceof ServerLevel level) {

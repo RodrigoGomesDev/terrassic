@@ -1,5 +1,6 @@
 """Real socket regression of notebooks, UUIDs, delta, dimensions, death, reconnect and restart."""
 import argparse
+import json
 import time
 from pathlib import Path
 
@@ -61,6 +62,10 @@ def main():
     clients = []
     print(f"Reports and disposable world: {server.directory}", flush=True)
     try:
+        # the intro and Katarina's pages belong to the story mode, off by default since v0.10 (config/Story.java)
+        config = server.directory / "config"
+        config.mkdir(exist_ok=True)
+        (config / "terrassic-world.json").write_text(json.dumps({"historia": True}))
         server.start("network-create", timeout=args.startup_timeout)
         alice = connect(server, "TerraAlice")
         clients.append(alice)

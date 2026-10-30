@@ -4,6 +4,8 @@ era.  gen_science.py writes the JSON from NODES and merges LANG.
 Each node: id "<tab>/<name>", parent, icon, frame, trigger, xp, ready, hidden, texts (pt, en, es).
 - trigger "code": criterion "done" (minecraft:impossible), awarded by Research.award / Research.objective.
 - trigger "tick": the tab root, granted on the first tick in the world.
+  chapter1/root is "code" since v0.10: Research grants it on join only while the story mode is on, so the
+  "Echoes of the End" tab stays hidden while the story is off.
 - trigger ("item", id): granted by minecraft:inventory_changed when the player has that item, no Java needed.
 - ready=False: the feature is not in the game yet; the node is documented here but not written.
 - objective nodes (chapter1/<Objective id>) take their texts from lore.OBJECTIVES, shared with the notebook.
@@ -55,7 +57,7 @@ NODES = [
         ("Ecos do Fim", "Echoes of the End", "Ecos del Fin"),
         ("Cretáceo Superior, 68 milhões de anos atrás. Você acordou de mãos vazias.",
          "Late Cretaceous, 68 million years ago. You woke up empty-handed.",
-         "Cretácico Superior, hace 68 millones de años. Despertaste con las manos vacías.")), trigger="tick", xp=0),
+         "Cretácico Superior, hace 68 millones de años. Despertaste con las manos vacías.")), trigger="code", xp=0),
 ]
 for _theme, _objectives in CHAPTER1_THEMES.items():
     NODES.append(N(f"chapter1/fragment_{_theme}", "chapter1/root", "terrassic:raw_amber", fragment_texts(_theme),
@@ -134,9 +136,9 @@ NODES += [
     # ================================================================ Field Notebook (every era)
     N("journal/root", None, "terrassic:field_notebook", T(
         ("Caderno de Campo", "Field Notebook", "Cuaderno de Campo"),
-        ("O caderno que a Katarina começou e você continua. Vale em qualquer era.",
-         "The notebook Katarina started and you carry on. It counts in every era.",
-         "El cuaderno que Katarina empezó y tú continúas. Vale en cualquier era.")), trigger="tick", xp=0),
+        ("Seu caderno de pesquisa. Vale em qualquer era.",
+         "Your research notebook. It counts in every era.",
+         "Tu cuaderno de investigación. Vale en cualquier era.")), trigger="tick", xp=0),
     # Field Guide
     N("journal/first_sighting", "journal/root", "terrassic:gallimimus_spawn_egg", T(
         ("Visto vivo", "Seen alive", "Visto con vida"),
@@ -150,9 +152,9 @@ NODES += [
          "Estudia una especie hasta \"Estudiado\": un boceto, un fósil, una muestra o derrotar uno.")), xp=25),
     N("journal/guide_complete", "journal/first_studied", "minecraft:enchanted_book", T(
         ("Guia de Campo completo", "Complete Field Guide", "Guía de Campo completa"),
-        ("Estude todas as espécies do Guia. A Katarina vai querer ler isto.",
-         "Study every species in the Guide. Katarina will want to read this.",
-         "Estudia todas las especies de la Guía. Katarina querrá leer esto.")), frame="challenge", xp=100),
+        ("Estude todas as espécies do Guia.",
+         "Study every species in the Guide.",
+         "Estudia todas las especies de la Guía.")), frame="challenge", xp=100),
     N("journal/first_silhouette", "journal/root", "terrassic:triceratops_fossil", T(
         ("Só os ossos", "Only bones", "Solo huesos"),
         ("Estude um fóssil na Mesa de Pesquisa.", "Study a fossil at the Research Table.",
@@ -205,10 +207,11 @@ NODES += [
         ("Domado no sono", "Tamed in its sleep", "Domado en sueños"),
         ("Alimente uma criatura derrubada até ela acordar domada.", "Feed a knocked-out creature until it wakes up tame.",
          "Alimenta a una criatura derribada hasta que despierte domada.")), xp=25, ready=False),
-    # Katarina's pages
+    # Katarina's pages (story mode): hidden until earned, so they stay out of sight while the story is off
     N("journal/five_pages", "journal/root", "terrassic:loose_page", T(
         ("Leitor atento", "Close reader", "Lector atento"),
-        ("Junte 5 páginas da Katarina.", "Collect 5 of Katarina's pages.", "Reúne 5 páginas de Katarina.")), xp=25),
+        ("Junte 5 páginas da Katarina.", "Collect 5 of Katarina's pages.", "Reúne 5 páginas de Katarina.")), xp=25,
+      hidden=True),
     N("journal/all_pages", "journal/five_pages", "minecraft:writable_book", T(
         ("O caderno dela", "Her notebook", "Su cuaderno"),
         ("Junte todas as páginas da Katarina.", "Collect every one of Katarina's pages.",

@@ -38,8 +38,14 @@ public final class SpawnConfig {
     private SpawnConfig() {
     }
 
-    /** Spawn weight to use for a species whose default weight is {@code weight}; 0 = do not spawn. */
+    /**
+     * Spawn weight to use for a species whose default weight is {@code weight}; 0 = do not spawn. Species of an era
+     * that is switched off (config/Eras) never spawn.
+     */
     public static int weight(String species, int weight) {
+        if (!Eras.active(species)) {
+            return 0;
+        }
         JsonObject cfg = load();
         double global = cfg.has("spawn_multiplier") ? cfg.get("spawn_multiplier").getAsDouble() : 1.0D;
         JsonObject all = cfg.getAsJsonObject("species");

@@ -3,6 +3,11 @@
   "pools": [
     {
       "rolls": 2,
+      "conditions": [
+        {
+          "condition": "terrassic:story"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",

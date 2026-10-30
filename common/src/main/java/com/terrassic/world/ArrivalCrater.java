@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import com.terrassic.config.Story;
 import com.terrassic.Terrassic;
 import com.terrassic.registry.ModItems;
 import dev.architectury.event.events.common.PlayerEvent;
@@ -40,6 +41,9 @@ public final class ArrivalCrater {
     }
 
     private static void onJoin(ServerPlayer player) {
+        if (!Story.enabled()) {
+            return;  // part of the story (config/Story); a world that turns it on later still gets its crater
+        }
         ServerLevel level = player.server.overworld();
         Data data = Data.get(level);
         if (data.placed) {

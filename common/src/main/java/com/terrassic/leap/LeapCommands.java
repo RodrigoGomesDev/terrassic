@@ -1,5 +1,6 @@
 package com.terrassic.leap;
 
+import com.terrassic.config.Story;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -36,6 +37,9 @@ public final class LeapCommands {
 
     private static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext ctx,
                                  Commands.CommandSelection selection) {
+        if (!Story.enabled()) {
+            return;  // modes, chapters and the ritual belong to the story mode (config/Story)
+        }
         for (String name : List.of("modo", "mode")) {
             dispatcher.register(Commands.literal("terrassic").then(Commands.literal(name).requires(s -> s.hasPermission(2))
                     .executes(c -> showMode(c.getSource()))

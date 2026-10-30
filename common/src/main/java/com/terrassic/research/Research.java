@@ -1,6 +1,8 @@
 package com.terrassic.research;
 
 import com.terrassic.Terrassic;
+import com.terrassic.config.Eras;
+import com.terrassic.config.Story;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.entity.HerbivoreDinosaur;
@@ -45,6 +47,9 @@ import java.util.List;
  * It also gives the advancements of docs/CONQUISTAS.md ({@link #award}). Those that follow from the Knowledge
  * (counts, objectives, fragments) are checked again on every change and when the player joins, so old worlds
  * catch up.
+ * <p>
+ * With the story mode off (config/Story, the default since v0.10) the Field Guide keeps working, but there is no
+ * intro, no notebook on the first join, no objective and no advancement of the "Echoes of the End" tab.
  */
 public final class Research {
     public static final double SIGHT_RANGE = 16.0D;
@@ -60,6 +65,8 @@ public final class Research {
     /** Knowledge counters: a marine reptile / a pterosaur was sighted (objective "Inland Sea"). */
     private static final String SEEN_SEA = "seen_sea";
     private static final String SEEN_SKY = "seen_sky";
+    /** Knowledge counter "era_title_&lt;era&gt;": the era's title was shown to this player (once per player and world). */
+    private static final String ERA_TITLE = "era_title_";
 
     private Research() {
     }
@@ -67,6 +74,12 @@ public final class Research {
     public static void init() {
         ModNetwork.init();
         PlayerEvent.PLAYER_JOIN.register(Research::onJoin);
+        PlayerEvent.CHANGE_DIMENSION.register((player, from, to) -> {
+            Knowledge k = knowledge(player);
+            if (arrive(player, k, false)) {
+                changed(player, k, true);
+            }
+        });
         TickEvent.PLAYER_POST.register(Research::onPlayerTick);
         EntityEvent.LIVING_DEATH.register((entity, source) -> {
             if (entity instanceof DinosaurEntity dino && source.getEntity() instanceof ServerPlayer player) {
@@ -126,16 +139,39 @@ public final class Research {
 
     private static void onJoin(ServerPlayer player) {
         Knowledge k = knowledge(player);
-        if (!k.introSeen()) {
-            k.setIntroSeen(true);
-            ItemStack notebook = new ItemStack(ModItems.FIELD_NOTEBOOK.get());
-            if (!player.getInventory().add(notebook)) {
-                player.drop(notebook, false);
+        // players from before v0.10 saw the era's title on every join: they are not shown it again
+        boolean veteran = k.introSeen();
+        ModNetwork.sendStory(player, Story.enabled());
+        if (Story.enabled()) {
+            if (!k.introSeen()) {
+                k.setIntroSeen(true);
+                ItemStack notebook = new ItemStack(ModItems.FIELD_NOTEBOOK.get());
+                if (!player.getInventory().add(notebook)) {
+                    player.drop(notebook, false);
+                }
+                ModNetwork.sendIntro(player);
             }
-            ModNetwork.sendIntro(player);
+            award(player, "chapter1/root");
         }
         milestones(player, k);
+        arrive(player, k, veteran);
         ModNetwork.sendFullKnowledge(player, k);
+    }
+
+    /**
+     * The title of the era the player is in ("Late Cretaceous"), the first time they are in it: once per player and
+     * world, kept in their Knowledge. {@code silent} only marks it. Returns true if the Knowledge changed.
+     */
+    private static boolean arrive(ServerPlayer player, Knowledge k, boolean silent) {
+        String era = eraHere(player);
+        if (era == null || k.counter(ERA_TITLE + era) > 0) {
+            return false;
+        }
+        k.increment(ERA_TITLE + era);
+        if (!silent) {
+            ModNetwork.sendEraTitle(player, era);
+        }
+        return true;
     }
 
     private static void onPlayerTick(Player player) {
@@ -294,7 +330,7 @@ public final class Research {
 
     /** Marks the objective and gives its advancement and, on the theme's 2nd objective, the amber fragment. */
     private static boolean complete(ServerPlayer player, Knowledge k, Objective objective) {
-        if (!objective.available() || !k.completeObjective(objective)) {
+        if (!Story.enabled() || !objective.available() || !k.completeObjective(objective)) {
             return false;
         }
         award(player, objective.advancement());
@@ -308,8 +344,14 @@ public final class Research {
 
     // ------------------------------------------------------------------ advancements (docs/CONQUISTAS.md)
 
-    /** Gives the advancement terrassic:&lt;path&gt; (all its criteria). Does nothing if it is done or not in the game. */
+    /**
+     * Gives the advancement terrassic:&lt;path&gt; (all its criteria). Does nothing if it is done or not in the game, or if
+     * it belongs to the story's tab (chapter1/) while the story mode is off.
+     */
     public static void award(ServerPlayer player, String path) {
+        if (path.startsWith("chapter1/") && !Story.enabled()) {
+            return;
+        }
         Advancement advancement = player.server.getAdvancements().getAdvancement(Terrassic.id(path));
         if (advancement == null) {
             return;
@@ -390,11 +432,11 @@ public final class Research {
         return changed;
     }
 
-    /** Every Field Guide species of the era (null = of every era) is at least studied. */
+    /** Every Field Guide species of the era (null = of every active era, config/Eras) is at least studied. */
     private static boolean allStudied(Knowledge k, String era) {
         int count = 0;
         for (GuideSpecies s : GuideSpecies.ALL) {
-            if (era == null || s.era().equals(era)) {
+            if (era == null ? Eras.active(s) : s.era().equals(era)) {
                 if (k.level(s.id()) < Knowledge.STUDIED) {
                     return false;
                 }

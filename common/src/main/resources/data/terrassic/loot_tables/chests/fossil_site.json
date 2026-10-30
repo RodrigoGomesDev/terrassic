@@ -50,24 +50,15 @@
         {
           "type": "minecraft:item",
           "name": "terrassic:velociraptor_fossil"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "terrassic:stegosaurus_fossil"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "terrassic:brachiosaurus_fossil"
-        },
-        {
-          "type": "minecraft:item",
-          "name": "terrassic:dilophosaurus_fossil"
         }
       ]
     },
     {
       "rolls": 1,
       "conditions": [
+        {
+          "condition": "terrassic:story"
+        },
         {
           "condition": "minecraft:random_chance",
           "chance": 0.5

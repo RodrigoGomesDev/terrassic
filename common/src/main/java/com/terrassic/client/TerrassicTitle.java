@@ -34,13 +34,15 @@ public final class TerrassicTitle {
     private TerrassicTitle() {
     }
 
-    /** Draws the logo and the chapter line, fading with {@code alpha} like the vanilla logo. */
+    /** Draws the logo and the chapter line (or the era's line), fading with {@code alpha} like the vanilla logo. */
     public static void renderLogo(GuiGraphics graphics, int screenWidth, float alpha) {
         graphics.setColor(1.0F, 1.0F, 1.0F, alpha);
         graphics.blit(LOGO, screenWidth / 2 - 128, LOGO_Y - 6, 0.0F, 0.0F, 256, 64, 256, 64);
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int a = Math.max(4, (int) (alpha * 255.0F)) << 24;
-        graphics.drawCenteredString(Minecraft.getInstance().font, TerrassicFonts.ui("menu.terrassic.subtitle"),
+        // the chapter line belongs to the story mode; without it, the era and its age (config/Story)
+        String line = ClientResearch.story() ? "menu.terrassic.subtitle" : "menu.terrassic.subtitle_free";
+        graphics.drawCenteredString(Minecraft.getInstance().font, TerrassicFonts.ui(line),
                 screenWidth / 2, LOGO_Y + 46, PAPER | a);
     }
 

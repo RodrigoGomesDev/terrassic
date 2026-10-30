@@ -1,5 +1,6 @@
 package com.terrassic.leap;
 
+import com.terrassic.config.Story;
 import com.terrassic.config.WorldConfig;
 import com.terrassic.registry.ModItems;
 import com.terrassic.research.Research;
@@ -93,6 +94,11 @@ public class LeapAltarBlockEntity extends BlockEntity {
 
     void use(Player p) {
         if (!(p instanceof ServerPlayer player) || !(this.level instanceof ServerLevel level)) {
+            return;
+        }
+        if (!Story.enabled()) {
+            // the Altar belongs to the story mode (config/Story): an old altar stays a block, and says so
+            player.displayClientMessage(Component.translatable("message.terrassic.story_soon"), true);
             return;
         }
         long now = level.getGameTime();

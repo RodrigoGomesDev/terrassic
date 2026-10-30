@@ -40,6 +40,14 @@ public final class ClientHooks {
         });
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.INTRO, (buf, context) ->
                 context.queue(() -> introPending = true));
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.STORY, (buf, context) -> {
+            boolean story = buf.readBoolean();
+            context.queue(() -> ClientResearch.setStory(story));
+        });
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.ERA_TITLE, (buf, context) -> {
+            String era = buf.readUtf();
+            context.queue(() -> TerrassicHud.showEraTitle(era));
+        });
         // world rules (docs/REGRAS.md): the server's values, and the command that opens the screen
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, RulesNetwork.SYNC, (buf, context) -> {
             CompoundTag tag = buf.readNbt();

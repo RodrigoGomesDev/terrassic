@@ -18,6 +18,9 @@ Merged into the lang files by gen_world.py -> gen_resources.py.
 # (en_us, pt_br, es_es)
 MENU = {
     "menu.terrassic.subtitle": ("Chapter 1 · Echoes of the End", "Capítulo 1 · Ecos do Fim", "Capítulo 1 · Ecos del Fin"),
+    # v0.10: the line under the logo while the story mode is off (config/Story.java)
+    "menu.terrassic.subtitle_free": ("Late Cretaceous · 68 million years ago", "Cretáceo Superior · 68 milhões de anos atrás", "Cretácico Superior · hace 68 millones de años"),
+    "message.terrassic.story_soon": ("The story mode comes in a future version.", "O modo história chega numa versão futura.", "El modo historia llega en una versión futura."),
     "menu.terrassic.did_you_know": ("Did you know?", "Você sabia?", "¿Sabías que...?"),
     # main menu (client/title/TerrassicMenuScreen, docs/MENU.md)
     "menu.terrassic.slogan": ("The past has awoken.", "The past has awoken.", "The past has awoken."),  # English everywhere (brand)
@@ -53,6 +56,7 @@ MENU = {
     # HUD (phase M5)
     "hud.terrassic.rift_storm": ("Rift Storm", "Tempestade da Fenda", "Tormenta de la Grieta"),
     "hud.terrassic.era.late_cretaceous": ("Late Cretaceous", "Cretáceo Superior", "Cretácico Superior"),
+    "hud.terrassic.era.late_cretaceous.when": ("68 million years ago", "68 milhões de anos atrás", "Hace 68 millones de años"),
     "hud.terrassic.species.silhouette": ("Fossil studied", "Fóssil estudado", "Fósil estudiado"),
     "hud.terrassic.species.sighted": ("New species sighted", "Nova espécie avistada", "Nueva especie avistada"),
     "hud.terrassic.species.studied": ("Species studied", "Espécie estudada", "Especie estudiada"),

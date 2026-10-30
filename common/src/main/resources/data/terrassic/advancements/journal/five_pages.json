@@ -9,7 +9,8 @@
     },
     "description": {
       "translate": "advancements.terrassic.journal.five_pages.description"
-    }
+    },
+    "hidden": true
   },
   "criteria": {
     "done": {
