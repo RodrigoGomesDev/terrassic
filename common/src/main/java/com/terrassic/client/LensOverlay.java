@@ -127,7 +127,8 @@ public final class LensOverlay {
         // as wide as the longest line: the taming hint, or the name with its level
         Component how = howToTame(t, ko);
         W = Math.max(Math.max(MIN_W, font.width(TerrassicFonts.ui(how)) + 14), font.width(TerrassicFonts.ui(d.getDisplayName())) + 26);
-        int x = g.guiWidth() / 2 + 16;
+        // beside the crosshair, but never past the right edge (a long name with its level on a small window)
+        int x = Math.max(4, Math.min(g.guiWidth() / 2 + 16, g.guiWidth() - W - 4));
         int y = Mth.clamp(g.guiHeight() / 2 - h / 2, 4, Math.max(4, g.guiHeight() - h - 30));
         panel(g, x, y, x + W, y + h);
         int cx = x + 6;

@@ -163,7 +163,14 @@ public class DinoScreen extends Screen {
         Component name = d == null ? Component.empty() : d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
         Component sex = Component.literal(t.getBoolean("Female") ? " ♀" : " ♂")
                 .withStyle(t.getBoolean("Female") ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.AQUA);
-        g.drawString(this.font, TerrassicFonts.title(name.copy()).append(sex), x, y, TerrassicPalette.rgb(TerrassicPalette.BONE_100));
+        // a long name shrinks to stay clear of the levels column
+        Component title = TerrassicFonts.title(name.copy()).append(sex);
+        float fit = Math.min(1.0F, (right - x) / (float) Math.max(1, this.font.width(title)));
+        g.pose().pushPose();
+        g.pose().translate(x, y + (1.0F - fit) * 4.0F, 0.0F);
+        g.pose().scale(fit, fit, 1.0F);
+        g.drawString(this.font, title, 0, 0, TerrassicPalette.rgb(TerrassicPalette.BONE_100));
+        g.pose().popPose();
         y += 11;
         if (d != null && d.hasCustomName()) {
             g.drawString(this.font, TerrassicFonts.ui(d.getType().getDescription()), x, y, TerrassicPalette.rgb(TerrassicPalette.STONE_400));
