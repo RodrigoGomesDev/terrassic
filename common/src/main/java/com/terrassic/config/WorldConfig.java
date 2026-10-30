@@ -35,7 +35,8 @@ import java.nio.file.Path;
  *   "borda_em_raios": 2.0,        // distance from the middle of the continent to the border, in continent radii
  *   "historia": false,            // v0.10: the story mode (config/Story); off until it comes back in a future version
  *   "vozes": false,               // v0.14.3: the animals' voices (DinosaurEntity#playSound); off until they are remade
- *   "regras_no_jogo": false       // v0.15.1: the Terrassic Rules can be changed in game (operators only); off for now
+ *   "regras_no_jogo": false,      // v0.15.1: the Terrassic Rules can be changed in game (operators only); off for now
+ *   "titulo_da_era": false        // v0.15.2: the era's title when a player first arrives ("Cretáceo Superior"); off for now
  * }
  * </pre>
  */
@@ -133,6 +134,13 @@ public final class WorldConfig {
         return bool("regras_no_jogo", false);
     }
 
+    /** v0.15.2: the era's title (TerrassicHud.eraTitle) the first time a player is in an era. Off for now (Rodrigo,
+     *  30/10/2026: it doesn't make sense yet); nothing is marked while it is off, so each player still sees it once when
+     *  it comes back. */
+    public static boolean eraTitle() {
+        return bool("titulo_da_era", false);
+    }
+
     /** A boolean from the file, or the default when the value is missing or not a boolean (never throws). */
     private static boolean bool(String key, boolean fallback) {
         try {
@@ -184,6 +192,7 @@ public final class WorldConfig {
         changed |= def(cfg, "historia", false);
         changed |= def(cfg, "vozes", false);
         changed |= def(cfg, "regras_no_jogo", false);
+        changed |= def(cfg, "titulo_da_era", false);
         if (changed) {
             try {
                 Files.createDirectories(file.getParent());

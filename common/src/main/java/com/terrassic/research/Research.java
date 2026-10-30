@@ -3,6 +3,7 @@ package com.terrassic.research;
 import com.terrassic.Terrassic;
 import com.terrassic.config.Eras;
 import com.terrassic.config.Story;
+import com.terrassic.config.WorldConfig;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.entity.HerbivoreDinosaur;
@@ -164,7 +165,8 @@ public final class Research {
      */
     private static boolean arrive(ServerPlayer player, Knowledge k, boolean silent) {
         String era = eraHere(player);
-        if (era == null || k.counter(ERA_TITLE + era) > 0) {
+        // v0.15.2: off for now (WorldConfig "titulo_da_era"), and left unmarked so it still shows once when it comes back
+        if (era == null || k.counter(ERA_TITLE + era) > 0 || !WorldConfig.eraTitle()) {
             return false;
         }
         k.increment(ERA_TITLE + era);

@@ -17,9 +17,10 @@ import net.minecraft.network.chat.Component;
 public class HudOptionsScreen extends Screen {
     private static final int W = 300;
     private static final int ROW = 17;
-    /** The switches, in order; each label is gui.terrassic.hud.&lt;option&gt;. */
+    /** The switches, in order; each label is gui.terrassic.hud.&lt;option&gt;. "hud_era_title" is left out while the era's
+     *  title is off for everyone (v0.15.2, WorldConfig "titulo_da_era"). */
     private static final String[] OPTIONS = {"hud_mount", "hud_nameplate", "hud_taming", "hud_notices", "hud_new_species",
-            "hud_era_title", "hud_numbers_always"};
+            "hud_numbers_always"};
     private final Screen parent;
     private int left;
     private int top;

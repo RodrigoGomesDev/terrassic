@@ -112,6 +112,10 @@ No modo compacto, a placa de nome e as barras de doma aparecem sem a placa de pe
 
 ### Título da era
 
+> **Desligado por enquanto (v0.15.2, Rodrigo 30/10):** "acho que ela não faz sentido por agora". O título não aparece
+> ao entrar no mundo e sai da tela de opções do HUD. Nada foi apagado: `"titulo_da_era": true` em
+> `config/terrassic-world.json` traz de volta, e cada jogador ainda vê uma vez (nada é marcado enquanto está desligado).
+
 Um corte nas camadas de rocha de lado a lado da tela: solo, argila e cinza por cima, uma faixa grossa de âmbar com o
 nome da era entalhado (letras escuras com o lábio de baixo claro), giz e basalto embaixo, as pontas se desfazendo. Uma
 amonite no giz, um osso na argila e a data embaixo ("68 milhões de anos atrás"). Mesmo tempo de antes: entra em 0,5 s,
