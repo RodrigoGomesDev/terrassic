@@ -64,13 +64,17 @@ public final class ClientHooks {
                 context.queue(() -> rulesPending = true));
         // a "Terrassic Rules" button in the top left corner of the pause menu, to edit the world's rules. Not on the
         // title screen since v0.14.3: Minecraft's own menu stays as it is (the defaults for new worlds are edited in
-        // config/terrassic-world.json until the menu comes back)
+        // config/terrassic-world.json until the menu comes back); and the "HUD" options beside it
         ClientGuiEvent.INIT_POST.register((screen, access) -> {
             boolean pause = screen instanceof PauseScreen && Minecraft.getInstance().level != null;
             if (pause) {
                 access.addRenderableWidget(new RulesScreen.StoneButton(6, 6, 120, 18,
                         Component.translatable("rules.terrassic.ui.button"),
                         b -> Minecraft.getInstance().setScreen(new RulesScreen(screen, pause)), false, false, false));
+                // v0.14.2: the HUD options beside it
+                access.addRenderableWidget(new RulesScreen.StoneButton(130, 6, 60, 18,
+                        Component.translatable("gui.terrassic.hud.button"),
+                        b -> Minecraft.getInstance().setScreen(new HudOptionsScreen(screen)), false, false, false));
             }
         });
         ClientTickEvent.CLIENT_POST.register(mc -> {

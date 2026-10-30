@@ -108,7 +108,30 @@ domar, a carga, os pontos e "Come:" com os itens. Tem no mínimo 172 de largura 
 
 No modo compacto, a placa de nome e as barras de doma aparecem sem a placa de pedra.
 
-## Próximas partes
+## Parte 3 (v0.14.2): título da era, tela do dino e opções do HUD
 
-- **v0.14.2**: roda do apito (segurar H: seguir, esperar, vagar, atacar, juntar, passivo, com "N dinos ouvem o
-  apito"), título da era em camadas de rocha, tela do dino e tela de opções do HUD.
+### Título da era
+
+Um corte nas camadas de rocha de lado a lado da tela: solo, argila e cinza por cima, uma faixa grossa de âmbar com o
+nome da era entalhado (letras escuras com o lábio de baixo claro), giz e basalto embaixo, as pontas se desfazendo. Uma
+amonite no giz, um osso na argila e a data embaixo ("68 milhões de anos atrás"). Mesmo tempo de antes: entra em 0,5 s,
+fica 3,5 s e sai em 1 s, uma vez por jogador e mundo.
+
+### Tela do dino
+
+O mesmo conteúdo da v0.13 no visual Âmbar, com 372 x 196: o bicho de verdade sobre uma rocha quebrada com um veio de
+âmbar; o nome em letras grandes e âmbar, ♀ ou ♂, idade, o que está fazendo, sela e carga; vida e fome em sulcos;
+montado num grande terópode, "Teclas da montaria" com o encaixe do rugido forte. Na coluna da direita, "NÍVEL N", a XP
+num sulco com "Próximo: x/y XP" escrito embaixo, os pontos e os status com o "+" em âmbar. As ordens embaixo.
+
+### Opções do HUD
+
+Botão "HUD" ao lado de "Regras do Terrassic" no menu de pausa (a tela de título fica a do Minecraft, v0.14.3). Estilo (Âmbar ou Compacto) e um
+interruptor por peça: placa da montaria, placa de nome, barras de doma, avisos à direita, espécie nova, título da era
+e números nas barras sempre. Cada mudança vai na hora para `config/terrassic-client.json`.
+
+## Fica para uma versão própria: a roda do apito
+
+A roda do apito da prévia (segurar H: seguir, esperar, vagar por perto, atacar meu alvo, juntar o bando, ficar
+passivo, com "N dinos ouvem o apito") não é só HUD: quatro dessas ordens ainda não existem no jogo. Ela entra como uma
+versão própria, depois que o Rodrigo aprovar como cada ordem funciona.

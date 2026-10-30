@@ -1,16 +1,15 @@
 package com.terrassic.client;
 
+import com.terrassic.client.ui.AmberHud;
 import com.terrassic.client.ui.TerrassicButton;
 import com.terrassic.client.ui.TerrassicFonts;
 import com.terrassic.client.ui.TerrassicPalette;
-import com.terrassic.client.ui.TerrassicUi;
 import com.terrassic.entity.DinoLevels;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.network.DinoNetwork;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
@@ -33,14 +32,18 @@ import net.minecraft.util.Mth;
  * <p>
  * On the far right, the levels of v0.13 (entity/DinoLevels): the level, the experience to the next one, the points
  * to spend and each stat as a share of the species' usual value, with a "+" beside the ones that take a point.
+ * <p>
+ * Since v0.14.2 it has the HUD's Âmbar look (docs/HUD.md; study: dirF.py scene_tela_dino): a chipped slab, the animal
+ * on a broken rock with an amber vein, the bars cut into the stone, the special's key socket while ridden.
  */
 public class DinoScreen extends Screen {
     private static final int W = 372;
-    /** Where the levels column starts (the info column ends 12 px before it). */
-    private static final int STATS_X = 254;
-    private static final int ROW = 13;
-    private static final int H = 156;
-    private static final int PORTRAIT = 84;
+    /** Where the levels column starts (the info column ends 10 px before it). */
+    private static final int STATS_X = 272;
+    /** Where the info column starts. */
+    private static final int INFO_X = 132;
+    private static final int ROW = 15;
+    private static final int H = 196;
 
     private final int dinoId;
     private CompoundTag info;
@@ -77,9 +80,9 @@ public class DinoScreen extends Screen {
     @Override
     protected void init() {
         this.left = (this.width - W) / 2;
-        this.top = (this.height - H) / 2;
-        int bx = this.left + 10;
-        int by = this.top + H - 30;
+        this.top = Math.max(2, (this.height - H) / 2 - 8);
+        int bx = this.left + INFO_X;
+        int by = this.top + H - 26;
         int gap = 4;
         boolean sitting = this.info.getBoolean("Sitting");
         // the order it is under shows as the selected one; the other is the action
@@ -100,8 +103,8 @@ public class DinoScreen extends Screen {
             int y = this.statsTop();
             for (DinoLevels.Stat stat : DinoLevels.Stat.values()) {
                 if (stat.spendable()) {
-                    TerrassicButton plus = TerrassicButton.stone(this.left + W - 21, y - 2, 11, 11, Component.literal("+"),
-                            b -> this.send("up:" + stat.key));
+                    TerrassicButton plus = new TerrassicButton(this.left + STATS_X + 86, y, 12, 12, Component.literal("+"),
+                            b -> this.send("up:" + stat.key), TerrassicButton.Kind.PRIMARY, false);
                     plus.setTooltip(Tooltip.create(Component.translatable("gui.terrassic.dino.spend",
                             Component.translatable("gui.terrassic.stat." + stat.key))));
                     this.addRenderableWidget(plus);
@@ -113,7 +116,7 @@ public class DinoScreen extends Screen {
 
     /** First stat row of the levels column. */
     private int statsTop() {
-        return this.top + 12 + 12 + 9 + 11 + 6;
+        return this.top + 58;
     }
 
     /** An order button; returns its width. */
@@ -143,74 +146,84 @@ public class DinoScreen extends Screen {
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(g);
-        TerrassicUi.slab(g, this.left, this.top, this.left + W, this.top + H);
+        int x0 = this.left;
+        int y0 = this.top;
+        AmberHud.slab(g, "dino_screen", x0, y0, 6, 0, W - 40, 0, W - 36, 3, W, 3, W, H - 5, W - 5, H, 120, H, 116, H - 2,
+                0, H - 2, 0, 6);
         DinosaurEntity d = this.dino();
         CompoundTag t = this.info;
 
-        // the animal, in a recessed frame
-        int px = this.left + 10;
-        int py = this.top + 12;
-        TerrassicUi.well(g, px - 1, py - 1, px + PORTRAIT + 1, py + PORTRAIT + 1, false);
+        // the animal on a broken rock with an amber vein, in a dark recess
+        int bx = x0 + 10;
+        int by = y0 + 12;
+        g.fill(bx, by, bx + 112, by + 104, TerrassicPalette.BASALT_900);
+        g.fill(bx, by, bx + 112, by + 1, TerrassicPalette.BASALT_950);
+        g.fill(bx, by, bx + 1, by + 104, TerrassicPalette.BASALT_950);
+        g.fill(bx, by + 103, bx + 112, by + 104, TerrassicPalette.BASALT_600);
+        AmberHud.slab(g, "dino_screen_rock", bx, by, 14, 80, 28, 74, 86, 74, 100, 80, 94, 90, 20, 90);
+        for (int i = 0; i < 30; i++) {
+            g.fill(bx + 40 + i, by + 81 + i / 10, bx + 41 + i, by + 82 + i / 10, i % 5 != 0 ? TerrassicPalette.AMBER_600 : TerrassicPalette.AMBER_300);
+        }
         if (d != null) {
-            TerrassicHud.portrait(g, d, px, py, PORTRAIT);
+            TerrassicHud.portrait(g, d, bx + 2, by + 6, 108, 82);
+        }
+        if (d != null && d.hasCustomName()) {
+            AmberHud.text(g, this.font, d.getType().getDescription(), bx, by + 110, TerrassicPalette.STONE_300);
         }
 
-        // name and sex, species
-        int x = px + PORTRAIT + 10;
-        int y = this.top + 12;
-        int right = this.left + STATS_X - 12;
-        // the plain name: the level has its own column
+        // name and sex; age and size; what it is doing; saddle and cargo
+        int x = x0 + INFO_X;
+        int right = x0 + STATS_X - 10;
         Component name = d == null ? Component.empty() : d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
-        Component sex = Component.literal(t.getBoolean("Female") ? " ♀" : " ♂")
-                .withStyle(t.getBoolean("Female") ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.AQUA);
+        Component title = TerrassicFonts.title(name.copy());
+        boolean female = t.getBoolean("Female");
+        Component sex = Component.literal(female ? "♀" : "♂");
         // a long name shrinks to stay clear of the levels column
-        Component title = TerrassicFonts.title(name.copy()).append(sex);
-        float fit = Math.min(1.0F, (right - x) / (float) Math.max(1, this.font.width(title)));
+        int room = right - x - AmberHud.width(this.font, sex) - 4;
+        float fit = Math.min(1.0F, room / (float) Math.max(1, this.font.width(title)));
         g.pose().pushPose();
-        g.pose().translate(x, y + (1.0F - fit) * 4.0F, 0.0F);
+        g.pose().translate(x, y0 + 10 + (1.0F - fit) * 4.0F, 0.0F);
         g.pose().scale(fit, fit, 1.0F);
-        g.drawString(this.font, title, 0, 0, TerrassicPalette.rgb(TerrassicPalette.BONE_100));
+        g.drawString(this.font, title, 0, 0, TerrassicPalette.rgb(TerrassicPalette.AMBER_500), false);
         g.pose().popPose();
-        y += 11;
-        if (d != null && d.hasCustomName()) {
-            g.drawString(this.font, TerrassicFonts.ui(d.getType().getDescription()), x, y, TerrassicPalette.rgb(TerrassicPalette.STONE_400));
-            y += 10;
-        }
+        AmberHud.text(g, this.font, sex, x + Math.round(this.font.width(title) * fit) + 4, y0 + 12, female ? 0xFFE58AC0 : 0xFF7FB4E8);
         Component age = t.getBoolean("Baby")
                 ? Component.translatable("gui.terrassic.lens.young", Math.round(t.getFloat("Growth") * 100))
                 : Component.translatable("gui.terrassic.lens.adult", Math.round(t.getFloat("Size") * 100));
-        g.drawString(this.font, TerrassicFonts.ui(age), x, y, TerrassicPalette.rgb(TerrassicPalette.STONE_300));
-        y += 13;
-        TerrassicUi.divider(g, x, right, y);
-        y += 6;
-
-        // health and fullness
-        this.bar(g, x, y, right, Component.translatable("gui.terrassic.lens.health"), t.getFloat("Health") / Math.max(1.0F, t.getFloat("MaxHealth")),
-                TerrassicPalette.BLOOD_500, Mth.ceil(t.getFloat("Health")) + "/" + Mth.ceil(t.getFloat("MaxHealth")));
-        y += 12;
-        this.bar(g, x, y, right, Component.translatable("gui.terrassic.lens.hunger"), t.getInt("Hunger") / (float) DinosaurEntity.MAX_HUNGER,
-                TerrassicPalette.AMBER_600, t.getInt("Hunger") + "%");
-        y += 15;
-
-        // what it is doing, saddle and cargo
+        AmberHud.text(g, this.font, age, x, y0 + 26, TerrassicPalette.STONE_300);
         Component state = Component.translatable(t.getBoolean("Ridden") ? "gui.terrassic.dino.state_ridden"
                 : t.getBoolean("Sitting") ? "gui.terrassic.dino.state_waiting" : "gui.terrassic.dino.state_following");
-        g.drawString(this.font, TerrassicFonts.ui(state), x, y, TerrassicPalette.rgb(TerrassicPalette.FERN_400));
-        y += 11;
+        AmberHud.text(g, this.font, state, x, y0 + 38, TerrassicPalette.FERN_400);
+        Component gear = null;
         if (t.getBoolean("Rideable")) {
-            g.drawString(this.font, TerrassicFonts.ui(t.getBoolean("Saddled") ? "gui.terrassic.dino.saddled" : "gui.terrassic.dino.no_saddle"),
-                    x, y, TerrassicPalette.rgb(TerrassicPalette.STONE_300));
-            y += 11;
+            gear = Component.translatable(t.getBoolean("Saddled") ? "gui.terrassic.dino.saddled" : "gui.terrassic.dino.no_saddle");
         }
         if (t.contains("CargoSize")) {
-            g.drawString(this.font, TerrassicFonts.ui("gui.terrassic.lens.cargo", t.getInt("CargoUsed"), t.getInt("CargoSize")), x, y,
-                    TerrassicPalette.rgb(TerrassicPalette.STONE_300));
+            Component cargo = Component.translatable("gui.terrassic.lens.cargo", t.getInt("CargoUsed"), t.getInt("CargoSize"));
+            gear = gear == null ? cargo : Component.empty().append(gear).append(" · ").append(cargo);
+        }
+        if (gear != null) {
+            AmberHud.text(g, this.font, gear, x, y0 + 48, TerrassicPalette.STONE_200);
+        }
+
+        // health and fullness, cut into the stone
+        this.bar(g, x, y0 + 62, Component.translatable("gui.terrassic.lens.health"), t.getFloat("Health") / Math.max(1.0F, t.getFloat("MaxHealth")),
+                AmberHud.RED, Mth.ceil(t.getFloat("Health")) + "/" + Mth.ceil(t.getFloat("MaxHealth")));
+        this.bar(g, x, y0 + 73, Component.translatable("gui.terrassic.lens.hunger"), t.getInt("Hunger") / (float) DinosaurEntity.MAX_HUNGER,
+                AmberHud.AMBER, t.getInt("Hunger") + "%");
+
+        // the special's key socket while you ride it
+        if (t.getBoolean("Ridden") && d != null && d.specialName() != null && d.specialCharge() >= 0.0F) {
+            AmberHud.text(g, this.font, Component.translatable("gui.terrassic.dino.mount_keys"), x, y0 + 96, TerrassicPalette.STONE_300);
+            float charge = d.specialCharge();
+            AmberHud.chip(g, this.font, x, y0 + 108, null, charge);
+            Component special = Component.translatable("hud.terrassic.special." + d.specialName());
+            Component line = charge >= 1.0F ? Component.translatable("hud.terrassic.special.ready", special)
+                    : Component.translatable("hud.terrassic.special.wait", special, Mth.ceil(d.specialTicksLeft() / 20.0F));
+            AmberHud.text(g, this.font, line, x + 16, y0 + 110, TerrassicPalette.STONE_200);
         }
 
         this.levels(g, t);
-
-        // the orders, and at the foot the mounted controls
-        TerrassicUi.divider(g, this.left + 10, this.left + W - 10, this.top + H - 36);
         super.render(g, mouseX, mouseY, partialTick);
         this.statTooltip(g, mouseX, mouseY);
         if (t.getBoolean("Ridden") && d != null) {
@@ -226,52 +239,41 @@ public class DinoScreen extends Screen {
     /** The levels column: level, experience, points, then each stat as a share of the species' usual value. */
     private void levels(GuiGraphics g, CompoundTag t) {
         int x = this.left + STATS_X;
-        int right = this.left + W - 10;
-        g.fill(x - 7, this.top + 12, x - 6, this.top + H - 42, TerrassicPalette.BASALT_950);
-        int y = this.top + 12;
-        g.drawString(this.font, TerrassicFonts.title(Component.translatable("gui.terrassic.dino.level", t.getInt("Level"))), x, y,
-                TerrassicPalette.rgb(TerrassicPalette.BONE_100));
-        y += 12;
+        for (int yy = this.top + 10; yy < this.top + 150; yy++) {
+            g.fill(x - 7, yy, x - 6, yy + 1, TerrassicPalette.BASALT_950);
+            g.fill(x - 6, yy, x - 5, yy + 1, TerrassicPalette.BASALT_600);
+        }
+        g.drawString(this.font, TerrassicFonts.title(Component.translatable("gui.terrassic.dino.level", t.getInt("Level"))),
+                x, this.top + 8, TerrassicPalette.rgb(TerrassicPalette.AMBER_500), false);
         // experience to the next tame level (full at the top)
         boolean top = t.getInt("TamedLevels") >= DinoLevels.MAX_TAMED_LEVELS;
         float xp = top ? 1.0F : t.getFloat("Xp") / Math.max(1, t.getInt("XpNext"));
-        g.fill(x, y, right, y + 5, TerrassicPalette.BASALT_950);
-        int fill = Math.round((right - x - 2) * Mth.clamp(xp, 0.0F, 1.0F));
-        g.fill(x + 1, y + 1, x + 1 + fill, y + 4, TerrassicPalette.FERN_400);
-        y += 9;
+        AmberHud.groove(g, x, this.top + 24, 92, xp, AmberHud.AMBER);
+        Component next = top ? Component.translatable("gui.terrassic.dino.max_level")
+                : Component.translatable("gui.terrassic.dino.xp", Mth.floor(t.getFloat("Xp")), t.getInt("XpNext"));
+        AmberHud.text(g, this.font, next, x, this.top + 31, TerrassicPalette.STONE_300);
         int points = t.getInt("Points");
-        g.drawString(this.font, TerrassicFonts.ui("gui.terrassic.dino.points", points), x, y,
-                TerrassicPalette.rgb(points > 0 ? TerrassicPalette.AMBER_300 : TerrassicPalette.STONE_400));
-        y += 11;
-        TerrassicUi.divider(g, x, right, y);
-        y = this.statsTop();
+        AmberHud.text(g, this.font, Component.translatable("gui.terrassic.dino.points", points), x, this.top + 43,
+                points > 0 ? TerrassicPalette.AMBER_300 : TerrassicPalette.STONE_400);
+        int y = this.statsTop();
         CompoundTag stats = t.getCompound("Stats");
         for (DinoLevels.Stat stat : DinoLevels.Stat.values()) {
-            g.drawString(this.font, TerrassicFonts.ui("gui.terrassic.stat." + stat.key), x, y, TerrassicPalette.rgb(TerrassicPalette.STONE_300));
-            String value = Math.round(stats.getFloat(stat.key) * 100.0F) + "%";
-            int vx = (points > 0 ? right - 14 : right) - this.font.width(value);
-            g.drawString(this.font, value, vx, y, TerrassicPalette.rgb(TerrassicPalette.BONE_100), false);
+            AmberHud.text(g, this.font, Component.translatable("gui.terrassic.stat." + stat.key), x, y + 2, TerrassicPalette.STONE_200);
+            AmberHud.text(g, this.font, Component.literal(Math.round(stats.getFloat(stat.key) * 100.0F) + "%"), x + 64, y + 2,
+                    TerrassicPalette.BONE_100);
             y += ROW;
         }
     }
 
-    /** The experience in numbers over its bar, and what a stat does over its name. */
+    /** What a stat does, over its name. */
     private void statTooltip(GuiGraphics g, int mouseX, int mouseY) {
         int x = this.left + STATS_X;
-        int barY = this.top + 24;
-        if (mouseX >= x && mouseX < this.left + W - 10 && mouseY >= barY - 1 && mouseY < barY + 6) {
-            g.renderTooltip(this.font, this.info.getInt("TamedLevels") >= DinoLevels.MAX_TAMED_LEVELS
-                    ? Component.translatable("gui.terrassic.dino.max_level")
-                    : Component.translatable("gui.terrassic.dino.xp", Mth.floor(this.info.getFloat("Xp")), this.info.getInt("XpNext")),
-                    mouseX, mouseY);
-            return;
-        }
-        if (mouseX < x || mouseX >= this.left + W - 24) {
+        if (mouseX < x || mouseX >= x + 84) {
             return;
         }
         int y = this.statsTop();
         for (DinoLevels.Stat stat : DinoLevels.Stat.values()) {
-            if (mouseY >= y - 2 && mouseY < y + ROW - 2) {
+            if (mouseY >= y && mouseY < y + 12) {
                 g.renderTooltip(this.font, Component.translatable("gui.terrassic.stat." + stat.key + ".tip"), mouseX, mouseY);
                 return;
             }
@@ -279,16 +281,11 @@ public class DinoScreen extends Screen {
         }
     }
 
-    /** A label, then a bar with its value written at its right end (as on the Field Lens card). */
-    private void bar(GuiGraphics g, int x, int y, int right, Component label, float fraction, int colour, String value) {
-        g.drawString(this.font, TerrassicFonts.ui(label), x, y, TerrassicPalette.rgb(TerrassicPalette.STONE_300));
-        int bx = x + 54;
-        int bw = right - bx;
-        g.fill(bx, y, bx + bw, y + 9, TerrassicPalette.BASALT_950);
-        int fill = Math.round((bw - 2) * Mth.clamp(fraction, 0.0F, 1.0F));
-        g.fill(bx + 1, y + 1, bx + 1 + fill, y + 8, colour);
-        g.fill(bx + 1, y + 1, bx + 1 + fill, y + 2, (colour & 0x00FFFFFF) | 0x50FFFFFF);
-        g.drawString(this.font, value, bx + bw - this.font.width(value) - 2, y + 1, 0xFFFFFFFF, true);
+    /** A label, a bar cut into the stone and its value at the right (study: 52 px of groove). */
+    private void bar(GuiGraphics g, int x, int y, Component label, float fraction, int[] tones, String value) {
+        AmberHud.text(g, this.font, label, x, y, TerrassicPalette.STONE_200);
+        AmberHud.groove(g, x + 44, y + 1, 52, fraction, tones);
+        AmberHud.text(g, this.font, Component.literal(value), x + 100, y, TerrassicPalette.BONE_100);
     }
 
     @Override

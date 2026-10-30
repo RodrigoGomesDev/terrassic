@@ -112,8 +112,10 @@ public final class TerrassicHud {
     }
 
     /**
-     * The era title, drawn here instead of the vanilla title: the "Entalhe" letters are wider than the vanilla font,
-     * so the vanilla title (4x) ran off both sides of the screen. Same place and fade, scaled down to fit when needed.
+     * The era title (v0.14.2, docs/HUD.md; study: dirB.py scene_title()): a cut through the rock layers across the
+     * screen, soil, clay and ash over a thick band of amber with the era's name carved in it, chalk and basalt under
+     * it, the ends crumbling away; a little ammonite in the chalk and a bone in the clay, and the date under it.
+     * Drawn here instead of the vanilla title, with its fade: 10 ticks in, 70 held, 20 out.
      */
     private static void eraTitle(GuiGraphics g, Font font, float partialTick) {
         float age = titleAge + partialTick;
@@ -123,24 +125,97 @@ public final class TerrassicHud {
         if (a <= 8) {
             return;
         }
+        int w = g.guiWidth();
+        int top = g.guiHeight() / 2 - 36;
+        int half = w / 2 + 2;
+        RenderSystem.enableBlend();
+        g.setColor(1.0F, 1.0F, 1.0F, a / 255.0F);
+        AmberHud.picture(g, "era_strata_" + w, w / 2 - half, top - STRATA_PAD, half * 2, STRATA_H + STRATA_PAD * 2,
+                () -> strata(half, 2));
+        AmberHud.icon(g, AMMONITE, w / 2 + 150, top + 36, 0xFFF7F2E6, 0xFFB5AE9A, 0xFF5A5040);
+        AmberHud.icon(g, BONE, w / 2 - 170, top + 3, TerrassicPalette.BONE_100, TerrassicPalette.STONE_300, TerrassicPalette.BASALT_600);
+        g.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        // the name carved in the amber: dark letters with a lit lower lip
         Component title = com.terrassic.client.ui.TerrassicFonts.title(Component.translatable("hud.terrassic.era." + titleEra));
+        float big = Math.min(2.0F, (w - 48) / (float) Math.max(1, font.width(title)));
+        float tx = (w - font.width(title) * big) / 2.0F;
+        float ty = top + 15 + (2.0F - big) * 4.0F;
+        for (int pass = 0; pass < 2; pass++) {
+            g.pose().pushPose();
+            g.pose().translate(tx, ty + (pass == 0 ? 1.0F : 0.0F), 0.0F);
+            g.pose().scale(big, big, 1.0F);
+            g.drawString(font, title, 0, 0, (pass == 0 ? 0xFFD27A : 0x4A2A08) | a << 24, false);
+            g.pose().popPose();
+        }
         Component subtitle = com.terrassic.client.ui.TerrassicFonts.ui(ClientResearch.story()
                 ? "menu.terrassic.subtitle" : "hud.terrassic.era." + titleEra + ".when");
-        int room = g.guiWidth() - 32;
-        g.pose().pushPose();
-        g.pose().translate(g.guiWidth() / 2.0F, g.guiHeight() / 2.0F, 0.0F);
-        float big = Math.min(4.0F, room / (float) Math.max(1, font.width(title)));
-        g.pose().pushPose();
-        g.pose().scale(big, big, big);
-        g.drawString(font, title, -font.width(title) / 2, -10, 0xFFFFFF | a << 24, true);
-        g.pose().popPose();
-        float small = Math.min(2.0F, room / (float) Math.max(1, font.width(subtitle)));
-        g.pose().pushPose();
-        g.pose().translate(0.0F, 2.0F, 0.0F);
-        g.pose().scale(small, small, small);
-        g.drawString(font, subtitle, -font.width(subtitle) / 2, 5, 0xFFFFFF | a << 24, true);
-        g.pose().popPose();
-        g.pose().popPose();
+        int sx = (w - font.width(subtitle)) / 2;
+        g.drawString(font, subtitle, sx + 1, top + 53, TerrassicPalette.rgb(TerrassicPalette.BASALT_950) | a << 24, false);
+        g.drawString(font, subtitle, sx, top + 52, TerrassicPalette.rgb(TerrassicPalette.BONE_100) | a << 24, false);
+    }
+
+    private static final String[] AMMONITE = {".sss.", "s+++s", "s+s+s", "s++ss", ".sss."};
+    private static final String[] BONE = {"+...+", "s+++s", "+...+"};
+    /** The rock layers of the title, top to bottom: thickness, then light, mid and dark tones. */
+    private static final int[][] LAYERS = {
+            {3, 0xFF7A6650, 0xFF5B4636, 0xFF46362A},          // soil
+            {4, 0xFFC2A672, 0xFFA08458, 0xFF86683F},          // clay
+            {2, 0xFF6E6A62, 0xFF57534C, 0xFF45413B},          // ash
+            {28, TerrassicPalette.AMBER_300, TerrassicPalette.AMBER_600, TerrassicPalette.AMBER_700},
+            {3, 0xFFF2EEE2, 0xFFDCD6C4, 0xFFBDB6A2},          // chalk
+            {4, TerrassicPalette.BASALT_500, TerrassicPalette.BASALT_700, TerrassicPalette.BASALT_800},
+            {3, TerrassicPalette.BASALT_600, TerrassicPalette.BASALT_800, TerrassicPalette.BASALT_900}};
+    private static final int STRATA_H = 47;
+    private static final int STRATA_PAD = 3;
+
+    /** The cut through the layers (study: common.py strata(), fade 0.8, wave 0.6, specks 0.08), 2 x half wide. */
+    private static int[] strata(int half, int seed) {
+        int w = half * 2;
+        int h = STRATA_H + STRATA_PAD * 2;
+        int[] px = new int[w * h];
+        java.util.Random rnd = new java.util.Random(seed);
+        double fade = 0.8D;
+        double wave = 0.6D;
+        int edge = 0xC80E0B0E;
+        for (int i = 0; i < w; i++) {
+            double d = Math.abs(i - half) / (double) half;
+            double crumble = d > fade ? (d - fade) / (1.0D - fade) * 1.15D : 0.0D;
+            int y0 = STRATA_PAD + (int) Math.round(wave * Math.sin(i * 0.07D + seed));
+            int y = y0;
+            for (int l = 0; l < LAYERS.length; l++) {
+                int t = LAYERS[l][0];
+                int off = (int) Math.round(wave * 0.8D * Math.sin(i * (0.05D + 0.02D * l) + l * 1.7D));
+                int tt = l < LAYERS.length - 1 ? Math.max(1, t + off) : t;
+                for (int k = 0; k < tt; k++) {
+                    if (crumble > 0.0D && rnd.nextDouble() < crumble) {
+                        continue;
+                    }
+                    int c = k == 0 ? LAYERS[l][1] : rnd.nextDouble() < 0.08D ? LAYERS[l][3] : LAYERS[l][2];
+                    if (y + k >= 0 && y + k < h) {
+                        px[(y + k) * w + i] = c;
+                    }
+                }
+                y += tt;
+            }
+            if (!(crumble > 0.0D && rnd.nextDouble() < crumble)) {
+                if (y0 - 1 >= 0) {
+                    px[(y0 - 1) * w + i] = edge;
+                }
+                if (y < h) {
+                    px[y * w + i] = edge;
+                }
+            }
+        }
+        // a softer, lighter core in the amber, where the letters sit
+        int amberTop = STRATA_PAD + 3 + 4 + 2;
+        for (int y = amberTop + 7; y < amberTop + 16; y++) {
+            for (int i = 40; i < w - 40; i++) {
+                if (px[y * w + i] == TerrassicPalette.AMBER_600 && rnd.nextBoolean()) {
+                    px[y * w + i] = TerrassicPalette.AMBER_500;
+                }
+            }
+        }
+        return px;
     }
 
     // ------------------------------------------------------------------ mount plate

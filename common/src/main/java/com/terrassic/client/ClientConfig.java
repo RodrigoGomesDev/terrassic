@@ -119,17 +119,33 @@ public final class ClientConfig {
             cfg.remove("hud_pack");
             changed = true;
         }
-        if (changed) {
-            try {
-                Files.createDirectories(file.getParent());
-                try (Writer w = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-                    GSON.toJson(cfg, w);
-                }
-            } catch (IOException e) {
-                LOG.warn("Could not write {}: {}", file, e.toString());
-            }
-        }
         root = cfg;
+        if (changed) {
+            save();
+        }
         return root;
+    }
+
+    /** Changes an option and writes the file (the HUD options screen, v0.14.2). */
+    public static synchronized void set(String name, boolean value) {
+        load().addProperty(name, value);
+        save();
+    }
+
+    public static synchronized void setHudStyle(boolean compact) {
+        load().addProperty("hud_style", compact ? "compact" : "amber");
+        save();
+    }
+
+    private static void save() {
+        Path file = Platform.getConfigFolder().resolve("terrassic-client.json");
+        try {
+            Files.createDirectories(file.getParent());
+            try (Writer w = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
+                GSON.toJson(root, w);
+            }
+        } catch (IOException e) {
+            LOG.warn("Could not write {}: {}", file, e.toString());
+        }
     }
 }

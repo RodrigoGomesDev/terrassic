@@ -146,6 +146,16 @@ public final class AmberHud {
         return Math.sqrt(ex * ex + ey * ey);
     }
 
+    /** A picture made by code once ({@code pixels}: w x h ARGB, row by row) and kept under {@code key}. */
+    public static void picture(GuiGraphics g, String key, int x, int y, int w, int h, java.util.function.Supplier<int[]> pixels) {
+        Baked b = BAKED.get(key);
+        if (b == null) {
+            b = bake(key, "0", new Image(0, 0, w, h, pixels.get()));
+            BAKED.put(key, b);
+        }
+        draw(g, b, x, y);
+    }
+
     // ------------------------------------------------------------------ amber drop
 
     /**
@@ -237,6 +247,11 @@ public final class AmberHud {
 
     /** A small pixel icon: '+' is the fill, 's' the shade; the outline grows around it. */
     public static void icon(GuiGraphics g, String[] rows, int x, int y, int fill, int shade) {
+        icon(g, rows, x, y, fill, shade, OUTLINE);
+    }
+
+    /** The same with its own outline colour. */
+    public static void icon(GuiGraphics g, String[] rows, int x, int y, int fill, int shade, int outline) {
         int h = rows.length;
         int w = 0;
         for (String r : rows) {
@@ -248,7 +263,7 @@ public final class AmberHud {
                 if (c == '+' || c == 's') {
                     g.fill(x + 1 + rx, y + 1 + ry, x + 2 + rx, y + 2 + ry, c == 's' ? shade : fill);
                 } else if (on(rows, rx - 1, ry) || on(rows, rx + 1, ry) || on(rows, rx, ry - 1) || on(rows, rx, ry + 1)) {
-                    g.fill(x + 1 + rx, y + 1 + ry, x + 2 + rx, y + 2 + ry, OUTLINE);
+                    g.fill(x + 1 + rx, y + 1 + ry, x + 2 + rx, y + 2 + ry, outline);
                 }
             }
         }
