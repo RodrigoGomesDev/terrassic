@@ -84,7 +84,7 @@ public class Pteranodon extends Pterosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.52D * this.getScale();
+        return 1.22D * this.getScale();
     }
 
     @Override

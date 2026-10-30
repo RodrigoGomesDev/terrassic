@@ -614,7 +614,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.25, FLYING_SPEED=0.6, ATTACK_DAMAGE=4, FOLLOW_RANGE=24),
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.45, 1.4, 220), xp=12, run=0.03,
-      rideable=True, ride_offset=1.9, ride_forward=0.1, ride_speed=1.0, ride_air_lift=1.1,
+      rideable=True, ride_offset=1.525, ride_forward=0.1, ride_speed=1.0, ride_air_lift=1.1,
       prey="e instanceof AbstractFish", saddle="PTERANODON_SADDLE", colonial=True, rig="Pterosaur"),
  dict(id="quetzalcoatlus", cls="Quetzalcoatlus", base="FlyingDinosaur",
       doc="Quetzalcoatlus northropi - the largest flyer ever, a giraffe-tall azhdarchid that stalks open country on all fours and spears small prey like a giant stork. Egg-tamed for now (knockout taming comes in v0.7); a heavy flying mount.",
