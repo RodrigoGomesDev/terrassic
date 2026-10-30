@@ -1636,6 +1636,7 @@
   "rules.terrassic.ui.cancel": "Cancelar",
   "rules.terrassic.ui.defaults": "Reglas por defecto para mundos nuevos",
   "rules.terrassic.ui.denied": "No tienes permiso para cambiar las reglas.",
+  "rules.terrassic.ui.disabled": "Por ahora las reglas no se cambian en el juego: cada mundo conserva las reglas con las que fue creado (config/terrassic-world.json).",
   "rules.terrassic.ui.read_only": "Solo un operador puede cambiar las reglas de este mundo.",
   "rules.terrassic.ui.reset": "Restablecer",
   "rules.terrassic.ui.save": "Guardar",

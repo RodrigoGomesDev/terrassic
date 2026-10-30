@@ -5,6 +5,12 @@ padrão bem mais cheia: voadores voando de verdade pelo céu, muitos animais no 
 
 ## Onde fica
 
+> **v0.15.1 (Rodrigo, 30/10/2026): por enquanto as regras não mudam dentro do jogo.** "Se todo mundo ficar mudando
+> as configurações de spawn vai ficar muito ruim": cada mundo fica com as regras com que foi criado. O botão do menu
+> de pausa, o `/terrassic regras` e o botão Config da lista de mods do Forge estão desligados (nada apagado). Quem
+> roda o jogo ou o servidor muda o objeto `"rules"` de `config/terrassic-world.json` antes de criar o mundo.
+> Religar: `"regras_no_jogo": true` no mesmo arquivo (aí só operadores e o dono do mundo em um jogador editam).
+
 - **Tela "Regras do Terrassic"**: botão no canto superior esquerdo do menu de pausa, ou `/terrassic regras`
   (também `rules` e `reglas`). No Forge, o botão "Config" da lista de mods abre as regras padrão.
 - Três abas: **Geral**, **Criação** e **Ecossistema**. Cada regra tem nome, caixa de número e controle deslizante;

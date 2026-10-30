@@ -3,6 +3,7 @@ package com.terrassic.network;
 import com.mojang.brigadier.Command;
 import com.terrassic.Terrassic;
 import com.terrassic.config.Rules;
+import com.terrassic.config.WorldConfig;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.networking.NetworkManager;
@@ -49,6 +50,11 @@ public final class RulesNetwork {
             for (String name : new String[]{"regras", "rules", "reglas"}) {
                 dispatcher.register(Commands.literal(Terrassic.MOD_ID).then(Commands.literal(name).executes(ctx -> {
                     ServerPlayer player = ctx.getSource().getPlayerOrException();
+                    if (!WorldConfig.rulesInGame()) {
+                        // v0.15.1: off for now, the world keeps the rules it was created with
+                        ctx.getSource().sendFailure(Component.translatable("rules.terrassic.ui.disabled"));
+                        return 0;
+                    }
                     sync(player);
                     NetworkManager.sendToPlayer(player, OPEN, new FriendlyByteBuf(Unpooled.buffer()));
                     return Command.SINGLE_SUCCESS;
@@ -57,9 +63,11 @@ public final class RulesNetwork {
         });
     }
 
-    /** Operators, and the owner of a single player world even without cheats. */
+    /** Operators, and the owner of a single player world even without cheats; nobody while the rules are kept out of
+     *  the game ({@link WorldConfig#rulesInGame}, v0.15.1). */
     public static boolean canEdit(ServerPlayer player) {
-        return player.hasPermissions(2) || player.server.isSingleplayerOwner(player.getGameProfile());
+        return WorldConfig.rulesInGame()
+                && (player.hasPermissions(2) || player.server.isSingleplayerOwner(player.getGameProfile()));
     }
 
     public static void sync(ServerPlayer player) {

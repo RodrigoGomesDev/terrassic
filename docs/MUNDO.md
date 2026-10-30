@@ -332,7 +332,9 @@ gerada por `tools/worldgen/mapa_preview.py`.
 
 ### 12.2 A regra "Dinos no mundo normal"
 
-Aba **Ecossistema** das Regras do Terrassic, salva por mundo. Padrão **0,25**, de 0 a 1.
+Aba **Ecossistema** das Regras do Terrassic, salva por mundo. Padrão **0,25**, de 0 a 1. Desde a v0.15.1 as regras não
+mudam dentro do jogo (REGRAS.md): vale o `"dino_share"` do objeto `"rules"` de `config/terrassic-world.json` na hora
+de criar o mundo.
 
 | Valor | Efeito fora do Cretáceo |
 |---|---|
@@ -359,7 +361,7 @@ Nos biomas do Cretáceo (tipo de mundo Terrassic) a regra não muda nada: lá os
 1. Criar mundo novo: o tipo vem em **Padrão**. Em Mais opções, os três tipos Terrassic ainda aparecem.
 2. Andar uns 2.000 blocos por planícies, florestas e savanas: vacas, ovelhas, porcos e cavalos em quantidade normal,
    e de vez em quando um bando de dinos (uns 1 em 4 animais).
-3. Regras do Terrassic → Ecossistema → **Dinos no mundo normal** em 0: em chunks novos não nascem dinos.
-   Em 1: muitos dinos como antes.
+3. Com `"dino_share": 0` no objeto `"rules"` de `config/terrassic-world.json`, criar um mundo novo: não nascem dinos.
+   Com 1: muitos dinos como antes.
 4. Mundo do tipo Terrassic: os biomas do Cretáceo continuam cheios de dinos e sem animais do Minecraft.
 5. Mundo antigo (de antes da v0.15): abre normal, a regra aparece com 0,25.

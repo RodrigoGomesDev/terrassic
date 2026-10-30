@@ -138,6 +138,9 @@ UI = {  # key suffix: (pt, en, es)
                "No tienes permiso para cambiar las reglas."),
     "button": ("Regras do Terrassic", "Terrassic Rules", "Reglas de Terrassic"),
     "version": ("Valores salvos com o mundo", "Values saved with the world", "Valores guardados con el mundo"),
+    "disabled": ("Por enquanto as regras não mudam no jogo: cada mundo fica com as regras com que foi criado (config/terrassic-world.json).",
+                 "For now the rules can't be changed in game: each world keeps the rules it was created with (config/terrassic-world.json).",
+                 "Por ahora las reglas no se cambian en el juego: cada mundo conserva las reglas con las que fue creado (config/terrassic-world.json)."),
 }
 
 
