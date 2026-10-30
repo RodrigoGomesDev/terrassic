@@ -92,6 +92,7 @@ public final class ModSpawns {
     }
 
     public static void init() {
+        VanillaShare.init();
         // BEGIN GENERATED placements
         placement(ModEntities.TYRANNOSAURUS);
         placement(ModEntities.SPINOSAURUS);

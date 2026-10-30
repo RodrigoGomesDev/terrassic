@@ -37,6 +37,74 @@ public final class VanillaShare {
     private VanillaShare() {
     }
 
+    /** v0.16.1: {@code /terrassic fauna} (operators), to measure the share in a real world (Mac test: about 1 in 10
+     *  on Fabric and 1 in 4 on Forge). Prints, for the biome under the player, the weights of the mod and of vanilla
+     *  in the land and sea lists, the chance a dino is let through, EcoSpawner's factor, and the wild animals
+     *  counted within 128 blocks. */
+    public static void init() {
+        dev.architectury.event.events.common.CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) ->
+                dispatcher.register(net.minecraft.commands.Commands.literal(Terrassic.MOD_ID).then(
+                        net.minecraft.commands.Commands.literal("fauna").requires(s -> s.hasPermission(2)).executes(ctx -> {
+                            net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+                            for (String line : report(player)) {
+                                ctx.getSource().sendSuccess(() -> net.minecraft.network.chat.Component.literal(line), false);
+                            }
+                            return 1;
+                        }))));
+    }
+
+    private static java.util.List<String> report(net.minecraft.server.level.ServerPlayer player) {
+        net.minecraft.server.level.ServerLevel level = player.serverLevel();
+        Holder<Biome> biome = level.getBiome(player.blockPosition());
+        Rules rules = Rules.of(level);
+        double share = rules.get(Rule.DINO_SHARE);
+        java.util.List<String> out = new java.util.ArrayList<>();
+        out.add("bioma " + biome.unwrapKey().map(k -> k.location().toString()).orElse("?")
+                + (biome.is(CretaceousBiomes.CRETACEOUS) ? " (Cretaceo)" : "") + ", dino_share " + share
+                + ", fator EcoSpawner " + String.format(java.util.Locale.ROOT, "%.2f", ecoFactor(biome, rules)));
+        for (MobCategory category : new MobCategory[]{MobCategory.CREATURE, MobCategory.WATER_CREATURE}) {
+            int ours = 0;
+            int others = 0;
+            for (MobSpawnSettings.SpawnerData data : biome.value().getMobSettings().getMobs(category).unwrap()) {
+                if (Terrassic.MOD_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(data.type).getNamespace())) {
+                    ours += data.getWeight().asInt();
+                } else {
+                    others += data.getWeight().asInt();
+                }
+            }
+            out.add(category.getName() + ": peso mod " + ours + ", peso vanilla " + others + ", chance "
+                    + String.format(java.util.Locale.ROOT, "%.2f", chance(biome.value(), category, share)));
+        }
+        int dinoLand = 0;
+        int dinoSea = 0;
+        int vanillaLand = 0;
+        int vanillaSea = 0;
+        net.minecraft.world.phys.AABB box = player.getBoundingBox().inflate(128.0D, 384.0D, 128.0D);
+        for (net.minecraft.world.entity.Mob mob : level.getEntitiesOfClass(net.minecraft.world.entity.Mob.class, box)) {
+            boolean ours = Terrassic.MOD_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).getNamespace());
+            if (ours && mob instanceof com.terrassic.entity.DinosaurEntity d && d.isTame()) {
+                continue;
+            }
+            MobCategory c = mob.getType().getCategory();
+            if (c == MobCategory.CREATURE) {
+                if (ours) {
+                    dinoLand++;
+                } else {
+                    vanillaLand++;
+                }
+            } else if (c == MobCategory.WATER_CREATURE) {
+                if (ours) {
+                    dinoSea++;
+                } else {
+                    vanillaSea++;
+                }
+            }
+        }
+        out.add("a 128 blocos: terra " + dinoLand + " dinos / " + vanillaLand + " vanilla; mar " + dinoSea
+                + " dinos / " + vanillaSea + " vanilla");
+        return out;
+    }
+
     /** Runs EcoSpawner's spawn-rule check without the thinning below. */
     static boolean ecoCheck(java.util.function.BooleanSupplier check) {
         ECO.set(Boolean.TRUE);
