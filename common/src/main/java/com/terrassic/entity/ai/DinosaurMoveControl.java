@@ -9,8 +9,16 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 public class DinosaurMoveControl extends MoveControl {
     /** Off the heading by more than this, a pivoting animal stops and turns on the spot before it walks on. */
     private static final float PIVOT_ANGLE = 50.0F;
+    /**
+     * Without a target (strolling, following the herd or its owner) it first turns while walking, as before, and turns
+     * on the spot only once it has stayed this many ticks off its heading, which is when it is circling the waypoint.
+     * Pivoting at once made a strolling herd stop and turn all the time (v0.11 test: a quarter of the distance walked).
+     */
+    private static final int CIRCLING_TICKS = 20;
     private final boolean pivots;
     private float walkingSpeed;
+    /** Ticks in a row it has been walking more than {@link #PIVOT_ANGLE} off the heading to its waypoint. */
+    private int offTicks;
 
     public DinosaurMoveControl(Mob mob) {
         this(mob, false);
@@ -41,15 +49,21 @@ public class DinosaurMoveControl extends MoveControl {
         super.tick();
         // on its feet only: afloat the path's first node is the block it is in, the heading to it flips every tick and it
         // spun on the spot (rc2 swim test)
-        boolean pivots = this.pivots || this.mob instanceof DinosaurEntity dino && dino.pivotsToTurn();
-        if (walking && pivots && this.mob.onGround() && !this.mob.isInWater() && !this.mob.isVehicle() && dx * dx + dz * dz > 0.0625D) {
+        boolean off = false;
+        if (walking && this.mob.onGround() && !this.mob.isInWater() && !this.mob.isVehicle() && dx * dx + dz * dz > 0.0625D) {
             float heading = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
-            if (Math.abs(Mth.wrapDegrees(heading - this.mob.getYRot())) > PIVOT_ANGLE) {
-                this.walkingSpeed = 0;
-                this.mob.setSpeed(0.0F);
-                this.mob.setZza(0.0F);
-                return;
-            }
+            off = Math.abs(Mth.wrapDegrees(heading - this.mob.getYRot())) > PIVOT_ANGLE;
+        }
+        this.offTicks = off ? this.offTicks + 1 : 0;
+        // a T. rex (pivots) and a wide animal after its target turn on the spot at once; a wide animal otherwise once it
+        // is circling the waypoint
+        boolean pivot = off && (this.pivots || this.mob instanceof DinosaurEntity dino && dino.pivotsToTurn()
+                && (this.mob.getTarget() != null || this.offTicks > CIRCLING_TICKS));
+        if (pivot) {
+            this.walkingSpeed = 0;
+            this.mob.setSpeed(0.0F);
+            this.mob.setZza(0.0F);
+            return;
         }
         if (walking && this.mob.zza > 0.0F && this.mob.onGround() && !this.mob.isVehicle()) {
             this.walkingSpeed = Mth.lerp(0.25F, this.walkingSpeed, this.mob.getSpeed());

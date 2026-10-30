@@ -1857,11 +1857,25 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.hasImpulse = true;
             this.riderJump = 0.0F;
         }
-        // the legs paddle: a big one swims at a walk (a T. rex about 2 blocks a second) rather than drifting
-        if (this.wadesDeep() && this.isControlledByLocalInstance() && this.isInWater() && !this.onGround() && input.z > 0.0D) {
-            float yaw = this.getYRot() * Mth.DEG_TO_RAD;
-            double push = 0.075D * this.getAttributeValue(Attributes.MOVEMENT_SPEED);   // 0.018 for the T. rex
-            this.setDeltaMovement(this.getDeltaMovement().add(-Mth.sin(yaw) * push, 0.0D, Mth.cos(yaw) * push));
+        if (this.walksOnGroundPaths() && this.isControlledByLocalInstance() && this.isInWater()) {
+            // the legs paddle: a big one swims at a walk (a T. rex about 2 blocks a second) rather than drifting
+            if (this.wadesDeep() && !this.onGround() && input.z > 0.0D) {
+                float yaw = this.getYRot() * Mth.DEG_TO_RAD;
+                double push = 0.075D * this.getAttributeValue(Attributes.MOVEMENT_SPEED);   // 0.018 for the T. rex
+                this.setDeltaMovement(this.getDeltaMovement().add(-Mth.sin(yaw) * push, 0.0D, Mth.cos(yaw) * push));
+            }
+            // ridden, no FloatGoal keeps it up (goals do not run on the rider's side): it kicks up like the goal would,
+            // instead of sinking slowly to the bottom with its rider (v0.11 test)
+            if (this.isVehicle() && this.getFluidHeight(FluidTags.WATER) > this.getFluidJumpThreshold()) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.04D, 0.0D));
+            }
+            // pushing against the bank: it climbs out. Afloat chest-deep, a big one's feet are deeper than the step it
+            // can take, and vanilla's jump out of the water needs room it does not have (v0.11 test: none got out, not
+            // even over 1-block steps)
+            if (this.wadesDeep() && this.horizontalCollision && (input.z > 0.0D || !this.getNavigation().isDone())) {
+                Vec3 v = this.getDeltaMovement();
+                this.setDeltaMovement(v.x, Math.max(v.y, 0.2D), v.z);
+            }
         }
         super.travel(input);
     }
