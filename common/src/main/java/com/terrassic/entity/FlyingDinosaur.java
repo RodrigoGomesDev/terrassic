@@ -380,10 +380,21 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     // ------------------------------------------------------------------ ridden flight
 
+    /** The rider got off in the air: gravity back (the slow parrot fall of aiStep takes over), unless it is soaring. */
+    @Override
+    protected void removePassenger(net.minecraft.world.entity.Entity passenger) {
+        super.removePassenger(passenger);
+        if (!this.isVehicle() && !this.cruising) {
+            this.setNoGravity(false);
+        }
+    }
+
     @Override
     protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);
-        this.setNoGravity(false);
+        // ridden flight moves itself (travel below); without NoGravity a server with allow-flight=false (the default)
+        // kicks the rider "for floating a vehicle too long" after 4 s in the air (v0.12 test)
+        this.setNoGravity(this.isFlying());
         if (this.isFlying()) {
             // in the air it always turns with the rider, even when gliding with no keys pressed
             this.setRot(player.getYRot(), player.getXRot() * 0.5F);
