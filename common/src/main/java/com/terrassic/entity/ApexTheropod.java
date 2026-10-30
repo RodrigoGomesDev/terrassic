@@ -24,8 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
@@ -161,24 +159,6 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     @Override
     protected boolean solitary() {
         return true;
-    }
-
-    // ------------------------------------------------------------------ water
-
-    /** It floats chest-deep, the back and head out, instead of bobbing on top of the water. */
-    @Override
-    public double getFluidJumpThreshold() {
-        return this.getBbHeight() * 0.5D;
-    }
-
-    /** The legs paddle: it swims at a walk (about 2 blocks a second) rather than drifting. */
-    @Override
-    public void travel(Vec3 input) {
-        if (this.isControlledByLocalInstance() && this.isInWater() && !this.onGround() && input.z > 0.0D) {
-            float yaw = this.getYRot() * Mth.DEG_TO_RAD;
-            this.setDeltaMovement(this.getDeltaMovement().add(-Mth.sin(yaw) * 0.018D, 0.0D, Mth.cos(yaw) * 0.018D));
-        }
-        super.travel(input);
     }
 
     @Override
@@ -361,27 +341,6 @@ public abstract class ApexTheropod extends PredatorDinosaur {
                 triggerAnim(ACTION_CONTROLLER, "shake");
                 this.soaked = 0;
                 this.gestureCooldown = Math.max(this.gestureCooldown, 100);
-            }
-        }
-        // afloat chest-deep its feet are more than a block under the path's nodes (laid on the water surface), so vanilla
-        // never counts one as reached and it paddled round the first: here a node counts when it is over it
-        Path path = this.getNavigation().getPath();
-        // a fresh path starts at the block it stands on; on a stair or a slab edge that block can be behind it, and
-        // going back to it (a pivot, a step up, a pivot, the step down) it rocked on the bottom step (rc3c stairs
-        // test): a first node it is already past is skipped, as vanilla does for small mobs within 2 blocks
-        if (path != null && !path.isDone() && path.getNextNodeIndex() == 0 && path.getNodeCount() > 1) {
-            Vec3 first = path.getEntityPosAtNode(this, 0);
-            Vec3 second = path.getEntityPosAtNode(this, 1);
-            if (Mth.square(second.x - this.getX()) + Mth.square(second.z - this.getZ())
-                    < Mth.square(second.x - first.x) + Mth.square(second.z - first.z)) {
-                path.advance();
-            }
-        }
-        if (path != null && !path.isDone() && this.isInWater() && !this.onGround()) {
-            Vec3 node = path.getNextEntityPos(this);
-            double r = this.getBbWidth() / 2.0D + 0.5D;
-            if (Mth.square(node.x - this.getX()) + Mth.square(node.z - this.getZ()) < r * r) {
-                path.advance();
             }
         }
         if ((this.tickCount + this.getId()) % 40 == 0) {

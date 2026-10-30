@@ -1,5 +1,6 @@
 package com.terrassic.entity.ai;
 
+import com.terrassic.entity.DinosaurEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -16,10 +17,10 @@ public class DinosaurMoveControl extends MoveControl {
     }
 
     /**
-     * @param pivots turn on the spot towards a waypoint well off its heading (big animals with a full set of
-     *               animations). At the slow turn rate of a wide animal a waypoint beside or behind it sits inside
-     *               its turning circle, and walking while turning it would circle it for ever (29/10 tests: stairs
-     *               down, the bite that walked away).
+     * @param pivots always turn on the spot towards a waypoint well off its heading. Since v0.11 every land animal
+     *               wider than a block does it anyway ({@link DinosaurEntity#pivotsToTurn()}): at the slow turn rate
+     *               of a wide animal a waypoint beside or behind it sits inside its turning circle, and walking while
+     *               turning it would circle it for ever (29/10 tests: stairs down, the bite that walked away).
      */
     public DinosaurMoveControl(Mob mob, boolean pivots) {
         super(mob);
@@ -40,7 +41,8 @@ public class DinosaurMoveControl extends MoveControl {
         super.tick();
         // on its feet only: afloat the path's first node is the block it is in, the heading to it flips every tick and it
         // spun on the spot (rc2 swim test)
-        if (walking && this.pivots && this.mob.onGround() && !this.mob.isInWater() && !this.mob.isVehicle() && dx * dx + dz * dz > 0.0625D) {
+        boolean pivots = this.pivots || this.mob instanceof DinosaurEntity dino && dino.pivotsToTurn();
+        if (walking && pivots && this.mob.onGround() && !this.mob.isInWater() && !this.mob.isVehicle() && dx * dx + dz * dz > 0.0625D) {
             float heading = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
             if (Math.abs(Mth.wrapDegrees(heading - this.mob.getYRot())) > PIVOT_ANGLE) {
                 this.walkingSpeed = 0;

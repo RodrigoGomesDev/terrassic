@@ -49,6 +49,8 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
@@ -230,6 +232,65 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.rollSize();
         }
         this.cargo = this.cargoRows() > 0 ? new SimpleContainer(this.cargoRows() * 9) : null;
+    }
+
+    // ------------------------------------------------------------------ big walkers (v0.11)
+    //
+    // The fixes of the T. rex v2 tests (29/10), for every land animal they apply to: a wide animal turns slowly
+    // (DinosaurMoveControl), so a waypoint beside or behind it sits inside its turning circle and it walked round it
+    // for ever (the bite that walked away, the circling at the foot of stairs); afloat, its feet are too deep to reach
+    // the path's nodes laid on the water surface (it spun in the water).
+
+    /** From this width (blocks) a land animal floats chest-deep and paddles in deep water. */
+    public static final float BIG_WIDTH = 2.0F;
+
+    /** A land animal on vanilla ground paths: not a flyer, a swimmer or the amphibious Deinosuchus. */
+    protected boolean walksOnGroundPaths() {
+        return this.getNavigation() instanceof GroundPathNavigation;
+    }
+
+    /** Its turn rate is limited by its width (wider than 1 block), so it turns on the spot instead of circling. */
+    public boolean pivotsToTurn() {
+        return this.walksOnGroundPaths() && this.getBbWidth() > 1.0F;
+    }
+
+    /** A big land animal: chest-deep in deep water, legs paddling, instead of bobbing on the surface. */
+    protected boolean wadesDeep() {
+        return this.walksOnGroundPaths() && this.getBbWidth() >= BIG_WIDTH;
+    }
+
+    @Override
+    public double getFluidJumpThreshold() {
+        return this.wadesDeep() ? this.getBbHeight() * 0.5D : super.getFluidJumpThreshold();
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (!this.pivotsToTurn()) {
+            return;
+        }
+        Path path = this.getNavigation().getPath();
+        // a fresh path starts at the block it stands on; on a stair or a slab edge that block can be behind it, and
+        // going back to it (a pivot, a step up, a pivot, the step down) it rocked on the bottom step (rc3c stairs
+        // test): a first node it is already past is skipped, as vanilla does for small mobs within 2 blocks
+        if (path != null && !path.isDone() && path.getNextNodeIndex() == 0 && path.getNodeCount() > 1) {
+            Vec3 first = path.getEntityPosAtNode(this, 0);
+            Vec3 second = path.getEntityPosAtNode(this, 1);
+            if (Mth.square(second.x - this.getX()) + Mth.square(second.z - this.getZ())
+                    < Mth.square(second.x - first.x) + Mth.square(second.z - first.z)) {
+                path.advance();
+            }
+        }
+        // afloat chest-deep its feet are more than a block under the path's nodes (laid on the water surface), so vanilla
+        // never counts one as reached and it paddled round the first: here a node counts when it is over it
+        if (path != null && !path.isDone() && this.isInWater() && !this.onGround()) {
+            Vec3 node = path.getNextEntityPos(this);
+            double r = this.getBbWidth() / 2.0D + 0.5D;
+            if (Mth.square(node.x - this.getX()) + Mth.square(node.z - this.getZ()) < r * r) {
+                path.advance();
+            }
+        }
     }
 
     // ------------------------------------------------------------------ species hooks
@@ -1795,6 +1856,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
             this.hasImpulse = true;
             this.riderJump = 0.0F;
+        }
+        // the legs paddle: a big one swims at a walk (a T. rex about 2 blocks a second) rather than drifting
+        if (this.wadesDeep() && this.isControlledByLocalInstance() && this.isInWater() && !this.onGround() && input.z > 0.0D) {
+            float yaw = this.getYRot() * Mth.DEG_TO_RAD;
+            double push = 0.075D * this.getAttributeValue(Attributes.MOVEMENT_SPEED);   // 0.018 for the T. rex
+            this.setDeltaMovement(this.getDeltaMovement().add(-Mth.sin(yaw) * push, 0.0D, Mth.cos(yaw) * push));
         }
         super.travel(input);
     }
