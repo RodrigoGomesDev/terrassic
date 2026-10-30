@@ -241,6 +241,9 @@ public final class ModItems {
     /** The T. rex's own saddle (only it saddles a T. rex), with saddlebags: a saddled T. rex carries its cargo. */
     public static final RegistrySupplier<Item> TYRANNOSAURUS_SADDLE = ITEMS.register("tyrannosaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Pteranodon's own saddle (only it saddles a Pteranodon), with saddlebags like the T. rex's. */
+    public static final RegistrySupplier<Item> PTERANODON_SADDLE = ITEMS.register("pteranodon_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
 
     // ---- science: notebook, field tools, fossils (docs/HISTORIA.md, section 4)
     public static final RegistrySupplier<Item> FIELD_NOTEBOOK = ITEMS.register("field_notebook",

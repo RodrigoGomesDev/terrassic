@@ -37,7 +37,7 @@ public class SoarGoal extends Goal {
     }
 
     private boolean free() {
-        return !this.bird.isTame() && !this.bird.isBaby() && !this.bird.isKnockedOut() && !this.bird.isOrderedToSit() && !this.bird.isVehicle()
+        return !this.bird.isTame() && !this.bird.isBaby() && !this.bird.isKnockedOut() && !this.bird.isColonist() && !this.bird.isOrderedToSit() && !this.bird.isVehicle()
                 && !this.bird.isPassenger() && !this.bird.isSleeping() && !this.bird.isLeashed() && this.bird.getTarget() == null
                 && !this.bird.isSleepTime();
     }
@@ -180,10 +180,38 @@ public class SoarGoal extends Goal {
                 return null;
             }
         }
+        if (!ending && !strayed && !this.habitat(bx, bz)) {
+            // keep over its own country (a hill and forest flyer does not go out over the beach and the sea):
+            // try the other side, else turn for home
+            double back = yaw + 180.0F + (this.bird.getRandom().nextFloat() * 60.0F - 30.0F);
+            int ox = Mth.floor(this.bird.getX() - Mth.sin((float) back * Mth.DEG_TO_RAD) * distance);
+            int oz = Mth.floor(this.bird.getZ() + Mth.cos((float) back * Mth.DEG_TO_RAD) * distance);
+            if (this.bird.level().hasChunk(ox >> 4, oz >> 4) && this.habitat(ox, oz)) {
+                x = ox + 0.5D;
+                z = oz + 0.5D;
+            } else if (home != null && this.bird.level().hasChunk(Mth.floor(home.x) >> 4, Mth.floor(home.z) >> 4)) {
+                x = home.x;
+                z = home.z;
+            }
+            bx = Mth.floor(x);
+            bz = Mth.floor(z);
+        }
         int ground = this.bird.level().getHeight(Heightmap.Types.MOTION_BLOCKING, bx, bz);
         double y = ending ? ground + 0.5D : ground + 18 + this.bird.getRandom().nextInt(13);
         y = Math.min(y, this.bird.level().getMaxBuildHeight() - 8);
         return new Vec3(x, y, z);
+    }
+
+    /** Whether the species lives in the biome under (x, z): it is in that biome's spawn list. */
+    private boolean habitat(int x, int z) {
+        int ground = this.bird.level().getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
+        for (net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData data : this.bird.level().getBiome(new net.minecraft.core.BlockPos(x, ground, z))
+                .value().getMobSettings().getMobs(net.minecraft.world.entity.MobCategory.CREATURE).unwrap()) {
+            if (data.type == this.bird.getType()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** The soaring wild one of the species with the lowest id within flock range (this bird if none is lower). */

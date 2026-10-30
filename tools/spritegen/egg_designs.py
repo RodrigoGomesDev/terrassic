@@ -322,23 +322,43 @@ def maiasaura():
 
 
 def pteranodon():
-    e = Egg("pteranodon", {"b": "#b8b2a6", "c": "#eeeae0", "d": "#55504a", "n": "#3a3632",
-                           "e": "#d0582c", "f": "#f0a04a", "w": "#6a5444", "m": "#d8bc84", "M": "#a88c5a"})
-    # folded wings at the sides
-    for side in (0, 1):
-        pts = [(4, 15), (0, 19), (1, 22), (4, 21)]
-        if side:
-            pts = [(31 - x, y) for (x, y) in pts]
-        e.poly(pts, "w")
-    cap(e, "d", (6, 3, 25, 17), (3, 9, 28, 36))
-    # long crest sweeping back over the head
-    e.line([(17, 8), (6, 0)], "e", 3)
-    e.line([(8, 1), (6, 0)], "f", 2)
-    e.ell((9, 18, 22, 34), "c", clip=True)
-    eyes(e, 13, 9)
-    # long toothless beak down the middle
-    e.poly([(13, 15), (18, 15), (17, 28), (16, 30), (15, 30), (14, 28)], "m")
-    e.line([(15, 18), (15, 27)], "M")
+    """Pteranodon v3 (30/10): front view like the T. rex egg, in the new model's colours (charcoal cap, pale face, dark
+    wings folded at the sides), the model's eyes (amber ring in a patch of bare red skin), the horn beak with its dark
+    tip down the middle and the male's banded crest blade rising over the top."""
+    e = Egg("pteranodon_front", {"b": "#cfcbc1", "d": "#3e4449", "D": "#2d3236", "w": "#3e3532", "W": "#2b2626",
+                              "k": "#bcab80", "K": "#8f7f5c", "t": "#2f2923", "c": "#a8381b", "C": "#2a1512", "y": "#e9ad4f",
+                              "o": "#d2662a", "E": "#140d0a", "R": "#c8902c", "g": "#f3ecd2", "M": "#1f2326",
+                              "s": "#5e1a16", "S": "#8e2a20", "f": "#7395a0"})
+    # folded wings at the sides, stepping out of the egg
+    for pts in ([(5, 13), (0, 18), (0, 23), (2, 25), (5, 22)],):
+        e.poly(pts, "w"); e.poly([(31 - x, y) for x, y in pts], "w")
+    e.line([(4, 14), (1, 19)], "W"); e.line([(27, 14), (30, 19)], "W")
+    # slate cap over the top of the head and the neck
+    e.ell((4, 2, 27, 19), "d", clip=True)
+    e.ell((6, 9, 25, 34), "b", clip=True)
+    # crest: a red blade rising from the crown, yellow at the tip
+    e.poly([(14, 9), (17, 9), (17, 2), (16, 0), (15, 0), (14, 2)], "c")
+    e.px([(14, 3), (15, 3), (16, 3), (17, 4), (14, 6), (15, 6), (16, 6), (17, 7)], "C")
+    e.px([(15, 2), (16, 2), (15, 5), (16, 5)], "o")
+    e.px([(15, 0), (16, 0), (15, 1), (16, 1)], "y")
+    # the model's eyes, set wide on the sides
+    eye = [".sSs..",
+           "sMMMs.",
+           "SRRRMs",
+           "SREgRs",
+           "SREER.",
+           ".sRRs.",
+           "..ss.."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(5 + i, 10 + j)]) if in_egg(*q)], ch)
+    # dark streak running back from each eye
+    e.px(e.mirror([(5, 13), (4, 14)]), "M")
+    # long toothless beak down the middle, horn with a dark tip
+    e.poly([(13, 13), (18, 13), (17, 25), (16, 29), (15, 29), (14, 25)], "k")
+    e.line([(15, 15), (15, 24)], "K")
+    e.px([(15, 27), (16, 27), (15, 28), (16, 28), (15, 29), (16, 29)], "t")
     return e
 
 

@@ -788,7 +788,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
             if (this.isKnockedOut()) {
                 this.cycleSpeed = 1.0D;
-                return state.setAndContinue(this.knockedOutAnim);
+                return this.knockedOutAnimation(state);
             }
             return this.movementAnimation(state);
         });
@@ -814,18 +814,27 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
 
         AnimationController<DinosaurEntity> action = new AnimationController<>(this, ACTION_CONTROLLER, 3, state -> PlayState.STOP);
-        action.triggerableAnim("attack", RawAnimation.begin().thenPlay(anim("attack")));
-        action.triggerableAnim("eat", RawAnimation.begin().thenPlay(anim("eat")));
-        action.triggerableAnim("beg", RawAnimation.begin().thenPlay(anim("beg")));
-        action.triggerableAnim("wake", RawAnimation.begin().thenPlay(anim("wake")));
-        action.triggerableAnim("tame", RawAnimation.begin().thenPlay(anim("tame")));
+        for (String name : new String[]{"attack", "eat", "beg", "wake", "tame"}) {
+            action.triggerableAnim(name, RawAnimation.begin().thenPlay(anim(this.actionAnimation(name))));
+        }
         if (this.hasSleepAnim()) {
-            action.triggerableAnim("wake_sleep", RawAnimation.begin().thenPlay(anim("wake_sleep")));
+            action.triggerableAnim("wake_sleep", RawAnimation.begin().thenPlay(anim(this.actionAnimation("wake_sleep"))));
         }
         for (String extra : extraActions()) {
-            action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
+            action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(this.actionAnimation(extra))));
         }
         controllers.add(action);
+    }
+
+    /** The animation a one-shot trigger plays: its own name, unless the rig has none by that name (a rig without
+     *  "tame" or "wake_sleep" maps them onto one of its own). */
+    protected String actionAnimation(String trigger) {
+        return trigger;
+    }
+
+    /** Knocked out: the "knocked_out" loop (a flyer can have its own pose for the fall). */
+    protected PlayState knockedOutAnimation(AnimationState<DinosaurEntity> state) {
+        return state.setAndContinue(this.knockedOutAnim);
     }
 
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
@@ -1264,6 +1273,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     this.tameBy(player);
                 } else {
                     this.level().broadcastEntityEvent(this, (byte) 6);
+                    // every bite says so: it took the food, not yet won over (1 in N per bite)
+                    player.displayClientMessage(Component.translatable("message.terrassic.tame_try", this.getDisplayName(), chance), true);
                 }
             }
             return InteractionResult.sidedSuccess(client);
@@ -1460,7 +1471,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (owner != null) {
             t.putString("Owner", owner.getName().getString());
         }
-        t.putString("Method", this.isTame() ? "" : this.tameMethod() == TameMethod.FEEDING || this.isBaby() ? "feed" : "knockout");
+        // feeding species can also be knocked out and fed; the rest only by knockout (or as babies)
+        t.putString("Method", this.isTame() ? "" : this.isBaby() ? "feed"
+                : this.tameMethod() == TameMethod.FEEDING ? "feed_or_knockout" : "knockout");
+        t.putInt("Chance", Research.isStudied(viewer, this.speciesId()) ? Math.max(2, this.tameChance() - 1) : this.tameChance());
         t.putBoolean("KnockedOut", this.isKnockedOut());
         t.putFloat("Torpor", this.torpor);
         t.putFloat("MaxTorpor", this.maxTorpor());

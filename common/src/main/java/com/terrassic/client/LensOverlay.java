@@ -22,11 +22,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -93,10 +91,20 @@ public final class LensOverlay {
         if (block.getType() != HitResult.Type.MISS) {
             end = block.getLocation();
         }
-        AABB box = player.getBoundingBox().expandTowards(end.subtract(eye)).inflate(1.0D);
-        EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, end, box,
-                e -> e instanceof DinosaurEntity && e.isAlive(), eye.distanceToSqr(end));
-        return hit != null && hit.getEntity() instanceof DinosaurEntity d ? d : null;
+        AABB box = player.getBoundingBox().expandTowards(end.subtract(eye)).inflate(4.0D);
+        DinosaurEntity best = null;
+        double bestDistance = Double.MAX_VALUE;
+        for (DinosaurEntity d : player.level().getEntitiesOfClass(DinosaurEntity.class, box, Entity::isAlive)) {
+            // a flyer's body is small against its wingspan: aim at it with a wider box, a little more for far ones
+            double grow = d instanceof com.terrassic.entity.FlyingDinosaur
+                    ? Math.max(1.0D, d.getBbWidth() * 0.6D) + eye.distanceTo(d.position()) * 0.03D : 0.3D;
+            java.util.Optional<Vec3> at = d.getBoundingBox().inflate(grow).clip(eye, end);
+            if (at.isPresent() && eye.distanceToSqr(at.get()) < bestDistance) {
+                bestDistance = eye.distanceToSqr(at.get());
+                best = d;
+            }
+        }
+        return best;
     }
 
     private static void render(GuiGraphics g, float partialTick) {
@@ -115,8 +123,7 @@ public final class LensOverlay {
         int rows = 5 + (tame ? 1 : 2) + (ko ? 3 : t.getFloat("Torpor") > 0.5F ? 1 : 0) + (t.contains("CargoSize") ? 1 : 0);
         int h = 8 + rows * 11 + 4;
         // as wide as the longest line (the taming hint is the long one)
-        String how = ko ? "gui.terrassic.lens.how_feed_now" : "feed".equals(t.getString("Method"))
-                ? "gui.terrassic.lens.how_feed" : "gui.terrassic.lens.how_knockout";
+        Component how = howToTame(t, ko);
         W = Math.max(MIN_W, font.width(TerrassicFonts.ui(how)) + 14);
         int x = g.guiWidth() / 2 + 16;
         int y = Mth.clamp(g.guiHeight() / 2 - h / 2, 4, Math.max(4, g.guiHeight() - h - 30));
@@ -179,6 +186,18 @@ public final class LensOverlay {
             g.drawString(font, TerrassicFonts.ui("gui.terrassic.lens.cargo", t.getInt("CargoUsed"), t.getInt("CargoSize")), cx, cy,
                     TerrassicPalette.rgb(TerrassicPalette.STONE_200));
         }
+    }
+
+    /** How it is tamed: feeding (with the chance per bite), feeding or knockout, knockout, or "feed it now". */
+    private static Component howToTame(CompoundTag t, boolean ko) {
+        if (ko) {
+            return Component.translatable("gui.terrassic.lens.how_feed_now");
+        }
+        return switch (t.getString("Method")) {
+            case "feed" -> Component.translatable("gui.terrassic.lens.how_feed", t.getInt("Chance"));
+            case "feed_or_knockout" -> Component.translatable("gui.terrassic.lens.how_feed_or_ko", t.getInt("Chance"));
+            default -> Component.translatable("gui.terrassic.lens.how_knockout");
+        };
     }
 
     private static void panel(GuiGraphics g, int x0, int y0, int x1, int y1) {

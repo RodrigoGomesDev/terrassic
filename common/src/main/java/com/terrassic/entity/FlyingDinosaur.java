@@ -1,9 +1,13 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.ai.ColonyGoal;
+import com.terrassic.entity.ai.FishingFlightGoal;
 import com.terrassic.entity.ai.SoarGoal;
 import com.terrassic.entity.ai.FlightSteering;
 import com.terrassic.entity.ai.SoaringMoveControl;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -85,6 +89,10 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     private Vec3 soarTarget;
     private Vec3 soarHome;
     private boolean cruising;
+    /** The coastal colony a colonial wild flyer belongs to (world/PteroColonies), or null. */
+    private BlockPos colonyHome;
+    /** A fishing sortie a colony mate asked this one to join: where over the sea (FishingFlightGoal). */
+    private Vec3 sortieCall;
 
     protected FlyingDinosaur(EntityType<? extends FlyingDinosaur> type, Level level) {
         super(type, level);
@@ -119,7 +127,13 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.1D));
+        if (this.colonial()) {
+            this.goalSelector.addGoal(7, new FishingFlightGoal(this));
+        }
         this.goalSelector.addGoal(8, new SoarGoal(this));
+        if (this.colonial()) {
+            this.goalSelector.addGoal(9, new ColonyGoal(this));
+        }
         this.goalSelector.addGoal(9, new WaterAvoidingRandomFlyingGoal(this, 1.0D) {
             @Override
             public boolean canUse() {
@@ -132,7 +146,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
             }
 
             private boolean allowed() {
-                return !FlyingDinosaur.this.isResting() && !FlyingDinosaur.this.isKnockedOut()
+                return !FlyingDinosaur.this.isResting() && !FlyingDinosaur.this.isKnockedOut() && !FlyingDinosaur.this.isColonist()
                         && (FlyingDinosaur.this.isTame() || FlyingDinosaur.this.isBaby() || !FlyingDinosaur.this.isSleepTime());
             }
         });
@@ -154,6 +168,13 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     @Override
     public boolean isFlying() {
         return !this.onGround() && !this.isInWater() && !this.isPassenger();
+    }
+
+    /** In the air for the animations. The client learns onGround only from movement packets, so an animal standing
+     *  still since it was loaded would read as flying: there it also needs nothing solid just under its feet. */
+    public boolean isAirborne() {
+        return this.isFlying() && (!this.level().isClientSide()
+                || this.level().noCollision(this, this.getBoundingBox().move(0.0D, -0.25D, 0.0D)));
     }
 
     @Override
@@ -190,6 +211,59 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
                 && (this.flapTicks < 15 || this.getDeltaMovement().y > -0.03D)) {
             this.playSound(flap, 0.8F, 0.9F + this.random.nextFloat() * 0.2F);
         }
+    }
+
+    // ------------------------------------------------------------------ colonies (world/PteroColonies)
+
+    /** A colonial species lives in coastal colonies: it roosts there and leaves in small parties to fish over the sea
+     *  (ai/FishingFlightGoal, ai/ColonyGoal) instead of soaring in flocks over the land (SoarGoal). */
+    protected boolean colonial() {
+        return false;
+    }
+
+    public boolean isColonial() {
+        return this.colonial();
+    }
+
+    /** A wild one that belongs to a colony (tamed ones follow their owner instead). */
+    public boolean isColonist() {
+        return this.colonyHome != null && !this.isTame();
+    }
+
+    public BlockPos getColonyHome() {
+        return this.colonyHome;
+    }
+
+    public void setColonyHome(BlockPos home) {
+        this.colonyHome = home;
+    }
+
+    public Vec3 takeSortieCall() {
+        Vec3 call = this.sortieCall;
+        this.sortieCall = null;
+        return call;
+    }
+
+    public boolean hasSortieCall() {
+        return this.sortieCall != null;
+    }
+
+    public void callToSortie(Vec3 sea) {
+        this.sortieCall = sea;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        if (this.colonyHome != null) {
+            tag.put("Colony", NbtUtils.writeBlockPos(this.colonyHome));
+        }
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        this.colonyHome = tag.contains("Colony") ? NbtUtils.readBlockPos(tag.getCompound("Colony")) : null;
     }
 
     // ------------------------------------------------------------------ soaring (SoarGoal)
@@ -268,6 +342,11 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         }
     }
 
+    /** A one-shot of a fishing flight ("dive" down at the water, "scoop" along the surface), for rigs that have them
+     *  ({@link Pterosaur}); nothing by default. */
+    public void flightAction(String name) {
+    }
+
     /** Wing beat sound, or null for none. */
     protected SoundEvent flapSound() {
         return null;
@@ -281,7 +360,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
             this.flyAnim = RawAnimation.begin().thenLoop(anim("fly"));
             this.glideAnim = RawAnimation.begin().thenLoop(anim("glide"));
         }
-        if (this.isFlying() && !this.isPassenger()) {
+        if (this.isAirborne()) {
             Vec3 v = this.getDeltaMovement();
             // Level cruising also alternates wing beats and gliding; phase differs between animals.
             boolean gliding = v.y < 0.035D && v.horizontalDistanceSqr() > 0.04D

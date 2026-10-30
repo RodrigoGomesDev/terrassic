@@ -74,6 +74,8 @@ public final class EcoSpawner {
     enum Kind { LAND, FLYER, SEA, OTHER }
 
     private static final Map<EntityType<?>, Kind> KINDS = new HashMap<>();
+    /** Colonial flyers (the Pteranodon): they live in coastal colonies (PteroColonies), never in the sky flocks. */
+    private static final java.util.Set<EntityType<?>> COLONIAL = new java.util.HashSet<>();
     /** Wild creatures in the level, recounted every few rounds (cheap enough, and the cap does not need precision). */
     private static final Map<ServerLevel, Integer> WILD = new HashMap<>();
     private static final Map<ServerLevel, Long> LAST_COUNT = new HashMap<>();
@@ -151,11 +153,13 @@ public final class EcoSpawner {
                 AABB sky = new AABB(player.getX() - SpawnBudget.SKY_RADIUS, level.getMinBuildHeight(),
                         player.getZ() - SpawnBudget.SKY_RADIUS, player.getX() + SpawnBudget.SKY_RADIUS,
                         level.getMaxBuildHeight(), player.getZ() + SpawnBudget.SKY_RADIUS);
+                // colonists have their own coast budget (PteroColonies) and do not fill the sky's
                 int regionalFlyers = level.getEntitiesOfClass(FlyingDinosaur.class, sky,
-                        e -> e.isAlive() && !e.isTame()).size();
+                        e -> e.isAlive() && !e.isTame() && !e.isColonist()).size();
                 int skyTarget = target(SpawnBudget.SKY_TARGET, density, rules.get(Rule.FLYER_SPAWNS));
                 spawnRound(level, player, Kind.FLYER, rules, random,
                         SpawnBudget.allowance(skyTarget, regionalFlyers, cap, WILD.get(level)));
+                PteroColonies.tick(level, player);
             }
             if (sea < target(SEA_TARGET, density, rules.get(Rule.SEA_SPAWNS))) {
                 spawnRound(level, player, Kind.SEA, rules, random,
@@ -372,7 +376,7 @@ public final class EcoSpawner {
         List<MobSpawnSettings.SpawnerData> options = new ArrayList<>();
         int total = 0;
         for (MobSpawnSettings.SpawnerData data : biome.value().getMobSettings().getMobs(category).unwrap()) {
-            if (kindOf(level, data.type) == kind) {
+            if (kindOf(level, data.type) == kind && !(kind == Kind.FLYER && COLONIAL.contains(data.type))) {
                 options.add(data);
                 total += data.getWeight().asInt();
             }
@@ -397,8 +401,11 @@ public final class EcoSpawner {
             kind = Kind.OTHER;
             if (BuiltInRegistries.ENTITY_TYPE.getKey(type).getNamespace().equals("terrassic")) {
                 Entity e = type.create(level);
-                if (e instanceof FlyingDinosaur) {
+                if (e instanceof FlyingDinosaur bird) {
                     kind = Kind.FLYER;
+                    if (bird.isColonial()) {
+                        COLONIAL.add(type);
+                    }
                 } else if (e instanceof SwimmingDinosaur) {
                     kind = Kind.SEA;
                 } else if (e instanceof DinosaurEntity) {

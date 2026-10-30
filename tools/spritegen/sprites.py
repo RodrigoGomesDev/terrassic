@@ -968,7 +968,9 @@ EGG_BLOCK = {
 
 def egg_blocks():
     import random
-    from rex_extras import CUSTOM_EGGS   # these have their own nest model and textures (rex_extras.main)
+    from rex_extras import CUSTOM_EGGS as REX_EGGS   # these have their own nest model and textures (*_extras.main)
+    from ptera_extras import CUSTOM_EGGS as PTERA_EGGS
+    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1483,6 +1485,8 @@ if __name__ == "__main__":
     taming_tools()
     import rex_extras
     rex_extras.main()   # the T. rex egg pair in its nest and the T. rex saddle
+    import ptera_extras
+    ptera_extras.main()   # the Pteranodon's clutch in its sand scrape and its saddle
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)

@@ -425,22 +425,22 @@
   "render_scale": 0.5
  },
  "pteranodon": {
-  "bones": 29,
-  "cubes": 91,
+  "bones": 38,
+  "cubes": 112,
   "texture": [
    256,
-   256
+   128
   ],
   "bounds_px": [
    [
-    -108.0,
-    0.0,
-    -77.91690678255343
+    -109.05,
+    -2.612844089861316e-15,
+    -81.94772216766965
    ],
    [
-    108.0,
-    60.450089126531076,
-    26.0
+    109.05,
+    54.305494001230045,
+    20.0
    ]
   ],
   "animations": [
@@ -449,15 +449,30 @@
    "animation.pteranodon.run",
    "animation.pteranodon.fly",
    "animation.pteranodon.glide",
-   "animation.pteranodon.sit",
-   "animation.pteranodon.attack",
-   "animation.pteranodon.knocked_out",
-   "animation.pteranodon.wake",
+   "animation.pteranodon.bank_left",
+   "animation.pteranodon.bank_right",
+   "animation.pteranodon.takeoff",
+   "animation.pteranodon.land",
+   "animation.pteranodon.dive",
+   "animation.pteranodon.scoop",
+   "animation.pteranodon.swim",
+   "animation.pteranodon.water_takeoff",
    "animation.pteranodon.eat",
+   "animation.pteranodon.attack",
+   "animation.pteranodon.call",
+   "animation.pteranodon.display",
+   "animation.pteranodon.preen",
+   "animation.pteranodon.sun",
+   "animation.pteranodon.shake",
    "animation.pteranodon.beg",
-   "animation.pteranodon.tame"
+   "animation.pteranodon.sit",
+   "animation.pteranodon.sleep",
+   "animation.pteranodon.knocked_out",
+   "animation.pteranodon.knocked_out_air",
+   "animation.pteranodon.wake",
+   "animation.pteranodon.death"
   ],
-  "render_scale": 0.5
+  "handmade": true
  },
  "mosasaurus": {
   "bones": 18,

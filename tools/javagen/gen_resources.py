@@ -9,7 +9,9 @@ RES = os.path.join(ROOT, "common", "src", "main", "resources")
 A = os.path.join(RES, "assets", "terrassic")
 D = os.path.join(RES, "data", "terrassic")
 sys.path.insert(0, os.path.join(ROOT, "tools", "spritegen"))
-from rex_extras import CUSTOM_EGGS  # noqa: E402  (eggs with their own nest model: the T. rex pair)
+from rex_extras import CUSTOM_EGGS as REX_EGGS  # noqa: E402  (eggs with their own nest model: the T. rex pair)
+from ptera_extras import CUSTOM_EGGS as PTERA_EGGS  # noqa: E402  (the Pteranodon's clutch in a sand scrape)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -88,6 +90,7 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "platform_saddle": ("Platform Saddle", "Sela de Plataforma", "Silla de Plataforma", "item/generated"),
     # species saddles, like ARK: each big rider has its own, with its own recipe (the T. rex first)
     "tyrannosaurus_saddle": ("T. rex Saddle", "Sela de Tiranossauro", "Silla de Tiranosaurio", "item/generated"),
+    "pteranodon_saddle": ("Pteranodon Saddle", "Sela de Pteranodonte", "Silla de Pteranodonte", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
     "raw_dino_meat": ("Raw Dino Meat", "Carne de Dinossauro Crua", "Carne de Dinosaurio Cruda", "item/generated"),
     "cooked_dino_meat": ("Cooked Dino Meat", "Carne de Dinossauro Assada", "Carne de Dinosaurio Asada", "item/generated"),
@@ -197,7 +200,9 @@ LENS_LANG = {
         "gui.terrassic.lens.taming": "Taming",
         "gui.terrassic.lens.effectiveness": "Effectiveness: %s%%",
         "gui.terrassic.lens.how_knockout": "Tame: knock it out, then feed it",
-        "gui.terrassic.lens.how_feed": "Tame: feed it by hand",
+        "gui.terrassic.lens.how_feed": "Tame: feed it by hand (1 in %s per bite)",
+        "gui.terrassic.lens.how_feed_or_ko": "Tame: feed it by hand (1 in %s) or knock it out",
+        "message.terrassic.tame_try": "%s took the food, still wary (1 in %s)",
         "gui.terrassic.lens.how_feed_now": "Out cold: feed it now (use food on it)",
         "gui.terrassic.lens.eats": "Eats",
         "gui.terrassic.lens.cargo": "Bags: %s/%s slots",
@@ -217,7 +222,9 @@ LENS_LANG = {
         "gui.terrassic.lens.taming": "Doma",
         "gui.terrassic.lens.effectiveness": "Eficiência: %s%%",
         "gui.terrassic.lens.how_knockout": "Domar: nocauteie e depois alimente",
-        "gui.terrassic.lens.how_feed": "Domar: dê comida na mão",
+        "gui.terrassic.lens.how_feed": "Domar: dê comida na mão (1 em %s por porção)",
+        "gui.terrassic.lens.how_feed_or_ko": "Domar: comida na mão (1 em %s) ou nocaute",
+        "message.terrassic.tame_try": "%s comeu, mas ainda desconfia (1 em %s)",
         "gui.terrassic.lens.how_feed_now": "Desacordado: alimente agora (use a comida nele)",
         "gui.terrassic.lens.eats": "Come",
         "gui.terrassic.lens.cargo": "Bolsas: %s/%s espaços",
@@ -237,7 +244,9 @@ LENS_LANG = {
         "gui.terrassic.lens.taming": "Doma",
         "gui.terrassic.lens.effectiveness": "Eficacia: %s%%",
         "gui.terrassic.lens.how_knockout": "Domar: noquéalo y luego aliméntalo",
-        "gui.terrassic.lens.how_feed": "Domar: dale comida en la mano",
+        "gui.terrassic.lens.how_feed": "Domar: dale comida en la mano (1 de %s por bocado)",
+        "gui.terrassic.lens.how_feed_or_ko": "Domar: comida en la mano (1 de %s) o noqueo",
+        "message.terrassic.tame_try": "%s comió, pero aún desconfía (1 de %s)",
         "gui.terrassic.lens.how_feed_now": "Inconsciente: aliméntalo ahora (usa la comida en él)",
         "gui.terrassic.lens.eats": "Come",
         "gui.terrassic.lens.cargo": "Alforjas: %s/%s huecos",
@@ -364,6 +373,9 @@ def main():
     # the T. rex saddle: leather seat and flaps, rush padding, iron rings, and a rex tooth for the pommel
     shaped("tyrannosaurus_saddle", ["LLL", "RTR", "I I"], {"L": "minecraft:leather", "R": "terrassic:rush",
            "T": "terrassic:rex_tooth", "I": "minecraft:iron_ingot"}, "terrassic:tyrannosaurus_saddle")
+    # the Pteranodon saddle: a light leather pad on a string harness, a feather for the grab bar's crest
+    shaped("pteranodon_saddle", ["LLL", "SFS"], {"L": "minecraft:leather", "S": "minecraft:string", "F": "minecraft:feather"},
+           "terrassic:pteranodon_saddle")
     # the Field Lens: an amber lens in a bone rim on a stick (item/FieldLensItem)
     shaped("field_lens", [" G ", "BAB", " S "], {"G": "minecraft:glass_pane", "A": "terrassic:raw_amber", "B": "minecraft:bone",
                                                   "S": "minecraft:stick"}, "terrassic:field_lens")
