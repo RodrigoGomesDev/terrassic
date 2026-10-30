@@ -924,36 +924,159 @@ def stalk(cv, x, y0, y1, colors, joint=None):
         cv.set(x, y, hexc(colors[3]) if (joint and (y - y0) % joint == 0) else hexc(colors[2]))
 
 
-def horsetail(tall=False, giant=False, part="single"):
-    """Equisetum: jointed upright stems with whorls of thin branches (Calamites: a thick ribbed trunk)."""
+def horsetail():
+    """Equisetum: jointed upright stems with whorls of thin branches."""
     cv = Canvas()
-    rnd = random.Random("horsetail" + part + str(tall) + str(giant))
-    stems = (3, 7, 11, 13) if not giant else (7,)
-    for i, x in enumerate(stems):
-        top = 0 if part != "single" and part == "lower" else (2 + (i * 3) % 6 if part != "upper" else 3 + i * 2)
-        for y in range(top if part != "lower" else 0, 16):
-            c = GREEN[3] if (y % 3) else "#3a2e1c"
-            cv.set(x, y, hexc(c))
-            if giant:
-                cv.set(x + 1, y, hexc(GREEN[2] if y % 3 else "#2a2214")); cv.set(x - 1, y, hexc(GREEN[4] if y % 3 else "#3a2e1c"))
+    for i, x in enumerate((3, 7, 11, 13)):
+        top = 2 + (i * 3) % 6
+        for y in range(top, 16):
+            cv.set(x, y, hexc(GREEN[3] if (y % 3) else "#3a2e1c"))
             if y % 3 == 1 and y > top + 1:  # whorl of branches
-                span = 3 if giant else 2
-                for d in range(1, span + 1):
-                    cv.set(x - d - (1 if giant else 0), y - d // 2, hexc(GREEN[4])); cv.set(x + d + (1 if giant else 0), y - d // 2, hexc(GREEN[4]))
-        if part in ("single", "upper"):
-            cv.set(x, top - 1, hexc("#7a6a3a"))  # spore cone
-            cv.set(x, top - 2, hexc("#9a8a4a"))
+                for d in (1, 2):
+                    cv.set(x - d, y - d // 2, hexc(GREEN[4])); cv.set(x + d, y - d // 2, hexc(GREEN[4]))
+        cv.set(x, top - 1, hexc("#7a6a3a"))  # spore cone
+        cv.set(x, top - 2, hexc("#9a8a4a"))
     return cv
 
 
-def fern(kind="bracken", part="single"):
+# Two-block plants are drawn whole on a 16x32 sheet and only then cut into the upper and lower block, so stems,
+# trunks and fronds always run on across the seam (drawing each half alone left a gap in the middle).
+class TallSheet:
+    def __init__(self):
+        self.p = {}
+
+    def set(self, x, y, c):
+        if 0 <= x < N and 0 <= y < 2 * N and c is not None:
+            self.p[(x, y)] = c
+
+    def get(self, x, y):
+        return self.p.get((x, y))
+
+    def lit(self, colors):
+        """Tone indices into colours, lit from above: a pixel open above is a step lighter, open below a step darker."""
+        for (x, y), k in list(self.p.items()):
+            if isinstance(k, int):
+                t = k + ((x, y - 1) not in self.p) - ((x, y + 1) not in self.p)
+                self.p[(x, y)] = hexc(colors[max(0, min(len(colors) - 1, t))])
+
+    def halves(self):
+        upper, lower = Canvas(), Canvas()
+        for (x, y), c in self.p.items():
+            (upper if y < N else lower).set(x, y % N, hexc(c) if isinstance(c, str) else c)
+        return upper, lower
+
+
+def tall_horsetail(giant=False):
+    """Tall horsetail (Calamites when giant: one thick ribbed trunk). Joints every 3 px from the foot, a whorl of
+    branches above each joint all the way up, spore cones on top."""
+    sh = TallSheet()
+    for x, top in (((7, 2),) if giant else ((3, 4), (7, 1), (11, 6), (13, 9))):
+        for y in range(top, 2 * N):
+            joint = (2 * N - 1 - y) % 3 == 0
+            sh.set(x, y, "#3a2e1c" if joint else GREEN[3])
+            if giant:
+                sh.set(x + 1, y, "#2a2214" if joint else GREEN[2]); sh.set(x - 1, y, "#3a2e1c" if joint else GREEN[4])
+            if (2 * N - 1 - y) % 3 == 2 and top + 2 < y < 2 * N - 3:
+                span, o = (3, 1) if giant else (2, 0)
+                for d in range(1, span + 1):
+                    sh.set(x - d - o, y - d // 2, GREEN[4]); sh.set(x + d + o, y - d // 2, GREEN[4])
+        sh.set(x, top - 1, "#7a6a3a"); sh.set(x, top - 2, "#9a8a4a")  # spore cone
+    return sh.halves()
+
+
+def frond(sh, base, tip, bend, blade_from, width, rnd, droop):
+    """A fern frond on a TallSheet: a curved rachis from base to tip, pinnae in pairs every 2 px along the blade,
+    longest at the blade's foot and shortening to the tip, each pinna bowing down at its end."""
+    (bx, by), (tx, ty) = base, tip
+    n = int(math.hypot(tx - bx, ty - by) * 1.6)
+    pts = [(bx + (tx - bx) * i / n + bend * math.sin(math.pi * i / n), by + (ty - by) * i / n, i / n) for i in range(n + 1)]
+    for x, y, t in pts:
+        sh.set(round(x), round(y), 2)
+    done = set()
+    for j, (x, y, t) in enumerate(pts[:-1]):
+        if t < blade_from or round(y) % 2 or round(y) in done:
+            continue
+        done.add(round(y))
+        u = (t - blade_from) / (1 - blade_from)
+        length = width * (1 - u) ** 0.85 + 0.6
+        dx, dy = pts[j + 1][0] - x, pts[j + 1][1] - y
+        d = math.hypot(dx, dy) or 1
+        nx, ny = -dy / d, dx / d
+        for side in (-1, 1):
+            ln = length * (0.85 + 0.3 * rnd.random())
+            k = 1.0
+            while k <= ln:
+                sh.set(round(x + side * nx * k), round(y + side * ny * k + droop * (k / max(ln, 1)) ** 2 * ln * 0.5),
+                       3 if k < ln - 0.5 else 4)
+                k += 0.5
+
+
+def tall_bracken():
+    """Tall bracken: fronds rising from one crown at the foot and fanning out, the tallest up the middle."""
+    sh = TallSheet()
+    rnd = random.Random("tall_bracken")
+    frond(sh, (7, 31), (2, 9), -1.0, 0.30, 2.6, rnd, droop=0.9)
+    frond(sh, (9, 31), (14, 7), 1.0, 0.30, 2.6, rnd, droop=0.9)
+    frond(sh, (8, 31), (8, 1), 0.8, 0.30, 3.0, rnd, droop=1.1)
+    frond(sh, (7, 31), (1, 24), -0.5, 0.2, 1.6, rnd, droop=0.6)
+    frond(sh, (9, 31), (15, 23), 0.5, 0.2, 1.6, rnd, droop=0.6)
+    for (x, y), k in list(sh.p.items()):
+        if y >= 26 and k == 2:  # the stipes at the foot
+            sh.set(x, y, "#4a3a1e" if y > 29 else "#556a2a")
+    sh.lit(GREEN)
+    return sh.halves()
+
+
+def tall_cycad():
+    """Cycad: a scaly trunk up to the top of the lower block and a crown of stiff pinnate leaves arching out of it."""
+    sh = TallSheet()
+    bark = ["#3e301f", "#5a4630", "#6e563a", "#7a6040", "#8a7048"]
+    top = 17
+    for y in range(top, 2 * N):
+        w = 2 if y < top + 2 else 3  # a little thicker below the crown
+        for x in range(8 - w, 8 + w):
+            k = 1 + (x + (y // 2) % 2) % 2 + (y % 2 == 0)  # offset leaf scars
+            k += 1 if x == 8 - w else (-2 if x == 8 + w - 1 else 0)  # rounded: lit left, shaded right
+            sh.set(x, y, bark[max(0, min(4, k))])
+    for x in (4, 5, 10, 11):  # flared foot
+        sh.set(x, 2 * N - 1, bark[1])
+    leaves = [((7, 17), (4, 15), (1, 20)), ((8, 17), (11, 15), (14, 20)),  # low and drooping, behind the rest
+              ((7, 16), (2, 10), (0, 14)), ((8, 16), (13, 10), (15, 14)),
+              ((7, 16), (4, 6), (1, 5)), ((8, 16), (11, 6), (14, 5)),
+              ((8, 16), (8, 10), (7, 4))]  # the young leaf in the middle
+    for p0, p1, p2 in leaves:
+        pts = []
+        for i in range(41):
+            t = i / 40
+            p = (round((1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0]),
+                 round((1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1]))
+            if not pts or p != pts[-1]:
+                pts.append(p)
+        for i, (x, y) in enumerate(pts):
+            sh.set(x, y, 2)
+            if i < 3 or i > len(pts) - 2:
+                continue
+            (ax, ay), (bx, by) = pts[i - 1], pts[i + 1]
+            d = math.hypot(bx - ax, by - ay) or 1
+            nx, ny = -(by - ay) / d, (bx - ax) / d
+            if ny > 0 or (ny == 0 and nx < 0):
+                nx, ny = -nx, -ny  # towards the leaf's upper side
+            if i % 2 == 0:
+                sh.set(round(x + nx), round(y + ny), 3)  # leaflet in the light
+            else:
+                sh.set(round(x - nx), round(y - ny), 1)  # leaflet in shade
+    sh.lit(OLIVE)
+    return sh.halves()
+
+
+def fern(kind="bracken"):
     """Fern fronds: arching midribs with paired leaflets; royal fern has upright fronds with rusty fertile tips."""
     cv = Canvas()
     fronds = ((-1, 5), (1, 5), (-1, 3), (1, 3), (0, 6)) if kind != "royal" else ((-1, 4), (1, 4), (0, 6), (-1, 6), (1, 6))
     base_y = 15
     for dx, length in fronds:
         x, y = 7.5, base_y
-        for i in range(length * 2 if part != "single" else length + 3):
+        for i in range(length + 3):
             x += dx * (0.55 if kind != "royal" else 0.3)
             y -= 1.0 - (0.08 * i * abs(dx) if kind != "royal" else 0)
             ix, iy = int(x), int(y)
@@ -967,20 +1090,15 @@ def fern(kind="bracken", part="single"):
     return cv
 
 
-def cycad(young=True, part="single"):
-    """Cycad: a squat scaly trunk with a crown of stiff, glossy pinnate leaves."""
+def young_cycad():
+    """Young cycad: a squat scaly trunk with a crown of stiff, glossy pinnate leaves."""
     cv = Canvas()
-    trunk_top = 12 if young else (6 if part != "upper" else 99)
-    if part != "upper":
-        for y in range(trunk_top, 16):
-            for x in range(6, 10):
-                cv.set(x, y, hexc("#5a4630" if (x + y) % 2 else "#7a6040"))
-    if part == "lower":
-        return cv
-    crown_y = trunk_top if young else 14
+    for y in range(12, 16):
+        for x in range(6, 10):
+            cv.set(x, y, hexc("#5a4630" if (x + y) % 2 else "#7a6040"))
     for dx in (-1, -0.5, 0.5, 1, 0):
-        x, y = 7.5, crown_y
-        for i in range(7 if young else 9):
+        x, y = 7.5, 12
+        for i in range(7):
             x += dx * 1.0; y -= 1.0 - 0.12 * i * abs(dx)
             ix, iy = int(x), int(y)
             cv.set(ix, iy, hexc(OLIVE[1]))
@@ -1108,16 +1226,15 @@ def shelf_fungus():
 
 def plant_textures():
     out = {
-        "horsetail": horsetail(), "tall_horsetail_bottom": horsetail(True, part="lower"),
-        "tall_horsetail_top": horsetail(True, part="upper"), "calamites_bottom": horsetail(giant=True, part="lower"),
-        "calamites_top": horsetail(giant=True, part="upper"), "bracken": fern(), "tall_bracken_bottom": fern(part="lower"),
-        "tall_bracken_top": fern(part="upper"), "royal_fern": fern("royal"), "young_cycad": cycad(),
-        "cycad_bottom": cycad(False, "lower"), "cycad_top": cycad(False, "upper"),
+        "horsetail": horsetail(), "bracken": fern(), "royal_fern": fern("royal"), "young_cycad": young_cycad(),
         "williamsonia": flower("#d9c27a", "#8a5a2a"), "archaefructus": pad("archaefructus"),
         "cretaceous_water_lily": pad("lily"), "cretaceous_grass": grass("grass"), "clubmoss": grass("clubmoss"),
         "spikemoss": grass("spikemoss"), "liverwort": liverwort(), "lichen": lichen(), "rush_bottom": rush("lower"),
         "rush_top": rush("upper"), "swamp_algae": pad("algae"), "shelf_fungus": shelf_fungus(),
     }
+    for pid, (upper, lower) in (("tall_horsetail", tall_horsetail()), ("calamites", tall_horsetail(giant=True)),
+                                ("tall_bracken", tall_bracken()), ("cycad", tall_cycad())):
+        out[f"{pid}_top"], out[f"{pid}_bottom"] = upper, lower
     return out
 
 
