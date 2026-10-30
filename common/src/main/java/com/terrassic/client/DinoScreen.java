@@ -85,9 +85,24 @@ public class DinoScreen extends Screen {
         int by = this.top + H - 26;
         int gap = 4;
         boolean sitting = this.info.getBoolean("Sitting");
-        // the order it is under shows as the selected one; the other is the action
-        bx += this.order(bx, by, 54, "gui.terrassic.dino.follow", "follow", !sitting) + gap;
+        boolean wandering = this.info.getBoolean("Wandering");
+        // the order it is under shows as the selected one; the others are the actions (v0.16: wander and stop)
+        bx += this.order(bx, by, 54, "gui.terrassic.dino.follow", "follow", !sitting && !wandering) + gap;
         bx += this.order(bx, by, 54, "gui.terrassic.dino.wait", "sit", sitting) + gap;
+        bx += this.tip(this.order(bx, by, 54, "gui.terrassic.dino.wander", "wander", wandering),
+                Component.translatable("gui.terrassic.dino.wander.tip", DinosaurEntity.WANDER_RADIUS)) + gap;
+        this.tip(this.order(bx, by, 54, "gui.terrassic.dino.stop", "stop", false),
+                Component.translatable("gui.terrassic.dino.stop.tip", DinosaurEntity.CALM_TICKS / 20));
+        // the row above: the stance (a click takes the next one), cargo, shoulder, your own inventory
+        bx = this.left + INFO_X;
+        by -= 22;
+        String stance = this.info.contains("Stance") ? this.info.getString("Stance") : "neutral";
+        TerrassicButton mode = new TerrassicButton(bx, by, 112, 18, Component.translatable("gui.terrassic.dino.stance",
+                Component.translatable("gui.terrassic.dino.stance." + stance)), b -> this.send("stance"), TerrassicButton.Kind.STONE, false);
+        mode.setTooltip(Tooltip.create(Component.translatable("gui.terrassic.dino.stance." + stance + ".tip")
+                .append("\n").append(Component.translatable("gui.terrassic.dino.stance.click"))));
+        this.addRenderableWidget(mode);
+        bx += 112 + gap;
         if (this.info.getBoolean("HasCargo")) {
             bx += this.order(bx, by, 54, "gui.terrassic.dino.cargo", "cargo", false) + gap;
         }
@@ -121,9 +136,19 @@ public class DinoScreen extends Screen {
 
     /** An order button; returns its width. */
     private int order(int x, int y, int w, String label, String order, boolean selected) {
-        this.addRenderableWidget(new TerrassicButton(x, y, w, 18, Component.translatable(label), b -> this.send(order),
-                selected ? TerrassicButton.Kind.PRIMARY : TerrassicButton.Kind.STONE, selected));
+        this.lastOrder = new TerrassicButton(x, y, w, 18, Component.translatable(label), b -> this.send(order),
+                selected ? TerrassicButton.Kind.PRIMARY : TerrassicButton.Kind.STONE, selected);
+        this.addRenderableWidget(this.lastOrder);
         return w;
+    }
+
+    /** The button {@link #order} added last, for {@link #tip}. */
+    private TerrassicButton lastOrder;
+
+    /** Gives the button just added a tooltip; passes its width through. */
+    private int tip(int width, Component tip) {
+        this.lastOrder.setTooltip(Tooltip.create(tip));
+        return width;
     }
 
     private void send(String order) {
@@ -192,7 +217,8 @@ public class DinoScreen extends Screen {
                 : Component.translatable("gui.terrassic.lens.adult", Math.round(t.getFloat("Size") * 100));
         AmberHud.text(g, this.font, age, x, y0 + 26, TerrassicPalette.STONE_300);
         Component state = Component.translatable(t.getBoolean("Ridden") ? "gui.terrassic.dino.state_ridden"
-                : t.getBoolean("Sitting") ? "gui.terrassic.dino.state_waiting" : "gui.terrassic.dino.state_following");
+                : t.getBoolean("Sitting") ? "gui.terrassic.dino.state_waiting"
+                : t.getBoolean("Wandering") ? "gui.terrassic.dino.state_wandering" : "gui.terrassic.dino.state_following");
         AmberHud.text(g, this.font, state, x, y0 + 38, TerrassicPalette.FERN_400);
         Component gear = null;
         if (t.getBoolean("Rideable")) {
@@ -239,7 +265,8 @@ public class DinoScreen extends Screen {
     /** The levels column: level, experience, points, then each stat as a share of the species' usual value. */
     private void levels(GuiGraphics g, CompoundTag t) {
         int x = this.left + STATS_X;
-        for (int yy = this.top + 10; yy < this.top + 150; yy++) {
+        // the groove stops above the stance row (v0.16)
+        for (int yy = this.top + 10; yy < this.top + 144; yy++) {
             g.fill(x - 7, yy, x - 6, yy + 1, TerrassicPalette.BASALT_950);
             g.fill(x - 6, yy, x - 5, yy + 1, TerrassicPalette.BASALT_600);
         }

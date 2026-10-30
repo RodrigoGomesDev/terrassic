@@ -12,6 +12,7 @@ import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModItems;
 import com.terrassic.research.Objective;
 import com.terrassic.research.Research;
+import com.terrassic.entity.ai.AggressiveStanceGoal;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.EntityEvent;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -20,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -51,6 +53,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
@@ -62,6 +65,8 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ChestMenu;
@@ -211,6 +216,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private float riderJump;
     /** Ticks after perching during which the owner's sneak does not shake the animal off (it was sneaking to perch it). */
     private int perchGrace;
+
+    /** How it meets a fight (v0.16, docs/ORDENS.md); saved as "Stance". */
+    private DinoStance stance = DinoStance.NEUTRAL;
+    /** Where it was told to wander (null = it follows or waits); saved as "WanderPos". */
+    private BlockPos wanderPos;
+    /** Game time until which a "Stop" keeps it out of fights (not saved: ten seconds). */
+    private long calmUntil = Long.MIN_VALUE;
     /** Cooldown of the perched animal's danger warning. */
     private int perchWarnCooldown;
     /** While dying, the death loot is collected here for the carcass instead of being dropped. */
@@ -262,6 +274,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
         this.levels = new DinoLevels(DinoLevels.weightsFor(health != null ? health.getBaseValue() : 20.0D,
                 damage != null ? damage.getBaseValue() : 0.0D));
+        if (!level.isClientSide()) {
+            // registered here and not in each registerGoals, so every species (generated or by hand) has it
+            this.targetSelector.addGoal(4, new AggressiveStanceGoal(this));
+        }
     }
 
     // ------------------------------------------------------------------ big walkers (v0.11)
@@ -297,6 +313,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        this.ordersTick();
         if (!this.pivotsToTurn()) {
             return;
         }
@@ -765,6 +782,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         tag.putInt("Sated", this.sated);
         tag.putInt("Hunger", this.getHunger());
         tag.putBoolean("Roamer", this.roamer);
+        if (this.stance != DinoStance.NEUTRAL) {
+            tag.putString("Stance", this.stance.key);
+        }
+        if (this.wanderPos != null) {
+            tag.put("WanderPos", NbtUtils.writeBlockPos(this.wanderPos));
+        }
         if (this.isRift()) {
             tag.putBoolean("Rift", true);
         }
@@ -816,6 +839,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setPlatform(tag.getBoolean("Platform"));
         this.sated = tag.getInt("Sated");
         this.roamer = tag.getBoolean("Roamer");
+        this.stance = DinoStance.byKey(tag.getString("Stance"));
+        this.wanderPos = tag.contains("WanderPos", Tag.TAG_COMPOUND) ? NbtUtils.readBlockPos(tag.getCompound("WanderPos")) : null;
+        if (this.wanderPos != null) {
+            this.restrictTo(this.wanderPos, WANDER_RADIUS);
+        }
         this.setRift(tag.getBoolean("Rift"));
         this.torpor = tag.getFloat("Torpor");
         this.entityData.set(DATA_KNOCKED_OUT, tag.getBoolean("KnockedOut"));
@@ -1333,6 +1361,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (this.isSaddled() && !this.isBaby() && !player.isSecondaryUseActive() && this.canAddPassenger(player)) {
                     if (!client) {
                         this.setOrderedToSit(false);
+                        this.stopWandering();
                         player.startRiding(this);
                         if (player instanceof ServerPlayer sp) {
                             Research.objective(sp, Objective.RIDE);
@@ -1343,6 +1372,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (!client) {
                     boolean sit = !this.isOrderedToSit();
                     this.setOrderedToSit(sit);
+                    this.stopWandering();
                     this.jumping = false;
                     this.navigation.stop();
                     this.setTarget(null);
@@ -1787,6 +1817,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public CompoundTag screenInfo(Player viewer) {
         CompoundTag t = this.lensInfo(viewer);
         t.putBoolean("Sitting", this.isOrderedToSit());
+        t.putBoolean("Wandering", this.isWandering());
+        t.putString("Stance", this.stance.key);
         t.putBoolean("HasCargo", this.cargo != null && (this.isChested() || this.hasSaddlebags()));
         t.putBoolean("CanPerch", this.canPerch() && !this.isBaby());
         t.putBoolean("Ridden", this.hasPassenger(viewer));
@@ -1803,14 +1835,32 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     /**
-     * An order from the owner's dino screen (network/DinoNetwork checks owner and distance): "sit", "follow", "cargo",
-     * "perch" or "up:&lt;stat&gt;" (spend a level point). Returns true when the screen should be sent again with the new state.
+     * An order from the owner's dino screen (network/DinoNetwork checks owner and distance): "sit", "follow", "wander",
+     * "stop", "stance" (the next stance), "cargo", "perch" or "up:&lt;stat&gt;" (spend a level point). Returns true when the
+     * screen should be sent again with the new state.
      */
     public boolean screenOrder(ServerPlayer player, String order) {
         switch (order) {
+            case "wander" -> {
+                this.wanderHere();
+                player.displayClientMessage(Component.translatable("message.terrassic.wander", this.getDisplayName()), true);
+                return true;
+            }
+            case "stop" -> {
+                this.stopFighting();
+                player.displayClientMessage(Component.translatable("message.terrassic.stop", this.getDisplayName()), true);
+                return true;
+            }
+            case "stance" -> {
+                this.setStance(this.stance.next());
+                player.displayClientMessage(Component.translatable("message.terrassic.stance", this.getDisplayName(),
+                        Component.translatable("gui.terrassic.dino.stance." + this.stance.key)), true);
+                return true;
+            }
             case "sit", "follow" -> {
                 boolean sit = order.equals("sit");
                 this.setOrderedToSit(sit);
+                this.stopWandering();
                 this.jumping = false;
                 this.navigation.stop();
                 this.setTarget(null);
@@ -1842,9 +1892,151 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    // ------------------------------------------------------------------ orders: stop, stance, wander (v0.16, docs/ORDENS.md)
+
+    /** How far from where it was told to wander it roams (blocks). */
+    public static final int WANDER_RADIUS = 16;
+    /** Beyond this it walks back to its wander spot (dragged off by a fight, a herd, a flight). */
+    private static final int WANDER_LEASH = 24;
+    /** How long a "Stop" keeps it out of fights (ticks). */
+    public static final int CALM_TICKS = 200;
+    /** How near a monster or wild dinosaur must come for the aggressive stance to go for it (blocks). */
+    public static final double AGGRESSIVE_RANGE = 12.0D;
+
+    public DinoStance getStance() {
+        return this.stance;
+    }
+
+    public void setStance(DinoStance stance) {
+        this.stance = stance;
+        if (stance == DinoStance.PASSIVE) {
+            this.setTarget(null);
+            this.setAggressive(false);
+        }
+    }
+
+    /** Told to wander around a spot instead of following its owner. */
+    public boolean isWandering() {
+        return this.wanderPos != null;
+    }
+
+    /** Roams within {@link #WANDER_RADIUS} blocks of where it stands, neither following nor sitting. */
+    public void wanderHere() {
+        this.setOrderedToSit(false);
+        this.jumping = false;
+        this.navigation.stop();
+        this.wanderPos = this.blockPosition();
+        this.restrictTo(this.wanderPos, WANDER_RADIUS);
+    }
+
+    /** Back to following or waiting (an order, a rider, the shoulder). */
+    public void stopWandering() {
+        if (this.wanderPos != null) {
+            this.wanderPos = null;
+            this.clearRestriction();
+        }
+    }
+
+    /** "Stop": it lets go of its target at once and keeps out of fights for {@link #CALM_TICKS}, even if hit. */
+    public void stopFighting() {
+        this.calmUntil = this.level().getGameTime() + CALM_TICKS;
+        this.setTarget(null);
+        this.setAggressive(false);
+        this.navigation.stop();
+    }
+
+    /** Within the ten seconds after a "Stop". */
+    public boolean isCalmed() {
+        return this.level().getGameTime() < this.calmUntil;
+    }
+
+    /** Whether the species fights at all (herbivores that flee do not take the aggressive stance). */
+    protected boolean fightsInStance() {
+        return true;
+    }
+
+    /** The aggressive stance looks for a target now: tame, grown, free to move and awake. */
+    public boolean huntsInAggressiveStance() {
+        return this.isTame() && this.stance == DinoStance.AGGRESSIVE && this.fightsInStance() && !this.isBaby()
+                && !this.isOrderedToSit() && !this.isVehicle() && !this.isPassenger() && !this.isKnockedOut()
+                && !this.isSleeping() && !this.isCalmed();
+    }
+
+    /** What the aggressive stance goes for: monsters but creepers, and grown wild dinosaurs, near it (swimmers: in the water). */
+    public boolean provokesAggressive(LivingEntity e) {
+        if (e.distanceToSqr(this) > AGGRESSIVE_RANGE * AGGRESSIVE_RANGE || (this instanceof SwimmingDinosaur && !e.isInWater())) {
+            return false;
+        }
+        return e instanceof Enemy && !(e instanceof Creeper)
+                || e instanceof DinosaurEntity d && !d.isTame() && !d.isBaby() && !d.isKnockedOut();
+    }
+
+    /** Tamed by its own owner: a wolf, a horse, another dinosaur. */
+    private boolean sameOwner(LivingEntity target) {
+        return target instanceof OwnableEntity pet && this.getOwnerUUID() != null && this.getOwnerUUID().equals(pet.getOwnerUUID());
+    }
+
+    /**
+     * Every target goal asks this, when it starts and on every tick it runs: a tame animal in the passive stance or
+     * calmed by a "Stop" fights nobody, and none ever fights another animal of its owner (the vanilla rule let them,
+     * so one stray blow of the owner set the rest of the herd on it).
+     */
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        if (this.isTame() && (this.stance == DinoStance.PASSIVE || this.isCalmed() || this.sameOwner(target))) {
+            return false;
+        }
+        return super.canAttack(target);
+    }
+
+    /**
+     * The owner's fights (the vanilla "owner hurt" and "owner hurt by" goals). Never against the owner's own animals,
+     * nor a player the owner may not harm (PvP off, same team), as the wolf. In the neutral stance it stays out of a
+     * fight the owner starts against a player or someone's tamed animal; defending the owner from them still counts
+     * (the target hurt the owner in the last five seconds).
+     */
+    @Override
+    public boolean wantsToAttack(LivingEntity target, LivingEntity owner) {
+        if (target == owner || this.sameOwner(target)) {
+            return false;
+        }
+        if (target instanceof Player victim && owner instanceof Player player && !player.canHarmPlayer(victim)) {
+            return false;
+        }
+        if (this.stance == DinoStance.NEUTRAL && owner.getLastHurtByMob() != target
+                && (target instanceof Player || target instanceof OwnableEntity pet && pet.getOwnerUUID() != null)) {
+            return false;
+        }
+        return super.wantsToAttack(target, owner);
+    }
+
+    /** Server, every tick: drop a target it may no longer fight, keep the wander spot. */
+    private void ordersTick() {
+        if (!this.isTame()) {
+            return;
+        }
+        LivingEntity target = this.getTarget();
+        if (target != null && !this.canAttack(target)) {
+            // a target set from outside the target goals (a herd mate's alarm) while passive or calmed
+            this.setTarget(null);
+            this.setAggressive(false);
+        }
+        if (this.wanderPos == null || this.isVehicle() || this.isPassenger() || this.isLeashed() || this.isOrderedToSit()) {
+            return;
+        }
+        if (!this.hasRestriction()) {
+            this.restrictTo(this.wanderPos, WANDER_RADIUS);   // a leash taken off clears it
+        }
+        if ((this.tickCount + this.getId()) % 20 == 0 && this.getTarget() == null
+                && this.wanderPos.distSqr(this.blockPosition()) > WANDER_LEASH * WANDER_LEASH && this.navigation.isDone()) {
+            this.navigation.moveTo(this.wanderPos.getX() + 0.5D, this.wanderPos.getY(), this.wanderPos.getZ() + 0.5D, 1.0D);
+        }
+    }
+
     /** A shoulder animal hops onto its owner's shoulder (the owner sneaks later to shake it off). */
     protected void perchOn(Player player) {
         this.setOrderedToSit(false);
+        this.stopWandering();
         this.navigation.stop();
         this.setTarget(null);
         this.startRiding(player, true);

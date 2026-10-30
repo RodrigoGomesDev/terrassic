@@ -3,13 +3,13 @@ package com.terrassic.entity;
 import com.terrassic.entity.ai.DinoSleepGoal;
 import com.terrassic.entity.ai.FollowHerdGoal;
 import com.terrassic.entity.ai.MigrateGoal;
+import com.terrassic.entity.ai.OrderedFollowOwnerGoal;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -39,6 +39,12 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
 
     /** Breeding / taming food. Must return a static constant (used during construction). */
     protected abstract Ingredient food();
+
+    /** Only a herbivore that fights back takes the aggressive stance. */
+    @Override
+    protected boolean fightsInStance() {
+        return this.fightsBack();
+    }
 
     /** false = flees instead of fighting back. */
     protected boolean fightsBack() {
@@ -104,7 +110,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
                 return HerbivoreDinosaur.this.fightsBack() && super.canUse();
             }
         });
-        this.goalSelector.addGoal(5, new FollowOwnerGoal(this, 1.15D, followStartDistance(), followStopDistance(), false));
+        this.goalSelector.addGoal(5, new OrderedFollowOwnerGoal(this, 1.15D, followStartDistance(), followStopDistance(), false));
         this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));

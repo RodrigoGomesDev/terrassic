@@ -330,7 +330,7 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
         @Override
         public boolean canUse() {
             LivingEntity o = this.mob.getOwner();
-            if (o == null || o.isSpectator() || this.mob.isOrderedToSit() || !this.mob.isInWater()
+            if (o == null || o.isSpectator() || this.mob.isOrderedToSit() || this.mob.isWandering() || !this.mob.isInWater()
                     || this.mob.distanceToSqr(o) < (double) (this.start * this.start)) {
                 return false;
             }
@@ -340,7 +340,7 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
 
         @Override
         public boolean canContinueToUse() {
-            return !this.mob.getNavigation().isDone() && !this.mob.isOrderedToSit()
+            return !this.mob.getNavigation().isDone() && !this.mob.isOrderedToSit() && !this.mob.isWandering()
                     && this.mob.distanceToSqr(this.owner) > (double) (this.stop * this.stop);
         }
 

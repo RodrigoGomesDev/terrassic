@@ -4,13 +4,13 @@ import com.terrassic.entity.ai.DinoSleepGoal;
 import com.terrassic.entity.ai.EatCarcassGoal;
 import com.terrassic.entity.ai.FollowHerdGoal;
 import com.terrassic.entity.ai.FollowOwnerPathGoal;
+import com.terrassic.entity.ai.OrderedFollowOwnerGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -93,7 +93,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         float stop = Math.max(2.0F, this.getBbWidth() * 1.5F);
         this.goalSelector.addGoal(4, this.getNavigation() instanceof GroundPathNavigation
                 || this.getNavigation() instanceof FlyingPathNavigation
-                ? new FollowOwnerGoal(this, 1.2D, 10.0F, stop, false)
+                ? new OrderedFollowOwnerGoal(this, 1.2D, 10.0F, stop, false)
                 : new FollowOwnerPathGoal(this, 1.2D, 10.0F, stop));
         this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));

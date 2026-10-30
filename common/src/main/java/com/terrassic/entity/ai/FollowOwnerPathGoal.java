@@ -24,7 +24,7 @@ public class FollowOwnerPathGoal extends Goal {
     }
 
     private boolean available() {
-        return this.mob.isTame() && !this.mob.isKnockedOut() && !this.mob.isOrderedToSit()
+        return this.mob.isTame() && !this.mob.isKnockedOut() && !this.mob.isOrderedToSit() && !this.mob.isWandering()
                 && !this.mob.isVehicle() && !this.mob.isPassenger() && !this.mob.isLeashed();
     }
 
