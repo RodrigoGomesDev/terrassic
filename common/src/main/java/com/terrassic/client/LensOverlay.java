@@ -91,6 +91,11 @@ public final class LensOverlay {
         NetworkManager.sendToServer(LensNetwork.ASK, buf);
     }
 
+    /** The Lupa card is on screen (HudNotices waits while it is: both sit in the middle of the right side). */
+    static boolean showing() {
+        return info != null && target >= 0 && infoId == target;
+    }
+
     /** The last card the server sent for this animal, or null. */
     static CompoundTag infoFor(int id) {
         return infoId == id ? info : null;

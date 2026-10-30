@@ -100,7 +100,9 @@ public final class TerrassicHud {
         int hh = Math.round(g.guiHeight() / k);
         g.pose().pushPose();
         g.pose().scale(k, k, 1.0F);
-        if (ClientConfig.flag("hud_mount") && player.getVehicle() instanceof DinosaurEntity mount && !compact) {
+        // v0.14.5: the plate steps aside while F3 is open (it covered the first debug lines)
+        if (ClientConfig.flag("hud_mount") && player.getVehicle() instanceof DinosaurEntity mount && !compact
+                && !mc.options.renderDebug) {
             mountPlate(g, mc.font, mount, 4, 4);
         }
         HudNotices.render(g, mc.font, partialTick, compact, hw, hh);

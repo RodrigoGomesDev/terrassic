@@ -147,3 +147,9 @@ Os corações do modo compacto, a placa de nome, a Lupa, a tela do dino e o tít
 A roda do apito da prévia (segurar H: seguir, esperar, vagar por perto, atacar meu alvo, juntar o bando, ficar
 passivo, com "N dinos ouvem o apito") não é só HUD: quatro dessas ordens ainda não existem no jogo. Ela entra como uma
 versão própria, depois que o Rodrigo aprovar como cada ordem funciona.
+
+## v0.14.5: F3 e Lupa
+
+Do teste no Mac (30/10): com o F3 aberto a placa da montaria some (ela cobria as primeiras linhas). Enquanto o cartão
+da Lupa está na tela, os avisos da direita esperam escondidos, sem contar o tempo, e voltam quando o cartão fecha (os
+dois ficam no meio do lado direito).

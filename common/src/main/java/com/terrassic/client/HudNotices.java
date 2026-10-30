@@ -70,6 +70,10 @@ public final class HudNotices {
     }
 
     static void tick() {
+        // v0.14.5: they wait (hidden, not aging) while the Lupa card holds the same spot (Mac test, 30/10)
+        if (LensOverlay.showing()) {
+            return;
+        }
         SHOWING.removeIf(n -> ++n.age > STAY);
         while (SHOWING.size() < SHOWN && !WAITING.isEmpty()) {
             SHOWING.add(WAITING.poll());
@@ -84,7 +88,7 @@ public final class HudNotices {
 
     /** Draws the notices in a w x h space (the HUD scale, see ClientConfig.hudScale). */
     static void render(GuiGraphics g, Font font, float partialTick, boolean compact, int w, int h) {
-        if (SHOWING.isEmpty()) {
+        if (SHOWING.isEmpty() || LensOverlay.showing()) {
             return;
         }
         int step = compact ? COMPACT_STEP : STEP;
