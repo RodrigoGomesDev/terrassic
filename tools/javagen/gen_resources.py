@@ -380,6 +380,7 @@ HUD_LANG = {
         "hud.terrassic.special.loud_roar": "Loud roar",
         "hud.terrassic.special.ready": "%s ready",
         "hud.terrassic.special.wait": "%s in %s s",
+        "hud.terrassic.knocked_out": "Knocked out",
     },
     "pt_br": {
         "hud.terrassic.level": "Nv %s",
@@ -395,6 +396,7 @@ HUD_LANG = {
         "hud.terrassic.special.loud_roar": "Rugido forte",
         "hud.terrassic.special.ready": "%s pronto",
         "hud.terrassic.special.wait": "%s em %s s",
+        "hud.terrassic.knocked_out": "Desmaiado",
     },
     "es_es": {
         "hud.terrassic.level": "Nv %s",
@@ -410,6 +412,7 @@ HUD_LANG = {
         "hud.terrassic.special.loud_roar": "Rugido fuerte",
         "hud.terrassic.special.ready": "%s listo",
         "hud.terrassic.special.wait": "%s en %s s",
+        "hud.terrassic.knocked_out": "Inconsciente",
     },
 }
 for _lang, _keys in HUD_LANG.items():

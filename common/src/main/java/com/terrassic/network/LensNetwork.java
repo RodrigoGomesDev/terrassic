@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
  * <ul>
  *   <li>{@link #ASK} (client to server): the id of the dinosaur the player looks at through the lens.</li>
  *   <li>{@link #INFO} (server to client): that id and {@link DinosaurEntity#lensInfo} as NBT, only for a player holding
- *       the lens within {@link #RANGE} blocks.</li>
+ *       the lens within {@link #RANGE} blocks, or looking at a knocked-out animal (the HUD's taming bars).</li>
  * </ul>
  * The client receiver is registered in client/LensOverlay.
  */
@@ -30,8 +30,10 @@ public final class LensNetwork {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, ASK, (buf, context) -> {
             int id = buf.readVarInt();
             context.queue(() -> {
-                if (context.getPlayer() instanceof ServerPlayer player && FieldLensItem.holding(player)
+                // a knocked-out animal answers without the lens: its taming bars hang over it (v0.14.1 HUD)
+                if (context.getPlayer() instanceof ServerPlayer player
                         && player.level().getEntity(id) instanceof DinosaurEntity dino && dino.isAlive()
+                        && (FieldLensItem.holding(player) || dino.isKnockedOut())
                         && dino.distanceToSqr(player) < RANGE * RANGE) {
                     FriendlyByteBuf out = new FriendlyByteBuf(Unpooled.buffer());
                     out.writeVarInt(id);

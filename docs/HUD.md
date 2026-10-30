@@ -72,9 +72,43 @@ Os avisos aparecem sem placa: o bicho e duas linhas de texto, alinhados à direi
 
 A opção antiga `hud_pack` sai do arquivo sozinha.
 
+## Parte 2 (v0.14.1): placa de nome, barras de doma e cartão da Lupa
+
+Código: `client/DinoNameplate.java`, `client/LensOverlay.java`.
+
+### Placa de nome
+
+Olhando para um dino a até 24 blocos (sem a Lupa na mão e fora o que você monta), aparece sobre a cabeça dele uma
+placa pequena, do mesmo tamanho a qualquer distância:
+
+- uma gotinha na cor do temperamento: verde para domado, vermelho para predador selvagem, âmbar para os outros selvagens;
+- "Tiranossauro · Nv 23", com o nível em âmbar;
+- a vida num sulco.
+
+A posição na tela vem da câmera do quadro (`mixin/client/LevelRendererMixin`). Some 0,5 s depois que você desvia o olhar.
+
+### Barras de doma
+
+Num bicho desmaiado, à esquerda da placa de nome: "Desmaiado" com o tempo até acordar, o torpor (lilás) e a doma
+(verde). Os números vêm do servidor pelo mesmo pedido da Lupa, que agora responde também para um bicho desmaiado
+sem a Lupa na mão.
+
+### Cartão da Lupa
+
+O mesmo cartão de antes, no visual Âmbar: a gota de âmbar com o bicho, nome e nível, ♀ ou ♂, idade e tamanho,
+selvagem ou de quem; as barras em sulcos (vida, fome, torpor, doma) com o número à direita; depois a eficiência, como
+domar, a carga, os pontos e "Come:" com os itens. Tem no mínimo 172 de largura e alarga para a linha mais longa.
+
+### Opções novas
+
+| Opção | Padrão | O que faz |
+|---|---|---|
+| `hud_nameplate` | `true` | Placa de nome sobre o bicho que você olha |
+| `hud_taming` | `true` | Barras de doma no bicho desmaiado |
+
+No modo compacto, a placa de nome e as barras de doma aparecem sem a placa de pedra.
+
 ## Próximas partes
 
-- **v0.14.1**: placa de nome sobre o bicho que você olha (nome, nível, cor do temperamento, vida), barras de torpor e
-  doma no bicho desmaiado, e o cartão da Lupa no mesmo visual.
 - **v0.14.2**: roda do apito (segurar H: seguir, esperar, vagar, atacar, juntar, passivo, com "N dinos ouvem o
   apito"), título da era em camadas de rocha, tela do dino e tela de opções do HUD.
