@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.world.VanillaShare;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.FluidTags;
@@ -378,6 +379,6 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
                 return false;
             }
         }
-        return true;
+        return VanillaShare.allows(type, level, reason, pos);
     }
 }

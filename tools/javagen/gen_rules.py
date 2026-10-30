@@ -94,6 +94,10 @@ RULES = [
      ("Migration frequency", "How often herds set off for new grazing. 0 = they never migrate."),
      ("Frecuencia de migración", "Qué tan seguido parten las manadas en busca de pasto. 0 = no migran.")),
 
+    ("dino_share", "spawning", 0.25, 0.0, 1.0, 0.05,
+     ("Dinos no mundo normal", "Fora dos biomas do Cretáceo, a parte dos animais que são dinossauros; o resto é a fauna do Minecraft. 0,25 = cerca de um em quatro. 1 = sem limite."),
+     ("Dinos in the normal world", "Outside the Cretaceous biomes, the share of the animals that are dinosaurs; the rest is Minecraft's own fauna. 0.25 = about one in four. 1 = no limit."),
+     ("Dinos en el mundo normal", "Fuera de los biomas del Cretácico, la parte de los animales que son dinosaurios; el resto es la fauna de Minecraft. 0,25 = cerca de uno de cada cuatro. 1 = sin límite.")),
     ("spawn_density", "spawning", 1.0, 0.0, 5.0, 0.1,
      ("Densidade de vida", "Controla a reposição de fauna. 0 desliga a reposição; terrestres e marinhos ainda podem nascer naturalmente."),
      ("Wildlife density", "Controls wildlife replenishment. 0 disables replenishment; land and sea creatures may still spawn naturally."),

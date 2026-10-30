@@ -55,6 +55,9 @@ import java.util.Map;
  * ARK's wild dinos they despawn once every player is far away (DinosaurEntity.removeWhenFarAway), unless tamed or
  * named, so the population follows the players instead of piling up. Existing persistent animals count toward
  * the target but are never culled by this spawner. The doMobSpawning game rule turns it off.
+ *
+ * <p>v0.15: outside the Cretaceous biomes (a normal Minecraft world) every target is multiplied by
+ * {@link VanillaShare#ecoFactor}, a third at the default {@link Rule#DINO_SHARE}: 6 on land, 4 at sea, 1 in the sky.
  */
 public final class EcoSpawner {
     /** Ticks between spawn rounds. */
@@ -131,6 +134,8 @@ public final class EcoSpawner {
             if (WILD.get(level) >= cap) {
                 return;
             }
+            // v0.15: outside the Cretaceous the dinosaurs are an extra on vanilla's fauna (VanillaShare)
+            double here = density * VanillaShare.ecoFactor(level.getBiome(player.blockPosition()), rules);
             AABB box = new AABB(player.getX() - RADIUS, Math.max(level.getMinBuildHeight(), player.getY() - RADIUS), player.getZ() - RADIUS,
                     player.getX() + RADIUS, Math.min(level.getMaxBuildHeight(), player.getY() + RADIUS), player.getZ() + RADIUS);
             int land = 0;
@@ -144,9 +149,9 @@ public final class EcoSpawner {
                     land++;
                 }
             }
-            if (land < target(LAND_TARGET, density, rules.get(Rule.LAND_SPAWNS))) {
+            if (land < target(LAND_TARGET, here, rules.get(Rule.LAND_SPAWNS))) {
                 spawnRound(level, player, Kind.LAND, rules, random,
-                        SpawnBudget.allowance(target(LAND_TARGET, density, rules.get(Rule.LAND_SPAWNS)), land, cap, WILD.get(level)));
+                        SpawnBudget.allowance(target(LAND_TARGET, here, rules.get(Rule.LAND_SPAWNS)), land, cap, WILD.get(level)));
             }
             if (SpawnBudget.isTurn(time, player.getUUID().hashCode(), SpawnBudget.SKY_PERIOD)) {
                 // Count the whole visible sky, including birds that left the inner 80-block replenishment zone.
@@ -156,14 +161,14 @@ public final class EcoSpawner {
                 // colonists have their own coast budget (PteroColonies) and do not fill the sky's
                 int regionalFlyers = level.getEntitiesOfClass(FlyingDinosaur.class, sky,
                         e -> e.isAlive() && !e.isTame() && !e.isColonist()).size();
-                int skyTarget = target(SpawnBudget.SKY_TARGET, density, rules.get(Rule.FLYER_SPAWNS));
+                int skyTarget = target(SpawnBudget.SKY_TARGET, here, rules.get(Rule.FLYER_SPAWNS));
                 spawnRound(level, player, Kind.FLYER, rules, random,
                         SpawnBudget.allowance(skyTarget, regionalFlyers, cap, WILD.get(level)));
                 PteroColonies.tick(level, player);
             }
-            if (sea < target(SEA_TARGET, density, rules.get(Rule.SEA_SPAWNS))) {
+            if (sea < target(SEA_TARGET, here, rules.get(Rule.SEA_SPAWNS))) {
                 spawnRound(level, player, Kind.SEA, rules, random,
-                        SpawnBudget.allowance(target(SEA_TARGET, density, rules.get(Rule.SEA_SPAWNS)), sea, cap, WILD.get(level)));
+                        SpawnBudget.allowance(target(SEA_TARGET, here, rules.get(Rule.SEA_SPAWNS)), sea, cap, WILD.get(level)));
             }
         }
     }
@@ -248,7 +253,7 @@ public final class EcoSpawner {
     }
 
     private static boolean canStand(ServerLevel level, EntityType<?> type, BlockPos pos, RandomSource random) {
-        return SpawnPlacements.checkSpawnRules(type, level, MobSpawnType.NATURAL, pos, random)
+        return VanillaShare.ecoCheck(() -> SpawnPlacements.checkSpawnRules(type, level, MobSpawnType.NATURAL, pos, random))
                 && level.noCollision(type.getAABB(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D));
     }
 
@@ -338,7 +343,7 @@ public final class EcoSpawner {
         }
         BlockPos pos = new BlockPos(x, low + random.nextInt(high - low + 1), z);
         MobSpawnSettings.SpawnerData data = pick(level, pos, MobCategory.WATER_CREATURE, Kind.SEA, random);
-        if (data == null || !SpawnPlacements.checkSpawnRules(data.type, level, MobSpawnType.NATURAL, pos, random)) {
+        if (data == null || !VanillaShare.ecoCheck(() -> SpawnPlacements.checkSpawnRules(data.type, level, MobSpawnType.NATURAL, pos, random))) {
             return 0;
         }
         int count = Math.min(budget, groupSize(data, random));

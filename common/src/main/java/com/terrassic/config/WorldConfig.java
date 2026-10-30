@@ -29,7 +29,8 @@ import java.nio.file.Path;
  *   "progression_mode": "normal", // v0.9, mode of new worlds: "normal", "rapido" or "livre" (docs/SALTO.md)
  *   "meteor_damage": true,        // v0.9: meteors of the ritual hurt what they hit (never blocks)
  *   "ritual_call_seconds": 30,    // v0.9: meteors before the Rift Tyrant answers the ritual
- *   "mundo_padrao": true,         // "Criar novo mundo" opens on the Terrassic world type (docs/MUNDO.md, 10.3)
+ *   "mundo_terrassic": false,     // v0.15: "Criar novo mundo" opens on the Terrassic world type (docs/MUNDO.md, 10.3);
+ *                                 // off: v1 is normal Minecraft with dinosaurs (the old "mundo_padrao" key is ignored)
  *   "borda": true,                // a new continent world gets a world border around its sea (10.2)
  *   "borda_em_raios": 2.0,        // distance from the middle of the continent to the border, in continent radii
  *   "historia": false,            // v0.10: the story mode (config/Story); off until it comes back in a future version
@@ -96,9 +97,10 @@ public final class WorldConfig {
         return Math.max(5, (int) number("ritual_call_seconds", 30));
     }
 
-    /** "Criar novo mundo" opens on the Terrassic world type. */
+    /** "Criar novo mundo" opens on the Terrassic world type. Off since v0.15 (Rodrigo, 30/10/2026: "jogar um minecraft
+     *  normal, com dinossauros"); a new key, because every config file already had "mundo_padrao": true written in. */
     public static boolean defaultWorldType() {
-        return bool("mundo_padrao", true);
+        return bool("mundo_terrassic", false);
     }
 
     /** A new continent world gets a square world border around its sea. */
@@ -167,7 +169,7 @@ public final class WorldConfig {
         changed |= def(cfg, "progression_mode", "normal");
         changed |= def(cfg, "meteor_damage", true);
         changed |= def(cfg, "ritual_call_seconds", 30);
-        changed |= def(cfg, "mundo_padrao", true);
+        changed |= def(cfg, "mundo_terrassic", false);
         changed |= def(cfg, "borda", true);
         changed |= def(cfg, "borda_em_raios", 2.0D);
         changed |= def(cfg, "historia", false);

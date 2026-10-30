@@ -5,8 +5,9 @@
 
 ## 1. O tipo de mundo "Terrassic"
 
-Ao criar um mundo, o tipo **Terrassic** já vem escolhido (§10.3). Em **Mais opções do mundo → Tipo de mundo** também
-estão **Terrassic: Ilha Pequena** e **Terrassic: Continente Grande**, e os tipos do Minecraft.
+Desde a v0.15 o mundo novo vem no **Padrão** do Minecraft, com os dinossauros como um extra (§12). O tipo **Terrassic**
+fica em **Mais opções do mundo → Tipo de mundo**, junto com **Terrassic: Ilha Pequena** e **Terrassic: Continente
+Grande**; `"mundo_terrassic": true` faz ele voltar a vir escolhido (§10.3).
 
 - O mundo é **um continente só**, como uma Pangeia, com mar em volta e a borda do mundo fechando o mar (§10). O
   relevo dentro dele é o do Minecraft (montanhas, cavernas, rios). Os biomas são os 11 do Cretáceo Superior.
@@ -237,11 +238,12 @@ esse valor; o resto (cavernas, aquíferos, minérios, regras de superfície) con
   `/worldborder` continua valendo; `"borda": false` desliga.
 - Nada disso muda os tipos de mundo do Minecraft ("Padrão" etc.).
 
-### 10.3 Mundo Terrassic como padrão
+### 10.3 Mundo Terrassic como padrão (desligado na v0.15)
 
-- Em **Criar novo mundo**, o tipo já vem em **Terrassic** (`mixin/client/WorldCreationUiStateMixin`). O jogador pode
-  escolher qualquer outro tipo na lista.
-- Desligar: `"mundo_padrao": false` em `config/terrassic-world.json`.
+- Com `"mundo_terrassic": true` em `config/terrassic-world.json`, **Criar novo mundo** já vem no tipo **Terrassic**
+  (`mixin/client/WorldCreationUiStateMixin`). O jogador pode escolher qualquer outro tipo na lista.
+- **Desde a v0.15 vem desligado**: o jogo abre no **Padrão** do Minecraft (§12). A chave é nova porque todo arquivo
+  de config já tinha `"mundo_padrao": true` escrito; a chave antiga é ignorada.
 - **Servidor dedicado**: em `server.properties`, `level-type=terrassic\:terrassic` (ou `terrassic\:terrassic_small`,
   `terrassic\:terrassic_large`).
 
@@ -312,3 +314,52 @@ gerada por `tools/worldgen/mapa_preview.py`.
 6. Num mundo "Padrão" do Minecraft: a aba mostra só o aviso.
 7. Entrar no Nether e no End e abrir a aba: sem seta, com o aviso "Você está longe da ilha"; voltar e a seta reaparece.
 8. As cinco abas cabem no topo do caderno nos três idiomas, em várias escalas de interface.
+
+## 12. Minecraft normal com dinossauros (v0.15, pedido do Rodrigo, 30/10/2026)
+
+> "essa v0 eu quero que seja um acrescental ao minecraft, ent quero jogar um minecraft normal, com dinossauros"
+
+### 12.1 O que muda
+
+- **Mundo novo no Padrão do Minecraft.** O tipo Terrassic continua na lista (§10.3).
+- **A fauna do Minecraft fica inteira.** Vacas, ovelhas, porcos, galinhas, cavalos, lobos, lulas e golfinhos nascem
+  como sempre. Nada do Minecraft é tirado nos biomas do Minecraft (os biomas do Cretáceo continuam sem eles, §10.4).
+- **Os dinos são um extra: cerca de 1 em cada 4 animais.** Antes, numa planície ou savana, uns 2 em cada 3 animais que
+  nasciam eram dinos (peso somado 89 contra uns 46 a 50 dos animais do Minecraft).
+- **A reposição em volta do jogador** (`world/EcoSpawner`) fica com um terço do alvo fora do Cretáceo: 6 em terra,
+  4 no mar e 1 voador por região (contra 18, 12 e 4 no continente).
+- As colônias de Pteranodon na costa continuam como estão (uma a cada 600 a 800 blocos de litoral).
+
+### 12.2 A regra "Dinos no mundo normal"
+
+Aba **Ecossistema** das Regras do Terrassic, salva por mundo. Padrão **0,25**, de 0 a 1.
+
+| Valor | Efeito fora do Cretáceo |
+|---|---|
+| 0 | Nenhum dino nasce sozinho (ovos de spawn e o continente continuam) |
+| 0,25 | Cerca de 1 animal em 4 é dino; reposição com um terço do alvo |
+| 0,5 | Metade e metade; reposição cheia |
+| 1 | Sem limite: todos os dinos que o bioma tiver, como antes da v0.15 |
+
+Nos biomas do Cretáceo (tipo de mundo Terrassic) a regra não muda nada: lá os dinos são a fauna.
+
+### 12.3 Como funciona (técnico)
+
+- `world/VanillaShare`: quando o gerador do Minecraft escolhe um dino da lista do bioma (nascimento natural ou na
+  geração do chunk), ele passa com a chance `parte / (1 − parte) × peso do Minecraft / peso dos dinos`, contada por
+  bioma e por categoria (terra ou mar). Exemplo, planície: 0,25 / 0,75 × 46 / 89 ≈ 17%.
+- O sorteio é o mesmo para o bando inteiro (mesmo chunk, mesmo tick, mesma espécie): a manada nasce inteira ou não nasce.
+- Bioma sem animal do Minecraft daquela categoria (as badlands): passa a parte (25%) do que nasceria.
+- Chamado nas regras de nascimento de `DinosaurEntity` (terra) e `SwimmingDinosaur` (mar). Voadores já não nascem
+  pelo gerador do Minecraft. O `EcoSpawner` não passa por esse sorteio; os alvos dele é que são multiplicados por
+  `VanillaShare.ecoFactor` (o bioma onde o jogador está).
+
+### 12.4 Testes no jogo (para o Rodrigo)
+
+1. Criar mundo novo: o tipo vem em **Padrão**. Em Mais opções, os três tipos Terrassic ainda aparecem.
+2. Andar uns 2.000 blocos por planícies, florestas e savanas: vacas, ovelhas, porcos e cavalos em quantidade normal,
+   e de vez em quando um bando de dinos (uns 1 em 4 animais).
+3. Regras do Terrassic → Ecossistema → **Dinos no mundo normal** em 0: em chunks novos não nascem dinos.
+   Em 1: muitos dinos como antes.
+4. Mundo do tipo Terrassic: os biomas do Cretáceo continuam cheios de dinos e sem animais do Minecraft.
+5. Mundo antigo (de antes da v0.15): abre normal, a regra aparece com 0,25.

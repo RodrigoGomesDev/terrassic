@@ -1589,6 +1589,8 @@
   "rules.terrassic.dino_damage.tip": "Daño que causan las criaturas (salvajes y domesticadas).",
   "rules.terrassic.dino_resistance": "Resistencia de los dinos",
   "rules.terrassic.dino_resistance.tip": "Divide el daño que reciben las criaturas. 2 = aguantan el doble.",
+  "rules.terrassic.dino_share": "Dinos en el mundo normal",
+  "rules.terrassic.dino_share.tip": "Fuera de los biomas del Cretácico, la parte de los animales que son dinosaurios; el resto es la fauna de Minecraft. 0,25 = cerca de uno de cada cuatro. 1 = sin límite.",
   "rules.terrassic.flyer_spawns": "Voladores",
   "rules.terrassic.flyer_spawns.tip": "Objetivo regional de 4 voladores con densidad 1, con reposición cada 20 segundos. 0 desactiva la reposición del cielo.",
   "rules.terrassic.food_drain": "Consumo de comida",

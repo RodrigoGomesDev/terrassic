@@ -6,6 +6,7 @@ import com.terrassic.block.DinoEggBlock;
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
 import com.terrassic.config.WorldConfig;
+import com.terrassic.world.VanillaShare;
 import com.terrassic.network.ModNetwork;
 import com.terrassic.registry.ModBlocks;
 import com.terrassic.registry.ModItems;
@@ -2487,6 +2488,6 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         boolean ground = below.is(BlockTags.ANIMALS_SPAWNABLE_ON) || below.is(BlockTags.SAND)
                 || below.is(BlockTags.TERRACOTTA) || below.is(Blocks.COARSE_DIRT) || below.is(Blocks.PODZOL)
                 || below.is(Blocks.MUD);
-        return ground && level.getRawBrightness(pos, 0) > 8;
+        return ground && level.getRawBrightness(pos, 0) > 8 && VanillaShare.allows(type, level, reason, pos);
     }
 }

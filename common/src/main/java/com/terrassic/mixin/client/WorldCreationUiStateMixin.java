@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * "Criar novo mundo" starts on the Terrassic world type instead of "Padrão" (docs/MUNDO.md, section 10.3): whenever
- * the screen opens on the vanilla default type it switches to Terrassic (re-creating a world of another type keeps
- * that type). The player can still pick any other type in the list, and {@code "mundo_padrao": false} in
- * config/terrassic-world.json turns this off.
+ * With {@code "mundo_terrassic": true} in config/terrassic-world.json, "Criar novo mundo" starts on the Terrassic
+ * world type instead of "Padrão" (docs/MUNDO.md, section 10.3): whenever the screen opens on the vanilla default type
+ * it switches to Terrassic (re-creating a world of another type keeps that type). Off by default since v0.15: the
+ * game opens on Minecraft's own "Padrão" and the Terrassic types wait in the list.
  */
 @Mixin(WorldCreationUiState.class)
 public abstract class WorldCreationUiStateMixin {
