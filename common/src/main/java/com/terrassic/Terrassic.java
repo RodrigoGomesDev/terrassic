@@ -58,6 +58,7 @@ public final class Terrassic {
         Rules.init(); // world rules in the style of ARK (docs/REGRAS.md)
         RulesNetwork.init();
         com.terrassic.network.LensNetwork.init(); // the Field Lens card (item/FieldLensItem)
+        com.terrassic.network.DinoNetwork.init(); // v0.12: the dino screen and the mounted controls
         EcoSpawner.init(); // the living ecosystem around every player
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicClient::init);
     }

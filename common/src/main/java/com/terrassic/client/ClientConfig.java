@@ -29,7 +29,8 @@ import java.nio.file.Path;
  *   "shooting_stars": true,  // v0.9: shooting stars at night, more with each amber fragment
  *   "ritual_sky": true,      // v0.9: red sky and fog around an altar during the ritual of the meteors
  *   "terrassic_fonts": true, // the mod's own typefaces (Sedimento, Entalhe, Caderno); false = vanilla font
- *   "roar_shake": true       // the camera shakes near a loud roar (T. rex)
+ *   "roar_shake": true,      // the camera shakes near a loud roar (T. rex)
+ *   "mount_attack": true     // v0.12: riding your dinosaur, a left click is its attack (false = your own hand)
  * }
  * </pre>
  */
@@ -39,7 +40,7 @@ public final class ClientConfig {
     private static JsonObject root;
     private static final String[] FLAGS = {"title_screen", "loading_tips", "hud_mount", "hud_pack", "hud_new_species",
             "hud_era_title", "hud_rift_alert", "shooting_stars", "ritual_sky",
-            "terrassic_fonts", "roar_shake"};
+            "terrassic_fonts", "roar_shake", "mount_attack"};
 
     private ClientConfig() {
     }

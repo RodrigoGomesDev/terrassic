@@ -155,6 +155,8 @@ public final class TerrassicClient {
         ParticleProviderRegistry.register(ModParticles.ROAR_WAVE, RoarWaveParticle.Provider::new);
         RoarShake.init(); // the loud roar's camera shake
         LensOverlay.init(); // the Field Lens card (item/FieldLensItem)
+        DinoControls.init(); // v0.12: the mod's keys and the mounted controls
+        DinoScreen.register(); // v0.12: the dino screen
         BuildingBlocksClient.init();
         TerrassicMenuScreen.register(); // the Terrassic main menu (docs/MENU.md)
         ClientIslandMap.register(); // the island map of the Field Notebook (docs/MUNDO.md, section 11)

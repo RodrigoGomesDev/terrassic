@@ -67,12 +67,20 @@ import software.bernie.geckolib.core.object.PlayState;
  * ({@link SoarGoal}); the ecosystem spawner places new flocks already in the air (docs/REGRAS.md).
  */
 public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAnimal {
+    /**
+     * The rider holds the descend key (client/DinoControls, v0.12). Set on the rider's side only, which is the side that
+     * moves a ridden flyer; the server never reads it.
+     */
+    public boolean riderDescending;
+
     /** Ridden flight: acceleration along the look direction per tick at FLYING_SPEED 0.6, and air drag. */
     private static final double FLIGHT_ACCEL = 0.045D;
     private static final double FLIGHT_DRAG = 0.95D;
     private static final double GLIDE_DRAG = 0.985D;
     private static final double GLIDE_SINK = 0.02D;
     private static final double MAX_SINK = 0.45D;
+    /** Ridden, the descend key held (v0.12): extra sink per tick. */
+    private static final double DESCEND = 0.07D;
     /** Rider pitch (degrees, negative = up) above which pushing forward on the ground takes off. */
     private static final float TAKE_OFF_PITCH = -30.0F;
 
@@ -462,6 +470,9 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
             // sideways keys bank a little
             float yaw = this.getYRot() * Mth.DEG_TO_RAD;
             v = v.add(Mth.cos(yaw) * input.x * 0.02D, 0.0D, Mth.sin(yaw) * input.x * 0.02D);
+        }
+        if (this.riderDescending) {
+            v = v.add(0.0D, -DESCEND, 0.0D);
         }
         v = new Vec3(v.x * drag, Math.max(v.y * drag, -MAX_SINK), v.z * drag);
         this.move(MoverType.SELF, v);

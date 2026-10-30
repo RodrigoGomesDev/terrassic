@@ -9,7 +9,7 @@ Terrassic por cima: o código fica em `DinosaurEntity` (hand-written), e cada es
 | Ação | Como |
 |---|---|
 | Equipar | Dono usa um **baú** (vanilla) no animal domado e adulto: o baú some e o animal passa a "levar carga". |
-| Abrir | Sem sela: **agachar + usar com a mão vazia**. Com sela: montar e apertar a **tecla do inventário** (o jogo manda a abertura do inventário da montaria, como no cavalo). |
+| Abrir | v0.12: pela **tela do dino**, botão **Carga**. A tela abre com **agachar + usar com a mão vazia** (a pé) ou com a **tecla do inventário** montado (`client/DinoScreen`). |
 | Tirar | **Tesoura**: primeiro tira a sela (se houver), a segunda tesourada tira o baú e derruba tudo que havia dentro. |
 | Morte | Derruba o baú e todo o conteúdo. |
 | Coleta automática | De pé (não sentado), com baú, recolhe a cada meio segundo os itens caídos a 1 bloco do corpo: o que ele mesmo colhe (Terizinossauro, Deinocheirus), o que o dono derruba perto dele e o que cai de um bloco quebrado montado. |

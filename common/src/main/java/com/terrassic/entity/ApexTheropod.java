@@ -66,6 +66,11 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     private boolean loudRoar;
     private int roarCooldown;
     private int loudCooldown = 600;
+    /** The rider's bite (v0.12): ticks until the jaws close, and on whom (-1 = the air). */
+    private int riderBite;
+    private int riderBiteTarget = -1;
+    /** Game time of the last roar the rider asked for. */
+    private long lastRiderRoar = -1000L;
     private int pendingLoud;
     private int gestureCooldown = 200;
     private int threatCooldown;
@@ -199,6 +204,33 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         this.startRoar(false);
     }
 
+    /** Ridden: the quick bite, its hit on the frame the jaws close (as ApexBiteGoal times it). */
+    @Override
+    protected int riderAttackInterval() {
+        return 24;
+    }
+
+    @Override
+    protected void startRiderAttack(LivingEntity target) {
+        triggerAnim(ACTION_CONTROLLER, "attack_quick");
+        this.riderBite = 6;
+        this.riderBiteTarget = target == null ? -1 : target.getId();
+    }
+
+    /** The rider's special (v0.12): the loud roar when it has its breath back, otherwise the plain one. */
+    public void riderRoar() {
+        long now = this.level().getGameTime();
+        if (this.isRoaring() || now - this.lastRiderRoar < 60L) {
+            return;
+        }
+        this.lastRiderRoar = now;
+        if (this.loudCooldown <= 0) {
+            this.roarLoud();
+        } else {
+            this.roar();
+        }
+    }
+
     /** The loud roar, head to the sky, with the wave in the air. */
     public void roarLoud() {
         if (this.isRoaring() || this.level().isClientSide()) {
@@ -303,6 +335,14 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     protected void customServerAiStep() {
         super.customServerAiStep();
         ServerLevel level = (ServerLevel) this.level();
+        // the rider's bite lands when the jaws close, if the target is still in reach
+        if (this.riderBite > 0 && --this.riderBite == 0) {
+            if (this.riderBiteTarget >= 0 && level.getEntity(this.riderBiteTarget) instanceof LivingEntity target
+                    && target.isAlive() && this.inRiderReach(target)) {
+                this.doHurtTarget(target);
+            }
+            this.riderBiteTarget = -1;
+        }
         if (this.roarLeft > 0) {
             this.roarTick(level);
             // it stands for the whole roar (no walking on to a carcass), body turned to what it roars at

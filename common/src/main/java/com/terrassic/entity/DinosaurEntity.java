@@ -1215,16 +1215,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 }
                 return InteractionResult.sidedSuccess(client);
             }
-            // shoulder animals hop on when the owner sneaks with an empty hand (sneak again later to shake it off)
-            if (this.canPerch() && !this.isBaby() && stack.isEmpty() && player.isShiftKeyDown() && !this.isPassenger()
-                    && !player.isVehicle() && !player.isPassenger()) {
-                if (!client) {
-                    this.setOrderedToSit(false);
-                    this.navigation.stop();
-                    this.setTarget(null);
-                    this.startRiding(player, true);
-                    this.perchGrace = 60;
-                    player.displayClientMessage(Component.translatable("message.terrassic.perch", this.getDisplayName()), true);
+            // v0.12: sneak + empty hand opens the dino screen (orders, cargo, shoulder), which replaced the sneak shortcuts
+            if (stack.isEmpty() && player.isSecondaryUseActive() && !player.isPassenger()) {
+                if (!client && player instanceof ServerPlayer sp) {
+                    com.terrassic.network.DinoNetwork.sendScreen(sp, this);
                 }
                 return InteractionResult.sidedSuccess(client);
             }
@@ -1236,14 +1230,6 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     this.playSound(ModSounds.SFX_CARGO.get(), 1.0F, 1.0F);
                     player.displayClientMessage(Component.translatable(this.isRideable() ? "message.terrassic.cargo_chest_ride"
                             : "message.terrassic.cargo_chest", this.getDisplayName()), true);
-                }
-                return InteractionResult.sidedSuccess(client);
-            }
-            // without a saddle, sneak + empty hand opens the cargo (saddled: mount it and press the inventory key)
-            if (stack.isEmpty() && player.isSecondaryUseActive() && ((this.isChested() && !this.isSaddled())
-                    || (this.hasSaddlebags() && this.isOwnedBy(player)))) {
-                if (!client) {
-                    this.openCargo(player);
                 }
                 return InteractionResult.sidedSuccess(client);
             }
@@ -1300,7 +1286,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 return InteractionResult.sidedSuccess(client);
             }
             if (stack.isEmpty()) {
-                // ride (saddled) or toggle sit / follow (sneak, or not saddled)
+                // ride (saddled) or toggle sit / follow (not saddled; sneaking opened the dino screen above)
                 if (this.isSaddled() && !this.isBaby() && !player.isSecondaryUseActive() && this.canAddPassenger(player)) {
                     if (!client) {
                         this.setOrderedToSit(false);
@@ -1517,6 +1503,129 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** What the Field Lens shows to the player looking at it (network/LensNetwork): the values only the server
      *  knows (torpor, taming progress, effectiveness, time to wake, cargo) plus the accepted foods. */
+    // ------------------------------------------------------------------ the dino screen and the mounted controls (v0.12)
+
+    /** Ticks between two attacks ordered by the rider ({@link #riderAttack}). */
+    protected int riderAttackInterval() {
+        return 16;
+    }
+
+    /** Game time of the last attack ordered by the rider. */
+    private long lastRiderAttack = -1000L;
+
+    /** What the dino screen shows (client/DinoScreen): the Field Lens card and the orders it takes now. */
+    public CompoundTag screenInfo(Player viewer) {
+        CompoundTag t = this.lensInfo(viewer);
+        t.putBoolean("Sitting", this.isOrderedToSit());
+        t.putBoolean("HasCargo", this.cargo != null && (this.isChested() || this.hasSaddlebags()));
+        t.putBoolean("CanPerch", this.canPerch() && !this.isBaby());
+        t.putBoolean("Ridden", this.hasPassenger(viewer));
+        t.putBoolean("Rideable", this.isRideable());
+        return t;
+    }
+
+    /**
+     * An order from the owner's dino screen (network/DinoNetwork checks owner and distance): "sit", "follow", "cargo"
+     * or "perch". Returns true when the screen should be sent again with the new state.
+     */
+    public boolean screenOrder(ServerPlayer player, String order) {
+        switch (order) {
+            case "sit", "follow" -> {
+                boolean sit = order.equals("sit");
+                this.setOrderedToSit(sit);
+                this.jumping = false;
+                this.navigation.stop();
+                this.setTarget(null);
+                player.displayClientMessage(Component.translatable(sit ? "message.terrassic.sit" : "message.terrassic.follow",
+                        this.getDisplayName()), true);
+                return true;
+            }
+            case "cargo" -> {
+                if (this.cargo != null && (this.isChested() || this.hasSaddlebags())) {
+                    this.openCargo(player);
+                }
+                return false;
+            }
+            case "perch" -> {
+                if (this.canPerch() && !this.isBaby() && !this.isPassenger() && !player.isVehicle() && !player.isPassenger()) {
+                    this.perchOn(player);
+                }
+                return false;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    /** A shoulder animal hops onto its owner's shoulder (the owner sneaks later to shake it off). */
+    protected void perchOn(Player player) {
+        this.setOrderedToSit(false);
+        this.navigation.stop();
+        this.setTarget(null);
+        this.startRiding(player, true);
+        this.perchGrace = 60;
+        player.displayClientMessage(Component.translatable("message.terrassic.perch", this.getDisplayName()), true);
+    }
+
+    /**
+     * The rider's attack (left click while riding, client/DinoControls): the mount strikes the creature in front of it
+     * nearest to where the rider looks, within the reach of its head, or snaps at the air.
+     */
+    public void riderAttack(ServerPlayer rider) {
+        long now = this.level().getGameTime();
+        if (now - this.lastRiderAttack < this.riderAttackInterval() || this.isKnockedOut() || this.isSleeping()) {
+            return;
+        }
+        this.lastRiderAttack = now;
+        this.startRiderAttack(this.riderTarget(rider));
+    }
+
+    /** Plays the attack and lands the hit (null = nothing in reach: it snaps at the air). */
+    protected void startRiderAttack(LivingEntity target) {
+        if (target == null || !this.doHurtTarget(target) || !this.animatesHits()) {
+            triggerAnim(ACTION_CONTROLLER, "attack");
+        }
+    }
+
+    /** How far from its centre the mount's head reaches. */
+    protected double riderReach() {
+        return this.getBbWidth() * 0.5D + 2.5D * Math.max(0.6F, this.getScale());
+    }
+
+    /** Within the reach of the head (edge of the target's box, horizontally; a little up and down). */
+    protected boolean inRiderReach(LivingEntity target) {
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        double reach = this.riderReach() + target.getBbWidth() * 0.5D;
+        return dx * dx + dz * dz <= reach * reach && target.getY() < this.getY() + this.getBbHeight() + 1.5D
+                && target.getY() + target.getBbHeight() > this.getY() - 1.5D;
+    }
+
+    /** The creature in reach in front of the mount (within 60 degrees of where the rider looks), nearest to that line. */
+    protected LivingEntity riderTarget(Player rider) {
+        double reach = this.riderReach() + 2.0D;
+        Vec3 look = rider.getViewVector(1.0F);
+        double lookYaw = Math.atan2(look.z, look.x);
+        LivingEntity best = null;
+        double bestAngle = Math.toRadians(60.0D);
+        for (LivingEntity e : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(reach, 2.0D, reach),
+                c -> c != this && c != rider && c.isAlive() && !this.hasPassenger(c) && !c.isAlliedTo(rider)
+                        && !(c instanceof DinosaurEntity d && d.isTame() && d.isOwnedBy(rider))
+                        && !(c instanceof Player p && (p.isCreative() || p.isSpectator())))) {
+            if (!this.inRiderReach(e)) {
+                continue;
+            }
+            double angle = Math.abs(Mth.wrapDegrees((float) Math.toDegrees(Math.atan2(e.getZ() - this.getZ(), e.getX() - this.getX()) - lookYaw)));
+            double rad = Math.toRadians(angle);
+            if (rad < bestAngle) {
+                bestAngle = rad;
+                best = e;
+            }
+        }
+        return best;
+    }
+
     public CompoundTag lensInfo(Player viewer) {
         CompoundTag t = new CompoundTag();
         t.putBoolean("Female", this.isFemale());
