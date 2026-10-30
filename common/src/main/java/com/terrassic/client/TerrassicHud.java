@@ -167,7 +167,8 @@ public final class TerrassicHud {
     /** The mount panel: a 24 px portrait, the name, health with numbers, food, and the state icons beside it
      *  (the vanilla mount hearts are hidden for our dinosaurs: mixin/client/GuiMixin, forge/MountHudForge). */
     private static int mountCard(GuiGraphics g, Font font, DinosaurEntity d, int x, int y) {
-        int w = 124;
+        // as wide as the name, which now carries the level ("Pteranodonte · Nv 34")
+        int w = Math.max(124, 37 + font.width(com.terrassic.client.ui.TerrassicFonts.ui(d.getDisplayName())));
         frame(g, x, y, x + w, y + 32);
         g.fill(x + 3, y + 3, x + 29, y + 29, com.terrassic.client.ui.TerrassicPalette.BASALT_950);
         portrait(g, d, x + 4, y + 4, 24);

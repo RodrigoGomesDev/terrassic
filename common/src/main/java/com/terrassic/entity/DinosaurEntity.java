@@ -46,6 +46,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -159,6 +160,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.FLOAT);
     private static final UUID SIZE_HEALTH_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e301");
     private static final UUID SIZE_DAMAGE_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e302");
+    /** The level's stats (DinoLevels): one id per stat, the same id on walking and flying speed. */
+    private static final UUID LEVEL_HEALTH_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e311");
+    private static final UUID LEVEL_DAMAGE_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e312");
+    private static final UUID LEVEL_SPEED_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e313");
+    /** The level, synced for the name (0 until the server has drawn it). */
+    private static final EntityDataAccessor<Integer> DATA_LEVEL =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     /** Ticks a baby takes to grow up (vanilla age counter). */
     private static final float GROW_TICKS = 24000.0F;
     public static final int MAX_HUNGER = 100;
@@ -222,7 +230,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     protected double cycleSpeed = 1.0D;
     /** Client: hurtTime seen by the flinch controller on the previous frame (a higher value means a new hit). */
     private int lastFlinch;
-    private static final UUID TAMING_BONUS_ID = UUID.fromString("6c0f3b8e-2d5a-4c71-9a43-1f5e8d7b2a90");
+    /** Levels and stat points (DinoLevels, docs/NIVEIS.md); a new animal draws them on its first server tick. */
+    private final DinoLevels levels;
+    /** Loaded from a save made before the levels: a tame animal keeps its stats, a wild one draws a level. */
+    private boolean legacyLevels;
+    /** Where the owner was riding it last tick, and the distance carried since the last point of experience. */
+    private Vec3 ridePos;
+    private double rideDistance;
 
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
@@ -232,6 +246,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.rollSize();
         }
         this.cargo = this.cargoRows() > 0 ? new SimpleContainer(this.cargoRows() * 9) : null;
+        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        this.levels = new DinoLevels(DinoLevels.weightsFor(health != null ? health.getBaseValue() : 20.0D,
+                damage != null ? damage.getBaseValue() : 0.0D));
     }
 
     // ------------------------------------------------------------------ big walkers (v0.11)
@@ -657,6 +675,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_SIZE, 1.0F);
         this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
         this.entityData.define(DATA_GROWTH, 0.0F);
+        this.entityData.define(DATA_LEVEL, 0);
     }
 
     public boolean isFemale() {
@@ -738,6 +757,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         tag.putFloat("Size", this.getAdultSize());
         tag.putFloat("BirthSize", this.entityData.get(DATA_BIRTH_SIZE));
+        if (this.levels.isRolled()) {
+            tag.put("Levels", this.levels.save());
+        }
         if (this.torpor > 0.0F) {
             tag.putFloat("Torpor", this.torpor);
         }
@@ -790,6 +812,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (tag.contains("Hunger")) {
             this.setHunger(tag.getInt("Hunger"));
         }
+        if (tag.contains("Levels", Tag.TAG_COMPOUND)) {
+            this.levels.load(tag.getCompound("Levels"));
+            this.applyLevelModifiers(false);
+        } else {
+            this.legacyLevels = true;
+        }
         // size: worlds from before the size variation keep the size rolled when the entity was created
         if (tag.contains("BirthSize")) {
             this.entityData.set(DATA_BIRTH_SIZE, tag.getFloat("BirthSize"));
@@ -825,6 +853,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 this.layWildEgg(level);
             }
         }
+        this.ensureLevels();
         return data;
     }
 
@@ -1174,6 +1203,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             ItemStack rest = this.cargo.addItem(stack);
             if (rest.getCount() < before) {
                 this.take(item, before - rest.getCount());
+                this.gainXp((before - rest.getCount()) * 0.25F);
                 if (rest.isEmpty()) {
                     item.discard();
                 } else {
@@ -1317,6 +1347,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 // studying the species (Field Guide "studied") makes taming faster, and so does the Taming speed rule
                 int chance = Research.isStudied(player, this.speciesId()) ? Math.max(2, tameChance() - 1) : tameChance();
                 if (this.random.nextDouble() < Rules.of(this.level()).get(Rule.TAMING_SPEED) / chance) {
+                    if (!this.isBaby()) {
+                        this.grantTamingBonus(100);   // hand-fed without a fight: full effectiveness
+                    }
                     this.tameBy(player);
                 } else {
                     this.level().broadcastEntityEvent(this, (byte) 6);
@@ -1350,6 +1383,141 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 Component.translatable(this.isFemale() ? "sex.terrassic.female" : "sex.terrassic.male")), true);
     }
 
+    // ------------------------------------------------------------------ levels (v0.13, docs/NIVEIS.md)
+
+    public DinoLevels levels() {
+        return this.levels;
+    }
+
+    /** The level shown with the name (synced; 0 on a client that has not heard it yet). */
+    public int getLevel() {
+        return this.entityData.get(DATA_LEVEL);
+    }
+
+    /** The name with the level: "Velociraptor · Nv 34" (the Field Lens, the dino screen, the mount panel, messages). */
+    @Override
+    public Component getName() {
+        Component name = super.getName();
+        int level = this.getLevel();
+        return level > 0 ? Component.translatable("entity.terrassic.leveled", name, level) : name;
+    }
+
+    /** Server: a new animal draws its level (at spawn, or on its first tick when hatched or bred); one loaded from a
+     *  save made before the levels keeps its stats if tame (the level-40 spread) and draws if wild. */
+    private void ensureLevels() {
+        if (this.levels.isRolled() || this.level().isClientSide()) {
+            return;
+        }
+        if (this.legacyLevels && this.isTame()) {
+            this.levels.setReference();
+        } else {
+            this.levels.roll(this.random, this.wildLevelCap());
+        }
+        this.legacyLevels = false;
+        this.applyLevelModifiers(true);
+    }
+
+    /** The highest level a wild animal can be born at here: the "Max wild level" rule; with "Levels by distance"
+     *  on, 30 within 500 blocks of the world spawn, rising to the full rule at 3,000 blocks. */
+    private int wildLevelCap() {
+        Rules rules = Rules.of(this.level());
+        int max = (int) Math.round(rules.get(Rule.MAX_WILD_LEVEL));
+        if (rules.get(Rule.LEVEL_DISTANCE) >= 0.5D) {
+            BlockPos spawn = this.level().getSharedSpawnPos();
+            double distance = Math.sqrt(Mth.square(this.getX() - spawn.getX()) + Mth.square(this.getZ() - spawn.getZ()));
+            double t = Mth.clamp((distance - 500.0D) / 2500.0D, 0.0D, 1.0D);
+            max = (int) Math.round(Mth.lerp(t, Math.min(30, max), max));
+        }
+        return Math.max(1, max);
+    }
+
+    /** Health, damage and speed from the level, as permanent modifiers on top of the size ones (saved with the
+     *  attributes, applied again on load). Keeps the share of health it had, or fills it. Server only. */
+    private void applyLevelModifiers(boolean fill) {
+        if (this.level().isClientSide()) {
+            return;
+        }
+        float share = this.getMaxHealth() > 0.0F ? this.getHealth() / this.getMaxHealth() : 1.0F;
+        this.levelModifier(Attributes.MAX_HEALTH, LEVEL_HEALTH_ID, DinoLevels.Stat.HEALTH);
+        this.levelModifier(Attributes.ATTACK_DAMAGE, LEVEL_DAMAGE_ID, DinoLevels.Stat.ATTACK);
+        this.levelModifier(Attributes.MOVEMENT_SPEED, LEVEL_SPEED_ID, DinoLevels.Stat.SPEED);
+        this.levelModifier(Attributes.FLYING_SPEED, LEVEL_SPEED_ID, DinoLevels.Stat.SPEED);
+        this.setHealth(fill ? this.getMaxHealth() : Math.max(1.0F, share * this.getMaxHealth()));
+        this.entityData.set(DATA_LEVEL, this.levels.level());
+    }
+
+    private void levelModifier(Attribute attribute, UUID id, DinoLevels.Stat stat) {
+        AttributeInstance instance = this.getAttribute(attribute);
+        if (instance == null) {
+            return;
+        }
+        instance.removeModifier(id);
+        double bonus = this.levels.multiplier(stat) - 1.0D;
+        if (Math.abs(bonus) > 1.0E-4D) {
+            instance.addPermanentModifier(new AttributeModifier(id, "Level", bonus, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+    }
+
+    /** Bonus levels for taming a wild adult: half its wild level times the effectiveness (in %). */
+    public int tamingBonusLevels(int effectiveness) {
+        return (int) (this.levels.wildLevel() * 0.5D * effectiveness / 100.0D);
+    }
+
+    /** Adds the taming bonus levels, drawn like the wild ones, and wakes it at full health. */
+    private void grantTamingBonus(int effectiveness) {
+        this.ensureLevels();
+        this.levels.addWildPoints(this.random, this.tamingBonusLevels(effectiveness));
+        this.applyLevelModifiers(true);
+    }
+
+    /** A tame animal's experience, times the "Tamed XP" rule; each level gained is a point for the owner, announced
+     *  on the action bar. */
+    public void gainXp(float amount) {
+        if (this.level().isClientSide() || !this.isTame() || amount <= 0.0F) {
+            return;
+        }
+        int gained = this.levels.addXp(amount * (float) Rules.of(this.level()).get(Rule.TAMED_XP));
+        if (gained <= 0) {
+            return;
+        }
+        this.applyLevelModifiers(false);
+        this.level().playSound(null, this, SoundEvents.PLAYER_LEVELUP, SoundSource.NEUTRAL, 0.6F, 0.8F);
+        if (this.getOwner() instanceof Player owner) {
+            Component name = this.hasCustomName() ? this.getCustomName() : this.getType().getDescription();
+            owner.displayClientMessage(Component.translatable("message.terrassic.level_up", name, this.levels.level()), true);
+        }
+    }
+
+    /** Experience for every kill: the prey's health. */
+    @Override
+    public void awardKillScore(Entity killed, int score, DamageSource source) {
+        super.awardKillScore(killed, score, source);
+        if (killed instanceof LivingEntity victim) {
+            this.gainXp(victim.getMaxHealth());
+        }
+    }
+
+    /** One point of experience every 8 blocks carried with the owner riding. */
+    private void rideXpTick() {
+        if (!this.isTame() || !(this.getControllingPassenger() instanceof Player rider) || !this.isOwnedBy(rider)) {
+            this.ridePos = null;
+            return;
+        }
+        Vec3 here = this.position();
+        if (this.ridePos != null) {
+            double step = Math.sqrt(Mth.square(here.x - this.ridePos.x) + Mth.square(here.z - this.ridePos.z));
+            if (step < 4.0D) {   // a teleport is not a ride
+                this.rideDistance += step;
+            }
+            if (this.rideDistance >= 8.0D) {
+                int points = (int) (this.rideDistance / 8.0D);
+                this.rideDistance -= points * 8.0D;
+                this.gainXp(points);
+            }
+        }
+        this.ridePos = here;
+    }
+
     // ------------------------------------------------------------------ knockout taming (docs/DOMESTICACAO.md)
 
     public boolean isKnockedOut() {
@@ -1358,7 +1526,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Torpor needed to knock it out: grows with its health, so the giants need a long fight or a volley of darts. */
     public float maxTorpor() {
-        return Math.max(10.0F, this.getMaxHealth());
+        return Math.max(10.0F, this.getMaxHealth()) * (float) this.levels.multiplier(DinoLevels.Stat.TORPOR);
     }
 
     public float getTorpor() {
@@ -1521,12 +1689,20 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         t.putBoolean("CanPerch", this.canPerch() && !this.isBaby());
         t.putBoolean("Ridden", this.hasPassenger(viewer));
         t.putBoolean("Rideable", this.isRideable());
+        t.putInt("TamedLevels", this.levels.tamedLevels());
+        t.putFloat("Xp", this.levels.xp());
+        t.putInt("XpNext", DinoLevels.xpToNext(this.levels.tamedLevels()));
+        CompoundTag stats = new CompoundTag();
+        for (DinoLevels.Stat stat : DinoLevels.Stat.values()) {
+            stats.putFloat(stat.key, (float) this.levels.multiplier(stat));
+        }
+        t.put("Stats", stats);
         return t;
     }
 
     /**
-     * An order from the owner's dino screen (network/DinoNetwork checks owner and distance): "sit", "follow", "cargo"
-     * or "perch". Returns true when the screen should be sent again with the new state.
+     * An order from the owner's dino screen (network/DinoNetwork checks owner and distance): "sit", "follow", "cargo",
+     * "perch" or "up:&lt;stat&gt;" (spend a level point). Returns true when the screen should be sent again with the new state.
      */
     public boolean screenOrder(ServerPlayer player, String order) {
         switch (order) {
@@ -1553,6 +1729,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 return false;
             }
             default -> {
+                DinoLevels.Stat stat = order.startsWith("up:") ? DinoLevels.Stat.byKey(order.substring(3)) : null;
+                if (stat != null && this.levels.spend(stat)) {
+                    this.applyLevelModifiers(false);
+                    this.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.5F, 0.8F);
+                    return true;
+                }
                 return false;
             }
         }
@@ -1651,6 +1833,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         t.putFloat("Progress", this.tameProgress);
         t.putFloat("Goal", this.tameGoal());
         t.putInt("Effectiveness", this.tameEffectiveness);
+        t.putInt("Level", this.levels.level());
+        if (this.isKnockedOut()) {
+            t.putInt("BonusLevels", this.tamingBonusLevels(this.tameEffectiveness));
+        }
+        if (this.isOwnedBy(viewer)) {
+            t.putInt("Points", this.levels.unspent());
+        }
         if (this.isKnockedOut()) {
             t.putInt("WakeSeconds", Mth.ceil(this.torpor * (this.wakesFast() ? 90.0F : 150.0F) / this.maxTorpor()));
         }
@@ -1673,20 +1862,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return t;
     }
 
-    /** Wakes up tame: full health plus a bonus of up to 20% for an effective taming (few wounds while asleep). */
+    /** Wakes up tame at full health, with bonus levels for an effective taming (few wounds while asleep). */
     private void finishKnockoutTaming(Player player) {
         int effectiveness = this.tameEffectiveness;
         this.entityData.set(DATA_KNOCKED_OUT, false);
         this.torpor = 0.0F;
         this.tameProgress = 0.0F;
         this.tamer = null;
-        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
-        if (health != null) {
-            health.removeModifier(TAMING_BONUS_ID);
-            health.addPermanentModifier(new AttributeModifier(TAMING_BONUS_ID, "Knockout taming effectiveness",
-                    health.getBaseValue() * 0.2D * effectiveness / 100.0D, AttributeModifier.Operation.ADDITION));
-        }
-        this.setHealth(this.getMaxHealth());
+        // bonus levels instead of the old +20% health (animals tamed before v0.13 keep theirs, saved with the attributes)
+        this.grantTamingBonus(effectiveness);
         this.tameBy(player);
         triggerAnim(ACTION_CONTROLLER, "tame");
         player.sendSystemMessage(Component.translatable("message.terrassic.ko_tamed", this.getDisplayName(), effectiveness));
@@ -1708,6 +1892,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     public void tick() {
         super.tick();
+        if (!this.level().isClientSide()) {
+            if (!this.levels.isRolled()) {
+                this.ensureLevels();
+            }
+            this.rideXpTick();
+        }
         if (this.pendingNest && !this.level().isClientSide()) {
             this.pendingNest = false;
             this.layWildEgg(this.level());
@@ -1755,7 +1945,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private void hungerTick() {
         // the gauge empties with time (twice as fast for a growing baby), at the pace of the Food drain rule
         if (--this.hungerTimer <= 0) {
-            int base = this.isBaby() ? this.hungerInterval() / 2 : this.hungerInterval();
+            int base = (int) Math.round((this.isBaby() ? this.hungerInterval() / 2 : this.hungerInterval())
+                    * this.levels.multiplier(DinoLevels.Stat.FOOD));
             double drain = Rules.of(this.level()).get(Rule.FOOD_DRAIN);
             this.hungerTimer = drain <= 0.0D ? base : Math.max(1, (int) Math.round(base / drain));
             if (drain <= 0.0D) {

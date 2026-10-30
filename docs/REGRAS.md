@@ -33,6 +33,9 @@ padrão bem mais cheia: voadores voando de verdade pelo céu, muitos animais no 
 | Geral | Resistência de estruturas | 1,0 | 0,1 a 5 | Divide o dano de estruturas |
 | Geral | Multiplicador de XP | 1,0 | 0 a 10 | XP de abater criaturas e de criar filhotes |
 | Geral | Velocidade de domesticação | 1,0 | 0,1 a 10 | Chance de cada mordida domesticar |
+| Geral | Nível máximo selvagem | 150 | 30 a 300 | Nível mais alto em que um selvagem nasce; o nível 40 é a força de antes dos níveis (docs/NIVEIS.md) |
+| Geral | XP dos domesticados | 1,0 | 0 a 10 | Experiência que os domesticados ganham lutando, levando alguém montado e coletando (0 = não sobem) |
+| Geral | Níveis por distância | 1 | 0 ou 1 | 1 = até o nível 30 perto do ponto de nascimento do mundo, subindo até o máximo a 3.000 blocos |
 | Criação | Velocidade de chocagem | 1,0 | 0,1 a 10 | Quão rápido os ovos racham e chocam (vale para os chocadores também) |
 | Criação | Velocidade de crescimento | 1,0 | 0,1 a 20 | Quão rápido os filhotes viram adultos |
 | Criação | Intervalo de acasalamento | 1,0 | 0,1 a 5 | Espera depois de pôr ovos (padrão 5 min) |

@@ -4,6 +4,7 @@ import com.terrassic.client.ui.TerrassicButton;
 import com.terrassic.client.ui.TerrassicFonts;
 import com.terrassic.client.ui.TerrassicPalette;
 import com.terrassic.client.ui.TerrassicUi;
+import com.terrassic.entity.DinoLevels;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.network.DinoNetwork;
@@ -12,6 +13,7 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.nbt.CompoundTag;
@@ -29,10 +31,14 @@ import net.minecraft.util.Mth;
  * ({@link DinosaurEntity#screenInfo}) and are sent again after every order. A line at the foot names the mounted
  * controls with the keys the player has bound.
  * <p>
- * Room is left in the layout for the levels and stats of v0.13.
+ * On the far right, the levels of v0.13 (entity/DinoLevels): the level, the experience to the next one, the points
+ * to spend and each stat as a share of the species' usual value, with a "+" beside the ones that take a point.
  */
 public class DinoScreen extends Screen {
-    private static final int W = 252;
+    private static final int W = 372;
+    /** Where the levels column starts (the info column ends 12 px before it). */
+    private static final int STATS_X = 254;
+    private static final int ROW = 13;
     private static final int H = 156;
     private static final int PORTRAIT = 84;
 
@@ -89,6 +95,25 @@ public class DinoScreen extends Screen {
             this.addRenderableWidget(TerrassicButton.stone(bx, by, 54, 18, Component.translatable("gui.terrassic.dino.backpack"),
                     b -> this.minecraft.setScreen(new InventoryScreen(this.minecraft.player))));
         }
+        // a "+" beside every stat that takes a point, while there are points to spend
+        if (this.info.getInt("Points") > 0) {
+            int y = this.statsTop();
+            for (DinoLevels.Stat stat : DinoLevels.Stat.values()) {
+                if (stat.spendable()) {
+                    TerrassicButton plus = TerrassicButton.stone(this.left + W - 21, y - 2, 11, 11, Component.literal("+"),
+                            b -> this.send("up:" + stat.key));
+                    plus.setTooltip(Tooltip.create(Component.translatable("gui.terrassic.dino.spend",
+                            Component.translatable("gui.terrassic.stat." + stat.key))));
+                    this.addRenderableWidget(plus);
+                }
+                y += ROW;
+            }
+        }
+    }
+
+    /** First stat row of the levels column. */
+    private int statsTop() {
+        return this.top + 12 + 12 + 9 + 11 + 6;
     }
 
     /** An order button; returns its width. */
@@ -133,8 +158,9 @@ public class DinoScreen extends Screen {
         // name and sex, species
         int x = px + PORTRAIT + 10;
         int y = this.top + 12;
-        int right = this.left + W - 10;
-        Component name = d != null ? d.getDisplayName() : Component.empty();
+        int right = this.left + STATS_X - 12;
+        // the plain name: the level has its own column
+        Component name = d == null ? Component.empty() : d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
         Component sex = Component.literal(t.getBoolean("Female") ? " ♀" : " ♂")
                 .withStyle(t.getBoolean("Female") ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.AQUA);
         g.drawString(this.font, TerrassicFonts.title(name.copy()).append(sex), x, y, TerrassicPalette.rgb(TerrassicPalette.BONE_100));
@@ -174,9 +200,12 @@ public class DinoScreen extends Screen {
                     TerrassicPalette.rgb(TerrassicPalette.STONE_300));
         }
 
+        this.levels(g, t);
+
         // the orders, and at the foot the mounted controls
         TerrassicUi.divider(g, this.left + 10, this.left + W - 10, this.top + H - 36);
         super.render(g, mouseX, mouseY, partialTick);
+        this.statTooltip(g, mouseX, mouseY);
         if (t.getBoolean("Ridden") && d != null) {
             Component hint = d instanceof FlyingDinosaur
                     ? Component.translatable("gui.terrassic.dino.hint_flyer", DinoControls.DESCEND.getTranslatedKeyMessage())
@@ -184,6 +213,62 @@ public class DinoScreen extends Screen {
                     : "gui.terrassic.dino.hint_ridden");
             g.drawCenteredString(this.font, TerrassicFonts.ui(hint), this.left + W / 2, this.top + H + 4,
                     TerrassicPalette.rgb(TerrassicPalette.STONE_300));
+        }
+    }
+
+    /** The levels column: level, experience, points, then each stat as a share of the species' usual value. */
+    private void levels(GuiGraphics g, CompoundTag t) {
+        int x = this.left + STATS_X;
+        int right = this.left + W - 10;
+        g.fill(x - 7, this.top + 12, x - 6, this.top + H - 42, TerrassicPalette.BASALT_950);
+        int y = this.top + 12;
+        g.drawString(this.font, TerrassicFonts.title(Component.translatable("gui.terrassic.dino.level", t.getInt("Level"))), x, y,
+                TerrassicPalette.rgb(TerrassicPalette.BONE_100));
+        y += 12;
+        // experience to the next tame level (full at the top)
+        boolean top = t.getInt("TamedLevels") >= DinoLevels.MAX_TAMED_LEVELS;
+        float xp = top ? 1.0F : t.getFloat("Xp") / Math.max(1, t.getInt("XpNext"));
+        g.fill(x, y, right, y + 5, TerrassicPalette.BASALT_950);
+        int fill = Math.round((right - x - 2) * Mth.clamp(xp, 0.0F, 1.0F));
+        g.fill(x + 1, y + 1, x + 1 + fill, y + 4, TerrassicPalette.FERN_400);
+        y += 9;
+        int points = t.getInt("Points");
+        g.drawString(this.font, TerrassicFonts.ui("gui.terrassic.dino.points", points), x, y,
+                TerrassicPalette.rgb(points > 0 ? TerrassicPalette.AMBER_300 : TerrassicPalette.STONE_400));
+        y += 11;
+        TerrassicUi.divider(g, x, right, y);
+        y = this.statsTop();
+        CompoundTag stats = t.getCompound("Stats");
+        for (DinoLevels.Stat stat : DinoLevels.Stat.values()) {
+            g.drawString(this.font, TerrassicFonts.ui("gui.terrassic.stat." + stat.key), x, y, TerrassicPalette.rgb(TerrassicPalette.STONE_300));
+            String value = Math.round(stats.getFloat(stat.key) * 100.0F) + "%";
+            int vx = (points > 0 ? right - 14 : right) - this.font.width(value);
+            g.drawString(this.font, value, vx, y, TerrassicPalette.rgb(TerrassicPalette.BONE_100), false);
+            y += ROW;
+        }
+    }
+
+    /** The experience in numbers over its bar, and what a stat does over its name. */
+    private void statTooltip(GuiGraphics g, int mouseX, int mouseY) {
+        int x = this.left + STATS_X;
+        int barY = this.top + 24;
+        if (mouseX >= x && mouseX < this.left + W - 10 && mouseY >= barY - 1 && mouseY < barY + 6) {
+            g.renderTooltip(this.font, this.info.getInt("TamedLevels") >= DinoLevels.MAX_TAMED_LEVELS
+                    ? Component.translatable("gui.terrassic.dino.max_level")
+                    : Component.translatable("gui.terrassic.dino.xp", Mth.floor(this.info.getFloat("Xp")), this.info.getInt("XpNext")),
+                    mouseX, mouseY);
+            return;
+        }
+        if (mouseX < x || mouseX >= this.left + W - 24) {
+            return;
+        }
+        int y = this.statsTop();
+        for (DinoLevels.Stat stat : DinoLevels.Stat.values()) {
+            if (mouseY >= y - 2 && mouseY < y + ROW - 2) {
+                g.renderTooltip(this.font, Component.translatable("gui.terrassic.stat." + stat.key + ".tip"), mouseX, mouseY);
+                return;
+            }
+            y += ROW;
         }
     }
 

@@ -120,11 +120,13 @@ public final class LensOverlay {
         CompoundTag t = info;
         boolean ko = t.getBoolean("KnockedOut");
         boolean tame = t.getBoolean("Tame");
-        int rows = 5 + (tame ? 1 : 2) + (ko ? 3 : t.getFloat("Torpor") > 0.5F ? 1 : 0) + (t.contains("CargoSize") ? 1 : 0);
+        int points = t.getInt("Points");
+        int rows = 5 + (tame ? 1 : 2) + (ko ? 3 : t.getFloat("Torpor") > 0.5F ? 1 : 0) + (t.contains("CargoSize") ? 1 : 0)
+                + (points > 0 ? 1 : 0);
         int h = 8 + rows * 11 + 4;
-        // as wide as the longest line (the taming hint is the long one)
+        // as wide as the longest line: the taming hint, or the name with its level
         Component how = howToTame(t, ko);
-        W = Math.max(MIN_W, font.width(TerrassicFonts.ui(how)) + 14);
+        W = Math.max(Math.max(MIN_W, font.width(TerrassicFonts.ui(how)) + 14), font.width(TerrassicFonts.ui(d.getDisplayName())) + 26);
         int x = g.guiWidth() / 2 + 16;
         int y = Mth.clamp(g.guiHeight() / 2 - h / 2, 4, Math.max(4, g.guiHeight() - h - 30));
         panel(g, x, y, x + W, y + h);
@@ -164,7 +166,8 @@ public final class LensOverlay {
             bar(g, font, cx, cy, Component.translatable("gui.terrassic.lens.taming"), progress, TerrassicPalette.FERN_400,
                     Math.round(progress * 100) + "%");
             cy += 11;
-            g.drawString(font, TerrassicFonts.ui("gui.terrassic.lens.effectiveness", t.getInt("Effectiveness")), cx, cy,
+            // effectiveness and the bonus levels it is worth (v0.13)
+            g.drawString(font, TerrassicFonts.ui("gui.terrassic.lens.effectiveness_levels", t.getInt("Effectiveness"), t.getInt("BonusLevels")), cx, cy,
                     TerrassicPalette.rgb(TerrassicPalette.STONE_200));
             cy += 11;
         } else if (!tame && t.getFloat("Torpor") > 0.5F) {
@@ -185,6 +188,10 @@ public final class LensOverlay {
         if (t.contains("CargoSize")) {
             g.drawString(font, TerrassicFonts.ui("gui.terrassic.lens.cargo", t.getInt("CargoUsed"), t.getInt("CargoSize")), cx, cy,
                     TerrassicPalette.rgb(TerrassicPalette.STONE_200));
+            cy += 11;
+        }
+        if (points > 0) {
+            g.drawString(font, TerrassicFonts.ui("gui.terrassic.lens.points", points), cx, cy, TerrassicPalette.rgb(TerrassicPalette.AMBER_300));
         }
     }
 
