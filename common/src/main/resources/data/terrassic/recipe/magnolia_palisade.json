@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    " F ",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "L": {
+      "item": "terrassic:magnolia_log"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "terrassic:magnolia_palisade"
+  }
+}

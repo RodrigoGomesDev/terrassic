@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "ingredient": {
+    "item": "terrassic:raw_clay_pot"
+  },
+  "result": {
+    "id": "terrassic:fired_clay_pot"
+  },
+  "experience": 0.1,
+  "cookingtime": 200
+}

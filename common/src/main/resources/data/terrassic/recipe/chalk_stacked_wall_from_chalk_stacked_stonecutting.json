@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:chalk_stacked"
+  },
+  "result": {
+    "id": "terrassic:chalk_stacked_wall",
+    "count": 1
+  }
+}

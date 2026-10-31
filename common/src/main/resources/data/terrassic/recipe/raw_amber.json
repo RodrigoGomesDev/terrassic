@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "terrassic:resin_jar"
+    }
+  ],
+  "result": {
+    "id": "terrassic:raw_amber"
+  }
+}

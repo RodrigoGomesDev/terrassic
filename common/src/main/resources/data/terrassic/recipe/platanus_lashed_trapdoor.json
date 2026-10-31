@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PPP",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "terrassic:platanus_hewn_planks"
+    }
+  },
+  "result": {
+    "count": 2,
+    "id": "terrassic:platanus_lashed_trapdoor"
+  }
+}

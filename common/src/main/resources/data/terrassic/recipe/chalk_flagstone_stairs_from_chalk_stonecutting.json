@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:chalk"
+  },
+  "result": {
+    "id": "terrassic:chalk_flagstone_stairs",
+    "count": 1
+  }
+}

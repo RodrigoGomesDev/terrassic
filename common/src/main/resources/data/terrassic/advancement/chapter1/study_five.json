@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/fragment_science",
+  "display": {
+    "icon": {
+      "id": "minecraft:writable_book"
+    },
+    "title": {
+      "translate": "objective.terrassic.study_five"
+    },
+    "description": {
+      "translate": "objective.terrassic.study_five.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

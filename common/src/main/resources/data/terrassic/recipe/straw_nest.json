@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "T T",
+    "TTT"
+  ],
+  "key": {
+    "T": {
+      "item": "terrassic:thatch"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "terrassic:straw_nest"
+  }
+}

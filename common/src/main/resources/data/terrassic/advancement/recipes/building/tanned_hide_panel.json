@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:tanned_hide_panel"
+      }
+    },
+    "has_hide_screen": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:hide_screen"
+            ]
+          }
+        ]
+      }
+    },
+    "has_logs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:logs"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_hide_screen",
+      "has_logs",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:tanned_hide_panel"
+    ]
+  },
+  "sends_telemetry_event": false
+}

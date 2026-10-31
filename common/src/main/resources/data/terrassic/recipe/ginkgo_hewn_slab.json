@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:ginkgo_hewn_planks"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "terrassic:ginkgo_hewn_slab"
+  }
+}

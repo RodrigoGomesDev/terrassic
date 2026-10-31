@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:mossy_flint_stacked"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "terrassic:mossy_flint_stacked_stairs"
+  }
+}

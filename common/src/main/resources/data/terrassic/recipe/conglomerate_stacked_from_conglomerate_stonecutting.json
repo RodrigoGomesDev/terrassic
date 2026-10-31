@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:conglomerate"
+  },
+  "result": {
+    "id": "terrassic:conglomerate_stacked",
+    "count": 1
+  }
+}

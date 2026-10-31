@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:polished_amber"
+  },
+  "result": {
+    "id": "terrassic:polished_amber_stairs",
+    "count": 1
+  }
+}

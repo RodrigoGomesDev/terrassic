@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/fragment_survival",
+  "display": {
+    "icon": {
+      "id": "terrassic:flint_spear"
+    },
+    "title": {
+      "translate": "objective.terrassic.first_spear"
+    },
+    "description": {
+      "translate": "objective.terrassic.first_spear.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

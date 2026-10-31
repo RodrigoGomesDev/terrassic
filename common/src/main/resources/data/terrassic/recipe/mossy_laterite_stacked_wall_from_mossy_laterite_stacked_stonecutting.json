@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:mossy_laterite_stacked"
+  },
+  "result": {
+    "id": "terrassic:mossy_laterite_stacked_wall",
+    "count": 1
+  }
+}

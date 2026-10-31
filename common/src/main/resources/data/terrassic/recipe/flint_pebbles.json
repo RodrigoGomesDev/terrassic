@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:flint_nodules"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "terrassic:flint_pebbles"
+  }
+}

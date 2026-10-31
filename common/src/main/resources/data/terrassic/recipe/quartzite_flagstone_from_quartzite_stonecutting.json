@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:quartzite"
+  },
+  "result": {
+    "id": "terrassic:quartzite_flagstone",
+    "count": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "terrassic:limestone"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "terrassic:limestone_pebbles"
+  }
+}

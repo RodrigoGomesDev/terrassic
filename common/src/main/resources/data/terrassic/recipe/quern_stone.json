@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "S",
+    "Q",
+    "Q"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "Q": {
+      "item": "terrassic:quartzite"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "terrassic:quern_stone"
+  }
+}

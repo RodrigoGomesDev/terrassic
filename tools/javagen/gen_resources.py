@@ -942,6 +942,8 @@ def main():
     gen_pocket_guide.main()  # the book's content file, advancement, loot and recipe (checks the recipes it shows)
     import gen_recipe_unlocks  # v1.0.2: every recipe shows in the recipe book once an ingredient is picked up
     gen_recipe_unlocks.main()
+    import para_1_21  # branch mc/1.21.1: last step, the 1.21 data layout
+    para_1_21.main()
     print("resources written")
 
 

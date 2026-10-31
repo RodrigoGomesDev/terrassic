@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " A ",
+    "BGB"
+  ],
+  "key": {
+    "A": {
+      "item": "terrassic:raw_amber"
+    },
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "terrassic:amber_lens"
+  }
+}

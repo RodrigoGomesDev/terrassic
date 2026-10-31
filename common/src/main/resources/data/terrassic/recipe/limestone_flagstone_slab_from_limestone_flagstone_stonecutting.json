@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:limestone_flagstone"
+  },
+  "result": {
+    "id": "terrassic:limestone_flagstone_slab",
+    "count": 2
+  }
+}

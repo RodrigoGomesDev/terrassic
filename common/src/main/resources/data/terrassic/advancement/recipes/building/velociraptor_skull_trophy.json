@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:velociraptor_skull_trophy"
+      }
+    },
+    "has_velociraptor_fossil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:velociraptor_fossil"
+            ]
+          }
+        ]
+      }
+    },
+    "has_planks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:planks"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_planks",
+      "has_the_recipe",
+      "has_velociraptor_fossil"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:velociraptor_skull_trophy"
+    ]
+  },
+  "sends_telemetry_event": false
+}

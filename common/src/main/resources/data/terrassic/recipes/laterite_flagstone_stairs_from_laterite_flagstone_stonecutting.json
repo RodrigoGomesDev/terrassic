@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "terrassic:laterite_flagstone"
-  },
-  "result": "terrassic:laterite_flagstone_stairs",
-  "count": 1
-}

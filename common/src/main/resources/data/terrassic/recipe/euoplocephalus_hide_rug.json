@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "HH"
+  ],
+  "key": {
+    "H": {
+      "item": "terrassic:euoplocephalus_hide"
+    }
+  },
+  "result": {
+    "count": 2,
+    "id": "terrassic:euoplocephalus_hide_rug"
+  }
+}

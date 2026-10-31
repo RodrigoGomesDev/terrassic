@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PP",
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "terrassic:taxodium_hewn_planks"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "terrassic:taxodium_lashed_door"
+  }
+}

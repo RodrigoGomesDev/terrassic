@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "terrassic:bracken"
+    }
+  },
+  "result": {
+    "count": 2,
+    "id": "terrassic:fern_thatch"
+  }
+}

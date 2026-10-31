@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:gneiss"
+  },
+  "result": {
+    "id": "terrassic:gneiss_pebbles",
+    "count": 4
+  }
+}

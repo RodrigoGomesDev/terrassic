@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "terrassic:firewood_pile"
+  }
+}

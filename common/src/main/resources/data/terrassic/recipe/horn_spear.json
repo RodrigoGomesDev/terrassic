@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  H",
+    " T ",
+    "S  "
+  ],
+  "key": {
+    "H": {
+      "item": "terrassic:triceratops_horn"
+    },
+    "T": {
+      "item": "minecraft:string"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "terrassic:horn_spear"
+  }
+}

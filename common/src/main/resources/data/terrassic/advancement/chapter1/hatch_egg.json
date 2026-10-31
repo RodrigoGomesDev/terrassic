@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/fragment_taming",
+  "display": {
+    "icon": {
+      "id": "terrassic:triceratops_egg"
+    },
+    "title": {
+      "translate": "objective.terrassic.hatch_egg"
+    },
+    "description": {
+      "translate": "objective.terrassic.hatch_egg.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "terrassic:archelon",
+    "terrassic:deinosuchus",
+    "terrassic:elasmosaurus",
+    "terrassic:enchodus",
+    "terrassic:hesperornis",
+    "terrassic:lepisosteus",
+    "terrassic:mosasaurus",
+    "terrassic:spinosaurus",
+    "terrassic:tylosaurus",
+    "terrassic:xiphactinus"
+  ]
+}

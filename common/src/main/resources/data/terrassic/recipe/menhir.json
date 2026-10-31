@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "G",
+    "G"
+  ],
+  "key": {
+    "G": {
+      "item": "terrassic:gneiss"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "terrassic:menhir"
+  }
+}

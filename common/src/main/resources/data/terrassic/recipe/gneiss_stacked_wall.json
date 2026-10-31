@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:gneiss_stacked"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "terrassic:gneiss_stacked_wall"
+  }
+}

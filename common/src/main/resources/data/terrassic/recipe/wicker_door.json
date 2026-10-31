@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "WW",
+    "WW",
+    "WW"
+  ],
+  "key": {
+    "W": {
+      "item": "terrassic:wicker_block"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "terrassic:wicker_door"
+  }
+}

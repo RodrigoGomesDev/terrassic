@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR",
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:limestone"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "terrassic:limestone_stacked"
+  }
+}

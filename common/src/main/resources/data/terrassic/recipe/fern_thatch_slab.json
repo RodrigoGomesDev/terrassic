@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:fern_thatch"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "terrassic:fern_thatch_slab"
+  }
+}

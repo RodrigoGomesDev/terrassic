@@ -1,0 +1,22 @@
+{
+  "parent": "terrassic:chapter1/fragment_science",
+  "display": {
+    "icon": {
+      "id": "terrassic:hair_brush"
+    },
+    "title": {
+      "translate": "objective.terrassic.first_fossil"
+    },
+    "description": {
+      "translate": "objective.terrassic.first_fossil.hint"
+    }
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 10
+  }
+}

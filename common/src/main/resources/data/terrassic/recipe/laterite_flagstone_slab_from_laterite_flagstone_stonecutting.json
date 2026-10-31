@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:laterite_flagstone"
+  },
+  "result": {
+    "id": "terrassic:laterite_flagstone_slab",
+    "count": 2
+  }
+}

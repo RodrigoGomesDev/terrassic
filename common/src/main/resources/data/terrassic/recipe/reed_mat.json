@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RR"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:rush"
+    }
+  },
+  "result": {
+    "count": 3,
+    "id": "terrassic:reed_mat"
+  }
+}

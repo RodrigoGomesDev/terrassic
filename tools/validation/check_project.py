@@ -156,7 +156,7 @@ def check(root):
                     assets / f"animations/entity/{name}.animation.json",
                     assets / f"textures/entity/{name}_male.png", assets / f"textures/entity/{name}_female.png",
                     assets / f"models/item/{name}_spawn_egg.json",
-                    resources / f"data/terrassic/loot_tables/entities/{name}.json"]
+                    resources / f"data/terrassic/loot_table/entities/{name}.json"]
         if name in resource_table and resource_table[name][3] is not None:
             required.append(assets / f"blockstates/{name}_egg.json")
         for path in required:

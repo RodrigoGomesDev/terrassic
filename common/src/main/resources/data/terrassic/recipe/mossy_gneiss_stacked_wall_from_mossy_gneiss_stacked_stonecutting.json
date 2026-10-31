@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:mossy_gneiss_stacked"
+  },
+  "result": {
+    "id": "terrassic:mossy_gneiss_stacked_wall",
+    "count": 1
+  }
+}

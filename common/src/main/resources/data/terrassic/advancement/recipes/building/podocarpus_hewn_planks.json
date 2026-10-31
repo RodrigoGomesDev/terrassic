@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:podocarpus_hewn_planks"
+      }
+    },
+    "has_podocarpus_logs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#terrassic:podocarpus_logs"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_podocarpus_logs",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:podocarpus_hewn_planks"
+    ]
+  },
+  "sends_telemetry_event": false
+}

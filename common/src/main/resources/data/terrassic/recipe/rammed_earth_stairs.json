@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "X  ",
+    "XX ",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "terrassic:rammed_earth"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "terrassic:rammed_earth_stairs"
+  }
+}

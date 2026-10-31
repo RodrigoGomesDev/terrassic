@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "SRS",
+    "SRS"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:rush"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "terrassic:wicker_panel"
+  }
+}

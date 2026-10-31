@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:limestone"
+  },
+  "result": {
+    "id": "terrassic:limestone_pebbles",
+    "count": 4
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "category": "food",
+  "ingredient": {
+    "item": "terrassic:lepisosteus"
+  },
+  "result": {
+    "id": "terrassic:cooked_lepisosteus"
+  },
+  "experience": 0.35,
+  "type": "minecraft:campfire_cooking",
+  "cookingtime": 600
+}

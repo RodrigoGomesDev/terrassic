@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "terrassic:mossy_chalk_stacked"
+  },
+  "result": {
+    "id": "terrassic:mossy_chalk_stacked_stairs",
+    "count": 1
+  }
+}
