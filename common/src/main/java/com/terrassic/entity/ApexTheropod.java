@@ -59,6 +59,14 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     /** Share of wild adults that come with juveniles. */
     private static final float FAMILY_CHANCE = 0.18F;
     private static final String[] GESTURES = {"sniff", "look_back", "shake", "yawn", "stretch"};
+    /** The rig's blows ({@link ApexBiteGoal}). */
+    protected static final Strike BITE = new Strike("attack", 11, 44, false);
+    protected static final Strike QUICK_BITE = new Strike("attack_quick", 6, 24, false);
+    protected static final Strike STOMP = new Strike("stomp", 18, 34, true);
+
+    /** One blow: its animation, the tick its hit lands, the ticks until the next one, and whether it lands at the feet. */
+    public record Strike(String anim, int hit, int total, boolean atFeet) {
+    }
 
     /** Ticks left of the roar under way (normal or loud) and how far into it we are. */
     private int roarLeft;
@@ -113,7 +121,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         return 128.0D / 16.0D / 16.0D * this.modelScale();     // 128 px per 0.8 s cycle
     }
 
-    private double stalkCycleSpeed() {
+    protected double stalkCycleSpeed() {
         return 56.0D / 16.0D / 56.0D * this.modelScale();      // 56 px per 2.8 s cycle
     }
 
@@ -198,6 +206,34 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         return target != null && target.getId() == this.roaredAt;
     }
 
+    /** The one-shot of the loud roar, how long it stands for it and whether it shakes the air. */
+    protected String loudAnim() {
+        return "roar_loud";
+    }
+
+    protected int loudTicks() {
+        return LOUD_TICKS;
+    }
+
+    protected boolean loudShakesAir() {
+        return true;
+    }
+
+    /** Whether it walks right up to this target and strikes at its feet instead of reaching with the head. */
+    public boolean strikesAtFeet(LivingEntity target) {
+        return target.getBbHeight() < 1.0F && target.getBbWidth() < 1.0F;
+    }
+
+    /** The blow for a target at its feet. */
+    public Strike feetStrike() {
+        return STOMP;
+    }
+
+    /** The blow for a target in reach of the head. */
+    public Strike biteFor(LivingEntity target) {
+        return this.getRandom().nextFloat() < 0.3F ? BITE : QUICK_BITE;
+    }
+
     /** The roar when it locks onto a target: it stands for it; the sound comes as the jaws open. */
     public void roar() {
         if (this.isRoaring() || this.level().isClientSide()) {
@@ -272,10 +308,10 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     private void startRoar(boolean loud) {
         this.loudRoar = loud;
-        this.roarLeft = loud ? LOUD_TICKS : ROAR_TICKS;
+        this.roarLeft = loud ? this.loudTicks() : ROAR_TICKS;
         this.roarAge = 0;
         this.getNavigation().stop();
-        triggerAnim(ACTION_CONTROLLER, loud ? "roar_loud" : "roar");
+        triggerAnim(ACTION_CONTROLLER, loud ? this.loudAnim() : "roar");
     }
 
     private void roarTick(ServerLevel level) {
@@ -284,7 +320,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         if (this.roarAge == (this.loudRoar ? LOUD_SOUND : ROAR_SOUND)) {
             this.playSound(this.roarSound(), this.loudRoar ? 5.0F : 3.0F, (this.loudRoar ? 0.85F : 1.0F) * this.getVoicePitch());
         }
-        if (!this.loudRoar) {
+        if (!this.loudRoar || !this.loudShakesAir()) {
             return;
         }
         for (int[] wave : LOUD_WAVES) {

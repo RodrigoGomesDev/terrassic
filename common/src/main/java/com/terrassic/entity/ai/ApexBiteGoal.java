@@ -110,7 +110,7 @@ public class ApexBiteGoal extends Goal {
         float off = Math.abs(Mth.wrapDegrees(yawTo - this.mob.getYRot()));
         this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
         // small things (a chicken, a compy) are stomped: it walks right up to them instead of biting from afar
-        boolean small = target.getBbHeight() < 1.0F && target.getBbWidth() < 1.0F;
+        boolean small = this.mob.strikesAtFeet(target);
         double stand = (small ? STOMP_STAND : STAND) * s;
         double biteMin = (small ? 0.0D : BITE_MIN) * s;
         if (this.cooldown > 0) {
@@ -180,24 +180,20 @@ public class ApexBiteGoal extends Goal {
         if (this.cooldown <= 0 && off < REACH_ANGLE && Math.abs(target.getY() - this.mob.getY()) < 4.5D * s) {
             if (small) {
                 if (dist < STOMP_REACH * s + target.getBbWidth() / 2.0D) {
-                    this.begin("stomp", 18, 34, true);
+                    this.begin(this.mob.feetStrike());
                 }
             } else if (dist <= REACH * s + target.getBbWidth() / 2.0D && dist >= biteMin) {
-                if (this.mob.getRandom().nextFloat() < 0.3F) {
-                    this.begin("attack", 11, 44, false);
-                } else {
-                    this.begin("attack_quick", 6, 24, false);
-                }
+                this.begin(this.mob.biteFor(target));
             }
         }
     }
 
-    /** Starts a bite (or stomp): the animation now, the hit {@code hit} ticks later, the next one {@code total} after. */
-    private void begin(String anim, int hit, int total, boolean stomp) {
-        this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, anim);
-        this.pending = hit;
-        this.cooldown = total;
-        this.stomping = stomp;
+    /** Starts a blow: the animation now, the hit when it lands, the next one once it is over. */
+    private void begin(ApexTheropod.Strike strike) {
+        this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, strike.anim());
+        this.pending = strike.hit();
+        this.cooldown = strike.total();
+        this.stomping = strike.atFeet();
         this.mob.getNavigation().stop();
     }
 

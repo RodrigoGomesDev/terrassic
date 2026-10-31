@@ -52,38 +52,57 @@
   "handmade": true
  },
  "spinosaurus": {
-  "bones": 24,
-  "cubes": 130,
+  "bones": 26,
+  "cubes": 73,
   "texture": [
    256,
-   512
+   256
   ],
   "bounds_px": [
    [
     -19.0,
-    -0.4039306607837405,
-    -122.2487088711055
+    -0.04999999999999999,
+    -108.2968179858195
    ],
    [
     19.0,
-    84.0,
-    113.99997123302845
+    95.39709089217665,
+    132.03061298083207
    ]
   ],
   "animations": [
    "animation.spinosaurus.idle",
+   "animation.spinosaurus.sniff",
+   "animation.spinosaurus.look_back",
+   "animation.spinosaurus.shake",
+   "animation.spinosaurus.yawn",
+   "animation.spinosaurus.stretch",
    "animation.spinosaurus.walk",
    "animation.spinosaurus.run",
-   "animation.spinosaurus.attack",
+   "animation.spinosaurus.stalk",
+   "animation.spinosaurus.swim",
    "animation.spinosaurus.roar",
-   "animation.spinosaurus.sit",
-   "animation.spinosaurus.knocked_out",
-   "animation.spinosaurus.wake",
+   "animation.spinosaurus.call",
+   "animation.spinosaurus.threat",
+   "animation.spinosaurus.attack",
+   "animation.spinosaurus.attack_quick",
+   "animation.spinosaurus.hurt",
+   "animation.spinosaurus.death",
    "animation.spinosaurus.eat",
+   "animation.spinosaurus.drink",
+   "animation.spinosaurus.sit",
+   "animation.spinosaurus.sleep",
+   "animation.spinosaurus.wake",
+   "animation.spinosaurus.wake_sleep",
+   "animation.spinosaurus.knocked_out",
    "animation.spinosaurus.beg",
-   "animation.spinosaurus.tame"
+   "animation.spinosaurus.tame",
+   "animation.spinosaurus.fish",
+   "animation.spinosaurus.display",
+   "animation.spinosaurus.swipe"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.5,
+  "handmade": true
  },
  "dilophosaurus": {
   "bones": 25,

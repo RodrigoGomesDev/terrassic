@@ -385,3 +385,9 @@ atuais nesta entrega; o histórico Git permanece preservado.
 Arquivos reservados e liberados na mesma entrega: `Velociraptor`, modelo, animações, texturas, ninho, arreio e ovo,
 com a versão rc5 aprovada pelo Rodrigo. 48 arquivos sobre `c13634fa`, sem remoções. Detalhes dos testes ficam nas notas
 da entrega do raptor.
+
+### Spinosaurus v3, entregue (31/10/2026)
+
+Reservados no clone `~/projects/terrassic-spino` (branch `spino-dev`, sem commit): `tools/javagen/gen_species.py` (flag `rig` junto com `apex`, linha do Spinosaurus),
+`entity/ApexTheropod.java` e `entity/ai/ApexBiteGoal.java` (ganchos, sem mudar o T. rex), novo `entity/Spinosaur.java`, gerados `Spinosaurus.java` e
+`GuideSpecies.java`, modelo, animações e texturas do Spinosaurus. `DinosaurEntity.java` não foi tocado. Reservas liberadas nesta entrega.
