@@ -109,3 +109,9 @@ Aprovada pelo Rodrigo: o T. rex v2 espreitando na floresta enevoada com um facho
 Blender com o modelo e as texturas do jogo. Arquivos e como gerar de novo em `art/divulgacao/capa/v4/README.md`.
 Substitui a v3 (que tinha o fundo editado por IA) nas lojas. As capas são só para loja, site e posts; o menu do jogo
 continua o do Minecraft.
+
+## Capa Carcaça na praia — 31/10/2026
+
+Aprovada pelo Rodrigo: Velociraptors comendo um Pteranodonte morto na praia, num dia de sol. Mesmo processo da
+Espreita (Blender com os modelos e as texturas do jogo), com o letreiro em cima à direita. Arquivos e como gerar de
+novo em `art/divulgacao/capa/carcaca/README.md`.

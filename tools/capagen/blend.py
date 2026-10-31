@@ -31,7 +31,7 @@ def _image(img, name, tmp):
     return im
 
 
-def _material(name, image, tint=(1, 1, 1), rough=0.85, look=None, mask=None, creature=False):
+def _material(name, image, tint=(1, 1, 1), rough=0.85, look=None, mask=None, creature=False, emit=0.0):
     """Textured block/creature material. Optional, from the look (what a shader pack adds on top of vanilla):
     tex_bump = per-pixel relief from the texture's brightness; leaf_trans = foliage (white in mask) lets the sun
     through; creature_rough / creature_spec = a soft sheen on the animals' skin."""
@@ -96,8 +96,15 @@ def _material(name, image, tint=(1, 1, 1), rough=0.85, look=None, mask=None, cre
         L(shader, mix.inputs[1])
         L(tr.outputs["BSDF"], mix.inputs[2])
         shader = mix.outputs["Shader"]
+    if emit:
+        # glowing effect sprites (the roar's sound rings): light of their own, soft alpha
+        em = N("ShaderNodeEmission")
+        L(mul.outputs["Result"], em.inputs["Color"])
+        em.inputs["Strength"].default_value = emit
+        shader = em.outputs["Emission"]
+        gt = tex  # use the texture's own alpha, not the hard cut-out
     cut = N("ShaderNodeMixShader")
-    L(gt.outputs[0], cut.inputs["Fac"])
+    L(gt.outputs["Alpha"] if emit else gt.outputs[0], cut.inputs["Fac"])
     L(N("ShaderNodeBsdfTransparent").outputs["BSDF"], cut.inputs[1])
     L(shader, cut.inputs[2])
     L(cut.outputs["Shader"], out.inputs["Surface"])
@@ -507,6 +514,58 @@ def _clouds(look, cam_b):
     _volume_box("clouds", centre, (w, w, y1 - y0), density, look.get("cloud_col", (1, 1, 1)), 0.6)
 
 
+def _dust(look):
+    """Dust kicked up off the ground (a stomp, a roar): a low lumpy cloud round a point, thick at the bottom."""
+    c, size, dens, colour = look["dust"]
+    cb = to_b(c)
+    sb = (size[0], size[2], size[1])
+
+    def density(nt):
+        N, L = nt.nodes.new, nt.links.new
+        geo = N("ShaderNodeNewGeometry")
+        nz = N("ShaderNodeTexNoise")
+        nz.inputs["Scale"].default_value = 0.35
+        nz.inputs["Detail"].default_value = 6
+        L(geo.outputs["Position"], nz.inputs["Vector"])
+        cov = N("ShaderNodeMapRange")
+        cov.inputs["From Min"].default_value = 0.45
+        cov.inputs["From Max"].default_value = 0.7
+        L(nz.outputs["Fac"], cov.inputs["Value"])
+        sep = N("ShaderNodeSeparateXYZ")
+        L(geo.outputs["Position"], sep.inputs[0])
+        h = N("ShaderNodeMapRange")  # 1 at the ground, 0 at the top of the box
+        h.inputs["From Min"].default_value = cb.z + sb[2] / 2
+        h.inputs["From Max"].default_value = cb.z - sb[2] / 2
+        L(sep.outputs["Z"], h.inputs["Value"])
+        m1 = N("ShaderNodeMath")
+        m1.operation = "MULTIPLY"
+        L(cov.outputs["Result"], m1.inputs[0])
+        L(h.outputs["Result"], m1.inputs[1])
+        m2 = N("ShaderNodeMath")
+        m2.operation = "MULTIPLY"
+        L(m1.outputs[0], m2.inputs[0])
+        m2.inputs[1].default_value = dens
+        # round in plan, so the box's walls never show: fades to nothing at the edge of the footprint
+        rel = N("ShaderNodeVectorMath")
+        rel.operation = "SUBTRACT"
+        L(geo.outputs["Position"], rel.inputs[0])
+        rel.inputs[1].default_value = (cb.x, cb.y, 0.0)
+        sc = N("ShaderNodeVectorMath")
+        sc.operation = "MULTIPLY"
+        L(rel.outputs[0], sc.inputs[0])
+        sc.inputs[1].default_value = (2.0 / sb[0], 2.0 / sb[1], 0.0)
+        rad = N("ShaderNodeTexGradient")
+        rad.gradient_type = "SPHERICAL"
+        L(sc.outputs[0], rad.inputs["Vector"])
+        m3 = N("ShaderNodeMath")
+        m3.operation = "MULTIPLY"
+        L(m2.outputs[0], m3.inputs[0])
+        L(rad.outputs["Fac"], m3.inputs[1])
+        return m3.outputs[0]
+
+    _volume_box("dust", cb, sb, density, colour, 0.5)
+
+
 def _haze(look, cam_b):
     """Aerial perspective: a thin even haze so the distance melts into the sky glow."""
     w = look.get("haze_width", 2400)
@@ -564,7 +623,7 @@ def render(meshes, cam, target, fov, sun_dir, look, W, H, samples=96, focus=None
         mask = getattr(m, "foliage", None)
         mask = _image(mask, f"mask{i}", tmp) if mask is not None else None
         _mesh(f"m{i}", m.verts, _material(f"mat{i}", images[key], m.tint, look=look, mask=mask,
-                                          creature=getattr(m, "creature", False)))
+                                          creature=getattr(m, "creature", False), emit=getattr(m, "emit", 0.0)))
     _sky(look, sun_b)
     # sun: soft shadow (the sun is ~0.5 degrees, a bit wider reads better at block scale)
     ld = bpy.data.lights.new("sun", "SUN")
@@ -597,6 +656,15 @@ def render(meshes, cam, target, fov, sun_dir, look, W, H, samples=96, focus=None
         sc.collection.objects.link(so)
         so.location = to_b(sp)
         so.rotation_euler = (to_b(st) - to_b(sp)).to_track_quat("-Z", "Y").to_euler()
+    for i, (pp, energy, col, rad) in enumerate(look.get("points", ())):
+        # small warm lights: a torch flame, a lantern
+        pl = bpy.data.lights.new(f"point{i}", "POINT")
+        pl.energy = energy
+        pl.color = col
+        pl.shadow_soft_size = rad
+        po = bpy.data.objects.new(f"point{i}", pl)
+        sc.collection.objects.link(po)
+        po.location = to_b(pp)
     if fog_box:
         c, s = fog_box
         _fog(look, to_b(c), (s[0], s[2], s[1]))
@@ -604,6 +672,8 @@ def render(meshes, cam, target, fov, sun_dir, look, W, H, samples=96, focus=None
         _clouds(look, to_b(cam))
     if look.get("haze"):
         _haze(look, to_b(cam))
+    if look.get("dust"):
+        _dust(look)
     # camera
     cd = bpy.data.cameras.new("cam")
     cd.sensor_fit = "VERTICAL"

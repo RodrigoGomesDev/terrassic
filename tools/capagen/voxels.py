@@ -56,6 +56,7 @@ def textures(seed=1):
         s[y, x0:x0 + rng.integers(3, 7)] *= 0.78
     t["stone"] = _rgba(s)
     t["sand"] = _rgba(_tile(rng, "#d8c48f", 0.05, "#c2ad78", 0.25))
+    t["wet_sand"] = _rgba(_tile(rng, "#a8915e", 0.05, "#957f50", 0.25))
     t["gravel"] = _rgba(_tile(rng, "#8e8378", 0.14, "#6c625a", 0.35))
     t["mud"] = _rgba(_tile(rng, "#5a4a3a", 0.08, "#4a3c2e", 0.3))
     # araucaria bark: vertical plates
@@ -97,6 +98,30 @@ def textures(seed=1):
         for y in range(top, T):
             h[y, x] = list(hexrgb("#6f8d3c" if y % 3 else "#3d4f22")) + [255]
     t["horsetail"] = h.astype(np.uint8)
+    # basalt: dark grey, columnar joints on the sides, polygon column tops seen from above
+    yy, xx = np.mgrid[0:T, 0:T]
+    bs = _tile(rng, "#2f2d31", 0.09, "#242226", 0.25)
+    x = 0
+    while x < T:  # columns of uneven width, each broken at its own heights
+        w = int(rng.integers(3, 6))
+        bs[:, min(x, T - 1)] *= 0.62
+        for y in rng.integers(0, T, 2):
+            bs[y, x:x + w] *= 0.7
+        bs[:, x + 1:x + w] *= rng.uniform(0.9, 1.12)
+        x += w
+    t["basalt"] = _rgba(bs)
+    bt = _tile(rng, "#454247", 0.06, "#38353a", 0.2)
+    pts = rng.uniform(0, T, (6, 2))
+    d = np.sort(np.hypot(xx[..., None] - pts[:, 0], yy[..., None] - pts[:, 1]), axis=-1)
+    bt[(d[..., 1] - d[..., 0]) < 0.9] *= 0.68  # joints between the columns
+    t["basalt_top"] = _rgba(bt)
+    # lava: hot orange with yellow cores and a few dark crust plates floating on it
+    lv = _tile(rng, "#d9581c", 0.06)
+    hot = (np.sin(xx * 0.9 + rng.uniform(0, 6)) + np.sin(yy * 0.7 + xx * 0.3 + rng.uniform(0, 6))) > 0.9
+    lv[hot] = hexrgb("#ffb431")
+    crust = rng.random((T // 4, T // 4)) < 0.22
+    lv[np.kron(crust, np.ones((4, 4), bool)) & (rng.random((T, T)) < 0.8)] = hexrgb("#4a2618")
+    t["lava"] = _rgba(lv)
     return t
 
 
@@ -107,7 +132,8 @@ MOD_TEXTURES = ["fern_litter", "fern_litter_side", "lateritic_soil", "cracked_mu
                 "tree_fern_leaves", "podocarpus_leaves", "taxodium_log", "taxodium_log_top", "taxodium_leaves",
                 "royal_fern", "horsetail", "bracken", "cretaceous_grass", "clubmoss", "cycad_top", "cycad_bottom",
                 "tall_horsetail_top", "tall_horsetail_bottom", "tall_bracken_top", "tall_bracken_bottom", "chalk",
-                "chalk_pebbles", "conglomerate"]
+                "chalk_pebbles", "conglomerate", "volcanic_ash", "cave_painting_tyrannosaurus",
+                "cave_painting_handprint", "cave_painting_footprints", "cave_painting_sun", "bone_torch"]
 
 
 def mod_textures():
@@ -127,6 +153,17 @@ def mod_textures():
 def all_textures():
     t = textures()
     t.update(mod_textures())
+    if "limestone" in t:  # wet limestone with moss growing over it, for the walls of a sinkhole
+        rng = np.random.default_rng(7)
+        a = t["limestone"].copy()
+        yy = np.arange(T)[:, None] / T
+        moss = rng.random((T, T)) < 0.75 - yy * 0.6  # thicker toward the top of the block, where it drips from
+        greens = np.array([(74, 98, 46), (92, 118, 54), (60, 82, 40)])
+        a[moss, :3] = greens[rng.integers(3, size=int(moss.sum()))]
+        t["moss_limestone"] = a
+        top = a.copy()
+        top[..., :3] = greens[rng.integers(3, size=(T, T))]
+        t["moss_limestone_top"] = top
     return t
 
 
@@ -145,11 +182,18 @@ def atlas(tex):
 # block -> (top, side, bottom) textures; mod textures where the mod has the block, procedural otherwise
 BLOCKS = {
     "grass": ("grass_top", "grass_side", "dirt"), "dirt": ("dirt", "dirt", "dirt"), "stone": ("stone",) * 3,
-    "sand": ("sand",) * 3, "gravel": ("gravel",) * 3, "mud": ("cracked_mud",) * 3, "log": ("log_top", "log", "log_top"),
+    "sand": ("sand",) * 3, "wet_sand": ("wet_sand", "sand", "sand"), "gravel": ("gravel",) * 3, "mud": ("cracked_mud",) * 3, "log": ("log_top", "log", "log_top"),
     "litter": ("fern_litter", "fern_litter_side", "lateritic_soil"), "soil": ("lateritic_soil",) * 3,
     "needles": ("needle_litter", "needle_litter_side", "lateritic_soil"), "limestone": ("limestone",) * 3,
     "shale": ("shale",) * 3, "chalk": ("chalk",) * 3, "peat": ("peat",) * 3, "pebbles": ("chalk_pebbles",) * 3,
-    "conglomerate": ("conglomerate",) * 3,
+    "conglomerate": ("conglomerate",) * 3, "basalt": ("basalt_top", "basalt", "basalt_top"),
+    "ash": ("volcanic_ash", "volcanic_ash", "basalt"),
+    "mossy": ("mossy_limestone_stacked",) * 3,
+    "moss_rock": ("moss_limestone_top", "moss_limestone", "limestone"),
+    "painting_rex": ("limestone", "cave_painting_tyrannosaurus", "limestone"),
+    "painting_hand": ("limestone", "cave_painting_handprint", "limestone"),
+    "painting_feet": ("limestone", "cave_painting_footprints", "limestone"),
+    "painting_sun": ("limestone", "cave_painting_sun", "limestone"),
     "araucaria_log": ("araucaria_log_top", "araucaria_log", "araucaria_log_top"),
     "metasequoia_log": ("metasequoia_log_top", "metasequoia_log", "metasequoia_log_top"),
     "taxodium_log": ("taxodium_log_top", "taxodium_log", "taxodium_log_top"),

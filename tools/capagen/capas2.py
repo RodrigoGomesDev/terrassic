@@ -23,9 +23,15 @@ LAYOUT = {
     "tempestade": (0.035, 0.06, "pedra", 0.45),
     "floresta": (0.035, 0.06, "pedra", 0.30),
     "espreita": (0.035, 0.06, "pedra", 0.30),
+    # each cover keeps its title somewhere else (Rodrigo 30/10)
+    "praia_carcaca": (-0.035, 0.06, "pedra", 0.30),
+    "grito": (None, 0.70, "pedra", 0.35),
+    "vulcao": (-0.035, 0.70, "pedra", 0.35),
+    "caverna": (-0.035, 0.72, "ambar", 0.40),
+    "dolina": (None, 0.74, "basalto", 0.30),
 }
 # lettering size per scene (1 = the standard 2 px texel at 1920 wide); Rodrigo 30/10: a bit smaller on Espreita
-LOGO = {"espreita": 0.83}
+LOGO = {"espreita": 0.83, "praia_carcaca": 0.83, "grito": 0.83, "vulcao": 0.83, "caverna": 0.8, "dolina": 0.83}
 
 
 def capa(img, scene, lang="en_us", logo=None):
@@ -42,9 +48,9 @@ def capa(img, scene, lang="en_us", logo=None):
     BW, BH = big.size
     y = int(BH * fy)
     probe = Image.new("RGBA", (BW, BH))
-    if fx is None:
+    if fx is None or fx < 0:  # None = centred, negative = right-aligned that far from the right edge
         x0, _y0, x1, _y1 = title_block(probe, 0, y, finish, lang, texel)
-        x = (BW - (x1 - x0)) // 2
+        x = (BW - (x1 - x0)) // 2 if fx is None else int(BW * (1 + fx)) - (x1 - x0)
         probe = Image.new("RGBA", (BW, BH))
     else:
         x = int(BW * fx)
