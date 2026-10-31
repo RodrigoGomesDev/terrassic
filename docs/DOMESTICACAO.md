@@ -22,7 +22,8 @@ Status: **implementado** (torpor, nocaute, alimentar derrubado, eficiência, aco
   mais agudo conforme o torpor enche.
 - Receitas: zarabatana = 3 juncos na diagonal; erva sonífera (2) = lírio-d'água do Cretáceo + orelha-de-pau;
   dardo de narcótico (4) = sílex + erva sonífera + pena.
-- Ainda não: boleadeira, inventário de comida da criatura derrubada e a dificuldade de nocaute no Guia (arquivos do Guia
+- Boleadeira (v1.1): amarra pernas e asas e derruba voadores, mas não dá torpor; detalhes em `docs/ARMAS.md`.
+- Ainda não: inventário de comida da criatura derrubada e a dificuldade de nocaute no Guia (arquivos do Guia
   reservados ao Codex).
 
 ## As três formas de domar

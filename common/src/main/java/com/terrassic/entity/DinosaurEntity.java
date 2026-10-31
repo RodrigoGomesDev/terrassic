@@ -158,6 +158,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Unconscious from torpor (knockout taming, docs/DOMESTICACAO.md); synced for the knocked_out pose. */
     private static final EntityDataAccessor<Boolean> DATA_KNOCKED_OUT =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Tied by a bola (v1.1, docs/ARMAS.md); synced so the rider's client stops steering and the thongs are drawn. */
+    private static final EntityDataAccessor<Boolean> DATA_ENTANGLED =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DATA_HUNGER =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_SLEEPING =
@@ -700,6 +703,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_RIFT, false);
         this.entityData.define(DATA_HUNGER, 70);
         this.entityData.define(DATA_KNOCKED_OUT, false);
+        this.entityData.define(DATA_ENTANGLED, false);
         this.entityData.define(DATA_SLEEPING, false);
         this.entityData.define(DATA_SIZE, 1.0F);
         this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
@@ -778,6 +782,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             tag.putBoolean("PendingNest", true);
         }
         tag.putBoolean("Chested", this.isChested());
+        if (this.entangledTicks > 0) {
+            tag.putInt("Entangled", this.entangledTicks);
+        }
         tag.putBoolean("Platform", this.isPlatform());
         tag.putInt("Sated", this.sated);
         tag.putInt("Hunger", this.getHunger());
@@ -847,6 +854,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setRift(tag.getBoolean("Rift"));
         this.torpor = tag.getFloat("Torpor");
         this.entityData.set(DATA_KNOCKED_OUT, tag.getBoolean("KnockedOut"));
+        this.entangledTicks = tag.getInt("Entangled");
+        this.entityData.set(DATA_ENTANGLED, this.entangledTicks > 0);
         this.tameProgress = tag.getFloat("TameProgress");
         this.tameEffectiveness = tag.contains("TameEffectiveness") ? tag.getInt("TameEffectiveness") : 100;
         this.tamer = tag.hasUUID("Tamer") ? tag.getUUID("Tamer") : null;
@@ -2170,10 +2179,42 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         player.sendSystemMessage(Component.translatable("message.terrassic.ko_tamed", this.getDisplayName(), effectiveness));
     }
 
-    /** Unconscious: no goals, no steering (LivingEntity skips the AI of an immobile mob). */
+    /** Unconscious or tied by a bola: no goals, no steering (LivingEntity skips the AI of an immobile mob). */
     @Override
     protected boolean isImmobile() {
-        return super.isImmobile() || this.isKnockedOut();
+        return super.isImmobile() || this.isKnockedOut() || this.isEntangled();
+    }
+
+    // ------------------------------------------------------------------ bola (v1.1, docs/ARMAS.md; entity/ThrownBola)
+
+    /** Server ticks left tied; 0 when free. */
+    private int entangledTicks;
+
+    /** Legs (or wings) bound by a bola: it can neither move, fight nor fly. Readable on both sides. */
+    public boolean isEntangled() {
+        return this.entityData.get(DATA_ENTANGLED);
+    }
+
+    /** Ties it for the given ticks (server). A flyer drops (FlyingDinosaur turns its lift off while tied). */
+    public void entangle(int ticks) {
+        this.entangledTicks = Math.max(this.entangledTicks, ticks);
+        this.entityData.set(DATA_ENTANGLED, true);
+        this.getNavigation().stop();
+        Vec3 v = this.getDeltaMovement();
+        this.setDeltaMovement(0.0D, Math.min(v.y, 0.0D), 0.0D);
+    }
+
+    /** Server, every tick while tied: when the time is up it works free and the bola falls, whole half of the times. */
+    private void entangledTick() {
+        if (--this.entangledTicks > 0) {
+            return;
+        }
+        this.entangledTicks = 0;
+        this.entityData.set(DATA_ENTANGLED, false);
+        this.playSound(SoundEvents.LEASH_KNOT_BREAK, 0.8F, 1.0F);
+        if (this.random.nextBoolean()) {
+            this.spawnAtLocation(new ItemStack(ModItems.BOLA.get()), 0.2F);
+        }
     }
 
     // ------------------------------------------------------------------ shoulder perch
@@ -2213,6 +2254,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         if (!this.level().isClientSide() && this.isAlive() && (this.torpor > 0.0F || this.isKnockedOut())) {
             this.torporTick();
+        }
+        if (!this.level().isClientSide() && this.entangledTicks > 0) {
+            this.entangledTick();
         }
         if (!this.level().isClientSide() && this.isAlive()) {
             this.growthTick();
@@ -2442,7 +2486,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);
-        if (player.zza != 0 || player.xxa != 0) {
+        if (!this.isEntangled() && (player.zza != 0 || player.xxa != 0)) {
             this.setRot(player.getYRot(), player.getXRot() * 0.25F);
             this.yRotO = this.getYRot();
             this.yBodyRot = this.getYRot();
@@ -2454,6 +2498,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     @Override
     public void travel(Vec3 input) {
+        if (this.isEntangled()) {
+            // tied by a bola: no steps, no jump, ridden or not; it just stands (or drops) where it is
+            input = Vec3.ZERO;
+            this.riderJump = 0.0F;
+        }
         if (this.riderJump > 0.0F && this.isVehicle() && this.onGround() && this.isControlledByLocalInstance()) {
             Vec3 v = this.getDeltaMovement();
             double up = this.jumpStrength() * this.riderJump * this.getBlockJumpFactor() + this.getJumpBoostPower();

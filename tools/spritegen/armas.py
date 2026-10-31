@@ -18,6 +18,8 @@ PAL = {
     "w": WOOD, "e": WOOD_D, "h": WOOD_L, "b": BONE, "t": FEATHER_D, "S": hexc("#e2dcc8"),  # bow wood, sinew
     "u": hexc("#c8c48a"), "U": hexc("#9c9a5a"),  # rush-fibre fletching
     "v": hexc("#b8a8ec"), "V": hexc("#8a7ac8"),  # the same, dyed with the sleep herb
+    "c": shade(LEATHER, 1.25), "C": LEATHER_D,   # the bola's leather thongs
+    "o": hexc("#c08a52"), "O": hexc("#9a6a3a"), "q": hexc("#6a4424"),  # its ochre sandstone weight
 }
 
 # tail on the left, point on the right (the arrow renderer flies +u forward)
@@ -190,6 +192,40 @@ MUZZLE = ["nk", "kn"]                 # the open bore at (0, 4)
 WRAP = ["LDL", "DLD", "LDL"]          # the leather mouthpiece binding at (0, 8)
 
 
+# the bola (v1.1, docs/ARMAS.md; design A approved 31/10): two flint stones and an ochre sandstone on leather
+# thongs knotted in the middle
+BOLA = [
+    "................",
+    "..ls............",
+    ".lssk.......lo..",
+    ".sssk......oOOq.",
+    "..kkc......OOOq.",
+    "....c.....cqqC..",
+    ".....c...c......",
+    "......cCC.......",
+    "......CCc.......",
+    ".......c........",
+    ".......c........",
+    "......ls........",
+    ".....lssk.......",
+    ".....sssk.......",
+    "......kk........",
+    "................",
+]
+# the 3D bola's texture (models item/bola_thrown and item/bola_wrap): a flint face at (0, 0), a sandstone face at
+# (4, 0), the thong at (0, 4) and the knot at (0, 6)
+BOLA_PARTS = [
+    "lsssoOOO",
+    "ssskOOOq",
+    "sskkOOqq",
+    "skkkOqqq",
+    "cCcCcCcC",
+    "CcCcCcCc",
+    "CCcC....",
+    "cCCC....",
+]
+
+
 def _paint(img, rows, x0, y0, extra=None):
     pal = dict(PAL, **(extra or {}))
     for y, row in enumerate(rows):
@@ -241,6 +277,8 @@ def main():
     save_png(arrow_texture(_narcotic(ARROW_SIDE, [(7, 2), (8, 2), (9, 2)]), _narcotic(ARROW_BACK, [])),
              os.path.join(TEX, "entity", "narcotic_arrow.png"))
     save_png(tube_texture(), os.path.join(TEX, "item", "blowgun_tube.png"))
+    save_png(sprite(BOLA), os.path.join(TEX, "item", "bola.png"))
+    save_png(sprite(BOLA_PARTS), os.path.join(TEX, "item", "bola_parts.png"))
 
 
 if __name__ == "__main__":

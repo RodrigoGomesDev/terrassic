@@ -299,14 +299,15 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     @Override
     public void aiStep() {
         // Immobilized mobs can skip goal/controller updates: release lift before vanilla applies physics.
-        if (!this.level().isClientSide() && this.isKnockedOut()) {
+        if (!this.level().isClientSide() && (this.isKnockedOut() || this.isEntangled())) {
             if (this.cruising) this.endSoar();
             this.setNoGravity(false);
         }
         super.aiStep();
         // unridden: fall slowly with the wings open, like a parrot
         Vec3 v = this.getDeltaMovement();
-        if (!this.isVehicle() && !this.isCruising() && !this.isResting() && !this.isKnockedOut() && !this.onGround() && v.y < 0.0D) {
+        if (!this.isVehicle() && !this.isCruising() && !this.isResting() && !this.isKnockedOut() && !this.isEntangled()
+                && !this.onGround() && v.y < 0.0D) {
             this.setDeltaMovement(v.multiply(1.0D, 0.6D, 1.0D));
         }
         if (this.flapTicks < 100) {
@@ -497,8 +498,9 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         super.tickRidden(player, input);
         // ridden flight moves itself (travel below); without NoGravity a server with allow-flight=false (the default)
         // kicks the rider "for floating a vehicle too long" after 4 s in the air (v0.12 test)
+        // tied in the air too: the server keeps the flag while the rider's client drops it (travel below)
         this.setNoGravity(this.isFlying());
-        if (this.isFlying()) {
+        if (this.isFlying() && !this.isEntangled()) {
             // in the air it always turns towards the rider's view, even gliding with no keys pressed, but at its own
             // pace: it carves the turn (and banks) instead of snapping round. The rider's side steers; the server keeps
             // the heading the rider's client sent.
@@ -513,6 +515,17 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     @Override
     public void travel(Vec3 input) {
+        if (this.isEntangled()) {
+            // wings bound by a bola (v1.1): no flight, it drops like a stone (no fall damage for flyers)
+            this.pendingJump = 0.0F;
+            if (this.isVehicle() && !this.isControlledByLocalInstance()) {
+                this.setDeltaMovement(Vec3.ZERO);   // the rider's client moves it, as in flight
+                return;
+            }
+            this.setNoGravity(false);
+            super.travel(Vec3.ZERO);
+            return;
+        }
         if (this.isCruising() && !this.level().isClientSide()) {
             Vec3 target = this.soarTarget != null ? this.soarTarget
                     : this.position().add(Vec3.directionFromRotation(0, this.getYRot()).scale(32));
@@ -618,7 +631,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     @Override
     public void onPlayerJump(int power) {
-        if (!this.isSaddled()) {
+        if (!this.isSaddled() || this.isEntangled()) {
             return;
         }
         this.pendingJump = power <= 0 ? 0.4F : power >= 90 ? 1.0F : 0.4F + 0.6F * power / 90.0F;

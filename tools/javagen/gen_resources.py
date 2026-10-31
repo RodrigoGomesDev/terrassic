@@ -111,6 +111,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "flint_arrow": ("Flint Arrow", "Flecha de Sílex", "Flecha de Sílex", "item/generated"),
     "narcotic_arrow": ("Narcotic Arrow", "Flecha de Narcótico", "Flecha Narcótica", "item/generated"),
     "sleep_herb": ("Sleep Herb", "Erva Sonífera", "Hierba Somnífera", "item/generated"),
+    # v1.1: the bola ties legs and wings (item/BolaItem, entity/ThrownBola; docs/ARMAS.md)
+    "bola": ("Bola", "Boleadeira", "Boleadoras", "item/generated"),
     # the Field Lens: the card of the dinosaur you look at, taming included (item/FieldLensItem)
     "field_lens": ("Field Lens", "Lupa de Campo", "Lupa de Campo", "item/handheld"),
 }
@@ -131,6 +133,7 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s dropped its cargo chest",
         "message.terrassic.platform": "%s wears the platform saddle: four aboard, anyone may climb on, you drive",
         "entity.terrassic.tranq_dart": "Narcotic Dart",
+        "entity.terrassic.bola": "Bola",
         "entity.terrassic.flint_arrow": "Flint Arrow",
         "entity.terrassic.narcotic_arrow": "Narcotic Arrow",
         "message.terrassic.knocked_out": "%s collapsed, unconscious! Feed it its food while it sleeps",
@@ -154,6 +157,7 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s largou o baú de carga",
         "message.terrassic.platform": "%s leva a sela de plataforma: quatro a bordo, qualquer um pode subir, você conduz",
         "entity.terrassic.tranq_dart": "Dardo de Narcótico",
+        "entity.terrassic.bola": "Boleadeira",
         "entity.terrassic.flint_arrow": "Flecha de Sílex",
         "entity.terrassic.narcotic_arrow": "Flecha de Narcótico",
         "message.terrassic.knocked_out": "%s desabou, desacordado! Dê a comida dele enquanto dorme",
@@ -177,6 +181,7 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s soltó el baúl de carga",
         "message.terrassic.platform": "%s lleva la silla de plataforma: cuatro a bordo, cualquiera puede subir, tú conduces",
         "entity.terrassic.tranq_dart": "Dardo Narcótico",
+        "entity.terrassic.bola": "Boleadoras",
         "entity.terrassic.flint_arrow": "Flecha de Sílex",
         "entity.terrassic.narcotic_arrow": "Flecha Narcótica",
         "message.terrassic.knocked_out": "¡%s se desplomó, inconsciente! Dale su comida mientras duerme",
@@ -543,6 +548,10 @@ ITEM_OVERRIDES = {
     "blowgun": [{"predicate": {"terrassic:blowing": 1}, "model": "terrassic:item/blowgun_blowing"}],
     "flint_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/flint_spear_held"}],
     "horn_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/horn_spear_held"}],
+    # the 3D bola, only while client/WeaponPoses.BOLA says so: 0.5 spinning in flight (BolaRenderer), 1 the thongs
+    # wound round a tied animal (DinosaurRenderer); everywhere else the sprite
+    "bola": [{"predicate": {"terrassic:bola": 0.5}, "model": "terrassic:item/bola_thrown"},
+             {"predicate": {"terrassic:bola": 1}, "model": "terrassic:item/bola_wrap"}],
     "hunting_bow": [{"predicate": {"pulling": 1}, "model": "terrassic:item/hunting_bow_pulling_0"},
                     {"predicate": {"pulling": 1, "pull": 0.65}, "model": "terrassic:item/hunting_bow_pulling_1"},
                     {"predicate": {"pulling": 1, "pull": 0.9}, "model": "terrassic:item/hunting_bow_pulling_2"}],
@@ -596,9 +605,26 @@ def _spear_held(spear):
 
 _TUBE_SIDE = {"uv": [0, 0, 16, 2], "texture": "#t"}
 _WRAP = {"uv": [0, 8, 3, 11], "texture": "#t"}
+_BOLA_FLINT = {f: {"uv": [0, 0, 3, 3], "texture": "#t"} for f in ("north", "south", "east", "west", "up", "down")}
+_BOLA_OCHRE = {f: {"uv": [4, 0, 7, 3], "texture": "#t"} for f in ("north", "south", "east", "west", "up", "down")}
+_BOLA_THONG = {f: {"uv": [0, 4, 8, 5], "texture": "#t"} for f in ("north", "south", "east", "west", "up", "down")}
+_BOLA_KNOT = {f: {"uv": [0, 6, 2, 8], "texture": "#t"} for f in ("north", "south", "east", "west", "up", "down")}
+_BOLA_TEX = {"t": "terrassic:item/bola_parts", "particle": "terrassic:item/bola"}
 HELD_MODELS = {
     "flint_spear_held": _spear_held("flint_spear"),
     "horn_spear_held": _spear_held("horn_spear"),
+    # the bola in flight: three 3 px stones on half-pixel thongs from a knot at the centre, lying flat (it spins)
+    "bola_thrown": {"textures": _BOLA_TEX, "elements": [
+        _box([6.5, 6.5, 1], [9.5, 9.5, 4], _BOLA_FLINT), _box([7.75, 7.75, 4], [8.25, 8.25, 8], _BOLA_THONG),
+        _box([1, 6.5, 6.5], [4, 9.5, 9.5], _BOLA_FLINT), _box([4, 7.75, 7.75], [8, 8.25, 8.25], _BOLA_THONG),
+        _box([12, 6.5, 6.5], [15, 9.5, 9.5], _BOLA_OCHRE), _box([8, 7.75, 7.75], [12, 8.25, 8.25], _BOLA_THONG),
+        _box([7.25, 7.25, 7.25], [8.75, 8.75, 8.75], _BOLA_KNOT)]},
+    # wound round a tied animal: a loop of thong the width of its body, the three stones hanging from it
+    "bola_wrap": {"textures": _BOLA_TEX, "elements": [
+        _box([0, 7.5, 0], [16, 8.5, 1], _BOLA_THONG), _box([0, 7.5, 15], [16, 8.5, 16], _BOLA_THONG),
+        _box([0, 7.5, 1], [1, 8.5, 15], _BOLA_THONG), _box([15, 7.5, 1], [16, 8.5, 15], _BOLA_THONG),
+        _box([-1, 5, -1], [2, 8, 2], _BOLA_FLINT), _box([14.5, 5, 6.5], [17.5, 8, 9.5], _BOLA_OCHRE),
+        _box([6.5, 5, 14.5], [9.5, 8, 17.5], _BOLA_FLINT)]},
     # the hunting bow's draw frames keep the bow's held pose (their parent inherits minecraft:item/bow's display)
     **{f"hunting_bow_pulling_{i}": {"parent": "terrassic:item/hunting_bow",
                                     "textures": {"layer0": f"terrassic:item/hunting_bow_pulling_{i}"}} for i in range(3)},
@@ -738,6 +764,13 @@ def main():
     shaped("hunting_bow", [" SR", "B R", " SR"], {"S": "minecraft:stick", "B": "minecraft:bone", "R": "terrassic:rush"}, "terrassic:hunting_bow")
     shaped("flint_arrow", ["F", "S", "R"], {"F": "minecraft:flint", "S": "minecraft:stick", "R": "terrassic:rush"}, "terrassic:flint_arrow", 4)
     shaped("narcotic_arrow", ["AAA", "AHA", "AAA"], {"A": "terrassic:flint_arrow", "H": "terrassic:sleep_herb"}, "terrassic:narcotic_arrow", 8)
+    # the bola (docs/ARMAS.md): three flint weights on string, or on thongs cut from any dinosaur hide
+    shaped("bola", ["F F", "S S", " F "], {"F": "minecraft:flint", "S": "minecraft:string"}, "terrassic:bola", 2)
+    write(f"{D}/recipes/bola_from_hide.json", {"type": "minecraft:crafting_shaped", "category": "equipment",
+                                              "pattern": ["F F", " H ", " F "],
+                                              "key": {"F": {"item": "minecraft:flint"}, "H": {"tag": "terrassic:hides"}},
+                                              "result": {"item": "terrassic:bola", "count": 2}})
+    write(f"{D}/tags/items/hides.json", {"replace": False, "values": [f"terrassic:{sid}_hide" for sid in SPECIES]})
     # any bow (and the crossbow) takes the mod's arrows
     write(os.path.join(RES, "data", "minecraft", "tags", "items", "arrows.json"),
           {"replace": False, "values": ["terrassic:flint_arrow", "terrassic:narcotic_arrow"]})

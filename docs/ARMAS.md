@@ -41,3 +41,27 @@ flecha e do tridente vanilla. Arte desenhada à mão pixel a pixel em `tools/spr
   tendão, pega de couro. Troca pela sobreposição `terrassic:held` que só vale durante `mixin/client/HeldSpearMixin`
   (mãos e voo; inventário, chão e moldura seguem com o sprite), como o tridente vanilla.
 - Cravada no chão ela balança como a flecha (`ThrownSpearRenderer`, `shakeTime`).
+
+## v1.1: boleadeira (feito)
+Pedido do Rodrigo em 31/10/2026 ("sinto falta de uma boiadeira para derrubar os dinos voantes"). Desenho A e regras
+aprovados no mesmo dia: https://claude.ai/artifact/7fjdqYKRkavzwZ64aiwyyk
+- `item/BolaItem`: segurar gira acima da cabeça (pose do tridente, `UseAnim.SPEAR`, um "vush" por volta); soltar
+  arremessa. Giro cheio em 20 ticks: velocidade 0,9 + 0,9·giro (uns 20 blocos), espalhamento 1,0. Menos de 4 ticks
+  não arremessa. Recarga 20 ticks, pilha de 16.
+- `entity/ThrownBola` (projétil de item, como a bola de neve): não fere, amarra.
+  - Voador no ar: asas presas por `FLYER_TICKS` = 160 (8 s): para de voar e cai, sem dano de queda; o cavaleiro cai junto.
+  - Outro bicho do mod: pernas presas por `GROUND_TICKS` = 120 (6 s). Amarrado = `isImmobile` (não anda, não luta, não
+    voa); montado, a montaria não anda nem pula.
+  - Gigantes (vida de tabela acima de 120, classes gigante/colossal de `KillXp`; filhotes não contam) arrebentam na hora.
+  - Nadador dentro da água, bicho desmaiado ou já amarrado: não pega, a boleadeira cai.
+  - Jogador (com PvP) lentidão V por 3 s; bicho do Minecraft lentidão V por 6 s.
+  - Nunca os bichos do próprio arremessador; os domados de outro jogador só com PvP ligado.
+  - Errou: cai onde bateu. Pegou: cai quando o bicho se solta, metade das vezes (na outra a tira arrebentou).
+- Estado salvo e sincronizado em `DinosaurEntity` (`isEntangled`, `entangle`, NBT `Entangled`); `FlyingDinosaur` desliga
+  a sustentação e o voo montado enquanto amarrado.
+- Visual: em voo o modelo 3D `item/bola_thrown` (3 pedras de 3 px em tiras de meio pixel, girando deitado,
+  `client/BolaRenderer`); no bicho, `item/bola_wrap` (um laço da largura do corpo nas pernas, ou nas asas, com as pedras
+  penduradas) desenhado por `DinosaurRenderer`. Os dois são sobreposições do item ligadas pela propriedade
+  `terrassic:bola` (`client/WeaponPoses.BOLA`). Arte: `BOLA` e `BOLA_PARTS` em `tools/spritegen/armas.py`.
+- Receitas: 3 sílex + 2 linhas = 2; 3 sílex + 1 couro de qualquer dino (tag `terrassic:hides`) = 2.
+- Sons: do Minecraft por enquanto (varrida, tridente, laço); sons próprios em espera (Rodrigo, 31/10).

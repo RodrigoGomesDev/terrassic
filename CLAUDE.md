@@ -43,7 +43,7 @@ de coautoria de IA (pedido do Rodrigo, 24/10/2026).
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
-Versão atual: **v1.0.2** (31/10/2026; tags git v0.1.0, v0.2.0, v1.0.0, v1.0.1 e v1.0.2; `mod_version` em gradle.properties). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
+Versão atual: **v1.1.0** (31/10/2026, boleadeira; tags git v0.1.0, v0.2.0, v1.0.0, v1.0.1, v1.0.2 e v1.1.0; `mod_version` em gradle.properties). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
 A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; o cliente gráfico Forge ainda não foi validado.
 Os servidores dedicados Fabric e Forge foram validados posteriormente pelos roteiros de entidades e Caderno.
 Nome: o projeto se chamava **PrimalEra** e foi renomeado para **Terrassic** em 23/10/2026: mod id `terrassic`,
@@ -108,7 +108,8 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   Sabal, Magnólia, Podocarpo, Platanus, com árvores no mundo), âmbar e resina (comum, de raw_amber/resin_jar; o Âmbar
   Temporal da história não é bloco), solos do Cretáceo (serrapilheiras, lama rachada, cinza vulcânica, turfa, solo
   laterítico, crosta de sal).
-- `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers.
+- `item/` armas: SpearItem + `entity/ThrownSpear` (arremessável), ClubItem, FlintHatchetItem, ModTiers; BolaItem +
+  `entity/ThrownBola` (v1.1, amarra e derruba voadores; `docs/ARMAS.md`).
 - `registry/` ModEntities, ModBlocks, ModItems, ModTabs. Ordem em Terrassic.init: tabs, entities, blocks, items.
 - `client/` DinoGeoModel (textura _male/_female, esconde ossos male_display/female_display/saddle), renderers.
 - `world/ModSpawns` spawn por bioma. `world/ModWorldgen`: veios de Rocha Fossilífera e Páginas Soltas em baús vanilla.

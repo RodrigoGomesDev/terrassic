@@ -3,6 +3,7 @@ package com.terrassic.registry;
 import com.terrassic.Terrassic;
 import com.terrassic.config.Eras;
 import com.terrassic.config.Story;
+import com.terrassic.item.BolaItem;
 import com.terrassic.item.ClubItem;
 import com.terrassic.item.ExcavationToolItem;
 import com.terrassic.item.FieldNotebookItem;
@@ -245,6 +246,10 @@ public final class ModItems {
             () -> new TerrassicArrowItem(FlintArrow::new, new Item.Properties().arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> NARCOTIC_ARROW = ITEMS.register("narcotic_arrow",
             () -> new TerrassicArrowItem(NarcoticArrow::new, new Item.Properties().arch$tab(ModTabs.MAIN)));
+
+    // v1.1: the bola ties legs and wings (docs/ARMAS.md)
+    public static final RegistrySupplier<Item> BOLA = ITEMS.register("bola",
+            () -> new BolaItem(new Item.Properties().stacksTo(16).arch$tab(ModTabs.MAIN)));
 
     // ---- riding gear: the platform saddle of the titans (docs/CARGA.md): four aboard, anyone may climb on
     public static final RegistrySupplier<Item> PLATFORM_SADDLE = ITEMS.register("platform_saddle",

@@ -1,0 +1,20 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "terrassic:item/bola"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "terrassic:bola": 0.5
+      },
+      "model": "terrassic:item/bola_thrown"
+    },
+    {
+      "predicate": {
+        "terrassic:bola": 1
+      },
+      "model": "terrassic:item/bola_wrap"
+    }
+  ]
+}

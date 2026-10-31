@@ -20,6 +20,9 @@ import net.minecraft.world.item.ItemStack;
 public final class WeaponPoses {
     /** Set by HeldSpearMixin around the model lookup of a spear in a hand or in flight (render thread only). */
     public static boolean HELD;
+    /** "terrassic:bola": 0.5 while BolaRenderer draws a bola in flight, 1 while DinosaurRenderer draws one wound round a
+     *  tied animal (render thread only); 0 everywhere else, so hands and inventory keep the sprite. */
+    public static float BOLA;
 
     private WeaponPoses() {
     }
@@ -33,6 +36,8 @@ public final class WeaponPoses {
             ItemPropertiesRegistry.register(ModItems.HUNTING_BOW.get(), new ResourceLocation("pull"),
                     (stack, level, entity, seed) -> using(entity, stack)
                             ? (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / HuntingBowItem.FULL_DRAW : 0.0F);
+            ItemPropertiesRegistry.register(ModItems.BOLA.get(), new ResourceLocation(Terrassic.MOD_ID, "bola"),
+                    (stack, level, entity, seed) -> BOLA);
             for (Item spear : new Item[]{ModItems.FLINT_SPEAR.get(), ModItems.HORN_SPEAR.get()}) {
                 ItemPropertiesRegistry.register(spear, new ResourceLocation(Terrassic.MOD_ID, "held"),
                         (stack, level, entity, seed) -> HELD ? 1.0F : 0.0F);

@@ -152,6 +152,7 @@ public final class TerrassicClient {
         EntityRendererRegistry.register(ModEntities.TRANQ_DART, c -> new PrimitiveArrowRenderer<>(c, "tranq_dart", 0.6F));
         EntityRendererRegistry.register(ModEntities.FLINT_ARROW, c -> new PrimitiveArrowRenderer<>(c, "flint_arrow", 1.0F));
         EntityRendererRegistry.register(ModEntities.NARCOTIC_ARROW, c -> new PrimitiveArrowRenderer<>(c, "narcotic_arrow", 1.0F));
+        EntityRendererRegistry.register(ModEntities.BOLA, BolaRenderer::new);
         WeaponPoses.init(); // the weapons' held poses (item model overrides)
         EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();

@@ -63,6 +63,7 @@ import com.terrassic.entity.Velociraptor;
 import com.terrassic.entity.Xiphactinus;
 // END GENERATED imports
 import com.terrassic.entity.CarcassEntity;
+import com.terrassic.entity.ThrownBola;
 import com.terrassic.entity.ThrownSpear;
 import com.terrassic.entity.TranqDart;
 import com.terrassic.entity.FlintArrow;
@@ -231,6 +232,11 @@ public final class ModEntities {
     public static final RegistrySupplier<EntityType<NarcoticArrow>> NARCOTIC_ARROW = ENTITY_TYPES.register("narcotic_arrow",
             () -> EntityType.Builder.<NarcoticArrow>of(NarcoticArrow::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build("narcotic_arrow"));
+
+    // v1.1: the bola (docs/ARMAS.md)
+    public static final RegistrySupplier<EntityType<ThrownBola>> BOLA = ENTITY_TYPES.register("bola",
+            () -> EntityType.Builder.<ThrownBola>of(ThrownBola::new, MobCategory.MISC)
+                    .sized(0.4F, 0.4F).clientTrackingRange(4).updateInterval(10).build("bola"));
 
     // ---- carcasses (docs/CARCACAS.md): the body a dead dinosaur leaves, harvested by players and scavengers
     public static final RegistrySupplier<EntityType<CarcassEntity>> CARCASS = ENTITY_TYPES.register("carcass",

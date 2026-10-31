@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "F F",
+    " H ",
+    " F "
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "H": {
+      "tag": "terrassic:hides"
+    }
+  },
+  "result": {
+    "item": "terrassic:bola",
+    "count": 2
+  }
+}

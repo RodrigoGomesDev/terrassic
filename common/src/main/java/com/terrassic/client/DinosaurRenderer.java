@@ -4,7 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
+import com.terrassic.registry.ModItems;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -20,8 +26,11 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
     /** How far from the player's centre the left shoulder is (blocks). */
     private static final double SHOULDER_SIDE = 0.37D;
 
+    private final ItemRenderer items;
+
     public DinosaurRenderer(EntityRendererProvider.Context context, String speciesId, float modelScale, float shadow) {
         super(context, new DinoGeoModel<>(speciesId));
+        this.items = context.getItemRenderer();
         this.withScale(modelScale);
         this.shadowRadius = shadow;
         this.addRenderLayer(new RiftLayer<>(this));  // v0.9: creatures of the Rift glow with amber cracks
@@ -53,6 +62,35 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
                 poseStack.translate(0.0D, -up, back);
             }
         }
+    }
+
+    @Override
+    public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+        if (entity.isEntangled()) {
+            this.renderBola(entity, partialTick, poseStack, buffer, packedLight);
+        }
+    }
+
+    /** A bola's thongs wound round a tied animal (v1.1, docs/ARMAS.md): one loop the width of the body round the legs,
+     *  or round the wings of a flyer, the stones hanging from it (model item/bola_wrap). Drawn the same for every
+     *  species, so it needs nothing from their models. */
+    private void renderBola(T entity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        boolean wings = entity instanceof FlyingDinosaur;
+        float width = entity.getBbWidth() * (wings ? 1.25F : 1.05F);
+        float y = entity.getBbHeight() * (wings ? 0.55F : 0.25F);
+        poseStack.pushPose();
+        poseStack.translate(0.0D, y, 0.0D);
+        poseStack.mulPose(Axis.YP.rotationDegrees(-Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot)));
+        poseStack.scale(width, Math.max(0.6F, width * 0.5F), width);
+        WeaponPoses.BOLA = 1.0F;
+        try {
+            this.items.renderStatic(new ItemStack(ModItems.BOLA.get()), ItemDisplayContext.NONE, packedLight, OverlayTexture.NO_OVERLAY,
+                    poseStack, buffer, entity.level(), entity.getId());
+        } finally {
+            WeaponPoses.BOLA = 0.0F;
+        }
+        poseStack.popPose();
     }
 
     /** Species with their own death animation fall in it; no vanilla tipping over on top. */
