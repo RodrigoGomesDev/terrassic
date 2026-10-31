@@ -20,5 +20,16 @@ flecha e do tridente vanilla. Arte desenhada à mão pixel a pixel em `tools/spr
   (vista lateral 16x5 + traseira 5x5 no layout da flecha).
 - Dardos por bicho (fôlego cheio, sem contar o torpor que escoa): Velociraptor 1, Triceratops 4, T. rex 5.
 
-## Passo 2: arco de caça e flechas (a fazer)
+## Passo 2: arco de caça e flechas (feito)
+- `item/HuntingBowItem` (estende o arco vanilla): recurvo de madeira com tendão, pontas de osso e pega de couro.
+  Puxada de 25 ticks (vanilla 20), tiro cheio a 3,3 (vanilla 3,0), +1 de dano, espalhamento 0,8, durabilidade 480.
+  Mesma pose e tremida do arco vanilla; quadros de puxada pelas propriedades `pulling`/`pull` registradas para ele em
+  `client/WeaponPoses`; zoom da puxada por `mixin/client/BowZoomMixin` (o jogo só dá zoom ao arco vanilla).
+- Flechas (`item/TerrassicArrowItem`, tag `minecraft:arrows`, então qualquer arco e a besta usam):
+  - `flint_arrow` (`entity/FlintArrow`): dano base 2,5 (vanilla 2). Receita: sílex + graveto + junco = 4.
+  - `narcotic_arrow` (`entity/NarcoticArrow`, é um `TranqDart`): potência 2,2 x força do tiro (velocidade/3).
+    Receita: 8 flechas de sílex em volta de 1 erva sonífera = 8.
+- Arco: graveto, osso e junco no formato do arco vanilla.
+- Flechas narcóticas por bicho (puxada cheia): Velociraptor 1, Triceratops 3, T. rex 3.
+- `client/PrimitiveArrowRenderer` (era TranqDartRenderer) desenha dardo e flechas com a textura de cada um.
 ## Passo 3: lança 3D, estocada no toque rápido (a fazer)

@@ -37,7 +37,11 @@ public class TranqDart extends AbstractArrow {
     }
 
     public TranqDart(Level level, LivingEntity shooter) {
-        super(ModEntities.TRANQ_DART.get(), shooter, level);
+        this(ModEntities.TRANQ_DART.get(), level, shooter);
+    }
+
+    protected TranqDart(EntityType<? extends TranqDart> type, Level level, LivingEntity shooter) {
+        super(type, shooter, level);
         this.setBaseDamage(0.5D);
     }
 

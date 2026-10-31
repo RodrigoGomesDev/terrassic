@@ -17,6 +17,10 @@ import com.terrassic.item.SketchCharcoalItem;
 import com.terrassic.item.SketchItem;
 import com.terrassic.item.SpearItem;
 import com.terrassic.item.BlowgunItem;
+import com.terrassic.item.HuntingBowItem;
+import com.terrassic.item.TerrassicArrowItem;
+import com.terrassic.entity.FlintArrow;
+import com.terrassic.entity.NarcoticArrow;
 import com.terrassic.research.GuideSpecies;
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -234,6 +238,13 @@ public final class ModItems {
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> SLEEP_HERB = ITEMS.register("sleep_herb",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)));
+    // the hunting bow and its arrows (docs/ARMAS.md)
+    public static final RegistrySupplier<Item> HUNTING_BOW = ITEMS.register("hunting_bow",
+            () -> new HuntingBowItem(new Item.Properties().durability(480).arch$tab(ModTabs.MAIN)));
+    public static final RegistrySupplier<Item> FLINT_ARROW = ITEMS.register("flint_arrow",
+            () -> new TerrassicArrowItem(FlintArrow::new, new Item.Properties().arch$tab(ModTabs.MAIN)));
+    public static final RegistrySupplier<Item> NARCOTIC_ARROW = ITEMS.register("narcotic_arrow",
+            () -> new TerrassicArrowItem(NarcoticArrow::new, new Item.Properties().arch$tab(ModTabs.MAIN)));
 
     // ---- riding gear: the platform saddle of the titans (docs/CARGA.md): four aboard, anyone may climb on
     public static final RegistrySupplier<Item> PLATFORM_SADDLE = ITEMS.register("platform_saddle",

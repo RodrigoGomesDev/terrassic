@@ -1,0 +1,6 @@
+{
+  "parent": "terrassic:item/hunting_bow",
+  "textures": {
+    "layer0": "terrassic:item/hunting_bow_pulling_2"
+  }
+}

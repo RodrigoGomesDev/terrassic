@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "AAA",
+    "AHA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "terrassic:flint_arrow"
+    },
+    "H": {
+      "item": "terrassic:sleep_herb"
+    }
+  },
+  "result": {
+    "item": "terrassic:narcotic_arrow",
+    "count": 8
+  }
+}

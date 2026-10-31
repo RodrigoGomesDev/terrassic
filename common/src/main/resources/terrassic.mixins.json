@@ -20,7 +20,8 @@
     "client.LevelRendererMixin",
     "client.GameRendererMixin",
     "client.GuiMixin",
-    "client.WorldCreationUiStateMixin"
+    "client.WorldCreationUiStateMixin",
+    "client.BowZoomMixin"
   ],
   "injectors": {
     "defaultRequire": 1

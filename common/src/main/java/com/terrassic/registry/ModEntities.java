@@ -65,6 +65,8 @@ import com.terrassic.entity.Xiphactinus;
 import com.terrassic.entity.CarcassEntity;
 import com.terrassic.entity.ThrownSpear;
 import com.terrassic.entity.TranqDart;
+import com.terrassic.entity.FlintArrow;
+import com.terrassic.entity.NarcoticArrow;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -222,6 +224,13 @@ public final class ModEntities {
     public static final RegistrySupplier<EntityType<TranqDart>> TRANQ_DART = ENTITY_TYPES.register("tranq_dart",
             () -> EntityType.Builder.<TranqDart>of(TranqDart::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(20).build("tranq_dart"));
+    // the hunting bow's arrows (docs/ARMAS.md)
+    public static final RegistrySupplier<EntityType<FlintArrow>> FLINT_ARROW = ENTITY_TYPES.register("flint_arrow",
+            () -> EntityType.Builder.<FlintArrow>of(FlintArrow::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build("flint_arrow"));
+    public static final RegistrySupplier<EntityType<NarcoticArrow>> NARCOTIC_ARROW = ENTITY_TYPES.register("narcotic_arrow",
+            () -> EntityType.Builder.<NarcoticArrow>of(NarcoticArrow::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).build("narcotic_arrow"));
 
     // ---- carcasses (docs/CARCACAS.md): the body a dead dinosaur leaves, harvested by players and scavengers
     public static final RegistrySupplier<EntityType<CarcassEntity>> CARCASS = ENTITY_TYPES.register("carcass",

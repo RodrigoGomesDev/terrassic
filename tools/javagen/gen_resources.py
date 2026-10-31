@@ -107,6 +107,9 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # knockout taming (docs/DOMESTICACAO.md)
     "blowgun": ("Blowgun", "Zarabatana", "Cerbatana", "item/handheld"),
     "tranq_dart": ("Narcotic Dart", "Dardo de Narcótico", "Dardo Narcótico", "item/generated"),
+    "hunting_bow": ("Hunting Bow", "Arco de Caça", "Arco de Caza", "minecraft:item/bow"),
+    "flint_arrow": ("Flint Arrow", "Flecha de Sílex", "Flecha de Sílex", "item/generated"),
+    "narcotic_arrow": ("Narcotic Arrow", "Flecha de Narcótico", "Flecha Narcótica", "item/generated"),
     "sleep_herb": ("Sleep Herb", "Erva Sonífera", "Hierba Somnífera", "item/generated"),
     # the Field Lens: the card of the dinosaur you look at, taming included (item/FieldLensItem)
     "field_lens": ("Field Lens", "Lupa de Campo", "Lupa de Campo", "item/handheld"),
@@ -128,6 +131,8 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s dropped its cargo chest",
         "message.terrassic.platform": "%s wears the platform saddle: four aboard, anyone may climb on, you drive",
         "entity.terrassic.tranq_dart": "Narcotic Dart",
+        "entity.terrassic.flint_arrow": "Flint Arrow",
+        "entity.terrassic.narcotic_arrow": "Narcotic Arrow",
         "message.terrassic.knocked_out": "%s collapsed, unconscious! Feed it its food while it sleeps",
         "message.terrassic.ko_status": "%s · torpor %s/%s · taming %s%% · effectiveness %s%%",
         "message.terrassic.ko_tamed": "%s wakes up tame. Taming effectiveness: %s%%",
@@ -149,6 +154,8 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s largou o baú de carga",
         "message.terrassic.platform": "%s leva a sela de plataforma: quatro a bordo, qualquer um pode subir, você conduz",
         "entity.terrassic.tranq_dart": "Dardo de Narcótico",
+        "entity.terrassic.flint_arrow": "Flecha de Sílex",
+        "entity.terrassic.narcotic_arrow": "Flecha de Narcótico",
         "message.terrassic.knocked_out": "%s desabou, desacordado! Dê a comida dele enquanto dorme",
         "message.terrassic.ko_status": "%s · torpor %s/%s · domesticação %s%% · eficiência %s%%",
         "message.terrassic.ko_tamed": "%s acorda domesticado. Eficiência da domesticação: %s%%",
@@ -170,6 +177,8 @@ LANG_EXTRA = {
         "message.terrassic.cargo_off": "%s soltó el baúl de carga",
         "message.terrassic.platform": "%s lleva la silla de plataforma: cuatro a bordo, cualquiera puede subir, tú conduces",
         "entity.terrassic.tranq_dart": "Dardo Narcótico",
+        "entity.terrassic.flint_arrow": "Flecha de Sílex",
+        "entity.terrassic.narcotic_arrow": "Flecha Narcótica",
         "message.terrassic.knocked_out": "¡%s se desplomó, inconsciente! Dale su comida mientras duerme",
         "message.terrassic.ko_status": "%s · torpor %s/%s · domesticación %s%% · eficacia %s%%",
         "message.terrassic.ko_tamed": "%s despierta domesticado. Eficacia de la domesticación: %s%%",
@@ -532,6 +541,9 @@ def write(path, data):
 # Weapons whose held model changes while in use (client/WeaponPoses registers the predicates; docs/ARMAS.md).
 ITEM_OVERRIDES = {
     "blowgun": [{"predicate": {"terrassic:blowing": 1}, "model": "terrassic:item/blowgun_blowing"}],
+    "hunting_bow": [{"predicate": {"pulling": 1}, "model": "terrassic:item/hunting_bow_pulling_0"},
+                    {"predicate": {"pulling": 1, "pull": 0.65}, "model": "terrassic:item/hunting_bow_pulling_1"},
+                    {"predicate": {"pulling": 1, "pull": 0.9}, "model": "terrassic:item/hunting_bow_pulling_2"}],
 }
 
 
@@ -542,6 +554,9 @@ def _box(frm, to, faces):
 _TUBE_SIDE = {"uv": [0, 0, 16, 2], "texture": "#t"}
 _WRAP = {"uv": [0, 8, 3, 11], "texture": "#t"}
 HELD_MODELS = {
+    # the hunting bow's draw frames keep the bow's held pose (their parent inherits minecraft:item/bow's display)
+    **{f"hunting_bow_pulling_{i}": {"parent": "terrassic:item/hunting_bow",
+                                    "textures": {"layer0": f"terrassic:item/hunting_bow_pulling_{i}"}} for i in range(3)},
     # the reed at the lips: a 24 px tube along -Z with the leather mouthpiece at the near end, pointing at the
     # crosshair in first person and straight ahead of the face in the goat-horn pose
     "blowgun_blowing": {
@@ -673,6 +688,14 @@ def main():
     # brewed from the Cretaceous water lily (sedative, like its living relatives) and shelf fungus
     shaped("blowgun", ["  R", " R ", "R  "], {"R": "terrassic:rush"}, "terrassic:blowgun")
     shaped("tranq_dart", ["F", "H", "E"], {"F": "minecraft:flint", "H": "terrassic:sleep_herb", "E": "minecraft:feather"}, "terrassic:tranq_dart", 4)
+    # the hunting bow (docs/ARMAS.md): a stick stave backed with bone at the grip, a rush-fibre string; flint arrows
+    # fletched with rush; narcotic arrows dipped eight at a time in the sleep herb, like tipped arrows
+    shaped("hunting_bow", [" SR", "B R", " SR"], {"S": "minecraft:stick", "B": "minecraft:bone", "R": "terrassic:rush"}, "terrassic:hunting_bow")
+    shaped("flint_arrow", ["F", "S", "R"], {"F": "minecraft:flint", "S": "minecraft:stick", "R": "terrassic:rush"}, "terrassic:flint_arrow", 4)
+    shaped("narcotic_arrow", ["AAA", "AHA", "AAA"], {"A": "terrassic:flint_arrow", "H": "terrassic:sleep_herb"}, "terrassic:narcotic_arrow", 8)
+    # any bow (and the crossbow) takes the mod's arrows
+    write(os.path.join(RES, "data", "minecraft", "tags", "items", "arrows.json"),
+          {"replace": False, "values": ["terrassic:flint_arrow", "terrassic:narcotic_arrow"]})
     # the T. rex saddle: leather seat and flaps, rush padding, iron rings, and a rex tooth for the pommel
     shaped("tyrannosaurus_saddle", ["LLL", "RTR", "I I"], {"L": "minecraft:leather", "R": "terrassic:rush",
            "T": "terrassic:rex_tooth", "I": "minecraft:iron_ingot"}, "terrassic:tyrannosaurus_saddle")
