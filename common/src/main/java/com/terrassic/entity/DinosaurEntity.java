@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.item.SavedItems;
 import com.terrassic.Terrassic;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.block.DinoEggBlock;
@@ -884,7 +885,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 CompoundTag item = list.getCompound(i);
                 int slot = item.getByte("Slot") & 255;
                 if (slot < this.cargo.getContainerSize()) {
-                    this.cargo.setItem(slot, ItemStack.parseOptional(this.registryAccess(), item));
+                    this.cargo.setItem(slot, SavedItems.read(this.registryAccess(), item));
                 }
             }
         }

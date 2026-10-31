@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.item.SavedItems;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
@@ -167,7 +168,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
         this.loot.clear();
         ListTag list = tag.getList("Loot", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
-            ItemStack stack = ItemStack.parseOptional(this.registryAccess(), list.getCompound(i));
+            ItemStack stack = SavedItems.read(this.registryAccess(), list.getCompound(i));
             if (!stack.isEmpty()) {
                 this.loot.add(stack);
             }

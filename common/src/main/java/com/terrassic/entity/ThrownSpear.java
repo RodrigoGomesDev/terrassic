@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.item.SavedItems;
 import net.minecraft.server.level.ServerLevel;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -116,7 +117,7 @@ public class ThrownSpear extends AbstractArrow {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("Spear", 10)) {
-            this.spearItem = ItemStack.parseOptional(this.registryAccess(), tag.getCompound("Spear"));
+            this.spearItem = SavedItems.read(this.registryAccess(), tag.getCompound("Spear"));
             this.entityData.set(DATA_ITEM, this.spearItem.copy());
         }
         this.dealtDamage = tag.getBoolean("DealtDamage");

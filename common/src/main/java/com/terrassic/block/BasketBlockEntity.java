@@ -1,5 +1,6 @@
 package com.terrassic.block;
 
+import com.terrassic.item.SavedItems;
 import net.minecraft.core.HolderLookup;
 import com.terrassic.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -56,6 +57,7 @@ public class BasketBlockEntity extends RandomizableContainerBlockEntity {
         super.loadAdditional(tag, registries);
         this.items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
         if (!this.tryLoadLootTable(tag)) {
+            SavedItems.upgradeList(tag, "Items");
             ContainerHelper.loadAllItems(tag, this.items, registries);
         }
     }
