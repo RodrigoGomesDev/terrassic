@@ -1490,6 +1490,8 @@ if __name__ == "__main__":
     ptera_extras.main()   # the Pteranodon's clutch in its sand scrape and its saddle
     import rapt_extras
     rapt_extras.main()   # the Velociraptor's clutch in its desert scrape and its hunting harness
+    import armas
+    armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)

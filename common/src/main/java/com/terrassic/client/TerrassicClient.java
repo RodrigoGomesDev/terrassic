@@ -149,7 +149,8 @@ public final class TerrassicClient {
         renderer(ModEntities.BAURUSUCHUS, "baurusuchus", Baurusuchus.MODEL_SCALE, Baurusuchus.SHADOW);
         // END GENERATED renderers
         EntityRendererRegistry.register(ModEntities.SPEAR, ThrownSpearRenderer::new);
-        EntityRendererRegistry.register(ModEntities.TRANQ_DART, net.minecraft.client.renderer.entity.ThrownItemRenderer::new);
+        EntityRendererRegistry.register(ModEntities.TRANQ_DART, TranqDartRenderer::new);
+        WeaponPoses.init(); // the weapons' held poses (item model overrides)
         EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();
         ParticleProviderRegistry.register(ModParticles.ROAR_WAVE, RoarWaveParticle.Provider::new);

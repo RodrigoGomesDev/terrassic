@@ -529,6 +529,43 @@ def write(path, data):
         f.write("\n")
 
 
+# Weapons whose held model changes while in use (client/WeaponPoses registers the predicates; docs/ARMAS.md).
+ITEM_OVERRIDES = {
+    "blowgun": [{"predicate": {"terrassic:blowing": 1}, "model": "terrassic:item/blowgun_blowing"}],
+}
+
+
+def _box(frm, to, faces):
+    return {"from": frm, "to": to, "faces": faces}
+
+
+_TUBE_SIDE = {"uv": [0, 0, 16, 2], "texture": "#t"}
+_WRAP = {"uv": [0, 8, 3, 11], "texture": "#t"}
+HELD_MODELS = {
+    # the reed at the lips: a 24 px tube along -Z with the leather mouthpiece at the near end, pointing at the
+    # crosshair in first person and straight ahead of the face in the goat-horn pose
+    "blowgun_blowing": {
+        "textures": {"t": "terrassic:item/blowgun_tube", "particle": "terrassic:item/blowgun"},
+        "elements": [
+            _box([7, 7, -4], [9, 9, 20], {
+                "north": {"uv": [0, 4, 2, 6], "texture": "#t"}, "south": {"uv": [0, 4, 2, 6], "texture": "#t"},
+                "east": _TUBE_SIDE, "west": _TUBE_SIDE,
+                "up": dict(_TUBE_SIDE, rotation=90), "down": {"uv": [0, 2, 16, 4], "texture": "#t", "rotation": 90}}),
+            _box([6.5, 6.5, 16], [9.5, 9.5, 19.5], {f: _WRAP for f in ("north", "south", "east", "west", "up", "down")}),
+        ],
+        "display": {
+            "firstperson_righthand": {"rotation": [10, 0, 0], "translation": [-9, 1.5, -3], "scale": [1, 1, 1]},
+            "firstperson_lefthand": {"rotation": [10, 0, 0], "translation": [-9, 1.5, -3], "scale": [1, 1, 1]},
+            "thirdperson_righthand": {"rotation": [0, 0, 0], "translation": [0, 0, -10], "scale": [0.8, 0.8, 0.8]},
+            "thirdperson_lefthand": {"rotation": [0, 0, 0], "translation": [0, 0, -10], "scale": [0.8, 0.8, 0.8]},
+            "gui": {"rotation": [-90, -135, 0], "translation": [0, 0, 0], "scale": [0.55, 0.55, 0.55]},
+            "fixed": {"rotation": [-90, -135, 0], "translation": [0, 0, 0], "scale": [0.55, 0.55, 0.55]},
+            "ground": {"rotation": [0, 0, 0], "translation": [0, 2, 0], "scale": [0.4, 0.4, 0.4]},
+        },
+    },
+}
+
+
 def egg_model(sid, stage, large):
     if sid in CUSTOM_EGGS:
         return CUSTOM_EGGS[sid](sid, stage)
@@ -588,7 +625,12 @@ def main():
         lang["en_us"][f"item.terrassic.{iid}"] = en
         lang["pt_br"][f"item.terrassic.{iid}"] = pt
         lang["es_es"][f"item.terrassic.{iid}"] = es
-        write(f"{A}/models/item/{iid}.json", {"parent": parent, "textures": {"layer0": f"terrassic:item/{iid}"}})
+        model = {"parent": parent, "textures": {"layer0": f"terrassic:item/{iid}"}}
+        if iid in ITEM_OVERRIDES:
+            model["overrides"] = ITEM_OVERRIDES[iid]
+        write(f"{A}/models/item/{iid}.json", model)
+    for name, model in HELD_MODELS.items():
+        write(f"{A}/models/item/{name}.json", model)
     import gen_blocks  # primitive building blocks: their JSON + lang entries
     gen_blocks.main()
     import gen_science  # fossils, field tools, research table, advancements, story and Field Guide texts
