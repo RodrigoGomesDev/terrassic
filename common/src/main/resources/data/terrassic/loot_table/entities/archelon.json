@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:scute",
+          "name": "minecraft:turtle_scute",
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -17,12 +17,13 @@
               }
             },
             {
-              "function": "minecraft:looting_enchant",
+              "function": "minecraft:enchanted_count_increase",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 0,
                 "max": 1
-              }
+              },
+              "enchantment": "minecraft:looting"
             }
           ]
         }
@@ -44,12 +45,13 @@
               }
             },
             {
-              "function": "minecraft:looting_enchant",
+              "function": "minecraft:enchanted_count_increase",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 0,
                 "max": 1
-              }
+              },
+              "enchantment": "minecraft:looting"
             }
           ]
         }
@@ -85,12 +87,13 @@
               ]
             },
             {
-              "function": "minecraft:looting_enchant",
+              "function": "minecraft:enchanted_count_increase",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 0,
                 "max": 1
-              }
+              },
+              "enchantment": "minecraft:looting"
             }
           ]
         }
@@ -112,12 +115,13 @@
               }
             },
             {
-              "function": "minecraft:looting_enchant",
+              "function": "minecraft:enchanted_count_increase",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 0,
                 "max": 1
-              }
+              },
+              "enchantment": "minecraft:looting"
             }
           ]
         }

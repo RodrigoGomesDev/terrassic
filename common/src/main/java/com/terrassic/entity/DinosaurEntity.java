@@ -829,8 +829,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (!stack.isEmpty()) {
                     CompoundTag item = new CompoundTag();
                     item.putByte("Slot", (byte) i);
-                    stack.save(this.registryAccess(), item);
-                    list.add(item);
+                    list.add(stack.save(this.registryAccess(), item));
                 }
             }
             tag.put("Cargo", list);

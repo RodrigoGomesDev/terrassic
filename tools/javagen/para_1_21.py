@@ -86,6 +86,57 @@ def advancement(doc):
     walk_predicates(doc)
 
 
+def flat_providers(node):
+    """1.20.5 dropped the "value" wrapper of the number providers (uniform, biased_to_bottom...)."""
+    if isinstance(node, dict):
+        inner = node.get("value")
+        if isinstance(inner, dict) and str(node.get("type", "")).startswith("minecraft:") and "min_inclusive" in inner:
+            del node["value"]
+            node.update(inner)
+        for value in node.values():
+            flat_providers(value)
+    elif isinstance(node, list):
+        for value in node:
+            flat_providers(value)
+
+
+def renamed_ids(node):
+    """Vanilla ids that changed since 1.20.1."""
+    names = {"minecraft:grass": "minecraft:short_grass", "minecraft:scute": "minecraft:turtle_scute"}
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if isinstance(value, str):
+                node[key] = names.get(value, value)
+            else:
+                renamed_ids(value)
+    elif isinstance(node, list):
+        for i, value in enumerate(node):
+            if isinstance(value, str):
+                node[i] = names.get(value, value)
+            else:
+                renamed_ids(value)
+
+
+def loot_functions(node):
+    if isinstance(node, dict):
+        if node.get("function") == "minecraft:looting_enchant":
+            node["function"] = "minecraft:enchanted_count_increase"
+            node["enchantment"] = "minecraft:looting"
+        if node.get("condition") == "minecraft:random_chance_with_looting":
+            chance = node.pop("chance")
+            bonus = node.pop("looting_multiplier")
+            node["condition"] = "minecraft:random_chance_with_enchanted_bonus"
+            node["enchantment"] = "minecraft:looting"
+            node["unenchanted_chance"] = chance
+            node["enchanted_chance"] = {"type": "minecraft:linear", "base": round(chance + bonus, 4),
+                                        "per_level_above_first": bonus}
+        for value in node.values():
+            loot_functions(value)
+    elif isinstance(node, list):
+        for value in node:
+            loot_functions(value)
+
+
 def json_files(folder):
     for d, _, fs in os.walk(folder):
         for f in fs:
@@ -121,12 +172,17 @@ def main():
             move(os.path.join(base, old), os.path.join(base, new))
         for old, new in TAGS.items():
             move(os.path.join(base, "tags", old), os.path.join(base, "tags", new))
+        for path in json_files(base):
+            rewrite(path, renamed_ids)
         for path in json_files(os.path.join(base, "recipe")):
             rewrite(path, recipe)
         for path in json_files(os.path.join(base, "advancement")):
             rewrite(path, advancement)
         for path in json_files(os.path.join(base, "loot_table")):
             rewrite(path, walk_predicates)
+            rewrite(path, loot_functions)
+        for path in json_files(os.path.join(base, "worldgen")):
+            rewrite(path, flat_providers)
     water_breathers()
     era_packs()
 

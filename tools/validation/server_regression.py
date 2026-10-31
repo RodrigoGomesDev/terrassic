@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PET_STATE = ('{Owner:[I;1,2,3,4],Saddled:1b,Chested:1b,Female:1b,Sitting:1b,'
-             'Cargo:[{Slot:0b,id:"minecraft:diamond",Count:7b}]}')
+             'Cargo:[{Slot:0b,id:"minecraft:diamond",count:7}]}')
 
 
 def verify_pet(marker):
@@ -128,7 +128,7 @@ def run_server(loader, init, directory, stage, commands, expected, timeout):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric", "neoforge"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True, help="Existing eula.txt accepted by the operator")
     parser.add_argument("--timeout", type=int, default=240, help="Seconds per launch")
     args = parser.parse_args()
@@ -156,12 +156,13 @@ def main():
     create = ["gamerule doMobSpawning false", "gamerule randomTickSpeed 0", "forceload add 0 0",
               'summon terrassic:edmontosaurus 0 80 0 {Tags:["reg_pet"],NoAI:1b,NoGravity:1b,Invulnerable:1b,Roamer:1b,'
               'Owner:[I;1,2,3,4],Saddled:1b,Chested:1b,Female:1b,Sitting:1b,'
-              'Cargo:[{Slot:0b,id:"minecraft:diamond",Count:7b}]}',
+              'Cargo:[{Slot:0b,id:"minecraft:diamond",count:7}]}',
               'summon terrassic:gallimimus 4 80 0 {Tags:["reg_wild"],NoAI:1b,NoGravity:1b,Invulnerable:1b,Roamer:1b}',
               'summon terrassic:gallimimus 8 80 0 {Tags:["reg_named"],NoAI:1b,NoGravity:1b,Invulnerable:1b,Roamer:1b,'
               'CustomName:\'{"text":"Regression Named"}\'}',
               'summon terrassic:gallimimus 12 80 0 {Tags:["reg_normal"],NoAI:1b,NoGravity:1b,Invulnerable:1b}',
               'summon minecraft:pig 14 80 0 {Tags:["reg_control"],NoAI:1b,NoGravity:1b,Invulnerable:1b}',
+              'data get entity @e[tag=reg_pet,limit=1]',
               verify_pet("REG_PET_CREATED"),
               'execute if entity @e[tag=reg_wild] run say REG_WILD_CREATED',
               'execute if entity @e[tag=reg_named] run say REG_NAMED_CREATED',
