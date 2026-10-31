@@ -1106,7 +1106,7 @@
   "guide.terrassic.pocket.riding.body": "Pon la silla a un dinosaurio montable adulto. El T. rex, el Pteranodon y el Velociraptor necesitan la suya; los demás usan la silla normal. Úsalo con la mano vacía para montar, y las tijeras quitan la silla.\n%key:jump% salta (mantén para saltar más alto) y %key:attack% ataca.\nEn el Pteranodon, %key:jump% despega y bate las alas, la mirada dirige y %key:sneak% en el aire desciende sin desmontar.",
   "guide.terrassic.pocket.riding.title": "Montura",
   "guide.terrassic.pocket.rules.body": "Quien crea el mundo, o el administrador del servidor, ajusta las reglas: cantidad de dinosaurios, daño, velocidad de doma, crecimiento de las crías y más.\nEstán en la pantalla de creación del mundo y en el archivo de configuración del servidor, no dentro del juego.",
-  "guide.terrassic.pocket.rules.title": "Reglas del mundo",
+  "guide.terrassic.pocket.rules.title": "Reglas",
   "guide.terrassic.pocket.start.body": "Los dinosaurios viven en el mundo normal, entre los demás animales: más o menos uno de cada tres. Los grandes van en manada, los voladores anidan en colonias en la costa y los reptiles marinos viven en el océano.\nCasi todo empieza con sílex, que sale de la grava, y con junco, que crece a orillas de ríos y pantanos.\nEl Velociraptor caza de noche: al principio, no camines solo a oscuras.",
   "guide.terrassic.pocket.start.title": "Primeros pasos",
   "guide.terrassic.pocket.subtitle": "de Terrassic",

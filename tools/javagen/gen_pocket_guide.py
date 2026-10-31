@@ -4,7 +4,8 @@
 Writes assets/terrassic/pocket_guide.json (topic order, icon, recipes shown on a crafting grid), the advancement and
 loot table that give every player one book on their first tick in a world, the recipe (book + flint), and returns
 LANG for gen_resources.py. %key:<name>% in a text becomes the key the player has bound (client/PocketGuideScreen).
-Keep every text short: the screen flows it over as many pages as it needs.
+Keep every text short: the screen flows it over as many pages as it needs. A title must fit its index line: about
+82 px of the default font, so 14 letters or so.
 """
 import json
 import os
@@ -106,7 +107,7 @@ TOPICS = [
                   "Um macho e uma fêmea domados procriam e põem um ovo. O ovo choca em três etapas, e o filhote marca como "
                   "dono o jogador que estiver mais perto.\n"
                   "Predadores só se domam filhotes ou por nocaute. Herbívoros também se domam com comida na mão."),
-        "en_us": ("Eggs and Hatchlings",
+        "en_us": ("Eggs and Young",
                   "A tamed male and female breed and lay an egg. The egg hatches in three stages, and the hatchling takes the "
                   "nearest player as its owner.\n"
                   "Predators are tamed only as hatchlings or by knockout. Herbivores can also be tamed by hand-feeding."),
@@ -168,7 +169,7 @@ TOPICS = [
                   "Todo dino sente fome. O domado com fome pede comida: dê a comida dele na mão, ou deixe comida na carga, "
                   "que ele come sozinho. Bem alimentado, ele se cura devagar.\n"
                   "Selvagens dormem de noite (o Velociraptor, de dia), e um predador de barriga cheia não caça."),
-        "en_us": ("Hunger and Sleep",
+        "en_us": ("Hunger & Sleep",
                   "Every dinosaur gets hungry. A hungry tamed one begs: hand it its food, or leave food in its cargo and it eats "
                   "by itself. Well fed, it heals slowly.\n"
                   "Wild ones sleep at night (the Velociraptor by day), and a predator with a full belly does not hunt."),
@@ -182,7 +183,7 @@ TOPICS = [
                   "Use um baú num dino de carga domado e ele passa a levar carga, recolhendo os itens do chão por perto. "
                   "Abra pela tela do dino, botão Carga.\n"
                   "Bichos pequenos sobem no seu ombro pelo botão Ombro; agache para soltá-los."),
-        "en_us": ("Cargo and Shoulder",
+        "en_us": ("Cargo, Shoulder",
                   "Use a chest on a tamed pack animal and it carries cargo, picking up the items lying nearby. "
                   "Open it from the dinosaur's screen, Cargo button.\n"
                   "Small animals ride on your shoulder with the Shoulder button; sneak to let them down."),
@@ -206,7 +207,7 @@ TOPICS = [
                   "Los bloques están en la pestaña de construcción de Terrassic, y sus recetas salen en el libro de recetas."),
     }),
     ("rules", "terrassic:sketch", [], {
-        "pt_br": ("Regras do mundo",
+        "pt_br": ("Regras",
                   "Quem cria o mundo, ou o administrador do servidor, ajusta as regras: quantidade de dinos, dano, velocidade "
                   "de domar, crescimento dos filhotes e outras.\n"
                   "Elas ficam na tela de criação do mundo e no arquivo de configuração do servidor, não dentro do jogo."),
@@ -214,7 +215,7 @@ TOPICS = [
                   "Whoever creates the world, or the server admin, sets the rules: how many dinosaurs, damage, taming speed, "
                   "hatchling growth and more.\n"
                   "They are on the world creation screen and in the server's config file, not inside the game."),
-        "es_es": ("Reglas del mundo",
+        "es_es": ("Reglas",
                   "Quien crea el mundo, o el administrador del servidor, ajusta las reglas: cantidad de dinosaurios, daño, "
                   "velocidad de doma, crecimiento de las crías y más.\n"
                   "Están en la pantalla de creación del mundo y en el archivo de configuración del servidor, no dentro del juego."),

@@ -386,7 +386,7 @@ public class PocketGuideScreen extends Screen {
 
         @Override
         public int height() {
-            return 20;
+            return 18;
         }
 
         @Override

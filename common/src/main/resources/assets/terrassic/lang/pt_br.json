@@ -1106,7 +1106,7 @@
   "guide.terrassic.pocket.riding.body": "Ponha a sela num dino montável adulto. O T. rex, o Pteranodonte e o Velociraptor pedem a sela deles; os outros usam a sela comum. Clique com a mão vazia para montar e use tesoura para tirar a sela.\n%key:jump% pula (segure para pular mais alto) e %key:attack% ataca.\nNo Pteranodonte, %key:jump% decola e bate as asas, olhar dirige, e %key:sneak% no ar desce sem desmontar.",
   "guide.terrassic.pocket.riding.title": "Montaria",
   "guide.terrassic.pocket.rules.body": "Quem cria o mundo, ou o administrador do servidor, ajusta as regras: quantidade de dinos, dano, velocidade de domar, crescimento dos filhotes e outras.\nElas ficam na tela de criação do mundo e no arquivo de configuração do servidor, não dentro do jogo.",
-  "guide.terrassic.pocket.rules.title": "Regras do mundo",
+  "guide.terrassic.pocket.rules.title": "Regras",
   "guide.terrassic.pocket.start.body": "Os dinossauros vivem no mundo normal, no meio dos outros animais: mais ou menos um a cada três bichos. Os grandes andam em bando, os voadores fazem colônias na costa e os répteis marinhos ficam no oceano.\nQuase tudo começa com sílex, que sai do cascalho, e com junco, que cresce na beira de rios e pântanos.\nO Velociraptor caça de noite: não ande sozinho no escuro no começo.",
   "guide.terrassic.pocket.start.title": "Começo",
   "guide.terrassic.pocket.subtitle": "do Terrassic",
