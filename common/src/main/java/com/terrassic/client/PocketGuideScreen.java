@@ -202,9 +202,18 @@ public class PocketGuideScreen extends Screen {
 
     // ------------------------------------------------------------------ drawing
 
+    /** 1.21: Screen.render blurs and dims here, over whatever this screen already drew; ours draws its own backdrop. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g, mouseX, mouseY, partialTick);
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(g);
+        } else {
+            super.renderBackground(g, mouseX, mouseY, partialTick);
+        }
         g.blit(TEXTURE, this.left, this.top, 0, 0, W, H, TEX_W, TEX_H);
         this.hoveredStack = ItemStack.EMPTY;
         this.hoveredEntry = null;

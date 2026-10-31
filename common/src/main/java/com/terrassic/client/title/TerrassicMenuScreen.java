@@ -169,6 +169,11 @@ public class TerrassicMenuScreen extends Screen {
         this.setInitialFocus(single);
     }
 
+    /** 1.21: Screen.render blurs and dims here, over whatever this screen already drew; ours draws its own backdrop. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         float seconds = (Util.getMillis() - this.openedAt) / 1000.0F;

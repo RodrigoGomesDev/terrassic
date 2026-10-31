@@ -31,6 +31,11 @@ public class IntroScreen extends Screen {
         return false;
     }
 
+    /** 1.21: Screen.render blurs and dims here, over whatever this screen already drew; ours draws its own backdrop. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         long now = Util.getMillis();

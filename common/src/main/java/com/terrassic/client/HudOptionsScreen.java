@@ -58,9 +58,18 @@ public class HudOptionsScreen extends Screen {
         this.rebuildWidgets();
     }
 
+    /** 1.21: Screen.render blurs and dims here, over whatever this screen already drew; ours draws its own backdrop. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g, mouseX, mouseY, partialTick);
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(g);
+        } else {
+            super.renderBackground(g, mouseX, mouseY, partialTick);
+        }
         int x = this.left;
         int y = this.top;
         AmberHud.slab(g, "hud_options_" + this.h, x, y, 6, 0, W, 0, W, this.h - 5, W - 5, this.h, 0, this.h, 0, 6);

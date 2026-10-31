@@ -274,9 +274,18 @@ public class NotebookScreen extends Screen {
 
     // ------------------------------------------------------------------ drawing
 
+    /** 1.21: Screen.render blurs and dims here, over whatever this screen already drew; ours draws its own backdrop. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g, mouseX, mouseY, partialTick);
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(g);
+        } else {
+            super.renderBackground(g, mouseX, mouseY, partialTick);
+        }
         g.fill(this.left - 4, this.top - 4, this.left + W + 4, this.top + H + 4, LEATHER);
         g.fill(this.left, this.top, this.left + W, this.top + H, PAPER);
         g.fill(this.left + W / 2 - 1, this.top + 4, this.left + W / 2 + 1, this.top + H - 4, PAPER_DARK);

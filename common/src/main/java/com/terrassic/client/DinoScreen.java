@@ -167,9 +167,18 @@ public class DinoScreen extends Screen {
         }
     }
 
+    /** 1.21: Screen.render blurs and dims here, over whatever this screen already drew; ours draws its own backdrop. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g, mouseX, mouseY, partialTick);
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(g);
+        } else {
+            super.renderBackground(g, mouseX, mouseY, partialTick);
+        }
         int x0 = this.left;
         int y0 = this.top;
         AmberHud.slab(g, "dino_screen", x0, y0, 6, 0, W - 40, 0, W - 36, 3, W, 3, W, H - 5, W - 5, H, 120, H, 116, H - 2,

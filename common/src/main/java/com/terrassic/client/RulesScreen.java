@@ -169,9 +169,18 @@ public class RulesScreen extends Screen {
 
     // ------------------------------------------------------------------ drawing
 
+    /** 1.21: Screen.render blurs and dims here, over whatever this screen already drew; ours draws its own backdrop. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g, mouseX, mouseY, partialTick);
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(g);
+        } else {
+            super.renderBackground(g, mouseX, mouseY, partialTick);
+        }
         int right = this.left + this.panelW;
         int bottom = this.top + this.panelH;
         TerrassicUi.slab(g, this.left, this.top, right, bottom);
