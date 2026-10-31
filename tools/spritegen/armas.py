@@ -262,11 +262,16 @@ def arrow_texture(side, back):
     return img
 
 
+def mirrored(img):
+    return img.transpose(Image.FLIP_LEFT_RIGHT)
+
+
 def main():
     save_png(dart_texture(), os.path.join(TEX, "entity", "tranq_dart.png"))
-    save_png(sprite(BOW), os.path.join(TEX, "item", "hunting_bow.png"))
+    # the hand transforms of minecraft:item/bow expect the arrow tip at the top left, so the bow is drawn mirrored
+    save_png(mirrored(sprite(BOW)), os.path.join(TEX, "item", "hunting_bow.png"))
     for i, rows in enumerate(BOW_PULL):
-        save_png(sprite(rows), os.path.join(TEX, "item", f"hunting_bow_pulling_{i}.png"))
+        save_png(mirrored(sprite(rows)), os.path.join(TEX, "item", f"hunting_bow_pulling_{i}.png"))
     save_png(sprite(ARROW_ITEM), os.path.join(TEX, "item", "flint_arrow.png"))
     save_png(sprite(_narcotic(ARROW_ITEM, [(8, 6), (7, 7)])), os.path.join(TEX, "item", "narcotic_arrow.png"))
     for spear, head in SPEAR_HEADS.items():
