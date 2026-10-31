@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.terrassic.client.DinoNameplate;
 import com.terrassic.client.LeapClient;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
@@ -18,16 +19,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LevelRenderer.class)
 public abstract class LevelRendererMixin {
     @Inject(method = "renderLevel", at = @At("HEAD"), require = 0)
-    private void terrassic$frameCamera(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline,
-                                       Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projection,
-                                       CallbackInfo ci) {
-        DinoNameplate.capture(projection, poseStack.last().pose(), camera.getPosition());
+    private void terrassic$frameCamera(DeltaTracker delta, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer,
+                                       LightTexture lightTexture, Matrix4f view, Matrix4f projection, CallbackInfo ci) {
+        DinoNameplate.capture(projection, view, camera.getPosition());
     }
 
     @Inject(method = "renderSky", at = @At("TAIL"), require = 0)
-    private void terrassic$shootingStars(PoseStack poseStack, Matrix4f projection, float partialTick, Camera camera,
+    private void terrassic$shootingStars(Matrix4f view, Matrix4f projection, float partialTick, Camera camera,
                                          boolean foggy, Runnable fogSetup, CallbackInfo ci) {
         if (!foggy) {
+            PoseStack poseStack = new PoseStack();
+            poseStack.mulPose(view);
             LeapClient.renderStreaks(poseStack, partialTick);
         }
     }
