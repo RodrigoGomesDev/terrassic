@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:tree_fern_lashed_trapdoor"
+      }
+    },
+    "has_tree_fern_hewn_planks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:tree_fern_hewn_planks"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tree_fern_hewn_planks"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:tree_fern_lashed_trapdoor"
+    ]
+  },
+  "sends_telemetry_event": false
+}

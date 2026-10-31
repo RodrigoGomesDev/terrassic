@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:whitewashed_wattle"
+      }
+    },
+    "has_wattle_and_daub": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:wattle_and_daub"
+            ]
+          }
+        ]
+      }
+    },
+    "has_chalk_pebbles": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:chalk_pebbles"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_chalk_pebbles",
+      "has_the_recipe",
+      "has_wattle_and_daub"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:whitewashed_wattle"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:dilophosaurus_skull_fossil"
+      }
+    },
+    "has_dilophosaurus_fossil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:dilophosaurus_fossil"
+            ]
+          }
+        ]
+      }
+    },
+    "has_shale": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:shale"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dilophosaurus_fossil",
+      "has_shale",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:dilophosaurus_skull_fossil"
+    ]
+  },
+  "sends_telemetry_event": false
+}

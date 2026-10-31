@@ -43,7 +43,7 @@ de coautoria de IA (pedido do Rodrigo, 24/10/2026).
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
-Versão atual: **v1.0.0** (31/10/2026; tags git v0.1.0 e v0.2.0). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
+Versão atual: **v1.0.2** (31/10/2026; tags git v0.1.0, v0.2.0, v1.0.0, v1.0.1 e v1.0.2; `mod_version` em gradle.properties). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
 A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; o cliente gráfico Forge ainda não foi validado.
 Os servidores dedicados Fabric e Forge foram validados posteriormente pelos roteiros de entidades e Caderno.
 Nome: o projeto se chamava **PrimalEra** e foi renomeado para **Terrassic** em 23/10/2026: mod id `terrassic`,
@@ -180,12 +180,15 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   por `tools/fontgen/build.py` (bitmap do Minecraft + TrueType em `art/identidade/fontes/`); kit de marca por `tools/capagen/brand.py`.
 - Tudo é autoral e gerado por código; referências só de medidas (Wikipedia). Não copiar arte de terceiros.
 
-## Espécies (12)
-Predadores: Tyrannosaurus, Spinosaurus, Dilophosaurus, Velociraptor, Compsognathus.
-Herbívoros: Triceratops, Stegosaurus, Ankylosaurus, Brachiosaurus, Parasaurolophus, Pachycephalosaurus, Gallimimus.
-Montáveis: T. rex, Triceratops, Brachiosaurus, Parasaurolophus, Gallimimus.
+## Espécies (59 registradas, 55 ativas)
+59 espécies em `gen_species.SPECIES`. Na v1 só o Cretáceo Superior está ligado: Stegosaurus, Brachiosaurus,
+Dilophosaurus e Compsognathus (jurássicos) continuam registrados, mas não nascem. Lista, era e status de cada uma
+em `docs/ROSTER.md`; tamanhos em `docs/TAMANHOS.md`.
 
 ## Pendências conhecidas
+- Receitas no livro de receitas (v1.0.2): `tools/javagen/gen_recipe_unlocks.py` (chamado no fim do gen_resources)
+  gera uma conquista oculta por receita em `data/terrassic/advancements/recipes/`; pegar um ingrediente libera a receita.
+  Receita nova não precisa de nada a mais: basta rodar o gen_resources.
 - Testar v0.2 no Forge e conferir a build depois da renomeação para Terrassic.
 - Tamanhos novos (24/10/2026, escala real, aprovados) ainda não compilados/testados no jogo: conferir caminho na floresta,
   altura da sela, pés deslizando na caminhada dos gigantes e filhotes.

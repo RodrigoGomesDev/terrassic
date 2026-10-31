@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:mossy_gneiss_stacked_from_vine"
+      }
+    },
+    "has_gneiss_stacked": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:gneiss_stacked"
+            ]
+          }
+        ]
+      }
+    },
+    "has_vine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:vine"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_gneiss_stacked",
+      "has_the_recipe",
+      "has_vine"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:mossy_gneiss_stacked_from_vine"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -565,6 +565,12 @@ _HANDHELD = {
     "fixed": {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [1, 1, 1]},
 }
 
+# The spear is twice as long as a sword: at the sword's first-person size its flint head ran off the top of the
+# screen (Mac test, 31/10). Smaller and lower in first person only; third person, ground and frame as the sword.
+_SPEAR_DISPLAY = dict(_HANDHELD,
+                      firstperson_righthand={"rotation": [0, -90, 25], "translation": [1.13, 1.2, 1.13], "scale": [0.55, 0.55, 0.55]},
+                      firstperson_lefthand={"rotation": [0, 90, -25], "translation": [1.13, 1.2, 1.13], "scale": [0.55, 0.55, 0.55]})
+
 
 def _spear_held(spear):
     """The 3D spear: a 32 px shaft, 1.5 px thick, laid on the sprite's diagonal (so the handheld pose holds it the same way), flint or
@@ -584,7 +590,7 @@ def _spear_held(spear):
             part([7, 22, 7], [9, 24.5, 9], [8, 0, 10, 3], [8, 0, 10, 2]),                # sinew binding
             part([7, 2, 7], [9, 8, 9], [11, 0, 13, 6], [11, 0, 13, 2]),                  # leather grip
         ],
-        "display": _HANDHELD,
+        "display": _SPEAR_DISPLAY,
     }
 
 
@@ -878,6 +884,8 @@ def main():
                 bad.append(f"{name}: {tex}")
     if bad:
         raise SystemExit("item models without texture (run tools/spritegen/sprites.py, science.py or blocks.py):\n  " + "\n  ".join(bad))
+    import gen_recipe_unlocks  # v1.0.2: every recipe shows in the recipe book once an ingredient is picked up
+    gen_recipe_unlocks.main()
     print("resources written")
 
 

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:tyrannosaurus_skull_trophy"
+      }
+    },
+    "has_tyrannosaurus_fossil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:tyrannosaurus_fossil"
+            ]
+          }
+        ]
+      }
+    },
+    "has_planks": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:planks"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_planks",
+      "has_the_recipe",
+      "has_tyrannosaurus_fossil"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:tyrannosaurus_skull_trophy"
+    ]
+  },
+  "sends_telemetry_event": false
+}

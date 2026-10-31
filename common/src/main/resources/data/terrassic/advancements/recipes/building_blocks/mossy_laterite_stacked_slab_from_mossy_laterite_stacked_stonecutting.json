@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:mossy_laterite_stacked_slab_from_mossy_laterite_stacked_stonecutting"
+      }
+    },
+    "has_mossy_laterite_stacked": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:mossy_laterite_stacked"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_mossy_laterite_stacked",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:mossy_laterite_stacked_slab_from_mossy_laterite_stacked_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:velociraptor_skull_fossil"
+      }
+    },
+    "has_velociraptor_fossil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:velociraptor_fossil"
+            ]
+          }
+        ]
+      }
+    },
+    "has_limestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:limestone"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_limestone",
+      "has_the_recipe",
+      "has_velociraptor_fossil"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:velociraptor_skull_fossil"
+    ]
+  },
+  "sends_telemetry_event": false
+}

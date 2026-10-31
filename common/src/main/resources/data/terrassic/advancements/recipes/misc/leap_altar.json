@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:leap_altar"
+      }
+    },
+    "has_tanned_hide_panel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:tanned_hide_panel"
+            ]
+          }
+        ]
+      }
+    },
+    "has_amber_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:amber_block"
+            ]
+          }
+        ]
+      }
+    },
+    "has_ossuary_wall": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:ossuary_wall"
+            ]
+          }
+        ]
+      }
+    },
+    "has_limestone_stacked": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:limestone_stacked"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_amber_block",
+      "has_limestone_stacked",
+      "has_ossuary_wall",
+      "has_tanned_hide_panel",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:leap_altar"
+    ]
+  },
+  "sends_telemetry_event": false
+}

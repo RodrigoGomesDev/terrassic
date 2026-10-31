@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:velociraptor_hide_rug"
+      }
+    },
+    "has_velociraptor_hide": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:velociraptor_hide"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_velociraptor_hide"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:velociraptor_hide_rug"
+    ]
+  },
+  "sends_telemetry_event": false
+}

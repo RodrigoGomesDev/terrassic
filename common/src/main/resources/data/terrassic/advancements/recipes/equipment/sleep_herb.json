@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:sleep_herb"
+      }
+    },
+    "has_cretaceous_water_lily": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:cretaceous_water_lily"
+            ]
+          }
+        ]
+      }
+    },
+    "has_shelf_fungus": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:shelf_fungus"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cretaceous_water_lily",
+      "has_shelf_fungus",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:sleep_herb"
+    ]
+  },
+  "sends_telemetry_event": false
+}

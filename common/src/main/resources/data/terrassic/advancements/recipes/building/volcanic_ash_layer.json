@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:volcanic_ash_layer"
+      }
+    },
+    "has_volcanic_ash": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:volcanic_ash"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_volcanic_ash"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:volcanic_ash_layer"
+    ]
+  },
+  "sends_telemetry_event": false
+}

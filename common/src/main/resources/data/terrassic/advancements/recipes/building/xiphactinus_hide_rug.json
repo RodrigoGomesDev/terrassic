@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:xiphactinus_hide_rug"
+      }
+    },
+    "has_xiphactinus_hide": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:xiphactinus_hide"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_xiphactinus_hide"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:xiphactinus_hide_rug"
+    ]
+  },
+  "sends_telemetry_event": false
+}

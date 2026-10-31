@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:mossy_conglomerate_stacked_stairs_from_mossy_conglomerate_stacked_stonecutting"
+      }
+    },
+    "has_mossy_conglomerate_stacked": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:mossy_conglomerate_stacked"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_mossy_conglomerate_stacked",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:mossy_conglomerate_stacked_stairs_from_mossy_conglomerate_stacked_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:cave_painting_spiral_from_cave_painting_handprint_stonecutting"
+      }
+    },
+    "has_cave_painting_handprint": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:cave_painting_handprint"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cave_painting_handprint",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:cave_painting_spiral_from_cave_painting_handprint_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

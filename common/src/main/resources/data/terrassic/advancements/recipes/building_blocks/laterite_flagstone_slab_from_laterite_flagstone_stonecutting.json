@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:laterite_flagstone_slab_from_laterite_flagstone_stonecutting"
+      }
+    },
+    "has_laterite_flagstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:laterite_flagstone"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_laterite_flagstone",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:laterite_flagstone_slab_from_laterite_flagstone_stonecutting"
+    ]
+  },
+  "sends_telemetry_event": false
+}

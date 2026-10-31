@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:platanus_hewn_planks"
+      }
+    },
+    "has_platanus_logs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "terrassic:platanus_logs"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_platanus_logs",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:platanus_hewn_planks"
+    ]
+  },
+  "sends_telemetry_event": false
+}

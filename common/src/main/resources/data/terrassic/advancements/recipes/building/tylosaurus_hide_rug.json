@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:tylosaurus_hide_rug"
+      }
+    },
+    "has_tylosaurus_hide": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:tylosaurus_hide"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tylosaurus_hide"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:tylosaurus_hide_rug"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:yellow_ochre_plaster"
+      }
+    },
+    "has_clay_plaster": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:clay_plaster"
+            ]
+          }
+        ]
+      }
+    },
+    "has_yellow_dye": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:yellow_dye"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_clay_plaster",
+      "has_the_recipe",
+      "has_yellow_dye"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:yellow_ochre_plaster"
+    ]
+  },
+  "sends_telemetry_event": false
+}
