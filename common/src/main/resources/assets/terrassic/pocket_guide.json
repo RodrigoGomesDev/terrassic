@@ -1,0 +1,90 @@
+{
+  "topics": [
+    {
+      "id": "start",
+      "icon": "terrassic:field_lens",
+      "recipes": [
+        "terrassic:pocket_guide"
+      ]
+    },
+    {
+      "id": "weapons",
+      "icon": "terrassic:flint_spear",
+      "recipes": [
+        "terrassic:flint_spear",
+        "terrassic:bone_club",
+        "terrassic:hunting_bow",
+        "terrassic:flint_arrow"
+      ]
+    },
+    {
+      "id": "blowgun",
+      "icon": "terrassic:blowgun",
+      "recipes": [
+        "terrassic:blowgun",
+        "terrassic:tranq_dart",
+        "terrassic:sleep_herb",
+        "terrassic:narcotic_arrow"
+      ]
+    },
+    {
+      "id": "bola",
+      "icon": "terrassic:bola",
+      "recipes": [
+        "terrassic:bola",
+        "terrassic:bola_from_hide"
+      ]
+    },
+    {
+      "id": "knockout",
+      "icon": "terrassic:bone_club",
+      "recipes": []
+    },
+    {
+      "id": "eggs",
+      "icon": "terrassic:triceratops_egg",
+      "recipes": []
+    },
+    {
+      "id": "riding",
+      "icon": "terrassic:tyrannosaurus_saddle",
+      "recipes": [
+        "terrassic:tyrannosaurus_saddle",
+        "terrassic:pteranodon_saddle",
+        "terrassic:velociraptor_harness"
+      ]
+    },
+    {
+      "id": "orders",
+      "icon": "terrassic:velociraptor_harness",
+      "recipes": []
+    },
+    {
+      "id": "levels",
+      "icon": "minecraft:experience_bottle",
+      "recipes": []
+    },
+    {
+      "id": "hunger",
+      "icon": "terrassic:raw_dino_meat",
+      "recipes": []
+    },
+    {
+      "id": "cargo",
+      "icon": "minecraft:chest",
+      "recipes": []
+    },
+    {
+      "id": "building",
+      "icon": "terrassic:reed_thatch",
+      "recipes": [
+        "terrassic:reed_thatch"
+      ]
+    },
+    {
+      "id": "rules",
+      "icon": "terrassic:sketch",
+      "recipes": []
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "criteria": {
+    "joined": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "rewards": {
+    "loot": [
+      "terrassic:gameplay/pocket_guide"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -748,6 +748,8 @@ def main():
     gen_rules.main()
     import gen_leap  # v0.9 (docs/SALTO.md): Leap Altar, ring tags, Rift Tyrant, ritual and leap texts
     gen_leap.main()
+    import gen_pocket_guide  # v1.1.2 (docs/AJUDA.md): the Pocket Guide's texts
+    pocket_lang = gen_pocket_guide.build_lang()
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
@@ -755,6 +757,7 @@ def main():
         lang[code].update(TEXPACK_LANG[code])
         lang[code].update(gen_rules.LANG[code])
         lang[code].update(gen_leap.LANG[code])
+        lang[code].update(pocket_lang[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")
@@ -936,6 +939,7 @@ def main():
                 bad.append(f"{name}: {tex}")
     if bad:
         raise SystemExit("item models without texture (run tools/spritegen/sprites.py, science.py or blocks.py):\n  " + "\n  ".join(bad))
+    gen_pocket_guide.main()  # the book's content file, advancement, loot and recipe (checks the recipes it shows)
     import gen_recipe_unlocks  # v1.0.2: every recipe shows in the recipe book once an ingredient is picked up
     gen_recipe_unlocks.main()
     print("resources written")

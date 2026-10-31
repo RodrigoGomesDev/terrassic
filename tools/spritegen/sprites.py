@@ -1492,6 +1492,8 @@ if __name__ == "__main__":
     rapt_extras.main()   # the Velociraptor's clutch in its desert scrape and its hunting harness
     import armas
     armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
+    import pocket_guide
+    pocket_guide.main()   # the Pocket Guide's book and item (docs/AJUDA.md)
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)

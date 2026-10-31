@@ -4,6 +4,7 @@ import com.terrassic.Terrassic;
 import com.terrassic.config.Eras;
 import com.terrassic.config.Story;
 import com.terrassic.item.BolaItem;
+import com.terrassic.item.PocketGuideItem;
 import com.terrassic.item.ClubItem;
 import com.terrassic.item.ExcavationToolItem;
 import com.terrassic.item.FieldNotebookItem;
@@ -247,6 +248,9 @@ public final class ModItems {
     public static final RegistrySupplier<Item> NARCOTIC_ARROW = ITEMS.register("narcotic_arrow",
             () -> new TerrassicArrowItem(NarcoticArrow::new, new Item.Properties().arch$tab(ModTabs.MAIN)));
 
+    // v1.1.2: the Pocket Guide, the help book every player gets on joining (docs/AJUDA.md)
+    public static final RegistrySupplier<Item> POCKET_GUIDE = ITEMS.register("pocket_guide",
+            () -> new PocketGuideItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.MAIN)));
     // v1.1: the bola ties legs and wings (docs/ARMAS.md)
     public static final RegistrySupplier<Item> BOLA = ITEMS.register("bola",
             () -> new BolaItem(new Item.Properties().stacksTo(16).arch$tab(ModTabs.MAIN)));
