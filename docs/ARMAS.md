@@ -65,3 +65,16 @@ aprovados no mesmo dia: https://claude.ai/artifact/7fjdqYKRkavzwZ64aiwyyk
   `terrassic:bola` (`client/WeaponPoses.BOLA`). Arte: `BOLA` e `BOLA_PARTS` em `tools/spritegen/armas.py`.
 - Receitas: 3 sílex + 2 linhas = 2; 3 sílex + 1 couro de qualquer dino (tag `terrassic:hides`) = 2.
 - Sons: do Minecraft por enquanto (varrida, tridente, laço); sons próprios em espera (Rodrigo, 31/10).
+
+## v1.1.1: 3D da zarabatana e da lança refeitos
+Pedido do Rodrigo em 31/10/2026 (18:38Z): no F5 a zarabatana ficava grande e fora da boca; a lança ficava quebrada
+ao ser erguida para o arremesso.
+- Zarabatana vista de fora: `mixin/client/BlowgunMouthMixin` desenha o tubo a partir da cabeça, como o Minecraft faz
+  com a luneta no olho, com o modelo `item/blowgun_mouth` (tubo em pé de 13,5 px, uns 0,85 bloco, e o bocal de couro
+  na boca; pose "head" copiada da luneta). Altura da boca: `MOUTH_DROP` no mixin. A 1ª pessoa não mudou.
+- Lança: modelo 3D refeito em pé, como o tridente vanilla (33 px, ponta para cima), com as poses do tridente na mão
+  (`trident_in_hand`) e erguida para arremessar (`trident_throwing`, pela propriedade vanilla `throwing`). Como um
+  elemento de modelo só vai de -16 a 32, a lança fica 16 px acima da geometria do tridente e as translações das poses
+  descem o mesmo tanto (`_SPEAR_DISPLAY` em gen_resources). No ar e cravada, `ThrownSpearRenderer` deita a lança no
+  sentido do voo com a base da ponta no ponto da entidade, como o tridente. Na hotbar segue o sprite, inclusive
+  durante a carga do arremesso (`HeldSpearMixin`).

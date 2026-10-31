@@ -1,0 +1,73 @@
+{
+  "parent": "terrassic:item/flint_spear_held",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        90,
+        180
+      ],
+      "translation": [
+        8,
+        -1,
+        9
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        180
+      ],
+      "translation": [
+        8,
+        -1,
+        -7
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
+      ],
+      "translation": [
+        -3,
+        2.5,
+        7.76
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
+      ],
+      "translation": [
+        13,
+        2.5,
+        7.76
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    }
+  }
+}

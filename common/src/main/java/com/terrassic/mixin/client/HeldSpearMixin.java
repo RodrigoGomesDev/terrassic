@@ -36,6 +36,17 @@ public abstract class HeldSpearMixin {
         boolean hand = context.firstPerson() || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND
                 || context == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND || context == ItemDisplayContext.NONE;
         if (!hand) {
+            // raised to throw, the hotbar would get the 3D throwing model (the "throwing" override): keep the sprite
+            BakedModel base = ((ItemRenderer) (Object) this).getItemModelShaper().getItemModel(stack);
+            if (base != null && base != model) {
+                terrassic$swapping = true;
+                try {
+                    this.render(stack, context, leftHand, poseStack, buffer, light, overlay, base);
+                } finally {
+                    terrassic$swapping = false;
+                }
+                ci.cancel();
+            }
             return;
         }
         WeaponPoses.HELD = true;

@@ -9,6 +9,12 @@
         "terrassic:held": 1
       },
       "model": "terrassic:item/horn_spear_held"
+    },
+    {
+      "predicate": {
+        "throwing": 1
+      },
+      "model": "terrassic:item/horn_spear_throwing"
     }
   ]
 }

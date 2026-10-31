@@ -545,9 +545,16 @@ def write(path, data):
 
 # Weapons whose held model changes while in use (client/WeaponPoses registers the predicates; docs/ARMAS.md).
 ITEM_OVERRIDES = {
-    "blowgun": [{"predicate": {"terrassic:blowing": 1}, "model": "terrassic:item/blowgun_blowing"}],
-    "flint_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/flint_spear_held"}],
-    "horn_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/horn_spear_held"}],
+    # at the lips: in first person the tube to the crosshair (blowgun_blowing); seen from outside it hangs from the mouth
+    # (blowgun_mouth, only while mixin/client/BlowgunMouthMixin draws it at the head, like the vanilla spyglass)
+    "blowgun": [{"predicate": {"terrassic:blowing": 1}, "model": "terrassic:item/blowgun_blowing"},
+                {"predicate": {"terrassic:blowing": 1, "terrassic:mouth": 1}, "model": "terrassic:item/blowgun_mouth"}],
+    # spears: the 3D spear in hands and in flight (held, mixin/client/HeldSpearMixin) and raised to throw (throwing,
+    # the vanilla trident's own predicate and poses)
+    "flint_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/flint_spear_held"},
+                    {"predicate": {"throwing": 1}, "model": "terrassic:item/flint_spear_throwing"}],
+    "horn_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/horn_spear_held"},
+                   {"predicate": {"throwing": 1}, "model": "terrassic:item/horn_spear_throwing"}],
     # the 3D bola, only while client/WeaponPoses.BOLA says so: 0.5 spinning in flight (BolaRenderer), 1 the thongs
     # wound round a tied animal (DinosaurRenderer); everywhere else the sprite
     "bola": [{"predicate": {"terrassic:bola": 0.5}, "model": "terrassic:item/bola_thrown"},
@@ -562,42 +569,39 @@ def _box(frm, to, faces):
     return {"from": frm, "to": to, "faces": faces}
 
 
-# vanilla item/handheld + item/generated display, copied because a model with its own elements cannot have
-# builtin/generated as root (the game would rebuild it from the sprite)
-_HANDHELD = {
-    "thirdperson_righthand": {"rotation": [0, -90, 55], "translation": [0, 4.0, 0.5], "scale": [0.85, 0.85, 0.85]},
-    "thirdperson_lefthand": {"rotation": [0, 90, -55], "translation": [0, 4.0, 0.5], "scale": [0.85, 0.85, 0.85]},
-    "firstperson_righthand": {"rotation": [0, -90, 25], "translation": [1.13, 3.2, 1.13], "scale": [0.68, 0.68, 0.68]},
-    "firstperson_lefthand": {"rotation": [0, 90, -25], "translation": [1.13, 3.2, 1.13], "scale": [0.68, 0.68, 0.68]},
-    "ground": {"rotation": [0, 0, 0], "translation": [0, 2, 0], "scale": [0.5, 0.5, 0.5]},
-    "head": {"rotation": [0, 180, 0], "translation": [0, 13, 7], "scale": [1, 1, 1]},
-    "fixed": {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [1, 1, 1]},
+# v1.1.1: the spear is built and held like the vanilla trident (31 px, upright, head on top), whose in-hand and
+# throwing poses are known to look right in every view; before, a 32 px shaft laid on the sprite's diagonal looked
+# broken when raised to throw (Rodrigo, 31/10). A model element must stay within -16..32, so the spear sits 16 px
+# higher than the trident's own geometry and every pose's translation is lowered to match (tools: rotate (0, 16, 0) by
+# the pose and subtract). Values: minecraft:item/trident_in_hand and trident_throwing.
+_SPEAR_DISPLAY = {
+    "thirdperson_righthand": {"rotation": [0, 60, 0], "translation": [11, 1, -2], "scale": [1, 1, 1]},
+    "thirdperson_lefthand": {"rotation": [0, 60, 0], "translation": [3, 1, 12], "scale": [1, 1, 1]},
+    "firstperson_righthand": {"rotation": [0, -90, 25], "translation": [-3, 2.5, 7.76], "scale": [1, 1, 1]},
+    "firstperson_lefthand": {"rotation": [0, 90, -25], "translation": [13, 2.5, 7.76], "scale": [1, 1, 1]},
 }
-
-# The spear is twice as long as a sword: at the sword's first-person size its flint head ran off the top of the
-# screen (Mac test, 31/10). Smaller and lower in first person only; third person, ground and frame as the sword.
-_SPEAR_DISPLAY = dict(_HANDHELD,
-                      firstperson_righthand={"rotation": [0, -90, 25], "translation": [1.13, 1.2, 1.13], "scale": [0.55, 0.55, 0.55]},
-                      firstperson_lefthand={"rotation": [0, 90, -25], "translation": [1.13, 1.2, 1.13], "scale": [0.55, 0.55, 0.55]})
+_SPEAR_THROWING = dict(_SPEAR_DISPLAY,
+                       thirdperson_righthand={"rotation": [0, 90, 180], "translation": [8, -1, 9], "scale": [1, 1, 1]},
+                       thirdperson_lefthand={"rotation": [0, 90, 180], "translation": [8, -1, -7], "scale": [1, 1, 1]})
 
 
 def _spear_held(spear):
-    """The 3D spear: a 32 px shaft, 1.5 px thick, laid on the sprite's diagonal (so the handheld pose holds it the same way), flint or
-    horn head, sinew binding, leather grip. Texture from tools/spritegen/armas.py."""
-    rot = {"origin": [8, 8, 8], "axis": "z", "angle": -45}
-
+    """The 3D spear, upright like the vanilla trident: a 1.5 px shaft (y -11..16), the head's base at y 16 where the
+    trident's is at 0 (see _SPEAR_DISPLAY), flint or horn head and tip, sinew binding, leather grip where the hand
+    holds it. Texture from tools/spritegen/armas.py."""
     def part(frm, to, side, end):
         faces = {f: {"uv": side, "texture": "#t"} for f in ("north", "south", "east", "west")}
         faces.update({f: {"uv": end, "texture": "#t"} for f in ("up", "down")})
-        return {"from": frm, "to": to, "rotation": rot, "faces": faces}
+        return {"from": frm, "to": to, "faces": faces}
     return {
+        "gui_light": "front",
         "textures": {"t": f"terrassic:item/{spear}_held", "particle": f"terrassic:item/{spear}"},
         "elements": [
-            part([7.25, -8, 7.25], [8.75, 24, 8.75], [0, 0, 1, 16], [0, 0, 1, 1]),       # shaft
-            part([6.5, 24, 7.5], [9.5, 29, 8.5], [2, 0, 5, 5], [2, 0, 5, 1]),            # head
-            part([7.5, 29, 7.5], [8.5, 31, 8.5], [6, 0, 7, 2], [6, 0, 7, 1]),            # tip
-            part([7, 22, 7], [9, 24.5, 9], [8, 0, 10, 3], [8, 0, 10, 2]),                # sinew binding
-            part([7, 2, 7], [9, 8, 9], [11, 0, 13, 6], [11, 0, 13, 2]),                  # leather grip
+            part([-0.75, -11, -0.75], [0.75, 16, 0.75], [0, 0, 1, 16], [0, 0, 1, 1]),   # shaft
+            part([-1.5, 16, -0.5], [1.5, 20.5, 0.5], [2, 0, 5, 5], [2, 0, 5, 1]),       # head
+            part([-0.5, 20.5, -0.5], [0.5, 22.5, 0.5], [6, 0, 7, 2], [6, 0, 7, 1]),     # tip
+            part([-1, 14, -1], [1, 16.5, 1], [8, 0, 10, 3], [8, 0, 10, 2]),             # sinew binding
+            part([-1, -3, -1], [1, 3, 1], [11, 0, 13, 6], [11, 0, 13, 2]),              # leather grip
         ],
         "display": _SPEAR_DISPLAY,
     }
@@ -613,6 +617,21 @@ _BOLA_TEX = {"t": "terrassic:item/bola_parts", "particle": "terrassic:item/bola"
 HELD_MODELS = {
     "flint_spear_held": _spear_held("flint_spear"),
     "horn_spear_held": _spear_held("horn_spear"),
+    "flint_spear_throwing": {"parent": "terrassic:item/flint_spear_held", "display": _SPEAR_THROWING},
+    "horn_spear_throwing": {"parent": "terrassic:item/horn_spear_held", "display": _SPEAR_THROWING},
+    # v1.1.1: the blowgun at the mouth seen from outside (F5 and other players). Built like the vanilla spyglass (an
+    # upright tube whose top end is at the face, the same "head" pose), 13.5 px long (~0.85 block) against the old
+    # 24 px tube held out from the hand, which looked too big and far from the mouth (Rodrigo, 31/10)
+    "blowgun_mouth": {
+        "textures": {"t": "terrassic:item/blowgun_tube", "particle": "terrassic:item/blowgun"},
+        "elements": [
+            _box([7.25, 0, 7.25], [8.75, 13.5, 8.75], {
+                **{f: dict(_TUBE_SIDE, rotation=90) for f in ("north", "south", "east", "west")},
+                "down": {"uv": [0, 4, 2, 6], "texture": "#t"}, "up": {"uv": [0, 4, 2, 6], "texture": "#t"}}),
+            _box([6.75, 10.5, 6.75], [9.25, 13.75, 9.25], {f: _WRAP for f in ("north", "south", "east", "west", "up", "down")}),
+        ],
+        "display": {"head": {"rotation": [90, 0, 0], "translation": [0, 0, -16], "scale": [1.6, 1.6, 1.6]}},
+    },
     # the bola in flight: three 3 px stones on half-pixel thongs from a knot at the centre, lying flat (it spins)
     "bola_thrown": {"textures": _BOLA_TEX, "elements": [
         _box([6.5, 6.5, 1], [9.5, 9.5, 4], _BOLA_FLINT), _box([7.75, 7.75, 4], [8.25, 8.25, 8], _BOLA_THONG),

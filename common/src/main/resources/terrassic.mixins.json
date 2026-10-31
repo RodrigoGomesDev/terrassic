@@ -22,7 +22,8 @@
     "client.GuiMixin",
     "client.WorldCreationUiStateMixin",
     "client.BowZoomMixin",
-    "client.HeldSpearMixin"
+    "client.HeldSpearMixin",
+    "client.BlowgunMouthMixin"
   ],
   "injectors": {
     "defaultRequire": 1

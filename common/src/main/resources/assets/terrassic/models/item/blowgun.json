@@ -9,6 +9,13 @@
         "terrassic:blowing": 1
       },
       "model": "terrassic:item/blowgun_blowing"
+    },
+    {
+      "predicate": {
+        "terrassic:blowing": 1,
+        "terrassic:mouth": 1
+      },
+      "model": "terrassic:item/blowgun_mouth"
     }
   ]
 }

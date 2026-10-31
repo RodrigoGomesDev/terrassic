@@ -1,0 +1,167 @@
+{
+  "textures": {
+    "t": "terrassic:item/blowgun_tube",
+    "particle": "terrassic:item/blowgun"
+  },
+  "elements": [
+    {
+      "from": [
+        7.25,
+        0,
+        7.25
+      ],
+      "to": [
+        8.75,
+        13.5,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#t",
+          "rotation": 90
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#t",
+          "rotation": 90
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#t",
+          "rotation": 90
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ],
+          "texture": "#t",
+          "rotation": 90
+        },
+        "down": {
+          "uv": [
+            0,
+            4,
+            2,
+            6
+          ],
+          "texture": "#t"
+        },
+        "up": {
+          "uv": [
+            0,
+            4,
+            2,
+            6
+          ],
+          "texture": "#t"
+        }
+      }
+    },
+    {
+      "from": [
+        6.75,
+        10.5,
+        6.75
+      ],
+      "to": [
+        9.25,
+        13.75,
+        9.25
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            8,
+            3,
+            11
+          ],
+          "texture": "#t"
+        },
+        "south": {
+          "uv": [
+            0,
+            8,
+            3,
+            11
+          ],
+          "texture": "#t"
+        },
+        "east": {
+          "uv": [
+            0,
+            8,
+            3,
+            11
+          ],
+          "texture": "#t"
+        },
+        "west": {
+          "uv": [
+            0,
+            8,
+            3,
+            11
+          ],
+          "texture": "#t"
+        },
+        "up": {
+          "uv": [
+            0,
+            8,
+            3,
+            11
+          ],
+          "texture": "#t"
+        },
+        "down": {
+          "uv": [
+            0,
+            8,
+            3,
+            11
+          ],
+          "texture": "#t"
+        }
+      }
+    }
+  ],
+  "display": {
+    "head": {
+      "rotation": [
+        90,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        -16
+      ],
+      "scale": [
+        1.6,
+        1.6,
+        1.6
+      ]
+    }
+  }
+}
