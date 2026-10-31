@@ -37,7 +37,7 @@ public final class TerrassicFabric implements ModInitializer {
                 LOG.warn("Terrassic: built-in pack {} not found in any mod container", era);
                 continue;
             }
-            boolean ok = ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation(Terrassic.MOD_ID, era),
+            boolean ok = ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, era),
                     mod, Component.translatable("pack.terrassic." + era), ResourcePackActivationType.DEFAULT_ENABLED);
             if (ok) {
                 LOG.info("Terrassic: built-in pack {} registered from mod {}", era, mod.getMetadata().getId());

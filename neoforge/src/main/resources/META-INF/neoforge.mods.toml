@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "[4,)"
 license = "Code: LGPL-3.0-only. Assets (models, textures, sounds, story, names, logo): All Rights Reserved, see LICENSE-ASSETS.md"
 
 [[mods]]
@@ -12,30 +12,33 @@ description = '''
 Real dinosaurs rebuilt from fossil references: 12 species from the tiny Compsognathus to the giant Brachiosaurus, males and females, eggs that hatch, taming, riding and archaic weapons.
 '''
 
+[[mixins]]
+config = "terrassic.mixins.json"
+
 [[dependencies.terrassic]]
-modId = "forge"
-mandatory = true
-versionRange = "[47,)"
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.terrassic]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.20.1,1.20.2)"
+type = "required"
+versionRange = "[1.21.1,1.21.2)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.terrassic]]
 modId = "architectury"
-mandatory = true
-versionRange = "[9.2.0,)"
+type = "required"
+versionRange = "[13.0.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.terrassic]]
 modId = "geckolib"
-mandatory = true
-versionRange = "[4.4.0,)"
+type = "required"
+versionRange = "[4.7.0,)"
 ordering = "AFTER"
 side = "BOTH"

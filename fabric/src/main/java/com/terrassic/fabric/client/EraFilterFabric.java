@@ -17,11 +17,11 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public final class EraFilterFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        WorldRenderEvents.END.register(context -> EraFilter.render(context.tickDelta()));
+        WorldRenderEvents.END.register(context -> EraFilter.render(context.tickCounter().getGameTimeDeltaPartialTick(false)));
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public ResourceLocation getFabricId() {
-                return new ResourceLocation(Terrassic.MOD_ID, "era_filter");
+                return ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, "era_filter");
             }
 
             @Override
