@@ -31,7 +31,7 @@ class ProjectChecks(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(b"\x89PNG\r\n\x1a\n\x00\x00\x00\x0dIHDR" + (1).to_bytes(4, "big") * 2)
         self.write(self.assets / "models/item/example_spawn_egg.json", '{}')
-        self.write("common/src/main/resources/data/terrassic/loot_tables/entities/example.json", '{}')
+        self.write("common/src/main/resources/data/terrassic/loot_table/entities/example.json", '{}')
         for locale in ("pt_br", "en_us", "es_es"):
             self.write(self.assets / f"lang/{locale}.json", '{"entity.terrassic.example": "Example"}')
         self.write(self.assets / "sounds.json", '{"example": {"sounds": ["terrassic:example"]}}')
