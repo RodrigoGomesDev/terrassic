@@ -57,7 +57,8 @@ import java.util.Map;
  * the target but are never culled by this spawner. The doMobSpawning game rule turns it off.
  *
  * <p>v0.15: outside the Cretaceous biomes (a normal Minecraft world) every target is multiplied by
- * {@link VanillaShare#ecoFactor}, a third at the default {@link Rule#DINO_SHARE}: 6 on land, 4 at sea, 1 in the sky.
+ * {@link VanillaShare#ecoFactor}, 0.54 at the default {@link Rule#DINO_SHARE} of 0.35 (v1.0.1): 10 on land, 6 at sea, 2 in
+ * the sky.
  */
 public final class EcoSpawner {
     /** Ticks between spawn rounds. */

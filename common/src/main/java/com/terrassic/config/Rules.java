@@ -72,11 +72,21 @@ public final class Rules {
 
     // ------------------------------------------------------------------ save / load
 
+    /**
+     * Version of the saved rules (key {@value #VERSION_KEY}, in the world and in the defaults file). 2 = v1.0.1: the
+     * default "Dinos no mundo normal" went from 0.25 to 0.35 (Rodrigo, 31/10/2026: "o spawn de dinos ainda tá meio
+     * baixo"). Rules are not edited in game since v0.15.1, so a 0.25 saved before it is the old default and moves up.
+     */
+    private static final int VERSION = 2;
+    private static final String VERSION_KEY = "rules_version";
+    private static final double OLD_DINO_SHARE = 0.25D;
+
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
         for (Rule r : Rule.values()) {
             tag.putDouble(r.key, this.get(r));
         }
+        tag.putInt(VERSION_KEY, VERSION);
         return tag;
     }
 
@@ -88,7 +98,17 @@ public final class Rules {
                 rules.set(r, tag.getDouble(r.key));
             }
         }
+        rules.migrate(tag.getInt(VERSION_KEY));
         return rules;
+    }
+
+    /** Brings rules saved by an older version up to date; true if something changed. */
+    private boolean migrate(int version) {
+        if (version < 2 && Math.abs(this.get(Rule.DINO_SHARE) - OLD_DINO_SHARE) < 1.0E-6D) {
+            this.set(Rule.DINO_SHARE, Rule.DINO_SHARE.defaultValue);
+            return true;
+        }
+        return false;
     }
 
     public JsonObject toJson() {
@@ -96,7 +116,13 @@ public final class Rules {
         for (Rule r : Rule.values()) {
             json.addProperty(r.key, this.get(r));
         }
+        json.addProperty(VERSION_KEY, VERSION);
         return json;
+    }
+
+    private static int versionOf(JsonObject json) {
+        JsonElement v = json.get(VERSION_KEY);
+        return v != null && v.isJsonPrimitive() && v.getAsJsonPrimitive().isNumber() ? v.getAsInt() : 0;
     }
 
     public static Rules fromJson(JsonObject json) {
@@ -108,6 +134,7 @@ public final class Rules {
                     rules.set(r, e.getAsDouble());
                 }
             }
+            rules.migrate(versionOf(json));
         }
         return rules;
     }
@@ -136,7 +163,8 @@ public final class Rules {
         JsonObject root = readFile();
         JsonObject json = root.has("rules") && root.get("rules").isJsonObject() ? root.getAsJsonObject("rules") : null;
         Rules rules = fromJson(json);
-        if (json == null || json.size() < Rule.values().length) {
+        // missing or incomplete, or written before the current version (Rules.VERSION): write it back
+        if (json == null || json.size() < Rule.values().length || versionOf(json) < VERSION) {
             saveDefaults(rules);
         }
         return rules;

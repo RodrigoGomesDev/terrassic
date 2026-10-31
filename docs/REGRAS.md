@@ -48,7 +48,7 @@ padrão bem mais cheia: voadores voando de verdade pelo céu, muitos animais no 
 | Criação | Consumo de comida | 1,0 | 0 a 5 | Velocidade da fome (0 = nunca sentem fome) |
 | Criação | Ninhos selvagens | 1,0 | 0 a 5 | Chance de bandos nascerem com ninho e de selvagens acasalarem sozinhos |
 | Criação | Frequência de migração | 1,0 | 0 a 5 | Quão seguido as manadas migram (0 = não migram) |
-| Ecossistema | Dinos no mundo normal | 0,25 | 0 a 1 | v0.15: fora do Cretáceo, a parte dos animais que é dino (0,25 = 1 em 4; 1 = sem limite). MUNDO.md §12 |
+| Ecossistema | Dinos no mundo normal | 0,35 | 0 a 1 | v0.15: fora do Cretáceo, a parte dos animais que é dino (0,35 = 1 em 3; 1 = sem limite). Era 0,25 até a v1.0.1; mundos e configs com 0,25 sobem sozinhos. MUNDO.md §12 |
 | Ecossistema | Densidade de vida | 1,0 | 0 a 5 | Multiplica todos os alvos do ecossistema (0 = desliga o spawner novo) |
 | Ecossistema | Terrestres | 1,0 | 0 a 5 | Alvo de terrestres ao redor de cada jogador (18 na densidade 1) |
 | Ecossistema | Voadores | 1,0 | 0 a 5 | Alvo regional de voadores no céu (4); reposição a cada 20 s |

@@ -26,7 +26,7 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
  *       that leaves it at the chosen share of that list, {@code share / (1 - share) * vanilla weight / dino weight}.
  *       The roll is the same for every member of one group (chunk and tick), so a herd spawns whole or not at all.</li>
  *   <li><b>EcoSpawner</b> (the replenishment around each player): its targets are multiplied by
- *       {@link #ecoFactor}: a third of the continent's at the default share.</li>
+ *       {@link #ecoFactor}: about half of the continent's at the default share (0.35 since v1.0.1).</li>
  * </ul>
  * In the Cretaceous biomes of the Terrassic world type nothing changes: there the dinosaurs are the fauna.
  */

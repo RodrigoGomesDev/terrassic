@@ -324,22 +324,24 @@ gerada por `tools/worldgen/mapa_preview.py`.
 - **Mundo novo no Padrão do Minecraft.** O tipo Terrassic continua na lista (§10.3).
 - **A fauna do Minecraft fica inteira.** Vacas, ovelhas, porcos, galinhas, cavalos, lobos, lulas e golfinhos nascem
   como sempre. Nada do Minecraft é tirado nos biomas do Minecraft (os biomas do Cretáceo continuam sem eles, §10.4).
-- **Os dinos são um extra: cerca de 1 em cada 4 animais.** Antes, numa planície ou savana, uns 2 em cada 3 animais que
+- **Os dinos são um extra: cerca de 1 em cada 3 animais** (era 1 em 4 até a v1.0.1; no teste do Rodrigo de 31/10 o
+  spawn ainda estava "meio baixo", e a medição do Mac deu 1 dino para 5 animais com 0,25). Antes, numa planície ou savana, uns 2 em cada 3 animais que
   nasciam eram dinos (peso somado 89 contra uns 46 a 50 dos animais do Minecraft).
-- **A reposição em volta do jogador** (`world/EcoSpawner`) fica com um terço do alvo fora do Cretáceo: 6 em terra,
-  4 no mar e 1 voador por região (contra 18, 12 e 4 no continente).
+- **A reposição em volta do jogador** (`world/EcoSpawner`) fica com uns 54% do alvo fora do Cretáceo: 10 em terra,
+  6 no mar e 2 voadores por região (contra 18, 12 e 4 no continente).
 - As colônias de Pteranodon na costa continuam como estão (uma a cada 600 a 800 blocos de litoral).
 
 ### 12.2 A regra "Dinos no mundo normal"
 
-Aba **Ecossistema** das Regras do Terrassic, salva por mundo. Padrão **0,25**, de 0 a 1. Desde a v0.15.1 as regras não
+Aba **Ecossistema** das Regras do Terrassic, salva por mundo. Padrão **0,35** (0,25 até a v1.0.1), de 0 a 1. Desde a v0.15.1 as regras não
 mudam dentro do jogo (REGRAS.md): vale o `"dino_share"` do objeto `"rules"` de `config/terrassic-world.json` na hora
 de criar o mundo.
 
 | Valor | Efeito fora do Cretáceo |
 |---|---|
 | 0 | Nenhum dino nasce sozinho (ovos de spawn e o continente continuam) |
-| 0,25 | Cerca de 1 animal em 4 é dino; reposição com um terço do alvo |
+| 0,25 | Cerca de 1 animal em 4 a 5 é dino; reposição com um terço do alvo |
+| 0,35 (padrão) | Cerca de 1 animal em 3 é dino; reposição com uns 54% do alvo |
 | 0,5 | Metade e metade; reposição cheia |
 | 1 | Sem limite: todos os dinos que o bioma tiver, como antes da v0.15 |
 
@@ -349,7 +351,7 @@ Nos biomas do Cretáceo (tipo de mundo Terrassic) a regra não muda nada: lá os
 
 - `world/VanillaShare`: quando o gerador do Minecraft escolhe um dino da lista do bioma (nascimento natural ou na
   geração do chunk), ele passa com a chance `parte / (1 − parte) × peso do Minecraft / peso dos dinos`, contada por
-  bioma e por categoria (terra ou mar). Exemplo, planície: 0,25 / 0,75 × 46 / 89 ≈ 17%.
+  bioma e por categoria (terra ou mar). Exemplo, planície (pesos medidos no Mac, 118 do mod e 46 do Minecraft): 0,35 / 0,65 × 46 / 118 ≈ 21%.
 - O sorteio é o mesmo para o bando inteiro (mesmo chunk, mesmo tick, mesma espécie): a manada nasce inteira ou não nasce.
 - Bioma sem animal do Minecraft daquela categoria (as badlands): passa a parte (25%) do que nasceria.
 - Chamado nas regras de nascimento de `DinosaurEntity` (terra) e `SwimmingDinosaur` (mar). Voadores já não nascem
@@ -360,8 +362,9 @@ Nos biomas do Cretáceo (tipo de mundo Terrassic) a regra não muda nada: lá os
 
 1. Criar mundo novo: o tipo vem em **Padrão**. Em Mais opções, os três tipos Terrassic ainda aparecem.
 2. Andar uns 2.000 blocos por planícies, florestas e savanas: vacas, ovelhas, porcos e cavalos em quantidade normal,
-   e de vez em quando um bando de dinos (uns 1 em 4 animais).
+   e de vez em quando um bando de dinos (uns 1 em 3 animais).
 3. Com `"dino_share": 0` no objeto `"rules"` de `config/terrassic-world.json`, criar um mundo novo: não nascem dinos.
    Com 1: muitos dinos como antes.
 4. Mundo do tipo Terrassic: os biomas do Cretáceo continuam cheios de dinos e sem animais do Minecraft.
-5. Mundo antigo (de antes da v0.15): abre normal, a regra aparece com 0,25.
+5. Mundo antigo (de antes da v0.15): abre normal, a regra aparece com 0,35.
+6. Mundo ou config de antes da v1.0.1 com 0,25 (o padrão antigo): passa sozinho para 0,35. Outro valor fica como está.

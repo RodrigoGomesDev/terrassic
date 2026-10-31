@@ -1607,7 +1607,7 @@
   "rules.terrassic.dino_resistance": "Dino resistance",
   "rules.terrassic.dino_resistance.tip": "Divides the damage the creatures take. 2 = they last twice as long.",
   "rules.terrassic.dino_share": "Dinos in the normal world",
-  "rules.terrassic.dino_share.tip": "Outside the Cretaceous biomes, the share of the animals that are dinosaurs; the rest is Minecraft's own fauna. 0.25 = about one in four. 1 = no limit.",
+  "rules.terrassic.dino_share.tip": "Outside the Cretaceous biomes, the share of the animals that are dinosaurs; the rest is Minecraft's own fauna. 0.35 = about one in three. 1 = no limit.",
   "rules.terrassic.flyer_spawns": "Flyers",
   "rules.terrassic.flyer_spawns.tip": "Regional target of 4 flyers at density 1, replenished every 20 seconds. 0 disables sky replenishment.",
   "rules.terrassic.food_drain": "Food drain",

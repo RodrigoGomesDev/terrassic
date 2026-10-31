@@ -23,7 +23,7 @@ public enum Rule {
     FOOD_DRAIN("food_drain", Tab.BREEDING, 1.0D, 0.0D, 5.0D, 0.1D),
     NEST_FREQUENCY("nest_frequency", Tab.BREEDING, 1.0D, 0.0D, 5.0D, 0.1D),
     MIGRATION("migration", Tab.BREEDING, 1.0D, 0.0D, 5.0D, 0.1D),
-    DINO_SHARE("dino_share", Tab.SPAWNING, 0.25D, 0.0D, 1.0D, 0.05D),
+    DINO_SHARE("dino_share", Tab.SPAWNING, 0.35D, 0.0D, 1.0D, 0.05D),
     SPAWN_DENSITY("spawn_density", Tab.SPAWNING, 1.0D, 0.0D, 5.0D, 0.1D),
     LAND_SPAWNS("land_spawns", Tab.SPAWNING, 1.0D, 0.0D, 5.0D, 0.1D),
     FLYER_SPAWNS("flyer_spawns", Tab.SPAWNING, 1.0D, 0.0D, 5.0D, 0.1D),
