@@ -7,14 +7,20 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.registry.item.ItemPropertiesRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
  * Item properties that swap a weapon's model while it is in use, the way the vanilla bow swaps its pulling frames.
  * "terrassic:blowing" (blowgun): 1 while the blowgun is at the lips, so the reed tube points at the crosshair.
  * "pulling"/"pull" (hunting bow): the vanilla bow's pair, over the hunting bow's longer draw.
+ * "terrassic:held" (spears): 1 only while {@link #HELD} is set, which mixin/client/HeldSpearMixin does when a spear is
+ * drawn in a hand or in flight, so the 3D spear replaces the sprite there and the inventory keeps the sprite.
  */
 public final class WeaponPoses {
+    /** Set by HeldSpearMixin around the model lookup of a spear in a hand or in flight (render thread only). */
+    public static boolean HELD;
+
     private WeaponPoses() {
     }
 
@@ -27,6 +33,10 @@ public final class WeaponPoses {
             ItemPropertiesRegistry.register(ModItems.HUNTING_BOW.get(), new ResourceLocation("pull"),
                     (stack, level, entity, seed) -> using(entity, stack)
                             ? (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / HuntingBowItem.FULL_DRAW : 0.0F);
+            for (Item spear : new Item[]{ModItems.FLINT_SPEAR.get(), ModItems.HORN_SPEAR.get()}) {
+                ItemPropertiesRegistry.register(spear, new ResourceLocation(Terrassic.MOD_ID, "held"),
+                        (stack, level, entity, seed) -> HELD ? 1.0F : 0.0F);
+            }
         });
     }
 

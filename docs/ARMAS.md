@@ -32,4 +32,12 @@ flecha e do tridente vanilla. Arte desenhada à mão pixel a pixel em `tools/spr
 - Arco: graveto, osso e junco no formato do arco vanilla.
 - Flechas narcóticas por bicho (puxada cheia): Velociraptor 1, Triceratops 3, T. rex 3.
 - `client/PrimitiveArrowRenderer` (era TranqDartRenderer) desenha dardo e flechas com a textura de cada um.
-## Passo 3: lança 3D, estocada no toque rápido (a fazer)
+## Passo 3: lança 3D e estocada (feito)
+- Toque rápido (menos de 10 ticks) = estocada: o primeiro bicho na mira até 4,5 blocos leva um golpe corpo a corpo
+  normal (`player.attack`), com faíscas de crítico e som; recarga 12 ticks. Segurar 10 ticks = arremesso como antes,
+  com um "clique" quando fica pronto. Constantes `SpearItem.THROW_CHARGE` e `THRUST_REACH`.
+- Na mão e no ar: modelo 3D (`models/item/<lança>_held.json`, gerado em `gen_resources._spear_held`): haste de 32 px
+  deitada na diagonal do sprite (a pose de item de mão segura do mesmo jeito), ponta de sílex ou chifre, amarração de
+  tendão, pega de couro. Troca pela sobreposição `terrassic:held` que só vale durante `mixin/client/HeldSpearMixin`
+  (mãos e voo; inventário, chão e moldura seguem com o sprite), como o tridente vanilla.
+- Cravada no chão ela balança como a flecha (`ThrownSpearRenderer`, `shakeTime`).

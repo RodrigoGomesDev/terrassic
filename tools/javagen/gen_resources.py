@@ -541,6 +541,8 @@ def write(path, data):
 # Weapons whose held model changes while in use (client/WeaponPoses registers the predicates; docs/ARMAS.md).
 ITEM_OVERRIDES = {
     "blowgun": [{"predicate": {"terrassic:blowing": 1}, "model": "terrassic:item/blowgun_blowing"}],
+    "flint_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/flint_spear_held"}],
+    "horn_spear": [{"predicate": {"terrassic:held": 1}, "model": "terrassic:item/horn_spear_held"}],
     "hunting_bow": [{"predicate": {"pulling": 1}, "model": "terrassic:item/hunting_bow_pulling_0"},
                     {"predicate": {"pulling": 1, "pull": 0.65}, "model": "terrassic:item/hunting_bow_pulling_1"},
                     {"predicate": {"pulling": 1, "pull": 0.9}, "model": "terrassic:item/hunting_bow_pulling_2"}],
@@ -551,9 +553,46 @@ def _box(frm, to, faces):
     return {"from": frm, "to": to, "faces": faces}
 
 
+# vanilla item/handheld + item/generated display, copied because a model with its own elements cannot have
+# builtin/generated as root (the game would rebuild it from the sprite)
+_HANDHELD = {
+    "thirdperson_righthand": {"rotation": [0, -90, 55], "translation": [0, 4.0, 0.5], "scale": [0.85, 0.85, 0.85]},
+    "thirdperson_lefthand": {"rotation": [0, 90, -55], "translation": [0, 4.0, 0.5], "scale": [0.85, 0.85, 0.85]},
+    "firstperson_righthand": {"rotation": [0, -90, 25], "translation": [1.13, 3.2, 1.13], "scale": [0.68, 0.68, 0.68]},
+    "firstperson_lefthand": {"rotation": [0, 90, -25], "translation": [1.13, 3.2, 1.13], "scale": [0.68, 0.68, 0.68]},
+    "ground": {"rotation": [0, 0, 0], "translation": [0, 2, 0], "scale": [0.5, 0.5, 0.5]},
+    "head": {"rotation": [0, 180, 0], "translation": [0, 13, 7], "scale": [1, 1, 1]},
+    "fixed": {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [1, 1, 1]},
+}
+
+
+def _spear_held(spear):
+    """The 3D spear: a 32 px shaft, 1.5 px thick, laid on the sprite's diagonal (so the handheld pose holds it the same way), flint or
+    horn head, sinew binding, leather grip. Texture from tools/spritegen/armas.py."""
+    rot = {"origin": [8, 8, 8], "axis": "z", "angle": -45}
+
+    def part(frm, to, side, end):
+        faces = {f: {"uv": side, "texture": "#t"} for f in ("north", "south", "east", "west")}
+        faces.update({f: {"uv": end, "texture": "#t"} for f in ("up", "down")})
+        return {"from": frm, "to": to, "rotation": rot, "faces": faces}
+    return {
+        "textures": {"t": f"terrassic:item/{spear}_held", "particle": f"terrassic:item/{spear}"},
+        "elements": [
+            part([7.25, -8, 7.25], [8.75, 24, 8.75], [0, 0, 1, 16], [0, 0, 1, 1]),       # shaft
+            part([6.5, 24, 7.5], [9.5, 29, 8.5], [2, 0, 5, 5], [2, 0, 5, 1]),            # head
+            part([7.5, 29, 7.5], [8.5, 31, 8.5], [6, 0, 7, 2], [6, 0, 7, 1]),            # tip
+            part([7, 22, 7], [9, 24.5, 9], [8, 0, 10, 3], [8, 0, 10, 2]),                # sinew binding
+            part([7, 2, 7], [9, 8, 9], [11, 0, 13, 6], [11, 0, 13, 2]),                  # leather grip
+        ],
+        "display": _HANDHELD,
+    }
+
+
 _TUBE_SIDE = {"uv": [0, 0, 16, 2], "texture": "#t"}
 _WRAP = {"uv": [0, 8, 3, 11], "texture": "#t"}
 HELD_MODELS = {
+    "flint_spear_held": _spear_held("flint_spear"),
+    "horn_spear_held": _spear_held("horn_spear"),
     # the hunting bow's draw frames keep the bow's held pose (their parent inherits minecraft:item/bow's display)
     **{f"hunting_bow_pulling_{i}": {"parent": "terrassic:item/hunting_bow",
                                     "textures": {"layer0": f"terrassic:item/hunting_bow_pulling_{i}"}} for i in range(3)},

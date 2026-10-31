@@ -145,6 +145,32 @@ ARROW_BACK = [
 ]
 
 
+# the 3D spear's texture (models/item/<spear>_held.json): shaft column, head, tip, sinew binding, leather grip.
+# "x"/"X"/"Y" are the head material: flint, or the triceratops horn
+SPEAR_HELD = [
+    "w.XxX.x.SS.LD...",
+    "h.xxX.X.SS.DL...",
+    "w.XxX...tS.LD...",
+    "w.xXx......DL...",
+    "e.XxY......LD...",
+    "w..........DL...",
+    "h...............",
+    "w...............",
+    "w...............",
+    "e...............",
+    "w...............",
+    "h...............",
+    "w...............",
+    "w...............",
+    "e...............",
+    "w...............",
+]
+SPEAR_HEADS = {
+    "flint_spear": {"x": FLINT, "X": FLINT_L, "Y": FLINT_D},
+    "horn_spear": {"x": hexc("#d8ccaa"), "X": BONE, "Y": hexc("#a89878")},
+}
+
+
 def _narcotic(rows, band):
     """The narcotic variant: violet fletching and the green paste on the given shaft pixels."""
     out = [row.replace("u", "v").replace("U", "V") for row in rows]
@@ -164,11 +190,12 @@ MUZZLE = ["nk", "kn"]                 # the open bore at (0, 4)
 WRAP = ["LDL", "DLD", "LDL"]          # the leather mouthpiece binding at (0, 8)
 
 
-def _paint(img, rows, x0, y0):
+def _paint(img, rows, x0, y0, extra=None):
+    pal = dict(PAL, **(extra or {}))
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
             if ch != ".":
-                img.putpixel((x0 + x, y0 + y), PAL[ch])
+                img.putpixel((x0 + x, y0 + y), pal[ch])
 
 
 def dart_texture():
@@ -206,6 +233,10 @@ def main():
         save_png(sprite(rows), os.path.join(TEX, "item", f"hunting_bow_pulling_{i}.png"))
     save_png(sprite(ARROW_ITEM), os.path.join(TEX, "item", "flint_arrow.png"))
     save_png(sprite(_narcotic(ARROW_ITEM, [(8, 6), (7, 7)])), os.path.join(TEX, "item", "narcotic_arrow.png"))
+    for spear, head in SPEAR_HEADS.items():
+        img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+        _paint(img, SPEAR_HELD, 0, 0, head)
+        save_png(img, os.path.join(TEX, "item", f"{spear}_held.png"))
     save_png(arrow_texture(ARROW_SIDE, ARROW_BACK), os.path.join(TEX, "entity", "flint_arrow.png"))
     save_png(arrow_texture(_narcotic(ARROW_SIDE, [(7, 2), (8, 2), (9, 2)]), _narcotic(ARROW_BACK, [])),
              os.path.join(TEX, "entity", "narcotic_arrow.png"))

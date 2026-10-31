@@ -27,9 +27,15 @@ public class ThrownSpearRenderer extends EntityRenderer<ThrownSpear> {
         poseStack.pushPose();
         // same orientation as arrows: local +X = flight direction
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, spear.yRotO, spear.getYRot()) - 90.0F));
-        // the sprite is drawn diagonally (tip in the top-right corner): turn it to lie along +X
+        // the spear is drawn diagonally (tip in the top-right corner): turn it to lie along +X
         poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, spear.xRotO, spear.getXRot()) - 45.0F));
-        poseStack.scale(1.8F, 1.8F, 1.8F);
+        float shake = spear.shakeTime - partialTick;
+        if (shake > 0.0F) {
+            // it quivers where it sticks, like an arrow
+            poseStack.mulPose(Axis.ZP.rotationDegrees(-Mth.sin(shake * 3.0F) * shake));
+        }
+        // the 3D spear (client/WeaponPoses) is 32 px long against the sprite's 22: about 2.5 blocks either way
+        poseStack.scale(1.25F, 1.25F, 1.25F);
         this.itemRenderer.renderStatic(spear.getRenderStack(), ItemDisplayContext.NONE, packedLight, OverlayTexture.NO_OVERLAY,
                 poseStack, buffer, spear.level(), spear.getId());
         poseStack.popPose();

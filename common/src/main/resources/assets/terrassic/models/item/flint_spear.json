@@ -2,5 +2,13 @@
   "parent": "item/handheld",
   "textures": {
     "layer0": "terrassic:item/flint_spear"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "terrassic:held": 1
+      },
+      "model": "terrassic:item/flint_spear_held"
+    }
+  ]
 }

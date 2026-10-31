@@ -21,7 +21,8 @@
     "client.GameRendererMixin",
     "client.GuiMixin",
     "client.WorldCreationUiStateMixin",
-    "client.BowZoomMixin"
+    "client.BowZoomMixin",
+    "client.HeldSpearMixin"
   ],
   "injectors": {
     "defaultRequire": 1
