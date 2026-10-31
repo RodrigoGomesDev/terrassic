@@ -206,17 +206,33 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         this.startRoar(false);
     }
 
-    /** Ridden: the quick bite, its hit on the frame the jaws close (as ApexBiteGoal times it). */
+    /** Ridden: the quick bite, its hit on the frame the jaws close (as ApexBiteGoal times it), or the stomp. */
     @Override
     protected int riderAttackInterval() {
         return 24;
     }
 
+    /** Ridden, the head reaches as far as when it hunts (ApexBiteGoal): the neck stretches 6.8 blocks from the centre.
+     *  The general reach (half the width + 2.5) ended short of the jaws, so a small dino in front of them was never hit. */
+    @Override
+    protected double riderReach() {
+        return 6.8D * this.getScale();
+    }
+
     @Override
     protected void startRiderAttack(LivingEntity target) {
-        triggerAnim(ACTION_CONTROLLER, "attack_quick");
-        this.riderBite = 6;
+        boolean stomp = target != null && this.underFoot(target);
+        triggerAnim(ACTION_CONTROLLER, stomp ? "stomp" : "attack_quick");
+        this.riderBite = stomp ? 18 : 6;
         this.riderBiteTarget = target == null ? -1 : target.getId();
+    }
+
+    /** A small thing at its feet (a raptor, a compy): the jaws cannot get down there, the foot comes down on it. */
+    private boolean underFoot(LivingEntity target) {
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        double r = 3.6D * this.getScale() + target.getBbWidth() / 2.0D;
+        return target.getBbHeight() <= 1.2F && target.getBbWidth() <= 1.0F && dx * dx + dz * dz < r * r;
     }
 
     /** The rider's special (v0.12): the loud roar when it has its breath back, otherwise the plain one. */
@@ -349,10 +365,15 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     protected void customServerAiStep() {
         super.customServerAiStep();
         ServerLevel level = (ServerLevel) this.level();
-        // the rider's bite lands when the jaws close, if the target is still in reach
+        // the rider's bite lands when the jaws close: on the target if it is still in reach, otherwise on whatever is in
+        // front of the jaws by then (a small dino darts about; a click on the air can still catch one walking in)
         if (this.riderBite > 0 && --this.riderBite == 0) {
-            if (this.riderBiteTarget >= 0 && level.getEntity(this.riderBiteTarget) instanceof LivingEntity target
-                    && target.isAlive() && this.inRiderReach(target)) {
+            LivingEntity target = this.riderBiteTarget >= 0 && level.getEntity(this.riderBiteTarget) instanceof LivingEntity e
+                    && e.isAlive() && this.inRiderReach(e) ? e : null;
+            if (target == null && this.getControllingPassenger() instanceof Player rider) {
+                target = this.riderTarget(rider);
+            }
+            if (target != null) {
                 this.doHurtTarget(target);
             }
             this.riderBiteTarget = -1;
