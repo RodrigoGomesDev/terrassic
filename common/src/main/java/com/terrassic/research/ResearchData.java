@@ -1,5 +1,6 @@
 package com.terrassic.research;
 
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -31,7 +32,7 @@ public final class ResearchData extends SavedData {
     /** Package-private for the regression with real DimensionDataStorage and temporary files. */
     static ResearchData open(DimensionDataStorage storage) {
         return storage.computeIfAbsent(new Factory<>(() -> new ResearchData(storage, new CompoundTag()),
-                (tag, registries) -> new ResearchData(storage, tag.getCompound("Players")), null), NAME);
+                (tag, registries) -> new ResearchData(storage, tag.getCompound("Players")), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
     }
 
     public Knowledge of(UUID player) {
@@ -39,7 +40,7 @@ public final class ResearchData extends SavedData {
         PlayerData data = this.storage.computeIfAbsent(new Factory<>(() -> {
             boolean migrate = this.legacyPlayers.contains(id, Tag.TAG_COMPOUND);
             return new PlayerData(migrate ? Knowledge.load(this.legacyPlayers.getCompound(id)) : new Knowledge(), migrate);
-        }, (tag, registries) -> PlayerData.load(tag), null), NAME + "_" + id);
+        }, (tag, registries) -> PlayerData.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME + "_" + id);
         return data.knowledge;
     }
 

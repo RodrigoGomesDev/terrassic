@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +24,7 @@ public class ColonyData extends SavedData {
     private final Map<Long, Long> colonies = new LinkedHashMap<>();
 
     public static ColonyData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(new Factory<>(ColonyData::new, (tag, registries) -> ColonyData.load(tag), null), NAME);
+        return level.getDataStorage().computeIfAbsent(new Factory<>(ColonyData::new, (tag, registries) -> ColonyData.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
     }
 
     private static ColonyData load(CompoundTag tag) {

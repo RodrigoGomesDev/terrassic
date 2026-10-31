@@ -1,5 +1,6 @@
 package com.terrassic.world.continent;
 
+import net.minecraft.util.datafix.DataFixTypes;
 import com.terrassic.Terrassic;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
@@ -163,7 +164,7 @@ public final class IslandMap {
 
         /** The saved survey, or null while there is none. */
         static Data find(MinecraftServer server) {
-            Data data = server.overworld().getDataStorage().get(new Factory<>(() -> new Data(0, 0, new byte[0], new byte[0]), (tag, registries) -> Data.load(tag), null), NAME);
+            Data data = server.overworld().getDataStorage().get(new Factory<>(() -> new Data(0, 0, new byte[0], new byte[0]), (tag, registries) -> Data.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
             return data != null && data.heights.length == SIZE * SIZE ? data : null;
         }
 

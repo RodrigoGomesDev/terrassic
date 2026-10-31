@@ -1,5 +1,6 @@
 package com.terrassic.config;
 
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -19,7 +20,7 @@ public class RulesData extends SavedData {
     }
 
     public static RulesData get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(RulesData::create, (tag, registries) -> RulesData.load(tag), null), NAME);
+        return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(RulesData::create, (tag, registries) -> RulesData.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
     }
 
     private static RulesData create() {

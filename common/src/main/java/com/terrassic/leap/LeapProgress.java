@@ -1,5 +1,6 @@
 package com.terrassic.leap;
 
+import net.minecraft.util.datafix.DataFixTypes;
 import com.terrassic.config.WorldConfig;
 import com.terrassic.research.Knowledge;
 import com.terrassic.research.Objective;
@@ -121,7 +122,7 @@ public final class LeapProgress {
         final Set<UUID> tyrant = new HashSet<>();
 
         static Data get(MinecraftServer server) {
-            return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), null), NAME);
+            return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
         }
 
         Mode mode() {

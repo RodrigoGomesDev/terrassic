@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import net.minecraft.util.datafix.DataFixTypes;
 import com.terrassic.config.Story;
 import com.terrassic.Terrassic;
 import com.terrassic.registry.ModItems;
@@ -158,7 +159,7 @@ public final class ArrivalCrater {
         int z;
 
         static Data get(ServerLevel level) {
-            return level.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), null), NAME);
+            return level.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
         }
 
         @Override

@@ -4,13 +4,12 @@ import com.terrassic.network.NbtDelta;
 import com.terrassic.network.NetworkRegression;
 import io.netty.buffer.Unpooled;
 import net.minecraft.SharedConstants;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.ConnectionProtocol;
-import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 
@@ -33,15 +32,6 @@ public final class ResearchRegression {
 
     public static void main(String[] args) throws Exception {
         SharedConstants.tryDetectVersion();
-        if (args.length == 1 && args[0].equals("--protocol-dump")) {
-            for (ConnectionProtocol protocol : ConnectionProtocol.values()) {
-                for (PacketFlow flow : PacketFlow.values()) {
-                    protocol.getPacketsByIds(flow).forEach((id, type) ->
-                            System.out.println("PROTOCOL " + protocol.name() + " " + flow.name() + " " + id + " " + type.getSimpleName()));
-                }
-            }
-            return;
-        }
         knowledgeRoundTrip();
         individualStorage();
         deltaRoundTrip();
@@ -101,7 +91,7 @@ public final class ResearchRegression {
     }
 
     private static DimensionDataStorage storage(Path path) {
-        return new DimensionDataStorage(path.toFile(), DataFixers.getDataFixer());
+        return new DimensionDataStorage(path.toFile(), DataFixers.getDataFixer(), RegistryAccess.EMPTY);
     }
 
     private static void individualStorage() throws Exception {
@@ -121,7 +111,7 @@ public final class ResearchRegression {
             archive.put("data", data);
             archive.putInt("DataVersion", SharedConstants.getCurrentVersion().getDataVersion().getVersion());
             Path legacy = directory.resolve("terrassic_research.dat");
-            NbtIo.writeCompressed(archive, legacy.toFile());
+            NbtIo.writeCompressed(archive, legacy);
             byte[] legacyBytes = Files.readAllBytes(legacy);
 
             DimensionDataStorage first = storage(directory);

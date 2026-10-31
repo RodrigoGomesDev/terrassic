@@ -1,5 +1,6 @@
 package com.terrassic.world;
 
+import net.minecraft.util.datafix.DataFixTypes;
 import com.terrassic.config.Story;
 import com.terrassic.registry.ModSounds;
 import com.mojang.brigadier.CommandDispatcher;
@@ -309,7 +310,7 @@ public final class RiftStorm {
         final Set<UUID> survivors = new HashSet<>();
 
         static Data get(MinecraftServer server) {
-            return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), null), NAME);
+            return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
         }
 
         @Override
