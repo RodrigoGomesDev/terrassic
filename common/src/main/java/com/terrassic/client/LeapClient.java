@@ -1,5 +1,7 @@
 package com.terrassic.client;
 
+import com.mojang.blaze3d.vertex.MeshData;
+import net.minecraft.client.DeltaTracker;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
@@ -202,8 +204,7 @@ public final class LeapClient {
                 com.mojang.blaze3d.platform.GlStateManager.DestFactor.ONE);
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        BufferBuilder b = Tesselator.getInstance().getBuilder();
-        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder b = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         Matrix4f m = poseStack.last().pose();
         float now = ticks + partialTick;
         for (Iterator<Streak> it = STREAKS.iterator(); it.hasNext(); ) {
@@ -217,12 +218,15 @@ public final class LeapClient {
             Vector3f head = new Vector3f(s.dir()).mul(t * 0.5F).add(s.start()).normalize().mul(100.0F);
             Vector3f tail = new Vector3f(s.dir()).mul(t * 0.5F - s.length()).add(s.start()).normalize().mul(100.0F);
             Vector3f across = new Vector3f(head).sub(tail).cross(head).normalize().mul(s.width());
-            b.vertex(m, tail.x, tail.y, tail.z).color(1.0F, 0.75F, 0.45F, 0.0F).endVertex();
-            b.vertex(m, head.x - across.x, head.y - across.y, head.z - across.z).color(1.0F, 0.95F, 0.85F, alpha).endVertex();
-            b.vertex(m, head.x + across.x, head.y + across.y, head.z + across.z).color(1.0F, 0.95F, 0.85F, alpha).endVertex();
-            b.vertex(m, tail.x, tail.y, tail.z).color(1.0F, 0.75F, 0.45F, 0.0F).endVertex();
+            b.addVertex(m, tail.x, tail.y, tail.z).setColor(1.0F, 0.75F, 0.45F, 0.0F);
+            b.addVertex(m, head.x - across.x, head.y - across.y, head.z - across.z).setColor(1.0F, 0.95F, 0.85F, alpha);
+            b.addVertex(m, head.x + across.x, head.y + across.y, head.z + across.z).setColor(1.0F, 0.95F, 0.85F, alpha);
+            b.addVertex(m, tail.x, tail.y, tail.z).setColor(1.0F, 0.75F, 0.45F, 0.0F);
         }
-        BufferUploader.drawWithShader(b.end());
+        MeshData mesh = b.build();
+        if (mesh != null) {
+            BufferUploader.drawWithShader(mesh);
+        }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
@@ -240,7 +244,8 @@ public final class LeapClient {
         }
     }
 
-    private static void renderFlash(GuiGraphics g, float partialTick) {
+    private static void renderFlash(GuiGraphics g, DeltaTracker delta) {
+        float partialTick = delta.getGameTimeDeltaPartialTick(false);
         if (flash < 0) {
             return;
         }

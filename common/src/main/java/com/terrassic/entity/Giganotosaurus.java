@@ -1,10 +1,11 @@
 package com.terrassic.entity;
 
+import com.terrassic.Terrassic;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
-import java.util.UUID;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -37,7 +38,7 @@ public class Giganotosaurus extends PredatorDinosaur {
     public static final float SHADOW = 2.3F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
-    private static final UUID RAGE_ID = UUID.fromString("7c1e5a3e-6b8d-4b1f-9a2e-3c6e4aedcfac");
+    private static final ResourceLocation RAGE_ID = Terrassic.id("giganotosaurus_rage");
 
     public Giganotosaurus(EntityType<? extends Giganotosaurus> type, Level level) {
         super(type, level);
@@ -101,7 +102,6 @@ public class Giganotosaurus extends PredatorDinosaur {
         return 1.15F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 3.85D * this.getScale();
     }
@@ -169,7 +169,7 @@ public class Giganotosaurus extends PredatorDinosaur {
             attack.removeModifier(RAGE_ID);
             float missing = 1.0F - Mth.clamp(health / this.getMaxHealth(), 0.0F, 1.0F);
             if (missing > 0.05F) {
-                attack.addTransientModifier(new AttributeModifier(RAGE_ID, "Rage", 0.6D * missing, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                attack.addTransientModifier(new AttributeModifier(RAGE_ID, 0.6D * missing, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
     }

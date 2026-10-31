@@ -83,7 +83,6 @@ public class Archelon extends SwimmingDinosaur {
         return 0.75F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 0.91D * this.getScale();
     }

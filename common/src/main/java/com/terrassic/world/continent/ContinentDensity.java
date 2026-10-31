@@ -1,6 +1,7 @@
 package com.terrassic.world.continent;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.util.Mth;
@@ -25,7 +26,7 @@ import java.util.Objects;
 public final class ContinentDensity implements DensityFunction {
     public static final int DEFAULT_RADIUS = 1200;
 
-    private static final Codec<ContinentDensity> DATA_CODEC = RecordCodecBuilder.create(i -> i.group(
+    private static final MapCodec<ContinentDensity> DATA_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             DensityFunction.HOLDER_HELPER_CODEC.fieldOf("argument").forGetter(ContinentDensity::input),
             Codec.intRange(64, 30000).optionalFieldOf("raio", DEFAULT_RADIUS).forGetter(ContinentDensity::radius)
     ).apply(i, ContinentDensity::new));

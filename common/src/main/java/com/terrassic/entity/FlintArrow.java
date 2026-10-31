@@ -15,13 +15,13 @@ public class FlintArrow extends AbstractArrow {
         this.setBaseDamage(2.5D);
     }
 
-    public FlintArrow(Level level, LivingEntity shooter) {
-        super(ModEntities.FLINT_ARROW.get(), shooter, level);
+    public FlintArrow(Level level, LivingEntity shooter, ItemStack weapon) {
+        super(ModEntities.FLINT_ARROW.get(), shooter, level, new ItemStack(ModItems.FLINT_ARROW.get()), weapon);
         this.setBaseDamage(2.5D);
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ModItems.FLINT_ARROW.get());
     }
 }

@@ -1,5 +1,6 @@
 package com.terrassic.config;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -18,7 +19,7 @@ public class RulesData extends SavedData {
     }
 
     public static RulesData get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(RulesData::load, RulesData::create, NAME);
+        return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(RulesData::create, (tag, registries) -> RulesData.load(tag), null), NAME);
     }
 
     private static RulesData create() {
@@ -36,7 +37,7 @@ public class RulesData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         tag.put("Rules", this.rules.save());
         return tag;
     }

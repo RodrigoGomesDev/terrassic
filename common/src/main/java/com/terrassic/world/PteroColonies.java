@@ -185,7 +185,7 @@ public final class PteroColonies {
             if (!level.noCollision(bird)) {
                 continue;
             }
-            bird.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.STRUCTURE, null, null);
+            bird.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.STRUCTURE, null);
             bird.setAge(i >= adults ? -6000 - random.nextInt(14000) : 0);
             bird.setColonyHome(site);
             bird.setPersistenceRequired();

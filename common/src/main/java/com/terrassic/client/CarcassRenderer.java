@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -63,7 +63,7 @@ public class CarcassRenderer extends GeoEntityRenderer<CarcassEntity> {
         }
 
         private void hide(String bone, boolean hidden) {
-            CoreGeoBone b = getAnimationProcessor().getBone(bone);
+            GeoBone b = getAnimationProcessor().getBone(bone);
             if (b != null) {
                 b.setHidden(hidden);
             }

@@ -98,7 +98,6 @@ public class Argentinosaurus extends HerbivoreDinosaur {
         return 0.9F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 7.34D * this.getScale();
     }
@@ -160,7 +159,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
                     (int) Math.floor(box.maxX), (int) Math.floor(box.maxY), (int) Math.floor(box.maxZ))) {
                 BlockState state = this.level().getBlockState(pos);
                 if (state.is(BlockTags.LEAVES) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.SAPLINGS)
-                        || state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)
+                        || state.is(Blocks.SHORT_GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)
                         || state.is(Blocks.DEAD_BUSH) || state.is(Blocks.SWEET_BERRY_BUSH)) {
                     if (Rules.breaksBlock(this.level(), this.random)) {
                         this.level().destroyBlock(pos, true, this);

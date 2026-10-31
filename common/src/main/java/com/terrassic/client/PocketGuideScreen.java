@@ -1,5 +1,6 @@
 package com.terrassic.client;
 
+import net.minecraft.world.item.crafting.RecipeHolder;
 import com.google.gson.JsonArray;
 import com.mojang.logging.LogUtils;
 import com.google.gson.JsonElement;
@@ -94,11 +95,11 @@ public class PocketGuideScreen extends Screen {
             JsonObject root = GsonHelper.parse(reader);
             for (JsonElement e : GsonHelper.getAsJsonArray(root, "topics")) {
                 JsonObject t = e.getAsJsonObject();
-                ItemStack icon = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(GsonHelper.getAsString(t, "icon"))));
+                ItemStack icon = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(GsonHelper.getAsString(t, "icon"))));
                 List<ResourceLocation> recipes = new ArrayList<>();
                 JsonArray rs = GsonHelper.getAsJsonArray(t, "recipes", new JsonArray());
                 for (JsonElement r : rs) {
-                    recipes.add(new ResourceLocation(r.getAsString()));
+                    recipes.add(ResourceLocation.parse(r.getAsString()));
                 }
                 out.add(new Topic(GsonHelper.getAsString(t, "id"), icon, recipes));
             }
@@ -141,11 +142,11 @@ public class PocketGuideScreen extends Screen {
                 }
             }
             for (ResourceLocation id : t.recipes()) {
-                Optional<? extends Recipe<?>> recipe = this.minecraft != null && this.minecraft.level != null
-                        ? this.minecraft.level.getRecipeManager().byKey(id) : Optional.empty();
+                Optional<RecipeHolder<?>> recipe = this.minecraft != null && this.minecraft.level != null
+                        ? this.minecraft.level.getRecipeManager().byKey(id).map(holder -> (RecipeHolder<?>) holder) : Optional.empty();
                 if (recipe.isPresent()) {
                     page = this.add(page, new Gap(6));
-                    page = this.add(page, new RecipeGrid(recipe.get()));
+                    page = this.add(page, new RecipeGrid(recipe.get().value()));
                 }
             }
             this.pages.add(page);
@@ -203,7 +204,7 @@ public class PocketGuideScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g);
+        this.renderBackground(g, mouseX, mouseY, partialTick);
         g.blit(TEXTURE, this.left, this.top, 0, 0, W, H, TEX_W, TEX_H);
         this.hoveredStack = ItemStack.EMPTY;
         this.hoveredEntry = null;
@@ -296,7 +297,7 @@ public class PocketGuideScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mx, double my, double delta) {
+    public boolean mouseScrolled(double mx, double my, double scrollX, double delta) {
         this.turn(this.spread + (delta < 0 ? 1 : -1));
         return true;
     }

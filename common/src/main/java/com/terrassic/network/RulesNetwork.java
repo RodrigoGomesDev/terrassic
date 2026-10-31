@@ -7,11 +7,10 @@ import com.terrassic.config.WorldConfig;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -56,7 +55,7 @@ public final class RulesNetwork {
                         return 0;
                     }
                     sync(player);
-                    NetworkManager.sendToPlayer(player, OPEN, new FriendlyByteBuf(Unpooled.buffer()));
+                    NetworkManager.sendToPlayer(player, OPEN, Net.buf(player.registryAccess()));
                     return Command.SINGLE_SUCCESS;
                 })));
             }
@@ -71,7 +70,7 @@ public final class RulesNetwork {
     }
 
     public static void sync(ServerPlayer player) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeNbt(Rules.of(player.server).save());
         buf.writeBoolean(canEdit(player));
         NetworkManager.sendToPlayer(player, SYNC, buf);

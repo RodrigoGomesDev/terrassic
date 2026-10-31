@@ -1,5 +1,6 @@
 package com.terrassic.research;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
@@ -29,21 +30,21 @@ public final class ResearchData extends SavedData {
 
     /** Package-private for the regression with real DimensionDataStorage and temporary files. */
     static ResearchData open(DimensionDataStorage storage) {
-        return storage.computeIfAbsent(tag -> new ResearchData(storage, tag.getCompound("Players")),
-                () -> new ResearchData(storage, new CompoundTag()), NAME);
+        return storage.computeIfAbsent(new Factory<>(() -> new ResearchData(storage, new CompoundTag()),
+                (tag, registries) -> new ResearchData(storage, tag.getCompound("Players")), null), NAME);
     }
 
     public Knowledge of(UUID player) {
         String id = player.toString();
-        PlayerData data = this.storage.computeIfAbsent(PlayerData::load, () -> {
+        PlayerData data = this.storage.computeIfAbsent(new Factory<>(() -> {
             boolean migrate = this.legacyPlayers.contains(id, Tag.TAG_COMPOUND);
             return new PlayerData(migrate ? Knowledge.load(this.legacyPlayers.getCompound(id)) : new Knowledge(), migrate);
-        }, NAME + "_" + id);
+        }, (tag, registries) -> PlayerData.load(tag), null), NAME + "_" + id);
         return data.knowledge;
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         tag.put("Players", this.legacyPlayers.copy());
         return tag;
     }
@@ -62,7 +63,7 @@ public final class ResearchData extends SavedData {
         }
 
         @Override
-        public CompoundTag save(CompoundTag tag) {
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
             tag.putInt("Version", 1);
             tag.put("Knowledge", this.knowledge.save());
             return tag;

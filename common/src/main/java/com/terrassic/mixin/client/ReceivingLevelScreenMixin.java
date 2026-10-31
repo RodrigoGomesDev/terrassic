@@ -35,12 +35,11 @@ public abstract class ReceivingLevelScreenMixin extends Screen {
     }
 
     /** A 3D scene of the menu gallery in place of the dirt (docs/MENU.md), unless the vanilla title is chosen. */
-    @Override
-    public void renderDirtBackground(GuiGraphics graphics) {
+    @Inject(method = "renderBackground", at = @At("HEAD"), cancellable = true)
+    private void terrassic$backdrop(GuiGraphics graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         if (ClientConfig.titleScreen()) {
             TerrassicMenuScreen.renderBackdrop(graphics, this.width, this.height);
-        } else {
-            super.renderDirtBackground(graphics);
+            ci.cancel();
         }
     }
 }

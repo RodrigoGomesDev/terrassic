@@ -38,15 +38,15 @@ public final class ModWorldgen {
 
     /** Vanilla chest -> chance of one loose page. */
     private static final Map<ResourceLocation, Float> PAGE_CHESTS = Map.of(
-            new ResourceLocation("chests/simple_dungeon"), 0.5F,
-            new ResourceLocation("chests/abandoned_mineshaft"), 0.25F,
-            new ResourceLocation("chests/desert_pyramid"), 0.5F,
-            new ResourceLocation("chests/jungle_temple"), 0.5F,
-            new ResourceLocation("chests/shipwreck_map"), 0.4F,
-            new ResourceLocation("chests/buried_treasure"), 0.6F,
-            new ResourceLocation("chests/ruined_portal"), 0.3F,
-            new ResourceLocation("chests/village/village_cartographer"), 0.5F,
-            new ResourceLocation("chests/igloo_chest"), 0.5F);
+            ResourceLocation.parse("chests/simple_dungeon"), 0.5F,
+            ResourceLocation.parse("chests/abandoned_mineshaft"), 0.25F,
+            ResourceLocation.parse("chests/desert_pyramid"), 0.5F,
+            ResourceLocation.parse("chests/jungle_temple"), 0.5F,
+            ResourceLocation.parse("chests/shipwreck_map"), 0.4F,
+            ResourceLocation.parse("chests/buried_treasure"), 0.6F,
+            ResourceLocation.parse("chests/ruined_portal"), 0.3F,
+            ResourceLocation.parse("chests/village/village_cartographer"), 0.5F,
+            ResourceLocation.parse("chests/igloo_chest"), 0.5F);
 
     private ModWorldgen() {
     }
@@ -60,20 +60,19 @@ public final class ModWorldgen {
             for (String[] f : BuildingBlocks.FEATURES) {
                 ResourceKey<PlacedFeature> feature = ResourceKey.create(Registries.PLACED_FEATURE, Terrassic.id(f[0]));
                 GenerationStep.Decoration step = GenerationStep.Decoration.valueOf(f[1].toUpperCase(java.util.Locale.ROOT));
-                TagKey<Biome> biomes = TagKey.create(Registries.BIOME, new ResourceLocation(f[2]));
+                TagKey<Biome> biomes = TagKey.create(Registries.BIOME, ResourceLocation.parse(f[2]));
                 BiomeModifications.addProperties(ctx -> ctx.hasTag(biomes),
                         (ctx, props) -> props.getGenerationProperties().addFeature(step, feature));
             }
         });
 
-        LootEvent.MODIFY_LOOT_TABLE.register((lootTables, id, context, builtin) -> {
-            Float chance = PAGE_CHESTS.get(id);
+        LootEvent.MODIFY_LOOT_TABLE.register((id, context, builtin) -> {
+            Float chance = PAGE_CHESTS.get(id.location());
             if (builtin && chance != null && Story.enabled()) {
                 context.addPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(ModItems.LOOSE_PAGE.get()))
-                        .when(LootItemRandomChanceCondition.randomChance(chance))
-                        .build());
+                        .when(LootItemRandomChanceCondition.randomChance(chance)));
             }
         });
     }

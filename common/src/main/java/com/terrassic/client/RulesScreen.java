@@ -6,7 +6,6 @@ import com.terrassic.client.ui.TerrassicFonts;
 import com.terrassic.client.ui.TerrassicUi;
 import com.terrassic.network.RulesNetwork;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -15,7 +14,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -145,7 +144,7 @@ public class RulesScreen extends Screen {
     private void save() {
         this.commitBoxes();
         if (this.world) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            RegistryFriendlyByteBuf buf = ClientNet.buf();
             buf.writeNbt(this.edited.save());
             NetworkManager.sendToServer(RulesNetwork.SET, buf);
         } else {
@@ -162,7 +161,7 @@ public class RulesScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double delta) {
         this.scroll -= (int) (delta * ROW_H / 2);
         this.layoutRows();
         return true;
@@ -172,7 +171,7 @@ public class RulesScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g);
+        this.renderBackground(g, mouseX, mouseY, partialTick);
         int right = this.left + this.panelW;
         int bottom = this.top + this.panelH;
         TerrassicUi.slab(g, this.left, this.top, right, bottom);

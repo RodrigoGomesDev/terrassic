@@ -1,6 +1,6 @@
 package com.terrassic.world.continent;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.terrassic.Terrassic;
 import com.terrassic.config.WorldConfig;
 import dev.architectury.event.events.common.LifecycleEvent;
@@ -32,9 +32,9 @@ import org.slf4j.LoggerFactory;
 public final class ModContinent {
     private static final Logger LOG = LoggerFactory.getLogger(Terrassic.MOD_ID);
 
-    public static final DeferredRegister<Codec<? extends BiomeSource>> BIOME_SOURCES =
+    public static final DeferredRegister<MapCodec<? extends BiomeSource>> BIOME_SOURCES =
             DeferredRegister.create(Terrassic.MOD_ID, Registries.BIOME_SOURCE);
-    public static final DeferredRegister<Codec<? extends DensityFunction>> DENSITY_FUNCTION_TYPES =
+    public static final DeferredRegister<MapCodec<? extends DensityFunction>> DENSITY_FUNCTION_TYPES =
             DeferredRegister.create(Terrassic.MOD_ID, Registries.DENSITY_FUNCTION_TYPE);
 
     /** World type selected by default in "Criar novo mundo" (the medium continent). */

@@ -82,7 +82,6 @@ public class Elasmosaurus extends SwimmingDinosaur {
         return 1.1F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 1.04D * this.getScale();
     }

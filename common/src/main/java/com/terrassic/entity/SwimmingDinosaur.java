@@ -14,7 +14,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
@@ -39,7 +38,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -67,7 +66,7 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
         super(type, level);
         this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     /** Sea reptiles do not nest yet: the Archelon beaches and the live births at sea come with v0.8. */
@@ -159,16 +158,6 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     }
 
     @Override
-    public MobType getMobType() {
-        return MobType.WATER;
-    }
-
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public boolean isPushedByFluid() {
         return false;
     }
@@ -197,8 +186,8 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
-                                        SpawnGroupData spawnData, CompoundTag tag) {
-        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+                                        SpawnGroupData spawnData) {
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData);
         if (this.liveYoung() && reason == MobSpawnType.NATURAL && this.random.nextFloat() < CALF_CHANCE) {
             this.setAge(-24000);
         }

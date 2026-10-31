@@ -60,7 +60,7 @@ public class HudOptionsScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g);
+        this.renderBackground(g, mouseX, mouseY, partialTick);
         int x = this.left;
         int y = this.top;
         AmberHud.slab(g, "hud_options_" + this.h, x, y, 6, 0, W, 0, W, this.h - 5, W - 5, this.h, 0, this.h, 0, 6);

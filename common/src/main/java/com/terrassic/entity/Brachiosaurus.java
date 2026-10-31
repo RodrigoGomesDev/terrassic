@@ -88,7 +88,6 @@ public class Brachiosaurus extends HerbivoreDinosaur {
         return 1.0F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 6.41D * this.getScale();
     }

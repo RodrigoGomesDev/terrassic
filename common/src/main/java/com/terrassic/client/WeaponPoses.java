@@ -31,22 +31,22 @@ public final class WeaponPoses {
 
     public static void init() {
         ClientLifecycleEvent.CLIENT_SETUP.register(minecraft -> {
-            ItemPropertiesRegistry.register(ModItems.BLOWGUN.get(), new ResourceLocation(Terrassic.MOD_ID, "blowing"),
+            ItemPropertiesRegistry.register(ModItems.BLOWGUN.get(), ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, "blowing"),
                     (stack, level, entity, seed) -> using(entity, stack) ? 1.0F : 0.0F);
-            ItemPropertiesRegistry.register(ModItems.BLOWGUN.get(), new ResourceLocation(Terrassic.MOD_ID, "mouth"),
+            ItemPropertiesRegistry.register(ModItems.BLOWGUN.get(), ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, "mouth"),
                     (stack, level, entity, seed) -> MOUTH ? 1.0F : 0.0F);
-            ItemPropertiesRegistry.register(ModItems.HUNTING_BOW.get(), new ResourceLocation("pulling"),
+            ItemPropertiesRegistry.register(ModItems.HUNTING_BOW.get(), ResourceLocation.parse("pulling"),
                     (stack, level, entity, seed) -> using(entity, stack) ? 1.0F : 0.0F);
-            ItemPropertiesRegistry.register(ModItems.HUNTING_BOW.get(), new ResourceLocation("pull"),
+            ItemPropertiesRegistry.register(ModItems.HUNTING_BOW.get(), ResourceLocation.parse("pull"),
                     (stack, level, entity, seed) -> using(entity, stack)
-                            ? (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / HuntingBowItem.FULL_DRAW : 0.0F);
-            ItemPropertiesRegistry.register(ModItems.BOLA.get(), new ResourceLocation(Terrassic.MOD_ID, "bola"),
+                            ? (float) (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / HuntingBowItem.FULL_DRAW : 0.0F);
+            ItemPropertiesRegistry.register(ModItems.BOLA.get(), ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, "bola"),
                     (stack, level, entity, seed) -> BOLA);
             for (Item spear : new Item[]{ModItems.FLINT_SPEAR.get(), ModItems.HORN_SPEAR.get()}) {
-                ItemPropertiesRegistry.register(spear, new ResourceLocation(Terrassic.MOD_ID, "held"),
+                ItemPropertiesRegistry.register(spear, ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, "held"),
                         (stack, level, entity, seed) -> HELD ? 1.0F : 0.0F);
                 // raised to throw: the vanilla trident's predicate, so the spear takes the trident's throwing pose
-                ItemPropertiesRegistry.register(spear, new ResourceLocation("throwing"),
+                ItemPropertiesRegistry.register(spear, ResourceLocation.parse("throwing"),
                         (stack, level, entity, seed) -> using(entity, stack) ? 1.0F : 0.0F);
             }
         });

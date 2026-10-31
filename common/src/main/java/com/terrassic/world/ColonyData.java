@@ -1,6 +1,7 @@
 package com.terrassic.world;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -22,7 +23,7 @@ public class ColonyData extends SavedData {
     private final Map<Long, Long> colonies = new LinkedHashMap<>();
 
     public static ColonyData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(ColonyData::load, ColonyData::new, NAME);
+        return level.getDataStorage().computeIfAbsent(new Factory<>(ColonyData::new, (tag, registries) -> ColonyData.load(tag), null), NAME);
     }
 
     private static ColonyData load(CompoundTag tag) {
@@ -35,7 +36,7 @@ public class ColonyData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag list = new ListTag();
         for (Map.Entry<Long, Long> e : this.colonies.entrySet()) {
             CompoundTag c = new CompoundTag();

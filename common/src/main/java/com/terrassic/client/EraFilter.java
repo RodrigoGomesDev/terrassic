@@ -30,7 +30,7 @@ import java.nio.file.Path;
 public final class EraFilter {
     private static final Logger LOG = LoggerFactory.getLogger("terrassic");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final ResourceLocation CHAIN = new ResourceLocation(Terrassic.MOD_ID, "shaders/post/era_cretaceo.json");
+    private static final ResourceLocation CHAIN = ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, "shaders/post/era_cretaceo.json");
 
     private static PostChain chain;
     private static boolean unavailable;

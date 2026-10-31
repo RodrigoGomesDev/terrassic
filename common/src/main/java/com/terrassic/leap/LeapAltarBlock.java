@@ -1,5 +1,6 @@
 package com.terrassic.leap;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,6 +37,7 @@ import org.joml.Vector3f;
  * {@link #STAGE}: 0 cold (ring incomplete), 1 ring complete, 2 ritual, 3 open (the Rift Tyrant was beaten here).
  */
 public class LeapAltarBlock extends BaseEntityBlock {
+    private static final MapCodec<LeapAltarBlock> CODEC = simpleCodec(LeapAltarBlock::new);
     public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 3);
     public static final int COLD = 0;
     public static final int RING = 1;
@@ -54,6 +56,11 @@ public class LeapAltarBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(STAGE);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -78,10 +85,7 @@ public class LeapAltarBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (hand != InteractionHand.MAIN_HAND) {
-            return InteractionResult.PASS;
-        }
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof LeapAltarBlockEntity altar) {
             altar.use(player);
         }

@@ -101,7 +101,6 @@ public class Carnotaurus extends PredatorDinosaur {
         return 1.35F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.47D * this.getScale();
     }

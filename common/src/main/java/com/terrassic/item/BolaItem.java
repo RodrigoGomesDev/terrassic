@@ -35,7 +35,7 @@ public class BolaItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity user) {
         return 72000;
     }
 
@@ -47,7 +47,7 @@ public class BolaItem extends Item {
 
     @Override
     public void onUseTick(Level level, LivingEntity user, ItemStack stack, int remaining) {
-        int used = this.getUseDuration(stack) - remaining;
+        int used = this.getUseDuration(stack, user) - remaining;
         // one whoosh per turn of the thongs, quicker and higher as the swing builds
         if (!level.isClientSide() && used > 0 && used % (used < FULL_SWING ? 8 : 6) == 0) {
             float swing = Mth.clamp((float) used / FULL_SWING, 0.0F, 1.0F);
@@ -61,7 +61,7 @@ public class BolaItem extends Item {
         if (!(user instanceof Player player)) {
             return;
         }
-        int used = this.getUseDuration(stack) - remaining;
+        int used = this.getUseDuration(stack, user) - remaining;
         if (used < MIN_SWING) {
             return;
         }

@@ -1,11 +1,12 @@
 package com.terrassic.entity;
 
+import com.terrassic.Terrassic;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
-import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -37,8 +38,8 @@ public class Carcharodontosaurus extends PredatorDinosaur {
     public static final float SHADOW = 2.3F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
-    private static final UUID KILLS_ATTACK_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e1f-28092a8ad990");
-    private static final UUID KILLS_SPEED_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e2f-a3cbbac8af37");
+    private static final ResourceLocation KILLS_ATTACK_ID = Terrassic.id("carcharodontosaurus_kills_attack");
+    private static final ResourceLocation KILLS_SPEED_ID = Terrassic.id("carcharodontosaurus_kills_speed");
     private int kills;
     private int killsTimer;
 
@@ -104,7 +105,6 @@ public class Carcharodontosaurus extends PredatorDinosaur {
         return 1.1F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 3.96D * this.getScale();
     }
@@ -186,13 +186,13 @@ public class Carcharodontosaurus extends PredatorDinosaur {
         if (attack != null) {
             attack.removeModifier(KILLS_ATTACK_ID);
             if (this.kills > 0) {
-                attack.addTransientModifier(new AttributeModifier(KILLS_ATTACK_ID, "Trophies", 0.08D * this.kills, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                attack.addTransientModifier(new AttributeModifier(KILLS_ATTACK_ID, 0.08D * this.kills, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
         if (speed != null) {
             speed.removeModifier(KILLS_SPEED_ID);
             if (this.kills > 0) {
-                speed.addTransientModifier(new AttributeModifier(KILLS_SPEED_ID, "Trophies", 0.03D * this.kills, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                speed.addTransientModifier(new AttributeModifier(KILLS_SPEED_ID, 0.03D * this.kills, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
     }

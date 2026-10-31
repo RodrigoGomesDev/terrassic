@@ -88,7 +88,6 @@ public class Alamosaurus extends HerbivoreDinosaur {
         return 0.95F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 6.46D * this.getScale();
     }

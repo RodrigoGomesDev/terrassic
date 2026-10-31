@@ -1,5 +1,6 @@
 package com.terrassic.leap;
 
+import net.minecraft.server.level.ServerEntity;
 import com.terrassic.config.WorldConfig;
 import com.terrassic.registry.ModItems;
 import net.minecraft.core.BlockPos;
@@ -86,8 +87,8 @@ public class Meteor extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_SIZE, 1.0F);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_SIZE, 1.0F);
     }
 
     @Override
@@ -120,7 +121,7 @@ public class Meteor extends Entity {
 
     private void impact(Vec3 at) {
         ServerLevel level = (ServerLevel) this.level();
-        level.playSound(null, BlockPos.containing(at), SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 3.0F, 0.8F);
+        level.playSound(null, BlockPos.containing(at), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.HOSTILE, 3.0F, 0.8F);
         level.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y + 0.5D, at.z, 3, 0.5D, 0.3D, 0.5D, 0.0D);
         if (WorldConfig.meteorDamage()) {
             this.burst(level, at);
@@ -145,7 +146,7 @@ public class Meteor extends Entity {
             }
             float k = (float) (1.0D - d / radius);
             if (e.hurt(level.damageSources().explosion(this, null), 2.0F + this.power * 3.0F * k)) {
-                e.setSecondsOnFire(2);
+                e.igniteForSeconds(2.0F);
             }
             Vec3 push = e.position().subtract(at).normalize().scale(0.8D * k);
             e.push(push.x, 0.3D * k, push.z);
@@ -205,7 +206,7 @@ public class Meteor extends Entity {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
+        return new ClientboundAddEntityPacket(this, entity);
     }
 }

@@ -1,5 +1,6 @@
 package com.terrassic.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,9 +31,11 @@ public class FacingBlock extends HorizontalDirectionalBlock {
     public static final double[][] ARCH = {{0, 0, 6, 3, 16, 10}, {13, 0, 6, 16, 16, 10}, {3, 13, 6, 13, 16, 10}};
 
     private final Map<Direction, VoxelShape> shapes = new EnumMap<>(Direction.class);
+    private final MapCodec<FacingBlock> codec;
 
     public FacingBlock(Properties properties, double[][] northBoxes) {
         super(properties);
+        this.codec = simpleCodec(p -> new FacingBlock(p, northBoxes));
         for (Direction d : Direction.Plane.HORIZONTAL) {
             VoxelShape shape = Shapes.empty();
             for (double[] b : northBoxes) {
@@ -51,6 +54,11 @@ public class FacingBlock extends HorizontalDirectionalBlock {
             case WEST -> Block.box(b[2], b[1], 16 - b[3], b[5], b[4], 16 - b[0]);
             default -> Block.box(b[0], b[1], b[2], b[3], b[4], b[5]);
         };
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return this.codec;
     }
 
     @Override

@@ -44,9 +44,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 /**
  * Pterosaurs. Wild ones fly around with a flying navigation (like parrots), glide down slowly when they stop
@@ -374,7 +374,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.colonyHome = tag.contains("Colony") ? NbtUtils.readBlockPos(tag.getCompound("Colony")) : null;
+        this.colonyHome = NbtUtils.readBlockPos(tag, "Colony").orElse(null);
     }
 
     // ------------------------------------------------------------------ soaring (SoarGoal)

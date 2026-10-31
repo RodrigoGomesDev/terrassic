@@ -1,5 +1,7 @@
 package com.terrassic.client;
 
+import org.joml.Vector3f;
+import org.joml.Quaternionf;
 import com.terrassic.client.ui.TerrassicButton;
 import com.terrassic.client.ui.TerrassicFonts;
 
@@ -239,8 +241,33 @@ public class NotebookScreen extends Screen {
         return false;
     }
 
+    /** The creature on its feet at (x, y), looking at the mouse (1.21 only offers this inside a box of its own). */
+    private static void followMouse(GuiGraphics g, int x, int y, int scale, float lookX, float lookY, LivingEntity entity) {
+        float yaw = (float) Math.atan(lookX / 40.0F);
+        float pitch = (float) Math.atan(lookY / 40.0F);
+        Quaternionf pose = new Quaternionf().rotateZ((float) Math.PI);
+        Quaternionf camera = new Quaternionf().rotateX(pitch * 20.0F * Mth.DEG_TO_RAD);
+        pose.mul(camera);
+        float bodyRot = entity.yBodyRot;
+        float yRot = entity.getYRot();
+        float xRot = entity.getXRot();
+        float headRotO = entity.yHeadRotO;
+        float headRot = entity.yHeadRot;
+        entity.yBodyRot = 180.0F + yaw * 20.0F;
+        entity.setYRot(180.0F + yaw * 40.0F);
+        entity.setXRot(-pitch * 20.0F);
+        entity.yHeadRot = entity.getYRot();
+        entity.yHeadRotO = entity.getYRot();
+        InventoryScreen.renderEntityInInventory(g, x, y, scale, new Vector3f(), pose, camera, entity);
+        entity.yBodyRot = bodyRot;
+        entity.setYRot(yRot);
+        entity.setXRot(xRot);
+        entity.yHeadRotO = headRotO;
+        entity.yHeadRot = headRot;
+    }
+
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double delta) {
         this.scroll = Mth.clamp(this.scroll - (int) (delta * 12), 0, Math.max(0, this.contentHeight));
         return true;
     }
@@ -249,7 +276,7 @@ public class NotebookScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g);
+        this.renderBackground(g, mouseX, mouseY, partialTick);
         g.fill(this.left - 4, this.top - 4, this.left + W + 4, this.top + H + 4, LEATHER);
         g.fill(this.left, this.top, this.left + W, this.top + H, PAPER);
         g.fill(this.left + W / 2 - 1, this.top + 4, this.left + W / 2 + 1, this.top + H - 4, PAPER_DARK);
@@ -369,8 +396,7 @@ public class NotebookScreen extends Screen {
             if (model != null) {
                 int scale = Math.max(4, Math.round(s.guiScale() * 0.6F));
                 g.enableScissor(x, y0, x + width, picBottom + 2);
-                InventoryScreen.renderEntityInInventoryFollowsMouse(g, x + width / 2, picBottom - 4, scale,
-                        x + width / 2 - mouseX, picBottom - 30 - mouseY, model);
+                followMouse(g, x + width / 2, picBottom - 4, scale, x + width / 2 - mouseX, picBottom - 30 - mouseY, model);
                 g.disableScissor();
             }
         } else {

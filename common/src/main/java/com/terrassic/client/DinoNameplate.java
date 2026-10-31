@@ -1,5 +1,6 @@
 package com.terrassic.client;
 
+import net.minecraft.client.DeltaTracker;
 import com.terrassic.client.ui.AmberHud;
 import com.terrassic.client.ui.TerrassicPalette;
 import com.terrassic.entity.DinosaurEntity;
@@ -76,7 +77,8 @@ public final class DinoNameplate {
         }
     }
 
-    private static void render(GuiGraphics g, float partialTick) {
+    private static void render(GuiGraphics g, DeltaTracker delta) {
+        float partialTick = delta.getGameTimeDeltaPartialTick(false);
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.level == null || target < 0 || projection == null || !ClientConfig.flag("hud_nameplate")) {
             return;

@@ -53,7 +53,7 @@ import java.util.List;
 public class RiftTyrant extends Tyrannosaurus {
     public static final float SIZE = 1.35F;
     private static final double LEASH = 48.0D;
-    private static final java.util.UUID PLAYERS_HEALTH_ID = java.util.UUID.fromString("6b1f0c52-8a3e-4d7f-b2c4-91e5a7d30f18");
+    private static final net.minecraft.resources.ResourceLocation PLAYERS_HEALTH_ID = com.terrassic.Terrassic.id("rift_tyrant_players");
     private static final DustParticleOptions SPARK = new DustParticleOptions(new Vector3f(1.0F, 0.55F, 0.12F), 2.0F);
     private final ServerBossEvent bossBar = new ServerBossEvent(Component.translatable("entity.terrassic.rift_tyrant"),
             BossEvent.BossBarColor.YELLOW, BossEvent.BossBarOverlay.NOTCHED_10);
@@ -104,7 +104,7 @@ public class RiftTyrant extends Tyrannosaurus {
         int extra = Math.max(0, Math.min(8, players) - 1);
         if (extra > 0) {
             health.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(PLAYERS_HEALTH_ID,
-                    "Rift Tyrant players", 0.5D * extra, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_BASE));
+                    0.5D * extra, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }
         this.setHealth(this.getMaxHealth());
     }
@@ -190,7 +190,7 @@ public class RiftTyrant extends Tyrannosaurus {
     }
 
     @Override
-    public boolean canChangeDimensions() {
+    public boolean canChangeDimensions(Level from, Level to) {
         return false;
     }
 
@@ -295,7 +295,7 @@ public class RiftTyrant extends Tyrannosaurus {
             if (!level.noCollision(v)) {
                 v.moveTo(this.getX(), this.getY(), this.getZ());
             }
-            v.finalizeSpawn(level, level.getCurrentDifficultyAt(v.blockPosition()), MobSpawnType.EVENT, null, null);
+            v.finalizeSpawn(level, level.getCurrentDifficultyAt(v.blockPosition()), MobSpawnType.EVENT, null);
             v.setRift(true);
             v.addTag("terrassic_rift");
             v.setTarget(this.getTarget());
@@ -361,7 +361,7 @@ public class RiftTyrant extends Tyrannosaurus {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("Altar")) {
-            this.altar = NbtUtils.readBlockPos(tag.getCompound("Altar"));
+            this.altar = NbtUtils.readBlockPos(tag, "Altar").orElse(null);
         }
         this.bossBar.setProgress(this.getHealth() / this.getMaxHealth());
     }

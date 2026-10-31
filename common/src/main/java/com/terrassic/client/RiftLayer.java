@@ -1,5 +1,6 @@
 package com.terrassic.client;
 
+import net.minecraft.util.FastColor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.terrassic.Terrassic;
@@ -36,6 +37,6 @@ public class RiftLayer<T extends DinosaurEntity> extends GeoRenderLayer<T> {
         float pulse = 0.6F + 0.4F * Mth.sin((animatable.tickCount + partialTick) * 0.12F + animatable.getId());
         RenderType glow = RenderType.eyes(OVERLAY);
         this.getRenderer().reRender(model, poseStack, buffers, animatable, glow, buffers.getBuffer(glow), partialTick,
-                LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, pulse, pulse, pulse, 1.0F);
+                LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.colorFromFloat(1.0F, pulse, pulse, pulse));
     }
 }

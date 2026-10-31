@@ -8,11 +8,10 @@ import com.terrassic.network.DinoNetwork;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.phys.EntityHitResult;
 import org.lwjgl.glfw.GLFW;
 
@@ -88,13 +87,13 @@ public final class DinoControls {
 
     /** Asks the server for the screen of a dinosaur (-1 = the one ridden). */
     static void ask(int id) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = ClientNet.buf();
         buf.writeVarInt(id);
         NetworkManager.sendToServer(DinoNetwork.ASK, buf);
     }
 
     private static void mount(String action) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = ClientNet.buf();
         buf.writeUtf(action);
         NetworkManager.sendToServer(DinoNetwork.MOUNT, buf);
     }

@@ -9,14 +9,13 @@ import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.network.DinoNetwork;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -152,7 +151,7 @@ public class DinoScreen extends Screen {
     }
 
     private void send(String order) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = ClientNet.buf();
         buf.writeVarInt(this.dinoId);
         buf.writeUtf(order);
         NetworkManager.sendToServer(DinoNetwork.ORDER, buf);
@@ -170,7 +169,7 @@ public class DinoScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g);
+        this.renderBackground(g, mouseX, mouseY, partialTick);
         int x0 = this.left;
         int y0 = this.top;
         AmberHud.slab(g, "dino_screen", x0, y0, 6, 0, W - 40, 0, W - 36, 3, W, 3, W, H - 5, W - 5, H, 120, H, 116, H - 2,

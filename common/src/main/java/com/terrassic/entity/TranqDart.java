@@ -2,6 +2,7 @@ package com.terrassic.entity;
 
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -27,6 +28,7 @@ public class TranqDart extends AbstractArrow {
     /** Torpor a dart adds: a flat dose plus a share of the target's gauge, so the giants still need a volley. */
     public static final float TORPOR_FLAT = 16.0F;
     public static final float TORPOR_SHARE = 0.06F;
+    private static final ColorParticleOption SWIRL = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.54F, 0.48F, 0.78F);
 
     /** Dose multiplier: 1 for a quick puff, up to 1.5 for a full breath (item/BlowgunItem). */
     private float potency = 1.0F;
@@ -37,11 +39,11 @@ public class TranqDart extends AbstractArrow {
     }
 
     public TranqDart(Level level, LivingEntity shooter) {
-        this(ModEntities.TRANQ_DART.get(), level, shooter);
+        this(ModEntities.TRANQ_DART.get(), level, shooter, new ItemStack(ModItems.TRANQ_DART.get()), null);
     }
 
-    protected TranqDart(EntityType<? extends TranqDart> type, Level level, LivingEntity shooter) {
-        super(type, shooter, level);
+    protected TranqDart(EntityType<? extends TranqDart> type, Level level, LivingEntity shooter, ItemStack pickup, ItemStack weapon) {
+        super(type, shooter, level, pickup, weapon);
         this.setBaseDamage(0.5D);
     }
 
@@ -88,8 +90,8 @@ public class TranqDart extends AbstractArrow {
                 double x = dino.getX() + (this.random.nextDouble() - 0.5D) * dino.getBbWidth();
                 double y = dino.getY() + dino.getBbHeight() * (0.6D + this.random.nextDouble() * 0.5D);
                 double z = dino.getZ() + (this.random.nextDouble() - 0.5D) * dino.getBbWidth();
-                // count 0: the three offsets are the swirl's colour (a dusky violet, the sleep herb's)
-                server.sendParticles(ParticleTypes.ENTITY_EFFECT, x, y, z, 0, 0.54D, 0.48D, 0.78D, 1.0D);
+                // the swirl's colour is a dusky violet, the sleep herb's
+                server.sendParticles(SWIRL, x, y, z, 1, 0.0D, 0.0D, 0.0D, 1.0D);
             }
         }
         this.playSound(SoundEvents.ARROW_HIT, 0.6F, 1.6F);
@@ -119,7 +121,7 @@ public class TranqDart extends AbstractArrow {
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ModItems.TRANQ_DART.get());
     }
 }

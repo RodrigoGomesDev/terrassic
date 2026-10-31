@@ -8,7 +8,7 @@ public class OrderedFollowOwnerGoal extends FollowOwnerGoal {
     private final DinosaurEntity dino;
 
     public OrderedFollowOwnerGoal(DinosaurEntity dino, double speed, float start, float stop, boolean canFly) {
-        super(dino, speed, start, stop, canFly);
+        super(dino, speed, start, stop);
         this.dino = dino;
     }
 

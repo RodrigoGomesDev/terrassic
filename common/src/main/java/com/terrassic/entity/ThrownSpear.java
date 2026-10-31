@@ -1,5 +1,7 @@
 package com.terrassic.entity;
 
+import net.minecraft.server.level.ServerLevel;
+import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
 import com.terrassic.registry.ModEntities;
 import net.minecraft.nbt.CompoundTag;
@@ -33,16 +35,16 @@ public class ThrownSpear extends AbstractArrow {
     }
 
     public ThrownSpear(Level level, LivingEntity shooter, ItemStack stack, float damage) {
-        super(ModEntities.SPEAR.get(), shooter, level);
+        super(ModEntities.SPEAR.get(), shooter, level, stack, null);
         this.spearItem = stack.copy();
         this.thrownDamage = damage;
         this.entityData.set(DATA_ITEM, this.spearItem.copy());
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_ITEM, ItemStack.EMPTY);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_ITEM, ItemStack.EMPTY);
     }
 
     /** The spear item, synced to clients for rendering. */
@@ -64,6 +66,11 @@ public class ThrownSpear extends AbstractArrow {
     }
 
     @Override
+    protected ItemStack getDefaultPickupItem() {
+        return new ItemStack(ModItems.FLINT_SPEAR.get());
+    }
+
+    @Override
     protected EntityHitResult findHitEntity(Vec3 start, Vec3 end) {
         return this.dealtDamage ? null : super.findHitEntity(start, end);
     }
@@ -72,20 +79,19 @@ public class ThrownSpear extends AbstractArrow {
     protected void onHitEntity(EntityHitResult result) {
         Entity target = result.getEntity();
         float damage = this.thrownDamage;
-        if (target instanceof LivingEntity living) {
-            damage += EnchantmentHelper.getDamageBonus(this.spearItem, living.getMobType());
-        }
         Entity owner = this.getOwner();
         DamageSource source = this.damageSources().trident(this, owner == null ? this : owner);
+        if (this.level() instanceof ServerLevel server) {
+            damage = EnchantmentHelper.modifyDamage(server, this.spearItem, target, source, damage);
+        }
         this.dealtDamage = true;
         if (target.hurt(source, damage)) {
             if (target.getType() == EntityType.ENDERMAN) {
                 return;
             }
             if (target instanceof LivingEntity living) {
-                if (owner instanceof LivingEntity livingOwner) {
-                    EnchantmentHelper.doPostHurtEffects(living, livingOwner);
-                    EnchantmentHelper.doPostDamageEffects(livingOwner, living);
+                if (this.level() instanceof ServerLevel server) {
+                    EnchantmentHelper.doPostAttackEffectsWithItemSource(server, living, source, this.spearItem);
                 }
                 this.doPostHurtEffects(living);
             }
@@ -110,7 +116,7 @@ public class ThrownSpear extends AbstractArrow {
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if (tag.contains("Spear", 10)) {
-            this.spearItem = ItemStack.of(tag.getCompound("Spear"));
+            this.spearItem = ItemStack.parseOptional(this.registryAccess(), tag.getCompound("Spear"));
             this.entityData.set(DATA_ITEM, this.spearItem.copy());
         }
         this.dealtDamage = tag.getBoolean("DealtDamage");
@@ -122,7 +128,7 @@ public class ThrownSpear extends AbstractArrow {
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.put("Spear", this.spearItem.save(new CompoundTag()));
+        tag.put("Spear", this.spearItem.saveOptional(this.registryAccess()));
         tag.putBoolean("DealtDamage", this.dealtDamage);
         tag.putFloat("ThrownDamage", this.thrownDamage);
     }

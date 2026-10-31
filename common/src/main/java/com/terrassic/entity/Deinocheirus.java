@@ -97,7 +97,6 @@ public class Deinocheirus extends HerbivoreDinosaur {
         return 0.95F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 4.06D * this.getScale();
     }

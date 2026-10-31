@@ -17,18 +17,19 @@ import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import com.terrassic.network.Net;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -235,7 +236,7 @@ public final class RiftStorm {
             if (!level.noCollision(dino)) {
                 continue;  // a big one would be stuck in trees or rock: try another spot
             }
-            dino.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.EVENT, null, null);
+            dino.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.EVENT, null);
             dino.addTag(TAG);
             dino.setRift(true);  // v0.9: drawn with glowing amber cracks (client/RiftLayer)
             level.addFreshEntity(dino);
@@ -265,7 +266,7 @@ public final class RiftStorm {
     // ------------------------------------------------------------------ sync and command
 
     private static void send(ServerPlayer player, boolean active) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeBoolean(active);
         NetworkManager.sendToPlayer(player, SYNC, buf);
     }
@@ -308,11 +309,11 @@ public final class RiftStorm {
         final Set<UUID> survivors = new HashSet<>();
 
         static Data get(MinecraftServer server) {
-            return server.overworld().getDataStorage().computeIfAbsent(Data::load, Data::new, NAME);
+            return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), null), NAME);
         }
 
         @Override
-        public CompoundTag save(CompoundTag tag) {
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
             tag.putBoolean("Active", this.active);
             tag.putInt("Left", this.left);
             tag.putLong("LastEnd", this.lastEnd);

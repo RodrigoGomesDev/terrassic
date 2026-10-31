@@ -79,7 +79,6 @@ public class Parasaurolophus extends HerbivoreDinosaur {
         return 1.15F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.24D * this.getScale();
     }

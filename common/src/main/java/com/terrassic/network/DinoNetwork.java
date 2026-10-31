@@ -4,8 +4,7 @@ import com.terrassic.Terrassic;
 import com.terrassic.entity.ApexTheropod;
 import com.terrassic.entity.DinosaurEntity;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -79,7 +78,7 @@ public final class DinoNetwork {
     }
 
     public static void sendScreen(ServerPlayer player, DinosaurEntity dino) {
-        FriendlyByteBuf out = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf out = Net.buf(player.registryAccess());
         out.writeVarInt(dino.getId());
         out.writeNbt(dino.screenInfo(player));
         NetworkManager.sendToPlayer(player, SCREEN, out);

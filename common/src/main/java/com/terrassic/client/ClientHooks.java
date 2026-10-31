@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 
 /**
  * Client-only entry points called from common code through EnvExecutor (notebook item, research table) and the
@@ -49,8 +50,8 @@ public final class ClientHooks {
         });
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.NOTICE, (buf, context) -> {
             int tone = buf.readVarInt();
-            Component title = buf.readComponent();
-            Component line = buf.readComponent();
+            Component title = ComponentSerialization.TRUSTED_STREAM_CODEC.decode(buf);
+            Component line = ComponentSerialization.TRUSTED_STREAM_CODEC.decode(buf);
             net.minecraft.resources.ResourceLocation species = buf.readResourceLocation();
             context.queue(() -> HudNotices.add(tone, title, line, species));
         });

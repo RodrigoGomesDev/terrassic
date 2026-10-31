@@ -83,7 +83,6 @@ public class Quetzalcoatlus extends FlyingDinosaur {
         return 0.9F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 3.29D * this.getScale();
     }

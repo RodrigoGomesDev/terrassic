@@ -25,7 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 
 /**
  * Deinosuchus riograndensis - 12 m alligator of the inland sea's shores. Basks by rivers, swamps and beaches, swims as well as it walks, and ambushes anything that comes to the water: its grip slows the victim. Egg taming only until the knockout (v0.7).
@@ -44,7 +44,7 @@ public class Deinosuchus extends PredatorDinosaur {
     public Deinosuchus(EntityType<? extends Deinosuchus> type, Level level) {
         super(type, level);
         this.setMaxUpStep(1.0F);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
         this.xpReward = 38;
     }
 
@@ -121,11 +121,6 @@ public class Deinosuchus extends PredatorDinosaur {
     @Override
     protected PathNavigation createNavigation(Level level) {
         return new AmphibiousPathNavigation(this, level);
-    }
-
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.terrassic.world.continent;
 
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
  * world keeps its size whatever the config says later.
  */
 public final class ContinentBiomeSource extends BiomeSource {
-    public static final Codec<ContinentBiomeSource> CODEC = RecordCodecBuilder.create(i -> i.group(
+    public static final MapCodec<ContinentBiomeSource> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(ContinentBiomeSource::biomes),
             Codec.intRange(64, 30000).optionalFieldOf("raio", ContinentDensity.DEFAULT_RADIUS).forGetter(ContinentBiomeSource::radius)
     ).apply(i, ContinentBiomeSource::new));
@@ -42,7 +43,7 @@ public final class ContinentBiomeSource extends BiomeSource {
     }
 
     @Override
-    protected Codec<? extends BiomeSource> codec() {
+    protected MapCodec<? extends BiomeSource> codec() {
         return CODEC;
     }
 

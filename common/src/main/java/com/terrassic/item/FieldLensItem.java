@@ -27,7 +27,7 @@ public class FieldLensItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
         lines.add(Component.translatable("item.terrassic.field_lens.tip").withStyle(ChatFormatting.GRAY));
         lines.add(Component.translatable("item.terrassic.field_lens.tip2").withStyle(ChatFormatting.DARK_GRAY));
     }

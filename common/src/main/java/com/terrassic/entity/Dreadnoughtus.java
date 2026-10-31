@@ -93,7 +93,6 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
         return 0.95F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 5.03D * this.getScale();
     }

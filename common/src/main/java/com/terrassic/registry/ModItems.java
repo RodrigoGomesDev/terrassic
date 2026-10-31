@@ -192,35 +192,35 @@ public final class ModItems {
     // Dino meat cooks like beef; prime cuts come from the big species and, cooked, heal a little.
     public static final RegistrySupplier<Item> RAW_DINO_MEAT = ITEMS.register("raw_dino_meat",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(3).saturationMod(0.3F).meat().build())));
+                    .food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3F).build())));
     public static final RegistrySupplier<Item> COOKED_DINO_MEAT = ITEMS.register("cooked_dino_meat",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(8).saturationMod(0.8F).meat().build())));
+                    .food(new FoodProperties.Builder().nutrition(8).saturationModifier(0.8F).build())));
     public static final RegistrySupplier<Item> RAW_PRIME_MEAT = ITEMS.register("raw_prime_meat",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(4).saturationMod(0.3F).meat().build())));
+                    .food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build())));
     public static final RegistrySupplier<Item> COOKED_PRIME_MEAT = ITEMS.register("cooked_prime_meat",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(10).saturationMod(0.9F).meat()
+                    .food(new FoodProperties.Builder().nutrition(10).saturationModifier(0.9F)
                             .effect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0), 1.0F).build())));
     // The fish of the Cretaceous waters: Enchodus in the sea (the cod's seat; raw and cooked like cod).
     public static final RegistrySupplier<Item> ENCHODUS = ITEMS.register("enchodus",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).build())));
+                    .food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build())));
     public static final RegistrySupplier<Item> COOKED_ENCHODUS = ITEMS.register("cooked_enchodus",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build())));
+                    .food(new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build())));
     // Lepisosteus, the gar, in the rivers (the salmon's seat; raw and cooked like salmon).
     public static final RegistrySupplier<Item> LEPISOSTEUS = ITEMS.register("lepisosteus",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(2).saturationMod(0.1F).build())));
+                    .food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build())));
     public static final RegistrySupplier<Item> COOKED_LEPISOSTEUS = ITEMS.register("cooked_lepisosteus",
             () -> new Item(new Item.Properties().arch$tab(ModTabs.MAIN)
-                    .food(new FoodProperties.Builder().nutrition(6).saturationMod(0.8F).build())));
+                    .food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.8F).build())));
 
     // ---- archaic weapons
     public static final RegistrySupplier<Item> FLINT_KNIFE = ITEMS.register("flint_knife",
-            () -> new SwordItem(ModTiers.FLINT, 2, -1.4F, new Item.Properties().arch$tab(ModTabs.MAIN)));
+            () -> new SwordItem(ModTiers.FLINT, new Item.Properties().attributes(SwordItem.createAttributes(ModTiers.FLINT, 2, -1.4F)).arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet",
             () -> new FlintHatchetItem(ModTiers.FLINT, 5.0F, -3.1F, new Item.Properties().arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> BONE_CLUB = ITEMS.register("bone_club",
@@ -230,7 +230,7 @@ public final class ModItems {
     public static final RegistrySupplier<Item> HORN_SPEAR = ITEMS.register("horn_spear",
             () -> new SpearItem(8.0F, -2.9F, 10.0F, new Item.Properties().durability(520).arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> REX_TOOTH_DAGGER = ITEMS.register("rex_tooth_dagger",
-            () -> new SwordItem(ModTiers.REX_TOOTH, 3, -1.8F, new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+            () -> new SwordItem(ModTiers.REX_TOOTH, new Item.Properties().attributes(SwordItem.createAttributes(ModTiers.REX_TOOTH, 3, -1.8F)).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> TAIL_CLUB = ITEMS.register("tail_club",
             () -> new ClubItem(ModTiers.ANKYLO_CLUB, 6, -3.4F, 1.2F, new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     // knockout taming (docs/DOMESTICACAO.md): the reed blowgun, its narcotic darts and the sleep herb

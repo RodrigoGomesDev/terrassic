@@ -93,7 +93,6 @@ public class Therizinosaurus extends HerbivoreDinosaur {
         return 1.0F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 4.33D * this.getScale();
     }

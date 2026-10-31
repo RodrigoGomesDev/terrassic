@@ -104,11 +104,6 @@ public class Spinosaurus extends Spinosaur {
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public boolean isPushedByFluid() {
         return false;
     }

@@ -101,7 +101,6 @@ public class Majungasaurus extends PredatorDinosaur {
         return 1.3F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.14D * this.getScale();
     }

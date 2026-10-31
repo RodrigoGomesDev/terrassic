@@ -36,11 +36,11 @@ public abstract class LevelLoadingScreenMixin extends Screen {
 
     /** A 3D scene of the menu gallery in place of the dirt (docs/MENU.md), unless the vanilla title is chosen. */
     @Override
-    public void renderDirtBackground(GuiGraphics graphics) {
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (ClientConfig.titleScreen()) {
             TerrassicMenuScreen.renderBackdrop(graphics, this.width, this.height);
         } else {
-            super.renderDirtBackground(graphics);
+            super.renderBackground(graphics, mouseX, mouseY, partialTick);
         }
     }
 }

@@ -21,7 +21,7 @@ public class DrumBlock extends FacingBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         float pitch = 0.6F + level.getRandom().nextFloat() * 0.4F;
         level.playSound(player, pos, ModSounds.SFX_DRUM.get(), SoundSource.RECORDS, 2.0F, pitch);
         if (level.isClientSide()) {

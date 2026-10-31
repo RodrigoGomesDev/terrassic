@@ -96,7 +96,6 @@ public class Dakotaraptor extends PredatorDinosaur {
         return 1.35F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 1.77D * this.getScale();
     }

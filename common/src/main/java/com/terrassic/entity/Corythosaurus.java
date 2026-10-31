@@ -81,7 +81,6 @@ public class Corythosaurus extends HerbivoreDinosaur {
         return 1.1F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.12D * this.getScale();
     }

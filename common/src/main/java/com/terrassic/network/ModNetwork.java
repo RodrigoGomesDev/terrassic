@@ -5,9 +5,9 @@ import com.terrassic.research.Knowledge;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -60,23 +60,23 @@ public final class ModNetwork {
         if (update == null) {
             return;
         }
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeNbt(update.payload());
         NetworkManager.sendToPlayer(player, update.full() ? SYNC : DELTA, buf);
     }
 
     public static void sendIntro(ServerPlayer player) {
-        NetworkManager.sendToPlayer(player, INTRO, new FriendlyByteBuf(Unpooled.buffer()));
+        NetworkManager.sendToPlayer(player, INTRO, Net.buf(player.registryAccess()));
     }
 
     public static void sendStory(ServerPlayer player, boolean story) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeBoolean(story);
         NetworkManager.sendToPlayer(player, STORY, buf);
     }
 
     public static void sendEraTitle(ServerPlayer player, String era) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeUtf(era);
         NetworkManager.sendToPlayer(player, ERA_TITLE, buf);
     }
@@ -85,10 +85,10 @@ public final class ModNetwork {
      *  sent as a packet (the mod is needed on both sides; on Forge canPlayerReceive said false to clients that have the
      *  receiver); with "hud_notices": false the client itself puts it in the action bar (HudNotices.add). */
     public static void sendNotice(ServerPlayer player, int tone, Component title, Component line, ResourceLocation species) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeVarInt(tone);
-        buf.writeComponent(title);
-        buf.writeComponent(line);
+        ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, title);
+        ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, line);
         buf.writeResourceLocation(species);
         NetworkManager.sendToPlayer(player, NOTICE, buf);
     }

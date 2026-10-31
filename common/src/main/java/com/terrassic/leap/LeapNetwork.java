@@ -2,9 +2,9 @@ package com.terrassic.leap;
 
 import com.terrassic.Terrassic;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import com.terrassic.network.Net;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,7 +32,7 @@ public final class LeapNetwork {
     static void ritual(ServerLevel level, BlockPos altar, boolean on) {
         for (ServerPlayer p : level.players()) {
             if (p.blockPosition().distSqr(altar) < RANGE * RANGE) {
-                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+                RegistryFriendlyByteBuf buf = Net.buf(p.registryAccess());
                 buf.writeBlockPos(altar);
                 buf.writeBoolean(on);
                 NetworkManager.sendToPlayer(p, RITUAL, buf);
@@ -41,7 +41,7 @@ public final class LeapNetwork {
     }
 
     static void flash(ServerPlayer player, boolean unstable) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeBoolean(unstable);
         NetworkManager.sendToPlayer(player, FLASH, buf);
     }

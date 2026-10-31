@@ -4,8 +4,7 @@ import com.terrassic.Terrassic;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.item.FieldLensItem;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -35,7 +34,7 @@ public final class LensNetwork {
                         && player.level().getEntity(id) instanceof DinosaurEntity dino && dino.isAlive()
                         && (FieldLensItem.holding(player) || dino.isKnockedOut())
                         && dino.distanceToSqr(player) < RANGE * RANGE) {
-                    FriendlyByteBuf out = new FriendlyByteBuf(Unpooled.buffer());
+                    RegistryFriendlyByteBuf out = Net.buf(player.registryAccess());
                     out.writeVarInt(id);
                     out.writeNbt(dino.lensInfo(player));
                     NetworkManager.sendToPlayer(player, INFO, out);

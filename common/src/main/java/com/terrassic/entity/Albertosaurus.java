@@ -101,7 +101,6 @@ public class Albertosaurus extends PredatorDinosaur {
         return 1.25F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.86D * this.getScale();
     }

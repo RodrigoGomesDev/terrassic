@@ -1,5 +1,6 @@
 package com.terrassic.client;
 
+import net.minecraft.client.DeltaTracker;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.terrassic.Terrassic;
 import com.terrassic.client.ui.AmberHud;
@@ -46,7 +47,7 @@ import java.util.Map;
  */
 public final class TerrassicHud {
     public static final ResourceLocation ICONS = Terrassic.id("textures/gui/hud.png");
-    private static final ResourceLocation VANILLA_ICONS = new ResourceLocation("textures/gui/icons.png");
+    private static final ResourceLocation VANILLA_ICONS = ResourceLocation.parse("textures/gui/icons.png");
     /** Ticks the health number stays on the plate after the health changed. */
     private static final int NUMBER_TICKS = 60;
 
@@ -87,7 +88,8 @@ public final class TerrassicHud {
 
     // ------------------------------------------------------------------ drawing
 
-    private static void render(GuiGraphics g, float partialTick) {
+    private static void render(GuiGraphics g, DeltaTracker delta) {
+        float partialTick = delta.getGameTimeDeltaPartialTick(false);
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || mc.level == null || mc.options.hideGui) {
@@ -102,7 +104,7 @@ public final class TerrassicHud {
         g.pose().scale(k, k, 1.0F);
         // v0.14.5: the plate steps aside while F3 is open (it covered the first debug lines)
         if (ClientConfig.flag("hud_mount") && player.getVehicle() instanceof DinosaurEntity mount && !compact
-                && !mc.options.renderDebug) {
+                && !mc.getDebugOverlay().showDebugScreen()) {
             mountPlate(g, mc.font, mount, 4, 4);
         }
         HudNotices.render(g, mc.font, partialTick, compact, hw, hh);
@@ -344,7 +346,7 @@ public final class TerrassicHud {
         Vector3f b = m.transformPosition(new Vector3f(x + w, y + h, 0.0F));
         g.enableScissor(Math.round(a.x()), Math.round(a.y()), Math.round(b.x()), Math.round(b.y()));
         try {
-            InventoryScreen.renderEntityInInventory(g, x + w / 2, y + h - 3, scale,
+            InventoryScreen.renderEntityInInventory(g, x + w / 2, y + h - 3, scale, new Vector3f(),
                     new Quaternionf().rotateZ((float) Math.PI), null, e);
         } finally {
             g.disableScissor();

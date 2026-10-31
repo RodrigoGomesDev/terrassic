@@ -21,8 +21,8 @@ public class NarcoticArrow extends TranqDart {
         this.setBaseDamage(1.0D);
     }
 
-    public NarcoticArrow(Level level, LivingEntity shooter) {
-        super(ModEntities.NARCOTIC_ARROW.get(), level, shooter);
+    public NarcoticArrow(Level level, LivingEntity shooter, ItemStack weapon) {
+        super(ModEntities.NARCOTIC_ARROW.get(), level, shooter, new ItemStack(ModItems.NARCOTIC_ARROW.get()), weapon);
         this.setBaseDamage(1.0D);
     }
 
@@ -33,7 +33,7 @@ public class NarcoticArrow extends TranqDart {
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ModItems.NARCOTIC_ARROW.get());
     }
 }

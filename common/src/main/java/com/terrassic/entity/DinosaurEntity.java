@@ -27,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -85,12 +86,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -174,12 +175,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** How far a baby has grown, 0 (hatchling) to 1 (adult); refreshed by the server as it ages. */
     private static final EntityDataAccessor<Float> DATA_GROWTH =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.FLOAT);
-    private static final UUID SIZE_HEALTH_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e301");
-    private static final UUID SIZE_DAMAGE_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e302");
+    /** Down from the top of a player (1,8 m) to the shoulder. */
+    private static final double PERCH_DROP = 0.35D;
+    private static final ResourceLocation SIZE_HEALTH_ID = Terrassic.id("size_health");
+    private static final ResourceLocation SIZE_DAMAGE_ID = Terrassic.id("size_damage");
     /** The level's stats (DinoLevels): one id per stat, the same id on walking and flying speed. */
-    private static final UUID LEVEL_HEALTH_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e311");
-    private static final UUID LEVEL_DAMAGE_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e312");
-    private static final UUID LEVEL_SPEED_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e313");
+    private static final ResourceLocation LEVEL_HEALTH_ID = Terrassic.id("level_health");
+    private static final ResourceLocation LEVEL_DAMAGE_ID = Terrassic.id("level_damage");
+    private static final ResourceLocation LEVEL_SPEED_ID = Terrassic.id("level_speed");
     /** The level, synced for the name (0 until the server has drawn it). */
     private static final EntityDataAccessor<Integer> DATA_LEVEL =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
@@ -632,14 +635,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
         if (health != null) {
             health.removeModifier(SIZE_HEALTH_ID);
-            health.addPermanentModifier(new AttributeModifier(SIZE_HEALTH_ID, "Size", size * size - 1.0F,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL));
+            health.addPermanentModifier(new AttributeModifier(SIZE_HEALTH_ID, size * size - 1.0F,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
         if (damage != null) {
             damage.removeModifier(SIZE_DAMAGE_ID);
-            damage.addPermanentModifier(new AttributeModifier(SIZE_DAMAGE_ID, "Size", size - 1.0F,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL));
+            damage.addPermanentModifier(new AttributeModifier(SIZE_DAMAGE_ID, size - 1.0F,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         if (full || this.getHealth() > this.getMaxHealth()) {
             this.setHealth(this.getMaxHealth());
@@ -694,22 +697,22 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     // ------------------------------------------------------------------ synced data / save
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_FEMALE, false);
-        this.entityData.define(DATA_SADDLED, false);
-        this.entityData.define(DATA_CHESTED, false);
-        this.entityData.define(DATA_PLATFORM, false);
-        this.entityData.define(DATA_RIFT, false);
-        this.entityData.define(DATA_HUNGER, 70);
-        this.entityData.define(DATA_KNOCKED_OUT, false);
-        this.entityData.define(DATA_ENTANGLED, false);
-        this.entityData.define(DATA_SLEEPING, false);
-        this.entityData.define(DATA_SIZE, 1.0F);
-        this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
-        this.entityData.define(DATA_GROWTH, 0.0F);
-        this.entityData.define(DATA_LEVEL, 0);
-        this.entityData.define(DATA_SPECIAL, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_FEMALE, false);
+        builder.define(DATA_SADDLED, false);
+        builder.define(DATA_CHESTED, false);
+        builder.define(DATA_PLATFORM, false);
+        builder.define(DATA_RIFT, false);
+        builder.define(DATA_HUNGER, 70);
+        builder.define(DATA_KNOCKED_OUT, false);
+        builder.define(DATA_ENTANGLED, false);
+        builder.define(DATA_SLEEPING, false);
+        builder.define(DATA_SIZE, 1.0F);
+        builder.define(DATA_BIRTH_SIZE, 1.0F);
+        builder.define(DATA_GROWTH, 0.0F);
+        builder.define(DATA_LEVEL, 0);
+        builder.define(DATA_SPECIAL, 0);
     }
 
     public boolean isFemale() {
@@ -826,7 +829,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (!stack.isEmpty()) {
                     CompoundTag item = new CompoundTag();
                     item.putByte("Slot", (byte) i);
-                    stack.save(item);
+                    stack.save(this.registryAccess(), item);
                     list.add(item);
                 }
             }
@@ -847,7 +850,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.sated = tag.getInt("Sated");
         this.roamer = tag.getBoolean("Roamer");
         this.stance = DinoStance.byKey(tag.getString("Stance"));
-        this.wanderPos = tag.contains("WanderPos", Tag.TAG_COMPOUND) ? NbtUtils.readBlockPos(tag.getCompound("WanderPos")) : null;
+        this.wanderPos = NbtUtils.readBlockPos(tag, "WanderPos").orElse(null);
         if (this.wanderPos != null) {
             this.restrictTo(this.wanderPos, WANDER_RADIUS);
         }
@@ -882,7 +885,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 CompoundTag item = list.getCompound(i);
                 int slot = item.getByte("Slot") & 255;
                 if (slot < this.cargo.getContainerSize()) {
-                    this.cargo.setItem(slot, ItemStack.of(item));
+                    this.cargo.setItem(slot, ItemStack.parseOptional(this.registryAccess(), item));
                 }
             }
         }
@@ -890,9 +893,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
-                                        SpawnGroupData spawnData, CompoundTag tag) {
+                                        SpawnGroupData spawnData) {
         this.setFemale(this.random.nextBoolean());
-        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData);
         // Permanent herds can leave nests; disposable ecosystem roamers must not leave permanent blocks behind.
         float nest = 0.2F * (float) Rules.of(level.getLevel()).get(Rule.NEST_FREQUENCY);
         if (!this.isTransientRoamer() && (reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && this.wildNests() && !this.isBaby()
@@ -1088,7 +1091,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Experience of the species (its xpReward, which Animal would ignore) times the XP multiplier rule. */
     @Override
-    public int getExperienceReward() {
+    protected int getBaseExperienceReward() {
         int base = this.isBaby() ? 1 + this.random.nextInt(3) : Math.max(1, this.xpReward);
         return (int) Math.round(base * Rules.of(this.level()).get(Rule.XP_MULTIPLIER));
     }
@@ -1121,15 +1124,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** The death loot goes into a carcass (docs/CARCACAS.md) instead of flying out of the body. */
     @Override
-    protected void dropAllDeathLoot(DamageSource source) {
-        if (!(this.level() instanceof ServerLevel server)) {
-            super.dropAllDeathLoot(source);
-            return;
-        }
+    protected void dropAllDeathLoot(ServerLevel server, DamageSource source) {
         this.capturedLoot = new ArrayList<>();
         List<ItemStack> loot;
         try {
-            super.dropAllDeathLoot(source);
+            super.dropAllDeathLoot(server, source);
         } finally {
             loot = this.capturedLoot;
             this.capturedLoot = null;
@@ -1351,7 +1350,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     this.setSaddled(false);
                     this.setPlatform(false);
                     this.playSound(ModSounds.SFX_SADDLE_OFF.get(), 1.0F, 1.0F);
-                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                 }
                 return InteractionResult.sidedSuccess(client);
             }
@@ -1360,7 +1359,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 if (!client) {
                     this.dropCargo();
                     this.playSound(ModSounds.SFX_SADDLE_OFF.get(), 1.0F, 1.0F);
-                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                     player.displayClientMessage(Component.translatable("message.terrassic.cargo_off", this.getDisplayName()), true);
                 }
                 return InteractionResult.sidedSuccess(client);
@@ -1584,7 +1583,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.set(DATA_LEVEL, this.levels.level());
     }
 
-    private void levelModifier(Attribute attribute, UUID id, DinoLevels.Stat stat) {
+    private void levelModifier(Holder<Attribute> attribute, ResourceLocation id, DinoLevels.Stat stat) {
         AttributeInstance instance = this.getAttribute(attribute);
         if (instance == null) {
             return;
@@ -1592,7 +1591,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         instance.removeModifier(id);
         double bonus = this.levels.multiplier(stat) - 1.0D;
         if (Math.abs(bonus) > 1.0E-4D) {
-            instance.addPermanentModifier(new AttributeModifier(id, "Level", bonus, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            instance.addPermanentModifier(new AttributeModifier(id, bonus, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
     }
 
@@ -2357,7 +2356,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         int r = Math.max(1, Math.round(this.getBbWidth() * 0.6F));
         for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-r, -1, -r), centre.offset(r, 2, r))) {
             BlockState state = this.level().getBlockState(pos);
-            if (state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN)
+            if (state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.SHORT_GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN)
                     || state.is(Blocks.LARGE_FERN) || state.is(BlockTags.LEAVES) || state.is(BlockTags.SAPLINGS) || state.is(Blocks.MOSS_BLOCK)) {
                 return true;
             }
@@ -2432,9 +2431,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     @Override
-    public double getMyRidingOffset() {
-        // on a player the vanilla offset puts us at chest height; lift to the shoulder
-        return this.isPerched() ? 0.1D : super.getMyRidingOffset();
+    public Vec3 getVehicleAttachmentPoint(Entity vehicle) {
+        // 1.21 seats a passenger at the top of the vehicle's box; a perched animal goes down to the shoulder
+        return this.isPerched() ? new Vec3(0.0D, PERCH_DROP, 0.0D) : super.getVehicleAttachmentPoint(vehicle);
     }
 
     // ------------------------------------------------------------------ riding
@@ -2461,9 +2460,27 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return super.getControllingPassenger();
     }
 
+    /** Height of the seat; the species with a saddle set their own (1.21 dropped this from Entity). */
+    public double getPassengersRidingOffset() {
+        return this.getBbHeight() * 0.75D;
+    }
+
     /** Extra seat height on top of {@link #getPassengersRidingOffset()} for a pose that raises the back (flight). */
     protected double seatLift() {
         return 0.0D;
+    }
+
+    /** How the rider sits on the seat, the same numbers as before the 1.21 attachments, so the saddles keep their fit. */
+    private static double riderDrop(Entity passenger) {
+        return passenger instanceof Player ? -0.35D : passenger instanceof Animal ? 0.14D : 0.0D;
+    }
+
+    /** 1.21 made the step height an attribute; the species still set it in their constructors. */
+    protected final void setMaxUpStep(float height) {
+        AttributeInstance step = this.getAttribute(Attributes.STEP_HEIGHT);
+        if (step != null) {
+            step.setBaseValue(height);
+        }
     }
 
     @Override
@@ -2479,7 +2496,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
         move.accept(passenger, this.getX() - Mth.sin(yaw) * forward,
-                this.getY() + this.getPassengersRidingOffset() + this.seatLift() + passenger.getMyRidingOffset(),
+                this.getY() + this.getPassengersRidingOffset() + this.seatLift() + riderDrop(passenger),
                 this.getZ() + Mth.cos(yaw) * forward);
     }
 

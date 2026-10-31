@@ -85,7 +85,6 @@ public class Mosasaurus extends SwimmingDinosaur {
         return 1.0F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.4D * this.getScale();
     }

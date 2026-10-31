@@ -93,9 +93,9 @@ public class DinoEggBlock extends Block {
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        super.playerWillDestroy(level, pos, state, player);
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         this.alertParents(state, level, pos, player);
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     /** Whoever breaks a wild egg (a player, or an egg thief like the Didelphodon) becomes the enemy of the wild

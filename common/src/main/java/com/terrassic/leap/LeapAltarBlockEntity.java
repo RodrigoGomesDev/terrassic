@@ -1,5 +1,6 @@
 package com.terrassic.leap;
 
+import net.minecraft.core.HolderLookup;
 import com.terrassic.config.Story;
 import com.terrassic.config.WorldConfig;
 import com.terrassic.registry.ModItems;
@@ -326,7 +327,7 @@ public class LeapAltarBlockEntity extends BlockEntity {
             spot = this.worldPosition.offset(0, 0, 6);
             t.moveTo(spot.getX() + 0.5D, spot.getY(), spot.getZ() + 0.5D, 0.0F, 0.0F);
         }
-        t.finalizeSpawn(level, level.getCurrentDifficultyAt(spot), MobSpawnType.EVENT, null, null);
+        t.finalizeSpawn(level, level.getCurrentDifficultyAt(spot), MobSpawnType.EVENT, null);
         t.bindToAltar(this.worldPosition);
         int fighters = 0;
         for (ServerPlayer p : level.players()) {
@@ -342,7 +343,7 @@ public class LeapAltarBlockEntity extends BlockEntity {
         level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, t.getX(), t.getY() + 1.0D, t.getZ(), 2, 1.0D, 0.5D, 1.0D, 0.0D);
         level.sendParticles(ParticleTypes.LAVA, t.getX(), t.getY() + 1.0D, t.getZ(), 60, 3.0D, 1.0D, 3.0D, 0.0D);
         level.sendParticles(SPARK, t.getX(), t.getY() + 2.0D, t.getZ(), 300, 3.0D, 3.0D, 3.0D, 0.1D);
-        level.playSound(null, spot, SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 6.0F, 0.5F);
+        level.playSound(null, spot, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.HOSTILE, 6.0F, 0.5F);
         t.roarNow();
         this.broadcast(level, Component.translatable("altar.terrassic.tyrant_arrives"), 160.0D);
         this.setChanged();
@@ -418,8 +419,8 @@ public class LeapAltarBlockEntity extends BlockEntity {
     // ------------------------------------------------------------------ save
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         tag.putInt("Phase", this.phase);
         tag.putInt("Timer", this.timer);
         tag.putBoolean("Opened", this.opened);
@@ -434,8 +435,8 @@ public class LeapAltarBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         this.phase = tag.getInt("Phase");
         this.timer = tag.getInt("Timer");
         this.opened = tag.getBoolean("Opened");

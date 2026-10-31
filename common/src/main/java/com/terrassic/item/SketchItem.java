@@ -1,7 +1,9 @@
 package com.terrassic.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,14 +22,14 @@ public class SketchItem extends Item {
 
     public static ItemStack of(Item item, String species) {
         ItemStack stack = new ItemStack(item);
-        stack.getOrCreateTag().putString(TAG, species);
+        CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putString(TAG, species));
         return stack;
     }
 
     /** The species drawn on this sketch, or null for a blank one. */
     public static String species(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains(TAG) ? tag.getString(TAG) : null;
+        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        return tag.contains(TAG) ? tag.getString(TAG) : null;
     }
 
     @Override
@@ -38,7 +40,7 @@ public class SketchItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         if (species(stack) != null) {
             tooltip.add(Component.translatable("tooltip.terrassic.study_at_table").withStyle(ChatFormatting.GRAY));
         }

@@ -4,7 +4,10 @@ import com.terrassic.research.Lore;
 import com.terrassic.research.Knowledge;
 import com.terrassic.research.Research;
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +36,8 @@ public class LoosePageItem extends Item {
         if (level.isClientSide() || !(entity instanceof ServerPlayer player) || stack.isEmpty()) {
             return;
         }
-        String page = stack.hasTag() && stack.getTag().contains(TAG) ? stack.getTag().getString(TAG) : null;
+        CompoundTag data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        String page = data.contains(TAG) ? data.getString(TAG) : null;
         if (page == null) {
             Knowledge k = Research.knowledge(player);
             List<String> missing = new ArrayList<>();

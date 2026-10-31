@@ -4,6 +4,7 @@ import com.terrassic.config.WorldConfig;
 import com.terrassic.research.Knowledge;
 import com.terrassic.research.Objective;
 import com.terrassic.research.Research;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -120,7 +121,7 @@ public final class LeapProgress {
         final Set<UUID> tyrant = new HashSet<>();
 
         static Data get(MinecraftServer server) {
-            return server.overworld().getDataStorage().computeIfAbsent(Data::load, Data::new, NAME);
+            return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), null), NAME);
         }
 
         Mode mode() {
@@ -133,7 +134,7 @@ public final class LeapProgress {
         }
 
         @Override
-        public CompoundTag save(CompoundTag tag) {
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
             if (this.mode != null) {
                 tag.putString("Mode", this.mode.id);
             }

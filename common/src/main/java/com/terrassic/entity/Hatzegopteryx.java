@@ -84,7 +84,6 @@ public class Hatzegopteryx extends FlyingDinosaur {
         return 0.85F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 3.27D * this.getScale();
     }

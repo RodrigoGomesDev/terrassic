@@ -7,6 +7,7 @@ import dev.architectury.event.events.common.PlayerEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -157,11 +158,11 @@ public final class ArrivalCrater {
         int z;
 
         static Data get(ServerLevel level) {
-            return level.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(Data::load, Data::new, NAME);
+            return level.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new Factory<>(Data::new, (tag, registries) -> Data.load(tag), null), NAME);
         }
 
         @Override
-        public CompoundTag save(CompoundTag tag) {
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
             tag.putBoolean("Placed", this.placed);
             tag.putInt("X", this.x);
             tag.putInt("Y", this.y);

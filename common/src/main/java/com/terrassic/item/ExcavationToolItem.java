@@ -60,7 +60,7 @@ public class ExcavationToolItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity user) {
         return USE_DURATION;
     }
 
@@ -92,7 +92,7 @@ public class ExcavationToolItem extends Item {
         }
         if (used >= this.workTicks) {
             excavate(level, pos, player);
-            stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
+            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
             user.releaseUsingItem();
         }
     }

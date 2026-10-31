@@ -96,7 +96,6 @@ public class Tarbosaurus extends PredatorDinosaur {
         return 1.05F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 3.58D * this.getScale();
     }

@@ -11,7 +11,7 @@ public class ClubItem extends SwordItem {
     private final float knockback;
 
     public ClubItem(Tier tier, int damage, float speed, float knockback, Properties properties) {
-        super(tier, damage, speed, properties);
+        super(tier, properties.attributes(SwordItem.createAttributes(tier, damage, speed)));
         this.knockback = knockback;
     }
 

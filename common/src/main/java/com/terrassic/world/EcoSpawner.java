@@ -242,7 +242,7 @@ public final class EcoSpawner {
             if (dino == null) {
                 continue;
             }
-            group = dino.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.NATURAL, group, null);
+            group = dino.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.NATURAL, group);
             if (i > 0) {
                 maybeBaby(dino, rules, random);
             }
@@ -255,7 +255,7 @@ public final class EcoSpawner {
 
     private static boolean canStand(ServerLevel level, EntityType<?> type, BlockPos pos, RandomSource random) {
         return VanillaShare.ecoCheck(() -> SpawnPlacements.checkSpawnRules(type, level, MobSpawnType.NATURAL, pos, random))
-                && level.noCollision(type.getAABB(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D));
+                && level.noCollision(type.getSpawnAABB(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D));
     }
 
     // ------------------------------------------------------------------ sky
@@ -292,7 +292,7 @@ public final class EcoSpawner {
             if (visibleOrTooClose(level, position)) {
                 continue;
             }
-            if (!level.noCollision(data.type.getAABB(px, py, pz))) {
+            if (!level.noCollision(data.type.getSpawnAABB(px, py, pz))) {
                 continue;
             }
             Entity e = data.type.create(level);
@@ -301,7 +301,7 @@ public final class EcoSpawner {
             }
             bird.setRoamer(true);
             bird.moveTo(px, py, pz, heading, 0.0F);
-            bird.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(px, py, pz)), MobSpawnType.NATURAL, null, null);
+            bird.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(px, py, pz)), MobSpawnType.NATURAL, null);
             if (bird.isBaby()) {
                 bird.setAge(0);
             }
@@ -358,14 +358,14 @@ public final class EcoSpawner {
             if (i > 0 && !level.getFluidState(at).is(FluidTags.WATER)) {
                 continue;
             }
-            if (!level.noCollision(data.type.getAABB(at.getX() + 0.5D, at.getY(), at.getZ() + 0.5D))) {
+            if (!level.noCollision(data.type.getSpawnAABB(at.getX() + 0.5D, at.getY(), at.getZ() + 0.5D))) {
                 continue;
             }
             DinosaurEntity dino = create(level, data.type, at, random);
             if (dino == null) {
                 continue;
             }
-            group = dino.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.NATURAL, group, null);
+            group = dino.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.NATURAL, group);
             if (level.addFreshEntity(dino)) {
                 spawned++;
             }

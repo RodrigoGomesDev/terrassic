@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.Terrassic;
 import com.terrassic.entity.ai.DinosaurMoveControl;
 import com.terrassic.entity.ai.RaptorRetreatGoal;
 import com.terrassic.entity.ai.RaptorStrikeGoal;
@@ -10,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,11 +26,10 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
-import java.util.UUID;
 
 /**
  * The raptors with a full rig of their own (the Velociraptor v3, tools/modelgen/handmade/velociraptor, WHEN in build.py
@@ -45,8 +46,8 @@ import java.util.UUID;
  * </ul>
  */
 public abstract class Raptor extends PredatorDinosaur {
-    private static final UUID HARNESS_ARMOUR_ID = UUID.fromString("0c9f1b1e-6a54-4e7d-9d3a-7a1f6e2b4c10");
-    private static final UUID LEAP_DAMAGE_ID = UUID.fromString("0c9f1b1e-6a54-4e7d-9d3a-7a1f6e2b4c11");
+    private static final ResourceLocation HARNESS_ARMOUR_ID = Terrassic.id("raptor_harness_armour");
+    private static final ResourceLocation LEAP_DAMAGE_ID = Terrassic.id("raptor_leap_damage");
     private static final double HARNESS_ARMOUR = 4.0D;
     /** The cycles: pixels of ground each one covers and its length in ticks (raptanims.py, strides x K = 1.64). */
     private static final double WALK_PX = 26.24D;
@@ -189,7 +190,7 @@ public abstract class Raptor extends PredatorDinosaur {
 
     /** Cuts a one-shot short (the prey got out of the pin). */
     public void stopPlaying(String name) {
-        stopTriggeredAnimation(ACTION_CONTROLLER, name);
+        stopTriggeredAnim(ACTION_CONTROLLER, name);
     }
 
     // ------------------------------------------------------------------ goals
@@ -223,8 +224,8 @@ public abstract class Raptor extends PredatorDinosaur {
         if (factor == 1.0D || attack == null) {
             return this.doHurtTarget(target);
         }
-        attack.addTransientModifier(new AttributeModifier(LEAP_DAMAGE_ID, "Raptor leap", factor - 1.0D,
-                AttributeModifier.Operation.MULTIPLY_TOTAL));
+        attack.addTransientModifier(new AttributeModifier(LEAP_DAMAGE_ID, factor - 1.0D,
+                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         try {
             return this.doHurtTarget(target);
         } finally {
@@ -294,8 +295,8 @@ public abstract class Raptor extends PredatorDinosaur {
         if (armour != null && !this.level().isClientSide()) {
             armour.removeModifier(HARNESS_ARMOUR_ID);
             if (saddled) {
-                armour.addTransientModifier(new AttributeModifier(HARNESS_ARMOUR_ID, "Hunting harness", HARNESS_ARMOUR,
-                        AttributeModifier.Operation.ADDITION));
+                armour.addTransientModifier(new AttributeModifier(HARNESS_ARMOUR_ID, HARNESS_ARMOUR,
+                        AttributeModifier.Operation.ADD_VALUE));
             }
         }
     }

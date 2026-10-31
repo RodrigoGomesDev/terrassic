@@ -14,7 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.Heightmap;
 
@@ -130,9 +130,9 @@ public final class ModSpawns {
         placement(ModEntities.DIDELPHODON);
         placement(ModEntities.MESODMA);
         placement(ModEntities.BASILEMYS);
-        SpawnPlacementsRegistry.register(ModEntities.ENCHODUS, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.ENCHODUS, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.LEPISOSTEUS, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.LEPISOSTEUS, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         placement(ModEntities.PARASAUROLOPHUS);
         placement(ModEntities.PACHYCEPHALOSAURUS);
@@ -142,27 +142,27 @@ public final class ModSpawns {
         placement(ModEntities.MAIASAURA);
         placement(ModEntities.EDMONTOSAURUS);
         placement(ModEntities.CORYTHOSAURUS);
-        SpawnPlacementsRegistry.register(ModEntities.PTERANODON, SpawnPlacements.Type.ON_GROUND,
+        SpawnPlacementsRegistry.register(ModEntities.PTERANODON, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.QUETZALCOATLUS, SpawnPlacements.Type.ON_GROUND,
+        SpawnPlacementsRegistry.register(ModEntities.QUETZALCOATLUS, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.HATZEGOPTERYX, SpawnPlacements.Type.ON_GROUND,
+        SpawnPlacementsRegistry.register(ModEntities.HATZEGOPTERYX, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.ICHTHYORNIS, SpawnPlacements.Type.ON_GROUND,
+        SpawnPlacementsRegistry.register(ModEntities.ICHTHYORNIS, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.VEGAVIS, SpawnPlacements.Type.ON_GROUND,
+        SpawnPlacementsRegistry.register(ModEntities.VEGAVIS, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.MOSASAURUS, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.TYLOSAURUS, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.TYLOSAURUS, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.ELASMOSAURUS, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.ELASMOSAURUS, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.XIPHACTINUS, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.XIPHACTINUS, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.ARCHELON, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.ARCHELON, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
-        SpawnPlacementsRegistry.register(ModEntities.HESPERORNIS, SpawnPlacements.Type.IN_WATER,
+        SpawnPlacementsRegistry.register(ModEntities.HESPERORNIS, SpawnPlacementTypes.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);
         placement(ModEntities.DEINOSUCHUS);
         placement(ModEntities.BAURUSUCHUS);
@@ -367,7 +367,7 @@ public final class ModSpawns {
     }
 
     private static <T extends DinosaurEntity> void placement(RegistrySupplier<EntityType<T>> type) {
-        SpawnPlacementsRegistry.register(type, SpawnPlacements.Type.ON_GROUND,
+        SpawnPlacementsRegistry.register(type, SpawnPlacementTypes.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, DinosaurEntity::checkDinoSpawnRules);
     }
 

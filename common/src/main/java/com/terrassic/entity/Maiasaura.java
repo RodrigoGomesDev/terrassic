@@ -80,7 +80,6 @@ public class Maiasaura extends HerbivoreDinosaur {
         return 1.05F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.12D * this.getScale();
     }

@@ -77,7 +77,6 @@ public class Gallimimus extends HerbivoreDinosaur {
         return 1.35F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.14D * this.getScale();
     }

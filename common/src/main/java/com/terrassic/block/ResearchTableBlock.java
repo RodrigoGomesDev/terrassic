@@ -1,5 +1,7 @@
 package com.terrassic.block;
 
+import net.minecraft.world.ItemInteractionResult;
+import com.mojang.serialization.MapCodec;
 import com.terrassic.client.ClientHooks;
 import com.terrassic.item.BloodSampleItem;
 import com.terrassic.item.FossilItem;
@@ -44,9 +46,16 @@ public class ResearchTableBlock extends HorizontalDirectionalBlock {
                     Block.box(1.0D, 0.0D, 12.0D, 4.0D, 12.0D, 15.0D), Block.box(12.0D, 0.0D, 12.0D, 15.0D, 12.0D, 15.0D)),
             BooleanOp.OR);
 
+    private static final MapCodec<ResearchTableBlock> CODEC = simpleCodec(ResearchTableBlock::new);
+
     public ResearchTableBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -65,8 +74,19 @@ public class ResearchTableBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        ItemStack stack = player.getItemInHand(hand);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              InteractionHand hand, BlockHitResult hit) {
+        return this.interact(stack, level, pos, player, hand) == InteractionResult.PASS
+                ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
+                : ItemInteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        return this.interact(ItemStack.EMPTY, level, pos, player, InteractionHand.MAIN_HAND);
+    }
+
+    private InteractionResult interact(ItemStack stack, Level level, BlockPos pos, Player player, InteractionHand hand) {
         boolean client = level.isClientSide();
         if (stack.getItem() instanceof FossilItem fossil) {
             if (!client && player instanceof ServerPlayer sp) {

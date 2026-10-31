@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.UseAnim;
@@ -46,13 +47,19 @@ public class BlowgunItem extends ProjectileWeaponItem {
         return 24;
     }
 
+    /** Never called: the dart is shot in releaseUsing, with the breath's strength. */
+    @Override
+    protected void shootProjectile(LivingEntity shooter, Projectile projectile, int index, float velocity, float inaccuracy,
+                                   float angle, LivingEntity target) {
+    }
+
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.TOOT_HORN;
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity user) {
         return 72000;
     }
 
@@ -74,7 +81,7 @@ public class BlowgunItem extends ProjectileWeaponItem {
     @Override
     public void onUseTick(Level level, LivingEntity user, ItemStack stack, int remaining) {
         // a soft cue when the lungs are full
-        if (this.getUseDuration(stack) - remaining == FULL_BREATH && !level.isClientSide()) {
+        if (this.getUseDuration(stack, user) - remaining == FULL_BREATH && !level.isClientSide()) {
             level.playSound(null, user.getX(), user.getEyeY(), user.getZ(), SoundEvents.CROSSBOW_LOADING_END, SoundSource.PLAYERS,
                     0.35F, 1.7F);
         }
@@ -85,7 +92,7 @@ public class BlowgunItem extends ProjectileWeaponItem {
         if (!(user instanceof Player player)) {
             return;
         }
-        int used = this.getUseDuration(blowgun) - remaining;
+        int used = this.getUseDuration(blowgun, user) - remaining;
         if (used < MIN_BREATH) {
             return;
         }
@@ -101,7 +108,7 @@ public class BlowgunItem extends ProjectileWeaponItem {
             shot.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.4F + 1.6F * breath, 1.2F - 1.0F * breath);
             shot.pickup = free ? AbstractArrow.Pickup.CREATIVE_ONLY : AbstractArrow.Pickup.ALLOWED;
             level.addFreshEntity(shot);
-            blowgun.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));
+            blowgun.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
         }
         level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.LLAMA_SPIT, SoundSource.PLAYERS,
                 0.4F + 0.5F * breath, 1.9F - 0.4F * breath + level.getRandom().nextFloat() * 0.1F);

@@ -1,5 +1,6 @@
 package com.terrassic.registry;
 
+import com.mojang.serialization.MapCodec;
 import com.terrassic.Terrassic;
 import com.terrassic.block.DinoEggBlock;
 import com.terrassic.block.BasketBlock;
@@ -261,12 +262,17 @@ public final class ModBlocks {
 
     /** Sapling that grows into the configured feature terrassic:&lt;tree&gt;. */
     static void sapling(String id, String tree, BlockBehaviour.Properties p) {
-        building(id, () -> new SaplingBlock(new PrehistoricTreeGrower(tree), p) {});
+        building(id, () -> new SaplingBlock(PrehistoricTreeGrower.of(tree), p) {});
     }
 
     /** Small plant on dirt or grass (cross model). */
     static void plant(String id, BlockBehaviour.Properties p) {
-        building(id, () -> new BushBlock(p) {});
+        building(id, () -> new BushBlock(p) {
+            @Override
+            protected MapCodec<? extends BushBlock> codec() {
+                return simpleCodec(properties -> this);
+            }
+        });
     }
 
     /** Two blocks tall plant. */
@@ -305,12 +311,12 @@ public final class ModBlocks {
     }
 
     static void torch(String id, BlockBehaviour.Properties p) {
-        building(id, () -> new TorchBlock(p, ParticleTypes.FLAME) {});
+        building(id, () -> new TorchBlock(ParticleTypes.FLAME, p) {});
     }
 
     /** The wall form of a torch; it has no item (the torch's item places either, see ModItems). */
     static void wallTorch(String id, BlockBehaviour.Properties p) {
-        building(id, () -> new WallTorchBlock(p, ParticleTypes.FLAME) {});
+        building(id, () -> new WallTorchBlock(ParticleTypes.FLAME, p) {});
     }
 
     /** Stakes and spikes: hurt and slow whatever walks through them. */
@@ -349,16 +355,16 @@ public final class ModBlocks {
     }
 
     static void fenceGate(String id, BlockBehaviour.Properties p) {
-        building(id, () -> new FenceGateBlock(p.forceSolidOn(), WoodType.OAK));
+        building(id, () -> new FenceGateBlock(WoodType.OAK, p.forceSolidOn()));
     }
 
     static void door(String id, BlockBehaviour.Properties p) {
-        building(id, () -> new DoorBlock(p.strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY), BlockSetType.OAK));
+        building(id, () -> new DoorBlock(BlockSetType.OAK, p.strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY)));
     }
 
     static void trapdoor(String id, BlockBehaviour.Properties p) {
-        building(id, () -> new TrapDoorBlock(p.strength(3.0F).noOcclusion()
-                .isValidSpawn((state, level, pos, type) -> false), BlockSetType.OAK));
+        building(id, () -> new TrapDoorBlock(BlockSetType.OAK, p.strength(3.0F).noOcclusion()
+                .isValidSpawn((state, level, pos, type) -> false)));
     }
 
     /** The egg block of a species, or null if the registry is not ready / unknown species. */

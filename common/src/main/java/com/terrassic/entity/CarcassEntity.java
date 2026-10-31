@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -32,10 +33,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -88,13 +89,13 @@ public class CarcassEntity extends Entity implements GeoEntity {
     // ------------------------------------------------------------------ data
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_SPECIES, "tyrannosaurus");
-        this.entityData.define(DATA_FEMALE, false);
-        this.entityData.define(DATA_WIDTH, 1.0F);
-        this.entityData.define(DATA_HEIGHT, 0.5F);
-        this.entityData.define(DATA_SCALE, 1.0F);
-        this.entityData.define(DATA_MEAT, 1);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_SPECIES, "tyrannosaurus");
+        builder.define(DATA_FEMALE, false);
+        builder.define(DATA_WIDTH, 1.0F);
+        builder.define(DATA_HEIGHT, 0.5F);
+        builder.define(DATA_SCALE, 1.0F);
+        builder.define(DATA_MEAT, 1);
     }
 
     @Override
@@ -148,7 +149,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
         tag.putInt("Life", this.life);
         ListTag list = new ListTag();
         for (ItemStack stack : this.loot) {
-            list.add(stack.save(new CompoundTag()));
+            list.add(stack.save(this.registryAccess()));
         }
         tag.put("Loot", list);
     }
@@ -166,7 +167,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
         this.loot.clear();
         ListTag list = tag.getList("Loot", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
-            ItemStack stack = ItemStack.of(list.getCompound(i));
+            ItemStack stack = ItemStack.parseOptional(this.registryAccess(), list.getCompound(i));
             if (!stack.isEmpty()) {
                 this.loot.add(stack);
             }
@@ -175,8 +176,8 @@ public class CarcassEntity extends Entity implements GeoEntity {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
+        return new ClientboundAddEntityPacket(this, entity);
     }
 
     // ------------------------------------------------------------------ ticking: it lies there and rots
@@ -255,7 +256,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
             }
         }
         if (tool.getItem() instanceof TieredItem) {
-            tool.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+            tool.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
         }
         this.splash();
         if (!this.hasMeat()) {

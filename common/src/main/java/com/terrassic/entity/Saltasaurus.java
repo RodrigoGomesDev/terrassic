@@ -89,7 +89,6 @@ public class Saltasaurus extends HerbivoreDinosaur {
         return 1.0F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.78D * this.getScale();
     }

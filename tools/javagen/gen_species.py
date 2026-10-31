@@ -751,20 +751,20 @@ def gen(s, bounds):
         body.append("    private int displayCooldown;")
     if s.get("kills"):
         assert not s.get("trample"), s["id"] + ": kills and trample both override aiStep"
-        body.append('    private static final UUID KILLS_ATTACK_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e1f-%s");' % hashlib.md5((s["id"] + "a").encode()).hexdigest()[:12])
-        body.append('    private static final UUID KILLS_SPEED_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e2f-%s");' % hashlib.md5((s["id"] + "s").encode()).hexdigest()[:12])
+        body.append(f'    private static final ResourceLocation KILLS_ATTACK_ID = Terrassic.id("{s["id"]}_kills_attack");')
+        body.append(f'    private static final ResourceLocation KILLS_SPEED_ID = Terrassic.id("{s["id"]}_kills_speed");')
         body.append("    private int kills;")
         body.append("    private int killsTimer;")
     if s.get("rage"):
-        body.append('    private static final UUID RAGE_ID = UUID.fromString("7c1e5a3e-6b8d-4b1f-9a2e-%s");' % hashlib.md5(s["id"].encode()).hexdigest()[:12])
+        body.append(f'    private static final ResourceLocation RAGE_ID = Terrassic.id("{s["id"]}_rage");')
     body.append("")
     body.append(f"    public {cls}(EntityType<? extends {cls}> type, Level level) {{")
     body.append("        super(type, level);")
     if "step_height" in s:
         body.append(f"        this.setMaxUpStep({s['step_height']}F);")
     if s.get("amphibious"):
-        imports.add("net.minecraft.world.level.pathfinder.BlockPathTypes")
-        body.append("        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);")
+        imports.add("net.minecraft.world.level.pathfinder.PathType")
+        body.append("        this.setPathfindingMalus(PathType.WATER, 0.0F);")
     body.append(f"        this.xpReward = {s.get('xp', 5)};")
     body.append("    }")
     body.append("")
@@ -818,7 +818,7 @@ def gen(s, bounds):
     if s.get("rideable"):
         body.append("    @Override\n    public boolean isRideable() {\n        return true;\n    }\n")
         body.append(f"    @Override\n    protected float riddenSpeedFactor() {{\n        return {s['ride_speed']}F;\n    }}\n")
-        body.append(f"    @Override\n    public double getPassengersRidingOffset() {{\n        return {round(s['ride_offset'] * size['scale'], 2)}D * this.getScale();\n    }}\n")
+        body.append(f"    public double getPassengersRidingOffset() {{\n        return {round(s['ride_offset'] * size['scale'], 2)}D * this.getScale();\n    }}\n")
         if "jump" in s:
             body.append(f"    @Override\n    protected double jumpStrength() {{\n        return {s['jump']}D;\n    }}\n")
         if s.get("ride_air_lift"):
@@ -1015,7 +1015,6 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.entity.ai.navigation.PathNavigation")
         body.append("    @Override\n    protected PathNavigation createNavigation(Level level) {\n        return new AmphibiousPathNavigation(this, level);\n    }\n")
     if s.get("fish"):
-        body.append("    @Override\n    public boolean canBreatheUnderwater() {\n        return true;\n    }\n")
         body.append("    @Override\n    public boolean isPushedByFluid() {\n        return false;\n    }\n")
     if s.get("colonial"):
         # lives in coastal colonies and fishes at sea in small parties (world/PteroColonies), never in sky flocks
@@ -1060,7 +1059,7 @@ def gen(s, bounds):
     if s.get("pack"):
         body.append("    @Override\n    protected boolean packHunter() {\n        return true;\n    }\n")
     if s.get("kills"):
-        imports.update(["java.util.UUID", "net.minecraft.nbt.CompoundTag", "net.minecraft.world.entity.LivingEntity",
+        imports.update(["com.terrassic.Terrassic", "net.minecraft.resources.ResourceLocation", "net.minecraft.nbt.CompoundTag", "net.minecraft.world.entity.LivingEntity",
                         "net.minecraft.world.entity.ai.attributes.AttributeInstance", "net.minecraft.world.entity.ai.attributes.AttributeModifier"])
         body.append("""    /** Trophies: every kill adds a stack (up to five) of +8% attack and +3% speed; one stack fades every five minutes. */
     @Override
@@ -1090,13 +1089,13 @@ def gen(s, bounds):
         if (attack != null) {
             attack.removeModifier(KILLS_ATTACK_ID);
             if (this.kills > 0) {
-                attack.addTransientModifier(new AttributeModifier(KILLS_ATTACK_ID, "Trophies", 0.08D * this.kills, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                attack.addTransientModifier(new AttributeModifier(KILLS_ATTACK_ID, 0.08D * this.kills, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
         if (speed != null) {
             speed.removeModifier(KILLS_SPEED_ID);
             if (this.kills > 0) {
-                speed.addTransientModifier(new AttributeModifier(KILLS_SPEED_ID, "Trophies", 0.03D * this.kills, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                speed.addTransientModifier(new AttributeModifier(KILLS_SPEED_ID, 0.03D * this.kills, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
     }
@@ -1117,7 +1116,7 @@ def gen(s, bounds):
     }
 """)
     if s.get("rage"):
-        imports.update(["java.util.UUID", "net.minecraft.util.Mth", "net.minecraft.world.entity.ai.attributes.AttributeInstance",
+        imports.update(["com.terrassic.Terrassic", "net.minecraft.resources.ResourceLocation", "net.minecraft.util.Mth", "net.minecraft.world.entity.ai.attributes.AttributeInstance",
                         "net.minecraft.world.entity.ai.attributes.AttributeModifier"])
         body.append("""    /** Rage: the attack grows with the missing health, up to +60% at death's door (recomputed with every change). */
     @Override
@@ -1128,7 +1127,7 @@ def gen(s, bounds):
             attack.removeModifier(RAGE_ID);
             float missing = 1.0F - Mth.clamp(health / this.getMaxHealth(), 0.0F, 1.0F);
             if (missing > 0.05F) {
-                attack.addTransientModifier(new AttributeModifier(RAGE_ID, "Rage", 0.6D * missing, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                attack.addTransientModifier(new AttributeModifier(RAGE_ID, 0.6D * missing, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
     }
@@ -1335,7 +1334,7 @@ def gen(s, bounds):
                     (int) Math.floor(box.maxX), (int) Math.floor(box.maxY), (int) Math.floor(box.maxZ))) {
                 BlockState state = this.level().getBlockState(pos);
                 if (state.is(BlockTags.LEAVES) || state.is(BlockTags.FLOWERS) || state.is(BlockTags.SAPLINGS)
-                        || state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)
+                        || state.is(Blocks.SHORT_GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)
                         || state.is(Blocks.DEAD_BUSH) || state.is(Blocks.SWEET_BERRY_BUSH)) {
                     if (Rules.breaksBlock(this.level(), this.random)) {
                         this.level().destroyBlock(pos, true, this);
@@ -1618,10 +1617,10 @@ def gen_registrations():
         table.append(" *  %-19s %-31s %-7s %s" % (s["cls"], ", ".join(BIOMES[b][1] for b in w["biomes"]), w["weight"],
                                                  f"{lo}-{hi}" if lo != hi else lo))
         if s["base"] == "FlyingDinosaur":
-            placements.append(f"        SpawnPlacementsRegistry.register(ModEntities.{up(s)}, SpawnPlacements.Type.ON_GROUND,")
+            placements.append(f"        SpawnPlacementsRegistry.register(ModEntities.{up(s)}, SpawnPlacementTypes.ON_GROUND,")
             placements.append("                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FlyingDinosaur::checkFlyerSpawnRules);")
         elif s["base"] == "SwimmingDinosaur":
-            placements.append(f"        SpawnPlacementsRegistry.register(ModEntities.{up(s)}, SpawnPlacements.Type.IN_WATER,")
+            placements.append(f"        SpawnPlacementsRegistry.register(ModEntities.{up(s)}, SpawnPlacementTypes.IN_WATER,")
             placements.append("                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SwimmingDinosaur::checkSeaSpawnRules);")
         else:
             placements.append(f"        placement(ModEntities.{up(s)});")

@@ -93,7 +93,6 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
         return 1.0F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.42D * this.getScale();
     }

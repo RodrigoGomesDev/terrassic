@@ -96,7 +96,6 @@ public class Daspletosaurus extends PredatorDinosaur {
         return 1.15F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.98D * this.getScale();
     }

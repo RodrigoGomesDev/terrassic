@@ -79,7 +79,6 @@ public class Edmontosaurus extends HerbivoreDinosaur {
         return 1.0F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 2.76D * this.getScale();
     }

@@ -24,9 +24,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 /**
  * The big tyrant theropods with a full set of their own animations (the T. rex v2 rig,
@@ -547,8 +547,8 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     /** Now and then a wild adult comes with one or two juveniles of different ages. */
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
-                                        SpawnGroupData spawnData, CompoundTag tag) {
-        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+                                        SpawnGroupData spawnData) {
+        SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData);
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && spawnData == null && !this.isBaby()
                 && !this.isTame() && !this.isRift() && this.random.nextFloat() < FAMILY_CHANCE) {
             int young = 1 + this.random.nextInt(2);
@@ -564,7 +564,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
                     juvenile.moveTo(this.getX(), this.getY(), this.getZ());
                 }
                 juvenile.setAge(-8000 - this.random.nextInt(14000));   // a juvenile before finalizeSpawn: no nest of its own
-                juvenile.finalizeSpawn(level, difficulty, reason, new AgeableMob.AgeableMobGroupData(false), null);
+                juvenile.finalizeSpawn(level, difficulty, reason, new AgeableMob.AgeableMobGroupData(false));
                 level.addFreshEntity(juvenile);
             }
         }

@@ -77,7 +77,6 @@ public class Struthiomimus extends HerbivoreDinosaur {
         return 1.45F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 1.5D * this.getScale();
     }

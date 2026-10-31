@@ -18,7 +18,7 @@ import dev.architectury.event.events.common.BlockEvent;
 import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -354,7 +354,7 @@ public final class Research {
         if (path.startsWith("chapter1/") && !Story.enabled()) {
             return;
         }
-        Advancement advancement = player.server.getAdvancements().getAdvancement(Terrassic.id(path));
+        AdvancementHolder advancement = player.server.getAdvancements().get(Terrassic.id(path));
         if (advancement == null) {
             return;
         }

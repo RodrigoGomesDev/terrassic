@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 /**
@@ -45,19 +44,18 @@ public class MeteorRenderer extends EntityRenderer<Meteor> {
         poseStack.mulPose(Axis.ZP.rotationDegrees((entity.tickCount + partialTick) * 12.0F));
         PoseStack.Pose pose = poseStack.last();
         Matrix4f m = pose.pose();
-        Matrix3f n = pose.normal();
         VertexConsumer vc = buffers.getBuffer(RENDER_TYPE);
-        vertex(vc, m, n, -0.5F, -0.5F, 0, 1);
-        vertex(vc, m, n, 0.5F, -0.5F, 1, 1);
-        vertex(vc, m, n, 0.5F, 0.5F, 1, 0);
-        vertex(vc, m, n, -0.5F, 0.5F, 0, 0);
+        vertex(vc, m, pose, -0.5F, -0.5F, 0, 1);
+        vertex(vc, m, pose, 0.5F, -0.5F, 1, 1);
+        vertex(vc, m, pose, 0.5F, 0.5F, 1, 0);
+        vertex(vc, m, pose, -0.5F, 0.5F, 0, 0);
         poseStack.popPose();
         super.render(entity, yaw, partialTick, poseStack, buffers, light);
     }
 
-    private static void vertex(VertexConsumer vc, Matrix4f m, Matrix3f n, float x, float y, int u, int v) {
-        vc.vertex(m, x, y, 0.0F).color(255, 255, 255, 255).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(LightTexture.FULL_BRIGHT).normal(n, 0.0F, 1.0F, 0.0F).endVertex();
+    private static void vertex(VertexConsumer vc, Matrix4f m, PoseStack.Pose n, float x, float y, int u, int v) {
+        vc.addVertex(m, x, y, 0.0F).setColor(255, 255, 255, 255).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(LightTexture.FULL_BRIGHT).setNormal(n, 0.0F, 1.0F, 0.0F);
     }
 
     @Override

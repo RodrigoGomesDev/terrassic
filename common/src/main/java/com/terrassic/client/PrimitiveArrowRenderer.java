@@ -18,7 +18,7 @@ public class PrimitiveArrowRenderer<T extends AbstractArrow> extends ArrowRender
 
     public PrimitiveArrowRenderer(EntityRendererProvider.Context context, String name, float scale) {
         super(context);
-        this.texture = new ResourceLocation(Terrassic.MOD_ID, "textures/entity/" + name + ".png");
+        this.texture = ResourceLocation.fromNamespaceAndPath(Terrassic.MOD_ID, "textures/entity/" + name + ".png");
         this.scale = scale;
     }
 

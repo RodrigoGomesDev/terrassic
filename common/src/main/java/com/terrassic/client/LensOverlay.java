@@ -1,5 +1,6 @@
 package com.terrassic.client;
 
+import net.minecraft.client.DeltaTracker;
 import com.terrassic.client.ui.AmberHud;
 import com.terrassic.client.ui.TerrassicPalette;
 import com.terrassic.entity.DinosaurEntity;
@@ -9,7 +10,6 @@ import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,7 +17,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -86,7 +86,7 @@ public final class LensOverlay {
 
     /** Asks the server for the animal's card (the answer lands in {@link #infoFor}). */
     static void ask(int id) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = ClientNet.buf();
         buf.writeVarInt(id);
         NetworkManager.sendToServer(LensNetwork.ASK, buf);
     }
@@ -130,7 +130,8 @@ public final class LensOverlay {
      * amber, name and level, age and size, wild or whose; then the bars cut into the stone (health, food, and on a
      * knocked-out animal torpor and taming) and the lines under them.
      */
-    private static void render(GuiGraphics g, float partialTick) {
+    private static void render(GuiGraphics g, DeltaTracker delta) {
+        float partialTick = delta.getGameTimeDeltaPartialTick(false);
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui || mc.level == null || info == null || target < 0 || infoId != target) {
             return;
@@ -252,7 +253,7 @@ public final class LensOverlay {
         AmberHud.text(g, font, Component.translatable("gui.terrassic.lens.eats"), x, y, TerrassicPalette.STONE_200);
         int ix = x + 30;
         for (Tag tag : t.getList("Foods", Tag.TAG_STRING)) {
-            ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(tag.getAsString())));
+            ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.parse(tag.getAsString())));
             g.pose().pushPose();
             g.pose().translate(ix, y - 1, 0.0F);
             g.pose().scale(0.625F, 0.625F, 1.0F);

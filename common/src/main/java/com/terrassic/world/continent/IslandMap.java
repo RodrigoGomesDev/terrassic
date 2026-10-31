@@ -4,12 +4,13 @@ import com.terrassic.Terrassic;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import com.terrassic.network.Net;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -135,7 +136,7 @@ public final class IslandMap {
     }
 
     private static void send(ServerPlayer player, Data data) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        RegistryFriendlyByteBuf buf = Net.buf(player.registryAccess());
         buf.writeVarInt(SIZE);
         buf.writeVarInt(data.extent);
         buf.writeVarInt(data.seaLevel);
@@ -162,7 +163,7 @@ public final class IslandMap {
 
         /** The saved survey, or null while there is none. */
         static Data find(MinecraftServer server) {
-            Data data = server.overworld().getDataStorage().get(Data::load, NAME);
+            Data data = server.overworld().getDataStorage().get(new Factory<>(() -> new Data(0, 0, new byte[0], new byte[0]), (tag, registries) -> Data.load(tag), null), NAME);
             return data != null && data.heights.length == SIZE * SIZE ? data : null;
         }
 
@@ -178,7 +179,7 @@ public final class IslandMap {
         }
 
         @Override
-        public CompoundTag save(CompoundTag tag) {
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
             tag.putInt("Extent", this.extent);
             tag.putInt("SeaLevel", this.seaLevel);
             tag.putByteArray("Heights", this.heights);

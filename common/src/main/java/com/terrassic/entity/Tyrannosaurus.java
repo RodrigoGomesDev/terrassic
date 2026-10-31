@@ -101,7 +101,6 @@ public class Tyrannosaurus extends ApexTheropod {
         return 1.1F;
     }
 
-    @Override
     public double getPassengersRidingOffset() {
         return 4.5D * this.getScale();
     }
