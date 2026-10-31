@@ -112,6 +112,11 @@ public class Carnotaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 4.35D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 3;
     }

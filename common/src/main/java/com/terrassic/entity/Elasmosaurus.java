@@ -88,6 +88,11 @@ public class Elasmosaurus extends SwimmingDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 9.25D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

@@ -106,6 +106,11 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 5.39D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 3;
     }

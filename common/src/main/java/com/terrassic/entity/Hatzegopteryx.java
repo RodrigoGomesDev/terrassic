@@ -90,6 +90,11 @@ public class Hatzegopteryx extends FlyingDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 5.55D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

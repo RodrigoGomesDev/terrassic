@@ -96,6 +96,11 @@ public class Mosasaurus extends SwimmingDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 7.06D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 5;
     }

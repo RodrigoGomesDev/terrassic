@@ -117,6 +117,11 @@ public class Tyrannosaurus extends ApexTheropod {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 6.98D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

@@ -95,6 +95,11 @@ public class Edmontosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 6.31D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

@@ -93,6 +93,11 @@ public class Gallimimus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 3.24D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 3;
     }

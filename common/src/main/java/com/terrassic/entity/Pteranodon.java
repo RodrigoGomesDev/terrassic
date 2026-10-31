@@ -98,6 +98,11 @@ public class Pteranodon extends Pterosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 5.1D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 3;
     }

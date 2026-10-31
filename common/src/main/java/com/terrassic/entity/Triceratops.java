@@ -88,6 +88,11 @@ public class Triceratops extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 6.19D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

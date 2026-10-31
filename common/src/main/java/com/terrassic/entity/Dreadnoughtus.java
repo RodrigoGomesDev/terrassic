@@ -109,6 +109,11 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 15.87D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 6;
     }

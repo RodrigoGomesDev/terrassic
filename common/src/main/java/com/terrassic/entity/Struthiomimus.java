@@ -93,6 +93,11 @@ public class Struthiomimus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 2.55D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 2;
     }

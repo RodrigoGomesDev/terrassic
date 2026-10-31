@@ -112,6 +112,11 @@ public class Albertosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 5.31D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

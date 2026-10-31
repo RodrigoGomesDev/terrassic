@@ -112,6 +112,11 @@ public class Giganotosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 7.03D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

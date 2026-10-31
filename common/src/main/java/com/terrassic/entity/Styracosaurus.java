@@ -98,6 +98,11 @@ public class Styracosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 3.99D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 2;
     }

@@ -109,6 +109,11 @@ public class Therizinosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 6.09D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

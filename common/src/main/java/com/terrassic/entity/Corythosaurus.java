@@ -97,6 +97,11 @@ public class Corythosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 4.84D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

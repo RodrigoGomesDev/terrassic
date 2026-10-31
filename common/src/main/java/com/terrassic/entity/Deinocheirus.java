@@ -113,6 +113,11 @@ public class Deinocheirus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 7.19D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

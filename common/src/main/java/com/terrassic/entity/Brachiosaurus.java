@@ -104,6 +104,11 @@ public class Brachiosaurus extends HerbivoreDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 12.41D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 5;
     }

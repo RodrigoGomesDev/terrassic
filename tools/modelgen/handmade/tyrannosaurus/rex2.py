@@ -14,6 +14,10 @@ PAL = {
     "lea0": hx("2e1d14"), "lea1": hx("4a2f1f"), "lea2": hx("6b4429"), "stitch": hx("b89b6a"),
     "bl0": hx("3c2318"), "bl1": hx("7a3a24"), "bl2": hx("9c5a33"), "bl3": hx("c9b27a"),
     "iron0": hx("47474a"), "iron1": hx("6e6e6a"), "iron2": hx("a3a39b"),
+    # the saddle, in the colours of its item icon (tools/spritegen/rex_extras.py SADDLE_PAL)
+    "sd_o": hx("261911"), "sd_d": hx("4a2f1f"), "sd_l": hx("6b4429"), "sd_h": hx("8c5e3a"), "sd_s": hx("b89b6a"),
+    "sd_r": hx("7a3a24"), "sd_R": hx("9c5a33"), "sd_b": hx("c9b27a"), "sd_k": hx("3c2318"), "sd_i": hx("6e6e6a"),
+    "sd_I": hx("a3a39b"), "sd_t": hx("f1ebd4"), "sd_T": hx("c9bd98"),
     "eye": hx("e8a92f"), "eye_hi": hx("ffdf6e"), "eye2": hx("b8741f"), "pupil": hx("130d0c"), "glint": hx("fff3c6"), "lid": hx("141210"),
 }
 UP = {"s0": "s1", "s1": "s2", "s2": "s3", "s3": "s4", "s4": "s5", "s5": "s5", "b0": "b1", "b1": "b2", "b2": "b3", "b3": "b3", "r0": "r1", "r1": "r2", "r2": "r3", "r3": "r3"}
@@ -88,18 +92,22 @@ def build(saddle=True):
     return m
 
 def add_saddle(m, body):
-    """blanket over the back between the shoulder and the hip scutes, seat, cantle and pommel, skirts in front of the
-    thighs, stirrups on straps, saddlebags"""
+    """the item icon on the back (Rodrigo 31/10: simpler, like the icon): a plain leather seat with a high cantle and a
+    small pommel on a narrow rust-and-bone band that drops a little down the flanks, one strap with an iron stirrup
+    each side, an iron ring with a rex tooth on the left. No saddlebags drawn (the cargo still comes with the saddle).
+    The faces lying on the body are left out: GeckoLib draws without back-face culling, so they would flicker. As in
+    velociraptor/raptor.py, the inner face of a +x piece is "east" here (GeckoLib mirrors x once more)."""
+    out = lambda *drop: [f for f in geo.FACES if f not in drop]
     sd = m.bone("saddle", body, (0, 72, -15))
-    m.cube(sd, (-15, 66, -25), (15, 72, -5), name="blanket", mat="blanket")
-    m.cube(sd, (-8, 72, -21), (8, 75, -9), name="seat", mat="leather")
-    m.cube(sd, (-7, 75, -12), (7, 78, -9), name="cantle", mat="leather")
-    m.cube(sd, (-2, 75, -21), (2, 78, -18), name="pommel", mat="leather")
-    m.pair(sd, sd, (14, 50, -23), (15, 66, -13), name="skirt", mat="leather")
-    m.pair(sd, sd, (14, 40, -19), (15, 50, -17), name="strap", mat="strap")
-    m.pair(sd, sd, (14, 37, -21), (16, 40, -15), name="stirrup", mat="iron")
-    # saddlebags in front of the skirts (the T. rex saddle carries its cargo)
-    m.pair(sd, sd, (14, 49, -32), (18, 61, -24), name="saddlebag", mat="bag")
+    m.cube(sd, (-12, 68, -24), (12, 69.5, -8), name="band", mat="blanket", faces=out("down"))
+    m.pair(sd, sd, (14, 61, -24), (15, 69.5, -14), name="band_side", mat="blanket", faces=out("east"))
+    m.cube(sd, (-7, 69.5, -21), (7, 73, -9), name="seat", mat="leather", faces=out("down"))
+    m.cube(sd, (-6, 73, -11), (6, 77, -8.5), name="cantle", mat="leather", rot=(-12, 0, 0), origin=(0, 73, -8.5))
+    m.cube(sd, (-1.5, 73, -21), (1.5, 75.5, -18.5), name="pommel", mat="leather")
+    m.pair(sd, sd, (15, 50, -19.5), (15.6, 61, -18), name="strap", mat="leather")
+    m.pair(sd, sd, (14.5, 48, -21.5), (16.5, 50, -16), name="stirrup", mat="iron")
+    m.cube(sd, (15, 57.5, -23.5), (16, 59.5, -22), name="ring", mat="iron")
+    m.cube(sd, (15.2, 54, -23.3), (15.8, 57.5, -22.2), name="tooth", mat="tooth")
 
 BODY = ("torso", "rump", "neck", "tail1", "tail2", "tail3", "tail4")
 
@@ -140,31 +148,22 @@ def shader(t):
         if k == 0 and row >= 0 + (h32(col, 6) % 2): return p["tooth2"] if row == t.h - 2 else p["tooth"]
         return None
     if mat == "leather":
-        edge = t.i in (0, t.w - 1) or t.j in (0, t.h - 1)
-        if f in ("up", "north", "south", "east", "west") and (t.i == 1 or t.i == t.w - 2 or t.j == 1 or t.j == t.h - 2) and not edge:
-            return p["stitch"] if (t.i + t.j) % 2 == 0 else p["lea1"]
-        if edge: return p["lea0"]
-        return p["lea2"] if (f == "up" and (t.i * 3 + t.j * 5) % 11 == 0) else p["lea1"]
+        # the icon's leather: dark rim, plain body, light top edge, one stitched line along the sides
+        if f == "up": return p["sd_d"] if t.i in (0, t.w - 1) or t.j in (0, t.h - 1) else p["sd_h"]
+        if f == "down": return p["sd_d"]
+        if t.j == 0: return p["sd_h"]
+        if t.j == t.h - 1 or t.i in (0, t.w - 1): return p["sd_d"]
+        if t.h >= 3 and t.j == t.h - 2 and t.i % 2 == 0: return p["sd_s"]
+        return p["sd_l"]
     if mat == "blanket":
-        # woven bands across the back: rust ground, bone stripes, dark selvage
-        k = int(t.L[2]) % 8
-        if f in ("east", "west") and t.j >= t.h - 1: return p["bl0"]
-        if k in (0, 1): return p["bl3"] if (t.i + t.j) % 2 == 0 else p["bl2"]
-        if k == 4: return p["bl0"]
-        return p["bl1"] if (t.i + t.j) % 3 else p["bl2"]
-    if mat == "bag":
-        # flap over the top third with a buckle in the middle, stitched seams
-        if f in ("east", "west", "north", "south"):
-            flap = t.j < t.h // 3
-            if flap and t.j == t.h // 3 - 1: return p["lea0"]
-            if flap and t.i == t.w // 2 and t.j == t.h // 3 - 2: return p["iron2"]
-            if t.i in (0, t.w - 1) or t.j == t.h - 1: return p["lea0"]
-            return p["lea2"] if flap else (p["stitch"] if t.j == t.h - 2 and t.i % 2 else p["lea1"])
-        return p["lea1"]
-    if mat == "strap":
-        return p["lea0"] if t.i in (0, t.w - 1) else p["lea1"]
+        # the icon's band: rust and bone stripes across, a lighter rust now and then, dark hem
+        if f == "down" or (f in ("east", "west", "north", "south") and t.j == t.h - 1): return p["sd_k"]
+        z = int(math.floor(t.L[2]))
+        return p["sd_b"] if z % 2 else (p["sd_R"] if z % 5 == 0 else p["sd_r"])
     if mat == "iron":
-        return p["iron2"] if (f == "up" or t.j == 0) else (p["iron0"] if t.j == t.h - 1 else p["iron1"])
+        return p["sd_I"] if (f == "up" or t.j == 0) else p["sd_i"]
+    if mat == "tooth":
+        return p["sd_t"] if t.j < t.h - 1 else p["sd_T"]
     if mat == "claw":
         return p["clawl"] if (f == "north" and t.j >= t.h - 1) else p["claw"]
     if mat == "horn":

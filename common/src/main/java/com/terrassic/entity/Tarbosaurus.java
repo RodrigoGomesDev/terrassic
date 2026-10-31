@@ -107,6 +107,11 @@ public class Tarbosaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 6.61D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 4;
     }

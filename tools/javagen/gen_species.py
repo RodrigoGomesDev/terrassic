@@ -826,6 +826,10 @@ def gen(s, bounds):
             body.append(f"    @Override\n    protected double airSeatLift() {{\n        return {round(s['ride_air_lift'] * size['scale'], 2)}D;\n    }}\n")
         if s.get("ride_forward"):
             body.append(f"    @Override\n    protected double riderForwardOffset() {{\n        return {round(s['ride_forward'] * size['scale'], 2)}D;\n    }}\n")
+        # the rider's attack reaches the snout (front of the model, art/build_report.json) plus a stretch of the neck: the
+        # general half width + 2.5 fell short of the jaws of every long-headed mount (Rodrigo's test, 31/10)
+        snout = -bounds[s["id"]][0][2] / 16.0 * size["scale"]
+        body.append(f"    @Override\n    protected double riderReach() {{\n        return Math.max(super.riderReach(), {round(snout + 1.0, 2)}D * this.getScale());\n    }}\n")
     # cargo (docs/CARGA.md): every rideable species carries a chest, rows by real size; cargo=N overrides (0 = none)
     rows = s.get("cargo")
     if rows is None and s.get("rideable"):

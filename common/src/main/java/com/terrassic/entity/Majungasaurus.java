@@ -112,6 +112,11 @@ public class Majungasaurus extends PredatorDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 4.01D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 3;
     }

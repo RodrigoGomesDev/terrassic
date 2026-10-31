@@ -94,6 +94,11 @@ public class Archelon extends SwimmingDinosaur {
     }
 
     @Override
+    protected double riderReach() {
+        return Math.max(super.riderReach(), 3.71D * this.getScale());
+    }
+
+    @Override
     public int cargoRows() {
         return 2;
     }
