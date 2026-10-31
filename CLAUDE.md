@@ -43,7 +43,7 @@ de coautoria de IA (pedido do Rodrigo, 24/10/2026).
 
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
-Versão atual: **v0.2.0** (tags git v0.1.0 e v0.2.0). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
+Versão atual: **v1.0.0** (31/10/2026; tags git v0.1.0 e v0.2.0). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
 A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; o cliente gráfico Forge ainda não foi validado.
 Os servidores dedicados Fabric e Forge foram validados posteriormente pelos roteiros de entidades e Caderno.
 Nome: o projeto se chamava **PrimalEra** e foi renomeado para **Terrassic** em 23/10/2026: mod id `terrassic`,

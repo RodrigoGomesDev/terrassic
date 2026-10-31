@@ -1,4 +1,4 @@
-# Terrassic — v0.2.0
+# Terrassic — v1.0.0
 
 ![Terrassic](art/capa/terrassic_banner_1920x1080.png)
 
@@ -22,8 +22,7 @@ Verificação de integridade sem gerar arquivos: `python3 -B tools/validation/ch
 
 ## Estado da main de desenvolvimento
 
-A main contém 59 espécies, o sistema básico de nocaute e a identidade visual integrada. Isso não altera a versão
-declarada `0.2.0` nem significa um novo lançamento. O elenco e os exemplos abaixo descrevem a v0.2 original;
+A main contém 59 espécies, o sistema básico de nocaute e a identidade visual integrada, na versão `1.0.0`. O elenco e os exemplos abaixo descrevem a v0.2 original;
 o estado das entregas e os testes atuais estão no [quadro de coordenação](docs/COORDENACAO.md) e no
 [roadmap](docs/ROADMAP.md). Build, testes de servidor e aprovação visual são verificações distintas.
 
