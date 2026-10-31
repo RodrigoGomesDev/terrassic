@@ -1,7 +1,9 @@
 package com.terrassic.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.terrassic.entity.DinosaurEntity;
+import com.terrassic.entity.FlyingDinosaur;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +33,26 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
         float baby = animatable.getScale();
         super.scaleModelForRender(widthScale * baby, heightScale * baby, poseStack, animatable, model, isReRender,
                 partialTick, packedLight, packedOverlay);
+    }
+
+    /** A flyer that tilts in flight pitches and banks the whole body about its saddle (FlyingDinosaur#flightPitch). The
+     *  model is already scaled here and faces -Z, so the pivot is in model units. */
+    @Override
+    protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick);
+        if (animatable instanceof FlyingDinosaur flyer && animatable.deathTime <= 0) {
+            float pitch = flyer.flightPitch(partialTick);
+            float roll = flyer.flightRoll(partialTick);
+            if (Math.abs(pitch) > 0.05F || Math.abs(roll) > 0.05F) {
+                float size = animatable.getScale();
+                double up = flyer.tiltPivotHeight() / (this.scaleHeight * size);
+                double back = flyer.tiltPivotForward() / (this.scaleWidth * size);
+                poseStack.translate(0.0D, up, -back);
+                poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(roll));
+                poseStack.translate(0.0D, -up, back);
+            }
+        }
     }
 
     /** Species with their own death animation fall in it; no vanilla tipping over on top. */

@@ -24,7 +24,8 @@ import org.lwjgl.glfw.GLFW;
  *   <li>A left click is the mount's attack: it strikes what is in front of it, nearest to where you look
  *       (config/terrassic-client.json "mount_attack": false gives the click back to your hand).</li>
  *   <li>A right click with an empty hand is its special: the roar of the big theropods.</li>
- *   <li>{@link #DESCEND} (Z) dives a flyer; sneak still gets off.</li>
+ *   <li>{@link #DESCEND} (Z) dives a flyer; in the air sneak does the same (mixin/PlayerMixin keeps you in the
+ *       saddle), on the ground it gets off.</li>
  * </ul>
  * On foot, sneak + use with an empty hand on your dinosaur opens its screen. {@link #DINO_SCREEN} does the same for the
  * one you look at; it has no key by default (bind one in Controls if you like).
@@ -54,7 +55,7 @@ public final class DinoControls {
         DinosaurEntity mount = player.getVehicle() instanceof DinosaurEntity d && d.isTame() && d.isOwnedBy(player)
                 && d.getControllingPassenger() == player ? d : null;
         if (player.getVehicle() instanceof FlyingDinosaur flyer) {
-            flyer.riderDescending = mount == flyer && mc.screen == null && DESCEND.isDown();
+            flyer.riderDescending = mount == flyer && mc.screen == null && (DESCEND.isDown() || mc.options.keyShift.isDown());
         }
         if (mc.screen != null) {
             return;

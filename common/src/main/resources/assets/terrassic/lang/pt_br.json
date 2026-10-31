@@ -806,7 +806,7 @@
   "gui.terrassic.dino.cargo": "Carga",
   "gui.terrassic.dino.follow": "Seguir",
   "gui.terrassic.dino.hint_apex": "Clique esquerdo: mordida · Clique direito, mão vazia: rugido · Agachar: descer",
-  "gui.terrassic.dino.hint_flyer": "Clique esquerdo: ataque · %s: mergulhar · Agachar: descer",
+  "gui.terrassic.dino.hint_flyer": "Clique esquerdo: ataque · %s ou Agachar no ar: descer voando · Agachar no chão: desmontar",
   "gui.terrassic.dino.hint_ridden": "Clique esquerdo: ataque · Agachar: descer",
   "gui.terrassic.dino.level": "Nível %s",
   "gui.terrassic.dino.max_level": "Nível máximo",

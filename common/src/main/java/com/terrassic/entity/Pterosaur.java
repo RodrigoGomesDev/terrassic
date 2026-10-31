@@ -24,7 +24,8 @@ import software.bernie.geckolib.core.object.PlayState;
  *       near), "beg" (young near an adult), "sleep" at night (a colonist at its colony), knockout poses for the ground
  *       and for the fall ("knocked_out_air"), and its own "death".</li>
  * </ul>
- * The rig has no "tame" or "wake_sleep": taming plays "call", waking up plays "shake".
+ * The rig has no "tame" or "wake_sleep": taming plays "call", waking up plays "shake". In the air the whole body also
+ * pitches with the flight path and banks into turns ({@link FlyingDinosaur#flightPitch(float)}).
  */
 public abstract class Pterosaur extends FlyingDinosaur {
     /** Smoothed turn rate (degrees per tick) over which a glide banks. */
@@ -91,6 +92,17 @@ public abstract class Pterosaur extends FlyingDinosaur {
     @Override
     protected int deathAnimTicks() {
         return 52;
+    }
+
+    @Override
+    protected boolean tiltsInFlight() {
+        return true;
+    }
+
+    /** The takeoff animations already raise the body: only a little of the climb on top. */
+    @Override
+    protected float tiltWeight() {
+        return this.tickCount < this.takeoffUntil || this.tickCount < this.waterTakeoffUntil ? 0.3F : 1.0F;
     }
 
     @Override

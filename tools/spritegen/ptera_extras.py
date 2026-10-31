@@ -9,9 +9,10 @@ stage 1 shows a dent and creases, stage 2 a tear with the hatchling's beak tip p
 themselves are unknown; this is the closest real reference. The block model comes from egg_model()
 (tools/javagen/gen_resources.py uses it for the species in CUSTOM_EGGS).
 
-Saddle (item terrassic:pteranodon_saddle): 16x16, read like the vanilla saddle but the flyer's own: no heavy seat,
-a light pad on a harness of straps that runs round the wing roots, a high wooden grab bar to hold on to in a dive,
-a fish-skin pad and a red crest feather.
+Saddle (item terrassic:pteranodon_saddle): 16x16, drawn like the T. rex saddle (rex_extras: curved seat, blanket band,
+things hanging on one side) so the saddles read as one family, but the flyer's own: a low seat on a fish-skin pad, the
+wooden grab bar in front, a red crest feather behind the seat and an iron ring (2026-10-31, Rodrigo picked option B
+over the first flat-pad version, which read as a table).
 
 usage: python3 -B tools/spritegen/ptera_extras.py   (sprites.py also calls main() and skips the CUSTOM_EGGS eggs)
 """
@@ -119,38 +120,39 @@ def egg_model(sid, stage):
 
 
 SADDLE_PAL = {
-    "o": (34, 28, 24),     # outline
-    "d": (70, 52, 38),     # dark strap
-    "l": (104, 78, 54),    # strap
-    "h": (138, 106, 74),   # strap highlight
+    "o": (34, 26, 20),     # outline
+    "d": (74, 50, 34),     # dark leather
+    "l": (107, 74, 48),    # leather
+    "h": (146, 104, 66),   # leather highlight
+    "s": (196, 166, 112),  # stitching
     "f": (120, 128, 128),  # fish-skin pad, slate like the model
-    "F": (160, 168, 166),  # pad light
-    "g": (82, 90, 92),     # pad shade
-    "w": (122, 94, 62),    # wooden grab bar
-    "W": (164, 130, 88),   # bar light
-    "i": (110, 110, 106),  # buckle
-    "I": (170, 170, 162),  # buckle light
-    "c": (178, 66, 29),    # crest feather
+    "F": (168, 176, 172),  # pad light scale
+    "g": (78, 86, 88),     # pad shade
+    "w": (118, 88, 56),    # wooden grab bar
+    "W": (170, 134, 88),   # bar light
+    "i": (110, 110, 106),  # iron ring
+    "I": (170, 170, 162),  # iron light
+    "c": (182, 64, 30),    # crest feather
     "C": (124, 38, 24),    # crest feather dark
-    "y": (238, 180, 85),   # feather tip
+    "y": (236, 178, 84),   # feather tip
 }
 SADDLE_ART = [
     "................",
-    "..oo............",
-    ".oWWo.......oo..",
-    ".owWo......ocyo.",
-    "..owo.....ocyo..",
-    "..owo....oCco...",
-    "..owooooooCo....",
-    ".ooFFFFFFFFoo...",
-    "ofFFFFFFFFFFfo..",
-    "offfffffffffgo..",
-    ".ogggggggggggo..",
-    "..oohdoooohdoo..",
-    "...olo....olo...",
-    "..oiIo...oiIo...",
-    "..oI.o...oI.o...",
-    "...oo.....oo....",
+    "..oooo......oo..",
+    ".oWWWwo....ocyo.",
+    "..ooWoo...ocCo..",
+    "...oWo....oCo...",
+    "...oWo.....ooo..",
+    "..ohWhoooohhho..",
+    "..odlhhhhhhldo..",
+    ".ooddsslllsddoo.",
+    ".ogFfFfFfFfFfgo.",
+    ".ogfgfgfgfgfggo.",
+    "..oggooodgggoo..",
+    "....oldo.olIo...",
+    "....olho.oIoIo..",
+    "....oddo.oIIo...",
+    ".....oo...oo....",
 ]
 
 

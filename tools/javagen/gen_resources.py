@@ -287,7 +287,7 @@ DINO_LANG = {
         "gui.terrassic.dino.no_saddle": "No saddle",
         "gui.terrassic.dino.hint_ridden": "Left click: its attack · Sneak: get off",
         "gui.terrassic.dino.hint_apex": "Left click: bite · Right click, empty hand: roar · Sneak: get off",
-        "gui.terrassic.dino.hint_flyer": "Left click: its attack · %s: dive · Sneak: get off",
+        "gui.terrassic.dino.hint_flyer": "Left click: its attack · %s or sneak in the air: dive · Sneak on the ground: get off",
         # v0.16: orders (docs/ORDENS.md)
         "gui.terrassic.dino.wander": "Wander",
         "gui.terrassic.dino.wander.tip": "Roams within %s blocks of here instead of following you",
@@ -341,7 +341,7 @@ DINO_LANG = {
         "gui.terrassic.dino.no_saddle": "Sem sela",
         "gui.terrassic.dino.hint_ridden": "Clique esquerdo: ataque · Agachar: descer",
         "gui.terrassic.dino.hint_apex": "Clique esquerdo: mordida · Clique direito, mão vazia: rugido · Agachar: descer",
-        "gui.terrassic.dino.hint_flyer": "Clique esquerdo: ataque · %s: mergulhar · Agachar: descer",
+        "gui.terrassic.dino.hint_flyer": "Clique esquerdo: ataque · %s ou Agachar no ar: descer voando · Agachar no chão: desmontar",
         # v0.16: orders (docs/ORDENS.md)
         "gui.terrassic.dino.wander": "Vagar",
         "gui.terrassic.dino.wander.tip": "Anda a até %s blocos daqui em vez de te seguir",
@@ -395,7 +395,7 @@ DINO_LANG = {
         "gui.terrassic.dino.no_saddle": "Sin silla",
         "gui.terrassic.dino.hint_ridden": "Clic izquierdo: ataque · Agacharse: bajar",
         "gui.terrassic.dino.hint_apex": "Clic izquierdo: mordisco · Clic derecho, mano vacía: rugido · Agacharse: bajar",
-        "gui.terrassic.dino.hint_flyer": "Clic izquierdo: ataque · %s: picar · Agacharse: bajar",
+        "gui.terrassic.dino.hint_flyer": "Clic izquierdo: ataque · %s o agacharse en el aire: picar · Agacharse en el suelo: bajarse",
         # v0.16: orders (docs/ORDENS.md)
         "gui.terrassic.dino.wander": "Pasear",
         "gui.terrassic.dino.wander.tip": "Anda a menos de %s bloques de aquí en vez de seguirte",

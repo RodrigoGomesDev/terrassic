@@ -806,7 +806,7 @@
   "gui.terrassic.dino.cargo": "Carga",
   "gui.terrassic.dino.follow": "Seguir",
   "gui.terrassic.dino.hint_apex": "Clic izquierdo: mordisco · Clic derecho, mano vacía: rugido · Agacharse: bajar",
-  "gui.terrassic.dino.hint_flyer": "Clic izquierdo: ataque · %s: picar · Agacharse: bajar",
+  "gui.terrassic.dino.hint_flyer": "Clic izquierdo: ataque · %s o agacharse en el aire: picar · Agacharse en el suelo: bajarse",
   "gui.terrassic.dino.hint_ridden": "Clic izquierdo: ataque · Agacharse: bajar",
   "gui.terrassic.dino.level": "Nivel %s",
   "gui.terrassic.dino.max_level": "Nivel máximo",

@@ -55,9 +55,15 @@ import software.bernie.geckolib.core.object.PlayState;
  * <ul>
  *   <li>on the ground it walks like any mount; <b>jump</b> (hold for a stronger leap) takes off, and so does
  *       pushing forward while looking up steeply;</li>
- *   <li>in the air it flies where the rider looks while forward is held; <b>jump</b> flaps for height;</li>
- *   <li>with forward released it glides, keeping its speed and slowly sinking, and lands by touching ground.</li>
+ *   <li>in the air it flies where the rider looks while forward is held, turning at its own pace towards the
+ *       rider's view (it carves the turn instead of snapping round); <b>jump</b> flaps for height;</li>
+ *   <li>diving trades height for speed, climbing costs speed;</li>
+ *   <li>with forward released it glides, keeping its speed and slowly sinking, and lands by touching ground;</li>
+ *   <li>in the air <b>sneak</b> brings it down like the descend key instead of dropping the rider off
+ *       (mixin/PlayerMixin); on the ground sneak gets off as usual.</li>
  * </ul>
+ * Species that {@link #tiltsInFlight()} also pitch the whole body up and down with the flight path and bank into turns
+ * ({@link #flightPitch(float)}, {@link #flightRoll(float)}, drawn by client/DinosaurRenderer about the saddle).
  *
  * Animations: besides the usual ones the model needs "fly" (flapping) and "glide" (wings held open).
  * Ridden movement runs on the rider's client (vanilla vehicles do), so the flying state is derived from
@@ -79,6 +85,17 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     private static final double GLIDE_DRAG = 0.985D;
     private static final double GLIDE_SINK = 0.02D;
     private static final double MAX_SINK = 0.45D;
+    /** Ridden, a steep dive with forward held: the sink limit, and the lighter drag that lets it build speed. */
+    private static final double DIVE_SINK = 0.7D;
+    private static final double DIVE_DRAG = 0.97D;
+    /** Ridden in the air: how fast it turns towards the rider's view, degrees per tick. */
+    private static final float MAX_TURN = 7.0F;
+    /** Body tilt in flight (degrees): nose up climbing, nose down diving, and the bank into a turn per degree of turn
+     *  (a rig's own bank animations, Pterosaur "bank_left"/"bank_right", roll the body further on top). */
+    private static final float MAX_CLIMB_PITCH = 50.0F;
+    private static final float MAX_DIVE_PITCH = 60.0F;
+    private static final float MAX_ROLL = 20.0F;
+    private static final float ROLL_PER_TURN = 3.0F;
     /** Ridden, the descend key held (v0.12): extra sink per tick. */
     private static final double DESCEND = 0.07D;
     /** Rider pitch (degrees, negative = up) above which pushing forward on the ground takes off. */
@@ -101,6 +118,11 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     private BlockPos colonyHome;
     /** A fishing sortie a colony mate asked this one to join: where over the sea (FishingFlightGoal). */
     private Vec3 sortieCall;
+    // client: the body tilt in flight (tiltsInFlight), eased, with last tick's value for the frame in between
+    private float tiltPitch;
+    private float tiltPitchO;
+    private float tiltRoll;
+    private float tiltRollO;
 
     protected FlyingDinosaur(EntityType<? extends FlyingDinosaur> type, Level level) {
         super(type, level);
@@ -182,6 +204,65 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
     public void tick() {
         super.tick();
         this.airSeat += ((this.isAirborne() ? 1.0F : 0.0F) - this.airSeat) * 0.2F;
+        if (this.level().isClientSide() && this.tiltsInFlight()) {
+            this.tiltTick();
+        }
+    }
+
+    // ------------------------------------------------------------------ body tilt in flight (client)
+
+    /** Whether the whole body pitches with the flight path and banks into turns (a rig made for it: the Pterosaur). */
+    protected boolean tiltsInFlight() {
+        return false;
+    }
+
+    /** How much of the path's pitch the body takes now (less while an animation of its own lifts it off). */
+    protected float tiltWeight() {
+        return 1.0F;
+    }
+
+    /** Body pitch in flight, degrees, nose up positive. */
+    public float flightPitch(float partialTick) {
+        return Mth.lerp(partialTick, this.tiltPitchO, this.tiltPitch);
+    }
+
+    /** Body roll in flight, degrees, positive = left wing down (turning left). */
+    public float flightRoll(float partialTick) {
+        return Mth.lerp(partialTick, this.tiltRollO, this.tiltRoll);
+    }
+
+    /** Where the tilt turns about: the saddle, near the wing roots, so a rider stays in the seat. Blocks, from the feet. */
+    public double tiltPivotForward() {
+        return this.riderForwardOffset() * this.getScale();
+    }
+
+    public double tiltPivotHeight() {
+        return this.getPassengersRidingOffset() + this.seatLift();
+    }
+
+    /** From how it actually moved this tick (the client knows the motion of other players' mounts and of wild ones only
+     *  from their positions). */
+    private void tiltTick() {
+        this.tiltPitchO = this.tiltPitch;
+        this.tiltRollO = this.tiltRoll;
+        float turn = Mth.wrapDegrees(this.getYRot() - this.yRotO);
+        float pitch = 0.0F;
+        float roll = 0.0F;
+        if (this.isAirborne() && !this.isKnockedOut() && this.isAlive()) {
+            double dy = this.getY() - this.yo;
+            double dh = Math.sqrt(Mth.square(this.getX() - this.xo) + Mth.square(this.getZ() - this.zo));
+            // it points where it goes: nose up in a climb (even flapping straight up), down in a dive, level hovering
+            pitch = (float) (Mth.atan2(dy, Math.max(dh, 0.15D)) * Mth.RAD_TO_DEG);
+            pitch = Mth.clamp(pitch, -MAX_DIVE_PITCH, MAX_CLIMB_PITCH) * this.tiltWeight();
+            roll = Mth.clamp(-turn * ROLL_PER_TURN, -MAX_ROLL, MAX_ROLL);
+        }
+        this.tiltPitch += (pitch - this.tiltPitch) * 0.2F;
+        this.tiltRoll += (roll - this.tiltRoll) * 0.25F;
+    }
+
+    /** The head's own pitch on top of the body's: none for a body that already tilts. */
+    private float headPitch(float pitch) {
+        return this.tiltsInFlight() ? 0.0F : pitch;
     }
 
     @Override
@@ -412,16 +493,21 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
 
     @Override
     protected void tickRidden(Player player, Vec3 input) {
+        float yaw = this.getYRot();
         super.tickRidden(player, input);
         // ridden flight moves itself (travel below); without NoGravity a server with allow-flight=false (the default)
         // kicks the rider "for floating a vehicle too long" after 4 s in the air (v0.12 test)
         this.setNoGravity(this.isFlying());
         if (this.isFlying()) {
-            // in the air it always turns with the rider, even when gliding with no keys pressed
-            this.setRot(player.getYRot(), player.getXRot() * 0.5F);
-            this.yRotO = this.getYRot();
-            this.yBodyRot = this.getYRot();
-            this.yHeadRot = this.getYRot();
+            // in the air it always turns towards the rider's view, even gliding with no keys pressed, but at its own
+            // pace: it carves the turn (and banks) instead of snapping round. The rider's side steers; the server keeps
+            // the heading the rider's client sent.
+            if (this.isControlledByLocalInstance()) {
+                yaw = Mth.approachDegrees(yaw, player.getYRot(), MAX_TURN);
+            }
+            this.setRot(yaw, this.headPitch(player.getXRot() * 0.5F));
+            this.yBodyRot = yaw;
+            this.yHeadRot = yaw;
         }
     }
 
@@ -435,8 +521,8 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
             this.setYRot(step.yaw());
             this.yBodyRot = this.getYRot();
             this.yHeadRot = this.getYRot();
-            this.setXRot(Mth.rotLerp(0.15F, this.getXRot(),
-                    (float) (-Mth.atan2(step.velocity().y, step.velocity().horizontalDistance()) * Mth.RAD_TO_DEG)));
+            this.setXRot(Mth.rotLerp(0.15F, this.getXRot(), this.headPitch(
+                    (float) (-Mth.atan2(step.velocity().y, step.velocity().horizontalDistance()) * Mth.RAD_TO_DEG))));
             this.setDeltaMovement(step.velocity());
             this.move(MoverType.SELF, step.velocity());
             this.calculateEntityAnimation(true);
@@ -486,14 +572,23 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
             this.flapTicks = 0;
         }
         double drag;
+        double maxSink = MAX_SINK;
         if (input.z > 0.0D) {
             double accel = FLIGHT_ACCEL * this.getAttributeValue(Attributes.FLYING_SPEED) / 0.6D * this.riddenSpeedFactor();
             Vec3 look = Vec3.directionFromRotation(rider.getXRot(), this.getYRot());
-            v = v.add(look.scale(accel * input.z));
             if (look.y > 0.0D) {
+                // climbing is work: the steeper, the slower it gains
+                accel *= 1.0D - 0.45D * look.y;
                 this.flapTicks = 0;
             }
-            drag = FLIGHT_DRAG;
+            v = v.add(look.scale(accel * input.z));
+            if (look.y < -0.4D) {
+                // a dive builds speed
+                drag = DIVE_DRAG;
+                maxSink = DIVE_SINK;
+            } else {
+                drag = FLIGHT_DRAG;
+            }
         } else {
             v = v.add(0.0D, -GLIDE_SINK, 0.0D);
             drag = GLIDE_DRAG;
@@ -506,7 +601,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         if (this.riderDescending) {
             v = v.add(0.0D, -DESCEND, 0.0D);
         }
-        v = new Vec3(v.x * drag, Math.max(v.y * drag, -MAX_SINK), v.z * drag);
+        v = new Vec3(v.x * drag, Math.max(v.y * drag, -maxSink), v.z * drag);
         this.move(MoverType.SELF, v);
         this.setDeltaMovement(v);
         this.calculateEntityAnimation(true);
