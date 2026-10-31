@@ -970,7 +970,8 @@ def egg_blocks():
     import random
     from rex_extras import CUSTOM_EGGS as REX_EGGS   # these have their own nest model and textures (*_extras.main)
     from ptera_extras import CUSTOM_EGGS as PTERA_EGGS
-    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS}
+    from rapt_extras import CUSTOM_EGGS as RAPT_EGGS
+    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1487,6 +1488,8 @@ if __name__ == "__main__":
     rex_extras.main()   # the T. rex egg pair in its nest and the T. rex saddle
     import ptera_extras
     ptera_extras.main()   # the Pteranodon's clutch in its sand scrape and its saddle
+    import rapt_extras
+    rapt_extras.main()   # the Velociraptor's clutch in its desert scrape and its hunting harness
     if len(sys.argv) > 1:
         preview(sys.argv[1])
     print("sprites written to", TEX)

@@ -27,7 +27,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Tyrannosaurus       savanna, jungle                 1       1
  *  Spinosaurus         river, swamp, mangrove          2       1
  *  Dilophosaurus       forest, jungle                  3       1-2
- *  Velociraptor        savanna, badlands, desert*      6       2-4
+ *  Velociraptor        savanna, badlands, desert*      6       1-3
  *  Compsognathus       forest, jungle                  8       3-6
  *  Triceratops         savanna, plains                 6       2-4
  *  Styracosaurus       savanna, plains, forest         5       2-5
@@ -195,7 +195,7 @@ public final class ModSpawns {
                 add(props, ModEntities.DILOPHOSAURUS.get(), 3, 1, 2);
             }
             if (savanna || badlands || desert) {
-                add(props, ModEntities.VELOCIRAPTOR.get(), 6, 2, 4);
+                add(props, ModEntities.VELOCIRAPTOR.get(), 6, 1, 3);
             }
             if (forest || jungle) {
                 add(props, ModEntities.COMPSOGNATHUS.get(), 8, 3, 6);

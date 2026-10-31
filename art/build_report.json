@@ -120,37 +120,55 @@
   "render_scale": 0.5
  },
  "velociraptor": {
-  "bones": 23,
-  "cubes": 70,
+  "bones": 28,
+  "cubes": 86,
   "texture": [
-   128,
-   128
+   256,
+   32
   ],
   "bounds_px": [
    [
-    -5.0,
-    1.3542856188248829e-05,
-    -31.063098048345164
+    -8.0,
+    0.0,
+    -43.9
    ],
    [
-    5.0,
-    27.03247344233251,
-    40.99998109612815
+    8.0,
+    33.0,
+    56.0
    ]
   ],
   "animations": [
    "animation.velociraptor.idle",
+   "animation.velociraptor.sniff",
+   "animation.velociraptor.look_back",
+   "animation.velociraptor.preen",
+   "animation.velociraptor.ruffle",
+   "animation.velociraptor.stretch",
    "animation.velociraptor.walk",
    "animation.velociraptor.run",
-   "animation.velociraptor.sit",
+   "animation.velociraptor.stalk",
+   "animation.velociraptor.swim",
+   "animation.velociraptor.leap",
+   "animation.velociraptor.call",
+   "animation.velociraptor.screech",
+   "animation.velociraptor.display",
    "animation.velociraptor.attack",
+   "animation.velociraptor.kick",
+   "animation.velociraptor.pounce",
+   "animation.velociraptor.hurt",
+   "animation.velociraptor.death",
+   "animation.velociraptor.eat",
+   "animation.velociraptor.drink",
+   "animation.velociraptor.sit",
+   "animation.velociraptor.sleep",
+   "animation.velociraptor.wake_sleep",
    "animation.velociraptor.knocked_out",
    "animation.velociraptor.wake",
-   "animation.velociraptor.eat",
    "animation.velociraptor.beg",
    "animation.velociraptor.tame"
   ],
-  "render_scale": 0.5
+  "handmade": true
  },
  "compsognathus": {
   "bones": 25,

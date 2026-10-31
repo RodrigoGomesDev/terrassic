@@ -11,7 +11,8 @@ D = os.path.join(RES, "data", "terrassic")
 sys.path.insert(0, os.path.join(ROOT, "tools", "spritegen"))
 from rex_extras import CUSTOM_EGGS as REX_EGGS  # noqa: E402  (eggs with their own nest model: the T. rex pair)
 from ptera_extras import CUSTOM_EGGS as PTERA_EGGS  # noqa: E402  (the Pteranodon's clutch in a sand scrape)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS}
+from rapt_extras import CUSTOM_EGGS as RAPT_EGGS  # noqa: E402  (the Velociraptor's clutch in a desert scrape)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -91,6 +92,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # species saddles, like ARK: each big rider has its own, with its own recipe (the T. rex first)
     "tyrannosaurus_saddle": ("T. rex Saddle", "Sela de Tiranossauro", "Silla de Tiranosaurio", "item/generated"),
     "pteranodon_saddle": ("Pteranodon Saddle", "Sela de Pteranodonte", "Silla de Pteranodonte", "item/generated"),
+    # not a saddle: a hunting vest for the Velociraptor, armour for an animal too small to ride
+    "velociraptor_harness": ("Hunting Harness", "Arreio de Caça", "Arnés de caza", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
     "raw_dino_meat": ("Raw Dino Meat", "Carne de Dinossauro Crua", "Carne de Dinosaurio Cruda", "item/generated"),
     "cooked_dino_meat": ("Cooked Dino Meat", "Carne de Dinossauro Assada", "Carne de Dinosaurio Asada", "item/generated"),
@@ -634,6 +637,9 @@ def main():
     # the Pteranodon saddle: a light leather pad on a string harness, a feather for the grab bar's crest
     shaped("pteranodon_saddle", ["LLL", "SFS"], {"L": "minecraft:leather", "S": "minecraft:string", "F": "minecraft:feather"},
            "terrassic:pteranodon_saddle")
+    # the Velociraptor's hunting harness: leather flanks, a bone plate, string straps and an iron ring
+    shaped("velociraptor_harness", ["LBL", "SNS"], {"L": "minecraft:leather", "B": "minecraft:bone", "S": "minecraft:string",
+                                                     "N": "minecraft:iron_nugget"}, "terrassic:velociraptor_harness")
     # the Field Lens: an amber lens in a bone rim on a stick (item/FieldLensItem)
     shaped("field_lens", [" G ", "BAB", " S "], {"G": "minecraft:glass_pane", "A": "terrassic:raw_amber", "B": "minecraft:bone",
                                                   "S": "minecraft:stick"}, "terrassic:field_lens")

@@ -378,3 +378,9 @@ atuais nesta entrega; o histórico Git permanece preservado.
   A frente liberou os arquivos. Conflito de coordenação resolvido mantendo os estados de conclusão das duas frentes.
   Integridade: 59 espécies, 4.313 JSONs, 1.810 chaves por idioma, áudio íntegro pelos vínculos/cabeçalhos;
   build Fabric/Forge com regressões passou em 34 s. A CI da entrega recebida também passou no Linux.
+
+### Velociraptor v3 (31/10/2026)
+
+Arquivos reservados e liberados na mesma entrega: `Velociraptor`, modelo, animações, texturas, ninho, arreio e ovo,
+com a versão rc5 aprovada pelo Rodrigo. 48 arquivos sobre `c13634fa`, sem remoções. Detalhes dos testes ficam nas notas
+da entrega do raptor.

@@ -247,6 +247,9 @@ public final class ModItems {
     /** The Pteranodon's own saddle (only it saddles a Pteranodon), with saddlebags like the T. rex's. */
     public static final RegistrySupplier<Item> PTERANODON_SADDLE = ITEMS.register("pteranodon_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Velociraptor's hunting harness: its "saddle" for the armour it gives; it can never be ridden. */
+    public static final RegistrySupplier<Item> VELOCIRAPTOR_HARNESS = ITEMS.register("velociraptor_harness",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
 
     // ---- science: notebook, field tools, fossils (docs/HISTORIA.md, section 4)
     public static final RegistrySupplier<Item> FIELD_NOTEBOOK = ITEMS.register("field_notebook",

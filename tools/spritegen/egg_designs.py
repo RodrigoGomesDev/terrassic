@@ -109,23 +109,42 @@ def dilophosaurus():
 
 
 def velociraptor():
-    e = Egg("velociraptor", {"b": "#9a6a40", "c": "#e2cca2", "d": "#4a2c18", "n": "#2e2014",
-                              "f": "#4a2e1a", "R": MOUTH})
-    for (x, h) in ((11, 3), (13, 5), (15, 6), (17, 5), (19, 3)):
-        e.line([(x, 5 - h + 1), (x + (1 if x < 15 else -1 if x > 16 else 0), 6)], "f", 2)
-    cap(e, "d", (6, 4, 25, 17), (3, 9, 28, 36))
-    for (x0, y0, x1, y1) in ((4, 18, 7, 15), (4, 23, 7, 20)):
-        e.line([(x0, y0), (x1, y1)], "n", 2, clip=True)
-        e.line([(31 - x0, y0), (31 - x1, y1)], "n", 2, clip=True)
-    e.poly([(11, 17), (20, 17), (22, 31), (9, 31)], "c", clip=True)
-    e.px([(15, 1), (16, 1), (13, 2), (18, 2)], "F")
-    e.pal["F"] = "#b07a44"
-    eyes(e, 14, 9, iris="#f4c22c", brow="n", angry=True)
-    nostrils(e, 20, 13)
-    e.line([(9, 25), (22, 25)], "R")
-    for x in (11, 14):
-        e.px(e.mirror([(x, 26)]), "W")
-    e.pal["W"] = TOOTH
+    e = Egg("velociraptor", {"b": "#7a6146", "l": "#574533", "d": "#3d3026", "D": "#2b221b", "k": "#1f1915",
+                                 "K": "#0f0c0a", "r": "#436577", "R": "#2c4350", "E": "#f2b233", "e": "#b5761a",
+                                 "p": "#0a0706", "w": "#efe8d2", "W": "#c9bd98", "s": "#4a4038", "c": "#bba783"})
+    e.ell((2, 0, 29, 34), "D", clip=True)
+    # the quill ridge: dark spikes with the steel-blue sheen, tallest in the middle
+    for x, h in ((8, 2), (10, 3), (12, 4), (14, 4), (17, 4), (19, 4), (21, 3), (23, 2)):
+        e.line([(x, 8), (x, 8 - h)], "K", 1, clip=True)
+        e.px([q for q in [(x, 8 - h), (x, 9 - h)] if in_egg(*q)], "r")
+    # the head: dark, a lighter cheek below the eyes, broken bars over the crown
+    e.ell((4, 7, 27, 22), "d", clip=True)
+    e.ell((5, 15, 26, 30), "b", clip=True)
+    e.px(e.mirror([(6, 17), (7, 19), (6, 21), (8, 22)]), "l")
+    e.px(e.mirror([(8, 7), (9, 8), (10, 8), (7, 10), (8, 11)]), "k")
+    # sand throat and the dark lower jaw at the bottom
+    e.ell((8, 25, 23, 38), "c", clip=True)
+    e.rect((10, 27, 21, 29), "s", clip=True)
+    # the long narrow snout down the middle, darker edges, the dark tip with the nostrils
+    e.poly([(13, 11), (18, 11), (18, 27), (13, 27)], "d", clip=True)
+    e.line([(13, 12), (13, 27)], "D"); e.line([(18, 12), (18, 27)], "D")
+    e.line([(15, 12), (15, 24)], "l"); e.line([(16, 12), (16, 24)], "l")
+    e.px([(14, 15), (17, 15), (14, 19), (17, 19)], "k")
+    e.rect((13, 25, 18, 27), "K", clip=True)
+    e.px([(14, 25), (17, 25)], "s")
+    # the eyes: narrow slits under brows that slant down toward the snout (the angry V)
+    band = ["KK......",
+            "kKKK....",
+            ".kkKKK..",
+            ".kEpEe..",
+            "..kkk..."]
+    for j, row in enumerate(band):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(5 + i, 10 + j)]) if in_egg(*q)], ch)
+    # the shut mouth: a dark line, the upper teeth hanging over it along both sides of the snout
+    e.line([(8, 26), (23, 26)], "K", clip=True)
+    e.px(e.mirror([(9, 27), (11, 27), (11, 28), (13, 27)]), "w"); e.px(e.mirror([(10, 27), (12, 27)]), "W")
     return e
 
 

@@ -96,7 +96,8 @@ def backend(force_py):
 # Species built by a hand-made rig of their own instead of an archetype of species/ (the new standard of the 29/10
 # model study); build_all runs their build script and checks.py leaves them out.
 HANDMADE = {"tyrannosaurus": os.path.join(HERE, "handmade", "tyrannosaurus", "build.py"),
-            "pteranodon": os.path.join(HERE, "handmade", "pteranodon", "build.py")}
+            "pteranodon": os.path.join(HERE, "handmade", "pteranodon", "build.py"),
+            "velociraptor": os.path.join(HERE, "handmade", "velociraptor", "build.py")}
 
 
 async def run(names, force_py=False):
