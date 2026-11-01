@@ -162,6 +162,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Tied by a bola (v1.1, docs/ARMAS.md); synced so the rider's client stops steering and the thongs are drawn. */
     private static final EntityDataAccessor<Boolean> DATA_ENTANGLED =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Narcotic darts stuck in its hide (v1.1.4, docs/ARMAS.md); arrows use the vanilla arrow count. Drawn by
+     *  client/StuckProjectilesLayer. */
+    private static final EntityDataAccessor<Integer> DATA_STUCK_DARTS =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_HUNGER =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_SLEEPING =
@@ -705,6 +709,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_HUNGER, 70);
         this.entityData.define(DATA_KNOCKED_OUT, false);
         this.entityData.define(DATA_ENTANGLED, false);
+        this.entityData.define(DATA_STUCK_DARTS, 0);
         this.entityData.define(DATA_SLEEPING, false);
         this.entityData.define(DATA_SIZE, 1.0F);
         this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
@@ -1053,6 +1058,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             amount = Rules.damageTaken(this, source, amount);
         }
         boolean hurt = super.hurt(source, amount);
+        if (!hurt && torporHit > 0.0F && this.isAlive() && this.invulnerableTime > 10 && !this.isInvulnerableTo(source)
+                && source.getDirectEntity() instanceof TranqDart dart) {
+            // v1.1.4: a second dart inside the half second of invulnerability after a hit (two shooters, or bow and
+            // blowgun together) used to bounce off and lose its dose. The dose goes in; the dart is spent.
+            this.addTorpor(torporHit, source.getEntity());
+            dart.dosedThroughInvulnerability(this);
+        }
         if (hurt && amount > 0.0F && !this.level().isClientSide() && !this.isTame() && this.isKnockedOut()) {
             this.tameEffectiveness = Math.max(20, this.tameEffectiveness - 10);
         }
@@ -2227,6 +2239,32 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    // ------------------------------------------------------------------ stuck darts (v1.1.4, docs/ARMAS.md)
+
+    /** Server ticks until the next stuck dart falls out. */
+    private int stuckDartTicks;
+
+    /** How many narcotic darts are stuck in it (both sides). */
+    public int getStuckDarts() {
+        return this.entityData.get(DATA_STUCK_DARTS);
+    }
+
+    /** A dart went in and stays in the hide for a while (server). */
+    public void addStuckDart() {
+        this.entityData.set(DATA_STUCK_DARTS, Math.min(this.getStuckDarts() + 1, 16));
+    }
+
+    /** Darts work loose one at a time, like arrows in a player: the more there are, the faster they fall. */
+    private void stuckDartTick() {
+        int darts = this.getStuckDarts();
+        if (this.stuckDartTicks <= 0) {
+            this.stuckDartTicks = 20 * Math.max(5, 30 - darts);
+        }
+        if (--this.stuckDartTicks <= 0) {
+            this.entityData.set(DATA_STUCK_DARTS, darts - 1);
+        }
+    }
+
     // ------------------------------------------------------------------ shoulder perch
 
     /** True while riding on a player's shoulder. */
@@ -2267,6 +2305,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         if (!this.level().isClientSide() && this.entangledTicks > 0) {
             this.entangledTick();
+        }
+        if (!this.level().isClientSide() && this.getStuckDarts() > 0) {
+            this.stuckDartTick();
         }
         if (!this.level().isClientSide() && this.isAlive()) {
             this.growthTick();

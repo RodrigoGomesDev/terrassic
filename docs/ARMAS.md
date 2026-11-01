@@ -78,3 +78,15 @@ ao ser erguida para o arremesso.
   descem o mesmo tanto (`_SPEAR_DISPLAY` em gen_resources). No ar e cravada, `ThrownSpearRenderer` deita a lança no
   sentido do voo com a base da ponta no ponto da entidade, como o tridente. Na hotbar segue o sprite, inclusive
   durante a carga do arremesso (`HeldSpearMixin`).
+
+## v1.1.4: acabamento das armas
+- **Dardo cravado:** o dardo da zarabatana fica espetado no bicho, e as flechas também (sílex, narcótica, comum). Cada um
+  fica numa face de verdade do modelo, acompanha o osso na animação e aponta para dentro, com a pena para fora
+  (`client/StuckProjectilesLayer`). Saem sozinhos com o tempo, um por vez, como as flechas no jogador. Dardos na conta
+  `DinosaurEntity#getStuckDarts`; flechas na conta de flechas do Minecraft. Até 12 de cada aparecem.
+- **Dose que não se perde:** um segundo dardo ou flecha narcótica no meio segundo de invencibilidade depois de um golpe
+  antes quicava e perdia a dose. Agora a dose entra, e o dardo fica cravado (`DinosaurEntity#hurt`).
+- **Espirais mais fortes:** o dobro de espirais violeta, um pouco mais vivas, mais faíscas de bruxa em cima do bicho;
+  bichos grandes ganham mais.
+- **Dispensador:** atira flecha de sílex, flecha narcótica e dardo como a flecha comum (`item/WeaponDispensing`). Tiro de
+  dispensador é fraco: a flecha narcótica leva uns 37% de uma puxada cheia, o dardo a dose de um sopro curto.

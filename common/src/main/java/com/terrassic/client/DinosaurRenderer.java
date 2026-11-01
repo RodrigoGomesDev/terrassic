@@ -34,6 +34,7 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
         this.withScale(modelScale);
         this.shadowRadius = shadow;
         this.addRenderLayer(new RiftLayer<>(this));  // v0.9: creatures of the Rift glow with amber cracks
+        this.addRenderLayer(new StuckProjectilesLayer<>(this));  // v1.1.4: darts and arrows stuck in the hide
     }
 
     @Override
@@ -42,6 +43,11 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
         float baby = animatable.getScale();
         super.scaleModelForRender(widthScale * baby, heightScale * baby, poseStack, animatable, model, isReRender,
                 partialTick, packedLight, packedOverlay);
+    }
+
+    /** How much the model is scaled when drawn (the species' model scale times the growth of a young one). */
+    public float renderScale(DinosaurEntity entity) {
+        return this.scaleWidth * entity.getScale();
     }
 
     /** A flyer that tilts in flight pitches and banks the whole body about its saddle (FlyingDinosaur#flightPitch). The
