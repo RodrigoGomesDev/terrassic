@@ -5,6 +5,7 @@ Fixture setup uses operator commands; feeding uses a real local protocol connect
 import argparse
 import hashlib
 import json
+import re
 import struct
 import subprocess
 import time
@@ -53,6 +54,14 @@ class Checks:
 
 def selector(tag):
     return f"@e[tag={tag},limit=1]"
+
+
+def wild_points(server, tag):
+    cursor = len(server.lines)
+    server.command(f"data get entity {selector(tag)} Levels.Wild")
+    server.wait(lambda: any("entity data: {" in line for line in server.lines[cursor:]), 15)
+    line = next(line for line in server.lines[cursor:] if "entity data: {" in line)
+    return {key: int(value) for key, value in re.findall(r"(\w+): (\d+)", line.split("entity data: ", 1)[1])}
 
 
 def state(tag, nbt):
@@ -117,9 +126,12 @@ def main():
         client.wait_for(lambda c: str(ids["partial"]) in c.entities and str(ids["finished"]) in c.entities)
         checks.expect("efficiency saved before any food", state("ko_zero", "{KnockedOut:1b,TameEffectiveness:60}"))
 
+        # health is capped by the level's maximum, so fixtures are compared with themselves, never with a number
+        server.command(f"execute store result score rejected_before ko_metrics run data get entity {selector('ko_rejected')} Health 1000")
         server.command(f"damage {selector('ko_rejected')} 1 minecraft:generic")
+        server.command(f"execute store result score rejected_after ko_metrics run data get entity {selector('ko_rejected')} Health 1000")
         checks.barrier()
-        checks.expect("invulnerable fixture takes no wound", state("ko_rejected", "{Health:20f}"))
+        checks.expect("invulnerable fixture takes no wound", "score rejected_after ko_metrics = rejected_before ko_metrics")
         checks.expect("rejected damage preserves efficiency", state("ko_rejected", "{TameEffectiveness:90}"))
         server.command(f"data merge entity {selector('ko_rejected')} {{Invulnerable:0b}}")
         server.command(f"damage {selector('ko_rejected')} 1 minecraft:generic")
@@ -142,11 +154,17 @@ def main():
         client.interact_entity(ids["partial"])
         checks.expect("real wheat interaction advances partial tame", state("ko_partial", "{TameProgress:2f}"), timeout=5)
         checks.expect("feeding records the real player's UUID", state("ko_partial", f"{{Tamer:{owner}}}"))
+        before = wild_points(server, "ko_finished")
         client.interact_entity(ids["finished"])
         checks.expect("real hand feeding finishes taming", state("ko_finished", f"{{Owner:{owner}}}"), timeout=5)
         server.command(f"execute store result score hp ko_metrics run attribute {selector('ko_finished')} minecraft:generic.max_health get 1000")
         checks.barrier()
-        checks.expect("70 percent efficiency grants expected health bonus", "score hp ko_metrics matches 22799..22801")
+        # the bonus is drawn at random over the stats, so it is checked as points, not as health
+        gained = sum(wild_points(server, "ko_finished").values()) - sum(before.values())
+        expected = int((sum(before.values()) + 1) * 0.5 * 70 / 100)
+        passed = gained == expected
+        checks.results.append({"name": "70 percent efficiency grants the taming bonus points", "passed": passed})
+        print(f"{'PASS' if passed else 'FAIL'} {server.loader}: 70 percent efficiency grants the taming bonus points ({gained} of {expected})", flush=True)
         client.close()
         client = None
         server.stop()
@@ -157,9 +175,9 @@ def main():
         checks.expect("partial progress and efficiency survive restart", state("ko_partial", "{KnockedOut:1b,TameProgress:2f,TameEffectiveness:70}"))
         checks.expect("tamer UUID survives restart", state("ko_partial", f"{{Tamer:{owner}}}"))
         checks.expect("finished tame and owner survive restart", state("ko_finished", f"{{Owner:{owner}}}"))
-        server.command(f"execute store result score hp ko_metrics run attribute {selector('ko_finished')} minecraft:generic.max_health get 1000")
+        server.command(f"execute store result score hp_reload ko_metrics run attribute {selector('ko_finished')} minecraft:generic.max_health get 1000")
         checks.barrier()
-        checks.expect("health bonus survives restart without doubling", "score hp ko_metrics matches 22799..22801")
+        checks.expect("health bonus survives restart without doubling", "score hp_reload ko_metrics = hp ko_metrics")
         client.wait_for(lambda c: str(ids["partial"]) in c.entities)
         server.command("item replace entity TerraKO weapon.mainhand with minecraft:wheat 32")
         checks.barrier()

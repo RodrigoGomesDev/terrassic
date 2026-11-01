@@ -318,6 +318,9 @@ class LocalClient:
         self._use_sequence += 1
         self.send(50, varint(0) + varint(self._use_sequence))  # MAIN_HAND and block-prediction sequence.
 
+    def release_item(self):
+        self.send(29, varint(5) + b"\x00" * 8 + b"\x00" + varint(0))  # PlayerAction RELEASE_USE_ITEM.
+
     def close(self):
         self._closing = True
         try:
