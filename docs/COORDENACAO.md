@@ -1,5 +1,15 @@
 # Terrassic — coordenação entre frentes
 
+## Comunicação das lojas — 01/11/2026 (Codex)
+
+Escopo: preservar a descrição anterior em `docs/arquivo/DESCRICAO_LOJAS_VISAO_FUTURA.md`.
+Rodrigo decidiu reconstruir e lançar de pouco em pouco após a recepção negativa da publicação inicial,
+priorizando qualidade. A visão completa permanece para o futuro; não anunciar recursos planejados como prontos.
+Resumos e descrições das duas lojas foram alinhados ao Cretáceo e ao polimento gradual; história indicada
+como futura/desligada por padrão. Wiki e Discord padronizados. Ko-fi oficial confirmado: https://ko-fi.com/ogyiro.
+Arquivo histórico documental, sem mudança no jogo; não requer build. Summary e seções conferidos contra o
+texto lido na loja; `git diff --check` passou. Arquivos liberados; registro incluído no commit desta entrega.
+
 Atualizado em 26/10/2026. Titular: **Rodrigo Gomes**, pessoa física, sem vínculo empresarial.
 
 Entregas de 26/10 na main: `4e31cb72` (fonte, voo e locomoção), `5f8129d5` (população regional
