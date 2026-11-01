@@ -135,7 +135,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
-Reserva Claude do Mac — 01/11: `entity/DinosaurEntity.java`, `entity/FlyingDinosaur.java`, `tools/javagen/gen_species.py` e `tools/soundgen/` durante o pacote de passos e asas. Liberados ao concluir a entrega na main e em `mc/1.21.1`.
+Claude do Mac — 01/11: pacote de passos e asas entregue na main e em `mc/1.21.1`; `DinosaurEntity`, `FlyingDinosaur`, `gen_species.py` e `tools/soundgen/` liberados. Áudio em standby por decisão do Rodrigo.
 
 Piloto Codex — 27/10: primeiro passe do T. rex e estudo de Alex's Caves em
 `docs/estudos/07_TREX_PILOTO.md`, `tools/modelgen/pilots/` e `art/pilotos/trex/v1/`.
