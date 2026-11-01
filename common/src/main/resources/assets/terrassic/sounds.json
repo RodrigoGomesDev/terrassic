@@ -12,10 +12,6 @@
       {
         "name": "terrassic:voice/tyrannosaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/tyrannosaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.tyrannosaurus.ambient"
@@ -80,10 +76,6 @@
       },
       {
         "name": "terrassic:voice/tarbosaurus/ambient_3",
-        "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/tarbosaurus/ambient_4",
         "attenuation_distance": 48
       }
     ],
@@ -150,10 +142,6 @@
       {
         "name": "terrassic:voice/daspletosaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/daspletosaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.daspletosaurus.ambient"
@@ -218,10 +206,6 @@
       },
       {
         "name": "terrassic:voice/albertosaurus/ambient_3",
-        "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/albertosaurus/ambient_4",
         "attenuation_distance": 48
       }
     ],
@@ -288,10 +272,6 @@
       {
         "name": "terrassic:voice/giganotosaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/giganotosaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.giganotosaurus.ambient"
@@ -356,10 +336,6 @@
       },
       {
         "name": "terrassic:voice/carcharodontosaurus/ambient_3",
-        "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/carcharodontosaurus/ambient_4",
         "attenuation_distance": 48
       }
     ],
@@ -426,10 +402,6 @@
       {
         "name": "terrassic:voice/spinosaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/spinosaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.spinosaurus.ambient"
@@ -495,10 +467,6 @@
       {
         "name": "terrassic:voice/carnotaurus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/carnotaurus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.carnotaurus.ambient"
@@ -507,6 +475,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/carnotaurus/threat_1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "terrassic:voice/carnotaurus/threat_2",
         "attenuation_distance": 48
       }
     ],
@@ -560,10 +532,6 @@
       {
         "name": "terrassic:voice/majungasaurus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/majungasaurus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.majungasaurus.ambient"
@@ -572,6 +540,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/majungasaurus/threat_1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "terrassic:voice/majungasaurus/threat_2",
         "attenuation_distance": 48
       }
     ],
@@ -625,10 +597,6 @@
       {
         "name": "terrassic:voice/dilophosaurus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/dilophosaurus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.dilophosaurus.ambient"
@@ -637,6 +605,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/dilophosaurus/threat_1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "terrassic:voice/dilophosaurus/threat_2",
         "attenuation_distance": 48
       }
     ],
@@ -677,10 +649,6 @@
       {
         "name": "terrassic:voice/velociraptor/ambient_3",
         "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/velociraptor/ambient_4",
-        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.velociraptor.ambient"
@@ -719,10 +687,6 @@
       },
       {
         "name": "terrassic:voice/dakotaraptor/ambient_3",
-        "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/dakotaraptor/ambient_4",
         "attenuation_distance": 24
       }
     ],
@@ -776,10 +740,6 @@
       {
         "name": "terrassic:voice/troodon/ambient_3",
         "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/troodon/ambient_4",
-        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.troodon.ambient"
@@ -832,10 +792,6 @@
       {
         "name": "terrassic:voice/compsognathus/ambient_3",
         "attenuation_distance": 16
-      },
-      {
-        "name": "terrassic:voice/compsognathus/ambient_4",
-        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.compsognathus.ambient"
@@ -844,6 +800,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/compsognathus/hurt_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "terrassic:voice/compsognathus/hurt_2",
         "attenuation_distance": 12
       }
     ],
@@ -871,10 +831,6 @@
       {
         "name": "terrassic:voice/mononykus/ambient_3",
         "attenuation_distance": 16
-      },
-      {
-        "name": "terrassic:voice/mononykus/ambient_4",
-        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.mononykus.ambient"
@@ -883,6 +839,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/mononykus/hurt_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "terrassic:voice/mononykus/hurt_2",
         "attenuation_distance": 12
       }
     ],
@@ -919,10 +879,6 @@
       {
         "name": "terrassic:voice/didelphodon/ambient_3",
         "attenuation_distance": 16
-      },
-      {
-        "name": "terrassic:voice/didelphodon/ambient_4",
-        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.didelphodon.ambient"
@@ -931,6 +887,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/didelphodon/hurt_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "terrassic:voice/didelphodon/hurt_2",
         "attenuation_distance": 12
       }
     ],
@@ -966,10 +926,6 @@
       },
       {
         "name": "terrassic:voice/oviraptor/ambient_3",
-        "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/oviraptor/ambient_4",
         "attenuation_distance": 32
       }
     ],
@@ -1010,10 +966,6 @@
       {
         "name": "terrassic:voice/citipati/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/citipati/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.citipati.ambient"
@@ -1052,10 +1004,6 @@
       },
       {
         "name": "terrassic:voice/gallimimus/ambient_3",
-        "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/gallimimus/ambient_4",
         "attenuation_distance": 32
       }
     ],
@@ -1096,10 +1044,6 @@
       {
         "name": "terrassic:voice/struthiomimus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/struthiomimus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.struthiomimus.ambient"
@@ -1138,10 +1082,6 @@
       },
       {
         "name": "terrassic:voice/therizinosaurus/ambient_3",
-        "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/therizinosaurus/ambient_4",
         "attenuation_distance": 32
       }
     ],
@@ -1195,10 +1135,6 @@
       {
         "name": "terrassic:voice/deinocheirus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/deinocheirus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.deinocheirus.ambient"
@@ -1251,10 +1187,6 @@
       {
         "name": "terrassic:voice/parasaurolophus/ambient_3",
         "attenuation_distance": 64
-      },
-      {
-        "name": "terrassic:voice/parasaurolophus/ambient_4",
-        "attenuation_distance": 64
       }
     ],
     "subtitle": "subtitles.terrassic.voice.parasaurolophus.ambient"
@@ -1293,10 +1225,6 @@
       },
       {
         "name": "terrassic:voice/corythosaurus/ambient_3",
-        "attenuation_distance": 64
-      },
-      {
-        "name": "terrassic:voice/corythosaurus/ambient_4",
         "attenuation_distance": 64
       }
     ],
@@ -1337,10 +1265,6 @@
       {
         "name": "terrassic:voice/edmontosaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/edmontosaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.edmontosaurus.ambient"
@@ -1379,10 +1303,6 @@
       },
       {
         "name": "terrassic:voice/maiasaura/ambient_3",
-        "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/maiasaura/ambient_4",
         "attenuation_distance": 48
       }
     ],
@@ -1423,10 +1343,6 @@
       {
         "name": "terrassic:voice/pachycephalosaurus/ambient_3",
         "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/pachycephalosaurus/ambient_4",
-        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.pachycephalosaurus.ambient"
@@ -1466,10 +1382,6 @@
       {
         "name": "terrassic:voice/thescelosaurus/ambient_3",
         "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/thescelosaurus/ambient_4",
-        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.thescelosaurus.ambient"
@@ -1508,10 +1420,6 @@
       },
       {
         "name": "terrassic:voice/triceratops/ambient_3",
-        "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/triceratops/ambient_4",
         "attenuation_distance": 32
       }
     ],
@@ -1565,10 +1473,6 @@
       {
         "name": "terrassic:voice/styracosaurus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/styracosaurus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.styracosaurus.ambient"
@@ -1620,10 +1524,6 @@
       },
       {
         "name": "terrassic:voice/pachyrhinosaurus/ambient_3",
-        "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/pachyrhinosaurus/ambient_4",
         "attenuation_distance": 32
       }
     ],
@@ -1677,10 +1577,6 @@
       {
         "name": "terrassic:voice/protoceratops/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/protoceratops/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.protoceratops.ambient"
@@ -1719,10 +1615,6 @@
       },
       {
         "name": "terrassic:voice/ankylosaurus/ambient_3",
-        "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/ankylosaurus/ambient_4",
         "attenuation_distance": 32
       }
     ],
@@ -1776,10 +1668,6 @@
       {
         "name": "terrassic:voice/euoplocephalus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/euoplocephalus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.euoplocephalus.ambient"
@@ -1831,10 +1719,6 @@
       },
       {
         "name": "terrassic:voice/stegosaurus/ambient_3",
-        "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/stegosaurus/ambient_4",
         "attenuation_distance": 32
       }
     ],
@@ -1888,10 +1772,6 @@
       {
         "name": "terrassic:voice/brachiosaurus/ambient_3",
         "attenuation_distance": 80
-      },
-      {
-        "name": "terrassic:voice/brachiosaurus/ambient_4",
-        "attenuation_distance": 80
       }
     ],
     "subtitle": "subtitles.terrassic.voice.brachiosaurus.ambient"
@@ -1943,10 +1823,6 @@
       },
       {
         "name": "terrassic:voice/alamosaurus/ambient_3",
-        "attenuation_distance": 80
-      },
-      {
-        "name": "terrassic:voice/alamosaurus/ambient_4",
         "attenuation_distance": 80
       }
     ],
@@ -2000,10 +1876,6 @@
       {
         "name": "terrassic:voice/saltasaurus/ambient_3",
         "attenuation_distance": 80
-      },
-      {
-        "name": "terrassic:voice/saltasaurus/ambient_4",
-        "attenuation_distance": 80
       }
     ],
     "subtitle": "subtitles.terrassic.voice.saltasaurus.ambient"
@@ -2055,10 +1927,6 @@
       },
       {
         "name": "terrassic:voice/argentinosaurus/ambient_3",
-        "attenuation_distance": 80
-      },
-      {
-        "name": "terrassic:voice/argentinosaurus/ambient_4",
         "attenuation_distance": 80
       }
     ],
@@ -2112,10 +1980,6 @@
       {
         "name": "terrassic:voice/opisthocoelicaudia/ambient_3",
         "attenuation_distance": 80
-      },
-      {
-        "name": "terrassic:voice/opisthocoelicaudia/ambient_4",
-        "attenuation_distance": 80
       }
     ],
     "subtitle": "subtitles.terrassic.voice.opisthocoelicaudia.ambient"
@@ -2167,10 +2031,6 @@
       },
       {
         "name": "terrassic:voice/dreadnoughtus/ambient_3",
-        "attenuation_distance": 80
-      },
-      {
-        "name": "terrassic:voice/dreadnoughtus/ambient_4",
         "attenuation_distance": 80
       }
     ],
@@ -2224,10 +2084,6 @@
       {
         "name": "terrassic:voice/pteranodon/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/pteranodon/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.pteranodon.ambient"
@@ -2236,6 +2092,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/pteranodon/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/pteranodon/hurt_2",
         "attenuation_distance": 24
       }
     ],
@@ -2276,10 +2136,6 @@
       {
         "name": "terrassic:voice/quetzalcoatlus/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/quetzalcoatlus/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.quetzalcoatlus.ambient"
@@ -2288,6 +2144,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/quetzalcoatlus/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/quetzalcoatlus/hurt_2",
         "attenuation_distance": 24
       }
     ],
@@ -2328,10 +2188,6 @@
       {
         "name": "terrassic:voice/hatzegopteryx/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/hatzegopteryx/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.hatzegopteryx.ambient"
@@ -2340,6 +2196,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/hatzegopteryx/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/hatzegopteryx/hurt_2",
         "attenuation_distance": 24
       }
     ],
@@ -2380,10 +2240,6 @@
       {
         "name": "terrassic:voice/ichthyornis/ambient_3",
         "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/ichthyornis/ambient_4",
-        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.ichthyornis.ambient"
@@ -2392,6 +2248,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/ichthyornis/hurt_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/ichthyornis/hurt_2",
         "attenuation_distance": 16
       }
     ],
@@ -2428,10 +2288,6 @@
       {
         "name": "terrassic:voice/hesperornis/ambient_3",
         "attenuation_distance": 32
-      },
-      {
-        "name": "terrassic:voice/hesperornis/ambient_4",
-        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.hesperornis.ambient"
@@ -2440,6 +2296,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/hesperornis/hurt_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/hesperornis/hurt_2",
         "attenuation_distance": 16
       }
     ],
@@ -2467,10 +2327,6 @@
       {
         "name": "terrassic:voice/mosasaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/mosasaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.mosasaurus.ambient"
@@ -2479,6 +2335,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/mosasaurus/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/mosasaurus/hurt_2",
         "attenuation_distance": 24
       }
     ],
@@ -2506,10 +2366,6 @@
       {
         "name": "terrassic:voice/tylosaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/tylosaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.tylosaurus.ambient"
@@ -2518,6 +2374,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/tylosaurus/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/tylosaurus/hurt_2",
         "attenuation_distance": 24
       }
     ],
@@ -2545,10 +2405,6 @@
       {
         "name": "terrassic:voice/elasmosaurus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/elasmosaurus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.elasmosaurus.ambient"
@@ -2557,6 +2413,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/elasmosaurus/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/elasmosaurus/hurt_2",
         "attenuation_distance": 24
       }
     ],
@@ -2584,10 +2444,6 @@
       {
         "name": "terrassic:voice/archelon/ambient_3",
         "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/archelon/ambient_4",
-        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.archelon.ambient"
@@ -2596,6 +2452,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/archelon/hurt_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/archelon/hurt_2",
         "attenuation_distance": 16
       }
     ],
@@ -2623,10 +2483,6 @@
       {
         "name": "terrassic:voice/xiphactinus/ambient_3",
         "attenuation_distance": 24
-      },
-      {
-        "name": "terrassic:voice/xiphactinus/ambient_4",
-        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.xiphactinus.ambient"
@@ -2635,6 +2491,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/xiphactinus/hurt_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/xiphactinus/hurt_2",
         "attenuation_distance": 16
       }
     ],
@@ -2662,10 +2522,6 @@
       {
         "name": "terrassic:voice/deinosuchus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/deinosuchus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.deinosuchus.ambient"
@@ -2674,6 +2530,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/deinosuchus/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/deinosuchus/hurt_2",
         "attenuation_distance": 24
       }
     ],
@@ -2714,10 +2574,6 @@
       {
         "name": "terrassic:voice/baurusuchus/ambient_3",
         "attenuation_distance": 48
-      },
-      {
-        "name": "terrassic:voice/baurusuchus/ambient_4",
-        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.baurusuchus.ambient"
@@ -2726,6 +2582,10 @@
     "sounds": [
       {
         "name": "terrassic:voice/baurusuchus/hurt_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/baurusuchus/hurt_2",
         "attenuation_distance": 24
       }
     ],

@@ -1231,3 +1231,19 @@ for _name, (_fx, _dist, _variants, _sub) in SFX.items():
         if _v[2].get("hp") is None:
             _v[2]["hp"] = 30
     SUBTITLES[("sfx", _name)] = _sub
+
+
+# ---------------------------------------------------------------- vozes no estilo ARK (2026-11)
+# ambient, threat, hurt e death de cada espécie vêm de arkstyle.py (gravações de domínio público/CC0 + síntese,
+# ajustadas às medidas dos sons do ARK; nenhum som do ARK no mod). Passos e asas continuam os daqui de cima.
+try:
+    import arkstyle as _ark  # noqa: E402
+except ImportError:  # gen_resources.py only needs SUBTITLES and runs without numpy; build.py does need it
+    _ark = None
+
+for _sid, _events in VOICE_SETS.items():
+    if _ark is not None and _sid in _ark.P:
+        for _ev in _ark.EVENTS:
+            if _ev in _events:
+                _fx, _dist, _ = _events[_ev]
+                _events[_ev] = (_fx, _dist, [("ark", _sid, _ev, _n) for _n in range(_ark.COUNT[_ev])])
