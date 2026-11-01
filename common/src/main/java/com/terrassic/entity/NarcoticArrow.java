@@ -32,6 +32,12 @@ public class NarcoticArrow extends TranqDart {
         this.setPotency(FULL_POTENCY * Mth.clamp(velocity / 3.0F, 0.25F, 1.0F));
     }
 
+    /** Stays stuck as an arrow (the vanilla arrow count), not as a dart. */
+    @Override
+    protected void stickInto(DinosaurEntity dino) {
+        dino.setArrowCount(dino.getArrowCount() + 1);
+    }
+
     @Override
     protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ModItems.NARCOTIC_ARROW.get());
