@@ -29,11 +29,19 @@ public enum Rule {
     FLYER_SPAWNS("flyer_spawns", Tab.SPAWNING, 1.0D, 0.0D, 5.0D, 0.1D),
     SEA_SPAWNS("sea_spawns", Tab.SPAWNING, 1.0D, 0.0D, 5.0D, 0.1D),
     BABY_SHARE("baby_share", Tab.SPAWNING, 1.0D, 0.0D, 5.0D, 0.1D),
-    MAX_CREATURES("max_creatures", Tab.SPAWNING, 400.0D, 50.0D, 2000.0D, 10.0D);
+    MAX_CREATURES("max_creatures", Tab.SPAWNING, 400.0D, 50.0D, 2000.0D, 10.0D),
+    ALPHA_CHANCE("alpha_chance", Tab.ALPHAS, 0.5D, 0.0D, 10.0D, 0.1D),
+    ALPHA_STRENGTH("alpha_strength", Tab.ALPHAS, 1.0D, 0.5D, 3.0D, 0.1D),
+    ALPHA_TAMING("alpha_taming", Tab.ALPHAS, 1.0D, 0.5D, 3.0D, 0.1D),
+    ALPHA_DISTANCE("alpha_distance", Tab.ALPHAS, 1500.0D, 0.0D, 5000.0D, 100.0D),
+    ALPHA_WORLD_CAP("alpha_world_cap", Tab.ALPHAS, 4.0D, 0.0D, 64.0D, 1.0D),
+    ALPHA_TAMEABLE("alpha_tameable", Tab.ALPHAS, 1.0D, 0.0D, 1.0D, 1.0D),
+    ALPHA_TAMED_LIMIT("alpha_tamed_limit", Tab.ALPHAS, 1.0D, 0.0D, 10.0D, 1.0D),
+    ALPHA_ANNOUNCE("alpha_announce", Tab.ALPHAS, 0.0D, 0.0D, 1.0D, 1.0D);
 
     /** The tabs of the Rules screen, in order. */
     public enum Tab {
-        GENERAL, BREEDING, SPAWNING;
+        GENERAL, BREEDING, SPAWNING, ALPHAS;
 
         public String id() {
             return this.name().toLowerCase(java.util.Locale.ROOT);

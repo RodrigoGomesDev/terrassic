@@ -45,7 +45,9 @@ public class CarcassRenderer extends GeoEntityRenderer<CarcassEntity> {
 
         @Override
         public ResourceLocation getTextureResource(CarcassEntity carcass) {
-            return Terrassic.id("textures/entity/" + carcass.speciesId() + (carcass.isFemale() ? "_female.png" : "_male.png"));
+            boolean alpha = carcass.isAlpha() && com.terrassic.entity.Alphas.hasAlpha(carcass.speciesId());
+            return Terrassic.id("textures/entity/" + carcass.speciesId() + (alpha ? "_alpha" : "")
+                    + (carcass.isFemale() ? "_female.png" : "_male.png"));
         }
 
         @Override

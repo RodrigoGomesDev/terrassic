@@ -145,7 +145,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
-Claude do Mac — 01/11: dinos alfa em andamento; `DinosaurEntity`, `ApexTheropod`, `Alphas`, `gen_rules.py`, `gen_resources.py` e `tools/modelgen/handmade/tyrannosaurus/` reservados até a entrega na main e em `mc/1.21.1`.
+Claude do Mac — 01/11: dinos alfa entregues na main e em `mc/1.21.1`; `DinosaurEntity`, `ApexTheropod`, `Alphas`, `gen_rules.py`, `gen_resources.py` e `tools/modelgen/handmade/tyrannosaurus/` liberados.
 
 Claude do Mac — 01/11: Carnotauro novo entregue na main e em `mc/1.21.1`; `ApexTheropod`, `gen_species.py`, `GuideSpecies`, `Carnotaurus` e `tools/modelgen/handmade/carnotaurus/` liberados.
 

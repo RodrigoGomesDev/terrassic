@@ -158,6 +158,7 @@ public final class TerrassicClient {
         ClientHooks.init();
         ParticleProviderRegistry.register(ModParticles.ROAR_WAVE, RoarWaveParticle.Provider::new);
         RoarShake.init(); // the loud roar's camera shake
+        AlphaAura.init(); // the alphas' aura (docs/ALFAS.md)
         LensOverlay.init(); // the Field Lens card (item/FieldLensItem)
         DinoNameplate.init(); // v0.14.1: the nameplate and taming bars over the animal you look at
         DinoControls.init(); // v0.12: the mod's keys and the mounted controls

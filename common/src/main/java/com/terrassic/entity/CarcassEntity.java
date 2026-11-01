@@ -50,6 +50,7 @@ import java.util.List;
 public class CarcassEntity extends Entity implements GeoEntity {
     private static final EntityDataAccessor<String> DATA_SPECIES = SynchedEntityData.defineId(CarcassEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> DATA_FEMALE = SynchedEntityData.defineId(CarcassEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_ALPHA = SynchedEntityData.defineId(CarcassEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> DATA_WIDTH = SynchedEntityData.defineId(CarcassEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_HEIGHT = SynchedEntityData.defineId(CarcassEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_SCALE = SynchedEntityData.defineId(CarcassEntity.class, EntityDataSerializers.FLOAT);
@@ -72,6 +73,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
         CarcassEntity carcass = new CarcassEntity(ModEntities.CARCASS.get(), level);
         carcass.entityData.set(DATA_SPECIES, dino.speciesId());
         carcass.entityData.set(DATA_FEMALE, dino.isFemale());
+        carcass.entityData.set(DATA_ALPHA, dino.isAlpha());
         carcass.entityData.set(DATA_SCALE, dino.getScale());
         carcass.entityData.set(DATA_WIDTH, Math.max(0.6F, dino.getBbWidth() * 1.1F));
         carcass.entityData.set(DATA_HEIGHT, Math.max(0.4F, dino.getBbHeight() * 0.45F));
@@ -91,6 +93,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
     protected void defineSynchedData() {
         this.entityData.define(DATA_SPECIES, "tyrannosaurus");
         this.entityData.define(DATA_FEMALE, false);
+        this.entityData.define(DATA_ALPHA, false);
         this.entityData.define(DATA_WIDTH, 1.0F);
         this.entityData.define(DATA_HEIGHT, 0.5F);
         this.entityData.define(DATA_SCALE, 1.0F);
@@ -118,6 +121,11 @@ public class CarcassEntity extends Entity implements GeoEntity {
         return this.entityData.get(DATA_FEMALE);
     }
 
+    /** An alpha's carcass keeps the alpha's coat and name (docs/ALFAS.md). */
+    public boolean isAlpha() {
+        return this.entityData.get(DATA_ALPHA);
+    }
+
     /** The dead animal's scale (a baby's carcass is small). */
     public float getModelScale() {
         return this.entityData.get(DATA_SCALE);
@@ -133,13 +141,18 @@ public class CarcassEntity extends Entity implements GeoEntity {
 
     @Override
     public Component getName() {
-        return Component.translatable("entity.terrassic.carcass.of", Component.translatable("entity.terrassic." + this.speciesId()));
+        Component species = Component.translatable("entity.terrassic." + this.speciesId());
+        if (this.isAlpha()) {
+            species = Component.translatable("entity.terrassic.alpha", species);
+        }
+        return Component.translatable("entity.terrassic.carcass.of", species);
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putString("Species", this.speciesId());
         tag.putBoolean("Female", this.isFemale());
+        tag.putBoolean("Alpha", this.isAlpha());
         tag.putFloat("Width", this.entityData.get(DATA_WIDTH));
         tag.putFloat("Height", this.entityData.get(DATA_HEIGHT));
         tag.putFloat("Scale", this.getModelScale());
@@ -157,6 +170,7 @@ public class CarcassEntity extends Entity implements GeoEntity {
     protected void readAdditionalSaveData(CompoundTag tag) {
         this.entityData.set(DATA_SPECIES, tag.getString("Species"));
         this.entityData.set(DATA_FEMALE, tag.getBoolean("Female"));
+        this.entityData.set(DATA_ALPHA, tag.getBoolean("Alpha"));
         this.entityData.set(DATA_WIDTH, tag.getFloat("Width"));
         this.entityData.set(DATA_HEIGHT, tag.getFloat("Height"));
         this.entityData.set(DATA_SCALE, tag.contains("Scale") ? tag.getFloat("Scale") : 1.0F);

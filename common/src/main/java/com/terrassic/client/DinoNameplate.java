@@ -91,7 +91,7 @@ public final class DinoNameplate {
             return;
         }
         Font font = mc.font;
-        Component name = d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
+        Component name = d.hasCustomName() ? d.getCustomName() : d.speciesName();
         Component dot = Component.literal(name.getString() + " · ");
         Component level = Component.translatable("hud.terrassic.level", Math.max(1, d.getLevel()));
         int w = AmberHud.width(font, dot) + AmberHud.width(font, level) + 22;

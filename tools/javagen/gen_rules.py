@@ -15,6 +15,7 @@ TABS = {  # id: (pt, en, es)
     "general": ("Geral", "General", "General"),
     "breeding": ("Criação", "Breeding", "Cría"),
     "spawning": ("Ecossistema", "Ecosystem", "Ecosistema"),
+    "alphas": ("Alfas", "Alphas", "Alfas"),
 }
 
 # key, tab, default, min, max, step,
@@ -122,6 +123,40 @@ RULES = [
      ("Limite de criaturas", "Máximo de criaturas selvagens carregadas no mundo (desempenho)."),
      ("Creature limit", "Most wild creatures loaded in the world at once (performance)."),
      ("Límite de criaturas", "Máximo de criaturas salvajes cargadas en el mundo (rendimiento).")),
+
+    # the alphas (docs/ALFAS.md): a bigger, stronger animal of the species with its own coat, rare and far from spawn
+    ("alpha_chance", "alphas", 0.5, 0.0, 10.0, 0.1,
+     ("Chance de alfa (%)", "Chance de um adulto selvagem que nasce longe do spawn ser um alfa, nas espécies que têm alfa. 0 = sem alfas."),
+     ("Alpha chance (%)", "Chance that a wild adult born far from spawn is an alpha, in the species that have one. 0 = no alphas."),
+     ("Probabilidad de alfa (%)", "Probabilidad de que un adulto salvaje que nace lejos del spawn sea un alfa, en las especies que lo tienen. 0 = sin alfas.")),
+    ("alpha_strength", "alphas", 1.0, 0.5, 3.0, 0.1,
+     ("Força dos alfas", "Vida e dano dos alfas selvagens. 2 = o dobro."),
+     ("Alpha strength", "Health and damage of wild alphas. 2 = twice as much."),
+     ("Fuerza de los alfas", "Vida y daño de los alfas salvajes. 2 = el doble.")),
+    ("alpha_taming", "alphas", 1.0, 0.5, 3.0, 0.1,
+     ("Dificuldade da doma de alfa", "Torpor e comida que um alfa pede para ser domado. 2 = o dobro."),
+     ("Alpha taming difficulty", "Torpor and food an alpha needs to be tamed. 2 = twice as much."),
+     ("Dificultad de la doma de alfa", "Torpor y comida que pide un alfa para ser domado. 2 = el doble.")),
+    ("alpha_distance", "alphas", 1500.0, 0.0, 5000.0, 100.0,
+     ("Distância mínima do spawn", "Nenhum alfa nasce mais perto que isso (em blocos) do ponto de nascimento do mundo."),
+     ("Minimum distance from spawn", "No alpha is born closer than this (in blocks) to the world spawn."),
+     ("Distancia mínima del spawn", "Ningún alfa nace más cerca que esto (en bloques) del punto de aparición del mundo.")),
+    ("alpha_world_cap", "alphas", 4.0, 0.0, 64.0, 1.0,
+     ("Alfas no mundo", "Máximo de alfas selvagens vivos no mundo ao mesmo tempo. Sempre no máximo um por espécie a cada 1.024 blocos."),
+     ("Alphas in the world", "Most wild alphas alive in the world at once. Never more than one per species within 1,024 blocks."),
+     ("Alfas en el mundo", "Máximo de alfas salvajes vivos en el mundo a la vez. Nunca más de uno por especie cada 1.024 bloques.")),
+    ("alpha_tameable", "alphas", 1.0, 0.0, 1.0, 1.0,
+     ("Alfas podem ser domados", "1 = um alfa pode ser domado por nocaute (só carne nobre). 0 = nunca aceita dono."),
+     ("Alphas can be tamed", "1 = an alpha can be tamed by knockout (prime meat only). 0 = it never takes an owner."),
+     ("Los alfas se pueden domar", "1 = un alfa se puede domar por noqueo (solo carne de primera). 0 = nunca acepta dueño.")),
+    ("alpha_tamed_limit", "alphas", 1.0, 0.0, 10.0, 1.0,
+     ("Alfas domados por jogador", "Quantos alfas da mesma espécie cada jogador pode ter. 0 = sem limite."),
+     ("Tamed alphas per player", "How many alphas of the same species each player may own. 0 = no limit."),
+     ("Alfas domados por jugador", "Cuántos alfas de la misma especie puede tener cada jugador. 0 = sin límite.")),
+    ("alpha_announce", "alphas", 0.0, 0.0, 1.0, 1.0,
+     ("Avisar quando um alfa cai", "1 = o chat do servidor avisa quando um alfa selvagem morre ou é domado, e por quem."),
+     ("Announce fallen alphas", "1 = the server chat tells when a wild alpha dies or is tamed, and by whom."),
+     ("Avisar cuando cae un alfa", "1 = el chat del servidor avisa cuando un alfa salvaje muere o es domado, y por quién.")),
 ]
 
 UI = {  # key suffix: (pt, en, es)

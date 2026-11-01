@@ -234,7 +234,7 @@ public final class TerrassicHud {
      * stamina. The key socket on the right is the special (the loud roar), if the animal has one.
      */
     private static void mountPlate(GuiGraphics g, Font font, DinosaurEntity d, int x, int y) {
-        Component name = d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
+        Component name = d.hasCustomName() ? d.getCustomName() : d.speciesName();
         Component dot = Component.literal(name.getString() + " · ");
         Component level = Component.translatable("hud.terrassic.level", Math.max(1, d.getLevel()));
         int extra = Math.max(0, 34 + AmberHud.width(font, dot) + AmberHud.width(font, level) + 6 - 145);

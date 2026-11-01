@@ -111,6 +111,13 @@ public class RiftTyrant extends Tyrannosaurus {
 
     // ------------------------------------------------------------------ what a normal rex does and this one does not
 
+    /** The chapter's boss is never a weak draw: always at the "Max wild level" rule (before, it rolled like any wild
+     *  rex, and near the world spawn the distance cap could make it level 5). */
+    @Override
+    protected int fixedWildLevel() {
+        return Math.max(1, (int) Math.round(com.terrassic.config.Rules.of(this.level()).get(com.terrassic.config.Rule.MAX_WILD_LEVEL)));
+    }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();

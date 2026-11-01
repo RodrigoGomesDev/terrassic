@@ -290,10 +290,29 @@ FEMALE = {
     "r0": hx("3f2a1a"), "r1": hx("6a4526"), "r2": hx("94673a"), "r3": hx("b88c55"),
 }
 
-def paint_sex(m, sex):
+# the alpha (docs/ALFAS.md): same model and painting, its own coat per sex
+# Macho "Marfim": leucístico, branco-osso. Os escuros viram cinza quente (costuras, lábio, contorno das faixas)
+# e as faixas viram "fantasmas" cinza-rosados, como cicatriz antiga. Olho âmbar mais claro.
+ALPHA_MALE = {
+    "s0": hx("3a3734"), "s1": hx("85817a"), "s2": hx("c6c3bb"), "s3": hx("d7d4cd"), "s4": hx("e6e3dd"), "s5": hx("f4f2ee"),
+    "r0": hx("9e8c87"), "r1": hx("b8a5a0"), "r2": hx("cfb3ab"), "r3": hx("e0cbc4"),
+    "b0": hx("b9b4aa"), "b1": hx("f1efea"), "b2": hx("faf9f6"), "b3": hx("fefefc"),
+    "eye": hx("eec06a"), "eye_hi": hx("ffe7a3"), "eye2": hx("c98f3a"),
+    # pele branca fria e dente marfim quente com raiz escura: senão o dente some no queixo; gengiva rosada
+    "tooth": hx("eadbb0"), "tooth2": hx("a88f5c"), "gum": hx("9a4a4c"),
+}
+# Fêmea "Brasa": vermelho-sangue escuro no dorso, ferrugem-laranja na barriga, faixas quase pretas.
+ALPHA_FEMALE = {
+    "s0": hx("1c0c0a"), "s1": hx("34120e"), "s2": hx("561812"), "s3": hx("732116"), "s4": hx("8f2c1c"), "s5": hx("ad4128"),
+    "r0": hx("170c0b"), "r1": hx("241210"), "r2": hx("3e1913"), "r3": hx("5a2318"),
+    "b0": hx("8e4126"), "b1": hx("b85a35"), "b2": hx("cc7646"), "b3": hx("df9a63"),
+}
+
+def paint_sex(m, sex, alpha=False):
     keep = dict(PAL)
     try:
-        if sex == "female": PAL.update(FEMALE)
+        if alpha: PAL.update(ALPHA_FEMALE if sex == "female" else ALPHA_MALE)
+        elif sex == "female": PAL.update(FEMALE)
         return P.paint(m, shader, [decals])
     finally:
         PAL.clear(); PAL.update(keep)

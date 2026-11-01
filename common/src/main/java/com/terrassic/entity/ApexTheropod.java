@@ -582,7 +582,8 @@ public abstract class ApexTheropod extends PredatorDinosaur {
                                         SpawnGroupData spawnData, CompoundTag tag) {
         SpawnGroupData data = super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
         if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && spawnData == null && !this.isBaby()
-                && !this.isTame() && !this.isRift() && this.random.nextFloat() < FAMILY_CHANCE) {
+                && !this.isTame() && !this.isRift() && !this.isAlpha() && this.random.nextFloat() < FAMILY_CHANCE) {
+            // an alpha walks alone: juveniles beside it would read as alpha young (docs/ALFAS.md)
             int young = 1 + this.random.nextInt(2);
             for (int i = 0; i < young; i++) {
                 if (!(this.getType().create(level.getLevel()) instanceof ApexTheropod juvenile)) {

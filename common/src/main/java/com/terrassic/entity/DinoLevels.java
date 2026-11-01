@@ -126,6 +126,16 @@ public final class DinoLevels {
         this.rolled = true;
     }
 
+    /** Draws a level between {@code lo} and {@code hi} (both included, evenly) and spreads its points: the alphas'
+     *  band (docs/ALFAS.md) and the Rift Tyrant's fixed level. */
+    public void rollBetween(RandomSource random, int lo, int hi) {
+        java.util.Arrays.fill(this.wild, 0);
+        int low = Math.max(1, Math.min(lo, hi));
+        int level = low + random.nextInt(Math.max(1, Math.max(lo, hi) - low + 1));
+        this.addWildPoints(random, level - 1);
+        this.rolled = true;
+    }
+
     /** An animal from before the levels keeps the stats it had: the level-40 spread, nothing drawn. */
     public void setReference() {
         for (Stat s : STATS) {

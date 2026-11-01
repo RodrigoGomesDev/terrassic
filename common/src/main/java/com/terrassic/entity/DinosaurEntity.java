@@ -185,6 +185,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private static final UUID LEVEL_HEALTH_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e311");
     private static final UUID LEVEL_DAMAGE_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e312");
     private static final UUID LEVEL_SPEED_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e313");
+    /** An alpha (docs/ALFAS.md, entity/Alphas): bigger, stronger, its own coat; synced for the texture and the tremor. */
+    private static final EntityDataAccessor<Boolean> DATA_ALPHA =
+            SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final UUID ALPHA_HEALTH_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e321");
+    private static final UUID ALPHA_DAMAGE_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e322");
+    private static final UUID ALPHA_CROWD_ID = UUID.fromString("2f6c9b84-1d3e-4a57-9c08-5be1a7d4e323");
     /** The level, synced for the name (0 until the server has drawn it). */
     private static final EntityDataAccessor<Integer> DATA_LEVEL =
             SynchedEntityData.defineId(DinosaurEntity.class, EntityDataSerializers.INT);
@@ -273,8 +279,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     protected DinosaurEntity(EntityType<? extends DinosaurEntity> type, Level level) {
         super(type, level);
         this.moveControl = new com.terrassic.entity.ai.DinosaurMoveControl(this);
-        this.entityData.set(DATA_FEMALE, this.random.nextBoolean());
         if (!level.isClientSide()) {
+            // server only: "male" is the default value, which is never sent, so a sex rolled on the client stayed
+            this.entityData.set(DATA_FEMALE, this.random.nextBoolean());
             this.rollSize();
         }
         this.cargo = this.cargoRows() > 0 ? new SimpleContainer(this.cargoRows() * 9) : null;
@@ -665,7 +672,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
-        if (DATA_SIZE.equals(key) || DATA_BIRTH_SIZE.equals(key) || DATA_GROWTH.equals(key)) {
+        if (DATA_SIZE.equals(key) || DATA_BIRTH_SIZE.equals(key) || DATA_GROWTH.equals(key) || DATA_ALPHA.equals(key)) {
             this.refreshDimensions();
         }
     }
@@ -715,6 +722,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.define(DATA_BIRTH_SIZE, 1.0F);
         this.entityData.define(DATA_GROWTH, 0.0F);
         this.entityData.define(DATA_LEVEL, 0);
+        this.entityData.define(DATA_ALPHA, false);
         this.entityData.define(DATA_SPECIAL, 0);
     }
 
@@ -779,6 +787,143 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.entityData.set(DATA_RIFT, rift);
     }
 
+    // ------------------------------------------------------------------ the alpha (docs/ALFAS.md, entity/Alphas)
+
+    /** Players beyond the first last counted around this wild alpha (-1 = not counted since it loaded). */
+    private int alphaCrowd = -1;
+
+    public boolean isAlpha() {
+        return this.entityData.get(DATA_ALPHA);
+    }
+
+    /** Server: makes this animal an alpha of its species (the spawn roll or the command): grown, permanent, at the
+     *  alpha's size, its level drawn again in the alpha's band. {@code female}: the sex to give it, or null to keep. */
+    public void becomeAlpha(Boolean female) {
+        if (this.level().isClientSide()) {
+            return;
+        }
+        this.entityData.set(DATA_ALPHA, true);
+        if (female != null) {
+            this.setFemale(female);
+        }
+        if (this.isBaby()) {
+            this.setAge(0);
+        }
+        this.roamer = false;
+        this.setPersistenceRequired();
+        this.setAdultSize(Alphas.size(this.speciesId(), this.random));
+        if (this.levels.isRolled() && this.level() instanceof ServerLevel server) {
+            int[] band = Alphas.levelBand(server);
+            this.levels.rollBetween(this.random, band[0], band[1]);
+            this.applyLevelModifiers(true);
+        }
+        this.applyAlphaModifiers();
+        this.refreshDimensions();
+        Alphas.seen(this);
+    }
+
+    /** The "Alpha strength" and "Alpha taming difficulty" rules. */
+    private float alphaStrength() {
+        return (float) Rules.of(this.level()).get(Rule.ALPHA_STRENGTH);
+    }
+
+    private float alphaTaming() {
+        return (float) Rules.of(this.level()).get(Rule.ALPHA_TAMING);
+    }
+
+    /** Darts and sleep herb work half as well on an alpha. */
+    public float narcoticEffect() {
+        return this.isAlpha() && !this.isTame() ? Alphas.NARCOTIC_EFFECT : 1.0F;
+    }
+
+    /** What an unconscious animal accepts from the hand: an alpha only prime meat. */
+    private boolean acceptsKoFood(ItemStack stack) {
+        return this.isAlpha() ? stack.is(ModItems.RAW_PRIME_MEAT.get()) : this.koFood(stack);
+    }
+
+    /** Whether the player may feed this unconscious alpha into a tame one (the alpha rules); tells them why not. */
+    private boolean alphaMayBeTamedBy(Player player) {
+        if (Rules.of(this.level()).get(Rule.ALPHA_TAMEABLE) < 0.5D) {
+            player.displayClientMessage(Component.translatable("message.terrassic.alpha.untameable", this.getDisplayName()), true);
+            return false;
+        }
+        if (!Alphas.mayOwnAnother(player, this.speciesId())) {
+            player.displayClientMessage(Component.translatable("message.terrassic.alpha.limit", this.getDisplayName()), true);
+            return false;
+        }
+        return true;
+    }
+
+    /** The wild alpha's own bonus (+25% health, both times the "Alpha strength" rule), gone once it is tamed. Server;
+     *  permanent modifiers, saved with the attributes. */
+    private void applyAlphaModifiers() {
+        if (this.level().isClientSide()) {
+            return;
+        }
+        boolean wild = this.isAlpha() && !this.isTame();
+        float strength = wild ? this.alphaStrength() : 1.0F;
+        float share = this.getMaxHealth() > 0.0F ? this.getHealth() / this.getMaxHealth() : 1.0F;
+        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            health.removeModifier(ALPHA_HEALTH_ID);
+            if (!wild) {
+                health.removeModifier(ALPHA_CROWD_ID);
+            }
+            float bonus = wild ? (1.0F + Alphas.WILD_HEALTH_BONUS) * strength - 1.0F : 0.0F;
+            if (Math.abs(bonus) > 1.0E-4F) {
+                health.addPermanentModifier(new AttributeModifier(ALPHA_HEALTH_ID, "Alpha", bonus, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            }
+        }
+        AttributeInstance damage = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            damage.removeModifier(ALPHA_DAMAGE_ID);
+            if (Math.abs(strength - 1.0F) > 1.0E-4F) {
+                damage.addPermanentModifier(new AttributeModifier(ALPHA_DAMAGE_ID, "Alpha", strength - 1.0F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            }
+        }
+        AttributeInstance knockback = this.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
+        if (wild && knockback != null && knockback.getBaseValue() < 1.0D) {
+            knockback.setBaseValue(1.0D);
+        }
+        this.setHealth(Math.max(1.0F, share * this.getMaxHealth()));
+    }
+
+    /** Server, every five seconds for a wild alpha: keeps its place in the register and gives it +25% health for each
+     *  player beyond the first within 32 blocks (up to +100%), as the Rift Tyrant does with +50%. */
+    private void alphaTick() {
+        Alphas.seen(this);
+        int players = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(32.0D),
+                p -> p.isAlive() && !p.isSpectator() && !p.isCreative()).size();
+        int extra = Mth.clamp(players - 1, 0, Alphas.MAX_EXTRA_PLAYERS);
+        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        if (health == null) {
+            return;
+        }
+        if (extra == this.alphaCrowd) {
+            return;
+        }
+        this.alphaCrowd = extra;
+        double want = extra * Alphas.PER_PLAYER_HEALTH;
+        float share = this.getHealth() / this.getMaxHealth();
+        health.removeModifier(ALPHA_CROWD_ID);
+        if (want > 0.0D) {
+            health.addPermanentModifier(new AttributeModifier(ALPHA_CROWD_ID, "Alpha crowd", want, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        }
+        this.setHealth(Math.max(1.0F, share * this.getMaxHealth()));
+    }
+
+    /** An alpha keeps the species' widest hitbox (the model is bigger): a box any wider would not find its way between
+     *  the trees. Babies and the others scale as usual. */
+    @Override
+    public net.minecraft.world.entity.EntityDimensions getDimensions(net.minecraft.world.entity.Pose pose) {
+        net.minecraft.world.entity.EntityDimensions d = super.getDimensions(pose);
+        float scale = this.getScale();
+        if (this.isAlpha() && !this.isBaby() && scale > this.maxSize()) {
+            return d.scale(this.maxSize() / scale, 1.0F);
+        }
+        return d;
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
@@ -803,6 +948,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         if (this.isRift()) {
             tag.putBoolean("Rift", true);
+        }
+        if (this.isAlpha()) {
+            tag.putBoolean("Alpha", true);
         }
         tag.putFloat("Size", this.getAdultSize());
         tag.putFloat("BirthSize", this.entityData.get(DATA_BIRTH_SIZE));
@@ -858,6 +1006,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.restrictTo(this.wanderPos, WANDER_RADIUS);
         }
         this.setRift(tag.getBoolean("Rift"));
+        this.entityData.set(DATA_ALPHA, tag.getBoolean("Alpha"));
         this.torpor = tag.getFloat("Torpor");
         this.entityData.set(DATA_KNOCKED_OUT, tag.getBoolean("KnockedOut"));
         this.entangledTicks = tag.getInt("Entangled");
@@ -908,6 +1057,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             } else {
                 this.layWildEgg(level);
             }
+        }
+        if (level.getLevel() != null && Alphas.rollAtSpawn(this, level.getLevel(), reason)) {
+            this.becomeAlpha(null);
         }
         this.ensureLevels();
         return data;
@@ -1041,7 +1193,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (!this.level().isClientSide() && !this.isTame()) {
             if (source.getDirectEntity() instanceof TranqDart dart) {
                 // The dose is delivered only when the arrow's hit is accepted, like other torpor-producing blows.
-                torporHit = dart.dose(this.maxTorpor());
+                torporHit = dart.dose(this.maxTorpor()) * this.narcoticEffect();
             } else if (source.getDirectEntity() instanceof Player striker && source.getEntity() == striker) {
                 ItemStack weapon = striker.getMainHandItem();
                 if (weapon.getItem() instanceof ClubItem) {
@@ -1066,7 +1218,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             dart.dosedThroughInvulnerability(this);
         }
         if (hurt && amount > 0.0F && !this.level().isClientSide() && !this.isTame() && this.isKnockedOut()) {
-            this.tameEffectiveness = Math.max(20, this.tameEffectiveness - 10);
+            this.tameEffectiveness = Math.max(20, this.tameEffectiveness - (this.isAlpha() ? Alphas.WOUND_EFFECTIVENESS : 10));
         }
         if (hurt && torporHit > 0.0F && this.isAlive()) {
             this.addTorpor(torporHit, source.getEntity());
@@ -1102,7 +1254,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Experience of the species (its xpReward, which Animal would ignore) times the XP multiplier rule. */
     @Override
     public int getExperienceReward() {
-        int base = this.isBaby() ? 1 + this.random.nextInt(3) : Math.max(1, this.xpReward);
+        int base = this.isBaby() ? 1 + this.random.nextInt(3) : Math.max(1, this.xpReward) * (this.isAlpha() ? 2 : 1);
         return (int) Math.round(base * Rules.of(this.level()).get(Rule.XP_MULTIPLIER));
     }
 
@@ -1428,7 +1580,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     protected boolean canBeTamedNow() {
-        if (this.getTarget() != null) {
+        if (this.getTarget() != null || this.isAlpha()) {   // an alpha only by knockout
             return false;
         }
         return this.tameMethod() == TameMethod.FEEDING || this.isBaby();
@@ -1502,6 +1654,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Its owner hears of its death wherever they are, with where it lies (vanilla also says it in the chat). */
     @Override
     public void die(DamageSource source) {
+        if (!this.level().isClientSide() && this.isAlpha() && !this.isRemoved() && !this.dead) {
+            if (!this.isTame()) {
+                Alphas.announce(this, "fell", source.getEntity());
+            }
+            Alphas.gone(this, !this.isTame(), true);
+        }
         if (!this.level().isClientSide() && this.isTame() && !this.isRemoved() && !this.dead) {
             Component name = this.hasCustomName() ? this.getCustomName() : this.getType().getDescription();
             this.notice(this.getOwner(), ModNetwork.NOTICE_BLOOD, Component.translatable("hud.terrassic.notice.died", name),
@@ -1548,9 +1706,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** The name with the level: "Velociraptor · Nv 34" (the Field Lens, the dino screen, the mount panel, messages). */
     @Override
     public Component getName() {
-        Component name = super.getName();
+        Component name = this.hasCustomName() ? super.getName() : this.speciesName();
         int level = this.getLevel();
         return level > 0 ? Component.translatable("entity.terrassic.leveled", name, level) : name;
+    }
+
+    /** The species as shown on the HUD (Lens, nameplate, dino screen): "Alpha T. rex" for an alpha. */
+    public Component speciesName() {
+        Component name = this.getType().getDescription();
+        return this.isAlpha() ? Component.translatable("entity.terrassic.alpha", name) : name;
     }
 
     /** Server: a new animal draws its level (at spawn, or on its first tick when hatched or bred); one loaded from a
@@ -1559,13 +1723,24 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.levels.isRolled() || this.level().isClientSide()) {
             return;
         }
+        int fixed = this.fixedWildLevel();
         if (this.legacyLevels && this.isTame()) {
             this.levels.setReference();
+        } else if (this.isAlpha() && this.level() instanceof ServerLevel server) {
+            int[] band = Alphas.levelBand(server);
+            this.levels.rollBetween(this.random, band[0], band[1]);
+        } else if (fixed > 0) {
+            this.levels.rollBetween(this.random, fixed, fixed);
         } else {
             this.levels.roll(this.random, this.wildLevelCap());
         }
         this.legacyLevels = false;
         this.applyLevelModifiers(true);
+    }
+
+    /** A wild level that is not drawn (0 = drawn as usual): the Rift Tyrant is always at the "Max wild level" rule. */
+    protected int fixedWildLevel() {
+        return 0;
     }
 
     /** The highest level a wild animal can be born at here: the "Max wild level" rule; with "Levels by distance"
@@ -1680,7 +1855,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Torpor needed to knock it out: grows with its health, so the giants need a long fight or a volley of darts. */
     public float maxTorpor() {
-        return Math.max(10.0F, this.getMaxHealth()) * (float) this.levels.multiplier(DinoLevels.Stat.TORPOR);
+        float gauge = Math.max(10.0F, this.getMaxHealth()) * (float) this.levels.multiplier(DinoLevels.Stat.TORPOR);
+        return this.isAlpha() && !this.isTame() ? gauge * Alphas.TORPOR_GAUGE * this.alphaTaming() : gauge;
     }
 
     public float getTorpor() {
@@ -1695,7 +1871,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Food bites a knocked-out animal needs to be tamed (prime meat counts double). */
     public float tameGoal() {
-        return Mth.clamp(this.getMaxHealth() / 8.0F, 3.0F, 30.0F);
+        float goal = Mth.clamp(this.getMaxHealth() / 8.0F, 3.0F, 30.0F);
+        return this.isAlpha() ? goal * Alphas.FOOD_GOAL * this.alphaTaming() : goal;
     }
 
     /** What an unconscious animal accepts from the hand (its usual food). */
@@ -1736,16 +1913,19 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private void torporTick() {
         float max = this.maxTorpor();
         if (this.isKnockedOut()) {
-            // about 2.5 minutes asleep from a full gauge (1.5 for the big biters) unless kept down with narcotics
-            this.torpor -= max / ((this.wakesFast() ? 90.0F : 150.0F) * 20.0F);
-            if (this.torpor <= 0.0F) {
+            // about 2.5 minutes asleep from a full gauge (1.5 for the big biters) unless kept down with narcotics;
+            // an alpha: one minute, and it gets up at a quarter of the gauge
+            this.torpor -= this.isAlpha() ? max * (1.0F - Alphas.WAKE_SHARE) / (Alphas.KO_SECONDS * 20.0F)
+                    : max / ((this.wakesFast() ? 90.0F : 150.0F) * 20.0F);
+            if (this.torpor <= (this.isAlpha() ? max * Alphas.WAKE_SHARE : 0.0F)) {
                 this.wakeUp();
             } else if (this.tickCount % 60 == 0 && this.level() instanceof ServerLevel server) {
                 server.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, this.getX(),
                         this.getY() + this.getBbHeight() * 0.6D, this.getZ(), 1, 0.2D, 0.1D, 0.2D, 0.0D);
             }
         } else {
-            this.torpor = Math.max(0.0F, this.torpor - max * 0.02F / 20.0F);   // awake: 2% of the gauge a second
+            float recovery = this.isAlpha() ? Alphas.AWAKE_RECOVERY : 1.0F;
+            this.torpor = Math.max(0.0F, this.torpor - max * 0.02F * recovery / 20.0F);   // awake: 2% of the gauge a second
         }
     }
 
@@ -1768,13 +1948,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (stack.is(ModItems.SLEEP_HERB.get())) {
             if (!client) {
                 this.usePlayerItem(player, hand, stack);
-                this.torpor = Math.min(this.maxTorpor(), this.torpor + this.maxTorpor() * 0.35F);
+                this.torpor = Math.min(this.maxTorpor(), this.torpor + this.maxTorpor() * 0.35F * this.narcoticEffect());
                 this.playSound(SoundEvents.GENERIC_EAT, 0.6F, 0.8F);
                 this.knockoutStatus(player);
             }
             return InteractionResult.sidedSuccess(client);
         }
-        if (this.koFood(stack)) {
+        if (this.acceptsKoFood(stack)) {
+            if (!client && this.isAlpha() && !this.alphaMayBeTamedBy(player)) {
+                return InteractionResult.sidedSuccess(client);
+            }
             if (!client) {
                 float bite = stack.is(ModItems.RAW_PRIME_MEAT.get()) ? 2.0F : 1.0F;
                 if (Research.isStudied(player, this.speciesId())) {
@@ -2136,6 +2319,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public CompoundTag lensInfo(Player viewer) {
         CompoundTag t = new CompoundTag();
         t.putBoolean("Female", this.isFemale());
+        t.putBoolean("Alpha", this.isAlpha());
         t.putFloat("Size", this.getAdultSize());
         t.putBoolean("Baby", this.isBaby());
         t.putFloat("Growth", this.isBaby() ? this.entityData.get(DATA_GROWTH) : 1.0F);
@@ -2166,7 +2350,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             t.putInt("Points", this.levels.unspent());
         }
         if (this.isKnockedOut()) {
-            t.putInt("WakeSeconds", Mth.ceil(this.torpor * (this.wakesFast() ? 90.0F : 150.0F) / this.maxTorpor()));
+            t.putInt("WakeSeconds", this.isAlpha()
+                    ? Mth.ceil(Math.max(0.0F, this.torpor / this.maxTorpor() - Alphas.WAKE_SHARE) / (1.0F - Alphas.WAKE_SHARE) * Alphas.KO_SECONDS)
+                    : Mth.ceil(this.torpor * (this.wakesFast() ? 90.0F : 150.0F) / this.maxTorpor()));
         }
         t.putBoolean("Saddled", this.isSaddled());
         if (this.cargo != null && this.hasCargo()) {
@@ -2180,7 +2366,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             t.putInt("CargoSize", this.cargo.getContainerSize());
         }
         ListTag foods = new ListTag();
-        for (String id : this.acceptedFoods()) {
+        for (String id : this.isAlpha() && !this.isTame() ? List.of("terrassic:raw_prime_meat") : this.acceptedFoods()) {
             foods.add(net.minecraft.nbt.StringTag.valueOf(id));
         }
         t.put("Foods", foods);
@@ -2197,6 +2383,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         // bonus levels instead of the old +20% health (animals tamed before v0.13 keep theirs, saved with the attributes)
         this.grantTamingBonus(effectiveness);
         this.tameBy(player);
+        if (this.isAlpha()) {
+            Alphas.gone(this, true, false);
+            Alphas.tamed(player, this);
+            Alphas.announce(this, "tamed", player);
+            this.applyAlphaModifiers();
+        }
         triggerAnim(ACTION_CONTROLLER, "tame");
         player.sendSystemMessage(Component.translatable("message.terrassic.ko_tamed", this.getDisplayName(), effectiveness));
     }
@@ -2280,6 +2472,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 this.ensureLevels();
             }
             this.rideXpTick();
+            if (this.isAlpha() && !this.isTame() && this.isAlive() && (this.tickCount + this.getId()) % 100 == 0) {
+                this.alphaTick();
+            }
             if (this.tickCount % 5 == 0 && this.getControllingPassenger() instanceof Player) {
                 int[] r = this.specialRecharge();
                 this.entityData.set(DATA_SPECIAL, r == null ? 0

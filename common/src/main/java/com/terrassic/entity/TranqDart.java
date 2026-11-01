@@ -61,7 +61,7 @@ public class TranqDart extends AbstractArrow {
         if (target instanceof DinosaurEntity dino && dino.isKnockedOut()) {
             // keeps it asleep without a wound
             if (!this.level().isClientSide()) {
-                dino.addTorpor(this.dose(dino.maxTorpor()), this.getOwner());
+                dino.addTorpor(this.dose(dino.maxTorpor()) * dino.narcoticEffect(), this.getOwner());
                 this.dosed(dino);
                 if (this.pickup == Pickup.ALLOWED) {
                     this.spawnAtLocation(this.getPickupItem(), 0.1F);
