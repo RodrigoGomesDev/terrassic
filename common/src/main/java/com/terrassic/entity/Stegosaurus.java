@@ -109,6 +109,6 @@ public class Stegosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.STEGOSAURUS_STEP.get(), 0.5F, 1.0F);
+        this.playBodySound(ModSounds.STEGOSAURUS_STEP.get(), 0.5F, 1.0F);
     }
 }

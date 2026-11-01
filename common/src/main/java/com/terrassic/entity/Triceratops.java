@@ -138,6 +138,6 @@ public class Triceratops extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.TRICERATOPS_STEP.get(), 0.6F, 1.0F);
+        this.playBodySound(ModSounds.TRICERATOPS_STEP.get(), 0.6F, 1.0F);
     }
 }

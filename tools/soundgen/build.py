@@ -39,6 +39,8 @@ ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "ter
 SRC = os.path.join(ROOT, "art", "sounds", "src")
 JAVA = os.path.join(ROOT, "common", "src", "main", "java", "com", "terrassic", "registry", "ModSounds.java")
 LOUDNESS = "loudnorm=I=-18:TP=-2:LRA=11"
+# passos e asas bem mais baixos que as vozes (não podem ficar "extremamente altos")
+LOUD = {"steps": "loudnorm=I=-27:TP=-6:LRA=11", "wings": "loudnorm=I=-24:TP=-4:LRA=11"}
 
 
 def src_path(pattern, index=0):
@@ -151,12 +153,12 @@ def write_wav(path, x):
         w.writeframes(pcm.tobytes())
 
 
-def encode(variant, fx, out):
+def encode(variant, fx, out, loud=LOUDNESS):
     with tempfile.TemporaryDirectory() as tmp:
         wav = os.path.join(tmp, "in.wav")
         write_wav(wav, render(variant))
         inp = ["-i", wav]
-        chain = f"{fx},{LOUDNESS},aresample={SR}"
+        chain = f"{fx},{loud},aresample={SR}"
         tmp_out = os.path.join(tmp, "out.ogg")
         subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", *inp, "-af", chain,
                         "-ac", "1", "-ar", str(SR), "-c:a", "libvorbis", "-q:a", "4", "-map_metadata", "-1",
@@ -184,7 +186,7 @@ def main():
                 if wants_recording(var) and not uses_recording(var) and os.path.exists(out):
                     pass  # recording not downloaded here: keep the file built where it was (never downgrade)
                 else:
-                    changed += encode(var, FX[fx], out)
+                    changed += encode(var, FX[fx], out, LOUD.get(fx, LOUDNESS))
                 names.append({"name": f"terrassic:{rel}", "attenuation_distance": dist})
             entry = {"sounds": names}
             if (vset, ev) in SUBTITLES:

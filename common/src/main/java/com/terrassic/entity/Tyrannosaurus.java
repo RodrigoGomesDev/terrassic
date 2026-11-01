@@ -192,6 +192,6 @@ public class Tyrannosaurus extends ApexTheropod {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.TYRANNOSAURUS_STEP.get(), 0.9F, 1.0F);
+        this.playBodySound(ModSounds.TYRANNOSAURUS_STEP.get(), 0.9F, 1.0F);
     }
 }

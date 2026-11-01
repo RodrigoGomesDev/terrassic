@@ -320,7 +320,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         SoundEvent flap = this.flapSound();
         if (flap != null && !this.level().isClientSide() && this.isFlying() && this.tickCount % 16 == 0
                 && (this.flapTicks < 15 || this.getDeltaMovement().y > -0.03D)) {
-            this.playSound(flap, 0.8F, 0.9F + this.random.nextFloat() * 0.2F);
+            this.playBodySound(flap, 0.8F, 1.0F);
         }
     }
 

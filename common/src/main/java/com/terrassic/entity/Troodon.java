@@ -164,6 +164,6 @@ public class Troodon extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.TROODON_STEP.get(), 0.3F, 1.0F);
+        this.playBodySound(ModSounds.TROODON_STEP.get(), 0.3F, 1.0F);
     }
 }

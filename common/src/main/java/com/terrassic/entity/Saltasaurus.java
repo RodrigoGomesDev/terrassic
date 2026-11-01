@@ -155,6 +155,6 @@ public class Saltasaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.SALTASAURUS_STEP.get(), 1.0F, 1.0F);
+        this.playBodySound(ModSounds.SALTASAURUS_STEP.get(), 1.0F, 1.0F);
     }
 }

@@ -211,6 +211,6 @@ public class Giganotosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.GIGANOTOSAURUS_STEP.get(), 0.9F, 1.0F);
+        this.playBodySound(ModSounds.GIGANOTOSAURUS_STEP.get(), 0.9F, 1.0F);
     }
 }

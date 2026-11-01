@@ -155,6 +155,6 @@ public class Spinosaurus extends Spinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.SPINOSAURUS_STEP.get(), 0.8F, 1.0F);
+        this.playBodySound(ModSounds.SPINOSAURUS_STEP.get(), 0.8F, 1.0F);
     }
 }

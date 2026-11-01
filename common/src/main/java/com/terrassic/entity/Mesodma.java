@@ -150,6 +150,6 @@ public class Mesodma extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.RABBIT_JUMP, 0.1F, 1.4F);
+        this.playBodySound(SoundEvents.RABBIT_JUMP, 0.1F, 1.4F);
     }
 }

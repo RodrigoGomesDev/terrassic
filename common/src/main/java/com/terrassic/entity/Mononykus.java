@@ -183,6 +183,6 @@ public class Mononykus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.MONONYKUS_STEP.get(), 0.2F, 1.0F);
+        this.playBodySound(ModSounds.MONONYKUS_STEP.get(), 0.2F, 1.0F);
     }
 }

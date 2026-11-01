@@ -110,6 +110,6 @@ public class Ankylosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.ANKYLOSAURUS_STEP.get(), 0.5F, 1.0F);
+        this.playBodySound(ModSounds.ANKYLOSAURUS_STEP.get(), 0.5F, 1.0F);
     }
 }

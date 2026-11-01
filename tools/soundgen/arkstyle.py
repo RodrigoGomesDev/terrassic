@@ -35,11 +35,11 @@ FILES = {"elk": "nps_elk_bugle/nri-ElkBuglingGRSA.mp3", "griz": "nps_grizzly_roa
 # trechos altos de cada gravação (início, fim em segundos), achados automaticamente
 GRAINS = json.load(open(os.path.join(HERE, "arkstyle_grains.json")))
 EVENTS = ("ambient", "threat", "hurt", "death")
-COUNT = {"ambient": 3, "threat": 2, "hurt": 2, "death": 1}
+COUNT = {"ambient": 3, "threat": 2, "hurt": 2, "death": 1, "step": 3, "flap": 3}
 
 
 def needed_files():
-    return sorted({os.path.join(SRC, FILES[k]) for k in FILES})
+    return sorted({os.path.join(SRC, FILES[k]) for k in FILES} | {os.path.join(SRC, "oga_wings/wings_flap_large.ogg")})
 
 
 def available():
@@ -433,11 +433,124 @@ def rex_e(seed=4):
     return norm(x, 0.9)
 
 
+# ---------------------------------------------------------------- passos e asas (2026-11)
+# Pisada sem nota de seno: pancada + terra batida + grãos de terra irregulares + poeira grave nos grandes + garras.
+# Asas: gravação CC0 de asas grandes (oga_wings) desacelerada pelo tamanho + sopro de ar + estalo de membrana.
+# Ficam mais baixos que as vozes (build.py: LOUD["steps"/"wings"]) e o Java limita quantos tocam juntos.
+
+def load_file(rel):
+    key = "file:" + rel
+    if key not in _audio:
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(SRC, rel), "-ac", "1", "-ar", str(SR),
+                              "-f", "f32le", "-"], capture_output=True, check=True).stdout
+        _audio[key] = np.frombuffer(raw, "<f4").astype(float)
+    return _audio[key]
+
+
+def _hp(x, fc):
+    return x - _lp(x, fc)
+
+def impact(n, rng, size, weight):
+    t = np.arange(n) / SR
+    fc = 600 / size ** 0.5                      # quanto maior, mais grave a pancada
+    burst = _lp(rng.standard_normal(n), fc) * np.exp(-t / (0.03 * size ** 0.6))
+    f0 = 95 / size ** 0.4                       # corpo curto que cai de tom (bumbo), não um seno longo
+    ph = 2 * np.pi * np.cumsum(f0 * (1 + 1.2 * np.exp(-t / 0.02))) / SR
+    body = np.sin(ph + 0.6 * rng.standard_normal(n).cumsum() / SR * 30) * np.exp(-t / (0.06 * size ** 0.6))
+    knock = _hp(_lp(rng.standard_normal(n), 650), 140) * np.exp(-t / (0.035 * size ** 0.5))  # terra batida
+    return norm(burst, 1.0) + 0.6 * weight * norm(body, 1.0) + 0.9 * norm(knock, 1.0)
+
+def dirt(n, rng, size, amount, spread=0.15):
+    """terra/cascalho esfarelando: dezenas de grãos curtos em tempos aleatórios (nada periódico)"""
+    out = np.zeros(n); k = int(20 + 40 * amount)
+    for _ in range(k):
+        i = int(abs(rng.normal(0, spread * size ** 0.5)) * SR) + int(0.004 * SR)
+        L = int(rng.uniform(0.002, 0.012) * SR)
+        if i + L >= n: continue
+        g = rng.standard_normal(L) * np.hanning(L) * rng.uniform(0.2, 1.0) * np.exp(-i / SR / (0.12 * size ** 0.5))
+        out[i:i + L] += g
+    lo, hi = 250.0, 2500 + 1500 * (1 - min(size, 1.0))
+    return norm(_hp(_lp(out, hi), lo), 1.0)
+
+def dust(n, rng, size):
+    t = np.arange(n) / SR
+    x = _lp(rng.standard_normal(n), 140) * (1 - np.exp(-t / 0.03)) * np.exp(-t / (0.35 * size))
+    return norm(x, 1.0)
+
+def claws(n, rng, k, freq):
+    out = np.zeros(n)
+    for j in range(k):
+        i = int((0.006 + j * rng.uniform(0.012, 0.03)) * SR); L = int(0.01 * SR)
+        if i + L >= n: break
+        c = rng.standard_normal(L) * np.exp(-np.arange(L) / (0.0015 * SR))
+        out[i:i + L] += c * rng.uniform(0.5, 1.0)
+    return norm(_hp(_lp(out, freq * 1.6), freq * 0.6), 1.0)
+
+# tipo -> (peso do corpo, terra, garras, poeira, sala)
+KIND = {"theropod": (1.0, 0.8, 2, 1.0, (0.6, 0.1)), "sauropod": (1.3, 0.5, 0, 1.6, (1.0, 0.16)),
+        "quad": (1.1, 0.7, 0, 1.0, (0.6, 0.1)), "hadro": (0.9, 0.6, 0, 0.7, (0.5, 0.08)),
+        "runner": (0.6, 1.0, 3, 0.2, (0.4, 0.06)), "small": (0.3, 1.0, 2, 0.0, (0.3, 0.05)),
+        "croc": (0.7, 0.4, 3, 0.3, (0.5, 0.08))}
+
+def step_sound(kind, size, v=0):
+    w, d, c, du, room = KIND[kind]
+    rng = np.random.default_rng(5000 + int(size * 100) + 17 * v)
+    s = size * (1 + 0.06 * (v - 1))
+    dur = 0.25 + 0.5 * s ** 0.8 + (0.5 * s if du > 0.5 else 0)
+    n = int(dur * SR)
+    x = impact(n, rng, s, w) + d * 0.7 * dirt(n, rng, s, d)
+    if du: x += du * 0.6 * dust(n, rng, s)
+    if c: x += 0.35 * claws(n, rng, c, 2600 / s ** 0.3)
+    x = x * envelope(n, 0.0015, dur * 0.5, 1.0)
+    x = drive(norm(x, 1.0), 1.3 + 0.5 * min(s, 1.5))
+    return norm(reverb(x, *room), 0.9)
+
+def flap_sound(size, v=0):
+    """batida de asa grande: a gravação CC0 (3 batidas) recortada numa batida, desacelerada pelo tamanho"""
+    rng = np.random.default_rng(7000 + int(size * 100) + 13 * v)
+    w = load_file("oga_wings/wings_flap_large.ogg")
+    a, b = [(0.0, 1.0), (1.0, 2.05), (2.05, 2.63)][v % 3]
+    x = w[int(a * SR):int(b * SR)]
+    sp = 1.0 / size ** 0.5
+    m = int(len(x) / sp); x = np.interp(np.linspace(0, len(x) - 1, m), np.arange(len(x)), x)
+    x = alisar(norm(x, 1.0))
+    n = len(x); t = np.arange(n) / SR
+    pk = np.argmax(np.convolve(np.abs(x), np.ones(2205), "same")) / SR
+    g = np.exp(-((t - pk) / (0.12 * size ** 0.5)) ** 2)
+    air = spectral_filter(noise(n, rng, 0.3), ((700 / size ** 0.4, 900, 0), (2400 / size ** 0.3, 2000, -8)), floor=0.01)
+    snap = np.zeros(n); i = int((pk + 0.05 * size ** 0.5) * SR)
+    if i + 400 < n: snap[i:i + 400] = rng.standard_normal(400) * np.exp(-np.arange(400) / 60)
+    snap = _hp(_lp(snap, 2500), 500)
+    y = norm(x, 1.0) + 0.45 * g * norm(air, 1.0) + 0.3 * norm(snap, 1.0)
+    return norm(reverb(norm(y, 1.0) * envelope(n, 0.01, 0.2, 1.0), 1.0, 0.12), 0.9)
+
+STEP = {"tyrannosaurus": ("theropod", 1.0), "tarbosaurus": ("theropod", 0.9), "daspletosaurus": ("theropod", 0.85),
+        "albertosaurus": ("theropod", 0.7), "giganotosaurus": ("theropod", 1.05), "carcharodontosaurus": ("theropod", 1.0),
+        "spinosaurus": ("theropod", 1.0), "carnotaurus": ("theropod", 0.6), "majungasaurus": ("theropod", 0.55),
+        "dilophosaurus": ("runner", 0.45), "velociraptor": ("runner", 0.22), "dakotaraptor": ("runner", 0.4),
+        "troodon": ("small", 0.2), "compsognathus": ("small", 0.1), "mononykus": ("small", 0.12),
+        "didelphodon": ("small", 0.1), "oviraptor": ("runner", 0.25), "citipati": ("runner", 0.3),
+        "gallimimus": ("runner", 0.35), "struthiomimus": ("runner", 0.35), "therizinosaurus": ("theropod", 0.75),
+        "deinocheirus": ("theropod", 0.85), "parasaurolophus": ("hadro", 0.7), "corythosaurus": ("hadro", 0.65),
+        "edmontosaurus": ("hadro", 0.8), "maiasaura": ("hadro", 0.65), "pachycephalosaurus": ("hadro", 0.4),
+        "thescelosaurus": ("small", 0.25), "protoceratops": ("quad", 0.3), "triceratops": ("quad", 0.9),
+        "styracosaurus": ("quad", 0.8), "pachyrhinosaurus": ("quad", 0.8), "ankylosaurus": ("quad", 0.85),
+        "euoplocephalus": ("quad", 0.75), "stegosaurus": ("quad", 0.85), "brachiosaurus": ("sauropod", 1.5),
+        "alamosaurus": ("sauropod", 1.6), "saltasaurus": ("sauropod", 1.1), "argentinosaurus": ("sauropod", 1.8),
+        "opisthocoelicaudia": ("sauropod", 1.2), "dreadnoughtus": ("sauropod", 1.6), "deinosuchus": ("croc", 0.8),
+        "baurusuchus": ("croc", 0.5)}
+FLAP = {"pteranodon": 0.8, "quetzalcoatlus": 1.5, "hatzegopteryx": 1.4, "ichthyornis": 0.3}
+
+
 EVENT_FN = {"ambient": ambient, "threat": threat, "hurt": hurt, "death": death}
 
 
 def render(sid, event, v=0):
     """a voz `event` (variação v) da espécie sid, em amostras float a SR"""
+    if event == "step":
+        return step_sound(*STEP[sid], v)
+    if event == "flap":
+        return flap_sound(FLAP[sid], v)
     if sid == "tyrannosaurus" and event == "threat" and v == 0:
         return rex_e()
     p, _ = P[sid]

@@ -178,6 +178,6 @@ public class Dakotaraptor extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.DAKOTARAPTOR_STEP.get(), 0.5F, 1.0F);
+        this.playBodySound(ModSounds.DAKOTARAPTOR_STEP.get(), 0.5F, 1.0F);
     }
 }

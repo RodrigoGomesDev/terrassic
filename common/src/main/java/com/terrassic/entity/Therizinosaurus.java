@@ -188,6 +188,6 @@ public class Therizinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.THERIZINOSAURUS_STEP.get(), 0.8F, 1.0F);
+        this.playBodySound(ModSounds.THERIZINOSAURUS_STEP.get(), 0.8F, 1.0F);
     }
 }

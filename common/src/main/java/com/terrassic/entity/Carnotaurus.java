@@ -191,6 +191,6 @@ public class Carnotaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.CARNOTAURUS_STEP.get(), 0.7F, 1.0F);
+        this.playBodySound(ModSounds.CARNOTAURUS_STEP.get(), 0.7F, 1.0F);
     }
 }

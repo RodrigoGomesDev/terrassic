@@ -1487,7 +1487,7 @@ def gen(s, bounds):
         body.append(f"""
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {{
-        this.playSound({st}, {v}F, {p}F);
+        this.playBodySound({st}, {v}F, {p}F);
     }}""")
     if voice and "flap" in VOICE_SETS[voice[0]]:
         body.append(f"""

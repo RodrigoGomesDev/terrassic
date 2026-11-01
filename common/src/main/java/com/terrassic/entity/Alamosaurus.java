@@ -159,6 +159,6 @@ public class Alamosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.ALAMOSAURUS_STEP.get(), 1.3F, 1.0F);
+        this.playBodySound(ModSounds.ALAMOSAURUS_STEP.get(), 1.3F, 1.0F);
     }
 }

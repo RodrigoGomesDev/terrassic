@@ -179,6 +179,6 @@ public class Didelphodon extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.DIDELPHODON_STEP.get(), 0.2F, 1.0F);
+        this.playBodySound(ModSounds.DIDELPHODON_STEP.get(), 0.2F, 1.0F);
     }
 }

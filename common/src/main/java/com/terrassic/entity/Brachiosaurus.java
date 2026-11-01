@@ -159,6 +159,6 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.BRACHIOSAURUS_STEP.get(), 1.2F, 1.0F);
+        this.playBodySound(ModSounds.BRACHIOSAURUS_STEP.get(), 1.2F, 1.0F);
     }
 }

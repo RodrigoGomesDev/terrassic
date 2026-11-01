@@ -2762,4 +2762,44 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 || below.is(Blocks.MUD);
         return ground && level.getRawBrightness(pos, 0) > 8 && VanillaShare.allows(type, level, reason, pos);
     }
+
+    // ---- passos e asas sem "spam" (2026-11) ------------------------------------------------------------
+    private static final java.util.Map<net.minecraft.world.level.Level, java.util.Map<Long, long[]>> BODY_SOUND_BUDGET =
+            new java.util.WeakHashMap<>();
+    private long lastBodySoundTick = -100L;
+
+    /**
+     * Passo ou batida de asa. Respeita a passada (quanto mais largo o bicho, menos vezes pisa) e um limite por
+     * região: no máximo 2 desses sons a cada 4 ticks num quadrado de 16x16 blocos, para um bando andando junto
+     * não virar uma metralhadora de passos. O tom varia um pouco a cada passo.
+     */
+    protected void playBodySound(SoundEvent sound, float volume, float pitch) {
+        if (sound == null || this.isSilent()) {
+            return;
+        }
+        long now = this.level().getGameTime();
+        int stride = Math.max(5, Math.round(this.getBbWidth() * 4.0F));
+        if (now - this.lastBodySoundTick < stride) {
+            return;
+        }
+        if (!this.level().isClientSide()) {
+            java.util.Map<Long, long[]> budget = BODY_SOUND_BUDGET.computeIfAbsent(this.level(), l -> new java.util.HashMap<>());
+            long region = (((long) (this.getBlockX() >> 4)) << 32) ^ ((this.getBlockZ() >> 4) & 0xffffffffL);
+            long window = now >> 2;
+            long[] slot = budget.get(region);
+            if (slot == null || slot[0] != window) {
+                if (budget.size() > 512) {
+                    budget.clear();
+                }
+                slot = new long[] {window, 0L};
+                budget.put(region, slot);
+            }
+            if (slot[1] >= 2) {
+                return;
+            }
+            slot[1]++;
+        }
+        this.lastBodySoundTick = now;
+        this.playSound(sound, volume, pitch * (0.92F + this.random.nextFloat() * 0.16F));
+    }
 }

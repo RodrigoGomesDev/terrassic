@@ -206,6 +206,6 @@ public class Deinocheirus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.DEINOCHEIRUS_STEP.get(), 0.8F, 1.0F);
+        this.playBodySound(ModSounds.DEINOCHEIRUS_STEP.get(), 0.8F, 1.0F);
     }
 }

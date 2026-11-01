@@ -206,6 +206,6 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.ARGENTINOSAURUS_STEP.get(), 1.6F, 1.0F);
+        this.playBodySound(ModSounds.ARGENTINOSAURUS_STEP.get(), 1.6F, 1.0F);
     }
 }

@@ -165,6 +165,6 @@ public class Deinosuchus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.DEINOSUCHUS_STEP.get(), 0.6F, 1.0F);
+        this.playBodySound(ModSounds.DEINOSUCHUS_STEP.get(), 0.6F, 1.0F);
     }
 }

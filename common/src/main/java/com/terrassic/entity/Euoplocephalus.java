@@ -124,6 +124,6 @@ public class Euoplocephalus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.EUOPLOCEPHALUS_STEP.get(), 0.45F, 1.0F);
+        this.playBodySound(ModSounds.EUOPLOCEPHALUS_STEP.get(), 0.45F, 1.0F);
     }
 }
