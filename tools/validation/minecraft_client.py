@@ -50,7 +50,8 @@ def read_utf(stream):
     return value.decode("utf-8")
 
 
-def read_nbt(data):
+def read_nbt(data, named=False):
+    """Network NBT by default (no root name since 1.20.2); named=True for files on disk."""
     stream = io.BytesIO(data)
 
     def number(kind):
@@ -100,7 +101,9 @@ def read_nbt(data):
     kind = number("b")
     if kind == 0:
         return None
-    return payload(kind)  # network NBT: the root has no name since 1.20.2
+    if named:
+        string()
+    return payload(kind)
 
 
 def apply_patch(snapshot, patch):
@@ -132,6 +135,7 @@ class LocalClient:
         self._closing = False
         self._compression = -1
         self._phase = "login"
+        self._position = None
         self._registered = False
         self._condition = threading.Condition()
         self._send_lock = threading.Lock()
@@ -219,8 +223,11 @@ class LocalClient:
                     self.send(39, packet.read(4))
                 elif packet_id == 12:  # ChunkBatchFinished: keeps the server sending chunks.
                     self.send(8, struct.pack(">f", 20.0))
+                    if self._position is not None:  # 1.21 pairs entities when the player reports a position.
+                        self.send(26, struct.pack(">ddd", *self._position) + b"\x01")
                 elif packet_id == 64:  # PlayerPosition: x/y/z, yaw/pitch, relative flags, teleport id.
-                    packet.read(33)
+                    self._position = struct.unpack(">ddd", packet.read(24))
+                    packet.read(9)
                     self.send(0, varint(read_varint(packet)))
                 elif packet_id == 29:
                     raise RuntimeError("play disconnected: " + repr(read_nbt(packet.read())))

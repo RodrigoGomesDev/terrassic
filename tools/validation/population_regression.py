@@ -72,6 +72,7 @@ def main():
         server.command("time set day")
         server.command("scoreboard objectives add eco_count dummy")
         server.command("forceload add 144 -16 176 16")
+        time.sleep(3)  # 1.21 loads forced chunks asynchronously; birds summoned before that do not count yet
         for i in range(6):
             # Pin only the fixtures: old persistent birds must count even above/beyond the old 80-block box.
             x, y = (40 + i * 6, 40) if i < 3 else (155 + (i - 3) * 6, -30)

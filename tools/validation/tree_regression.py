@@ -29,7 +29,7 @@ def blocks(directory):
             length = int.from_bytes(region[offset:offset + 4], "big")
             if region[offset + 4] != 2:
                 raise ValueError("unsupported region compression")
-            chunk = read_nbt(zlib.decompress(region[offset + 5:offset + 4 + length]))
+            chunk = read_nbt(zlib.decompress(region[offset + 5:offset + 4 + length]), named=True)
             for section in chunk.get("sections", []):
                 states = section.get("block_states", {})
                 palette = states.get("palette", [])
