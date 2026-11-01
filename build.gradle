@@ -19,8 +19,8 @@ subprojects {
     apply plugin: 'maven-publish'
 
     base {
-        // Jar names look like terrassic-fabric-0.1.0.jar / terrassic-forge-0.1.0.jar
-        archivesName = "$rootProject.archives_name-$project.name"
+        // Jar names say loader and Minecraft version: terrassic-forge-1.20.1-1.1.4.jar
+        archivesName = "$rootProject.archives_name-$project.name-$rootProject.minecraft_version"
     }
 
     repositories {
