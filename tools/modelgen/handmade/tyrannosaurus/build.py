@@ -5,7 +5,7 @@ planted feet (leg IK). Writes:
 
   common/.../geo/entity/tyrannosaurus.geo.json
   common/.../animations/entity/tyrannosaurus.animation.json
-  common/.../textures/entity/tyrannosaurus_male.png, tyrannosaurus_female.png
+  common/.../textures/entity/tyrannosaurus_male.png, tyrannosaurus_female.png (+ _alpha_male/_alpha_female, the alpha coats)
   common/.../textures/particle/roar_wave_0..7.png + particles/roar_wave.json   (the loud roar's burst)
   art/build_report.json (its row: bones, cubes, texture, bounds, animations; gen_species reads the bounds)
 
@@ -47,6 +47,7 @@ def main():
         json.dump(geo_json, f, indent=1)
     for sex in ("male", "female"):
         save_png(rex2.paint_sex(m, sex), os.path.join(ASSETS, "textures", "entity", f"tyrannosaurus_{sex}.png"))
+        save_png(rex2.paint_sex(m, sex, alpha=True), os.path.join(ASSETS, "textures", "entity", f"tyrannosaurus_alpha_{sex}.png"))
 
     anims = {}
     for name, (fn, length, loop, _cat, _when) in A.ANIMS.items():

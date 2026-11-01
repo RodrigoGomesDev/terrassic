@@ -147,7 +147,7 @@ public final class LensOverlay {
         int points = t.getInt("Points");
         boolean torpor = !ko && !tame && t.getFloat("Torpor") > 0.5F;
 
-        Component name = d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
+        Component name = d.hasCustomName() ? d.getCustomName() : d.speciesName();
         Component dot = Component.literal(name.getString() + " · ");
         Component level = Component.translatable("hud.terrassic.level", Math.max(1, d.getLevel()));
         Component age = t.getBoolean("Baby")

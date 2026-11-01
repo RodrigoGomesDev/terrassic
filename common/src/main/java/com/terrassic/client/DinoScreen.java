@@ -201,13 +201,13 @@ public class DinoScreen extends Screen {
             TerrassicHud.portrait(g, d, bx + 2, by + 6, 108, 82);
         }
         if (d != null && d.hasCustomName()) {
-            AmberHud.text(g, this.font, d.getType().getDescription(), bx, by + 110, TerrassicPalette.STONE_300);
+            AmberHud.text(g, this.font, d.speciesName(), bx, by + 110, TerrassicPalette.STONE_300);
         }
 
         // name and sex; age and size; what it is doing; saddle and cargo
         int x = x0 + INFO_X;
         int right = x0 + STATS_X - 10;
-        Component name = d == null ? Component.empty() : d.hasCustomName() ? d.getCustomName() : d.getType().getDescription();
+        Component name = d == null ? Component.empty() : d.hasCustomName() ? d.getCustomName() : d.speciesName();
         Component title = TerrassicFonts.title(name.copy());
         boolean female = t.getBoolean("Female");
         Component sex = Component.literal(female ? "♀" : "♂");

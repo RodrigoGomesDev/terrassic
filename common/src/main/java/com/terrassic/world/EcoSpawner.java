@@ -442,7 +442,7 @@ public final class EcoSpawner {
 
     /** Some of the herd are babies, of different ages (and so sizes). */
     private static void maybeBaby(DinosaurEntity dino, Rules rules, RandomSource random) {
-        if (random.nextFloat() < BABY_CHANCE * rules.get(Rule.BABY_SHARE)) {
+        if (!dino.isAlpha() && random.nextFloat() < BABY_CHANCE * rules.get(Rule.BABY_SHARE)) {
             dino.setAge(-6000 - random.nextInt(18001));
         }
     }

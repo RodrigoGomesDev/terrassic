@@ -531,6 +531,45 @@ HUD_LANG = {
 for _lang, _keys in HUD_LANG.items():
     LANG_EXTRA[_lang].update(_keys)
 
+# the alphas (docs/ALFAS.md, entity/Alphas): name, knockout messages, server chat, the /terrassic alfa command
+ALPHA_LANG = {
+    "en_us": {
+        "entity.terrassic.alpha": "Alpha %s",
+        "message.terrassic.alpha.untameable": "%s takes no owner on this world",
+        "message.terrassic.alpha.limit": "You already own as many alphas of this species as this world allows: %s stays wild",
+        "message.terrassic.alpha.fell": "%s has fallen, brought down by %s",
+        "message.terrassic.alpha.tamed": "%s was tamed by %s",
+        "message.terrassic.alpha.fell_alone": "%s has fallen",
+        "command.terrassic.alpha.unknown": "%s has no alpha. Species with an alpha: %s",
+        "command.terrassic.alpha.sex": "Unknown sex: %s (use male or female)",
+        "command.terrassic.alpha.summoned": "%s is here",
+    },
+    "pt_br": {
+        "entity.terrassic.alpha": "%s Alfa",
+        "message.terrassic.alpha.untameable": "%s não aceita dono neste mundo",
+        "message.terrassic.alpha.limit": "Você já tem todos os alfas desta espécie que este mundo permite: %s continua selvagem",
+        "message.terrassic.alpha.fell": "%s caiu, derrubado por %s",
+        "message.terrassic.alpha.tamed": "%s foi domado por %s",
+        "message.terrassic.alpha.fell_alone": "%s caiu",
+        "command.terrassic.alpha.unknown": "%s não tem alfa. Espécies com alfa: %s",
+        "command.terrassic.alpha.sex": "Sexo desconhecido: %s (use macho ou femea)",
+        "command.terrassic.alpha.summoned": "%s chegou",
+    },
+    "es_es": {
+        "entity.terrassic.alpha": "%s Alfa",
+        "message.terrassic.alpha.untameable": "%s no acepta dueño en este mundo",
+        "message.terrassic.alpha.limit": "Ya tienes todos los alfas de esta especie que este mundo permite: %s sigue salvaje",
+        "message.terrassic.alpha.fell": "%s ha caído, abatido por %s",
+        "message.terrassic.alpha.tamed": "%s fue domado por %s",
+        "message.terrassic.alpha.fell_alone": "%s ha caído",
+        "command.terrassic.alpha.unknown": "%s no tiene alfa. Especies con alfa: %s",
+        "command.terrassic.alpha.sex": "Sexo desconocido: %s (usa macho o hembra)",
+        "command.terrassic.alpha.summoned": "%s ha llegado",
+    },
+}
+for _lang, _keys in ALPHA_LANG.items():
+    LANG_EXTRA[_lang].update(_keys)
+
 # Minecraft treats every Spanish locale as its own language and falls back to English when one is missing,
 # so the es_es file is copied to the other Spanish variants.
 SPANISH_VARIANTS = ("es_ar", "es_cl", "es_ec", "es_mx", "es_uy", "es_ve")

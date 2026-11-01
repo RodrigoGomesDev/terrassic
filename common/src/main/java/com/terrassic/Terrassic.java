@@ -57,6 +57,7 @@ public final class Terrassic {
         Research.init();
         Rules.init(); // world rules in the style of ARK (docs/REGRAS.md)
         com.terrassic.network.Net.declareServerToClient();
+        com.terrassic.entity.Alphas.init(); // the alphas' command (docs/ALFAS.md)
         RulesNetwork.init();
         com.terrassic.network.LensNetwork.init(); // the Field Lens card (item/FieldLensItem)
         com.terrassic.network.DinoNetwork.init(); // v0.12: the dino screen and the mounted controls
