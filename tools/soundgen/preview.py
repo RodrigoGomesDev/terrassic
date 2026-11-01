@@ -21,6 +21,9 @@ GAP = 0.7
 
 
 def render(variant):
+    if variant[0] == "ark":  # vozes no estilo ARK (arkstyle.py)
+        import arkstyle
+        return arkstyle.render(*variant[1:])
     _, voice, params = variant
     return VOICES[voice](**params)
 

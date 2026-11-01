@@ -50,6 +50,9 @@ def src_path(pattern, index=0):
 
 def available(variant):
     kind = variant[0]
+    if kind == "ark":
+        import arkstyle
+        return arkstyle.available()
     if kind == "src":
         return src_path(variant[1], variant[2].get("file", 0)) is not None
     if kind == "mix":
@@ -110,12 +113,15 @@ def render(variant):
         return norm(out)
     if kind == "alt":
         return render(variant[1] if available(variant[1]) else variant[2])
+    if kind == "ark":  # vozes no estilo ARK (arkstyle.py)
+        import arkstyle
+        return arkstyle.render(variant[1], variant[2], variant[3])
     raise ValueError(variant)
 
 
 def wants_recording(variant):
     kind = variant[0]
-    if kind == "src":
+    if kind in ("src", "ark"):
         return True
     if kind in ("mix", "alt"):
         parts = [v for v, _ in variant[1]] if kind == "mix" else [variant[1], variant[2]]
@@ -127,6 +133,8 @@ def uses_recording(variant):
     kind = variant[0]
     if kind == "src":
         return True
+    if kind == "ark":
+        return available(variant)
     if kind == "mix":
         return any(uses_recording(v) for v, _ in variant[1])
     if kind == "alt":
