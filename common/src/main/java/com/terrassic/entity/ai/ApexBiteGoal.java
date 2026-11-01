@@ -20,6 +20,8 @@ import java.util.EnumSet;
  *       "bites, walks away and comes back" of the 29/10 test).</li>
  *   <li>It stops with its head over the target ({@link #STAND}), never on top of it, and steps back when the target
  *       gets under its belly.</li>
+ *   <li>A rig may pause after a blow ({@link ApexTheropod#pauseAfter}): the Giganotosaurus cuts, steps back, stands
+ *       watching with one eye and circles before it comes in again.</li>
  *   <li>The reach is measured from the head: a bite starts only in front of it and within the neck's reach. The
  *       animation plays first and the hit lands on the frame the jaws close (attack_quick most of the time, the
  *       heavy bite with the shake now and then, a stomp for small things at its feet).</li>
@@ -56,6 +58,15 @@ public class ApexBiteGoal extends Goal {
     private Vec3 lastSpot;
     private int unstick;
     private float side;
+    /** The blow under way, and the pause after the last one: ticks left of the blow's own animation, stepping back,
+     *  standing, circling. */
+    private ApexTheropod.Strike strike;
+    private ApexTheropod.Pause pause;
+    private int holdLeft;
+    private int backLeft;
+    private int stareLeft;
+    private int circleLeft;
+    private float circleSide;
 
     public ApexBiteGoal(ApexTheropod mob, double speed) {
         this.mob = mob;
@@ -83,6 +94,7 @@ public class ApexBiteGoal extends Goal {
         this.mob.setAggressive(true);
         this.repath = 0;
         this.pending = 0;
+        this.endPause();
     }
 
     @Override
@@ -90,6 +102,7 @@ public class ApexBiteGoal extends Goal {
         this.mob.setAggressive(false);
         this.mob.getNavigation().stop();
         this.pending = 0;
+        this.endPause();
     }
 
     @Override
@@ -127,8 +140,19 @@ public class ApexBiteGoal extends Goal {
                 if (target.isAlive() && dist <= reach && off < 60.0F && Math.abs(target.getY() - this.mob.getY()) < 5.0D * s) {
                     this.mob.doHurtTarget(target);
                 }
+                this.startPause(this.strike == null ? null : this.mob.pauseAfter(this.strike));
             }
             return;
+        }
+        // the pause after a blow: back off facing it, stand and watch, circle; then in again. Cut short when the
+        // target gets away
+        if (this.holdLeft + this.backLeft + this.stareLeft + this.circleLeft > 0) {
+            if (dist > DIRECT * s * 1.3D) {
+                this.endPause();
+            } else {
+                this.pauseTick(yawTo, dist, stand);
+                return;
+            }
         }
         // roaring at it first: stand and face it
         if (this.mob.isRoaring()) {
@@ -189,8 +213,53 @@ public class ApexBiteGoal extends Goal {
         }
     }
 
+    private void startPause(ApexTheropod.Pause p) {
+        this.pause = p;
+        if (p == null) {
+            return;
+        }
+        // the blow's animation plays to its end on planted feet before the first step back
+        this.holdLeft = Math.max(0, this.strike.total() - this.strike.hit());
+        this.backLeft = p.back();
+        this.stareLeft = p.stare() == null ? 0 : p.stareTicks();
+        this.circleLeft = p.circle();
+        this.circleSide = this.mob.getRandom().nextBoolean() ? 1.0F : -1.0F;
+    }
+
+    private void endPause() {
+        this.pause = null;
+        this.holdLeft = 0;
+        this.backLeft = 0;
+        this.stareLeft = 0;
+        this.circleLeft = 0;
+    }
+
+    private void pauseTick(float yawTo, double dist, double stand) {
+        this.mob.getNavigation().stop();
+        if (this.holdLeft > 0) {
+            this.turn(yawTo, TURN * 0.6F);
+            this.holdLeft--;
+        } else if (this.backLeft > 0) {
+            this.turn(yawTo, TURN);
+            this.mob.getMoveControl().strafe(-0.55F, 0.0F);
+            if (--this.backLeft == 0 && this.stareLeft > 0) {
+                this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, this.pause.stare());
+            }
+        } else if (this.stareLeft > 0) {
+            this.turn(yawTo, TURN * 0.6F);
+            this.stareLeft--;
+        } else {
+            // sideways round it, drifting back to the distance it bites from
+            this.turn(yawTo, TURN);
+            float in = dist > stand + 1.5D * this.mob.getScale() ? 0.25F : dist < stand ? -0.2F : 0.0F;
+            this.mob.getMoveControl().strafe(in, 0.5F * this.circleSide);
+            this.circleLeft--;
+        }
+    }
+
     /** Starts a blow: the animation now, the hit when it lands, the next one once it is over. */
     private void begin(ApexTheropod.Strike strike) {
+        this.strike = strike;
         this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, strike.anim());
         this.pending = strike.hit();
         this.cooldown = strike.total();

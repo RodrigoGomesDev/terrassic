@@ -82,7 +82,9 @@ SIZES = {
     # Dreadnoughtus schrani: 26 m, 26-59 t (Lacovara et al. 2014; Bates et al. 2015); the 11 m neck carried high.
     # Dreadnoughtus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "dreadnoughtus":      dict(real=26.0, scale=0.95, w=4.5, h=9.0, baby=0.1,  shadow=5.0),
-    "giganotosaurus":     dict(real=13.0, scale=1.75, w=2.4, h=4.4, baby=0.25, shadow=2.3),
+    # Giganotosaurus v1 (01/11) is hand-made at 24 px/m and shown at its real 12.5 m (0.667), its own study and rig;
+    # adults vary up to 13.3 m (the bigger dentary, MUCPv-95).
+    "giganotosaurus":     dict(real=12.5, scale=0.667, w=2.4, h=3.9, baby=0.25, shadow=2.3, var=(0.92, 1.06)),
     "carcharodontosaurus": dict(real=12.5, scale=1.80, w=2.4, h=4.6, baby=0.25, shadow=2.3),
     # Carnotaurus v1 (01/11) is hand-made at 24 px/m and shown at its real 7.8 m (16 / 24 = 0.667), its own study and rig.
     "carnotaurus":        dict(real=7.8,  scale=0.667, w=1.8, h=3.0, baby=0.3,  shadow=1.6),
@@ -444,13 +446,13 @@ SPECIES = [
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 400), step=("RAVAGER_STEP", 1.3, 0.45),
       xp=56, step_height=1.8, head=(20, 30), rideable=True, platform=True, jump=0.0, ride_offset=5.3, ride_forward=2.4, ride_speed=0.95, call=True),
  dict(id="giganotosaurus", cls="Giganotosaurus", base="PredatorDinosaur",
-      doc="Giganotosaurus carolinii - 13 m carcharodontosaur of the dry lands, as long as the T. rex and leaner, with a long low skull and blade teeth. Hunts in loose pairs; the more it bleeds the harder it bites (rage). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
+      doc="Giganotosaurus carolinii - 12.5 m carcharodontosaur of the dry lands, as long as the T. rex and leaner, with a long low knife skull and blade teeth. Cuts, steps back and waits, circles; lives in loose pairs; the more it bleeds the harder it bites (rage). Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed. Behaviour in Giganotosaurine.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.2, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.7, 1.9, 240), step=("RAVAGER_STEP", 0.9, 0.65),
-      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.15,
+      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=5.32, ride_forward=2.06, ride_speed=1.15,
       prey="!(e instanceof Giganotosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
-      roar=True, rage=True, pack=True, prey_interval=200),
+      roar=True, rage=True, pack=True, apex=True, rig="Giganotosaurine", prey_interval=200),
  dict(id="carcharodontosaurus", cls="Carcharodontosaurus", base="PredatorDinosaur",
       doc="Carcharodontosaurus saharicus - 12.5 m shark-toothed carnosaur of the Saharan river plains, deep boxy skull with brow bosses and a dark mask. Solitary; every kill makes it stronger and faster for a while (trophies, up to five). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=15, ATTACK_KNOCKBACK=1.3, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),

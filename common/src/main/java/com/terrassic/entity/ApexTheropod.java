@@ -68,6 +68,11 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     public record Strike(String anim, int hit, int total, boolean atFeet) {
     }
 
+    /** What a rig does after a blow before it comes in again (ApexBiteGoal): ticks stepping back facing the target,
+     *  then standing while a one-shot plays (null = none), then ticks circling it sideways. */
+    public record Pause(int back, String stare, int stareTicks, int circle) {
+    }
+
     /** Ticks left of the roar under way (normal or loud) and how far into it we are. */
     private int roarLeft;
     private int roarAge;
@@ -189,7 +194,8 @@ public abstract class ApexTheropod extends PredatorDinosaur {
                 e -> e instanceof ApexTheropod rival && this.givesWayTo(rival)));
     }
 
-    private boolean givesWayTo(ApexTheropod rival) {
+    /** Whether this wild adult steps out of the way of that one (a rig may spare its mate). */
+    protected boolean givesWayTo(ApexTheropod rival) {
         return rival != this && rival.getClass() == this.getClass() && !this.isTame() && !rival.isTame()
                 && !this.isBaby() && !rival.isBaby() && this.getTarget() == null
                 && rival.getAdultSize() > this.getAdultSize() + 0.005F;
@@ -242,6 +248,21 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     /** The blow for a target in reach of the head. */
     public Strike biteFor(LivingEntity target) {
         return this.getRandom().nextFloat() < 0.3F ? BITE : QUICK_BITE;
+    }
+
+    /** The pause after this blow, or null to come straight in again (the T. rex and most rigs). */
+    public Pause pauseAfter(Strike strike) {
+        return null;
+    }
+
+    /** Where the mouth is in the loud roar's pose (blocks at model scale 1, forward of the centre and above the feet):
+     *  the wave starts there. */
+    protected double loudMouthForward() {
+        return LOUD_MOUTH_FORWARD;
+    }
+
+    protected double loudMouthUp() {
+        return LOUD_MOUTH_UP;
     }
 
     /** The roar when it locks onto a target: it stands for it; the sound comes as the jaws open. */
@@ -347,9 +368,9 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     private void airWave(ServerLevel level, float strength) {
         double k = this.modelScale() * this.getScale();
         float yaw = this.yBodyRot * Mth.DEG_TO_RAD;
-        double x = this.getX() - Mth.sin(yaw) * LOUD_MOUTH_FORWARD * k;
-        double y = this.getY() + LOUD_MOUTH_UP * k;
-        double z = this.getZ() + Mth.cos(yaw) * LOUD_MOUTH_FORWARD * k;
+        double x = this.getX() - Mth.sin(yaw) * this.loudMouthForward() * k;
+        double y = this.getY() + this.loudMouthUp() * k;
+        double z = this.getZ() + Mth.cos(yaw) * this.loudMouthForward() * k;
         // count 0: the "speed" values reach the particle as its velocity; x carries the wave's size and strength
         for (ServerPlayer player : level.players()) {
             if (player.distanceToSqr(x, y, z) < 96.0D * 96.0D) {
