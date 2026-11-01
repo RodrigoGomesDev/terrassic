@@ -145,6 +145,8 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
+Claude do Mac — 01/11: Carnotauro novo entregue na main e em `mc/1.21.1`; `ApexTheropod`, `gen_species.py`, `GuideSpecies`, `Carnotaurus` e `tools/modelgen/handmade/carnotaurus/` liberados.
+
 Claude do Mac — 01/11: pacote de passos e asas entregue na main e em `mc/1.21.1`; `DinosaurEntity`, `FlyingDinosaur`, `gen_species.py` e `tools/soundgen/` liberados. Áudio em standby por decisão do Rodrigo.
 
 Piloto Codex — 27/10: primeiro passe do T. rex e estudo de Alex's Caves em

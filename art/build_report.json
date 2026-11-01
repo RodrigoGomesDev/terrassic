@@ -1503,39 +1503,61 @@
   "render_scale": 1.0
  },
  "carnotaurus": {
-  "bones": 24,
-  "cubes": 74,
+  "bones": 25,
+  "cubes": 97,
   "texture": [
-   128,
-   256
+   256,
+   128
   ],
   "bounds_px": [
    [
-    -8.0,
-    -2.191411066133535e-05,
-    -41.249809171686834
+    -17.393961060779965,
+    -0.09399572055405217,
+    -96.67214828516262
    ],
    [
-    8.0,
-    43.699068525861875,
-    57.06117644194919
+    17.393961060779965,
+    73.75270053737141,
+    97.9879957780493
    ]
   ],
   "animations": [
    "animation.carnotaurus.idle",
+   "animation.carnotaurus.look_back",
+   "animation.carnotaurus.arm_twitch",
    "animation.carnotaurus.walk",
    "animation.carnotaurus.run",
+   "animation.carnotaurus.stalk",
+   "animation.carnotaurus.skid_turn",
+   "animation.carnotaurus.brake",
+   "animation.carnotaurus.lock_on",
+   "animation.carnotaurus.attack_quick",
    "animation.carnotaurus.attack",
+   "animation.carnotaurus.shove",
+   "animation.carnotaurus.hook",
+   "animation.carnotaurus.threat",
    "animation.carnotaurus.roar",
+   "animation.carnotaurus.call",
+   "animation.carnotaurus.hurt",
+   "animation.carnotaurus.death",
+   "animation.carnotaurus.sniff",
+   "animation.carnotaurus.shake",
+   "animation.carnotaurus.yawn",
+   "animation.carnotaurus.stretch",
+   "animation.carnotaurus.horn_rub",
+   "animation.carnotaurus.eat",
+   "animation.carnotaurus.drink",
+   "animation.carnotaurus.swim",
    "animation.carnotaurus.sit",
+   "animation.carnotaurus.sleep",
+   "animation.carnotaurus.wake_sleep",
    "animation.carnotaurus.knocked_out",
    "animation.carnotaurus.wake",
-   "animation.carnotaurus.eat",
    "animation.carnotaurus.beg",
-   "animation.carnotaurus.tame",
-   "animation.carnotaurus.charge"
+   "animation.carnotaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.667,
+  "handmade": true
  },
  "tarbosaurus": {
   "bones": 24,

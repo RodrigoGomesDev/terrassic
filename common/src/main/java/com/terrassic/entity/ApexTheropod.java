@@ -206,6 +206,16 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         return target != null && target.getId() == this.roaredAt;
     }
 
+    /** The bite and foot distances of the rig, against the T. rex they were measured on (1.0). */
+    public double reachScale() {
+        return 1.0D;
+    }
+
+    /** The gestures it picks from when it stands idle (a rig may add its own). */
+    protected String[] gestures() {
+        return GESTURES;
+    }
+
     /** The one-shot of the loud roar, how long it stands for it and whether it shakes the air. */
     protected String loudAnim() {
         return "roar_loud";
@@ -252,7 +262,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
      *  The general reach (half the width + 2.5) ended short of the jaws, so a small dino in front of them was never hit. */
     @Override
     protected double riderReach() {
-        return 6.8D * this.getScale();
+        return 6.8D * this.reachScale() * this.getScale();
     }
 
     @Override
@@ -267,7 +277,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     private boolean underFoot(LivingEntity target) {
         double dx = target.getX() - this.getX();
         double dz = target.getZ() - this.getZ();
-        double r = 3.6D * this.getScale() + target.getBbWidth() / 2.0D;
+        double r = 3.6D * this.reachScale() * this.getScale() + target.getBbWidth() / 2.0D;
         return target.getBbHeight() <= 1.2F && target.getBbWidth() <= 1.0F && dx * dx + dz * dz < r * r;
     }
 
@@ -477,7 +487,8 @@ public abstract class ApexTheropod extends PredatorDinosaur {
             triggerAnim(ACTION_CONTROLLER, "drink");
             return;
         }
-        String g = GESTURES[this.random.nextInt(GESTURES.length)];
+        String[] gestures = this.gestures();
+        String g = gestures[this.random.nextInt(gestures.length)];
         if (!level.isDay() && this.random.nextInt(3) == 0) {
             g = "yawn";
         }
