@@ -69,7 +69,7 @@ def audit(world, plot):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     parser.add_argument("--compare", action="store_true", help="Include magnolia foliage candidates alongside packaged trees")
     args = parser.parse_args()
@@ -85,7 +85,7 @@ def main():
     pack = server.directory / "world/datapacks/tree-regression"
     features = pack / "data/terrassic_test/worldgen/configured_feature"
     features.mkdir(parents=True)
-    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 15, "description": "Disposable canopy regression"}}))
+    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 48, "description": "Disposable canopy regression"}}))
     variants = []
     if args.compare:
         for name, foliage in [("offset_1", {"type": "minecraft:blob_foliage_placer", "radius": 3, "offset": 1, "height": 3}),

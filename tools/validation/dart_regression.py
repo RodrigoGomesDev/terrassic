@@ -25,16 +25,16 @@ def connect(server):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     args = parser.parse_args()
     server = LocalServer(args.loader, args.eula_file, report="dart-regression", properties={"allow-flight": "true"})
     revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     _, temporary = freeze_sources(server, revision)
     pack = server.directory / "world/datapacks/dart_regression"
-    functions = pack / "data/terrassic_test/functions"
+    functions = pack / "data/terrassic_test/function"
     functions.mkdir(parents=True)
-    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 15, "description": "Disposable dart test clocks"}}))
+    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 48, "description": "Disposable dart test clocks"}}))
     for ticks in (20, 40):
         (functions / f"dart_wait_{ticks}.mcfunction").write_text(f"say REG_DART_WAIT_{ticks}\n")
     sources = {}
@@ -55,6 +55,13 @@ def main():
     def score(name, command):
         server.command(f"execute store result score {name} dart_metrics run {command}")
         checks.barrier()
+
+    def blow():
+        """The blowgun fires on release, after a breath of at least 3 ticks (item/BlowgunItem)."""
+        client.use_item()
+        time.sleep(0.25)
+        client.release_item()
+        time.sleep(0.1)
 
     def aim(x):
         server.command(f"tp TerraDart {x} -60 0 0 0")
@@ -81,25 +88,25 @@ def main():
             server.command(f"summon terrassic:triceratops {x} -60 5 {{Tags:[\"dart_{name}\"],"
                            f"CustomName:'\"Dart {name}\"',NoAI:1b,NoGravity:1b,Size:1f,BirthSize:1f,Health:110f{extra}}}")
         aim(0)
-        client.use_item()
+        blow()
         time.sleep(0.2)
         checks.expect("no ammunition produces no projectile", "entity @e[type=terrassic:tranq_dart]", negate=True)
         checks.expect("no ammunition leaves target unstunned", f"data entity {selector('dart_awake')} Torpor", negate=True)
 
         server.command("item replace entity TerraDart weapon.offhand with terrassic:tranq_dart 3")
         checks.barrier()
-        client.use_item()
-        client.use_item()  # Burst: the second request must be blocked by the server cooldown.
+        blow()
+        blow()  # Burst: the second breath must be blocked by the server cooldown.
         checks.expect("real dart collision adds torpor", f"data entity {selector('dart_awake')} Torpor", timeout=5)
-        checks.expect("burst consumes only one offhand dart", 'data entity TerraDart {Inventory:[{Slot:-106b,id:"terrassic:tranq_dart",Count:2b}]}')
-        checks.expect("burst wears blowgun once", 'data entity TerraDart {Inventory:[{Slot:0b,id:"terrassic:blowgun",tag:{Damage:1}}]}')
+        checks.expect("burst consumes only one offhand dart", 'data entity TerraDart {Inventory:[{Slot:-106b,id:"terrassic:tranq_dart",count:2}]}')
+        checks.expect("burst wears blowgun once", 'data entity TerraDart {Inventory:[{Slot:0b,id:"terrassic:blowgun",components:{"minecraft:damage":1}}]}')
         score("wound", f"data get entity {selector('dart_awake')} Health 1000")
         checks.expect("awake target receives physical wound", "score wound dart_metrics matches 1..109999")
 
         server.command("kill @e[type=terrassic:tranq_dart]")
         aim(12)
         wait_ticks(20)
-        client.use_item()
+        blow()
         bounced = False
         deadline = time.monotonic() + 2
         while time.monotonic() < deadline:
@@ -118,7 +125,7 @@ def main():
         aim(24)
         wait_ticks(20)
         score("before", f"data get entity {selector('dart_ko')} Torpor 1000")
-        client.use_item()
+        blow()
         time.sleep(0.3)
         score("after", f"data get entity {selector('dart_ko')} Torpor 1000")
         checks.expect("dart maintains knockout by raising torpor", "score after dart_metrics > before dart_metrics")
@@ -129,7 +136,7 @@ def main():
         checks.barrier()
         for _ in range(10):
             wait_ticks(20)
-            client.use_item()
+            blow()
             time.sleep(0.2)
             if checks.condition(state("dart_awake", "{KnockedOut:1b}")):
                 break
@@ -162,7 +169,7 @@ def main():
         checks.barrier()
         time.sleep(0.1)
         score("wet_before", f"data get entity {selector('dart_marine')} Torpor 1000")
-        client.use_item()
+        blow()
         wait_ticks(20)
         score("wet_after", f"data get entity {selector('dart_marine')} Torpor 1000")
         checks.expect("underwater dart flight delivers maintenance dose", "score wet_after dart_metrics > wet_before dart_metrics")

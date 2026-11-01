@@ -33,7 +33,7 @@ def require(value, message):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     args = parser.parse_args()
     server = LocalServer(args.loader, args.eula_file, report="movement-regression", properties={

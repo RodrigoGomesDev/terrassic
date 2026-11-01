@@ -23,7 +23,7 @@ from minecraft_client import LocalClient
 
 def freeze_sources(server, revision):
     """Build from one Git revision while other fronts continue editing/integrating main."""
-    inputs = ["build.gradle", "settings.gradle", "gradle.properties", "gradlew", "gradle", "common", "fabric", "forge",
+    inputs = ["build.gradle", "settings.gradle", "gradle.properties", "gradlew", "gradle", "common", "fabric", "neoforge",
               "tools/javagen/gen_resources.py"]
     archive = server.directory / "source.tar"
     with archive.open("wb") as output:
@@ -88,7 +88,7 @@ def profile(server, classes, count, duration, clients):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     parser.add_argument("--counts", default="0,4,8", help="Increasing player counts, maximum 100")
     parser.add_argument("--warmup", type=int, default=15)
@@ -110,11 +110,11 @@ def main():
     config.mkdir()
     (config / "terrassic-world.json").write_text(json.dumps({"rift_storms": False}))
     pack = server.directory / "world/datapacks/terrassic_regression"
-    tag = pack / "data/terrassic_test/tags/entity_types/dinosaurs.json"
+    tag = pack / "data/terrassic_test/tags/entity_type/dinosaurs.json"
     tag.parent.mkdir(parents=True)
     table = ast.literal_eval(assignment(server.source_root / "tools/javagen/gen_resources.py", "SPECIES"))
     tag.write_text(json.dumps({"values": [f"terrassic:{name}" for name in sorted(table)]}))
-    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 15, "description": "Terrassic local regression fixtures"}}))
+    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 48, "description": "Terrassic local regression fixtures"}}))
     clients = []
     results = []
     metadata = {"loader": args.loader, "protocol": 763, "utc": datetime.now(timezone.utc).isoformat(),

@@ -31,7 +31,7 @@ def lifecycle(server, alice, bob):
     before = alice.respawn_packets
     server.command("execute in minecraft:the_nether run tp TerraAlice 0 100 0")
     alice.wait_for(lambda c: c.respawn_packets > before and c.dimension == "minecraft:the_nether", timeout=60)
-    server.command('give TerraAlice terrassic:loose_page{Page:"c1_day_17"} 1')
+    server.command('give TerraAlice terrassic:loose_page[custom_data={Page:"c1_day_17"}] 1')
     alice.wait_for(lambda c: "c1_day_17" in c.knowledge.get("Pages", []))
     require("c1_day_3" in alice.knowledge["Pages"], "dimension change must preserve previous research")
     before = alice.respawn_packets
@@ -43,7 +43,7 @@ def lifecycle(server, alice, bob):
     before = alice.respawn_packets
     alice.request_respawn()
     alice.wait_for(lambda c: c.respawn_packets > before and c.dimension == "minecraft:overworld")
-    server.command('give TerraAlice terrassic:loose_page{Page:"c1_day_41"} 1')
+    server.command('give TerraAlice terrassic:loose_page[custom_data={Page:"c1_day_41"}] 1')
     alice.wait_for(lambda c: "c1_day_41" in c.knowledge.get("Pages", []))
     require(set(alice.knowledge["Pages"]) == {"c1_day_3", "c1_day_17", "c1_day_41"},
             "respawn must preserve notebook and allow subsequent delta updates")
@@ -54,7 +54,7 @@ def lifecycle(server, alice, bob):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     parser.add_argument("--startup-timeout", type=int, default=360)
     args = parser.parse_args()
@@ -74,15 +74,16 @@ def main():
         require(alice.profile_uuid != bob.profile_uuid, "players must have different UUIDs")
         require(alice.knowledge.get("IntroSeen") == 1 and bob.knowledge.get("IntroSeen") == 1, "first join must initialize notebooks")
         require(not alice.knowledge.get("Pages") and not bob.knowledge.get("Pages"), "new notebooks must start independently empty")
-        server.command('give TerraAlice terrassic:loose_page{Page:"c1_day_3"} 1')
+        server.command('give TerraAlice terrassic:loose_page[custom_data={Page:"c1_day_3"}] 1')
         first_page = alice.wait_for(lambda c: len(c.knowledge.get("Pages", [])) == 1)
         require(first_page["Pages"] == ["c1_day_3"], "Alice must receive the explicitly selected page")
         require(alice.delta_packets > 0, "capable client must receive a delta over the real connection")
         require(not bob.knowledge.get("Pages"), "Alice's page must not leak to Bob")
-        server.command('give TerraBob terrassic:loose_page{Page:"c1_day_9"} 1')
+        server.command('give TerraBob terrassic:loose_page[custom_data={Page:"c1_day_9"}] 1')
         bob_page = bob.wait_for(lambda c: len(c.knowledge.get("Pages", [])) == 1)
         require(bob_page["Pages"] == ["c1_day_9"], "Bob must have his own explicitly selected page")
-        require(bob.delta_packets == 0 and bob.full_packets >= 2, "legacy-capability client must get full snapshots")
+        # since v0.15.4 every client takes deltas: the mod is needed on both sides (network/ModNetwork)
+        require(bob.delta_packets > 0, "every client must receive deltas")
         alice_uuid, bob_uuid = alice.profile_uuid, bob.profile_uuid
         print(f"{args.loader}: real joins, distinct UUIDs, page delta and legacy full fallback passed", flush=True)
         lifecycle(server, alice, bob)

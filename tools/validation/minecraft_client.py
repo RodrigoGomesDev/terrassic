@@ -1,6 +1,7 @@
-"""Minimal localhost-only Minecraft 1.20.1 (protocol 763) client for server regressions.
+"""Minimal localhost-only Minecraft 1.21.1 (protocol 767) client for server regressions, Fabric only.
 
-Packet IDs were read from the project's mapped ConnectionProtocol via --protocol-dump.
+Packet IDs come from the vanilla data generator (server.jar --reports, reports/packets.json). A NeoForge server
+negotiates its payload channels with its own client, which this client does not implement.
 No renderer, account login, external servers or gameplay automation outside the disposable test server.
 """
 import copy
@@ -99,8 +100,7 @@ def read_nbt(data):
     kind = number("b")
     if kind == 0:
         return None
-    string()
-    return payload(kind)
+    return payload(kind)  # network NBT: the root has no name since 1.20.2
 
 
 def apply_patch(snapshot, patch):
@@ -111,37 +111,6 @@ def apply_patch(snapshot, patch):
     for key, nested in patch.get("Compounds", {}).items():
         result[key] = apply_patch(result.get(key, {}), nested)
     return result
-
-
-def forge_login_reply(data):
-    """FML3 login-wrapper interoperability, read from the locally installed Forge 47.4.8 codec.
-
-    This protocol fixture acknowledges registry/config receipt; it does not load or render their content.
-    """
-    wrapper = io.BytesIO(data)
-    target = read_utf(wrapper)
-    size = read_varint(wrapper)
-    payload = io.BytesIO(wrapper.read(size))
-    if target != "fml:handshake":
-        raise ValueError(f"unsupported Forge login target {target}")
-    discriminator = payload.read(1)
-    if discriminator == b"\x05":  # Mod metadata is informational; Forge marks it noResponse.
-        return 5, None
-    if discriminator == b"\x01":  # Mod list, channel versions, registry names, custom datapack registries.
-        mods = [read_utf(payload) for _ in range(read_varint(payload))]
-        channels = [(read_utf(payload), read_utf(payload)) for _ in range(read_varint(payload))]
-        registries = [read_utf(payload) for _ in range(read_varint(payload))]
-        datapacks = [read_utf(payload) for _ in range(read_varint(payload))]
-        if datapacks:
-            raise ValueError("test client does not implement custom datapack registries")
-        reply = (b"\x02" + varint(len(mods)) + b"".join(utf(mod) for mod in mods)
-                 + varint(len(channels)) + b"".join(utf(key) + utf(version) for key, version in channels)
-                 + b"\x00")  # Known registry hashes: empty, as in Forge's default client reply.
-    elif discriminator in (b"\x03", b"\x04"):
-        reply = b"\x63"  # C2SAcknowledge, message discriminator 99; login index is the outer transaction id.
-    else:
-        raise ValueError(f"unsupported Forge handshake message {discriminator.hex()}")
-    return discriminator[0], utf(target) + varint(len(reply)) + reply
 
 
 class LocalClient:
@@ -156,23 +125,24 @@ class LocalClient:
         self.intro_packets = 0
         self.respawn_packets = 0
         self.dimension = None
-        self.forge_messages = {}
         self.entities = {}  # Spawned entity UUID -> current protocol id, scoped to this connection.
         self.island_map = None
         self._use_sequence = 0
         self.error = None
         self._closing = False
         self._compression = -1
-        self._play = False
+        self._phase = "login"
         self._registered = False
         self._condition = threading.Condition()
         self._send_lock = threading.Lock()
         self._socket = socket.create_connection(("127.0.0.1", port), timeout=10)
         self._socket.settimeout(None)
         self._input = self._socket.makefile("rb")
-        hostname = "localhost\x00FML3\x00" if loader == "forge" else "localhost"
-        self.send(0, varint(763) + utf(hostname) + struct.pack(">H", port) + varint(2))
-        self.send(0, utf(name) + b"\x00")  # LoginStart: no supplied UUID, offline server assigns one.
+        if loader != "fabric":
+            raise ValueError("the protocol client only speaks to Fabric servers since 1.21.1")
+        hostname = "localhost"
+        self.send(0, varint(767) + utf(hostname) + struct.pack(">H", port) + varint(2))
+        self.send(0, utf(name) + uuid.uuid3(uuid.NAMESPACE_DNS, "OfflinePlayer:" + name).bytes)  # LoginStart: the UUID is required.
         self._thread = threading.Thread(target=self._read_loop, daemon=True)
         self._thread.start()
 
@@ -187,12 +157,8 @@ class LocalClient:
         channels = ["terrassic:research_sync", "terrassic:intro", "terrassic:island_map", "terrassic:story", "terrassic:era_title"]
         if self.supports_delta:
             channels.append("terrassic:research_delta")
-        physical = ["architectury:network", "fml:play", "fml:handshake", "fml:loginwrapper"] if self.loader == "forge" else []
-        self.send(13, utf("minecraft:register") + b"\x00".join(channel.encode() for channel in channels + physical))
-        self.send(13, utf("minecraft:brand") + utf("TerrassicRegression"))
-        if self.loader == "forge":
-            receivers = struct.pack(">i", len(channels)) + b"".join(utf(channel) for channel in channels)
-            self.send(13, utf("architectury:network") + utf("architectury:sync_ids") + receivers)
+        self.send(18, utf("minecraft:register") + b"\x00".join(channel.encode() for channel in channels))
+        self.send(18, utf("minecraft:brand") + utf("TerrassicRegression"))
 
     def _read_loop(self):
         try:
@@ -211,26 +177,32 @@ class LocalClient:
                         raise ValueError("compression length mismatch")
                 packet = io.BytesIO(raw)
                 packet_id = read_varint(packet)
-                if not self._play:
+                if self._phase == "login":
                     if packet_id == 0:
                         raise RuntimeError("login rejected: " + read_utf(packet))
                     if packet_id == 1:
                         raise RuntimeError("test client requires the disposable offline-mode server")
                     if packet_id == 2:
                         self.profile_uuid = uuid.UUID(bytes=packet.read(16))
-                        self._play = True
+                        self.send(3)  # LoginAcknowledged: from here on, the configuration phase.
+                        self._phase = "configuration"
                     elif packet_id == 3:
                         self._compression = read_varint(packet)
                     elif packet_id == 4:
-                        transaction = read_varint(packet)
-                        channel = read_utf(packet)
-                        if self.loader == "forge" and channel == "fml:loginwrapper":
-                            kind, reply = forge_login_reply(packet.read())
-                            self.forge_messages[kind] = self.forge_messages.get(kind, 0) + 1
-                            if reply is not None:
-                                self.send(2, varint(transaction) + b"\x01" + reply)
-                        else:
-                            self.send(2, varint(transaction) + b"\x00")
+                        self.send(2, varint(read_varint(packet)) + b"\x00")
+                    continue
+                if self._phase == "configuration":
+                    if packet_id == 2:
+                        raise RuntimeError("configuration disconnected")
+                    if packet_id == 3:  # FinishConfiguration
+                        self.send(3)
+                        self._phase = "play"
+                    elif packet_id == 4:  # KeepAlive
+                        self.send(4, packet.read(8))
+                    elif packet_id == 5:  # Ping
+                        self.send(5, packet.read(4))
+                    elif packet_id == 14:  # SelectKnownPacks: none, so the registries come in full.
+                        self.send(7, varint(0))
                     continue
                 if packet_id == 1:  # AddEntity: protocol id followed by the entity UUID.
                     entity_id = read_varint(packet)
@@ -238,26 +210,30 @@ class LocalClient:
                     with self._condition:
                         self.entities[entity_uuid] = entity_id
                         self._condition.notify_all()
-                elif packet_id == 40 and not self._registered:  # JoinGame: the server's play listener is now installed.
+                elif packet_id == 43 and not self._registered:  # JoinGame: the server's play listener is now installed.
                     self._register()
                     self._registered = True
-                elif packet_id == 35:  # KeepAlive
-                    self.send(18, packet.read(8))
-                elif packet_id == 60:  # PlayerPosition: x/y/z, yaw/pitch, relative flags, teleport id.
+                elif packet_id == 38:  # KeepAlive
+                    self.send(24, packet.read(8))
+                elif packet_id == 53:  # Ping
+                    self.send(39, packet.read(4))
+                elif packet_id == 12:  # ChunkBatchFinished: keeps the server sending chunks.
+                    self.send(8, struct.pack(">f", 20.0))
+                elif packet_id == 64:  # PlayerPosition: x/y/z, yaw/pitch, relative flags, teleport id.
                     packet.read(33)
                     self.send(0, varint(read_varint(packet)))
-                elif packet_id == 26:
-                    raise RuntimeError("play disconnected: " + read_utf(packet))
-                elif packet_id == 65:  # Respawn (also sent on dimension change): two resource keys first.
-                    read_utf(packet)  # dimension type
+                elif packet_id == 29:
+                    raise RuntimeError("play disconnected: " + repr(read_nbt(packet.read())))
+                elif packet_id == 71:  # Respawn (also sent on dimension change): dimension type id, then its key.
+                    read_varint(packet)
                     with self._condition:
                         self.dimension = read_utf(packet)
                         self.respawn_packets += 1
                         self._condition.notify_all()
-                elif packet_id == 23:
+                elif packet_id == 25:
                     channel = read_utf(packet)
-                    if channel == "architectury:network":
-                        channel = read_utf(packet)
+                    for _ in range(2):  # Architectury frames its bytes twice: payload and buffer, each with a length.
+                        packet = io.BytesIO(packet.read(read_varint(packet)))
                     if channel == "terrassic:island_map":
                         size, extent, sea = (read_varint(packet) for _ in range(3))
                         if size != 128 or extent <= 0:
@@ -307,16 +283,19 @@ class LocalClient:
             return copy.deepcopy(self.knowledge)
 
     def request_respawn(self):
-        self.send(7, varint(0))  # ServerboundClientCommandPacket, PERFORM_RESPAWN.
+        self.send(9, varint(0))  # ServerboundClientCommandPacket, PERFORM_RESPAWN.
 
     def interact_entity(self, entity_uuid, attack=False):
         entity_id = self.entities[str(entity_uuid)]
         action = varint(1) if attack else varint(0) + varint(0)  # ATTACK, or INTERACT with MAIN_HAND.
-        self.send(16, varint(entity_id) + action + b"\x00")  # Not sneaking.
+        self.send(22, varint(entity_id) + action + b"\x00")  # Not sneaking.
 
     def use_item(self):
         self._use_sequence += 1
-        self.send(50, varint(0) + varint(self._use_sequence))  # MAIN_HAND and block-prediction sequence.
+        self.send(57, varint(0) + varint(self._use_sequence) + struct.pack(">ff", 0.0, 0.0))  # MAIN_HAND, sequence, yaw, pitch.
+
+    def release_item(self):
+        self.send(36, varint(5) + b"\x00" * 8 + b"\x00" + varint(0))  # PlayerAction RELEASE_USE_ITEM.
 
     def close(self):
         self._closing = True

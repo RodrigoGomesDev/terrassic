@@ -75,7 +75,7 @@ def connect(server):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     parser.add_argument("--startup-timeout", type=int, default=600)
     args = parser.parse_args()
@@ -88,7 +88,7 @@ def main():
     (server.source_root / relative).write_bytes(source)
     (server.directory / "DinosaurEntity.tested.java").write_bytes(source)
     metadata = {"source_commit": revision, "dinosaur_source_sha256": hashlib.sha256(source).hexdigest(),
-                "loader": args.loader, "protocol": 763, "scenario": "operator fixtures, real hand interactions, save/restart"}
+                "loader": args.loader, "protocol": 767, "scenario": "operator fixtures, real hand interactions, save/restart"}
     checks = Checks(server)
     client = None
     ids = {name: uuid.UUID(f"1f000000-0000-4000-8000-{index:012x}")
@@ -146,6 +146,8 @@ def main():
         checks.expect("real hand feeding finishes taming", state("ko_finished", f"{{Owner:{owner}}}"), timeout=5)
         server.command(f"execute store result score hp ko_metrics run attribute {selector('ko_finished')} minecraft:generic.max_health get 1000")
         checks.barrier()
+        server.command("scoreboard players get hp ko_metrics")
+        server.command(f"data get entity {selector('ko_finished')} attributes")
         checks.expect("70 percent efficiency grants expected health bonus", "score hp ko_metrics matches 22799..22801")
         client.close()
         client = None

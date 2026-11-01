@@ -28,7 +28,7 @@ def count(server):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     args = parser.parse_args()
     flat = {"layers": [{"block": "minecraft:bedrock", "height": 1}, {"block": "minecraft:dirt", "height": 2},
@@ -52,9 +52,9 @@ def main():
     (config / "terrassic-world.json").write_text(json.dumps({"rift_storms": False, "rules": {
         "spawn_density": 1, "land_spawns": 0, "sea_spawns": 0, "flyer_spawns": 1}}))
     pack = server.directory / "world/datapacks/sky-regression"
-    tag = pack / "data/terrassic_test/tags/entity_types"
+    tag = pack / "data/terrassic_test/tags/entity_type"
     tag.mkdir(parents=True)
-    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 15, "description": "Disposable sky regression"}}))
+    (pack / "pack.mcmeta").write_text(json.dumps({"pack": {"pack_format": 48, "description": "Disposable sky regression"}}))
     species = ["pteranodon", "quetzalcoatlus", "hatzegopteryx", "ichthyornis", "vegavis"]
     (tag / "flyers.json").write_text(json.dumps({"values": ["terrassic:" + s for s in species]}))
     clients = []

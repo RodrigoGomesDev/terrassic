@@ -36,7 +36,7 @@ def summary(data):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     parser.add_argument("--startup-timeout", type=int, default=600)
     args = parser.parse_args()

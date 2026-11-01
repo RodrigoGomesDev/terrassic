@@ -3,7 +3,7 @@ import copy
 import io
 import unittest
 
-from minecraft_client import apply_patch, forge_login_reply, read_nbt, read_utf, read_varint, utf, varint
+from minecraft_client import apply_patch, read_nbt, read_utf, read_varint, utf, varint
 
 
 class ProtocolFixtures(unittest.TestCase):
@@ -18,11 +18,11 @@ class ProtocolFixtures(unittest.TestCase):
         self.assertEqual(read_utf(io.BytesIO(b"\x06\xc3\x81mbar")), "Ámbar")
 
     def test_known_nbt_compound_and_list(self):
-        # Unnamed root compound: int N=42, string S=abc, then end.
-        encoded = bytes.fromhex("0a0000 0300014e0000002a 080001530003616263 00")
+        # Network root compound (no name): int N=42, string S=abc, then end.
+        encoded = bytes.fromhex("0a 0300014e0000002a 080001530003616263 00")
         self.assertEqual(read_nbt(encoded), {"N": 42, "S": "abc"})
-        # Unnamed root compound: list L contains two strings a,b.
-        encoded = bytes.fromhex("0a0000 0900014c0800000002000161000162 00")
+        # Network root compound (no name): list L contains two strings a,b.
+        encoded = bytes.fromhex("0a 0900014c0800000002000161000162 00")
         self.assertEqual(read_nbt(encoded), {"L": ["a", "b"]})
         self.assertIsNone(read_nbt(b"\x00"))
 
@@ -34,7 +34,7 @@ class ProtocolFixtures(unittest.TestCase):
         with self.assertRaises(EOFError):
             read_utf(io.BytesIO(b"\x03ab"))
         with self.assertRaises(EOFError):
-            read_nbt(b"\x0a\x00")
+            read_nbt(b"\x0a\x03")
 
     def test_nested_patch_and_input_independence(self):
         before = {"Species": {"rex": {"Level": 2, "Old": 1}}, "Pages": ["a"], "OldFlag": True}
@@ -46,19 +46,6 @@ class ProtocolFixtures(unittest.TestCase):
         self.assertEqual(before, backup)
         after["Pages"].append("c")
         self.assertEqual(patch["Values"]["Pages"], ["a", "b"])
-
-    def test_forge_login_wrapper(self):
-        mod_list = (b"\x01" + varint(1) + utf("terrassic") + varint(1)
-                    + utf("architectury:network") + utf("1") + varint(1) + utf("minecraft:block") + b"\x00")
-        kind, reply = forge_login_reply(utf("fml:handshake") + varint(len(mod_list)) + mod_list)
-        self.assertEqual(kind, 1)
-        wrapper = io.BytesIO(reply)
-        self.assertEqual(read_utf(wrapper), "fml:handshake")
-        nested = wrapper.read(read_varint(wrapper))
-        self.assertEqual(nested, b"\x02\x01" + utf("terrassic") + b"\x01" + utf("architectury:network") + utf("1") + b"\x00")
-        kind, reply = forge_login_reply(utf("fml:handshake") + b"\x01\x03")
-        self.assertEqual((kind, reply), (3, utf("fml:handshake") + b"\x01\x63"))
-        self.assertEqual(forge_login_reply(utf("fml:handshake") + b"\x01\x05"), (5, None))
 
 
 if __name__ == "__main__":
