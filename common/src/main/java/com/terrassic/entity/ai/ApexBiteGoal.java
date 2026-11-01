@@ -24,7 +24,8 @@ import java.util.EnumSet;
  *       animation plays first and the hit lands on the frame the jaws close (attack_quick most of the time, the
  *       heavy bite with the shake now and then, a stomp for small things at its feet).</li>
  * </ul>
- * Distances are in blocks for an animal of size 1.0 and scale with {@link DinosaurEntity#getScale()}.
+ * Distances are in blocks for a T. rex of size 1.0 and scale with {@link ApexTheropod#reachScale()} and
+ * {@link DinosaurEntity#getScale()}.
  */
 public class ApexBiteGoal extends Goal {
     /** Inside this distance (centre to centre) it moves on its own, no path. */
@@ -102,7 +103,7 @@ public class ApexBiteGoal extends Goal {
         if (target == null) {
             return;
         }
-        double s = this.mob.getScale();
+        double s = this.mob.reachScale() * this.mob.getScale();
         double dx = target.getX() - this.mob.getX();
         double dz = target.getZ() - this.mob.getZ();
         double dist = Math.sqrt(dx * dx + dz * dz);
