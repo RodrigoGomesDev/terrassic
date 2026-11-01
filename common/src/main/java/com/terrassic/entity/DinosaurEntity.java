@@ -25,6 +25,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -2041,6 +2042,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    /** The server tells every tracking player who rides whom, except the vehicle itself: without this the owner alone
+     *  would keep seeing the animal where it stood. */
+    private void tellOwnerAboutPerch(Player owner) {
+        if (owner instanceof ServerPlayer player) {
+            player.connection.send(new ClientboundSetPassengersPacket(owner));
+        }
+    }
+
     /** A shoulder animal hops onto its owner's shoulder (the owner sneaks later to shake it off). */
     protected void perchOn(Player player) {
         this.setOrderedToSit(false);
@@ -2048,6 +2057,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.navigation.stop();
         this.setTarget(null);
         this.startRiding(player, true);
+        this.tellOwnerAboutPerch(player);
         this.perchGrace = 60;
         player.displayClientMessage(Component.translatable("message.terrassic.perch", this.getDisplayName()), true);
     }
@@ -2384,6 +2394,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 || owner.isInWater() || owner.isSleeping() || !this.isTame() || !this.isOwnedBy(owner) || this.isDeadOrDying();
         if (shakeOff) {
             this.stopRiding();
+            this.tellOwnerAboutPerch(owner);
             return;
         }
         // a lookout: calls out when a monster is after the owner
