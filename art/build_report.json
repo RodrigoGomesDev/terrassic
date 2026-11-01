@@ -1435,38 +1435,63 @@
   "render_scale": 0.5
  },
  "giganotosaurus": {
-  "bones": 24,
-  "cubes": 55,
+  "bones": 25,
+  "cubes": 110,
   "texture": [
-   128,
+   256,
    256
   ],
   "bounds_px": [
    [
-    -9.0,
-    -1.557370834140378e-05,
-    -55.12744600876746
+    -20.595834921789614,
+    -0.08460950808891746,
+    -146.51704970338687
    ],
    [
-    9.0,
-    42.46146922796731,
-    64.04728961748464
+    20.595834921789614,
+    94.33543885679848,
+    153.93918929674962
    ]
   ],
   "animations": [
    "animation.giganotosaurus.idle",
+   "animation.giganotosaurus.look_side",
+   "animation.giganotosaurus.eye_aim",
    "animation.giganotosaurus.walk",
    "animation.giganotosaurus.run",
-   "animation.giganotosaurus.attack",
+   "animation.giganotosaurus.stalk",
+   "animation.giganotosaurus.back_off",
+   "animation.giganotosaurus.circle",
+   "animation.giganotosaurus.slash",
+   "animation.giganotosaurus.attack_quick",
+   "animation.giganotosaurus.lunge",
+   "animation.giganotosaurus.rip",
+   "animation.giganotosaurus.stomp",
+   "animation.giganotosaurus.hurt",
+   "animation.giganotosaurus.death",
+   "animation.giganotosaurus.gape",
    "animation.giganotosaurus.roar",
+   "animation.giganotosaurus.roar_loud",
+   "animation.giganotosaurus.call",
+   "animation.giganotosaurus.crest_show",
+   "animation.giganotosaurus.sniff",
+   "animation.giganotosaurus.shake",
+   "animation.giganotosaurus.yawn",
+   "animation.giganotosaurus.stretch",
+   "animation.giganotosaurus.jaw_rub",
+   "animation.giganotosaurus.eat",
+   "animation.giganotosaurus.drink",
+   "animation.giganotosaurus.swim",
    "animation.giganotosaurus.sit",
+   "animation.giganotosaurus.sleep",
+   "animation.giganotosaurus.wake_sleep",
    "animation.giganotosaurus.knocked_out",
    "animation.giganotosaurus.wake",
-   "animation.giganotosaurus.eat",
    "animation.giganotosaurus.beg",
    "animation.giganotosaurus.tame"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.667,
+  "handmade": true
  },
  "carcharodontosaurus": {
   "bones": 24,

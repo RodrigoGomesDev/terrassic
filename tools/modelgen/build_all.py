@@ -97,7 +97,9 @@ def backend(force_py):
 # model study); build_all runs their build script and checks.py leaves them out.
 HANDMADE = {"tyrannosaurus": os.path.join(HERE, "handmade", "tyrannosaurus", "build.py"),
             "pteranodon": os.path.join(HERE, "handmade", "pteranodon", "build.py"),
-            "velociraptor": os.path.join(HERE, "handmade", "velociraptor", "build.py")}
+            "velociraptor": os.path.join(HERE, "handmade", "velociraptor", "build.py"),
+            "carnotaurus": os.path.join(HERE, "handmade", "carnotaurus", "build.py"),
+            "giganotosaurus": os.path.join(HERE, "handmade", "giganotosaurus", "build.py")}
 
 
 async def run(names, force_py=False):
