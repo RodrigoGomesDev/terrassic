@@ -197,6 +197,6 @@ public class Albertosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.ALBERTOSAURUS_STEP.get(), 0.7F, 1.0F);
+        this.playBodySound(ModSounds.ALBERTOSAURUS_STEP.get(), 0.7F, 1.0F);
     }
 }

@@ -217,6 +217,6 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.PACHYRHINOSAURUS_STEP.get(), 0.6F, 1.0F);
+        this.playBodySound(ModSounds.PACHYRHINOSAURUS_STEP.get(), 0.6F, 1.0F);
     }
 }

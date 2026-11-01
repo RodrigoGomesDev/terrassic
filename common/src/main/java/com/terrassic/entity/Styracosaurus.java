@@ -172,6 +172,6 @@ public class Styracosaurus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.STYRACOSAURUS_STEP.get(), 0.5F, 1.0F);
+        this.playBodySound(ModSounds.STYRACOSAURUS_STEP.get(), 0.5F, 1.0F);
     }
 }

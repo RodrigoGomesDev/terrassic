@@ -192,6 +192,6 @@ public class Majungasaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.MAJUNGASAURUS_STEP.get(), 0.6F, 1.0F);
+        this.playBodySound(ModSounds.MAJUNGASAURUS_STEP.get(), 0.6F, 1.0F);
     }
 }

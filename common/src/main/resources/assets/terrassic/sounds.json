@@ -60,6 +60,10 @@
       {
         "name": "terrassic:voice/tyrannosaurus/step_2",
         "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/tyrannosaurus/step_3",
+        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.tyrannosaurus.step"
@@ -124,6 +128,10 @@
       },
       {
         "name": "terrassic:voice/tarbosaurus/step_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/tarbosaurus/step_3",
         "attenuation_distance": 24
       }
     ],
@@ -190,6 +198,10 @@
       {
         "name": "terrassic:voice/daspletosaurus/step_2",
         "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/daspletosaurus/step_3",
+        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.daspletosaurus.step"
@@ -254,6 +266,10 @@
       },
       {
         "name": "terrassic:voice/albertosaurus/step_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/albertosaurus/step_3",
         "attenuation_distance": 24
       }
     ],
@@ -320,6 +336,10 @@
       {
         "name": "terrassic:voice/giganotosaurus/step_2",
         "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/giganotosaurus/step_3",
+        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.giganotosaurus.step"
@@ -384,6 +404,10 @@
       },
       {
         "name": "terrassic:voice/carcharodontosaurus/step_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/carcharodontosaurus/step_3",
         "attenuation_distance": 24
       }
     ],
@@ -450,6 +474,10 @@
       {
         "name": "terrassic:voice/spinosaurus/step_2",
         "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/spinosaurus/step_3",
+        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.spinosaurus.step"
@@ -515,6 +543,10 @@
       {
         "name": "terrassic:voice/carnotaurus/step_2",
         "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/carnotaurus/step_3",
+        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.carnotaurus.step"
@@ -579,6 +611,10 @@
       },
       {
         "name": "terrassic:voice/majungasaurus/step_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/majungasaurus/step_3",
         "attenuation_distance": 16
       }
     ],
@@ -723,6 +759,10 @@
       {
         "name": "terrassic:voice/dakotaraptor/step_2",
         "attenuation_distance": 12
+      },
+      {
+        "name": "terrassic:voice/dakotaraptor/step_3",
+        "attenuation_distance": 12
       }
     ],
     "subtitle": "subtitles.terrassic.voice.dakotaraptor.step"
@@ -774,6 +814,10 @@
       },
       {
         "name": "terrassic:voice/troodon/step_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "terrassic:voice/troodon/step_3",
         "attenuation_distance": 12
       }
     ],
@@ -862,6 +906,14 @@
       {
         "name": "terrassic:voice/mononykus/step_1",
         "attenuation_distance": 8
+      },
+      {
+        "name": "terrassic:voice/mononykus/step_2",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "terrassic:voice/mononykus/step_3",
+        "attenuation_distance": 8
       }
     ],
     "subtitle": "subtitles.terrassic.voice.mononykus.step"
@@ -909,6 +961,14 @@
     "sounds": [
       {
         "name": "terrassic:voice/didelphodon/step_1",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "terrassic:voice/didelphodon/step_2",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "terrassic:voice/didelphodon/step_3",
         "attenuation_distance": 8
       }
     ],
@@ -1118,6 +1178,10 @@
       {
         "name": "terrassic:voice/therizinosaurus/step_2",
         "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/therizinosaurus/step_3",
+        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.therizinosaurus.step"
@@ -1169,6 +1233,10 @@
       },
       {
         "name": "terrassic:voice/deinocheirus/step_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/deinocheirus/step_3",
         "attenuation_distance": 16
       }
     ],
@@ -1456,6 +1524,10 @@
       {
         "name": "terrassic:voice/triceratops/step_2",
         "attenuation_distance": 20
+      },
+      {
+        "name": "terrassic:voice/triceratops/step_3",
+        "attenuation_distance": 20
       }
     ],
     "subtitle": "subtitles.terrassic.voice.triceratops.step"
@@ -1508,6 +1580,10 @@
       {
         "name": "terrassic:voice/styracosaurus/step_2",
         "attenuation_distance": 20
+      },
+      {
+        "name": "terrassic:voice/styracosaurus/step_3",
+        "attenuation_distance": 20
       }
     ],
     "subtitle": "subtitles.terrassic.voice.styracosaurus.step"
@@ -1559,6 +1635,10 @@
       },
       {
         "name": "terrassic:voice/pachyrhinosaurus/step_2",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "terrassic:voice/pachyrhinosaurus/step_3",
         "attenuation_distance": 20
       }
     ],
@@ -1651,6 +1731,10 @@
       {
         "name": "terrassic:voice/ankylosaurus/step_2",
         "attenuation_distance": 20
+      },
+      {
+        "name": "terrassic:voice/ankylosaurus/step_3",
+        "attenuation_distance": 20
       }
     ],
     "subtitle": "subtitles.terrassic.voice.ankylosaurus.step"
@@ -1702,6 +1786,10 @@
       },
       {
         "name": "terrassic:voice/euoplocephalus/step_2",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "terrassic:voice/euoplocephalus/step_3",
         "attenuation_distance": 20
       }
     ],
@@ -1755,6 +1843,10 @@
       {
         "name": "terrassic:voice/stegosaurus/step_2",
         "attenuation_distance": 20
+      },
+      {
+        "name": "terrassic:voice/stegosaurus/step_3",
+        "attenuation_distance": 20
       }
     ],
     "subtitle": "subtitles.terrassic.voice.stegosaurus.step"
@@ -1806,6 +1898,10 @@
       },
       {
         "name": "terrassic:voice/brachiosaurus/step_2",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "terrassic:voice/brachiosaurus/step_3",
         "attenuation_distance": 40
       }
     ],
@@ -1859,6 +1955,10 @@
       {
         "name": "terrassic:voice/alamosaurus/step_2",
         "attenuation_distance": 40
+      },
+      {
+        "name": "terrassic:voice/alamosaurus/step_3",
+        "attenuation_distance": 40
       }
     ],
     "subtitle": "subtitles.terrassic.voice.alamosaurus.step"
@@ -1910,6 +2010,10 @@
       },
       {
         "name": "terrassic:voice/saltasaurus/step_2",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "terrassic:voice/saltasaurus/step_3",
         "attenuation_distance": 40
       }
     ],
@@ -1963,6 +2067,10 @@
       {
         "name": "terrassic:voice/argentinosaurus/step_2",
         "attenuation_distance": 40
+      },
+      {
+        "name": "terrassic:voice/argentinosaurus/step_3",
+        "attenuation_distance": 40
       }
     ],
     "subtitle": "subtitles.terrassic.voice.argentinosaurus.step"
@@ -2014,6 +2122,10 @@
       },
       {
         "name": "terrassic:voice/opisthocoelicaudia/step_2",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "terrassic:voice/opisthocoelicaudia/step_3",
         "attenuation_distance": 40
       }
     ],
@@ -2067,6 +2179,10 @@
       {
         "name": "terrassic:voice/dreadnoughtus/step_2",
         "attenuation_distance": 40
+      },
+      {
+        "name": "terrassic:voice/dreadnoughtus/step_3",
+        "attenuation_distance": 40
       }
     ],
     "subtitle": "subtitles.terrassic.voice.dreadnoughtus.step"
@@ -2118,6 +2234,10 @@
       },
       {
         "name": "terrassic:voice/pteranodon/flap_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/pteranodon/flap_3",
         "attenuation_distance": 16
       }
     ],
@@ -2171,6 +2291,10 @@
       {
         "name": "terrassic:voice/quetzalcoatlus/flap_2",
         "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/quetzalcoatlus/flap_3",
+        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.quetzalcoatlus.flap"
@@ -2223,6 +2347,10 @@
       {
         "name": "terrassic:voice/hatzegopteryx/flap_2",
         "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/hatzegopteryx/flap_3",
+        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.hatzegopteryx.flap"
@@ -2270,6 +2398,14 @@
     "sounds": [
       {
         "name": "terrassic:voice/ichthyornis/flap_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "terrassic:voice/ichthyornis/flap_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "terrassic:voice/ichthyornis/flap_3",
         "attenuation_distance": 12
       }
     ],
@@ -2557,6 +2693,10 @@
       {
         "name": "terrassic:voice/deinosuchus/step_2",
         "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/deinosuchus/step_3",
+        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.deinosuchus.step"
@@ -2608,6 +2748,10 @@
       },
       {
         "name": "terrassic:voice/baurusuchus/step_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/baurusuchus/step_3",
         "attenuation_distance": 16
       }
     ],

@@ -182,6 +182,6 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.DREADNOUGHTUS_STEP.get(), 1.3F, 1.0F);
+        this.playBodySound(ModSounds.DREADNOUGHTUS_STEP.get(), 1.3F, 1.0F);
     }
 }

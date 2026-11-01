@@ -1247,3 +1247,19 @@ for _sid, _events in VOICE_SETS.items():
             if _ev in _events:
                 _fx, _dist, _ = _events[_ev]
                 _events[_ev] = (_fx, _dist, [("ark", _sid, _ev, _n) for _n in range(_ark.COUNT[_ev])])
+
+
+# ---------------------------------------------------------------- passos e asas no estilo ARK (2026-11)
+# step/flap de cada espécie vêm de arkstyle.py; mais baixos que as vozes (build.py LOUD) e o Java limita o spam.
+FX.setdefault("steps", "highpass=f=28,lowpass=f=7000")
+FX.setdefault("wings", "highpass=f=40,lowpass=f=9000")
+try:
+    import arkstyle as _ark2  # noqa: E402
+except ImportError:  # sem numpy (ex.: só gerando o Java): ficam as receitas de cima, mesmos eventos
+    _ark2 = None
+if _ark2 is not None:
+    for _sid, _events in VOICE_SETS.items():
+        for _ev, _table, _fxk in (("step", _ark2.STEP, "steps"), ("flap", _ark2.FLAP, "wings")):
+            if _ev in _events and _sid in _table:
+                _fx, _dist, _ = _events[_ev]
+                _events[_ev] = (_fxk, _dist, [("ark", _sid, _ev, _n) for _n in range(_ark2.COUNT[_ev])])

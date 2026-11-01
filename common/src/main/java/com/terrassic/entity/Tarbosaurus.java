@@ -187,6 +187,6 @@ public class Tarbosaurus extends PredatorDinosaur {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.TARBOSAURUS_STEP.get(), 0.9F, 1.0F);
+        this.playBodySound(ModSounds.TARBOSAURUS_STEP.get(), 0.9F, 1.0F);
     }
 }
