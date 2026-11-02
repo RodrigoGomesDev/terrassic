@@ -362,25 +362,61 @@ def parasaurolophus():
 
 
 def pachycephalosaurus():
-    e = Egg("pachycephalosaurus", {"b": "#7c6448", "c": "#d6c4a0", "e": "#ddb878", "i": "#a8865a",
-                                    "I": "#f2e6c8", "d": "#4e3c2a", "n": "#3a2c1e", "R": MOUTH})
-    e.ell((4, 2, 27, 21), "e", clip=True)
-    for y in range(13, 22):
-        for x in range(N):
-            if e.get(x, y) == "e" and y >= 13:
-                e.set(x, y, "b")
-    for x in range(5, 27, 3):
-        e.px([(x, 12), (x + 1, 12)], "I")
-        e.px([(x, 13)], "i")
-    e.poly([(4, 12), (4, 14), (1, 12)], "I")
-    e.poly([(27, 12), (27, 14), (30, 12)], "I")
-    for p in ((10, 5), (14, 3), (19, 5), (12, 8), (17, 8), (21, 9), (8, 9)):
-        e.px([p], "i")
-    e.ell((8, 19, 23, 34), "c", clip=True)
-    e.px(e.mirror([(9, 22), (8, 24), (10, 25)]), "I")
-    eyes(e, 15, 9, iris="#e8a83a", brow="d")
-    nostrils(e, 21, 13)
-    e.line([(11, 26), (20, 26)], "R")
+    """Pachycephalosaurus (02/11, the remade model): the egg's top IS the dome, the way the animal's own head is mostly
+    dome: honey at its base fading up to the male's bleached cream crown, with darker growth streaks fanning out from
+    the top; a rim of blunt dark knobs of uneven size where the dome meets the face (never an even row: that reads as
+    teeth); the heavy brow shelf over each eye and the model's eye under it (dark socket, olive-green iris, pupil
+    toward the snout, glint); pale cheek spots; the short narrow snout down the middle with the low bosses on its
+    bridge and the small horn-brown beak; the cream throat below."""
+    e = Egg("pachycephalosaurus", {
+        "b": "#a0661a", "B": "#bf8326", "d": "#7d4c14", "D": "#5a3510",
+        "h": "#c4a36c", "H": "#d9c193", "j": "#ebdcb6", "s": "#a8814a",
+        "n": "#3a2c22", "N": "#5a4636",
+        "w": "#d8c9a3", "W": "#c2b08a",
+        "S": "#2a1a14", "L": "#160e0c", "I": "#9aa466", "i": "#6b7646", "P": "#0d0b08", "G": "#f2ecd6",
+        "k": "#5a4532", "K": "#3d2e22", "o": "#2a1a14"})
+    # the dome: the top half of the egg, honey round its base rising to the bleached crown
+    e.ell((3, 1, 28, 24), "B", clip=True)
+    e.ell((6, 1, 25, 17), "s", clip=True)
+    e.ell((8, 1, 23, 12), "h", clip=True)
+    e.ell((10, 1, 21, 8), "H", clip=True)
+    e.ell((13, 1, 18, 5), "j", clip=True)
+    # growth streaks fanning out from the crown, uneven and broken
+    for pts in (((14, 5), (12, 9), (11, 12)), ((17, 5), (19, 9)), ((15, 6), (15, 9)), ((12, 4), (9, 8)),
+                ((19, 4), (22, 8), (23, 10))):
+        e.line(list(pts), "s")
+    # the knob rim where the dome meets the face: blunt bumps of different sizes, the biggest at the back corners
+    for (x, y, sz) in ((3, 14, 2), (8, 15, 1), (12, 14, 2)):
+        q = [(x + i, y + j) for i in range(sz) for j in range(sz)]
+        e.px([p for p in e.mirror(q) if in_egg(*p)], "n")
+        e.px([p for p in e.mirror([(x, y - 1)]) if in_egg(*p)], "N")
+    # the face below the dome: honey, a darker band where the dome casts its shadow
+    e.poly([(3, 17), (28, 17), (29, 31), (2, 31)], "b", clip=True)
+    e.line([(4, 16), (27, 16)], "d", clip=True)
+    # the heavy brow shelf over each eye, then the eye deep under it
+    e.px(e.mirror([(x, 17) for x in range(4, 11)]), "D")
+    eye = [".SSSSS.",
+           "SLLLLLS",
+           "SIiPGIS",
+           "SiIPIiS",
+           ".SSSSS."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(4 + i, 18 + j)]) if in_egg(*q)], ch)
+    # the pale cheek spots under the eyes (as on the model)
+    e.px(e.mirror([(6, 24), (7, 24), (6, 25)]), "w")
+    # the snout down the middle: narrow, the bosses on its bridge, the nostrils, the small beak at the bottom
+    e.poly([(12, 17), (19, 17), (18, 27), (13, 27)], "d")
+    e.line([(15, 18), (15, 25)], "b"); e.line([(16, 18), (16, 24)], "b")
+    e.px([(14, 19), (17, 19)], "N")
+    e.px([(13, 26), (18, 26)], "o")
+    e.poly([(13, 27), (18, 27), (18, 30), (13, 30)], "k")
+    e.line([(13, 30), (18, 30)], "K")
+    # the cream throat on each side of the beak
+    e.poly([(4, 27), (12, 27), (12, 33), (4, 33)], "w", clip=True)
+    e.poly([(19, 27), (27, 27), (27, 33), (19, 33)], "w", clip=True)
+    e.px(e.mirror([(5, 28), (8, 30)]), "W")
     return e
 
 

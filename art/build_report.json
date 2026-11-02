@@ -418,38 +418,51 @@
   "render_scale": 0.5
  },
  "pachycephalosaurus": {
-  "bones": 24,
-  "cubes": 90,
+  "bones": 31,
+  "cubes": 92,
   "texture": [
-   128,
-   256
+   256,
+   128
   ],
   "bounds_px": [
    [
-    -7.5,
-    -2.813961828751437e-05,
-    -41.56595697811482
+    -14.344555005215,
+    -0.049999998148907654,
+    -69.1761166288786
    ],
    [
-    7.5,
-    35.68420118627679,
-    46.10860472321931
+    14.344555005215,
+    64.78586081557387,
+    67.78918869039524
    ]
   ],
   "animations": [
    "animation.pachycephalosaurus.idle",
    "animation.pachycephalosaurus.walk",
    "animation.pachycephalosaurus.run",
-   "animation.pachycephalosaurus.sit",
+   "animation.pachycephalosaurus.swim",
+   "animation.pachycephalosaurus.dome_display",
+   "animation.pachycephalosaurus.warn",
+   "animation.pachycephalosaurus.sniff",
+   "animation.pachycephalosaurus.pluck",
+   "animation.pachycephalosaurus.eat",
    "animation.pachycephalosaurus.graze",
    "animation.pachycephalosaurus.attack",
+   "animation.pachycephalosaurus.flank_butt",
+   "animation.pachycephalosaurus.dome_clash",
+   "animation.pachycephalosaurus.hurt",
+   "animation.pachycephalosaurus.death",
+   "animation.pachycephalosaurus.sit",
+   "animation.pachycephalosaurus.sleep",
+   "animation.pachycephalosaurus.wake_sleep",
    "animation.pachycephalosaurus.knocked_out",
    "animation.pachycephalosaurus.wake",
-   "animation.pachycephalosaurus.eat",
    "animation.pachycephalosaurus.beg",
-   "animation.pachycephalosaurus.tame"
+   "animation.pachycephalosaurus.tame",
+   "animation.pachycephalosaurus.hop_play"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.5,
+  "handmade": true
  },
  "gallimimus": {
   "bones": 31,

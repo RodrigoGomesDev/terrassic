@@ -18,7 +18,8 @@ from giga_extras import CUSTOM_EGGS as GIGA_EGGS  # noqa: E402  (the Giganotosau
 from spino_extras import CUSTOM_EGGS as SPINO_EGGS  # noqa: E402  (the Spinosaurus' eggs on a river sandbar)
 from tri_extras import CUSTOM_EGGS as TRI_EGGS  # noqa: E402  (the Triceratops' oval eggs under rotting leaves)
 from galli_extras import CUSTOM_EGGS as GALLI_EGGS  # noqa: E402  (the Gallimimus' speckled clutch on a gravel bar)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS}
+from pachy_extras import CUSTOM_EGGS as PACHY_EGGS  # noqa: E402  (the Pachycephalosaurus' soft eggs among tree roots)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
