@@ -223,38 +223,53 @@
   "render_scale": 0.5
  },
  "triceratops": {
-  "bones": 30,
-  "cubes": 139,
+  "bones": 35,
+  "cubes": 115,
   "texture": [
    256,
-   512
+   256
   ],
   "bounds_px": [
    [
-    -22.0,
-    4.6530449083981296e-05,
-    -88.27812892663317
+    -22.80459205743675,
+    -0.05000424785577757,
+    -120.13818699823938
    ],
    [
-    22.0,
-    69.90795507224422,
-    65.57767463509177
+    22.80459205743675,
+    66.74764570770768,
+    98.3139243661144
    ]
   ],
   "animations": [
    "animation.triceratops.idle",
    "animation.triceratops.walk",
    "animation.triceratops.run",
+   "animation.triceratops.charge",
+   "animation.triceratops.swim",
    "animation.triceratops.attack",
-   "animation.triceratops.sit",
+   "animation.triceratops.horn_sweep",
+   "animation.triceratops.horn_lock",
+   "animation.triceratops.stamp",
+   "animation.triceratops.pivot",
+   "animation.triceratops.hurt",
+   "animation.triceratops.death",
+   "animation.triceratops.eat",
    "animation.triceratops.graze",
+   "animation.triceratops.plow",
+   "animation.triceratops.shear",
+   "animation.triceratops.wallow",
+   "animation.triceratops.butt_play",
+   "animation.triceratops.sit",
+   "animation.triceratops.sleep",
+   "animation.triceratops.wake_sleep",
    "animation.triceratops.knocked_out",
    "animation.triceratops.wake",
-   "animation.triceratops.eat",
    "animation.triceratops.beg",
    "animation.triceratops.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.6667,
+  "handmade": true
  },
  "stegosaurus": {
   "bones": 25,

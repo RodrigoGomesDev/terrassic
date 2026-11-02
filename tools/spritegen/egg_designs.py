@@ -200,38 +200,79 @@ def compsognathus():
 
 
 def triceratops():
-    e = Egg("triceratops", {"b": "#7b6c56", "c": "#b5a684", "e": "#bb4628", "w": "#ecdcb8",
-                             "D": "#6e2414", "i": "#f2e8cc", "j": "#b8a87e", "k": "#3e342a", "n": "#4a3e30"})
-    # frill peeking around the top of the egg
-    e.ell((1, 0, 30, 22), "w")
-    e.ell((3, 2, 28, 20), "e")
-    for (cx, cy) in ((7, 9), (12, 5), (19, 5), (24, 9)):
-        e.px([(cx, cy - 1), (cx - 1, cy), (cx + 1, cy), (cx, cy + 1)], "w")
-        e.px([(cx, cy)], "D")
-    for (x, y) in ((2, 8), (5, 3), (10, 0), (15, 0), (16, 0), (21, 0), (26, 3), (29, 8)):
-        e.px([(x, y - 1)], "w")
-    e.ell((6, 9, 25, 40), "b")
-    e.ell((9, 9, 22, 20), "d", clip=True)
-    e.pal["d"] = "#665844"
+    """Triceratops (02/11, the "ameixa" plum-grey of the new model), front view like the T. rex and Protoceratops
+    eggs: the solid frill is the dome behind the egg, its pale rim with low flat bumps and, on the male, the
+    terracotta band one scale in from the rim; the two long brow horns rise from over the eyes past the top of the
+    frill (outside the egg's outline, the first thing you see in the hotbar); the short thick nose horn; the model's
+    eyes (the house almond, rex-egg size: heavy brow, dark socket, pale top, dark honey iris, pupil toward the beak,
+    glint, lower lid) deep under the horn roots; the cheeks flaring to their dark epijugal points and the dark parrot
+    beak over the paler jaw."""
+    e = Egg("triceratops", {
+        "w": "#ddcfb6", "W": "#bfae96", "f": "#76697a", "F": "#8d7f8b", "v": "#574a5a", "x": "#a45c46", "X": "#86493c",
+        "b": "#615665", "l": "#776b77", "d": "#4b4050", "s": "#2e2234", "c": "#b5a1a8", "C": "#a38f98",
+        "i": "#e6dcc6", "I": "#cbbd9f", "j": "#a8997c", "o": "#6b5c4c", "O": "#4e4136",
+        "k": "#3f3534", "K": "#262022", "B": "#574b48", "h": "#3d2d42", "n": "#1c1418",
+        "D": "#1e1418", "Y": "#e8b860", "E": "#d09a42", "e": "#8a5a26", "P": "#140c0a", "G": "#fff4d6", "L": "#a38f98"})
+    # the frill: a solid dome behind the egg, pale rim, low flat bumps, the male's terracotta band one scale in
+    e.ell((0, 1, 31, 25), "w")
+    e.ell((1, 2, 30, 24), "x")
+    e.ell((3, 4, 28, 22), "f")
+    e.px(e.mirror([(1, 9), (3, 4), (7, 2), (12, 1)]), "W")          # the low bumps of the rim, flat (not spikes)
+    e.px(e.mirror([(2, 7), (5, 3), (10, 2)]), "X")                  # the band's darker scale edges
+    for pts in ([(12, 7), (8, 4)], [(10, 10), (5, 8)], [(14, 6), (13, 3)]):   # vessel grooves out from the middle
+        e.line(pts, "v"); e.line([(N - 1 - x, y) for x, y in pts], "v")
+    e.px(e.mirror([(9, 6), (6, 11)]), "F")
+    # the face: the egg under the frill, a dark edge against it, the crown a shade darker
+    e.ell((5, 8, 26, 41), "s")
+    e.ell((6, 9, 25, 41), "b")
     for y in range(N):
         for x in range(N):
-            if y > 18 and not in_egg(x, y):
+            if y > 16 and not in_egg(x, y):
                 e.set(x, y, "_")
-    e.ell((9, 21, 22, 33), "c", clip=True)
-    e.poly([(5, 20), (5, 23), (3, 22)], "i")
-    e.poly([(26, 20), (26, 23), (28, 22)], "i")
-    # brow horns and nose horn
+    e.ell((8, 9, 23, 18), "d", clip=True)
+    # drawn scales: plates lit on the upper side, rows on the crown and the cheeks
+    for x, y in ((11, 10), (13, 12), (9, 22), (11, 24)):
+        e.px(e.mirror([(x, y)]), "l")
+        e.px(e.mirror([(x, y + 1)]), "h")
+    # the brow horns: from the swollen brow over each eye, up and a little out, past the top of the frill; ivory
+    # keratin, dark at the root, a lit edge on the outside and a groove up the root half
     for side in (0, 1):
-        pts = [(10, 13), (12, 12), (9, 4), (8, 5)]
-        if side:
-            pts = [(31 - x, y) for (x, y) in pts]
-        e.poly(pts, "i")
-    e.line(e.mirror([(11, 12), (9, 6)])[:2], "j")
-    e.line([(20, 12), (22, 6)], "j")
-    eyes(e, 15, 9)
-    e.poly([(14, 22), (17, 22), (16, 17), (15, 17)], "i")
-    e.poly([(13, 26), (18, 26), (17, 30), (14, 30)], "k")
-    nostrils(e, 24, 13)
+        def mx(pts):
+            return [(N - 1 - x, y) for x, y in pts] if side else pts
+        e.poly(mx([(8, 14), (12, 14), (8, 2), (6, 0), (6, 3)]), "i")
+        e.poly(mx([(8, 14), (12, 14), (11, 10), (8, 10)]), "o")
+        e.line(mx([(7, 12), (6, 3)]), "I")
+        e.line(mx([(11, 12), (9, 5)]), "j")
+        e.px(mx([(9, 12), (10, 10)]), "O")
+    # the eyes, as on the model, rex-egg size, deep under the horn roots
+    eye = ["hhhhhhh.",
+           ".DDDDDD.",
+           "DYYYYGPD",
+           "DEYYEPPD",
+           "DeEEEEeD",
+           ".DDDDDD.",
+           "..LLL..."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(4 + i, 14 + j)]) if 0 <= q[0] < N], ch)
+    # the cheeks flaring out under the eyes to the dark epijugal points
+    e.poly([(3, 21), (7, 21), (8, 25), (4, 24)], "d")
+    e.px([(3, 21), (28, 21), (2, 22), (29, 22)], "o"); e.px([(1, 23), (30, 23), (2, 23), (29, 23)], "O")
+    # the snout down the middle, lighter, with the short thick nose horn on it
+    e.poly([(13, 13), (18, 13), (19, 24), (12, 24)], "l")
+    e.poly([(14, 19), (17, 19), (16, 15), (15, 15)], "i")
+    e.px([(14, 19), (17, 19)], "o"); e.px([(16, 18), (16, 17)], "j")
+    e.px(e.mirror([(12, 21), (12, 22)]), "n")                         # the nostrils either side
+    # the pale jaw at the bottom, the mouth line climbing to the cheek
+    e.ell((9, 25, 22, 36), "c", clip=True)
+    e.px(e.mirror([(11, 31), (12, 32)]), "C")
+    e.line([(8, 25), (11, 27), (13, 27)], "s"); e.line([(23, 25), (20, 27), (18, 27)], "s")
+    # the beak: the dark rostral narrowing down, a lit edge, the hooked tip over the predentary
+    e.poly([(13, 23), (18, 23), (18, 26), (17, 29), (14, 29), (13, 26)], "k")
+    e.line([(14, 23), (14, 27)], "B"); e.line([(18, 24), (18, 26)], "K")
+    e.poly([(14, 28), (17, 28), (16, 30), (15, 30)], "K")
+    e.px([(14, 31), (15, 31), (16, 31), (17, 31)], "h")
     return e
 
 
