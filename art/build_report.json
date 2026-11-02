@@ -1054,39 +1054,54 @@
   "render_scale": 0.5
  },
  "protoceratops": {
-  "bones": 28,
-  "cubes": 100,
+  "bones": 27,
+  "cubes": 63,
   "texture": [
    128,
-   256
+   128
   ],
   "bounds_px": [
    [
-    -8.653739537758987,
-    -0.13760149149294432,
-    -35.8248439110939
+    -11.05,
+    -0.011168682546414385,
+    -50.99174806568987
    ],
    [
-    8.653739537758987,
-    31.854889873291473,
-    48.236098813407224
+    11.05,
+    36.163819424262,
+    44.01317848670792
    ]
   ],
   "animations": [
    "animation.protoceratops.idle",
    "animation.protoceratops.walk",
    "animation.protoceratops.run",
+   "animation.protoceratops.run_biped",
+   "animation.protoceratops.swim",
    "animation.protoceratops.attack",
-   "animation.protoceratops.sit",
+   "animation.protoceratops.bite_hold",
+   "animation.protoceratops.shove",
+   "animation.protoceratops.frill_show",
+   "animation.protoceratops.sail_sway",
+   "animation.protoceratops.freeze",
+   "animation.protoceratops.hurt",
+   "animation.protoceratops.death",
+   "animation.protoceratops.eat",
    "animation.protoceratops.graze",
    "animation.protoceratops.dig",
+   "animation.protoceratops.sand_shake",
+   "animation.protoceratops.scrape_rest",
+   "animation.protoceratops.sit",
+   "animation.protoceratops.sleep",
+   "animation.protoceratops.huddle",
+   "animation.protoceratops.wake_sleep",
    "animation.protoceratops.knocked_out",
    "animation.protoceratops.wake",
-   "animation.protoceratops.eat",
    "animation.protoceratops.beg",
    "animation.protoceratops.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.3333,
+  "handmade": true
  },
  "struthiomimus": {
   "bones": 27,

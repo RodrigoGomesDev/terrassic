@@ -47,7 +47,8 @@ SIZES = {
     "pachyrhinosaurus":   dict(real=8.0,  scale=1.0,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
     # Protoceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "protoceratops":      dict(real=2.0,  scale=0.38, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
+    # Protoceratops v1 (01/11) is hand-made at 48 px/m and shown at its real 1.9 m (16 / 48 = 1/3), its own study and rig.
+    "protoceratops":      dict(real=1.9,  scale=0.3333, w=0.7, h=0.8, baby=0.5,  shadow=0.5),
     # Leptoceratops gracilis: ~2 m, 70-200 kg (Brown 1914; Ott 2007). Modelled at 2x (render_scale 0.5), 82 px long.
     "leptoceratops":      dict(real=2.0,  scale=0.39, w=0.6, h=0.7, baby=0.5,  shadow=0.5),
     # Stegosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
@@ -374,7 +375,7 @@ SPECIES = [
       doc="Protoceratops andrewsi - sheep-sized frilled herbivore of the dunes. Bites back when bothered. Digs in soft ground: a tame one turns up roots, bones and shallow fossils.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ATTACK_KNOCKBACK=0.5, ARMOR=3, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=16),
       food="Items.WHEAT, Items.CARROT, Items.BEETROOT, Items.FERN",
-      sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 1.1, 1.0, 240), xp=7, run=0.02, dig=True),
+      sounds=("TURTLE_AMBIENT_LAND", "TURTLE_HURT", "TURTLE_DEATH", 1.1, 1.0, 240), xp=7, run=0.003, dig=True, rig="Protoceratopsid"),
  dict(id="leptoceratops", cls="Leptoceratops", base="HerbivoreDinosaur",
       doc="Leptoceratops gracilis - 2 m hornless ceratopsian of the Hell Creek undergrowth, the \"pig\" of the Cretaceous: small herds on the plains, in the forests and the savanna, the easy early meat and leather (docs/FAUNA.md). Skittish, rears on its hind legs to look over the ferns; cornered, it butts. Hand-tamed with ferns, berries, wheat or apples.",
       attrs=dict(MAX_HEALTH=20, MOVEMENT_SPEED=0.28, ATTACK_DAMAGE=3, ATTACK_KNOCKBACK=0.4, ARMOR=1, KNOCKBACK_RESISTANCE=0.1, FOLLOW_RANGE=16),
@@ -801,8 +802,8 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex"):
-        pass  # ApexTheropod lists the whole set of its rig
+    if s.get("apex") or s.get("rig") == "Protoceratopsid":
+        pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
     elif base == "HerbivoreDinosaur" and len(extras) > 1:
@@ -1028,7 +1029,7 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.item.Item")
         imports.add("com.terrassic.registry.ModItems")
         body.append(f"    @Override\n    protected Item speciesSaddle() {{\n        return ModItems.{s['saddle']}.get();\n    }}\n")
-    if s.get("rig") == "Raptor":
+    if s.get("rig") in ("Raptor", "Protoceratopsid"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

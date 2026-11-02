@@ -344,8 +344,8 @@ FACE_ART = {
         "221222122",            # it, the mask's shadow as a brow), the mask behind it, the keyhole slot as one
         "m1mm22222",            # dark notch under its front, crease, cheek, lips
         "mmmmmm222",
-        "YgpifM212",
-        "iIpIfM222",
+        "lYgiiM212",            # the eye (02/11): one almond, the pupil a slot near the front, iris behind it
+        "lipIIM222",
         "ffffmm222",
         "1fmM12222",
         "MM1M13333",

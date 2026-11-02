@@ -145,7 +145,7 @@ entregues pelo Codex (Caderno por UUID/delta, persistência, ferramentas e teste
 
 ## Reservas desta entrega
 
-Claude do Mac — 02/11: Protoceratops novo e olhos de Carnotauro e Giganotossauro em andamento; `gen_species.py`, `tools/modelgen/build_all.py`, `tools/modelgen/handmade/protoceratops/`, `carnotaurus/` e `giganotosaurus/` reservados até a entrega na main e em `mc/1.21.1`.
+Claude do Mac — 02/11: Protoceratops novo e olhos de Carnotauro e Giganotossauro entregues na main e em `mc/1.21.1`; `gen_species.py`, `tools/modelgen/build_all.py`, `tools/modelgen/handmade/protoceratops/`, `carnotaurus/` e `giganotosaurus/` liberados.
 
 Claude do Mac — 01/11: dinos alfa entregues na main e em `mc/1.21.1`; `DinosaurEntity`, `ApexTheropod`, `Alphas`, `gen_rules.py`, `gen_resources.py` e `tools/modelgen/handmade/tyrannosaurus/` liberados.
 
