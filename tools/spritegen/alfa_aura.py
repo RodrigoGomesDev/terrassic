@@ -14,7 +14,9 @@ from PIL import Image
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures", "particle")
-STEPS = (0, 40, 90, 150, 215, 255)
+# v1.6 fix: the vanilla particle shader discards anything under 10% opacity (texture x particle alpha), so the lit
+# steps start at 110/255 and the glows fill most of the frame
+STEPS = (0, 110, 170, 215, 240, 255)
 
 
 def step(a):
@@ -30,7 +32,7 @@ def glow(radius, core, wobble=0.0):
             dx, dy = x - 7.5, y - 7.5
             ang = math.atan2(dy, dx)
             r = math.hypot(dx, dy) / (radius * (1.0 + wobble * math.sin(ang * 3 + 0.7)))
-            a = (1.0 - r) ** 1.6 if r < 1.0 else 0.0
+            a = (1.0 - r) ** 0.8 if r < 1.0 else 0.0
             if r < core:
                 a = 1.0
             img.putpixel((x, y), (255, 255, 255, step(a)))
@@ -44,14 +46,17 @@ def glint():
         for i in range(1, n + 1):
             img.putpixel((7 + ax * i, 8 + ay * i), (255, 255, 255, step(1.0 - i / (n + 1.5))))
     for dx, dy in ((1, 1), (-1, -1), (1, -1), (-1, 1)):
-        img.putpixel((7 + dx, 8 + dy), (255, 255, 255, step(0.35)))
+        img.putpixel((7 + dx, 8 + dy), (255, 255, 255, step(0.6)))
+    for dx, dy in ((1, -1), (1, -2), (-1, 1), (1, 1)):   # a thicker heart, so it reads from afar
+        img.putpixel((7 + dx, 8 + dy), (255, 255, 255, step(0.8)))
     img.putpixel((7, 8), (255, 255, 255, 255))
     return img
 
 
 def flake():
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    lit = {(7, 7): 1.0, (8, 7): 0.85, (7, 8): 0.7, (6, 7): 0.55, (8, 6): 0.45, (9, 8): 0.3, (6, 9): 0.25}
+    lit = {(7, 7): 1.0, (8, 7): 0.95, (7, 8): 0.9, (6, 7): 0.8, (8, 6): 0.75, (9, 8): 0.6, (6, 9): 0.55,
+           (8, 8): 0.9, (7, 6): 0.7, (9, 7): 0.6, (5, 8): 0.5, (8, 9): 0.5, (10, 9): 0.45, (6, 6): 0.45}
     for (x, y), a in lit.items():
         img.putpixel((x, y), (255, 255, 255, step(a)))
     return img
@@ -59,7 +64,7 @@ def flake():
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    frames = [glow(7.0, 0.0, 0.05), glow(4.5, 0.25), glint(), flake()]
+    frames = [glow(7.6, 0.0, 0.05), glow(6.5, 0.4), glint(), flake()]
     for i, img in enumerate(frames):
         img.save(os.path.join(OUT, f"alpha_mote_{i}.png"))
     print(f"alfa_aura: {len(frames)} frames -> {OUT}")

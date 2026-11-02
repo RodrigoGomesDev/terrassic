@@ -52,7 +52,7 @@ public class AlphaMoteParticle extends TextureSheetParticle {
         this.quadSize = size;
         this.twinkle = kind == GLINT;
         this.phase = this.random.nextFloat() * Mth.TWO_PI;
-        this.alpha = 0.0F;
+        this.alpha = 0.2F;
         this.setColor(this.r0, this.g0, this.b0);
         if (sprites != null) {
             this.setSprite(sprites.get(kind, 3));
@@ -76,12 +76,13 @@ public class AlphaMoteParticle extends TextureSheetParticle {
         // colour: from the bright coat colour to the dark one; size: swells a little, then shrinks away
         this.setColor(Mth.lerp(t, this.r0, this.r1), Mth.lerp(t, this.g0, this.g1), Mth.lerp(t, this.b0, this.b1));
         this.quadSize = this.size0 * (t < 0.2F ? 0.7F + 1.5F * t : 1.0F - 0.6F * (t - 0.2F));
-        // fades in fast, out slowly; a glint flickers
-        float a = t < 0.15F ? t / 0.15F : 1.0F - (t - 0.15F) / 0.85F;
+        // fades in fast, holds, fades out over the last third; a glint flickers. Never under 0.2 while it lives: the
+        // vanilla particle shader discards what is under 10% opacity (v1.6 fix, the first aura showed nothing)
+        float a = t < 0.1F ? t / 0.1F : t > 0.67F ? (1.0F - t) / 0.33F : 1.0F;
         if (this.twinkle) {
-            a *= 0.55F + 0.45F * Mth.sin(this.age * 1.3F + this.phase);
+            a *= 0.7F + 0.3F * Mth.sin(this.age * 1.3F + this.phase);
         }
-        this.alpha = Mth.clamp(a, 0.0F, 1.0F) * this.peak;
+        this.alpha = Math.max(0.2F, Mth.clamp(a, 0.0F, 1.0F) * this.peak);
         // the heat curls: a slow sideways wobble
         this.xd += Mth.sin(this.age * 0.35F + this.phase) * 0.0025D;
         this.zd += Mth.cos(this.age * 0.35F + this.phase) * 0.0025D;
