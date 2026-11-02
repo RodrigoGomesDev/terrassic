@@ -51,6 +51,11 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         return true;
     }
 
+    /** Whether a wild runner flees from this player (false lets the player come close, e.g. crouching with food). */
+    protected boolean fleesFrom(Player player) {
+        return true;
+    }
+
     /** Distance at which a tamed animal starts following its owner. */
     protected float followStartDistance() {
         return 10.0F;
@@ -96,7 +101,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
             }
         });
         this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Player.class, 10.0F, 1.2D, 1.5D,
-                e -> !e.isSpectator() && !((Player) e).isCreative()) {
+                e -> !e.isSpectator() && !((Player) e).isCreative() && this.fleesFrom((Player) e)) {
             @Override
             public boolean canUse() {
                 return !HerbivoreDinosaur.this.fightsBack() && !HerbivoreDinosaur.this.isTame() && super.canUse();

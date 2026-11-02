@@ -452,38 +452,52 @@
   "render_scale": 0.5
  },
  "gallimimus": {
-  "bones": 25,
-  "cubes": 64,
+  "bones": 31,
+  "cubes": 68,
   "texture": [
-   128,
-   256
+   256,
+   64
   ],
   "bounds_px": [
    [
-    -7.5,
-    4.489080843198545e-05,
-    -35.206561143589255
+    -11.305126058446351,
+    -0.04939943847776833,
+    -75.71414455522691
    ],
    [
-    7.5,
-    56.29717680306618,
-    58.987812479088205
+    11.305126058446351,
+    85.55594120709188,
+    113.80594798810385
    ]
   ],
   "animations": [
    "animation.gallimimus.idle",
    "animation.gallimimus.walk",
    "animation.gallimimus.run",
-   "animation.gallimimus.sit",
+   "animation.gallimimus.jink",
+   "animation.gallimimus.swim",
+   "animation.gallimimus.sentinel",
+   "animation.gallimimus.preen",
+   "animation.gallimimus.wing_display",
+   "animation.gallimimus.eat",
    "animation.gallimimus.graze",
+   "animation.gallimimus.grit",
+   "animation.gallimimus.sift",
+   "animation.gallimimus.browse",
    "animation.gallimimus.attack",
+   "animation.gallimimus.hurt",
+   "animation.gallimimus.death",
+   "animation.gallimimus.sit",
+   "animation.gallimimus.sleep",
+   "animation.gallimimus.wake_sleep",
+   "animation.gallimimus.brood",
    "animation.gallimimus.knocked_out",
    "animation.gallimimus.wake",
-   "animation.gallimimus.eat",
    "animation.gallimimus.beg",
    "animation.gallimimus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.5,
+  "handmade": true
  },
  "pteranodon": {
   "bones": 38,

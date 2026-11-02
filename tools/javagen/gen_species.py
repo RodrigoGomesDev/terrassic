@@ -115,8 +115,9 @@ SIZES = {
     # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
     # Thescelosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "thescelosaurus":     dict(real=4.0,  scale=0.76, w=1.0, h=1.6, baby=0.35, shadow=0.8),
-    # Gallimimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "gallimimus":         dict(real=6.0,  scale=1.02, w=1.2, h=2.6, baby=0.35, shadow=0.9),
+    # Gallimimus bullatus: 6 m, ~440 kg (Osmolska et al. 1972; Paul 2010). Gallimimus v1 (02/11) is hand-made at
+    # 32 px/m and shown at its real 6 m (16 / 32 = 0.5), its own study and rig; the hitbox is kept.
+    "gallimimus":         dict(real=6.0,  scale=0.5,  w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
     # Struthiomimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "struthiomimus":      dict(real=4.3,  scale=0.81, w=1.0, h=2.4, baby=0.35, shadow=0.8),
@@ -591,7 +592,8 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
       food="Items.WHEAT_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.55, 1.2, 200), xp=8, run=0.03,
-      fights=False, rideable=True, jump=0.8, ride_offset=2.1, ride_forward=0.3, ride_speed=1.35),
+      fights=False, rideable=True, jump=0.8, ride_offset=4.3, ride_forward=0.1, ride_speed=1.35,
+      saddle="GALLIMIMUS_SADDLE", rig="Ornithomimid"),
  dict(id="struthiomimus", cls="Struthiomimus", base="HerbivoreDinosaur",
       doc="Struthiomimus altus - 4.3 m ostrich mimic of the floodplains. Flocks flee from danger. Omnivore, tamed with seeds, berries or eggs; the lightest and fastest mount.",
       attrs=dict(MAX_HEALTH=26, MOVEMENT_SPEED=0.37, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
@@ -804,7 +806,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1030,7 +1032,7 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.item.Item")
         imports.add("com.terrassic.registry.ModItems")
         body.append(f"    @Override\n    protected Item speciesSaddle() {{\n        return ModItems.{s['saddle']}.get();\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

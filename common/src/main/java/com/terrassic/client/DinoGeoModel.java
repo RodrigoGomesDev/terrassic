@@ -13,6 +13,7 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
  *   <li>Texture depends on sex: textures/entity/&lt;id&gt;_male.png / _female.png</li>
  *   <li>Bone "male_display" is only shown on males, "female_display" only on females</li>
  *   <li>Bone "saddle" is only shown when the animal is saddled</li>
+ *   <li>Bones "adult_l" and "adult_r" are hidden on babies (plumage the young did not have)</li>
  *   <li>Bone "head" follows the look direction (handled by DefaultedEntityGeoModel)</li>
  * </ul>
  */
@@ -47,6 +48,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("male_display", female);
         hide("female_display", !female);
         hide("saddle", !animatable.isSaddled());
+        // adult-only plumage (the Gallimimus' wing fans: the young had only down)
+        hide("adult_l", animatable.isBaby());
+        hide("adult_r", animatable.isBaby());
     }
 
     private void hide(String bone, boolean hidden) {

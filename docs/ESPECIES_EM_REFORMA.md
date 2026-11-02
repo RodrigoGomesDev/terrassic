@@ -7,9 +7,9 @@ Fenda nem nos fósseis.
 
 - Lista dos refeitos: `Eras.REMADE` em `common/src/main/java/com/terrassic/config/Eras.java`. Cada espécie refeita e
   aprovada entra ali na versão em que ficar pronta.
-- Hoje: T. rex, Carnotauro, Giganotossauro, Protoceratops, Tricerátops (regra de estudo próprio) e Spinosaurus,
+- Hoje: T. rex, Carnotauro, Giganotossauro, Protoceratops, Tricerátops, Galimimo (regra de estudo próprio) e Spinosaurus,
   Velociraptor, Pteranodon (refeitos antes da regra; passam pela revisão da regra universal antes da 1.5; quem não passar
-  sai da lista). O Tricerátops é o primeiro dos seis do pacote 1.5 (depois: Gallimimus, Paquicefalossauro,
+  sai da lista). O Tricerátops e o Galimimo são os dois primeiros dos seis do pacote 1.5 (depois: Paquicefalossauro,
   Parassaurolofo, Anquilossauro, Mosassauro).
 - Para ligar todas de volta: `"especies_antigas": true` em `config/terrassic-world.json` e reiniciar o jogo ou o servidor.
   O valor é lido uma vez, no início.

@@ -20,6 +20,7 @@ uma cor livre quando for refeita.
 | Giganotosaurus | cinza-ardósia azulado | azul-cinza |
 | Protoceratops | areia quente com selas ferrugem | areia |
 | Triceratops | ameixa: cinza-arroxeado, babado com faixa terracota no macho | roxo-acinzentado |
+| Gallimimus | grafite-azulado (macho) ou canela (fêmea), barriga e garganta giz, canelas rosadas | azul-preto |
 
 ## Colisões que ainda existem (02/11/2026)
 
@@ -28,5 +29,8 @@ uma cor livre quando for refeita.
 - Protoceratops × Mononykus 6,9, Compsognathus 8,1, Styracosaurus 8,3: as antigas mudam.
 - Carnotaurus × Majungasaurus 9,2: o Majungasaurus muda.
 - Triceratops: a mais perto é o Pachyrhinosaurus (antigo, 13,4); o Mosasaurus, do mesmo pacote 1.5, não pode usar ameixa.
+- Gallimimus × Hesperornis 6,4, Citipati 7,5, Tylosaurus 7,5, Mosasaurus 8,0: as antigas mudam. O Mosasaurus, último
+  do pacote 1.5, sai do azul-escuro quando for refeito. Nenhuma colisão com refeitos (Giganotosaurus e Pteranodon
+  ficaram acima de 10 depois de o macho ir para o grafite-azulado).
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre
   nesta tabela antes de pintar.
