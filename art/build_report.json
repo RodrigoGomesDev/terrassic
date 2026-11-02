@@ -1569,6 +1569,7 @@
    "animation.carnotaurus.run",
    "animation.carnotaurus.stalk",
    "animation.carnotaurus.skid_turn",
+   "animation.carnotaurus.skid_turn_r",
    "animation.carnotaurus.brake",
    "animation.carnotaurus.lock_on",
    "animation.carnotaurus.attack_quick",
