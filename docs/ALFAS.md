@@ -46,6 +46,11 @@ seção do estudo de cada dino refeito.
   chama pequena na fêmea). O dobro quando ele está bravo, nenhuma quando está desmaiado (foi vencido). Quem monta não
   vê a própria aura. Só no cliente, até o alcance normal de partículas (~32 blocos); flag `alpha_aura` no config do
   cliente desliga. Teste 2 (01/11): sorteada dentro da caixa, quase toda nascia escondida no corpo e sumia à noite.
+- v1.6 (Rodrigo, 02/11: "usar as partículas do mine não ficou tão bom, o bicho tem que ter aura"): partículas próprias
+  (`client/AlphaMoteParticle`, sprites de `tools/spritegen/alfa_aura.py`), todas com brilho próprio (aparecem à noite),
+  em quatro camadas: névoa de calor fraca sobre as costas, pontos de luz das costas e flancos, brilhos que piscam e
+  flocos de cinza (macho marfim) ou brasa (fêmea), e, quando ele luta, um anel que pulsa do peito a cada 1,5 s como
+  batida de coração. Sem chama nem end rod do Minecraft. Menos camadas com partículas em "reduzidas" e "mínimas".
 - A caixa de colisão fica na largura do maior bicho comum da espécie, para ele não travar entre as árvores. O modelo
   e a altura crescem.
 - T. rex alfa típico: uns 820 de vida e 35 de dano, contra uns 140 e 15 do comum.
