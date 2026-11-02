@@ -2142,9 +2142,11 @@ def feather_bundle(top):
 
 
 def phase6_textures():
+    from couros_1_5 import SPECIES as REDRAWN  # remade species: their rug is drawn by couros_1_5.py
     out = {}
     for sid in SPECIES:
-        out[f"{sid}_hide_rug"] = hide_pattern(sid, species_ramp(sid), HIDE_PATTERN.get(sid, "scales"))
+        if sid not in REDRAWN:
+            out[f"{sid}_hide_rug"] = hide_pattern(sid, species_ramp(sid), HIDE_PATTERN.get(sid, "scales"))
         out[f"{sid}_skull_trophy"] = skull_sprite(sid)
         out[f"{sid}_skull_fossil"] = skull_fossil(sid)
     for hid in GENERIC_HIDES:

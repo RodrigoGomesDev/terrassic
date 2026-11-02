@@ -1467,7 +1467,9 @@ def hide_sprite(sid, pal):
 
 
 def hide_sprites():
-    return {sid: hide_sprite(sid, pal) for sid, pal in species_palettes().items()}
+    """Old-model species only: the hides of the remade ones are drawn by couros_1_5.py from their current skin."""
+    from couros_1_5 import SPECIES as REDRAWN
+    return {sid: hide_sprite(sid, pal) for sid, pal in species_palettes().items() if sid not in REDRAWN}
 
 
 def preview(path):
