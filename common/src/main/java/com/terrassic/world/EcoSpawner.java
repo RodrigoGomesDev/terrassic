@@ -390,14 +390,36 @@ public final class EcoSpawner {
         if (total <= 0) {
             return null;
         }
+        // v1.6 (players: "too many T. rex"): a biome with only a few rare species left in it (the old-model ones are off
+        // since 1.5) gets as little life as its weights say, not the full target made of whatever is left. With
+        // the T. rex the only species in the jungle, every land spawn there was a rex.
+        if (kind == Kind.LAND && total < SPARSE_WEIGHT && random.nextInt(SPARSE_WEIGHT) >= total) {
+            return null;
+        }
         int roll = random.nextInt(total);
         for (MobSpawnSettings.SpawnerData data : options) {
             roll -= data.getWeight().asInt();
             if (roll < 0) {
-                return data;
+                return rareCrowded(level, pos, data) ? null : data;
             }
         }
         return null;
+    }
+
+    /** Below this total land weight, a biome spawns proportionally less (the savanna has about 29, the jungle had 1). */
+    private static final int SPARSE_WEIGHT = 12;
+
+    /**
+     * v1.6: a rare species (weight 1: T. rex, Giganotosaurus...) never puts a third wild one within RADIUS of the spot,
+     * so the apex predators stay a meeting and not a crowd.
+     */
+    private static boolean rareCrowded(ServerLevel level, BlockPos pos, MobSpawnSettings.SpawnerData data) {
+        if (data.getWeight().asInt() > 1) {
+            return false;
+        }
+        AABB box = new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1)
+                .inflate(RADIUS, 64.0D, RADIUS);
+        return level.getEntitiesOfClass(DinosaurEntity.class, box, e -> e.getType() == data.type && !e.isTame()).size() >= 2;
     }
 
     /** Land, flyer or sea, found once per type by making a throwaway instance (OTHER for anything not ours). */
