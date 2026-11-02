@@ -20,7 +20,8 @@ public final class Eras {
     /** Species with their new model and own study (docs/CORES.md). Add each one here when it is remade. */
     public static final Set<String> REMADE = Set.of(
             "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops",
-            "spinosaurus", "velociraptor", "pteranodon", "triceratops", "gallimimus", "pachycephalosaurus");
+            "spinosaurus", "velociraptor", "pteranodon", "triceratops", "gallimimus", "pachycephalosaurus",
+            "parasaurolophus");
     private static final Set<String> OFF_SPECIES = new HashSet<>();
 
     static {

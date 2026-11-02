@@ -383,39 +383,52 @@
   "render_scale": 0.5
  },
  "parasaurolophus": {
-  "bones": 28,
-  "cubes": 74,
+  "bones": 35,
+  "cubes": 75,
   "texture": [
    256,
    256
   ],
   "bounds_px": [
    [
-    -14.5,
-    -0.07037776599369788,
-    -73.24190530823071
+    -14.807620729565052,
+    6.609296443471635e-16,
+    -113.3891707359314
    ],
    [
-    14.5,
-    66.34274871235019,
-    99.35249538655133
+    14.807620729565052,
+    70.58498813035112,
+    125.55125252176919
    ]
   ],
   "animations": [
    "animation.parasaurolophus.idle",
    "animation.parasaurolophus.walk",
    "animation.parasaurolophus.run",
-   "animation.parasaurolophus.attack",
-   "animation.parasaurolophus.sit",
-   "animation.parasaurolophus.graze",
+   "animation.parasaurolophus.swim",
    "animation.parasaurolophus.call",
+   "animation.parasaurolophus.answer",
+   "animation.parasaurolophus.alarm",
+   "animation.parasaurolophus.peep",
+   "animation.parasaurolophus.vigilant",
+   "animation.parasaurolophus.crest_display",
+   "animation.parasaurolophus.browse_high",
+   "animation.parasaurolophus.drink",
+   "animation.parasaurolophus.eat",
+   "animation.parasaurolophus.graze",
+   "animation.parasaurolophus.attack",
+   "animation.parasaurolophus.hurt",
+   "animation.parasaurolophus.death",
+   "animation.parasaurolophus.sit",
+   "animation.parasaurolophus.sleep",
+   "animation.parasaurolophus.wake_sleep",
    "animation.parasaurolophus.knocked_out",
    "animation.parasaurolophus.wake",
-   "animation.parasaurolophus.eat",
    "animation.parasaurolophus.beg",
    "animation.parasaurolophus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.667,
+  "handmade": true
  },
  "pachycephalosaurus": {
   "bones": 31,

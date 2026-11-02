@@ -340,26 +340,60 @@ def brachiosaurus():
 
 
 def parasaurolophus():
-    e = Egg("parasaurolophus", {"b": "#468070", "c": "#d8d2ac", "d": "#24443c", "n": "#1e3a34",
-                                 "e": "#c43c28", "y": "#f2c866", "m": "#c09a68", "M": "#4a3e30"})
-    e.line([(15, 8), (8, 0)], "e", 4)
-    e.line([(13, 4), (11, 6)], "y")
-    e.line([(10, 1), (8, 3)], "y")
-    cap(e, "d", (6, 5, 25, 17), (3, 10, 28, 36))
-    e.line([(15, 8), (8, 0)], "e", 4)
-    e.line([(13, 4), (11, 6)], "y")
-    e.line([(10, 1), (8, 3)], "y")
-    for y in (18, 21):
-        e.line([(4, y), (7, y)], "d", clip=True)
-        e.line([(24, y), (27, y)], "d", clip=True)
-    eyes(e, 14, 9, iris="#e0a832")
-    # wide duck bill
-    e.ell((8, 21, 23, 36), "c", clip=True)
-    e.ell((7, 23, 24, 30), "m", clip=True)
-    e.line([(9, 27), (22, 27)], "M")
-    nostrils(e, 25, 12, "M")
+    """Parasaurolophus (02/11, the remade model, "ruivo de impala"), front view like the other remade eggs: the long
+    tube of the crest leaves the top of the snout and sweeps up and back past the egg's outline to the right (the
+    first thing seen in the hotbar), lit along its top, darkening to near black at the tip as on the male; the crown
+    and the back of the head chestnut, the face rufous, the cheeks and the throat cream; the model's eyes (rex-egg
+    size: dark socket, amber-brown iris, pupil toward the bill, glint) with the pale lower lid of a herd animal; the
+    broad flat duck bill down the middle, dark keratin flaring at the bottom, its paler cutting edge, the slit
+    nostrils high on its sides."""
+    e = Egg("parasaurolophus", {
+        "r": "#c06a2c", "R": "#a0521f", "q": "#733a1a", "Q": "#4c2516", "o": "#d8874a",
+        "c": "#d3c4a4", "C": "#b6a284", "w": "#e9dfc6",
+        "t": "#a0521f", "T": "#733a1a", "u": "#4e2d1f", "U": "#34221d", "v": "#1d1517", "h": "#d8874a",
+        "D": "#120d0e", "Y": "#b07a3a", "E": "#7d4f24", "e": "#4d3018", "P": "#0c0a0a", "G": "#f0e6cc", "L": "#d9cdb0",
+        "k": "#37302d", "K": "#221e1e", "B": "#524842", "A": "#75695e", "n": "#1a1314"})
+    # the head: rufous, the crown chestnut, the cream coming up from the throat with a wandering edge
+    e.ell((3, 3, 28, 36), "r", clip=True)
+    e.ell((6, 3, 25, 14), "R", clip=True)
+    e.ell((9, 3, 22, 9), "q", clip=True)
+    e.poly([(3, 31), (4, 24), (7, 22), (9, 24), (10, 27), (21, 27), (22, 24), (24, 22), (27, 24), (28, 31)], "c", clip=True)
+    e.px([(5, 23), (26, 23), (8, 26), (23, 26)], "C")
+    e.px([(5, 28), (26, 29), (7, 30), (24, 30)], "w")
+    # drawn scales: a few lit plates on the crown and the cheeks (the lit side up), never a row
+    for x, y in ((11, 6), (8, 10), (12, 12), (6, 17)):
+        e.px(e.mirror([(x, y)]), "o")
+        e.px(e.mirror([(x + 1, y + 1)]), "q")
+    # the crest: from the top of the snout up and back to the upper right, 3 px thick, lit on its upper edge, shaded
+    # under, darkening toward the rounded tip (the male's); the suture a broken dark line along it
+    e.line([(15, 11), (21, 5)], "t", 3)
+    e.line([(21, 5), (25, 2)], "T", 3)
+    e.line([(25, 2), (29, 0)], "u", 3)
+    e.line([(14, 10), (20, 4)], "h"); e.line([(21, 3), (24, 1)], "t"); e.line([(25, 0), (27, 0)], "T")
+    e.line([(17, 11), (22, 6)], "T"); e.line([(23, 5), (27, 2)], "U"); e.px([(29, 1), (29, 2), (28, 2)], "v")
+    e.px([(18, 7), (22, 4), (26, 1)], "U")
+    # the eyes, as on the model, rex-egg size, the pale lower lid
+    eye = [".qqqq...",
+           ".DDDDDD.",
+           "DYYGYPD.",
+           "DEYYEPPD",
+           "DeEEEEeD",
+           ".DDDDDD.",
+           "..LLLL.."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(3 + i, 12 + j)]) if in_egg(*q)], ch)
+    # the duck bill: the snout narrows a little, then the keratin sheath flares broad and flat at the bottom, lit
+    # down its middle, dark at the sides and under the rim
+    e.poly([(13, 11), (18, 11), (19, 19), (12, 19)], "R")
+    e.poly([(12, 20), (19, 20), (20, 25), (21, 28), (19, 30), (12, 30), (10, 28), (11, 25)], "B")
+    e.line([(15, 21), (15, 28)], "A"); e.px([(16, 22), (16, 25)], "A")
+    e.line([(12, 20), (11, 25)], "k"); e.line([(19, 20), (20, 25)], "k")
+    e.line([(10, 28), (12, 30)], "k"); e.line([(21, 28), (19, 30)], "k")
+    e.line([(13, 30), (18, 30)], "K"); e.px([(14, 31), (17, 31)], "K")
+    e.px(e.mirror([(13, 21), (13, 22)]), "n")                            # the slit nostrils
     return e
-
 
 def pachycephalosaurus():
     """Pachycephalosaurus (02/11, the remade model): the egg's top IS the dome, the way the animal's own head is mostly

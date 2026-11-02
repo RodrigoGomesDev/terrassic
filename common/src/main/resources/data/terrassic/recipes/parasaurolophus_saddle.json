@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "MMM",
+    "RHR",
+    " S "
+  ],
+  "key": {
+    "M": {
+      "item": "terrassic:reed_mat"
+    },
+    "R": {
+      "item": "terrassic:rush"
+    },
+    "H": {
+      "item": "terrassic:parasaurolophus_hide"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "terrassic:parasaurolophus_saddle",
+    "count": 1
+  }
+}

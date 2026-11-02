@@ -7,10 +7,10 @@ Fenda nem nos fósseis.
 
 - Lista dos refeitos: `Eras.REMADE` em `common/src/main/java/com/terrassic/config/Eras.java`. Cada espécie refeita e
   aprovada entra ali na versão em que ficar pronta.
-- Hoje: T. rex, Carnotauro, Giganotossauro, Protoceratops, Tricerátops, Galimimo, Paquicefalossauro (regra de estudo próprio) e Spinosaurus,
+- Hoje: T. rex, Carnotauro, Giganotossauro, Protoceratops, Tricerátops, Galimimo, Paquicefalossauro, Parassaurolofo (regra de estudo próprio) e Spinosaurus,
   Velociraptor, Pteranodon (refeitos antes da regra; passam pela revisão da regra universal antes da 1.5; quem não passar
-  sai da lista). O Tricerátops, o Galimimo e o Paquicefalossauro são os três primeiros dos seis do pacote 1.5
-  (depois: Parassaurolofo, Anquilossauro, Mosassauro).
+  sai da lista). O Tricerátops, o Galimimo, o Paquicefalossauro e o Parassaurolofo são os quatro primeiros dos seis do
+  pacote 1.5 (depois: Anquilossauro, Mosassauro).
 - Para ligar todas de volta: `"especies_antigas": true` em `config/terrassic-world.json` e reiniciar o jogo ou o servidor.
   O valor é lido uma vez, no início.
 - Efeito no tipo de mundo Terrassic (desligado por padrão): a fauna de caça do Cretáceo também fica desligada; o mundo

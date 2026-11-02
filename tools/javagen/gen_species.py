@@ -108,8 +108,10 @@ SIZES = {
     "enchodus":           dict(real=0.8,  scale=0.14, w=0.4, h=0.3, baby=0.4,  shadow=0.3),
     # Lepisosteus: Hell Creek gars ~1-1.2 m (Grande 2010; Brinkman et al. 2014). 108 px long on the fish rig.
     "lepisosteus":        dict(real=1.0,  scale=0.15, w=0.4, h=0.3, baby=0.4,  shadow=0.3),
-    # Parasaurolophus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "parasaurolophus":    dict(real=9.5,  scale=0.88, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
+    # Parasaurolophus walkeri: 9.5 m, ~2.5-3 t (Parks 1922; Paul 2010). Parasaurolophus v1 (02/11) is hand-made at
+    # 24 px/m and shown at its real size (16 / 24 = 0.667), its own study and rig (the growth series: the baby shows the
+    # young's low dome, the adult the long crest); the hitbox is kept.
+    "parasaurolophus":    dict(real=9.5,  scale=0.667, w=2.0, h=3.2, baby=0.3,  shadow=1.6),
     # Pachycephalosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     # Pachycephalosaurus wyomingensis: 4.5 m, ~450 kg (Paul 2010). Pachycephalosaurus v1 (02/11) is hand-made at
     # 32 px/m and shown at its real 4.5 m (16 / 32 = 0.5), its own study and rig (the growth series: the baby shows the
@@ -575,11 +577,12 @@ SPECIES = [
       prey="e instanceof AbstractFish", prey_imports=["net.minecraft.world.entity.animal.AbstractFish"], prey_interval=120,
       hunts_players=False),
  dict(id="parasaurolophus", cls="Parasaurolophus", base="HerbivoreDinosaur",
-      doc="Parasaurolophus walkeri - duck-billed herbivore with a long hollow crest it uses to call. Flees from danger with the herd. Rideable when tamed.",
+      doc="Parasaurolophus walkeri - 9.5 m duck-billed herbivore of the floodplains with a long hollow crest it calls through, the bill shut. Walks on four, runs on two. The herd answers its calls and runs together at the alarm; a wild herd watches a player instead of bolting: stand still while it stares and it lets you come and hand-feed it. Rideable with its own reed saddle.",
       attrs=dict(MAX_HEALTH=60, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.7, 1.6, 260), xp=12,
-      fights=False, rideable=True, jump=0.65, ride_offset=2.55, ride_forward=0.8, ride_speed=1.15, call=True),
+      fights=False, rideable=True, jump=0.65, ride_offset=3.4, ride_forward=1.66, ride_speed=1.15,
+      saddle="PARASAUROLOPHUS_SADDLE", rig="Lambeosaurine"),
  dict(id="pachycephalosaurus", cls="Pachycephalosaurus", base="HerbivoreDinosaur",
       doc="Pachycephalosaurus wyomingensis - 4.5 m bipedal herbivore of the Hell Creek woods with a solid bony dome. Butts hard (huge knockback) when provoked; warns and shoves away anyone who comes close without food; males clash dome to dome. The young are flat-headed and spiky. Not rideable.",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=0.28, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=3.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=16),
@@ -809,7 +812,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1036,7 +1039,7 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.item.Item")
         imports.add("com.terrassic.registry.ModItems")
         body.append(f"    @Override\n    protected Item speciesSaddle() {{\n        return ModItems.{s['saddle']}.get();\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

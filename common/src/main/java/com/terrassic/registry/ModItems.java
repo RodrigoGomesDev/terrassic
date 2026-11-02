@@ -270,6 +270,10 @@ public final class ModItems {
     /** The Gallimimus' own riding pad: only it saddles a Gallimimus; the rider sits over the hips, holding a bone grip. */
     public static final RegistrySupplier<Item> GALLIMIMUS_SADDLE = ITEMS.register("gallimimus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Parasaurolophus' own reed saddle: only it saddles a Parasaurolophus; rolled bundles of rush along the flanks
+     *  carry the cargo. */
+    public static final RegistrySupplier<Item> PARASAUROLOPHUS_SADDLE = ITEMS.register("parasaurolophus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Pteranodon's own saddle (only it saddles a Pteranodon), with saddlebags like the T. rex's. */
     public static final RegistrySupplier<Item> PTERANODON_SADDLE = ITEMS.register("pteranodon_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

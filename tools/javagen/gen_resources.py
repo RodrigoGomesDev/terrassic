@@ -19,7 +19,8 @@ from spino_extras import CUSTOM_EGGS as SPINO_EGGS  # noqa: E402  (the Spinosaur
 from tri_extras import CUSTOM_EGGS as TRI_EGGS  # noqa: E402  (the Triceratops' oval eggs under rotting leaves)
 from galli_extras import CUSTOM_EGGS as GALLI_EGGS  # noqa: E402  (the Gallimimus' speckled clutch on a gravel bar)
 from pachy_extras import CUSTOM_EGGS as PACHY_EGGS  # noqa: E402  (the Pachycephalosaurus' soft eggs among tree roots)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS}
+from para_extras import CUSTOM_EGGS as PARA_EGGS  # noqa: E402  (the Parasaurolophus' round eggs in a mud crater)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -105,6 +106,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
     # a light riding pad for the racer: felt blanket, hide pad with knee rolls, a bone grip; the rider sits over the hips
     "gallimimus_saddle": ("Gallimimus Riding Pad", "Manta de Montaria de Galimimo", "Manta de montar de Gallimimus", "item/generated"),
+    # the floodplain reed saddle: a woven rush mat on a hide pad, rolled bundles of matting strapped along the flanks
+    "parasaurolophus_saddle": ("Parasaurolophus Reed Saddle", "Sela de Junco de Parassaurolofo", "Silla de junco de Parasaurolophus", "item/generated"),
     # not a saddle: a hunting vest for the Velociraptor, armour for an animal too small to ride
     "velociraptor_harness": ("Hunting Harness", "Arreio de Caça", "Arnés de caza", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
@@ -451,6 +454,8 @@ HUD_LANG = {
         "hud.terrassic.level": "Lv %s",
         "hud.terrassic.notice.level_up": "Level up",
         "hud.terrassic.notice.tamed": "Tamed",
+        "hud.terrassic.notice.herd_calm": "The herd lets you near",
+        "hud.terrassic.notice.herd_fled": "The herd took fright",
         "hud.terrassic.notice.hatched": "A baby hatched",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Hungry",
@@ -482,6 +487,8 @@ HUD_LANG = {
         "hud.terrassic.level": "Nv %s",
         "hud.terrassic.notice.level_up": "Subiu de nível",
         "hud.terrassic.notice.tamed": "Domesticado",
+        "hud.terrassic.notice.herd_calm": "O bando deixou você chegar",
+        "hud.terrassic.notice.herd_fled": "O bando se assustou",
         "hud.terrassic.notice.hatched": "Nasceu um filhote",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Com fome",
@@ -513,6 +520,8 @@ HUD_LANG = {
         "hud.terrassic.level": "Nv %s",
         "hud.terrassic.notice.level_up": "Subió de nivel",
         "hud.terrassic.notice.tamed": "Domesticado",
+        "hud.terrassic.notice.herd_calm": "La manada te deja acercarte",
+        "hud.terrassic.notice.herd_fled": "La manada se asustó",
         "hud.terrassic.notice.hatched": "Nació una cría",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Con hambre",
@@ -869,6 +878,10 @@ def main():
     # the Gallimimus' riding pad: a bone for the grip, two leather knee rolls on the Gallimimus hide pad, string to lace it
     shaped("gallimimus_saddle", [" B ", "LHL", " S "], {"B": "minecraft:bone", "L": "minecraft:leather",
            "H": "terrassic:gallimimus_hide", "S": "minecraft:string"}, "terrassic:gallimimus_saddle")
+    # the Parasaurolophus' reed saddle: three woven reed mats over its hide, two rush stems rolled for the bundles, string
+    # for the cord (no wood, no leather: all of it from the floodplain)
+    shaped("parasaurolophus_saddle", ["MMM", "RHR", " S "], {"M": "terrassic:reed_mat", "R": "terrassic:rush",
+           "H": "terrassic:parasaurolophus_hide", "S": "minecraft:string"}, "terrassic:parasaurolophus_saddle")
     # the Velociraptor's hunting harness: leather flanks, a bone plate, string straps and an iron ring
     shaped("velociraptor_harness", ["LBL", "SNS"], {"L": "minecraft:leather", "B": "minecraft:bone", "S": "minecraft:string",
                                                      "N": "minecraft:iron_nugget"}, "terrassic:velociraptor_harness")
