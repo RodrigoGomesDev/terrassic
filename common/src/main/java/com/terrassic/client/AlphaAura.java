@@ -25,6 +25,8 @@ import net.minecraft.world.entity.Entity;
  * glowing sprites ({@link AlphaMoteParticle}) in four layers, all at full brightness: a faint haze of heat over the
  * back, small motes off the back and flanks, twinkling glints and flakes of ash or ember, and, while it fights, a ring
  * pulsing out of its chest every 1.5 s like a heartbeat. Fewer layers on the "decreased" and "minimal" particle settings.
+ * Round 3 (Rodrigo: "mais sucinto e mais minecraft, sem círculos"): no haze and no ring; a few square beveled specks
+ * with a dark outline, an occasional plus-shaped glint and flake, about a quarter of the particles of round 2.
  */
 public final class AlphaAura {
     private AlphaAura() {
@@ -53,51 +55,37 @@ public final class AlphaAura {
             int dark = colors[1];
             boolean warm = Alphas.auraGlowsWarm(bright);
             float big = (float) Math.min(2.0D, 0.6D + b.w * 0.25D);   // a bigger animal, bigger specks
-            // 1. haze: wide faint blots of heat over the back, rising slowly (the "presence")
-            int haze = status == ParticleStatus.MINIMAL ? 0 : fighting ? 3 : 1 + random.nextInt(2);
-            for (int i = 0; i < haze; i++) {
-                double[] at = b.overBack(random, 0.9D);
-                AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], 0.0D, 0.012D + random.nextDouble() * 0.02D, 0.0D,
-                        AlphaMoteParticle.HAZE, bright, dark, (0.7F + random.nextFloat() * 0.5F) * big,
-                        30 + random.nextInt(16), fighting ? 0.75F : 0.6F);
+            // v1.6 "mais evidente de dia": in daylight the specks grow a little and a few more rise
+            boolean day = mc.level.isDay();
+            if (day) {
+                big *= 1.2F;
             }
-            // 2. motes: small round glows off the back and the flanks
-            int motes = fighting ? 4 : 2;
-            if (status == ParticleStatus.MINIMAL) {
-                motes = 1;
+            // 1. square specks off the back and the flanks (round 3: few, small, no haze, no ring)
+            int motes = (fighting ? 2 : 1) + (day && random.nextBoolean() ? 1 : 0);
+            if (status == ParticleStatus.MINIMAL && random.nextBoolean()) {
+                motes = 0;
             }
             for (int i = 0; i < motes; i++) {
                 double[] at = random.nextInt(3) == 0 ? b.offFlank(random) : b.overBack(random, 1.0D);
-                AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], (random.nextDouble() - 0.5D) * 0.03D,
-                        0.03D + random.nextDouble() * 0.04D, (random.nextDouble() - 0.5D) * 0.03D,
-                        AlphaMoteParticle.MOTE, bright, dark, (0.2F + random.nextFloat() * 0.15F) * big,
-                        25 + random.nextInt(16), 1.0F);
+                boolean chip = random.nextInt(3) == 0;
+                AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], (random.nextDouble() - 0.5D) * 0.02D,
+                        0.03D + random.nextDouble() * 0.03D, (random.nextDouble() - 0.5D) * 0.02D,
+                        chip ? AlphaMoteParticle.CHIP : AlphaMoteParticle.BLOCK, bright, dark,
+                        (chip ? 0.16F : 0.22F) * big, 22 + random.nextInt(14), 1.0F);
             }
             // 3. glints that twinkle (pale light on the ivory male, sparks on the ember female) and flakes of ash or ember
-            int glints = fighting ? 1 + random.nextInt(2) : (random.nextBoolean() ? 1 : 0);
+            int glints = random.nextInt(fighting ? 2 : 4) == 0 ? 1 : 0;
             for (int i = 0; i < glints; i++) {
                 double[] at = b.overBack(random, 0.82D);
                 AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], 0.0D, 0.04D + random.nextDouble() * 0.03D, 0.0D,
-                        AlphaMoteParticle.GLINT, warm ? 0xFFE2A0 : 0xFFFFFF, bright, (0.25F + random.nextFloat() * 0.13F) * big,
+                        AlphaMoteParticle.GLINT, warm ? 0xFFE2A0 : 0xFFFFFF, bright, (0.18F + random.nextFloat() * 0.08F) * big,
                         18 + random.nextInt(12), 1.0F);
             }
-            if (status == ParticleStatus.ALL && (fighting || random.nextBoolean())) {
+            if (status == ParticleStatus.ALL && random.nextInt(fighting ? 3 : 6) == 0) {
                 double[] at = b.overBack(random, 1.0D);
                 AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], (random.nextDouble() - 0.5D) * 0.05D,
                         0.05D + random.nextDouble() * 0.03D, (random.nextDouble() - 0.5D) * 0.05D,
-                        AlphaMoteParticle.FLAKE, bright, dark, 0.18F * big, 35 + random.nextInt(16), 1.0F);
-            }
-            // 4. while it fights, a pulse like a heartbeat: a ring of motes rolling out from its chest every 1.5 s
-            if (fighting && status != ParticleStatus.MINIMAL && d.tickCount % 30 == 0) {
-                int n = 18;
-                double ry = d.getY() + b.h * 0.5D;
-                for (int i = 0; i < n; i++) {
-                    double ang = Mth.TWO_PI * i / n;
-                    double cx = Math.cos(ang);
-                    double cz = Math.sin(ang);
-                    AlphaMoteParticle.spawn(mc.level, d.getX() + cx * b.w * 0.6D, ry, d.getZ() + cz * b.w * 0.6D,
-                            cx * 0.16D, 0.01D, cz * 0.16D, AlphaMoteParticle.MOTE, bright, dark, 0.3F * big, 14, 1.0F);
-                }
+                        AlphaMoteParticle.FLAKE, bright, dark, 0.16F * big, 30 + random.nextInt(16), 1.0F);
             }
         }
     }
