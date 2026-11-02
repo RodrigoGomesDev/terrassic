@@ -603,7 +603,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
       food="Items.WHEAT_SEEDS, Items.SWEET_BERRIES, Items.APPLE",
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.55, 1.2, 200), xp=8, run=0.03,
-      fights=False, rideable=True, jump=0.8, ride_offset=4.3, ride_forward=0.1, ride_speed=1.35,
+      fights=False, rideable=True, jump=0.8, ride_offset=3.9, ride_forward=0.1, ride_speed=1.35,
       saddle="GALLIMIMUS_SADDLE", rig="Ornithomimid"),
  dict(id="struthiomimus", cls="Struthiomimus", base="HerbivoreDinosaur",
       doc="Struthiomimus altus - 4.3 m ostrich mimic of the floodplains. Flocks flee from danger. Omnivore, tamed with seeds, berries or eggs; the lightest and fastest mount.",
