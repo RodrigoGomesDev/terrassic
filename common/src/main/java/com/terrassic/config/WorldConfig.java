@@ -36,7 +36,8 @@ import java.nio.file.Path;
  *   "historia": false,            // v0.10: the story mode (config/Story); off until it comes back in a future version
  *   "vozes": false,               // v0.14.3: the animals' voices (DinosaurEntity#playSound); off until they are remade
  *   "regras_no_jogo": false,      // v0.15.1: the Terrassic Rules can be changed in game (operators only); off for now
- *   "titulo_da_era": false        // v0.15.2: the era's title when a player first arrives ("Cretáceo Superior"); off for now
+ *   "titulo_da_era": false,       // v0.15.2: the era's title when a player first arrives ("Cretáceo Superior"); off for now
+ *   "especies_antigas": false     // v1.5: species still on their old model live in the world too (config/Eras); restart
  * }
  * </pre>
  */
@@ -141,6 +142,13 @@ public final class WorldConfig {
         return bool("titulo_da_era", false);
     }
 
+    /** v1.5: the species that still have their old model (config/Eras#REMADE lists the new ones) also spawn and show
+     *  in the creative tabs, the Field Guide and the fossil drops. Off by default (Rodrigo, 02/11/2026): only the
+     *  remade creatures are shown; saved worlds keep the animals they already have. Read once at startup. */
+    public static boolean oldSpecies() {
+        return bool("especies_antigas", false);
+    }
+
     /** A boolean from the file, or the default when the value is missing or not a boolean (never throws). */
     private static boolean bool(String key, boolean fallback) {
         try {
@@ -191,6 +199,7 @@ public final class WorldConfig {
         changed |= def(cfg, "borda_em_raios", 2.0D);
         changed |= def(cfg, "historia", false);
         changed |= def(cfg, "vozes", false);
+        changed |= def(cfg, "especies_antigas", false);
         changed |= def(cfg, "regras_no_jogo", false);
         changed |= def(cfg, "titulo_da_era", false);
         if (changed) {

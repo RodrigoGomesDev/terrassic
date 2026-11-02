@@ -10,14 +10,23 @@ import java.util.Set;
  * the mod (Stegosaurus, Brachiosaurus, Dilophosaurus, Compsognathus) stay registered, so saved worlds keep them, but
  * they do not spawn and are left out of the creative tabs, the Field Guide and the fossil drops. They come back with
  * their era.
+ *
+ * <p>v1.5: inside the active eras, only the species remade one by one ({@link #REMADE}) live in the world. The others
+ * still have their old model; they are off the same way as the Jurassic ones (registered, saved worlds keep them) until
+ * each one is remade and added here. WorldConfig "especies_antigas": true turns them back on.
  */
 public final class Eras {
     public static final Set<String> ACTIVE = Set.of("late_cretaceous", "early_cretaceous");
+    /** Species with their new model and own study (docs/CORES.md). Add each one here when it is remade. */
+    public static final Set<String> REMADE = Set.of(
+            "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops",
+            "spinosaurus", "velociraptor", "pteranodon");
     private static final Set<String> OFF_SPECIES = new HashSet<>();
 
     static {
+        boolean old = WorldConfig.oldSpecies();
         for (GuideSpecies s : GuideSpecies.ALL) {
-            if (!ACTIVE.contains(s.era())) {
+            if (!ACTIVE.contains(s.era()) || (!old && !REMADE.contains(s.id()))) {
                 OFF_SPECIES.add(s.id());
             }
         }
@@ -32,7 +41,7 @@ public final class Eras {
     }
 
     public static boolean active(GuideSpecies species) {
-        return ACTIVE.contains(species.era());
+        return !OFF_SPECIES.contains(species.id());
     }
 
     /**
