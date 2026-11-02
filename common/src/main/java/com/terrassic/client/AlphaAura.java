@@ -58,8 +58,8 @@ public final class AlphaAura {
             for (int i = 0; i < haze; i++) {
                 double[] at = b.overBack(random, 0.9D);
                 AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], 0.0D, 0.012D + random.nextDouble() * 0.02D, 0.0D,
-                        AlphaMoteParticle.HAZE, bright, dark, (0.45F + random.nextFloat() * 0.35F) * big,
-                        30 + random.nextInt(16), fighting ? 0.42F : 0.3F);
+                        AlphaMoteParticle.HAZE, bright, dark, (0.7F + random.nextFloat() * 0.5F) * big,
+                        30 + random.nextInt(16), fighting ? 0.75F : 0.6F);
             }
             // 2. motes: small round glows off the back and the flanks
             int motes = fighting ? 4 : 2;
@@ -70,22 +70,22 @@ public final class AlphaAura {
                 double[] at = random.nextInt(3) == 0 ? b.offFlank(random) : b.overBack(random, 1.0D);
                 AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], (random.nextDouble() - 0.5D) * 0.03D,
                         0.03D + random.nextDouble() * 0.04D, (random.nextDouble() - 0.5D) * 0.03D,
-                        AlphaMoteParticle.MOTE, bright, dark, (0.12F + random.nextFloat() * 0.1F) * big,
-                        25 + random.nextInt(16), 0.85F);
+                        AlphaMoteParticle.MOTE, bright, dark, (0.2F + random.nextFloat() * 0.15F) * big,
+                        25 + random.nextInt(16), 1.0F);
             }
             // 3. glints that twinkle (pale light on the ivory male, sparks on the ember female) and flakes of ash or ember
             int glints = fighting ? 1 + random.nextInt(2) : (random.nextBoolean() ? 1 : 0);
             for (int i = 0; i < glints; i++) {
                 double[] at = b.overBack(random, 0.82D);
                 AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], 0.0D, 0.04D + random.nextDouble() * 0.03D, 0.0D,
-                        AlphaMoteParticle.GLINT, warm ? 0xFFE2A0 : 0xFFFFFF, bright, (0.12F + random.nextFloat() * 0.07F) * big,
+                        AlphaMoteParticle.GLINT, warm ? 0xFFE2A0 : 0xFFFFFF, bright, (0.25F + random.nextFloat() * 0.13F) * big,
                         18 + random.nextInt(12), 1.0F);
             }
             if (status == ParticleStatus.ALL && (fighting || random.nextBoolean())) {
                 double[] at = b.overBack(random, 1.0D);
                 AlphaMoteParticle.spawn(mc.level, at[0], at[1], at[2], (random.nextDouble() - 0.5D) * 0.05D,
                         0.05D + random.nextDouble() * 0.03D, (random.nextDouble() - 0.5D) * 0.05D,
-                        AlphaMoteParticle.FLAKE, bright, dark, 0.1F * big, 35 + random.nextInt(16), 0.9F);
+                        AlphaMoteParticle.FLAKE, bright, dark, 0.18F * big, 35 + random.nextInt(16), 1.0F);
             }
             // 4. while it fights, a pulse like a heartbeat: a ring of motes rolling out from its chest every 1.5 s
             if (fighting && status != ParticleStatus.MINIMAL && d.tickCount % 30 == 0) {
@@ -96,7 +96,7 @@ public final class AlphaAura {
                     double cx = Math.cos(ang);
                     double cz = Math.sin(ang);
                     AlphaMoteParticle.spawn(mc.level, d.getX() + cx * b.w * 0.6D, ry, d.getZ() + cz * b.w * 0.6D,
-                            cx * 0.16D, 0.01D, cz * 0.16D, AlphaMoteParticle.MOTE, bright, dark, 0.2F * big, 14, 0.8F);
+                            cx * 0.16D, 0.01D, cz * 0.16D, AlphaMoteParticle.MOTE, bright, dark, 0.3F * big, 14, 1.0F);
                 }
             }
         }
