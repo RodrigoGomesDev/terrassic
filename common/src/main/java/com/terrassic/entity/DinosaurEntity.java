@@ -621,8 +621,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     /** Sets the adult size (clamped to 0.5 - 1.5) and the health and damage that go with it. */
+    /** Above the biggest animal there is: the T. rex alpha reaches 1.55, the Rift Tyrant is 1.65. */
+    private static final float MAX_ADULT_SIZE = 1.7F;
+
     public void setAdultSize(float size) {
-        this.entityData.set(DATA_SIZE, Mth.clamp(size, 0.5F, 1.5F));
+        this.entityData.set(DATA_SIZE, Mth.clamp(size, 0.5F, MAX_ADULT_SIZE));
         this.applySizeModifiers();
     }
 
@@ -1658,6 +1661,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             if (!this.isTame()) {
                 Alphas.announce(this, "fell", source.getEntity());
             }
+            Alphas.spoils(this, source);
             Alphas.gone(this, !this.isTame(), true);
         }
         if (!this.level().isClientSide() && this.isTame() && !this.isRemoved() && !this.dead) {
@@ -1909,6 +1913,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    /** An alpha knocked out already tried once to rise (reset when it wakes). */
+    private boolean stirred;
+
     /** Drains the torpor; an unconscious animal wakes when it reaches zero (half the taming progress is lost). */
     private void torporTick() {
         float max = this.maxTorpor();
@@ -1919,6 +1926,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     : max / ((this.wakesFast() ? 90.0F : 150.0F) * 20.0F);
             if (this.torpor <= (this.isAlpha() ? max * Alphas.WAKE_SHARE : 0.0F)) {
                 this.wakeUp();
+            } else if (this.isAlpha() && !this.stirred && this.torpor <= max * Alphas.WAKE_SHARE * 1.25F) {
+                this.stirred = true;     // about 5 s before it gets up: it tries once to rise (the tamer's warning)
+                this.nearlyAwake();
             } else if (this.tickCount % 60 == 0 && this.level() instanceof ServerLevel server) {
                 server.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, this.getX(),
                         this.getY() + this.getBbHeight() * 0.6D, this.getZ(), 1, 0.2D, 0.1D, 0.2D, 0.0D);
@@ -1929,7 +1939,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    /** Knocked out and about to wake (an alpha, a few seconds before it gets up); a rig may show it. */
+    protected void nearlyAwake() {
+    }
+
     private void wakeUp() {
+        this.stirred = false;
         this.torpor = 0.0F;
         this.entityData.set(DATA_KNOCKED_OUT, false);
         this.tameProgress *= 0.5F;

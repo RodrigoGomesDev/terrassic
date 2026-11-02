@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.terrassic.Terrassic;
 import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
+import com.terrassic.research.Research;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,13 +19,21 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -86,15 +95,16 @@ public final class Alphas {
         return SPECIES.contains(species);
     }
 
-    /** The alpha's adult size relative to the species' standard: its own band per species (the Rift Tyrant, 1.35,
-     *  stays the biggest T. rex). */
+    /** The alpha's adult size relative to the species' standard: its own band per species. T. rex 1.45-1.55, about
+     *  19 m, one and a half times the biggest common one (Rodrigo 02/11 after the first test: "ainda maior"; it was
+     *  1.25-1.30). The Rift Tyrant (1.65) stays the biggest T. rex. */
     public static float size(String species, RandomSource random) {
         float lo;
         float hi;
         switch (species) {
             case "tyrannosaurus" -> {
-                lo = 1.25F;
-                hi = 1.30F;
+                lo = 1.45F;
+                hi = 1.55F;
             }
             default -> {
                 lo = 1.25F;
@@ -188,6 +198,70 @@ public final class Alphas {
         if (player.level() instanceof ServerLevel level) {
             Data.get(level.getServer()).own(player.getUUID(), dino.getUUID(), dino.speciesId());
         }
+        if (player instanceof ServerPlayer server) {
+            Research.award(server, "journal/borrowed_crown");
+        }
+    }
+
+    // ------------------------------------------------------------------ the spoils
+
+    /** The coat of each sex of a species with alpha spoils (tools/spritegen/alfa_trofeus.py): Marfim and Brasa. */
+    private static final Map<String, String[]> COATS = Map.of("tyrannosaurus", new String[]{"ivory", "ember"});
+    /** Rugs of its hide: two, one rug two blocks long. */
+    private static final int RUGS = 2;
+
+    /** Server, on death: an alpha leaves rugs of its own hide and, if it died wild, its skull on its hide (the
+     *  trophy); the one who brought it down gets "Dethroned". They drop on the ground beside the carcass, out of the
+     *  body and out of its loot (a scavenger's bite would eat them with its share), and last 10 minutes. */
+    static void spoils(DinosaurEntity dino, DamageSource source) {
+        if (!(dino.level() instanceof ServerLevel level)) {
+            return;
+        }
+        String[] coats = COATS.get(dino.speciesId());
+        boolean wild = !dino.isTame();
+        if (coats != null && level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            String coat = coats[dino.isFemale() ? 1 : 0];
+            Vec3 at = beside(dino);
+            drop(dino, at, dino.speciesId() + "_" + coat + "_hide_rug", RUGS);
+            if (wild) {
+                drop(dino, at, dino.speciesId() + "_" + coat + "_trophy", 1);
+            }
+        }
+        if (wild) {
+            Entity by = source.getEntity();
+            ServerPlayer player = by instanceof ServerPlayer p ? p
+                    : by instanceof DinosaurEntity tame && tame.getOwner() instanceof ServerPlayer owner ? owner
+                    : dino.getLastHurtByMob() instanceof ServerPlayer last ? last : null;
+            if (player != null) {
+                Research.award(player, "journal/dethroned");
+            }
+        }
+    }
+
+    /** A free spot beside the body: off its back (it falls with its back to its left), past its legs if a tree or a
+     *  slope is in the way, where it fell if both are. Distances from its height, which grows with it. */
+    private static Vec3 beside(DinosaurEntity dino) {
+        float yaw = dino.yBodyRot * Mth.DEG_TO_RAD;
+        Vec3 left = new Vec3(Mth.cos(yaw), 0.0D, Mth.sin(yaw));
+        Vec3 feet = dino.position().add(0.0D, 0.5D, 0.0D);
+        for (double off : new double[]{0.7D, -0.85D}) {
+            Vec3 at = feet.add(left.scale(off * dino.getBbHeight()));
+            if (dino.level().noCollision(new AABB(at, at).inflate(0.5D))) {
+                return at;
+            }
+        }
+        return feet;
+    }
+
+    private static void drop(DinosaurEntity dino, Vec3 at, String id, int count) {
+        Item item = BuiltInRegistries.ITEM.get(Terrassic.id(id));
+        if (item == Items.AIR) {
+            return;
+        }
+        ItemEntity entity = new ItemEntity(dino.level(), at.x, at.y, at.z, new ItemStack(item, count));
+        entity.setDefaultPickUpDelay();
+        entity.setExtendedLifetime();
+        dino.level().addFreshEntity(entity);
     }
 
     /** The "Announce fallen alphas" rule: one line in the server chat. */

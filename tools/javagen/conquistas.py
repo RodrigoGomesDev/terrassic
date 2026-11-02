@@ -207,6 +207,17 @@ NODES += [
         ("Domado no sono", "Tamed in its sleep", "Domado en sueños"),
         ("Alimente uma criatura derrubada até ela acordar domada.", "Feed a knocked-out creature until it wakes up tame.",
          "Alimenta a una criatura derribada hasta que despierte domada.")), xp=25, ready=False),
+    # the alphas (docs/ALFAS.md): the owner of a region, brought down or brought home
+    N("journal/dethroned", "journal/root", "terrassic:tyrannosaurus_ivory_trophy", T(
+        ("Destronado", "Dethroned", "Destronado"),
+        ("Derrube um alfa selvagem e leve o crânio dele para casa.",
+         "Bring down a wild alpha and take its skull home.",
+         "Derriba a un alfa salvaje y llévate su cráneo a casa.")), frame="challenge", xp=100),
+    N("journal/borrowed_crown", "journal/root", "terrassic:raw_prime_meat", T(
+        ("Coroa emprestada", "Borrowed crown", "Corona prestada"),
+        ("Dome um alfa. Ele ainda acha que manda.",
+         "Tame an alpha. It still thinks it is in charge.",
+         "Doma a un alfa. Todavía cree que manda.")), frame="challenge", xp=100),
     # Katarina's pages (story mode): hidden until earned, so they stay out of sight while the story is off
     N("journal/five_pages", "journal/root", "terrassic:loose_page", T(
         ("Leitor atento", "Close reader", "Lector atento"),

@@ -51,7 +51,9 @@ import java.util.List;
  * </ul>
  */
 public class RiftTyrant extends Tyrannosaurus {
-    public static final float SIZE = 1.35F;
+    /** 1.65 since 02/11 (was 1.35), to stay bigger than the T. rex alpha (1.45-1.55); its base health and bite went
+     *  down by the same ratio, so it is just as strong as before. */
+    public static final float SIZE = 1.65F;
     private static final double LEASH = 48.0D;
     private static final java.util.UUID PLAYERS_HEALTH_ID = java.util.UUID.fromString("6b1f0c52-8a3e-4d7f-b2c4-91e5a7d30f18");
     private static final DustParticleOptions SPARK = new DustParticleOptions(new Vector3f(1.0F, 0.55F, 0.12F), 2.0F);
@@ -77,11 +79,12 @@ public class RiftTyrant extends Tyrannosaurus {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        // x SIZE^2 for health and x SIZE for the bite through the size modifiers: ~770 health, ~22 damage
+        // x SIZE^2 for health and x SIZE for the bite through the size modifiers: ~770 health, ~22 damage (the
+        // same as at 1.35 with 420 and 16)
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 420.0D)
+                .add(Attributes.MAX_HEALTH, 281.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.26D)
-                .add(Attributes.ATTACK_DAMAGE, 16.0D)
+                .add(Attributes.ATTACK_DAMAGE, 13.1D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.0D)
                 .add(Attributes.ARMOR, 12.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 4.0D)
