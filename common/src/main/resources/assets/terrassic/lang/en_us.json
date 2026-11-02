@@ -1706,7 +1706,7 @@
   "rules.terrassic.alpha_chance": "Alpha chance (%)",
   "rules.terrassic.alpha_chance.tip": "Chance that a wild adult born far from spawn is an alpha, in the species that have one. 0 = no alphas.",
   "rules.terrassic.alpha_distance": "Minimum distance from spawn",
-  "rules.terrassic.alpha_distance.tip": "No alpha is born closer than this (in blocks) to the world spawn.",
+  "rules.terrassic.alpha_distance.tip": "No alpha is born closer than this (in blocks) to the world spawn. In a Terrassic world it is at most half the continent's radius.",
   "rules.terrassic.alpha_strength": "Alpha strength",
   "rules.terrassic.alpha_strength.tip": "Health and damage of wild alphas. 2 = twice as much.",
   "rules.terrassic.alpha_tameable": "Alphas can be tamed",

@@ -22,7 +22,7 @@ seção do estudo de cada dino refeito.
 
 - Só no nascimento natural de um adulto selvagem (ecossistema ou geração do mundo) de uma espécie com alfa.
 - Chance: regra "Chance de alfa", padrão 0,5% (1 em 200).
-- Nunca a menos de 1.500 blocos do spawn do mundo (regra).
+- Nunca a menos de 1.500 blocos do spawn do mundo (regra). Num mundo Terrassic a distância fica em no máximo metade do raio do continente (600 blocos no padrão, 400 na Ilha Pequena, 1.000 no Continente Grande): com 1.500 nenhum alfa nasceria, porque a terra acaba no raio.
 - No máximo um alfa da mesma espécie a cada 1.024 blocos, e no máximo 4 alfas selvagens vivos no mundo (regra).
 - Depois que um alfa morre ou é domado, a região dele fica 7 dias de jogo sem alfa da mesma espécie.
 - Nunca nasce de ovo nem de cruza. Regra do Rodrigo: filhote alfa só de macho alfa com fêmea alfa da mesma espécie,
@@ -62,7 +62,7 @@ disparadas por `entity/RexAlphaMoves.java` (uma classe por espécie com alfa, cr
 |---|---|
 | `alpha_walk` | Andando calmo, no lugar do andar comum (passo mais longo, cabeça alta). Correndo ou caçando usa o comum. |
 | `alpha_survey` | Parado sem nada para fazer, de vez em quando: cabeça alta, varre a região de um lado ao outro e fareja. |
-| `alpha_jaw_rub` | Parado com um tronco a 3,5–4,5 blocos (× tamanho do modelo): vira para ele e esfrega a lateral da mandíbula três vezes; no fim a casca sai do bloco à altura da mandíbula (vira tronco descascado, só com `mobGriefing` ligado). Se entrar em luta, para. |
+| `alpha_jaw_rub` | Parado com um tronco a 3,5–4,5 blocos (× tamanho do modelo): vira para ele e esfrega a lateral da mandíbula três vezes; no fim a casca sai do bloco à altura da mandíbula (vira tronco descascado, só com `mobGriefing` ligado, só no alfa selvagem e só em árvore com folhas no topo: tronco de parede ou pilar não é tocado). Se entrar em luta, para. |
 | `alpha_challenge` | No lugar da ameaça comum: cabeça baixa, balança o corpo e bate os pés três vezes (poeira e baque a cada pisada). |
 | `alpha_bite_toss` | 30% das mordidas em algo de até 2 blocos de largura: morde, segura, levanta e arremessa para a esquerda dele, o lado do tranco do pescoço. Fica parado até a animação acabar. |
 | `alpha_shove` / `alpha_shove_left` | Alvo ao lado ou atrás, fora do alcance da cabeça (até 4,5 blocos × tamanho): empurrão com o ombro do lado do alvo (direito ou esquerdo), que joga o alvo para longe. Uma vez a cada 4 s. Fica parado até a animação acabar. |

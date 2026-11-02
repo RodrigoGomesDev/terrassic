@@ -1706,7 +1706,7 @@
   "rules.terrassic.alpha_chance": "Probabilidad de alfa (%)",
   "rules.terrassic.alpha_chance.tip": "Probabilidad de que un adulto salvaje que nace lejos del spawn sea un alfa, en las especies que lo tienen. 0 = sin alfas.",
   "rules.terrassic.alpha_distance": "Distancia mínima del spawn",
-  "rules.terrassic.alpha_distance.tip": "Ningún alfa nace más cerca que esto (en bloques) del punto de aparición del mundo.",
+  "rules.terrassic.alpha_distance.tip": "Ningún alfa nace más cerca que esto (en bloques) del punto de aparición del mundo. En un mundo Terrassic vale como máximo la mitad del radio del continente.",
   "rules.terrassic.alpha_strength": "Fuerza de los alfas",
   "rules.terrassic.alpha_strength.tip": "Vida y daño de los alfas salvajes. 2 = el doble.",
   "rules.terrassic.alpha_tameable": "Los alfas se pueden domar",
