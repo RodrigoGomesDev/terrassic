@@ -65,13 +65,19 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     protected static final Strike STOMP = new Strike("stomp", 18, 34, true);
 
     /** One blow: its animation, the tick its hit lands, the ticks until the next one, and whether it lands at the feet. */
-    public record Strike(String anim, int hit, int total, boolean atFeet) {
+    public record Strike(String anim, int hit, int total, boolean atFeet, boolean side) {
+        public Strike(String anim, int hit, int total, boolean atFeet) {
+            this(anim, hit, total, atFeet, false);
+        }
     }
 
     /** What a rig does after a blow before it comes in again (ApexBiteGoal): ticks stepping back facing the target,
      *  then standing while a one-shot plays (null = none), then ticks circling it sideways. */
     public record Pause(int back, String stare, int stareTicks, int circle) {
     }
+
+    /** No steps: only stands until the blow's animation ends. */
+    private static final Pause STAND_IT_OUT = new Pause(0, null, 0, 0);
 
     /** Ticks left of the roar under way (normal or loud) and how far into it we are. */
     private int roarLeft;
@@ -96,6 +102,9 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     /** Entity id of what it last roared at (so it charges instead of stalking). */
     private int roaredAt = -1;
     private RawAnimation stalkAnim;
+    /** An alpha's own moves (AlphaMoves; null until first asked, and for a species without its own) and its walk. */
+    private AlphaMoves alphaMoves;
+    private RawAnimation alphaWalkAnim;
 
     protected ApexTheropod(EntityType<? extends ApexTheropod> type, Level level) {
         super(type, level);
@@ -110,8 +119,54 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     @Override
     protected String[] extraActions() {
-        return new String[]{"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink",
+        String[] common = {"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink",
                 "sniff", "look_back", "shake", "yawn", "stretch"};
+        String[] alpha = Alphas.hasAlpha(this.speciesId()) ? AlphaMoves.actions(this.speciesId()) : new String[0];
+        String[] all = java.util.Arrays.copyOf(common, common.length + alpha.length);
+        System.arraycopy(alpha, 0, all, common.length, alpha.length);
+        return all;
+    }
+
+    /** An alpha's own moves (docs/ALFAS.md), or null: not an alpha, or a species whose alpha has none of its own. */
+    AlphaMoves alphaMoves() {
+        if (!this.isAlpha()) {
+            return null;
+        }
+        if (this.alphaMoves == null) {
+            this.alphaMoves = AlphaMoves.create(this);
+        }
+        return this.alphaMoves;
+    }
+
+    /** The blow for a target in reach of the head: an alpha's own now and then, else the rig's ({@link #biteFor}). */
+    public Strike strikeFor(LivingEntity target) {
+        AlphaMoves moves = this.alphaMoves();
+        Strike own = moves == null ? null : moves.bite(target);
+        return own != null ? own : this.biteFor(target);
+    }
+
+    /** A blow for a target beside or behind it, out of the head's reach (an alpha's shove), or null. */
+    public Strike sideStrike(LivingEntity target) {
+        AlphaMoves moves = this.alphaMoves();
+        return moves == null ? null : moves.side(target);
+    }
+
+    /** ApexBiteGoal: a blow landed (an alpha's own blow may throw or shove the target). */
+    public void struck(LivingEntity target, Strike strike) {
+        AlphaMoves moves = this.alphaMoves();
+        if (moves != null && strike != null) {
+            moves.struck(target, strike);
+        }
+    }
+
+    /** Knocked out and about to wake: an alpha tries once to rise. */
+    @Override
+    protected void nearlyAwake() {
+        AlphaMoves moves = this.alphaMoves();
+        String stir = moves == null ? null : moves.stirAnim();
+        if (stir != null) {
+            triggerAnim(ACTION_CONTROLLER, stir);
+        }
     }
 
     // ------------------------------------------------------------------ the rig's animations
@@ -158,6 +213,18 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     /** Creeping up on prey (aggressive but slow): the stalk cycle. */
     @Override
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
+        AlphaMoves moves = this.alphaMoves();
+        if (moves != null && moves.walkAnim() != null && state.isMoving() && !this.isAggressive() && !this.isSleeping()
+                && !this.isInSittingPose() && !this.isSwimmingDeep()
+                && this.getDeltaMovement().horizontalDistanceSqr() <= this.runThresholdSqr()) {
+            // the alpha's own calm walk (the run, the stalk and the swim stay the species')
+            if (this.alphaWalkAnim == null) {
+                this.alphaWalkAnim = RawAnimation.begin().thenLoop(anim(moves.walkAnim()));
+            }
+            PlayState play = state.setAndContinue(this.alphaWalkAnim);
+            this.cycleSpeed = this.gaitSpeed(moves.walkCycle() * this.modelScale());
+            return play;
+        }
         if (state.isMoving() && this.isAggressive() && !this.isVehicle() && !this.isSleeping() && !this.isSwimmingDeep()) {
             double dx = this.getX() - this.xo;
             double dz = this.getZ() - this.zo;
@@ -252,7 +319,8 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     /** The pause after this blow, or null to come straight in again (the T. rex and most rigs). */
     public Pause pauseAfter(Strike strike) {
-        return null;
+        AlphaMoves moves = this.alphaMoves();
+        return moves != null && moves.standsOut(strike) ? STAND_IT_OUT : null;
     }
 
     /** Where the mouth is in the loud roar's pose (blocks at model scale 1, forward of the centre and above the feet):
@@ -380,7 +448,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     }
 
     /** Dust kicked off the ground around the feet. */
-    private void dust(ServerLevel level) {
+    void dust(ServerLevel level) {
         BlockPos below = this.getBlockPosBelowThatAffectsMyMovement();
         BlockState ground = level.getBlockState(below);
         if (ground.isAir()) {
@@ -493,17 +561,29 @@ public abstract class ApexTheropod extends PredatorDinosaur {
             this.gestureCooldown = 300 + this.random.nextInt(500);
             this.gesture(level);
         }
+        AlphaMoves moves = this.alphaMoves();
+        if (moves != null && this.isAlive() && !this.isKnockedOut()) {
+            moves.tick(level);
+            if (moves.busy() && !this.isVehicle() && this.getTarget() == null) {
+                this.getNavigation().stop();       // it stands for its own act
+            }
+        }
     }
 
     /** Up and about with nothing to do: standing, awake, wild or tame, no rider. */
     private boolean calm() {
+        AlphaMoves moves = this.alphaMoves();
         return this.isAlive() && !this.isRoaring() && this.getTarget() == null && !this.isAggressive() && !this.isSleeping()
                 && !this.isKnockedOut() && !this.isInSittingPose() && !this.isVehicle() && !this.isPassenger()
                 && this.onGround() && !this.isInWater() && this.getNavigation().isDone()
-                && this.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4D;
+                && this.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4D && (moves == null || !moves.busy());
     }
 
     private void gesture(ServerLevel level) {
+        AlphaMoves moves = this.alphaMoves();
+        if (moves != null && moves.gesture(level)) {
+            return;
+        }
         if (this.waterAhead(level)) {
             triggerAnim(ACTION_CONTROLLER, "drink");
             return;
@@ -560,7 +640,8 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         if (near != null && !near.isCreative() && !near.isSpectator()) {
             this.threatCooldown = 300 + this.random.nextInt(200);
             this.getLookControl().setLookAt(near, 30.0F, 30.0F);
-            triggerAnim(ACTION_CONTROLLER, "threat");
+            AlphaMoves moves = this.alphaMoves();
+            triggerAnim(ACTION_CONTROLLER, moves == null ? "threat" : moves.threatAnim());
             this.playSound(this.roarSound(), 1.6F, 0.75F * this.getVoicePitch());
         }
     }

@@ -44,6 +44,8 @@ public class ApexBiteGoal extends Goal {
     /** Bite reach from the centre (the neck stretches) and how far off the snout's line the target may be. */
     private static final double REACH = 6.8D;
     private static final float REACH_ANGLE = 35.0F;
+    /** How far from its centre the shoulder reaches what stands beside or behind it. */
+    private static final double SIDE_REACH = 4.5D;
     /** Turning on the spot, degrees per tick. */
     private static final float TURN = 5.0F;
 
@@ -137,8 +139,11 @@ public class ApexBiteGoal extends Goal {
             this.turn(yawTo, TURN * 0.6F);
             if (--this.pending == 0) {
                 double reach = (this.stomping ? 4.0D : REACH + 1.0D) * s + target.getBbWidth() / 2.0D;
-                if (target.isAlive() && dist <= reach && off < 60.0F && Math.abs(target.getY() - this.mob.getY()) < 5.0D * s) {
-                    this.mob.doHurtTarget(target);
+                boolean side = this.strike != null && this.strike.side();
+                if (target.isAlive() && dist <= reach && (off < 60.0F || side) && Math.abs(target.getY() - this.mob.getY()) < 5.0D * s) {
+                    if (this.mob.doHurtTarget(target)) {
+                        this.mob.struck(target, this.strike);
+                    }
                 }
                 this.startPause(this.strike == null ? null : this.mob.pauseAfter(this.strike));
             }
@@ -208,7 +213,14 @@ public class ApexBiteGoal extends Goal {
                     this.begin(this.mob.feetStrike());
                 }
             } else if (dist <= REACH * s + target.getBbWidth() / 2.0D && dist >= biteMin) {
-                this.begin(this.mob.biteFor(target));
+                this.begin(this.mob.strikeFor(target));
+            }
+        } else if (this.cooldown <= 0 && !small && off >= 70.0F && dist <= SIDE_REACH * s + target.getBbWidth() / 2.0D
+                && Math.abs(target.getY() - this.mob.getY()) < 3.0D * s) {
+            // beside or behind it, out of the head's reach: an alpha shoulders it away
+            ApexTheropod.Strike side = this.mob.sideStrike(target);
+            if (side != null) {
+                this.begin(side);
             }
         }
     }

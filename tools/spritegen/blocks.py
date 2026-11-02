@@ -2820,6 +2820,8 @@ def build():
             cv.save(os.path.join(os.path.dirname(TEX), "item", f"{name}.png"))
     for name, cv in phase5_items().items():
         cv.save(os.path.join(os.path.dirname(TEX), "item", f"{name}.png"))
+    import alfa_trofeus  # the alphas' trophies and rugs, drawn on their own (not tamed: the coat colours are exact)
+    alfa_trofeus.main()
     return out
 
 

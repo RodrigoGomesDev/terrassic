@@ -27,6 +27,7 @@ import geo  # noqa: E402
 import proto as P  # noqa: E402
 import rex2  # noqa: E402
 import rexanims as A  # noqa: E402
+import alphaanims as AA  # noqa: E402
 import roar_wave  # noqa: E402
 from anim2 import bake, to_geckolib  # noqa: E402
 from sprites import save_png  # noqa: E402
@@ -37,6 +38,9 @@ FPS = 20
 # keyframe every frame for the fast or jolting ones, linear where a curve would overshoot a hit
 EVERY_FRAME = ("walk", "run", "stalk", "stomp", "threat", "beg", "wake", "wake_sleep", "death", "hurt", "attack_quick")
 LINEAR = ("stomp", "threat", "wake", "wake_sleep", "death", "hurt", "attack_quick")
+# the alpha's own (alphaanims.py), baked as alpha_<name>
+ALPHA_EVERY_FRAME = ("walk", "challenge", "shove", "shove_left")
+ALPHA_LINEAR = ("challenge", "shove", "shove_left")
 
 
 def main():
@@ -55,6 +59,12 @@ def main():
         anims[f"animation.tyrannosaurus.{name}"] = to_geckolib(frames, length, FPS, loop, every=1 if name in EVERY_FRAME else 2,
                                                                lerp="linear" if name in LINEAR else "catmullrom")
         print(name, flush=True)
+    for name, (fn, length, loop, _cat, _when) in AA.ANIMS.items():
+        frames = bake(fn, length, FPS)
+        anims[f"animation.tyrannosaurus.alpha_{name}"] = to_geckolib(frames, length, FPS, loop,
+                                                                     every=1 if name in ALPHA_EVERY_FRAME else 2,
+                                                                     lerp="linear" if name in ALPHA_LINEAR else "catmullrom")
+        print("alpha_" + name, flush=True)
     with open(os.path.join(ASSETS, "animations", "entity", "tyrannosaurus.animation.json"), "w") as f:
         json.dump({"format_version": "1.8.0", "animations": anims}, f, indent=1)
 

@@ -46,7 +46,16 @@
    "animation.tyrannosaurus.wake_sleep",
    "animation.tyrannosaurus.knocked_out",
    "animation.tyrannosaurus.beg",
-   "animation.tyrannosaurus.tame"
+   "animation.tyrannosaurus.tame",
+   "animation.tyrannosaurus.alpha_walk",
+   "animation.tyrannosaurus.alpha_survey",
+   "animation.tyrannosaurus.alpha_jaw_rub",
+   "animation.tyrannosaurus.alpha_challenge",
+   "animation.tyrannosaurus.alpha_bite_toss",
+   "animation.tyrannosaurus.alpha_shove",
+   "animation.tyrannosaurus.alpha_shove_left",
+   "animation.tyrannosaurus.alpha_guard",
+   "animation.tyrannosaurus.alpha_ko_struggle"
   ],
   "render_scale": 0.5,
   "handmade": true

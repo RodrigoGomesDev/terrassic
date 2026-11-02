@@ -339,6 +339,7 @@ for _sid, (_en, _pt, _es, _) in SPECIES.items():
 for _sid, (_en, _pt, _es, _) in SPECIES.items():
     add(f"{_sid}_skull_fossil", (f"{_en} Skull Fossil", f"Crânio Fóssil de {_pt}", f"Cráneo Fósil de {_es}"),
         "facing", (f"{_sid}_skull_fossil", SKULL_ROCK.get(_sid, "limestone")), "pickaxe", "soft_stone", "SAND")
+
 add("bone_fence_gate", ("Bone Fence Gate", "Portão de Osso", "Puerta de Valla de Hueso"), "fence_gate", "bone_fence",
     "pickaxe", "bone", "SAND")
 add("ossuary_wall", ("Ossuary Wall", "Parede de Ossuário", "Muro de Osario"), "cube", "ossuary_wall", "pickaxe", "bone",
@@ -352,10 +353,11 @@ add("feather_bundle", ("Feather Bundle", "Feixe de Penas", "Haz de Plumas"), "lo
     ("feather_bundle", "feather_bundle_top"), "hoe", "feathers", "COLOR_BROWN")
 
 # ------------------------------------------------------------- family: utilities (phase 7)
-def box(a, b, tex, collide=True, rotation=None, faces=None):
-    """One model element: tex is a texture or (side, top); collide=False keeps it out of the block's shape (flames,
-    ropes); faces limits the faces drawn (flat planes)."""
-    return {"from": a, "to": b, "tex": tex, "collide": collide, "rotation": rotation, "faces": faces}
+def box(a, b, tex, collide=True, rotation=None, faces=None, uv=None):
+    """One model element: tex is a texture, (side, top) or (front, side, top) (front = north and south);
+    collide=False keeps it out of the block's shape (flames, ropes); faces limits the faces drawn (flat planes);
+    uv = {face: [u0, v0, u1, v1]} where the automatic uv (from the element's position) would not do."""
+    return {"from": a, "to": b, "tex": tex, "collide": collide, "rotation": rotation, "faces": faces, "uv": uv}
 
 
 def fire_planes(y0, y1, tex="minecraft:block/campfire_fire"):
@@ -366,6 +368,49 @@ def fire_planes(y0, y1, tex="minecraft:block/campfire_fire"):
 
 LOG, LOG_TOP, STRIPPED = "araucaria_log", "araucaria_log_top", "stripped_araucaria_log"
 PROPS = {}  # block id: model elements (north facing)
+DISPLAY = {}  # block id: item display of the model, where the block's default corner view would not do
+# The alphas' spoils (docs/ALFAS.md "Recompensa"; textures tools/spritegen/alfa_trofeus.py): no recipe, only an alpha
+# leaves them. The trophy is the skull in 3D on the alpha's own hide stretched on a stick frame (one per coat); the
+# rug is its back. Model in viewer space (u right, v down, z from the room to the wall), snout to the left.
+def _vbox(u0, u1, v0, v1, z0, z1, tex, collide=True, rotation=None, uv=None):
+    return box([16 - u1, 16 - v1, z0], [16 - u0, 16 - v0, z1], tex, collide, rotation, None, uv)
+
+
+def _stick(u0, u1, v0, v1, z0, z1):
+    """A stick of the frame: its ends pass the block, so each face gets a uv inside the texture (the automatic one
+    would run out of it into the neighbouring sprites of the atlas)."""
+    long, end = ([1, 0, 2, 16], [1, 0, 2, 1]) if u1 - u0 == 1 else ([0, 1, 16, 2], [0, 1, 1, 2])
+    faces = ("north", "south", "east", "west") if u1 - u0 == 1 else ("north", "south", "up", "down")
+    return _vbox(u0, u1, v0, v1, z0, z1, "alpha_trophy_stick", False, None,
+                 {d: long if d in faces else end for d in ("north", "south", "east", "west", "up", "down")})
+
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "spritegen"))
+import alfa_trofeus  # noqa: E402  (the skull mask: one box per run of a row)
+
+_SKULL = ("tyrannosaurus_alpha_skull", "tyrannosaurus_alpha_skull_top", "tyrannosaurus_alpha_skull_top")
+ALPHA_COATS = {"ivory": (("Ivory Alpha Skull", "Crânio do Alfa Marfim", "Cráneo del Alfa Marfil"),
+                         ("Ivory Hide Rug", "Tapete de Couro Marfim", "Alfombra de Piel Marfil")),
+               "ember": (("Ember Alpha Skull", "Crânio da Alfa Brasa", "Cráneo de la Alfa Brasa"),
+                         ("Ember Hide Rug", "Tapete de Couro Brasa", "Alfombra de Piel Brasa"))}
+for _coat, (_trophy_names, _rug_names) in ALPHA_COATS.items():
+    _bid = f"tyrannosaurus_{_coat}_trophy"
+    add(_bid, _trophy_names, "alpha_trophy", None, "pickaxe", "trophy", "SNOW" if _coat == "ivory" else "COLOR_RED")
+    _skull = [_vbox(u0, u1, v0, v1, z0, z1, "tyrannosaurus_alpha_skull_inside" if kind == "inside" else _SKULL,
+                    kind == "bone", None, {"north": uv}) for u0, u1, v0, v1, z0, z1, kind, uv in alfa_trofeus.skull_boxes()]
+    PROPS[_bid] = _skull[:1] + [
+        # the frame: two uprights, two cross sticks lashed in front of them with the ends past the corners (out of
+        # the block's shape), the hide stretched between
+        _stick(0, 1, -1, 17, 14.5, 16), _stick(15, 16, -1, 17, 14.5, 16),
+        _stick(-1, 17, 0, 1, 14, 15.5), _stick(-1, 17, 15, 16, 14, 15.5),
+        _vbox(1, 15, 1, 15, 15, 16, f"tyrannosaurus_{_coat}_trophy_hide"),
+    ] + _skull[1:]
+    # the item shows the skull from the front: the block's corner view gives the frame's edge and hides the coat
+    DISPLAY[_bid] = {"gui": {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [0.85, 0.85, 0.85]},
+                     "fixed": {"rotation": [0, 180, 0], "translation": [0, 0, 0], "scale": [0.75, 0.75, 0.75]}}
+    add(f"tyrannosaurus_{_coat}_hide_rug", _rug_names, "carpet", f"tyrannosaurus_{_coat}_hide_rug", "axe", "rug",
+        "SNOW" if _coat == "ivory" else "COLOR_RED")
+
 for _tid, _names in (("bone", ("Bone Torch", "Tocha de Osso", "Antorcha de Hueso")),
                      ("resin", ("Resin Torch", "Tocha de Resina", "Antorcha de Resina")),
                      ("reed", ("Reed Torch", "Tocha de Junco", "Antorcha de Junco"))):
@@ -844,10 +889,14 @@ def element_model(name, elements):
         return "#" + keys[ref]
     out = []
     for e in elements:
-        side, top = e["tex"] if isinstance(e["tex"], tuple) else (e["tex"], e["tex"])
+        tex = e["tex"] if isinstance(e["tex"], tuple) else (e["tex"],)
+        front, side, top = (tex * 3)[:3] if len(tex) == 1 else (tex[0], tex[0], tex[1]) if len(tex) == 2 else tex
         faces = e["faces"] or ("north", "south", "east", "west", "up", "down")
         el = {"from": e["from"], "to": e["to"],
-              "faces": {d: {"texture": key(top if d in ("up", "down") else side)} for d in faces}}
+              "faces": {d: {"texture": key(top if d in ("up", "down") else front if d in ("north", "south") else side)}
+                        for d in faces}}
+        for d, uv in (e.get("uv") or {}).items():
+            el["faces"][d]["uv"] = uv
         if e["rotation"]:
             el["rotation"] = e["rotation"]
         if e["faces"]:
@@ -855,7 +904,10 @@ def element_model(name, elements):
         out.append(el)
     textures = {k: ref for ref, k in keys.items()}
     textures["particle"] = textures["t0"]
-    write(f"{A}/models/block/{name}.json", {"parent": "minecraft:block/block", "textures": textures, "elements": out})
+    model = {"parent": "minecraft:block/block", "textures": textures, "elements": out}
+    if name in DISPLAY:
+        model["display"] = DISPLAY[name]
+    write(f"{A}/models/block/{name}.json", model)
 
 
 def gen_prop(bid, tex):
@@ -931,7 +983,7 @@ GEN = {"plant": gen_plant, "tall_plant": gen_tall_plant, "water_plant": gen_wate
        "sapling": gen_sapling, "fence_gate": gen_fence_gate, "door": gen_door, "trapdoor": gen_trapdoor,
        "facing": gen_facing, "eave": gen_eave, "climber": gen_climber, "trophy": gen_trophy, "arch": gen_arch,
        "torch": gen_torch, "wall_torch": gen_wall_torch, "spikes": gen_spikes, "bed": gen_bed, "prop": gen_prop,
-       "hearth": gen_prop, "drum": gen_prop, "chimes": gen_prop, "basket": gen_prop}
+       "alpha_trophy": gen_prop, "hearth": gen_prop, "drum": gen_prop, "chimes": gen_prop, "basket": gen_prop}
 
 
 # ------------------------------------------------------------- loot
@@ -1328,12 +1380,12 @@ JAVA_KIND = {"cube": "cube", "column": "cube", "palisade": "palisade", "stairs":
              "sapling": "sapling", "fence_gate": "fenceGate", "door": "door", "trapdoor": "trapdoor", "plant": "plant",
              "tall_plant": "tallPlant", "water_plant": "waterPlant", "multiface": "multiface", "facing": "facing",
              "eave": "eave", "climber": "climber", "trophy": "trophy", "arch": "arch", "torch": "torch",
-             "wall_torch": "wallTorch", "spikes": "spikes", "bed": "bed", "prop": "prop", "hearth": "hearth",
+             "wall_torch": "wallTorch", "spikes": "spikes", "bed": "bed", "prop": "prop", "alpha_trophy": "prop", "hearth": "hearth",
              "drum": "drum", "chimes": "chimes", "basket": "basket"}
-BOX_KINDS = ("prop", "hearth", "drum", "chimes", "basket")
+BOX_KINDS = ("prop", "alpha_trophy", "hearth", "drum", "chimes", "basket")
 # drawn with transparent pixels: rendered as cutout on the client (BuildingBlocksClient)
 CUTOUT_KINDS = ("leaves", "sapling", "door", "trapdoor", "plant", "tall_plant", "water_plant", "multiface", "pane",
-                "climber", "trophy", "torch", "wall_torch", "spikes", "hearth")
+                "climber", "trophy", "alpha_trophy", "torch", "wall_torch", "spikes", "hearth")
 
 
 def gen_java(features):

@@ -91,7 +91,7 @@ public final class LeapClient {
         ClientTickEvent.CLIENT_POST.register(LeapClient::tick);
         ClientGuiEvent.RENDER_HUD.register(LeapClient::renderFlash);
         EntityRendererRegistry.register(LeapRegistry.RIFT_TYRANT, ctx -> new DinosaurRenderer<>(ctx, "tyrannosaurus",
-                com.terrassic.entity.Tyrannosaurus.MODEL_SCALE, com.terrassic.entity.Tyrannosaurus.SHADOW * 1.35F));
+                com.terrassic.entity.Tyrannosaurus.MODEL_SCALE, com.terrassic.entity.Tyrannosaurus.SHADOW * com.terrassic.leap.RiftTyrant.SIZE));
         EntityRendererRegistry.register(LeapRegistry.METEOR, MeteorRenderer::new);
     }
 
