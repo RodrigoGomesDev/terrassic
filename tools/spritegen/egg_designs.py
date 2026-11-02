@@ -299,28 +299,65 @@ def stegosaurus():
 
 
 def ankylosaurus():
-    e = Egg("ankylosaurus", {"b": "#6c5e44", "c": "#b8a780", "o": "#c8964a", "O": "#f2cc80",
-                              "d": "#4a3e2c", "I": "#ece2c4", "k": "#3e342a", "n": "#3a3022"})
-    e.ell((3, 2, 28, 26), "o", clip=True)
-    for row, y in enumerate((7, 13)):
-        start = 7 if row % 2 == 0 else 9
-        for x in range(start, 24, 4):
-            if in_egg(x, y) and in_egg(x + 1, y + 2):
-                e.px([(x, y), (x + 1, y)], "O")
-                e.px([(x, y + 2), (x + 1, y + 2)], "d")
-    e.line([(4, 18), (27, 18)], "d")
-    # horns at the corners and side spikes
-    e.poly(e.mirror([(6, 6), (8, 8), (3, 4)])[:3], "I")
-    e.poly([(25, 6), (23, 8), (28, 4)], "I")
-    for y in (12, 16):
-        e.poly([(4, y - 1), (4, y + 1), (1, y)], "I")
-        e.poly([(27, y - 1), (27, y + 1), (30, y)], "I")
-    e.ell((8, 21, 23, 34), "c", clip=True)
-    e.poly([(5, 22), (5, 25), (2, 24)], "I")
-    e.poly([(26, 22), (26, 25), (29, 24)], "I")
-    eyes(e, 19, 9)
-    nostrils(e, 24, 13)
-    e.poly([(12, 27), (19, 27), (18, 29), (13, 29)], "k")
+    """Ankylosaurus (02/11, the remade model, "jade escuro"), front view like the other remade eggs: the skull is a
+    wide low wedge, so the dark horn roof covers the top half of the egg in big uneven plates (the caputegulae, never a
+    grid), lit on their upper edge; the squamosal horns stick out past the outline at the top corners and the
+    quadratojugal horns below them point down and out (the two pairs that make the outline in the hotbar); the model's
+    eyes (rex-egg size: dark socket, amber-brown iris, pupil toward the beak, glint) low on the sides under the brow
+    plate, with the grey-green lid; the teal-grey face down the middle with the nostrils opening SIDEWAYS at the snout's
+    edges (Arbour & Mallon 2017, only in this genus) and the narrow dark beak; the pale grey-green throat below."""
+    e = Egg("ankylosaurus", {
+        "b": "#435957", "s": "#58716d", "S": "#314342", "w": "#8f9c94", "W": "#75837c",
+        "a": "#4b4439", "A": "#35302a", "Z": "#221f1b", "l": "#645b4b", "L": "#807561", "K": "#a3987f",
+        "h": "#938a6e", "H": "#bcb291", "j": "#6c6450", "J": "#4a4434",
+        "D": "#100e0c", "Y": "#a86d2c", "E": "#7a4a1c", "e": "#4a2c12", "P": "#0a0807", "G": "#eae2c8", "I": "#6f7461",
+        "k": "#322d26", "q": "#1e1b17", "Q": "#4a443a", "n": "#100f0d"})
+    # the roof: dark horn over the top half, out to the sides of the egg, its lower edge waving over the brows
+    e.poly([(1, 15), (2, 7), (7, 2), (12, 0), (19, 0), (24, 2), (29, 7), (30, 15), (27, 14), (24, 12), (20, 13),
+            (16, 12), (11, 13), (7, 12), (4, 14)], "a", clip=True)
+    # the caputegulae: uneven plates of different sizes and shapes, the biggest over the snout, the seams between them
+    # dark horn, a lit upper edge on some (never a grid: they were fused, irregular tiles)
+    plates = [[(10, 1), (14, 0), (16, 3), (14, 6), (10, 5)], [(17, 1), (21, 1), (22, 4), (18, 5)],
+              [(5, 5), (9, 4), (10, 8), (6, 10)], [(23, 4), (26, 6), (25, 10), (22, 8)],
+              [(11, 7), (14, 7), (17, 8), (16, 11), (12, 11)], [(19, 7), (21, 9), (19, 11)],
+              [(2, 10), (5, 11), (3, 13)], [(26, 11), (29, 10), (28, 13)]]
+    for k, poly_ in enumerate(plates):
+        e.poly(poly_, "l" if k % 3 else "a")
+        e.line(poly_ + [poly_[0]], "A")
+        if k in (0, 2, 4):
+            e.line([poly_[0], poly_[1]], "L")
+    e.px([(13, 3), (14, 9), (7, 7), (24, 7)], "K")                       # the keels catching the light
+    # the brow plates over the eyes, heavy and dark
+    e.line(e.mirror([(3, 14), (9, 12)]), "Z", 2, clip=True)
+    # the squamosal horns: short broad pyramids at the top corners, just past the outline, lit along the top
+    e.poly([(3, 5), (7, 4), (7, 8), (0, 6)], "h"); e.line([(0, 6), (3, 5)], "H"); e.line([(1, 7), (6, 8)], "J")
+    e.poly([(28, 5), (24, 4), (24, 8), (31, 6)], "h"); e.line([(31, 6), (28, 5)], "H"); e.line([(30, 7), (25, 8)], "J")
+    # the quadratojugal horns: lower on the cheeks, pointing down and out
+    e.poly([(3, 18), (6, 19), (4, 24), (1, 22)], "h"); e.line([(1, 22), (4, 24)], "J"); e.px([(3, 18)], "H")
+    e.poly([(28, 18), (25, 19), (27, 24), (30, 22)], "h"); e.line([(30, 22), (27, 24)], "J"); e.px([(28, 18)], "H")
+    # the face: teal-grey, the snout narrowing down the middle a shade lighter
+    e.poly([(10, 13), (21, 13), (20, 24), (11, 24)], "s")
+    # the eyes, as on the model: rex-egg size, low on the sides under the brow, the grey-green lid
+    eye = [".DDDD.",
+           "DYGEPD",
+           "DEYEPD",
+           ".DeeD.",
+           "..II.."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(4 + i, 15 + j)]) if in_egg(*q)], ch)
+    # the nostrils open sideways: dark slits on the edges of the snout, a lit lip above each
+    e.px(e.mirror([(10, 20), (10, 21), (11, 21)]), "n")
+    e.px(e.mirror([(10, 19), (11, 20)]), "W")
+    # the narrow beak: dark keratin, lit down its middle
+    e.poly([(12, 24), (19, 24), (18, 28), (16, 29), (15, 29), (13, 28)], "k")
+    e.line([(15, 25), (15, 27)], "Q"); e.px([(16, 25)], "Q")
+    e.line([(13, 28), (15, 29), (16, 29), (18, 28)], "q")
+    # the throat: pale grey-green under the jaws
+    e.ell((6, 27, 25, 36), "w", clip=True)
+    e.poly([(12, 28), (19, 28), (17, 30), (14, 30)], "k")
+    e.px(e.mirror([(9, 28), (12, 30)]), "W")
     return e
 
 
@@ -1197,8 +1234,36 @@ def leptoceratops():
     return e
 
 
+def _ankylosaur_v5():
+    """the old shared ankylosaur egg (v5), kept for the Euoplocephalus until it gets its own study; the Ankylosaurus
+    has its own since the 1.5 remake"""
+    e = Egg("ankylosaurus", {"b": "#6c5e44", "c": "#b8a780", "o": "#c8964a", "O": "#f2cc80",
+                              "d": "#4a3e2c", "I": "#ece2c4", "k": "#3e342a", "n": "#3a3022"})
+    e.ell((3, 2, 28, 26), "o", clip=True)
+    for row, y in enumerate((7, 13)):
+        start = 7 if row % 2 == 0 else 9
+        for x in range(start, 24, 4):
+            if in_egg(x, y) and in_egg(x + 1, y + 2):
+                e.px([(x, y), (x + 1, y)], "O")
+                e.px([(x, y + 2), (x + 1, y + 2)], "d")
+    e.line([(4, 18), (27, 18)], "d")
+    # horns at the corners and side spikes
+    e.poly(e.mirror([(6, 6), (8, 8), (3, 4)])[:3], "I")
+    e.poly([(25, 6), (23, 8), (28, 4)], "I")
+    for y in (12, 16):
+        e.poly([(4, y - 1), (4, y + 1), (1, y)], "I")
+        e.poly([(27, y - 1), (27, y + 1), (30, y)], "I")
+    e.ell((8, 21, 23, 34), "c", clip=True)
+    e.poly([(5, 22), (5, 25), (2, 24)], "I")
+    e.poly([(26, 22), (26, 25), (29, 24)], "I")
+    eyes(e, 19, 9)
+    nostrils(e, 24, 13)
+    e.poly([(12, 27), (19, 27), (18, 29), (13, 29)], "k")
+    return e
+
+
 def euoplocephalus():
-    e = ankylosaurus()
+    e = _ankylosaur_v5()
     e.name = "euoplocephalus"
     e.pal.update({"b": "#5e6c44", "c": "#c4c294", "o": "#6e8048", "O": "#b8483a", "d": "#3a4428",
                   "I": "#d86a3a", "k": "#3a3428"})

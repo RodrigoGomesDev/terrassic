@@ -64,6 +64,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         // the Parasaurolophus grows its crest: a year-old had only a low dome over the skull (Farke et al. 2013)
         hide("adult_crest", baby);
         hide("young_crest", !baby);
+        // the Ankylosaurus grows its club: a juvenile Pinacosaurus had only a plain tail tip (Currie et al. 2011)
+        hide("adult_club", baby);
+        hide("young_tail", !baby);
     }
 
     private void hide(String bone, boolean hidden) {

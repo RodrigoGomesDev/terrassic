@@ -274,6 +274,10 @@ public final class ModItems {
      *  carry the cargo. */
     public static final RegistrySupplier<Item> PARASAUROLOPHUS_SADDLE = ITEMS.register("parasaurolophus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Ankylosaurus' own pack deck: only it saddles an Ankylosaurus; poles tied down to the flank plates, hide bales
+     *  for the cargo. */
+    public static final RegistrySupplier<Item> ANKYLOSAURUS_SADDLE = ITEMS.register("ankylosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Pteranodon's own saddle (only it saddles a Pteranodon), with saddlebags like the T. rex's. */
     public static final RegistrySupplier<Item> PTERANODON_SADDLE = ITEMS.register("pteranodon_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

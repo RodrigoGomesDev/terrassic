@@ -55,7 +55,8 @@ SIZES = {
     # Stegosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "stegosaurus":        dict(real=9.0,  scale=0.86, w=2.2, h=3.2, baby=0.3,  shadow=1.8),
     # Ankylosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "ankylosaurus":       dict(real=8.0,  scale=0.98, w=2.6, h=2.1, baby=0.3,  shadow=1.9),
+    # Ankylosaurus 1.5: hand-made at 24 px/m like the other remakes, 7 m (Arbour & Mallon 2017: 6-8 m), low and wide
+    "ankylosaurus":       dict(real=7.0,  scale=0.667, w=2.4, h=1.8, baby=0.3,  shadow=1.6),
     # Euoplocephalus tutus: 5.5-6 m, ~2.5 t (Arbour & Currie 2013; Paul 2010); the widest body for its length.
     # Euoplocephalus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "euoplocephalus":     dict(real=6.0,  scale=0.74, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
@@ -395,10 +396,12 @@ SPECIES = [
       food="Items.FERN, Items.LARGE_FERN, Items.MELON_SLICE, Items.WHEAT",
       sounds=("COW_AMBIENT", "COW_HURT", "COW_DEATH", 0.55, 1.5, 320), step=("RAVAGER_STEP", 0.5, 1.0), xp=18),
  dict(id="ankylosaurus", cls="Ankylosaurus", base="HerbivoreDinosaur",
-      doc="Ankylosaurus magniventris - living tank covered in bony armour, swings a heavy tail club when attacked. Drops its tail club.",
+      doc="Ankylosaurus magniventris - 7 m armoured browser of the Hell Creek woods, the prey that fights back. Never charges: it turns its flank and swings the tail club sideways and back at whatever comes at it, warns anyone who walks into the arc behind it, and hunkers down on its belly when a predator is in front. Males club each other on the flanks. The young have no club. Wild ones will not take food from the hand: drop it on the ground in front of its beak and stay where it can see you. Rideable with its own pack deck (5 cargo rows). Drops its tail club.",
       attrs=dict(MAX_HEALTH=100, MOVEMENT_SPEED=0.17, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=2.0, ARMOR=16, ARMOR_TOUGHNESS=4, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
       food="Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES",
-      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.7, 1.2, 300), step=("RAVAGER_STEP", 0.5, 1.1), xp=20),
+      sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.7, 1.2, 300), step=("RAVAGER_STEP", 0.5, 1.1), xp=20,
+      rideable=True, jump=0.4, ride_offset=2.25, ride_forward=2.56, ride_speed=0.95, cargo=5,
+      saddle="ANKYLOSAURUS_SADDLE", rig="Ankylosaurid"),
  dict(id="euoplocephalus", cls="Euoplocephalus", base="HerbivoreDinosaur",
       doc="Euoplocephalus tutus - 6 m armoured herbivore with bony eyelids and a tail club. Territorial: a blow of the club leaves whatever it hits slowed and weakened (stunned). Tamed with ferns and berries; a guard, not a mount.",
       attrs=dict(MAX_HEALTH=85, MOVEMENT_SPEED=0.18, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=1.8, ARMOR=14, ARMOR_TOUGHNESS=3, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=16),
@@ -812,7 +815,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1039,7 +1042,7 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.item.Item")
         imports.add("com.terrassic.registry.ModItems")
         body.append(f"    @Override\n    protected Item speciesSaddle() {{\n        return ModItems.{s['saddle']}.get();\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

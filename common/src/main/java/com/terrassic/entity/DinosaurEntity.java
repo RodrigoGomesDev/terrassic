@@ -1794,7 +1794,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     /** Adds the taming bonus levels, drawn like the wild ones, and wakes it at full health. */
-    private void grantTamingBonus(int effectiveness) {
+    protected void grantTamingBonus(int effectiveness) {
         this.ensureLevels();
         this.levels.addWildPoints(this.random, this.tamingBonusLevels(effectiveness));
         this.applyLevelModifiers(true);

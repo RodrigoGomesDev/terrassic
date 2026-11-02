@@ -979,7 +979,8 @@ def egg_blocks():
     from galli_extras import CUSTOM_EGGS as GALLI_EGGS
     from pachy_extras import CUSTOM_EGGS as PACHY_EGGS
     from para_extras import CUSTOM_EGGS as PARA_EGGS
-    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS}
+    from anky_extras import CUSTOM_EGGS as ANKY_EGGS
+    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1514,6 +1515,8 @@ if __name__ == "__main__":
     pachy_extras.main()   # the Pachycephalosaurus' soft eggs among tree roots under needle litter
     import para_extras
     para_extras.main()    # the Parasaurolophus' round eggs in a raised mud crater under reeds, and its reed saddle
+    import anky_extras
+    anky_extras.main()    # the Ankylosaurus' leathery eggs half buried in a pit of forest loam, and its pack deck
     import armas
     armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
     import pocket_guide

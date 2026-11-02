@@ -315,38 +315,52 @@
   "render_scale": 0.5
  },
  "ankylosaurus": {
-  "bones": 25,
-  "cubes": 169,
+  "bones": 30,
+  "cubes": 171,
   "texture": [
    256,
    256
   ],
   "bounds_px": [
    [
-    -21.057588324924488,
-    -0.01966262164956656,
-    -58.03318748589823
+    -27.07722518894557,
+    7.771561172376096e-16,
+    -86.77808204375528
    ],
    [
-    21.057588324924488,
-    33.0,
-    72.2325546297482
+    27.07722518894557,
+    43.144169638564456,
+    84.97174432188433
    ]
   ],
   "animations": [
    "animation.ankylosaurus.idle",
    "animation.ankylosaurus.walk",
    "animation.ankylosaurus.run",
+   "animation.ankylosaurus.swim",
+   "animation.ankylosaurus.club_l",
+   "animation.ankylosaurus.club_r",
+   "animation.ankylosaurus.club_warn",
+   "animation.ankylosaurus.flank_club",
+   "animation.ankylosaurus.hunker",
+   "animation.ankylosaurus.snort",
+   "animation.ankylosaurus.dig",
+   "animation.ankylosaurus.drink",
    "animation.ankylosaurus.attack",
-   "animation.ankylosaurus.sit",
+   "animation.ankylosaurus.hurt",
+   "animation.ankylosaurus.death",
+   "animation.ankylosaurus.eat",
    "animation.ankylosaurus.graze",
+   "animation.ankylosaurus.sit",
+   "animation.ankylosaurus.sleep",
+   "animation.ankylosaurus.wake_sleep",
    "animation.ankylosaurus.knocked_out",
    "animation.ankylosaurus.wake",
-   "animation.ankylosaurus.eat",
    "animation.ankylosaurus.beg",
    "animation.ankylosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.667,
+  "handmade": true
  },
  "brachiosaurus": {
   "bones": 30,

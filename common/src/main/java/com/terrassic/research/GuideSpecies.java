@@ -23,7 +23,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("protoceratops", "late_cretaceous", "herbivore", 1.9F, false, false, 6, 50.53F),
             new GuideSpecies("leptoceratops", "late_cretaceous", "herbivore", 2.0F, false, false, 7, 50.11F),
             new GuideSpecies("stegosaurus", "jurassic", "herbivore", 9.0F, false, false, 5, 11.12F),
-            new GuideSpecies("ankylosaurus", "late_cretaceous", "herbivore", 8.0F, false, false, 4, 12.53F),
+            new GuideSpecies("ankylosaurus", "late_cretaceous", "herbivore", 7.0F, true, false, 4, 13.97F),
             new GuideSpecies("euoplocephalus", "late_cretaceous", "herbivore", 6.0F, false, false, 5, 16.73F),
             new GuideSpecies("therizinosaurus", "late_cretaceous", "herbivore", 10.0F, true, true, 2, 9.98F),
             new GuideSpecies("deinocheirus", "late_cretaceous", "omnivore", 11.0F, true, false, 1, 9.1F),

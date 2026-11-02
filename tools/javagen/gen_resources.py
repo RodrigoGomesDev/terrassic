@@ -20,7 +20,8 @@ from tri_extras import CUSTOM_EGGS as TRI_EGGS  # noqa: E402  (the Triceratops' 
 from galli_extras import CUSTOM_EGGS as GALLI_EGGS  # noqa: E402  (the Gallimimus' speckled clutch on a gravel bar)
 from pachy_extras import CUSTOM_EGGS as PACHY_EGGS  # noqa: E402  (the Pachycephalosaurus' soft eggs among tree roots)
 from para_extras import CUSTOM_EGGS as PARA_EGGS  # noqa: E402  (the Parasaurolophus' round eggs in a mud crater)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS}
+from anky_extras import CUSTOM_EGGS as ANKY_EGGS  # noqa: E402  (the Ankylosaurus' leathery eggs in a pit of forest loam)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -108,6 +109,9 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "gallimimus_saddle": ("Gallimimus Riding Pad", "Manta de Montaria de Galimimo", "Manta de montar de Gallimimus", "item/generated"),
     # the floodplain reed saddle: a woven rush mat on a hide pad, rolled bundles of matting strapped along the flanks
     "parasaurolophus_saddle": ("Parasaurolophus Reed Saddle", "Sela de Junco de Parassaurolofo", "Silla de junco de Parasaurolophus", "item/generated"),
+    # the pack deck: peeled poles and slats lashed on the low back, tied down to the flank plates (no girth), a bark-cloth
+    # cushion at the shoulders and hide bales for the cargo
+    "ankylosaurus_saddle": ("Ankylosaurus Pack Deck", "Deque de Carga de Anquilossauro", "Plataforma de carga de Anquilosaurio", "item/generated"),
     # not a saddle: a hunting vest for the Velociraptor, armour for an animal too small to ride
     "velociraptor_harness": ("Hunting Harness", "Arreio de Caça", "Arnés de caza", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
@@ -227,6 +231,7 @@ LENS_LANG = {
         "gui.terrassic.lens.how_feed": "Tame: feed it by hand (1 in %s per bite)",
         "gui.terrassic.lens.how_feed_or_ko": "Tame: feed it by hand (1 in %s) or knock it out",
         "message.terrassic.tame_try": "%s took the food, still wary (1 in %s)",
+        "message.terrassic.eats_from_ground": "%s won't take food from your hand: drop it in front of its beak",
         "gui.terrassic.lens.how_feed_now": "Out cold: feed it now (use food on it)",
         "gui.terrassic.lens.eats": "Eats",
         "gui.terrassic.lens.cargo": "Bags: %s/%s slots",
@@ -249,6 +254,7 @@ LENS_LANG = {
         "gui.terrassic.lens.how_feed": "Domar: dê comida na mão (1 em %s por porção)",
         "gui.terrassic.lens.how_feed_or_ko": "Domar: comida na mão (1 em %s) ou nocaute",
         "message.terrassic.tame_try": "%s comeu, mas ainda desconfia (1 em %s)",
+        "message.terrassic.eats_from_ground": "%s não come da sua mão: jogue a comida no chão, na frente do bico",
         "gui.terrassic.lens.how_feed_now": "Desacordado: alimente agora (use a comida nele)",
         "gui.terrassic.lens.eats": "Come",
         "gui.terrassic.lens.cargo": "Bolsas: %s/%s espaços",
@@ -271,6 +277,7 @@ LENS_LANG = {
         "gui.terrassic.lens.how_feed": "Domar: dale comida en la mano (1 de %s por bocado)",
         "gui.terrassic.lens.how_feed_or_ko": "Domar: comida en la mano (1 de %s) o noqueo",
         "message.terrassic.tame_try": "%s comió, pero aún desconfía (1 de %s)",
+        "message.terrassic.eats_from_ground": "%s no come de tu mano: tira la comida al suelo, delante del pico",
         "gui.terrassic.lens.how_feed_now": "Inconsciente: aliméntalo ahora (usa la comida en él)",
         "gui.terrassic.lens.eats": "Come",
         "gui.terrassic.lens.cargo": "Alforjas: %s/%s huecos",
@@ -456,6 +463,7 @@ HUD_LANG = {
         "hud.terrassic.notice.tamed": "Tamed",
         "hud.terrassic.notice.herd_calm": "The herd lets you near",
         "hud.terrassic.notice.herd_fled": "The herd took fright",
+        "hud.terrassic.notice.club_warn": "Get out from behind it",
         "hud.terrassic.notice.hatched": "A baby hatched",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Hungry",
@@ -489,6 +497,7 @@ HUD_LANG = {
         "hud.terrassic.notice.tamed": "Domesticado",
         "hud.terrassic.notice.herd_calm": "O bando deixou você chegar",
         "hud.terrassic.notice.herd_fled": "O bando se assustou",
+        "hud.terrassic.notice.club_warn": "Saia de trás dele",
         "hud.terrassic.notice.hatched": "Nasceu um filhote",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Com fome",
@@ -522,6 +531,7 @@ HUD_LANG = {
         "hud.terrassic.notice.tamed": "Domesticado",
         "hud.terrassic.notice.herd_calm": "La manada te deja acercarte",
         "hud.terrassic.notice.herd_fled": "La manada se asustó",
+        "hud.terrassic.notice.club_warn": "Sal de detrás de él",
         "hud.terrassic.notice.hatched": "Nació una cría",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Con hambre",
@@ -882,6 +892,10 @@ def main():
     # for the cord (no wood, no leather: all of it from the floodplain)
     shaped("parasaurolophus_saddle", ["MMM", "RHR", " S "], {"M": "terrassic:reed_mat", "R": "terrassic:rush",
            "H": "terrassic:parasaurolophus_hide", "S": "minecraft:string"}, "terrassic:parasaurolophus_saddle")
+    # the Ankylosaurus' pack deck: three poles for the frame and slats, leather for the cushion and bales on its hide,
+    # string for the tie-downs to the flank plates
+    shaped("ankylosaurus_saddle", ["PPP", "LHL", "C C"], {"P": "minecraft:stick", "L": "minecraft:leather",
+           "H": "terrassic:ankylosaurus_hide", "C": "minecraft:string"}, "terrassic:ankylosaurus_saddle")
     # the Velociraptor's hunting harness: leather flanks, a bone plate, string straps and an iron ring
     shaped("velociraptor_harness", ["LBL", "SNS"], {"L": "minecraft:leather", "B": "minecraft:bone", "S": "minecraft:string",
                                                      "N": "minecraft:iron_nugget"}, "terrassic:velociraptor_harness")
