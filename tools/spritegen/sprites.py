@@ -971,7 +971,8 @@ def egg_blocks():
     from rex_extras import CUSTOM_EGGS as REX_EGGS   # these have their own nest model and textures (*_extras.main)
     from ptera_extras import CUSTOM_EGGS as PTERA_EGGS
     from rapt_extras import CUSTOM_EGGS as RAPT_EGGS
-    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS}
+    from proto_extras import CUSTOM_EGGS as PROTO_EGGS
+    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1490,6 +1491,8 @@ if __name__ == "__main__":
     ptera_extras.main()   # the Pteranodon's clutch in its sand scrape and its saddle
     import rapt_extras
     rapt_extras.main()   # the Velociraptor's clutch in its desert scrape and its hunting harness
+    import proto_extras
+    proto_extras.main()   # the Protoceratops' soft eggs half buried in a mound of red sand
     import armas
     armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
     import pocket_guide
