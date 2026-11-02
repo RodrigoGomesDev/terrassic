@@ -65,22 +65,60 @@ def tyrannosaurus():
 
 
 def spinosaurus():
-    e = Egg("spinosaurus", {"b": "#5e7a74", "c": "#a8b8a8", "d": "#2c403c", "n": "#2e403c",
-                             "e": "#c4461e", "f": "#f0a03a", "R": MOUTH})
-    e.poly([(9, 7), (11, 1), (14, 0), (17, 0), (20, 1), (22, 7)], "e")
-    for x in (12, 15, 16, 19):
-        e.line([(x, 2 if x in (12, 19) else 1), (x, 6)], "D")
-    e.pal["D"] = "#8a2c16"
-    e.line([(11, 1), (14, 0), (17, 0), (20, 1)], "f")
-    cap(e, "d", (6, 5, 25, 18), (4, 11, 27, 36))
-    e.rect((12, 15, 19, 31), "c", clip=True)
-    e.ell((11, 26, 20, 33), "c", clip=True)
-    e.rect((13, 15, 18, 16), "C")
-    e.pal["C"] = "#7e928a"
-    eyes(e, 13, 9, iris="#e8b232", brow="n", angry=True)
-    nostrils(e, 18, 14)
-    e.line([(12, 27), (19, 27)], "R")
-    fangs(e, 28, [13])
+    """Spinosaurus (02/11, the v3 model), front view like the T. rex egg: cool slate olive, the male's crimson sail
+    rising behind the top of the egg with its dark spines and bone tips, the eyes set high (the model's: dark socket,
+    gold with a pale top, the pupil toward the snout, a glint), the nostrils far back between them, the long narrow
+    crocodile snout down the middle with the rosette of interlocking teeth at its tip, and the sand throat."""
+    e = Egg("spinosaurus", {
+        "b": "#4a5650", "d": "#35403d", "D": "#252c2c", "n": "#181c1c", "l": "#64715f", "L": "#838c72",
+        "c": "#b7a982", "C": "#958866", "a": "#d6caa1",
+        "r": "#9c3a28", "R": "#6e2420", "q": "#3e1716", "o": "#c86a3c", "t": "#e2c48c", "k": "#2a1c1a",
+        "i": "#d9c24e", "I": "#9a7f26", "Y": "#f6e78a", "P": "#120d0c", "G": "#fff6cf", "S": "#121414",
+        "W": "#efe8d0", "w": "#c4b892", "u": "#3a1618"})
+    # the sail behind the top of the egg: crimson, darker at the base, the spines dark, the tips bone
+    e.poly([(8, 9), (10, 3), (13, 0), (18, 0), (21, 3), (23, 9)], "r")
+    e.poly([(9, 9), (22, 9), (21, 6), (10, 6)], "R")
+    for x in (11, 14, 17, 20):
+        e.line([(x, 1 if 13 <= x <= 18 else 3), (x, 8)], "k")
+    e.px([(13, 0), (14, 0), (17, 0), (18, 0), (10, 3), (11, 2), (20, 2), (21, 3)], "t")
+    e.px([(15, 2), (16, 2), (12, 4), (19, 4)], "o")
+    # the head: slate olive, a darker crown, broken dark stripes back along the sides
+    e.ell((3, 6, 28, 38), "b")
+    for y in range(N):
+        for x in range(N):
+            if y > 10 and not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((6, 6, 25, 16), "d", clip=True)
+    for pts in ([(4, 16), (6, 19)], [(4, 21), (5, 24)]):
+        e.line(pts, "D", clip=True); e.line([(N - 1 - x, y) for x, y in pts], "D", clip=True)
+    # the eyes set high on the head, as on the model
+    eye = [".SSSS..",
+           "SYYGPS.",
+           "SiiPPS.",
+           ".SIISS.",
+           "..SS..."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(6 + i, 9 + j)]) if in_egg(*q)], ch)
+    e.line([(6, 8), (11, 8)], "n", clip=True); e.line([(25, 8), (20, 8)], "n", clip=True)
+    # the long narrow snout down the middle, a shade lighter, the nostrils far back by the eyes
+    e.poly([(13, 10), (18, 10), (18, 24), (13, 24)], "l")
+    e.line([(13, 11), (13, 23)], "d"); e.line([(18, 11), (18, 23)], "D")
+    e.line([(15, 11), (15, 21)], "L")
+    e.px([(14, 12), (17, 12)], "n")
+    # the rosette at the tip: the snout widens, the long teeth interlock over the lip line
+    e.poly([(11, 24), (20, 24), (20, 28), (11, 28)], "l")
+    e.line([(11, 26), (20, 26)], "u")
+    for x in (11, 13, 15, 17, 19):
+        e.px([(x, 27), (x, 28)], "W")
+    for x in (12, 14, 16, 18, 20):
+        e.px([(x, 25), (x, 24)], "W")
+    e.px([(12, 24), (16, 24), (20, 24)], "w")
+    # the sand throat either side of the snout
+    e.ell((5, 22, 11, 33), "c", clip=True); e.ell((20, 22, 26, 33), "c", clip=True)
+    e.px([q for q in e.mirror([(7, 27), (8, 30)]) if in_egg(*q)], "C")
+    e.line([(5, 23), (11, 25)], "u", clip=True); e.line([(26, 23), (20, 25)], "u", clip=True)
     return e
 
 
@@ -571,9 +609,50 @@ def albertosaurus():
 
 
 def giganotosaurus():
-    e = theropod("giganotosaurus", {"b": "#8e7e56", "c": "#dccc9c", "d": "#5a4c30", "n": "#3e3420",
-                                    "e": "#b84a2a"}, stripes=((4, 16, 7, 13), (4, 20, 7, 17)))
-    e.line([(11, 9), (20, 9)], "e", 2)
+    """Giganotosaurus (02/11, skin 'tubarao'), front view like the T. rex egg: steel grey above and off-white below
+    like a great white, the darker stripes over the crown, the long low knife snout down the middle with the two rows
+    of rough wine-red lumps along its top, the model's eyes (dark socket, the pale gold iris, the pupil toward the
+    snout, a glint) under a heavy brow, and the closed jaws with the blade teeth over the pale lip."""
+    e = Egg("giganotosaurus", {
+        "b": "#5b6872", "d": "#46525d", "D": "#343e49", "n": "#242a33", "l": "#74828a", "L": "#939f9f",
+        "c": "#d9d6c8", "C": "#c3c0b0", "a": "#a6a495",
+        "q": "#3b2228", "r": "#5a2c33", "R": "#7a3a3d", "t": "#96524b",
+        "i": "#c9b458", "I": "#8e7a32", "P": "#0f0d0c", "G": "#f1ecc8", "S": "#0f1216", "Y": "#e2d07a",
+        "W": "#f2eedd", "w": "#c9c2a8", "u": "#33161a"})
+    # the head: steel grey, a darker cap, broken dark stripes over the crown, lighter cheeks
+    e.ell((3, 1, 28, 34), "b", clip=True)
+    e.ell((5, 1, 26, 14), "d", clip=True)
+    for pts in ([(7, 4), (9, 8)], [(10, 2), (11, 5)], [(5, 9), (6, 11)]):
+        e.line(pts, "D", clip=True); e.line([(N - 1 - x, y) for x, y in pts], "D", clip=True)
+    e.px(e.mirror([(5, 19), (6, 21), (4, 22), (7, 24)]), "l")
+    # the heavy brow ridges over the eyes
+    e.line([(4, 11), (11, 10)], "n", clip=True); e.line([(27, 11), (20, 10)], "n", clip=True)
+    e.line([(5, 10), (10, 9)], "L", clip=True); e.line([(26, 10), (21, 9)], "L", clip=True)
+    # the eyes, as on the model: dark socket, pale gold iris, the pupil toward the snout, a glint over it
+    eye = [".SSSSS..",
+           "SYYiGPS.",
+           "SiiIPPS.",
+           ".SIIISS.",
+           "..SSS..."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(4 + i, 12 + j)]) if in_egg(*q)], ch)
+    # the long low knife snout down the middle, a shade lighter, with its two rows of rough wine-red lumps
+    e.poly([(12, 9), (19, 9), (20, 25), (11, 25)], "l", clip=True)
+    e.line([(12, 10), (11, 24)], "d"); e.line([(19, 10), (20, 24)], "d")
+    for x, y in ((14, 10), (13, 14), (14, 18)):
+        e.px(e.mirror([(x, y), (x + 1, y)]), "R"); e.px(e.mirror([(x, y + 1), (x + 1, y + 1)]), "r")
+        e.px(e.mirror([(x, y + 2)]), "q")
+    e.px(e.mirror([(14, 9)]), "t")
+    e.px(e.mirror([(13, 22)]), "n")    # the nostrils
+    # closed jaws: the pale lip, the blade teeth hanging over the dark lip line, the off-white throat
+    e.ell((6, 25, 25, 38), "c", clip=True)
+    e.line([(4, 24), (27, 24)], "u", clip=True)
+    for x in (6, 8, 10, 12, 14):
+        e.px(e.mirror([(x, 25), (x, 26)]), "W")
+        e.px(e.mirror([(x + 1, 25)]), "w")
+    e.px([q for q in e.mirror([(9, 29), (12, 30)]) if in_egg(*q)], "C")
     return e
 
 
@@ -585,13 +664,60 @@ def carcharodontosaurus():
 
 
 def carnotaurus():
-    e = theropod("carnotaurus", {"b": "#7a786a", "c": "#d0ccb8", "d": "#4a4a40", "n": "#30302a",
-                                 "e": "#8a2e22", "i": "#e8dcc0"}, jaw="narrow", teeth=(10, 13),
-                 cap_top=(5, 4, 26, 18))
-    # the two bull horns
-    _side(e, [(8, 9), (11, 9), (7, 3), (6, 4)], "i")
-    for p in ((7, 18), (6, 21), (8, 23)):
-        e.px(e.mirror([p]), "n")
+    """Carnotaurus (02/11, skin 'ferrugem'), front view like the T. rex egg: rust red with the darker saddle over
+    the crown, the two bull horns standing out sideways from over the eyes (dark keratin, pale tips) with the crimson
+    skin at their bases, the dark mask across the eyes, the model's eyes (almond, the slot pupil toward the snout,
+    a glint, the gold top), rows of round bumps over the crown, the short deep snout and the closed jaws with the
+    upper teeth over the cream lip."""
+    e = Egg("carnotaurus", {
+        "b": "#7b3d26", "d": "#582b20", "D": "#3a1e1a", "l": "#9e562e", "L": "#bd773f",
+        "m": "#2e1916", "M": "#45231c", "c": "#cfb68a", "C": "#b0906a", "q": "#c49f78",
+        "h": "#3a2d24", "H": "#231a15", "t": "#d2c3a2", "T": "#a8987a", "r": "#93302d", "R": "#6e1f22",
+        "i": "#e3a531", "I": "#ad6c1c", "Y": "#f7d76c", "P": "#120d0a", "G": "#f4ecc4", "K": "#1c1511",
+        "W": "#ece3c9", "w": "#c4b590", "u": "#3b1719", "n": "#2c1e1c"})
+    # the head: rust, the dark saddle over the crown, lighter cheeks
+    e.ell((3, 1, 28, 34), "b", clip=True)
+    e.ell((6, 1, 25, 13), "d", clip=True)
+    e.px(e.mirror([(5, 18), (6, 20), (5, 22), (7, 23)]), "l")
+    # rows of round bumps over the crown, lit on top
+    for x, y in ((9, 5), (12, 4), (8, 8), (11, 7), (14, 6)):
+        e.px(e.mirror([(x, y)]), "l"); e.px(e.mirror([(x, y + 1)]), "D")
+    # the horns: thick at the crimson base over each eye, standing out sideways and up, pale at the tip
+    e.poly([(9, 9), (5, 8), (1, 4), (0, 5), (3, 9), (8, 12)], "h")
+    e.poly([(22, 9), (26, 8), (30, 4), (31, 5), (28, 9), (23, 12)], "h")
+    e.line([(2, 5), (6, 8)], "T"); e.line([(29, 5), (25, 8)], "T")
+    e.px([(0, 4), (1, 4), (0, 5), (31, 4), (30, 4), (31, 5)], "t")
+    e.px([(1, 3), (30, 3)], "t")
+    e.ell((7, 8, 11, 12), "r"); e.ell((20, 8, 24, 12), "r")
+    e.px([(8, 9), (21, 9)], "R"); e.px([(9, 11), (22, 11)], "R")
+    # the dark mask across the eyes
+    e.poly([(3, 13), (13, 12), (13, 18), (4, 19)], "m", clip=True)
+    e.poly([(28, 13), (18, 12), (18, 18), (27, 19)], "m", clip=True)
+    # the eyes, as on the model: almond, gold top, the slot pupil toward the snout, a glint over it
+    eye = [".KKKKK..",
+           "KYYYGiK.",
+           "KiiiPIK.",
+           "KIiiPIK.",
+           ".KKKKK..",
+           "..MMM..."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(5 + i, 13 + j)]) if in_egg(*q)], ch)
+    # the short deep snout down the middle, a shade lighter, wrinkled, the nostrils near the top
+    e.poly([(12, 13), (19, 13), (20, 25), (11, 25)], "l", clip=True)
+    for y in (15, 18, 21):
+        e.line([(13, y), (18, y)], "b")
+    e.px([(14, 16), (17, 19), (13, 22), (16, 22)], "L")
+    e.px(e.mirror([(13, 14)]), "n")
+    # closed jaws: cream lip, the upper teeth hanging over the dark lip line, the pale throat under it
+    e.ell((6, 25, 25, 38), "c", clip=True)
+    e.line([(5, 24), (26, 24)], "u", clip=True)
+    e.line([(5, 23), (26, 23)], "q", clip=True)
+    for x in (7, 10, 13):
+        e.px(e.mirror([(x, 25), (x, 26)]), "W")
+    e.px(e.mirror([(8, 25), (11, 25), (14, 25)]), "w")
+    e.px(e.mirror([(10, 29), (12, 30)]), "C")
     return e
 
 

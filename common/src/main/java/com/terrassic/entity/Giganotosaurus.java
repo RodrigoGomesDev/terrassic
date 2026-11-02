@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -143,6 +144,11 @@ public class Giganotosaurus extends Giganotosaurine {
     @Override
     protected int preyInterval() {
         return 200;
+    }
+
+    @Override
+    protected Item speciesSaddle() {
+        return ModItems.GIGANOTOSAURUS_SADDLE.get();
     }
 
     @Override

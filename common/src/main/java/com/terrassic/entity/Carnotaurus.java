@@ -14,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
@@ -133,6 +134,11 @@ public class Carnotaurus extends Abelisaur {
     @Override
     protected int preyInterval() {
         return 160;
+    }
+
+    @Override
+    protected Item speciesSaddle() {
+        return ModItems.CARNOTAURUS_SADDLE.get();
     }
 
     @Override

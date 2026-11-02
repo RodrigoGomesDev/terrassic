@@ -116,19 +116,19 @@ TOPICS = [
                   "dueño al jugador más cercano.\n"
                   "Los depredadores solo se doman de crías o por noqueo. Los herbívoros también se doman dándoles de comer."),
     }),
-    ("riding", "terrassic:tyrannosaurus_saddle", ["tyrannosaurus_saddle", "pteranodon_saddle", "velociraptor_harness"], {
+    ("riding", "terrassic:tyrannosaurus_saddle", ["tyrannosaurus_saddle", "carnotaurus_saddle", "giganotosaurus_saddle", "pteranodon_saddle", "velociraptor_harness"], {
         "pt_br": ("Montaria",
-                  "Ponha a sela num dino montável adulto. O T. rex, o Pteranodonte e o Velociraptor pedem a sela deles; "
+                  "Ponha a sela num dino montável adulto. O T. rex, o Carnotauro, o Giganotossauro, o Pteranodonte e o Velociraptor pedem a sela deles; "
                   "os outros usam a sela comum. Clique com a mão vazia para montar e use tesoura para tirar a sela.\n"
                   "%key:jump% pula (segure para pular mais alto) e %key:attack% ataca.\n"
                   "No Pteranodonte, %key:jump% decola e bate as asas, olhar dirige, e %key:sneak% no ar desce sem desmontar."),
         "en_us": ("Riding",
-                  "Put a saddle on a grown rideable dinosaur. The T. rex, the Pteranodon and the Velociraptor need their own; "
+                  "Put a saddle on a grown rideable dinosaur. The T. rex, the Carnotaurus, the Giganotosaurus, the Pteranodon and the Velociraptor need their own; "
                   "the others take the plain saddle. Use it with an empty hand to mount, and shears take the saddle off.\n"
                   "%key:jump% jumps (hold it to jump higher) and %key:attack% attacks.\n"
                   "On the Pteranodon, %key:jump% takes off and flaps, your view steers, and %key:sneak% in the air descends without dismounting."),
         "es_es": ("Montura",
-                  "Pon la silla a un dinosaurio montable adulto. El T. rex, el Pteranodon y el Velociraptor necesitan la suya; "
+                  "Pon la silla a un dinosaurio montable adulto. El T. rex, el Carnotaurio, el Giganotosaurio, el Pteranodon y el Velociraptor necesitan la suya; "
                   "los demás usan la silla normal. Úsalo con la mano vacía para montar, y las tijeras quitan la silla.\n"
                   "%key:jump% salta (mantén para saltar más alto) y %key:attack% ataca.\n"
                   "En el Pteranodon, %key:jump% despega y bate las alas, la mirada dirige y %key:sneak% en el aire desciende sin desmontar."),
