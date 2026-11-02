@@ -16,6 +16,10 @@ import org.lwjgl.glfw.GLFW;
  * (hud-estudo/scripts/dirF.py, "wheel"): six basalt slabs round the crosshair, the one pointed at edged in amber with
  * its name in the middle, and under it how many dinos hear the whistle. Hold the whistle key, point with the mouse,
  * let go to give the order (entity/Whistle); a click gives it too, Esc or letting go in the middle gives none.
+ * A quick tap (let go within {@link #TAP_TICKS} ticks, pointing at nothing) leaves the wheel open instead: then a click
+ * or the key again gives the order. That covers a trackpad, a key the window cannot read held (a scan code) and a
+ * player who prefers to tap. The key's own repeats while held are swallowed, and a press made under the wheel does
+ * not reopen it after it closes (DinoControls).
  * It is a screen so the mouse is free to point; it does not pause the game nor darken the world.
  */
 public class WhistleWheelScreen extends Screen {
@@ -55,6 +59,12 @@ public class WhistleWheelScreen extends Screen {
     private int hovered = -1;
     private int hearing;
     private boolean done;
+    /** Ticks since the wheel opened. */
+    private int age;
+    /** Opened by a tap: stays until a click, the key again or Esc. */
+    private boolean sticky;
+    /** A tap shorter than this (ticks) leaves the wheel open. */
+    private static final int TAP_TICKS = 5;
 
     public WhistleWheelScreen() {
         super(Component.translatable("gui.terrassic.whistle.title"));
@@ -73,8 +83,9 @@ public class WhistleWheelScreen extends Screen {
 
     @Override
     public void tick() {
-        if (!this.done && !this.held()) {
-            this.give(this.hovered);
+        this.age++;
+        if (!this.done && !this.sticky && !this.held()) {
+            this.letGo();
             return;
         }
         if (this.minecraft != null && this.minecraft.player != null && this.minecraft.player.tickCount % 10 == 0) {
@@ -99,7 +110,19 @@ public class WhistleWheelScreen extends Screen {
         if (this.key.getType() == InputConstants.Type.KEYSYM && this.key.getValue() != InputConstants.UNKNOWN.getValue()) {
             return InputConstants.isKeyDown(window, this.key.getValue());
         }
-        return true;   // a scan code: stay open until a click or Esc
+        return true;   // a scan code the window cannot read: its release comes through keyReleased
+    }
+
+    /** The key was let go: a tap at nothing keeps the wheel open, anything else gives the order pointed at. */
+    private void letGo() {
+        if (this.done || this.sticky) {
+            return;
+        }
+        if (this.hovered < 0 && this.age <= TAP_TICKS) {
+            this.sticky = true;
+            return;
+        }
+        this.give(this.hovered);
     }
 
     /** Gives the order (or none for -1) and closes. */
@@ -115,9 +138,27 @@ public class WhistleWheelScreen extends Screen {
     }
 
     @Override
+    public void removed() {
+        DinoControls.wheelClosed();
+        super.removed();
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (DinoControls.WHISTLE.matches(keyCode, scanCode)) {
+            // held: the key's own repeats; after a tap: pressed again, it gives the order
+            if (this.sticky) {
+                this.give(this.hovered);
+            }
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         if (DinoControls.WHISTLE.matches(keyCode, scanCode)) {
-            this.give(this.hovered);
+            this.letGo();
             return true;
         }
         return super.keyReleased(keyCode, scanCode, modifiers);
@@ -129,13 +170,17 @@ public class WhistleWheelScreen extends Screen {
             this.give(this.hovered);
             return true;
         }
+        if (this.sticky && DinoControls.WHISTLE.matchesMouse(button)) {
+            this.give(this.hovered);
+            return true;
+        }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (DinoControls.WHISTLE.matchesMouse(button)) {
-            this.give(this.hovered);
+            this.letGo();
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -200,7 +245,8 @@ public class WhistleWheelScreen extends Screen {
             Component tip = Component.translatable("gui.terrassic.whistle." + Whistle.ORDERS[this.hovered] + ".tip");
             AmberHud.text(g, this.font, tip, cx - AmberHud.width(this.font, tip) / 2, y + 10, TerrassicPalette.BONE_100);
         }
-        Component release = Component.translatable("gui.terrassic.whistle.release", DinoControls.WHISTLE.getTranslatedKeyMessage());
+        Component release = Component.translatable(this.sticky ? "gui.terrassic.whistle.sticky" : "gui.terrassic.whistle.release",
+                DinoControls.WHISTLE.getTranslatedKeyMessage());
         AmberHud.text(g, this.font, release, cx - AmberHud.width(this.font, release) / 2, y + (this.hovered >= 0 ? 20 : 10),
                 TerrassicPalette.STONE_200);
         super.render(g, mouseX, mouseY, partialTick);

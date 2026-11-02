@@ -1,11 +1,22 @@
 package com.terrassic.entity;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.CommandRegistrationEvent;
+import dev.architectury.event.events.common.EntityEvent;
+import dev.architectury.event.events.common.PlayerEvent;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
@@ -28,9 +39,10 @@ import java.util.UUID;
  * same orders to one animal.
  * <ul>
  *   <li>Who hears: the player's own living tamed dinosaurs within {@link #RANGE} blocks, except the one they ride and
- *       one on their shoulder. Animals ridden by someone else or knocked out do not obey.</li>
+ *       one on their shoulder (it stays there whatever the order). Animals ridden by someone else or knocked out do not obey.</li>
  *   <li>Attack my target: the creature the player looks at, up to {@link #TARGET_RANGE} blocks and not behind a wall,
- *       or else the last one the player hit in the last ten seconds. It overrides the neutral stance's rule (players and
+ *       or else the last one the player hit in the last ten seconds, by hand, arrow or dart (kept here from the hurt event,
+ *       not from vanilla's last-hurt-mob, which forgets after five seconds and only counts blows by hand). It overrides the neutral stance's rule (players and
  *       tamed animals are attacked only on this order) and a "Stop", but not the passive stance, a waiting animal, a
  *       young one, a species that flees instead of fighting, the player's own animals or a player PvP protects.</li>
  *   <li>Passive: all of them take the passive stance; whistled again when all already are, they go back to neutral.</li>
@@ -47,14 +59,80 @@ public final class Whistle {
     /** At most one whistle every half second per player. */
     private static final long COOLDOWN = 10L;
     private static final Map<UUID, Long> LAST = new HashMap<>();
+    /** How long the last creature a player hit stays "my target" (ticks). */
+    private static final long LAST_HIT_TICKS = 200L;
+    /** The last creature each player hurt, and when (game time). */
+    private static final Map<UUID, LastHit> LAST_HIT = new HashMap<>();
+
+    private record LastHit(UUID target, long time) {
+    }
 
     private Whistle() {
     }
 
+    /** Remembers whom each player hurts, for "attack my target" (Terrassic.init). */
+    public static void init() {
+        EntityEvent.LIVING_HURT.register((victim, source, amount) -> {
+            if (!victim.level().isClientSide && source.getEntity() instanceof ServerPlayer player && victim != player
+                    && worthChasing(victim, player)) {
+                LAST_HIT.put(player.getUUID(), new LastHit(victim.getUUID(), player.level().getGameTime()));
+            }
+            return EventResult.pass();
+        });
+        PlayerEvent.PLAYER_QUIT.register(player -> {
+            LAST_HIT.remove(player.getUUID());
+            LAST.remove(player.getUUID());
+        });
+        CommandRegistrationEvent.EVENT.register(Whistle::commands);
+    }
+
+    /**
+     * Operators only, for tests and servers, like {@code /terrassic alfa}: {@code /terrassic apito <order>} (whistle)
+     * blows the whistle as the player running it, the same as the wheel; {@code /terrassic ombro} (perch) puts their
+     * nearest shoulder animal (8 blocks) on their shoulder, the same as the dino screen's button.
+     */
+    private static void commands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext ctx,
+                                 Commands.CommandSelection selection) {
+        for (String name : List.of("apito", "whistle", "silbato")) {
+            dispatcher.register(Commands.literal("terrassic").then(Commands.literal(name).requires(s -> s.hasPermission(2))
+                    .then(Commands.argument("ordem", StringArgumentType.word())
+                            .suggests((c, b) -> SharedSuggestionProvider.suggest(ORDERS, b))
+                            .executes(c -> {
+                                blow(c.getSource().getPlayerOrException(), StringArgumentType.getString(c, "ordem"));
+                                return 1;
+                            }))));
+        }
+        for (String name : List.of("ombro", "perch", "hombro")) {
+            dispatcher.register(Commands.literal("terrassic").then(Commands.literal(name).requires(s -> s.hasPermission(2))
+                    .executes(c -> perchNearest(c.getSource().getPlayerOrException()))));
+        }
+    }
+
+    private static int perchNearest(ServerPlayer player) {
+        if (player.isVehicle() || player.isPassenger()) {
+            return 0;
+        }
+        DinosaurEntity bird = player.level().getEntitiesOfClass(DinosaurEntity.class, player.getBoundingBox().inflate(8.0D),
+                        d -> d.isAlive() && d.isTame() && d.isOwnedBy(player) && d.canPerch() && !d.isBaby() && !d.isPassenger())
+                .stream().min(java.util.Comparator.comparingDouble(d -> d.distanceToSqr(player))).orElse(null);
+        if (bird == null) {
+            tell(player, Component.translatable("message.terrassic.whistle.no_perch"));
+            return 0;
+        }
+        bird.perchOn(player);
+        return 1;
+    }
+
+    /** Not the player's own animals, nor what they ride or carry (a mount, a bird on the shoulder). */
+    private static boolean worthChasing(Entity e, Player player) {
+        return !(e instanceof OwnableEntity own && player.getUUID().equals(own.getOwnerUUID()))
+                && e.getRootVehicle() != player.getRootVehicle();
+    }
+
     /** Whether this dinosaur hears the player's whistle (both sides: the wheel counts them on the client). */
     public static boolean hears(DinosaurEntity dino, Player player) {
-        return dino.isAlive() && dino.isTame() && dino.isOwnedBy(player) && dino != player.getVehicle()
-                && dino.getVehicle() != player && dino.distanceToSqr(player) <= RANGE * RANGE;
+        return dino.isAlive() && dino.isTame() && dino.isOwnedBy(player) && !dino.isPerched()
+                && dino.getRootVehicle() != player.getRootVehicle() && dino.distanceToSqr(player) <= RANGE * RANGE;
     }
 
     /** The player's dinosaurs that hear the whistle now. */
@@ -76,7 +154,11 @@ public final class Whistle {
         LAST.put(player.getUUID(), now);
         List<DinosaurEntity> dinos = hearing(player);
         if (dinos.isEmpty()) {
-            tell(player, Component.translatable("message.terrassic.whistle.nobody"));
+            // only the bird on the shoulder heard it: say so, rather than "nobody"
+            DinosaurEntity perched = player.getPassengers().stream().filter(e -> e instanceof DinosaurEntity)
+                    .map(e -> (DinosaurEntity) e).findFirst().orElse(null);
+            tell(player, perched != null ? Component.translatable("message.terrassic.whistle.perched", perched.getDisplayName())
+                    : Component.translatable("message.terrassic.whistle.nobody"));
             return;
         }
         LivingEntity target = null;
@@ -160,19 +242,22 @@ public final class Whistle {
         if (wall.getType() != HitResult.Type.MISS) {
             end = wall.getLocation();
         }
-        Entity mount = player.getVehicle();
         AABB box = player.getBoundingBox().expandTowards(look.scale(TARGET_RANGE)).inflate(1.0D);
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, end, box,
-                e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != mount
-                        && !(e instanceof DinosaurEntity d && d.getVehicle() == player),
+                e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && worthChasing(e, player),
                 eye.distanceToSqr(end));
         if (hit != null && hit.getEntity() instanceof LivingEntity living) {
             return living;
         }
-        LivingEntity last = player.getLastHurtMob();
-        if (last != null && last.isAlive() && player.tickCount - player.getLastHurtMobTimestamp() < 200
-                && last.distanceToSqr(player) < TARGET_RANGE * TARGET_RANGE) {
-            return last;
+        LastHit last = LAST_HIT.get(player.getUUID());
+        if (last == null || player.level().getGameTime() - last.time() > LAST_HIT_TICKS
+                || player.level().getGameTime() < last.time()) {
+            return null;
+        }
+        Entity e = player.serverLevel().getEntity(last.target());
+        if (e instanceof LivingEntity living && living.isAlive() && living.distanceToSqr(player) < TARGET_RANGE * TARGET_RANGE
+                && worthChasing(living, player)) {
+            return living;
         }
         return null;
     }

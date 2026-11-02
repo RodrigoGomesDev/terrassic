@@ -63,13 +63,18 @@ public final class DinoControls {
             flyer.riderDescending = mount == flyer && mc.screen == null && (DESCEND.isDown() || mc.options.keyShift.isDown());
         }
         if (mc.screen != null) {
+            // a whistle press under any screen (the wheel's own included) must not open the wheel once it closes
+            while (WHISTLE.consumeClick()) {
+                wheelClosedAt = mc.level.getGameTime();
+            }
             return;
         }
         boolean whistle = false;
         while (WHISTLE.consumeClick()) {
             whistle = true;
         }
-        if (whistle) {
+        long now = mc.level.getGameTime();
+        if (whistle && (now - wheelClosedAt > 2L || now < wheelClosedAt)) {
             // the wheel stays while the key is held and gives the order when it is let go
             mc.setScreen(new WhistleWheelScreen());
             return;
@@ -108,6 +113,14 @@ public final class DinoControls {
     }
 
     /** Blows the whistle with an order of the wheel (network/DinoNetwork, entity/Whistle). */
+    /** When the whistle wheel last closed (game time): the press that closed it does not reopen it. */
+    private static long wheelClosedAt = Long.MIN_VALUE / 2;
+
+    static void wheelClosed() {
+        Minecraft mc = Minecraft.getInstance();
+        wheelClosedAt = mc.level != null ? mc.level.getGameTime() : Long.MIN_VALUE / 2;
+    }
+
     static void whistle(String order) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUtf(order);

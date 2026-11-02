@@ -42,12 +42,17 @@ Também não ataca um jogador que o dono não pode ferir (PvP desligado ou mesmo
 ## Roda do apito (1.5)
 
 Segure **H**, aponte com o mouse e solte: a ordem vale para todos os seus dinos que ouvem o apito. Um clique na fatia
-também dá a ordem; Esc, ou soltar com o mouse no meio, não dá nenhuma. O desenho é o da prévia aprovada do HUD
+também dá a ordem; Esc, ou soltar com o mouse no meio, não dá nenhuma. Um toque rápido em H (soltar em menos de um
+quarto de segundo, sem apontar) deixa a roda aberta: aí um clique na fatia, ou H de novo, dá a ordem. Serve para quem
+joga no trackpad e para tecla que a janela não consegue ler segurada. Segurar H não repete nada, e o aperto que fecha
+a roda não abre outra. Se a tecla for um botão do mouse, vale o mesmo. O desenho é o da prévia aprovada do HUD
 (30/10, https://claude.ai/artifact/A8gmsTnR4hExM16C4XD7Bs): seis lajes de basalto em volta da mira, a apontada com
 borda de âmbar e o nome no meio, e embaixo quantos dinos ouvem, o que a ordem faz e a tecla. Não escurece o mundo nem
 pausa o jogo. A tecla muda em Controles > Terrassic.
 
-Quem ouve: seus dinos domados vivos a até **24 blocos**, menos o que você monta e o que está no seu ombro. Os montados
+Quem ouve: seus dinos domados vivos a até **24 blocos**, menos o que você monta e o que está no seu ombro. A ave do
+ombro fica lá em qualquer ordem e nunca entra na contagem; se só ela estava perto, a barra diz que só ela ouviu e fica
+no ombro, em vez de "ninguém ouviu". Os montados
 por outra pessoa e os desmaiados não obedecem. Cada um que obedece mostra uma nota musical em cima da cabeça, e a barra
 de ações diz quem obedeceu (o nome, se for um só, ou quantos). Por enquanto o apito não tem som: os sons do mod estão em
 espera.
@@ -57,7 +62,9 @@ As seis ordens, em sentido horário a partir do alto:
 - **Seguir** e **Esperar aqui:** as mesmas da tela do dino, para todos.
 - **Vagar por perto:** cada um vaga em volta de onde está (o Vagar da tela do dino).
 - **Atacar meu alvo:** o bicho que você mira, a até 32 blocos e sem parede no meio; se você não mira nada, o último
-  que você acertou nos últimos 10 segundos. Vale contra jogador e bicho domado de outra pessoa (era a única forma,
+  que você acertou nos últimos 10 segundos, na mão, com flecha ou com dardo. Esse último o mod guarda sozinho (pelo
+  evento de dano): o do vanilla esquece em 5 segundos e só conta golpe na mão, e por isso falhava em 3 dos 4 loaders.
+  A mira nunca pega o que você monta nem a ave do ombro. Vale contra jogador e bicho domado de outra pessoa (era a única forma,
   pela decisão do Rodrigo de 30/10) e passa por cima de um Pare. Não obedecem: os passivos, os que estão esperando,
   filhotes, as espécies que fogem em vez de lutar, répteis marinhos com o alvo fora d'água, e ninguém ataca bicho seu.
   Jogador protegido pelo PvP desligado ou pelo time: ninguém vai, e a barra avisa.
@@ -76,7 +83,8 @@ em Controles; o jogo marca o conflito em vermelho.
 
 ### Código
 
-- `entity/Whistle`: quem ouve (`hears`, usado também pela roda para contar), as ordens (`blow`), a mira do alvo.
+- `entity/Whistle`: quem ouve (`hears`, usado também pela roda para contar), as ordens (`blow`), a mira do alvo e o
+  último que cada jogador acertou (`init`, pelo `EntityEvent.LIVING_HURT` do Architectury).
 - `DinosaurEntity#orderAttack`: o ataque mandado pelo apito.
 - `client/WhistleWheelScreen`: a roda; `client/DinoControls`: a tecla e o pacote; `network/DinoNetwork`: `dino_whistle`.
 - Textos: `tools/javagen/gen_whistle.py` (os três idiomas). O Guia de Bolso explica o apito no tópico Ordens.
