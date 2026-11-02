@@ -247,7 +247,7 @@ GUIDE = {
 # turned off per species in config/terrassic.json (SpawnConfig). The spawn category and placement rule follow the
 # base class: SwimmingDinosaur -> WATER_CREATURE in water, FlyingDinosaur -> flyer rule, others -> on the ground.
 WORLD = {
-    "tyrannosaurus":      dict(biomes=("savanna", "jungle"), weight=1, group=(1, 1), track=10),
+    "tyrannosaurus":      dict(biomes=("savanna", "plains"), weight=1, group=(1, 1), track=10),  # v1.6: not jungle (it was the only species left there, so every jungle spawn was a rex)
     "spinosaurus":        dict(biomes=("river", "swamp"), weight=2, group=(1, 1), track=10),
     "dilophosaurus":      dict(biomes=("forest", "jungle"), weight=3, group=(1, 2), track=8),
     "velociraptor":       dict(biomes=("savanna", "badlands", "desert"), weight=6, group=(1, 3), track=8),

@@ -24,7 +24,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *
  *  BEGIN GENERATED table (tools/javagen/gen_species.py, table WORLD)
  *  Species             Biomes                          weight  group
- *  Tyrannosaurus       savanna, jungle                 1       1
+ *  Tyrannosaurus       savanna, plains                 1       1
  *  Spinosaurus         river, swamp, mangrove          2       1
  *  Dilophosaurus       forest, jungle                  3       1-2
  *  Velociraptor        savanna, badlands, desert*      6       1-3
@@ -185,7 +185,7 @@ public final class ModSpawns {
             boolean deepSea = (ctx.hasTag(BiomeTags.IS_DEEP_OCEAN) && !key.contains("frozen")) || ctx.hasTag(CretaceousBiomes.habitat("deep_sea"));
             boolean ocean = (ctx.hasTag(BiomeTags.IS_OCEAN) && !key.contains("frozen")) || ctx.hasTag(CretaceousBiomes.habitat("ocean"));
 
-            if (savanna || jungle) {
+            if (savanna || plains) {
                 add(props, ModEntities.TYRANNOSAURUS.get(), 1, 1, 1);
             }
             if (river || swamp) {
