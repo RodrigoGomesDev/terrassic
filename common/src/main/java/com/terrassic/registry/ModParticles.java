@@ -15,6 +15,10 @@ public final class ModParticles {
     public static final RegistrySupplier<SimpleParticleType> ROAR_WAVE = PARTICLES.register("roar_wave", () -> new SimpleParticleType(true) {
     });
 
+    /** v1.6: the alphas' aura (client/AlphaMoteParticle); AlphaAura makes them straight on the client. */
+    public static final RegistrySupplier<SimpleParticleType> ALPHA_MOTE = PARTICLES.register("alpha_mote", () -> new SimpleParticleType(false) {
+    });
+
     private ModParticles() {
     }
 }
