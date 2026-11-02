@@ -18,6 +18,8 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
  *       them; "adult_dome_male" / "adult_dome_female" carry the adult crown of each sex</li>
  *   <li>The Parasaurolophus' crest: "adult_crest" is hidden on babies and "young_crest" (the low dome a hatchling had,
  *       Farke et al. 2013) shown only on them</li>
+ *   <li>The Triceratops' brow horns: "adult_horns" is hidden on babies and "young_horns" (short, curving back) shown
+ *       only on them</li>
  *   <li>Bone "head" follows the look direction (handled by DefaultedEntityGeoModel)</li>
  * </ul>
  */
@@ -67,6 +69,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         // the Ankylosaurus grows its club: a juvenile Pinacosaurus had only a plain tail tip (Currie et al. 2011)
         hide("adult_club", baby);
         hide("young_tail", !baby);
+        // the Triceratops' brow horns: a calf's are short stubs curving back (Horner & Goodwin 2006)
+        hide("adult_horns", baby);
+        hide("young_horns", !baby);
     }
 
     private void hide(String bone, boolean hidden) {

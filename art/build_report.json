@@ -232,11 +232,11 @@
   "render_scale": 0.5
  },
  "triceratops": {
-  "bones": 35,
-  "cubes": 115,
+  "bones": 43,
+  "cubes": 121,
   "texture": [
    256,
-   256
+   512
   ],
   "bounds_px": [
    [
