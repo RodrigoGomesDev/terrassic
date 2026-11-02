@@ -2230,7 +2230,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      */
     @Override
     public boolean canAttack(LivingEntity target) {
-        if (Rules.spares(target)) {
+        if (Rules.spares(target) || Rules.sparesPlayer(this, target)) {
             return false;
         }
         if (this.isTame() && (this.stance == DinoStance.PASSIVE || this.isCalmed() || this.sameOwner(target))) {
