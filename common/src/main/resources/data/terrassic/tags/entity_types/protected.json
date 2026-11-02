@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id": "cobblemon:pokemon", "required": false},
+    {"id": "cobblemon:npc", "required": false}
+  ]
+}

@@ -8,12 +8,17 @@ import com.terrassic.Terrassic;
 import com.terrassic.entity.DinosaurEntity;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.platform.Platform;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
@@ -271,6 +276,32 @@ public final class Rules {
         Rules rules = of(level);
         double chance = rules.get(Rule.STRUCTURE_DAMAGE) / rules.get(Rule.STRUCTURE_RESISTANCE);
         return chance >= 1.0D || (chance > 0.0D && random.nextDouble() < chance);
+    }
+
+    /**
+     * v1.6: mobs the creatures never hunt nor attack, whatever the rules say (data/terrassic/tags/entity_types/protected.json:
+     * Cobblemon's Pokémon and NPCs; a modpack can add its own with a datapack).
+     */
+    public static final TagKey<EntityType<?>> PROTECTED = TagKey.create(Registries.ENTITY_TYPE, Terrassic.id("protected"));
+
+    /**
+     * v1.6: whether the creatures leave this one alone (Rodrigo, 02/11/2026: in a Cobblemon modpack the dinos hunted
+     * the Pokémon). The {@link #PROTECTED} tag always; and, while "Hunt other mods' animals" is 0, every mob of another
+     * mod that is not a monster. Players, Minecraft's and Terrassic's own mobs and hostile monsters stay fair game.
+     */
+    public static boolean spares(Entity target) {
+        if (target == null || target instanceof Player) {
+            return false;
+        }
+        EntityType<?> type = target.getType();
+        if (type.is(PROTECTED)) {
+            return true;
+        }
+        String mod = BuiltInRegistries.ENTITY_TYPE.getKey(type).getNamespace();
+        if ("minecraft".equals(mod) || Terrassic.MOD_ID.equals(mod) || target instanceof Enemy) {
+            return false;
+        }
+        return of(target.level()).get(Rule.OTHER_MODS_PREY) < 0.5D;
     }
 
     /** A rate scaled by a multiplier rule, rounded at random so fractions keep their average (3.4 -> 3 or 4). */
