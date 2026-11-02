@@ -73,6 +73,7 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
     private int swingSide;
     private int warnCooldown;
     private int hunkering;
+    private int hunkerCooldown;
     private int lostTarget;
     private ItemEntity meal;
     /** How long each player has stood in the club's arc since the warning. */
@@ -128,6 +129,8 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
     @Override
     protected void addExtraGoals() {
         this.goalSelector.addGoal(4, new ClubDefenceGoal());
+        // above the TemptGoal (7): someone holding more of its food would otherwise pull it away from the food on the ground
+        this.goalSelector.addGoal(5, new GroundMealGoal());
     }
 
     private boolean busy() {
@@ -246,7 +249,25 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
         triggerAnim(ACTION_CONTROLLER, "hunker");
         this.hunkering = 64;
         this.still = 64;
-        this.warnCooldown = 120;
+        this.hunkerCooldown = 160;      // up again before the next one: the club has its turn in between
+        this.getNavigation().stop();
+    }
+
+    /** A grown predator at its head, out of the club's arc: wild and about, or one that is after this animal. */
+    private boolean threatAtHead(PredatorDinosaur p) {
+        return p.isAlive() && !p.isBaby() && (!p.isTame() || p.getTarget() == this)
+                && this.distanceTo(p) - p.getBbWidth() * 0.5D < 3.6D * this.getScale() + 1.0D
+                && this.offNose(p.position()) < ARC_FROM;
+    }
+
+    /** Turns the body a step toward a point (the food on the ground). */
+    private void turnTo(Vec3 at) {
+        float want = (float) Math.toDegrees(Math.atan2(at.z - this.getZ(), at.x - this.getX())) - 90.0F;
+        float now = this.yBodyRot;
+        float step = net.minecraft.util.Mth.clamp(net.minecraft.util.Mth.wrapDegrees(want - now), -8.0F, 8.0F);
+        this.setYRot(now + step);
+        this.yBodyRot = now + step;
+        this.yHeadRot = this.yBodyRot;
     }
 
     // ------------------------------------------------------------------ taming off the ground
@@ -270,34 +291,36 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
         return new Vec3(this.getX() + fwd.x * ahead, this.getY(), this.getZ() + fwd.z * ahead);
     }
 
-    private void lookForMeal() {
-        if (this.meal != null && (!this.meal.isAlive() || this.meal.distanceToSqr(this) > 144.0D)) {
-            this.meal = null;
+    /** Who dropped it: the item's thrower, or, when the loader does not hand that back, the nearest player to a
+     *  fresh drop (under 30 s on the ground). */
+    private Player throwerOf(ItemEntity item) {
+        if (item.getOwner() instanceof Player p) {
+            return p;
         }
-        if (this.meal == null && this.tickCount % 10 == 0) {
-            List<ItemEntity> near = this.level().getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(6.0D, 2.0D, 6.0D),
-                    i -> i.isAlive() && i.onGround() && this.isFood(i.getItem()) && i.getOwner() instanceof Player);
-            this.meal = near.isEmpty() ? null : near.get(0);
+        if (item.getAge() > 600) {
+            return null;
         }
-        if (this.meal == null) {
-            return;
+        Player near = this.level().getNearestPlayer(item, 12.0D);
+        return near != null && !near.isSpectator() ? near : null;
+    }
+
+    private ItemEntity findMeal() {
+        List<ItemEntity> near = this.level().getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(6.0D, 2.0D, 6.0D),
+                i -> i.isAlive() && this.isFood(i.getItem()) && this.throwerOf(i) != null);
+        ItemEntity best = null;
+        double bestD = Double.MAX_VALUE;
+        for (ItemEntity i : near) {
+            double d = this.beak().distanceToSqr(i.getX(), this.getY(), i.getZ());
+            if (d < bestD) {
+                bestD = d;
+                best = i;
+            }
         }
-        Vec3 at = this.meal.position();
-        if (this.beak().distanceToSqr(at.x, this.getY(), at.z) < 1.6D * 1.6D) {
-            this.getNavigation().stop();
-            this.getLookControl().setLookAt(at.x, at.y, at.z);
-            this.eatMeal(this.meal);
-            this.meal = null;
-        } else if (this.getNavigation().isDone() || this.tickCount % 20 == 0) {
-            // walk so the beak, not the hips, ends over the food
-            Vec3 fwd = at.subtract(this.position()).normalize();
-            Vec3 stand = at.subtract(fwd.scale(3.0D * this.getScale()));
-            this.getNavigation().moveTo(stand.x, at.y, stand.z, 0.9D);
-        }
+        return best;
     }
 
     private void eatMeal(ItemEntity item) {
-        Player thrower = item.getOwner() instanceof Player p ? p : null;
+        Player thrower = this.throwerOf(item);
         // whoever dropped it has to be where it can see them, not standing behind it in the arc of the club
         if (thrower != null && this.distanceToSqr(thrower) < 64.0D && this.offNose(thrower.position()) > 110.0D) {
             this.warnCooldown = 0;
@@ -383,8 +406,17 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
         if (this.hunkering > 0) {
             this.hunkering--;
         }
+        if (this.hunkerCooldown > 0) {
+            this.hunkerCooldown--;
+        }
         if (this.swingHitIn >= 0 && --this.swingHitIn < 0) {
             this.clubBlow();
+        }
+        // a predator at its head (out of the club's arc): flat on its belly, even mid-fight (it has a target then)
+        if (this.hunkering == 0 && this.hunkerCooldown == 0 && !this.isBaby() && !this.busy() && this.tickCount % 5 == 0) {
+            if (!this.level().getEntitiesOfClass(PredatorDinosaur.class, this.getBoundingBox().inflate(6.0D), this::threatAtHead).isEmpty()) {
+                this.hunker();
+            }
         }
         if (this.still > 0) {
             this.still--;
@@ -401,18 +433,12 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
                 List<PredatorDinosaur> near = this.level().getEntitiesOfClass(PredatorDinosaur.class, this.getBoundingBox().inflate(10.0D),
                         p -> p.isAlive() && !p.isTame() && !p.isBaby() && this.hasLineOfSight(p));
                 if (!near.isEmpty()) {
-                    PredatorDinosaur pr = near.get(0);
-                    if (this.distanceTo(pr) < 5.0D * this.getScale() + 2.0D && this.offNose(pr.position()) < 50.0D && this.warnCooldown == 0) {
-                        this.hunker();
-                    } else {
-                        this.warn(pr);
-                    }
+                    this.warn(near.get(0));      // its back to it and the club up (at its head it hunkers, above)
                     return;
                 }
             }
-            this.lookForMeal();
             if (this.meal != null) {
-                return;
+                return;                     // walking to the food on the ground (GroundMealGoal)
             }
         }
         if (!this.getNavigation().isDone() || this.random.nextInt(700) != 0) {
@@ -494,6 +520,11 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
             if (t == null) {
                 return;
             }
+            if (a.hunkering > 0) {
+                a.getNavigation().stop();
+                a.getLookControl().setLookAt(t, 30.0F, 30.0F);
+                return;                     // flat on its belly: it holds until it rises
+            }
             double d = a.distanceTo(t);
             double reach = CLUB_REACH * a.getScale();
             if (d > reach + 1.5D) {
@@ -522,6 +553,81 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
             }
             if (a.swingHitIn < 0) {
                 a.presentClub(t);
+            }
+        }
+    }
+
+    /**
+     * Its food on the ground (dropped by a player, the taming): walks so the beak, not the hips, ends over it, turns to
+     * it and eats it (eatMeal: the taming roll). A goal of its own, so the TemptGoal of someone still holding food
+     * does not pull it away every tick.
+     */
+    private class GroundMealGoal extends Goal {
+        private int ticks;
+
+        GroundMealGoal() {
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        private boolean free() {
+            Ankylosaurid a = Ankylosaurid.this;
+            return !a.isTame() && !a.isBaby() && !a.busy() && a.getTarget() == null && a.hunkering == 0;
+        }
+
+        @Override
+        public boolean canUse() {
+            Ankylosaurid a = Ankylosaurid.this;
+            if (!this.free() || a.tickCount % 10 != 0) {
+                return false;
+            }
+            a.meal = a.findMeal();
+            return a.meal != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            Ankylosaurid a = Ankylosaurid.this;
+            return this.free() && a.meal != null && a.meal.isAlive() && this.ticks < 400 && a.meal.distanceToSqr(a) < 16.0D * 16.0D;
+        }
+
+        @Override
+        public void start() {
+            this.ticks = 0;
+        }
+
+        @Override
+        public void stop() {
+            Ankylosaurid.this.meal = null;
+        }
+
+        @Override
+        public void tick() {
+            Ankylosaurid a = Ankylosaurid.this;
+            this.ticks++;
+            if (a.still > 0) {
+                return;
+            }
+            Vec3 at = a.meal.position();
+            a.getLookControl().setLookAt(at.x, at.y, at.z, 30.0F, 30.0F);
+            double dx = at.x - a.getX();
+            double dz = at.z - a.getZ();
+            double d = Math.sqrt(dx * dx + dz * dz);
+            double reach = 3.4D * a.getScale();
+            if (d <= reach + 1.3D && d >= reach - 2.2D) {
+                a.getNavigation().stop();
+                if (a.offNose(at) < 35.0D) {
+                    a.eatMeal(a.meal);
+                    a.meal = null;
+                } else {
+                    a.turnTo(at);
+                }
+                return;
+            }
+            if (this.ticks % 10 == 1 || a.getNavigation().isDone()) {
+                // where the hips stand so the beak ends over it; after 10 s of trying, straight at the food
+                Vec3 dir = new Vec3(dx, 0.0D, dz).normalize();
+                Vec3 stand = this.ticks > 200 ? at : at.subtract(dir.scale(reach));
+                a.getNavigation().moveTo(stand.x, at.y, stand.z, 0.9D);
             }
         }
     }
