@@ -79,6 +79,11 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     protected void addExtraGoals() {
     }
 
+    /** Speed modifier of the idle wander (a species slows it so its walk cycle keeps up and the feet do not slide). */
+    protected double strollSpeed() {
+        return 0.8D;
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
@@ -116,7 +121,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(8, new MigrateGoal(this));
         this.goalSelector.addGoal(8, new FollowHerdGoal(this));
-        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, this.strollSpeed()));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
