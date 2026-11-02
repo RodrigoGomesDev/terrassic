@@ -116,19 +116,19 @@ TOPICS = [
                   "dueño al jugador más cercano.\n"
                   "Los depredadores solo se doman de crías o por noqueo. Los herbívoros también se doman dándoles de comer."),
     }),
-    ("riding", "terrassic:tyrannosaurus_saddle", ["tyrannosaurus_saddle", "pteranodon_saddle", "velociraptor_harness"], {
+    ("riding", "terrassic:tyrannosaurus_saddle", ["tyrannosaurus_saddle", "carnotaurus_saddle", "giganotosaurus_saddle", "pteranodon_saddle", "velociraptor_harness"], {
         "pt_br": ("Montaria",
-                  "Ponha a sela num dino montável adulto. O T. rex, o Pteranodonte e o Velociraptor pedem a sela deles; "
+                  "Ponha a sela num dino montável adulto. O T. rex, o Carnotauro, o Giganotossauro, o Pteranodonte e o Velociraptor pedem a sela deles; "
                   "os outros usam a sela comum. Clique com a mão vazia para montar e use tesoura para tirar a sela.\n"
                   "%key:jump% pula (segure para pular mais alto) e %key:attack% ataca.\n"
                   "No Pteranodonte, %key:jump% decola e bate as asas, olhar dirige, e %key:sneak% no ar desce sem desmontar."),
         "en_us": ("Riding",
-                  "Put a saddle on a grown rideable dinosaur. The T. rex, the Pteranodon and the Velociraptor need their own; "
+                  "Put a saddle on a grown rideable dinosaur. The T. rex, the Carnotaurus, the Giganotosaurus, the Pteranodon and the Velociraptor need their own; "
                   "the others take the plain saddle. Use it with an empty hand to mount, and shears take the saddle off.\n"
                   "%key:jump% jumps (hold it to jump higher) and %key:attack% attacks.\n"
                   "On the Pteranodon, %key:jump% takes off and flaps, your view steers, and %key:sneak% in the air descends without dismounting."),
         "es_es": ("Montura",
-                  "Pon la silla a un dinosaurio montable adulto. El T. rex, el Pteranodon y el Velociraptor necesitan la suya; "
+                  "Pon la silla a un dinosaurio montable adulto. El T. rex, el Carnotaurio, el Giganotosaurio, el Pteranodon y el Velociraptor necesitan la suya; "
                   "los demás usan la silla normal. Úsalo con la mano vacía para montar, y las tijeras quitan la silla.\n"
                   "%key:jump% salta (mantén para saltar más alto) y %key:attack% ataca.\n"
                   "En el Pteranodon, %key:jump% despega y bate las alas, la mirada dirige y %key:sneak% en el aire desciende sin desmontar."),
@@ -137,16 +137,22 @@ TOPICS = [
         "pt_br": ("Ordens",
                   "Agache e use a mão vazia no seu dino para abrir a tela dele; montado, use %key:inventory%.\n"
                   "Seguir, Esperar, Vagar (anda perto de onde você mandou) e Pare (larga a briga por 10 segundos).\n"
+                  "Apito: segure %key:whistle%, aponte com o mouse e solte. A ordem vale para todos os seus dinos a até 24 blocos. "
+                  "Atacar meu alvo manda todos atrás do bicho que você mira.\n"
                   "Modo: Passivo nunca ataca; Neutro defende você e a si; Agressivo vai atrás de monstros e dinos selvagens por perto.\n"
                   "Seus dinos nunca atacam outros bichos seus."),
         "en_us": ("Orders",
                   "Sneak and use an empty hand on your dinosaur to open its screen; while riding, press %key:inventory%.\n"
                   "Follow, Wait, Wander (it roams near where you told it) and Stop (it drops the fight for 10 seconds).\n"
+                  "Whistle: hold %key:whistle%, point with the mouse and let go. The order goes to all your dinosaurs within 24 blocks. "
+                  "Attack my target sends them all after the creature you aim at.\n"
                   "Stance: Passive never attacks; Neutral defends you and itself; Aggressive goes after monsters and wild dinosaurs nearby.\n"
                   "Your dinosaurs never attack your other animals."),
         "es_es": ("Órdenes",
                   "Agáchate y usa la mano vacía en tu dinosaurio para abrir su pantalla; montado, pulsa %key:inventory%.\n"
                   "Seguir, Esperar, Deambular (anda cerca de donde lo dejaste) y Alto (deja la pelea durante 10 segundos).\n"
+                  "Silbato: mantén %key:whistle%, apunta con el ratón y suelta. La orden vale para todos tus dinosaurios a 24 bloques. "
+                  "Atacar mi objetivo los manda a todos a por la criatura que apuntas.\n"
                   "Modo: Pasivo nunca ataca; Neutral te defiende a ti y a sí mismo; Agresivo va a por monstruos y dinosaurios salvajes cercanos.\n"
                   "Tus dinosaurios nunca atacan a tus otros animales."),
     }),

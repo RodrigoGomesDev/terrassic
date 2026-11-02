@@ -2,7 +2,7 @@
 
 Pedido do Rodrigo (30/10/2026): mecânicas de ordem como no ARK. Estudo com a tabela completa (o que já existia e o que
 faltava): https://claude.ai/artifact/DcT3Nc1WbkV5YFmRX9hvpY. Esta versão traz as ordens de um dino só, pela tela do dino.
-A roda do apito (segurar H, todos os dinos que ouvem) vem na v0.16.1.
+A roda do apito (segurar H, todos os dinos que ouvem) entrou na 1.5: seção abaixo.
 
 ## Na tela do dino
 
@@ -38,3 +38,45 @@ Também não ataca um jogador que o dono não pode ferir (PvP desligado ou mesmo
 - `entity/ai/OrderedFollowOwnerGoal` (o seguir vanilla, quieto enquanto vaga) nos herbívoros, predadores e voadores;
   `FollowOwnerPathGoal` e o seguir dos nadadores checam o vagar.
 - Tela: `client/DinoScreen`. Textos: `DINO_LANG` em `tools/javagen/gen_resources.py`.
+
+## Roda do apito (1.5)
+
+Segure **H**, aponte com o mouse e solte: a ordem vale para todos os seus dinos que ouvem o apito. Um clique na fatia
+também dá a ordem; Esc, ou soltar com o mouse no meio, não dá nenhuma. O desenho é o da prévia aprovada do HUD
+(30/10, https://claude.ai/artifact/A8gmsTnR4hExM16C4XD7Bs): seis lajes de basalto em volta da mira, a apontada com
+borda de âmbar e o nome no meio, e embaixo quantos dinos ouvem, o que a ordem faz e a tecla. Não escurece o mundo nem
+pausa o jogo. A tecla muda em Controles > Terrassic.
+
+Quem ouve: seus dinos domados vivos a até **24 blocos**, menos o que você monta e o que está no seu ombro. Os montados
+por outra pessoa e os desmaiados não obedecem. Cada um que obedece mostra uma nota musical em cima da cabeça, e a barra
+de ações diz quem obedeceu (o nome, se for um só, ou quantos). Por enquanto o apito não tem som: os sons do mod estão em
+espera.
+
+As seis ordens, em sentido horário a partir do alto:
+
+- **Seguir** e **Esperar aqui:** as mesmas da tela do dino, para todos.
+- **Vagar por perto:** cada um vaga em volta de onde está (o Vagar da tela do dino).
+- **Atacar meu alvo:** o bicho que você mira, a até 32 blocos e sem parede no meio; se você não mira nada, o último
+  que você acertou nos últimos 10 segundos. Vale contra jogador e bicho domado de outra pessoa (era a única forma,
+  pela decisão do Rodrigo de 30/10) e passa por cima de um Pare. Não obedecem: os passivos, os que estão esperando,
+  filhotes, as espécies que fogem em vez de lutar, répteis marinhos com o alvo fora d'água, e ninguém ataca bicho seu.
+  Jogador protegido pelo PvP desligado ou pelo time: ninguém vai, e a barra avisa.
+- **Juntar o bando:** levantam, param de vagar e de brigar e vêm correndo até você; depois seguem como no Seguir.
+- **Ficar passivo:** todos ficam no modo Passivo. Apitado de novo quando todos já estão passivos, voltam ao Neutro.
+
+### Por que H
+
+Conferido no código dos mods populares (01/11): Mekanism, Origins, Curios, JEI, EMI, REI, Create, Iron's Spells, Ars
+Nouveau, Sophisticated Backpacks, Apotheosis, Ice and Fire, FTB Ultimine, Twilight Forest, Alex's Caves, Simple Voice
+Chat, Quark, Waystones e Advent of Ascension. Só o **Mekanism** usa H, para ligar e desligar o HUD da MekaSuit; JEI,
+EMI e REI só usam teclas dentro das telas deles. O vanilla não usa H. As outras letras livres no vanilla estão mais
+ocupadas (G: Origins, Curios, Mekanism e Ice and Fire; V: Mekanism, Ars Nouveau, Iron's Spells; B, J, N: Mekanism;
+K: Apotheosis). O Xaero, de código fechado, não foi conferido. H também é a tecla da prévia aprovada. Quem joga com Mekanism troca uma das duas
+em Controles; o jogo marca o conflito em vermelho.
+
+### Código
+
+- `entity/Whistle`: quem ouve (`hears`, usado também pela roda para contar), as ordens (`blow`), a mira do alvo.
+- `DinosaurEntity#orderAttack`: o ataque mandado pelo apito.
+- `client/WhistleWheelScreen`: a roda; `client/DinoControls`: a tecla e o pacote; `network/DinoNetwork`: `dino_whistle`.
+- Textos: `tools/javagen/gen_whistle.py` (os três idiomas). O Guia de Bolso explica o apito no tópico Ordens.

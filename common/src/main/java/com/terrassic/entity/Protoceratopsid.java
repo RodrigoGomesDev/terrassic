@@ -46,10 +46,11 @@ public abstract class Protoceratopsid extends HerbivoreDinosaur {
     protected abstract float modelScale();
 
     /** Rodrigo 02/11: it wanders slowly, walking (about 0.9 blocks/s, under the trot threshold of about 1.1 blocks/s,
-     *  the most its walk cycle keeps up with); it trots only when it flees, follows or catches up with the herd. */
+     *  the most its walk cycle keeps up with); it trots only when it flees, follows or catches up with the herd.
+     *  A mob's speed goes with the square of this modifier: 0.26 measured 0.14 blocks/s, 1.0 measured 2.8. */
     @Override
     protected double strollSpeed() {
-        return 0.26D;
+        return 0.55D;
     }
 
     @Override

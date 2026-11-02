@@ -13,7 +13,10 @@ from rex_extras import CUSTOM_EGGS as REX_EGGS  # noqa: E402  (eggs with their o
 from ptera_extras import CUSTOM_EGGS as PTERA_EGGS  # noqa: E402  (the Pteranodon's clutch in a sand scrape)
 from rapt_extras import CUSTOM_EGGS as RAPT_EGGS  # noqa: E402  (the Velociraptor's clutch in a desert scrape)
 from proto_extras import CUSTOM_EGGS as PROTO_EGGS  # noqa: E402  (the Protoceratops' soft eggs in a red sand mound)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS}
+from carno_extras import CUSTOM_EGGS as CARNO_EGGS  # noqa: E402  (the Carnotaurus' pairs on salt clay by its footprint)
+from giga_extras import CUSTOM_EGGS as GIGA_EGGS  # noqa: E402  (the Giganotosaurus' round eggs in a cracked mud pit)
+from spino_extras import CUSTOM_EGGS as SPINO_EGGS  # noqa: E402  (the Spinosaurus' eggs on a river sandbar)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -93,6 +96,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # species saddles, like ARK: each big rider has its own, with its own recipe (the T. rex first)
     "tyrannosaurus_saddle": ("T. rex Saddle", "Sela de Tiranossauro", "Silla de Tiranosaurio", "item/generated"),
     "pteranodon_saddle": ("Pteranodon Saddle", "Sela de Pteranodonte", "Silla de Pteranodonte", "item/generated"),
+    "carnotaurus_saddle": ("Carnotaurus Saddle", "Sela de Carnotauro", "Silla de Carnotaurio", "item/generated"),
+    "giganotosaurus_saddle": ("Giganotosaurus Saddle", "Sela de Giganotossauro", "Silla de Giganotosaurio", "item/generated"),
     # not a saddle: a hunting vest for the Velociraptor, armour for an animal too small to ride
     "velociraptor_harness": ("Hunting Harness", "Arreio de Caça", "Arnés de caza", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
@@ -790,6 +795,8 @@ def main():
     gen_leap.main()
     import gen_pocket_guide  # v1.1.2 (docs/AJUDA.md): the Pocket Guide's texts
     pocket_lang = gen_pocket_guide.build_lang()
+    import gen_whistle  # 1.5 (docs/ORDENS.md): the whistle wheel's texts
+    whistle_lang = gen_whistle.build_lang()
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
@@ -798,6 +805,7 @@ def main():
         lang[code].update(gen_rules.LANG[code])
         lang[code].update(gen_leap.LANG[code])
         lang[code].update(pocket_lang[code])
+        lang[code].update(whistle_lang[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")
@@ -842,6 +850,12 @@ def main():
     # the Pteranodon saddle: a light leather pad on a string harness, a feather for the grab bar's crest
     shaped("pteranodon_saddle", ["LLL", "SFS"], {"L": "minecraft:leather", "S": "minecraft:string", "F": "minecraft:feather"},
            "terrassic:pteranodon_saddle")
+    # the Carnotaurus saddle: a low racing seat on a sand blanket with the crimson band of its horn bases
+    shaped("carnotaurus_saddle", ["LLL", "HRH", "I I"], {"L": "minecraft:leather", "H": "terrassic:carnotaurus_hide",
+           "R": "minecraft:red_dye", "I": "minecraft:iron_ingot"}, "terrassic:carnotaurus_saddle")
+    # the Giganotosaurus recado: the woven wool jerga, the leather rolls and a hide seat, carved wooden bell stirrups
+    shaped("giganotosaurus_saddle", ["WHW", "LLL", "P P"], {"W": "minecraft:red_wool", "H": "terrassic:giganotosaurus_hide",
+           "L": "minecraft:leather", "P": "minecraft:stripped_oak_log"}, "terrassic:giganotosaurus_saddle")
     # the Velociraptor's hunting harness: leather flanks, a bone plate, string straps and an iron ring
     shaped("velociraptor_harness", ["LBL", "SNS"], {"L": "minecraft:leather", "B": "minecraft:bone", "S": "minecraft:string",
                                                      "N": "minecraft:iron_nugget"}, "terrassic:velociraptor_harness")

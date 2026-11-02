@@ -267,6 +267,12 @@ public final class ModItems {
     /** The Pteranodon's own saddle (only it saddles a Pteranodon), with saddlebags like the T. rex's. */
     public static final RegistrySupplier<Item> PTERANODON_SADDLE = ITEMS.register("pteranodon_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Carnotaurus' own saddle (only it saddles a Carnotaurus): a low racing seat on a sand blanket. */
+    public static final RegistrySupplier<Item> CARNOTAURUS_SADDLE = ITEMS.register("carnotaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Giganotosaurus' own saddle (only it saddles a Giganotosaurus): the Patagonian recado of its model. */
+    public static final RegistrySupplier<Item> GIGANOTOSAURUS_SADDLE = ITEMS.register("giganotosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Velociraptor's hunting harness: its "saddle" for the armour it gives; it can never be ridden. */
     public static final RegistrySupplier<Item> VELOCIRAPTOR_HARNESS = ITEMS.register("velociraptor_harness",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

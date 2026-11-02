@@ -3,6 +3,7 @@ package com.terrassic.network;
 import com.terrassic.Terrassic;
 import com.terrassic.entity.ApexTheropod;
 import com.terrassic.entity.DinosaurEntity;
+import com.terrassic.entity.Whistle;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,8 @@ import net.minecraft.server.level.ServerPlayer;
  *       screen. Also sent when the owner sneaks and uses an empty hand on it.</li>
  *   <li>{@link #ORDER} (client to server): an order from the screen ({@link DinosaurEntity#screenOrder}).</li>
  *   <li>{@link #MOUNT} (client to server): the rider's attack ("attack") or the mount's special ("special").</li>
+ *   <li>{@link #WHISTLE} (client to server, 1.5): an order of the whistle wheel for every dino that hears it
+ *       ({@link Whistle#blow}).</li>
  * </ul>
  * Only the owner gets the screen and gives orders, within {@link #RANGE} blocks or riding it.
  */
@@ -24,6 +27,7 @@ public final class DinoNetwork {
     public static final ResourceLocation SCREEN = Terrassic.id("dino_screen");
     public static final ResourceLocation ORDER = Terrassic.id("dino_order");
     public static final ResourceLocation MOUNT = Terrassic.id("dino_mount");
+    public static final ResourceLocation WHISTLE = Terrassic.id("dino_whistle");
     public static final double RANGE = 12.0D;
 
     private DinoNetwork() {
@@ -50,6 +54,14 @@ public final class DinoNetwork {
                     if (dino != null && dino.screenOrder(player, order)) {
                         sendScreen(player, dino);
                     }
+                }
+            });
+        });
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, WHISTLE, (buf, context) -> {
+            String order = buf.readUtf(32);
+            context.queue(() -> {
+                if (context.getPlayer() instanceof ServerPlayer player) {
+                    Whistle.blow(player, order);
                 }
             });
         });

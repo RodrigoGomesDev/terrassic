@@ -972,7 +972,10 @@ def egg_blocks():
     from ptera_extras import CUSTOM_EGGS as PTERA_EGGS
     from rapt_extras import CUSTOM_EGGS as RAPT_EGGS
     from proto_extras import CUSTOM_EGGS as PROTO_EGGS
-    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS}
+    from carno_extras import CUSTOM_EGGS as CARNO_EGGS
+    from giga_extras import CUSTOM_EGGS as GIGA_EGGS
+    from spino_extras import CUSTOM_EGGS as SPINO_EGGS
+    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1493,6 +1496,12 @@ if __name__ == "__main__":
     rapt_extras.main()   # the Velociraptor's clutch in its desert scrape and its hunting harness
     import proto_extras
     proto_extras.main()   # the Protoceratops' soft eggs half buried in a mound of red sand
+    import carno_extras
+    carno_extras.main()   # the Carnotaurus' egg pairs on salt clay and its saddle
+    import giga_extras
+    giga_extras.main()   # the Giganotosaurus' round eggs in a cracked mud pit and its recado
+    import spino_extras
+    spino_extras.main()   # the Spinosaurus' eggs on a river sandbar (no saddle yet)
     import armas
     armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
     import pocket_guide

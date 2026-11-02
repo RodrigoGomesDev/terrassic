@@ -61,6 +61,8 @@ o papel do Caderno, com as bordas sumindo no papel, bem clara para o modelo colo
 
 ## Arquivos
 
+Nota da 1.5 (02/11/2026): os 5 `fundo_*.png` saíram do jar. Eram ilustrações feitas por IA e o menu próprio está desligado desde a v0.14.3 (`MENU_READY = false`), então nada some na tela. Para ligar o menu de novo é preciso desenhar outros fundos.
+
 - Tela: `common/src/main/java/com/terrassic/client/title/TerrassicMenuScreen.java` (registrada em `TerrassicClient`).
 - Texturas: `assets/terrassic/textures/gui/title/menu/` (`fundo_confronto.png`, `fundo_espinossauro.png`, `fundo_pteranodonte.png` 1672×941, `titulo.png`, `icones.png` com
   uma coluna por ícone e as linhas normal/destacado/apagado).

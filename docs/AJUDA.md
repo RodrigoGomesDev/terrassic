@@ -17,7 +17,7 @@ v1.1.2, 31/10/2026. Rodrigo pediu "um livrinho de ajuda", aprovou os tópicos e 
 - Primeiro o índice (clicar num tópico pula para ele), depois cada tópico começando numa página nova. O texto é diagramado
   quando a tela abre, então cabe em qualquer idioma e escala de interface.
 - Virar página: setas do livro, setas do teclado, Page Up/Down e a roda do mouse. Reabre na última página lida na sessão.
-- `%key:use%`, `%key:attack%`, `%key:jump%`, `%key:sneak%`, `%key:inventory%`, `%key:dino_screen%` e `%key:descend%`
+- `%key:use%`, `%key:attack%`, `%key:jump%`, `%key:sneak%`, `%key:inventory%`, `%key:dino_screen%`, `%key:descend%` e `%key:whistle%` (1.5)
   viram a tecla que o jogador configurou, entre colchetes.
 
 ## Tópicos (13)

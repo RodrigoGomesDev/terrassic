@@ -192,6 +192,9 @@ public final class RiftStorm {
                 if ("late_cretaceous".equals(s.era())) {
                     continue;
                 }
+                if (!com.terrassic.config.WorldConfig.oldSpecies() && !com.terrassic.config.Eras.REMADE.contains(s.id())) {
+                    continue; // v1.5: no old models in the world, not even through the Rift
+                }
                 EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(Terrassic.id(s.id()));
                 Entity probe = type.create(level);
                 if (probe instanceof DinosaurEntity && !(probe instanceof SwimmingDinosaur)) {
