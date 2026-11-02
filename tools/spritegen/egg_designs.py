@@ -385,18 +385,52 @@ def pachycephalosaurus():
 
 
 def gallimimus():
-    e = Egg("gallimimus", {"b": "#aaa498", "c": "#f0ece2", "d": "#4a4642", "n": "#3a3632",
-                            "m": "#4e4844", "M": "#7a7268"})
-    e.line([(15, 1), (14, 4)], "d", 2)
-    e.px([(17, 2), (16, 3)], "d")
-    e.ell((6, 2, 25, 18), "d", clip=True)
-    e.ell((7, 9, 24, 34), "b", clip=True)
-    e.ell((9, 18, 22, 34), "c", clip=True)
-    eyes(e, 13, 8, iris="#ee9a2a")
-    # long beak pointing down the middle
-    e.poly([(13, 15), (18, 15), (17, 27), (16, 29), (15, 29), (14, 27)], "m")
-    e.line([(15, 17), (15, 26)], "M")
-    nostrils(e, 17, 14, "n")
+    """Gallimimus (02/11, the remade model): the male's blue-black filament plumage over the crown and the neck
+    (2-pixel locks, a few with pale tips, the borders wandering), the chalk throat and face below; the big eyes of a
+    runner that watches far off, set out on the sides (the model's eye: dark lid, the pale ring of bare skin, chestnut
+    iris, pupil toward the beak, glint); the small bare face in grey skin between them and the long flat beak down the
+    middle, dark keratin, widening to the rounded spatulate tip at the bottom (it sifts and nips, no teeth)."""
+    e = Egg("gallimimus", {
+        "d": "#1c2130", "b": "#283043", "l": "#384258", "t": "#cfcbc0",
+        "w": "#dedbd2", "W": "#c8c5bd", "q": "#a6a39e",
+        "s": "#6b778a", "S": "#4f5b70",
+        "D": "#141013", "R": "#b9b1a8", "I": "#8a4a1c", "i": "#5e3012", "P": "#0c0909", "G": "#f6efe0",
+        "k": "#2e2b31", "K": "#1c1a1e", "B": "#57524f", "A": "#8a8177", "n": "#0c0909"})
+    # the plumage: the whole egg blue-black, the chalk throat coming up from below with a wandering edge
+    e.ell((3, 2, 28, 33), "b", clip=True)
+    e.ell((5, 2, 26, 12), "d", clip=True)
+    e.poly([(4, 31), (5, 22), (8, 20), (12, 22), (15, 21), (17, 22), (20, 20), (23, 21), (26, 23), (27, 31)], "w", clip=True)
+    e.px([(7, 23), (24, 24), (10, 21), (21, 21)], "w")
+    e.px([(8, 27), (23, 28), (6, 29), (25, 30), (12, 30), (19, 29)], "W")
+    # filament locks: 2-pixel strokes down the crown and the cheeks, each its own length, some with a pale tip
+    for (x, y, n, tip) in ((9, 3, 3, 0), (13, 2, 2, 0), (18, 3, 3, 0), (22, 4, 2, 0), (6, 8, 3, 1), (25, 9, 3, 0),
+                           (11, 7, 2, 0), (20, 7, 2, 1), (4, 15, 3, 0), (27, 16, 3, 1), (5, 20, 2, 1), (26, 21, 2, 0)):
+        e.px([(x, y + j) for j in range(n)], "l")
+        e.px([(x + 1, y + j) for j in range(n - 1)], "l")
+        if tip:
+            e.px([(x, y + n)], "t")
+    # the bare face between the eyes: grey skin, a shade lighter down the top of the beak's root
+    e.poly([(12, 10), (19, 10), (20, 16), (11, 16)], "s")
+    e.px([(12, 10), (19, 10), (11, 15), (20, 15)], "S")
+    # the eyes: big, out on the sides, the pale ring of bare skin around them
+    eye = [".RRRRR..",
+           "RDDDDDR.",
+           "RDIIGPDR",
+           "RDIiPPDR",
+           "RDiiiiDR",
+           ".RDDDDR.",
+           "..RRRR.."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(3 + i, 11 + j)]) if in_egg(*q)], ch)
+    # the long flat beak down the middle: narrow at the root, widening to the rounded tip, a lit ridge on top
+    e.poly([(13, 15), (18, 15), (19, 23), (20, 27), (19, 30), (12, 30), (11, 27), (12, 23)], "k")
+    e.line([(15, 16), (15, 28)], "B")
+    e.px([(16, 17), (16, 21), (14, 26)], "A")
+    e.line([(11, 27), (11, 29)], "K"); e.line([(20, 27), (20, 29)], "K")
+    e.px([(12, 30), (19, 30), (13, 31), (18, 31)], "K")
+    e.px([(14, 16), (17, 16)], "n")                                  # the nostrils high on the beak
     return e
 
 

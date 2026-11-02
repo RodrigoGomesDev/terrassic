@@ -17,7 +17,8 @@ from carno_extras import CUSTOM_EGGS as CARNO_EGGS  # noqa: E402  (the Carnotaur
 from giga_extras import CUSTOM_EGGS as GIGA_EGGS  # noqa: E402  (the Giganotosaurus' round eggs in a cracked mud pit)
 from spino_extras import CUSTOM_EGGS as SPINO_EGGS  # noqa: E402  (the Spinosaurus' eggs on a river sandbar)
 from tri_extras import CUSTOM_EGGS as TRI_EGGS  # noqa: E402  (the Triceratops' oval eggs under rotting leaves)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS}
+from galli_extras import CUSTOM_EGGS as GALLI_EGGS  # noqa: E402  (the Gallimimus' speckled clutch on a gravel bar)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -101,6 +102,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "giganotosaurus_saddle": ("Giganotosaurus Saddle", "Sela de Giganotossauro", "Silla de Giganotosaurio", "item/generated"),
     # the drover's pack saddle (cangalha) with two woven baskets: the Triceratops carries its cargo in them
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
+    # a light riding pad for the racer: felt blanket, hide pad with knee rolls, a bone grip; the rider sits over the hips
+    "gallimimus_saddle": ("Gallimimus Riding Pad", "Manta de Montaria de Galimimo", "Manta de montar de Gallimimus", "item/generated"),
     # not a saddle: a hunting vest for the Velociraptor, armour for an animal too small to ride
     "velociraptor_harness": ("Hunting Harness", "Arreio de Caça", "Arnés de caza", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
@@ -862,6 +865,9 @@ def main():
     # the Triceratops' pack saddle: two wooden heads of the frame, a hide seat on leather, two woven rush baskets
     shaped("triceratops_saddle", ["S S", "LHL", "R R"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")
+    # the Gallimimus' riding pad: a bone for the grip, two leather knee rolls on the Gallimimus hide pad, string to lace it
+    shaped("gallimimus_saddle", [" B ", "LHL", " S "], {"B": "minecraft:bone", "L": "minecraft:leather",
+           "H": "terrassic:gallimimus_hide", "S": "minecraft:string"}, "terrassic:gallimimus_saddle")
     # the Velociraptor's hunting harness: leather flanks, a bone plate, string straps and an iron ring
     shaped("velociraptor_harness", ["LBL", "SNS"], {"L": "minecraft:leather", "B": "minecraft:bone", "S": "minecraft:string",
                                                      "N": "minecraft:iron_nugget"}, "terrassic:velociraptor_harness")
