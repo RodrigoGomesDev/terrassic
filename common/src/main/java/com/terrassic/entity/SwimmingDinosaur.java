@@ -378,6 +378,10 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     /** Spawn rule for open-sea reptiles: deep water (at least 6 blocks of it) well below the surface. */
     public static boolean checkSeaSpawnRules(EntityType<? extends DinosaurEntity> type, LevelAccessor level,
                                              MobSpawnType reason, BlockPos pos, RandomSource random) {
+        if ((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION)
+                && com.terrassic.config.Rules.inSafeZone(level, pos)) {
+            return false;  // v1.6 "Safe area at spawn"
+        }
         int sea = level.getSeaLevel();
         if (pos.getY() > sea - 6 || pos.getY() < sea - 40) {
             return false;

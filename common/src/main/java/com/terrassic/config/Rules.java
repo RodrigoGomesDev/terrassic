@@ -318,6 +318,28 @@ public final class Rules {
                 && of(attacker.level()).get(Rule.WILD_HUNT_PLAYERS) < 0.5D && attacker.getLastHurtByMob() != target;
     }
 
+    /**
+     * v1.6 "Safe area at spawn": whether wild creatures may not appear here (within the radius of the overworld's
+     * spawn point). Works from chunk generation too (a WorldGenRegion is a ServerLevelAccessor).
+     */
+    public static boolean inSafeZone(net.minecraft.world.level.LevelAccessor level, net.minecraft.core.BlockPos pos) {
+        if (!(level instanceof net.minecraft.world.level.ServerLevelAccessor accessor)) {
+            return false;
+        }
+        ServerLevel server = accessor.getLevel();
+        if (server.dimension() != Level.OVERWORLD) {
+            return false;
+        }
+        double radius = of(server.getServer()).get(Rule.SPAWN_SAFE_RADIUS);
+        if (radius <= 0.0D) {
+            return false;
+        }
+        net.minecraft.core.BlockPos spawn = server.getSharedSpawnPos();
+        double dx = pos.getX() - spawn.getX();
+        double dz = pos.getZ() - spawn.getZ();
+        return dx * dx + dz * dz < radius * radius;
+    }
+
     /** A rate scaled by a multiplier rule, rounded at random so fractions keep their average (3.4 -> 3 or 4). */
     public static int scaled(RandomSource random, double base, Rule rule, Level level) {
         double v = base * of(level).get(rule);

@@ -190,7 +190,7 @@ public final class EcoSpawner {
             int x = Mth.floor(player.getX() + Math.cos(angle) * distance);
             int z = Mth.floor(player.getZ() + Math.sin(angle) * distance);
             BlockPos column = new BlockPos(x, player.getBlockY(), z);
-            if (!level.isPositionEntityTicking(column)) {
+            if (!level.isPositionEntityTicking(column) || Rules.inSafeZone(level, column)) {
                 continue;
             }
             int spawned = switch (kind) {

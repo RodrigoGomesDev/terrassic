@@ -3041,7 +3041,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         boolean ground = below.is(BlockTags.ANIMALS_SPAWNABLE_ON) || below.is(BlockTags.SAND)
                 || below.is(BlockTags.TERRACOTTA) || below.is(Blocks.COARSE_DIRT) || below.is(Blocks.PODZOL)
                 || below.is(Blocks.MUD);
-        return ground && level.getRawBrightness(pos, 0) > 8 && VanillaShare.allows(type, level, reason, pos);
+        return ground && level.getRawBrightness(pos, 0) > 8 && VanillaShare.allows(type, level, reason, pos)
+                && !((reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION) && Rules.inSafeZone(level, pos));
     }
 
     // ---- passos e asas sem "spam" (2026-11) ------------------------------------------------------------
