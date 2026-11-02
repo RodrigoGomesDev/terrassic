@@ -37,8 +37,9 @@ SIZES = {
     "velociraptor":       dict(real=2.07, scale=0.5,  w=0.9, h=1.0, baby=0.5,  shadow=0.4),
     # Compsognathus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "compsognathus":      dict(real=1.25, scale=0.28,  w=0.4, h=0.5, baby=0.5,  shadow=0.25),
-    # Triceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "triceratops":        dict(real=9.0,  scale=0.94, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
+    # Triceratops horridus: 8-9 m, 6-12 t (Scannella & Horner 2010; the study page). Triceratops v1 (02/11) is hand-made
+    # at 24 px/m and shown at its real 9 m (16 / 24 = 0.667), its own study and rig; the hitbox is kept.
+    "triceratops":        dict(real=9.0,  scale=0.667, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
     # Styracosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "styracosaurus":      dict(real=5.5,  scale=0.86,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
@@ -358,7 +359,8 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.22, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.5, ARMOR=10, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.25, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=20, rideable=True, jump=0.45, ride_offset=2.75, ride_speed=1.05),
+      xp=20, rideable=True, jump=0.45, ride_offset=4.0, ride_forward=1.78, ride_speed=1.05,
+      saddle="TRICERATOPS_SADDLE", rig="Triceratopsine"),
  dict(id="styracosaurus", cls="Styracosaurus", base="HerbivoreDinosaur",
       doc="Styracosaurus albertensis - 5.5 m horned herbivore with a spiked frill and one long nose horn. Territorial: fights back with the horn. Tamed with plants; ridden or charging at an enemy it breaks the leaves and bushes in its way.",
       attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=2.0, ARMOR=7, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=20),
@@ -802,7 +804,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") == "Protoceratopsid":
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1028,7 +1030,7 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.item.Item")
         imports.add("com.terrassic.registry.ModItems")
         body.append(f"    @Override\n    protected Item speciesSaddle() {{\n        return ModItems.{s['saddle']}.get();\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

@@ -19,6 +19,7 @@ uma cor livre quando for refeita.
 | Carnotaurus | vermelho-tijolo escuro, chifres pretos | vermelho |
 | Giganotosaurus | cinza-ardósia azulado | azul-cinza |
 | Protoceratops | areia quente com selas ferrugem | areia |
+| Triceratops | ameixa: cinza-arroxeado, babado com faixa terracota no macho | roxo-acinzentado |
 
 ## Colisões que ainda existem (02/11/2026)
 
@@ -26,5 +27,6 @@ uma cor livre quando for refeita.
 - Giganotosaurus × Dreadnoughtus 4,9, Pachyrhinosaurus 6,2, Brachiosaurus 7,1, Mosasaurus 7,5: as antigas mudam.
 - Protoceratops × Mononykus 6,9, Compsognathus 8,1, Styracosaurus 8,3: as antigas mudam.
 - Carnotaurus × Majungasaurus 9,2: o Majungasaurus muda.
+- Triceratops: a mais perto é o Pachyrhinosaurus (antigo, 13,4); o Mosasaurus, do mesmo pacote 1.5, não pode usar ameixa.
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre
   nesta tabela antes de pintar.

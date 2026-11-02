@@ -1,9 +1,10 @@
 """
 Builds the Carnotaurus into the mod. The first species made under the one-dino-at-a-time rule (its own study, page
 "Carnotaurus: estudo e modelo, passo a passo"): a hand-made rig drawn at 24 px per metre (game scale 0.667), per-face
-UV on a 256 x 128 skin for male and female in the "ferrugem" scheme, its own racing saddle, and 33 animations of its
+UV on a 256 x 128 skin for male and female in the "ferrugem" scheme, its own racing saddle, and 34 animations of its
 own (carnoanims.py: the 26 every big theropod needs and 7 that are only its: lock_on, skid_turn, brake, shove, hook,
-horn_rub, arm_twitch). Rodrigo approved the model and the first animations on 01/11. Writes:
+horn_rub, arm_twitch; skid_turn_r is skid_turn mirrored, for turns to the right). Rodrigo approved the model and the
+first animations on 01/11. Writes:
 
   common/.../geo/entity/carnotaurus.geo.json
   common/.../animations/entity/carnotaurus.animation.json
@@ -38,7 +39,7 @@ ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "ter
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
 EVERY_FRAME = ("walk", "run", "stalk", "threat", "beg", "wake", "wake_sleep", "death", "hurt", "attack_quick",
-               "skid_turn", "brake", "hook", "arm_twitch", "eat")
+               "skid_turn", "skid_turn_r", "brake", "hook", "arm_twitch", "eat")
 LINEAR = ("threat", "wake", "wake_sleep", "death", "hurt", "attack_quick", "hook", "arm_twitch", "brake")
 # baked at 40 fps: at 20 the fast ones (the run's lift-off, the brake's plant, the bite's lunge, the rolls) swept a foot
 # up to 1 px into the ground between two keyframes

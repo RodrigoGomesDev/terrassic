@@ -167,7 +167,8 @@ def arm_twitch(t):
 
 # ------------------------------------------------------------------ fast movement
 def skid_turn(t):
-    """turning at speed: leans into the curve, the outer foot skids sideways, the stiff tail swings out wide"""
+    """turning left at speed (the head goes to model -x, the animal's left in game): leans into the curve, the outer
+    foot skids sideways, the stiff tail swings out wide"""
     p = {}
     k = float(tr((0, 0), (0.15, 1, ease_out), (0.6, 1), (0.9, 0))(t))
     add(p, "body", rot=(5 * k, 18 * k, 12 * k), pos=(0, -3 * k, 0))
@@ -178,6 +179,20 @@ def skid_turn(t):
     for b in ("thigh_r", "shin_r"): add(p, b, rot=(0, 0, -5 * k))      # the outer leg braced out
     arms(p, -12 * k, 10 * k)
     return p
+
+
+def _mirror(p):
+    """the same pose on the other side: left and right bones swap, side-to-side moves and turns flip"""
+    q = {}
+    for b, e in p.items():
+        o = b[:-2] + {"_l": "_r", "_r": "_l"}[b[-2:]] if b[-2:] in ("_l", "_r") else b
+        q[o] = ([e[0][0], -e[0][1], -e[0][2]], [-e[1][0], e[1][1], e[1][2]], *e[2:])
+    return q
+
+
+def skid_turn_r(t):
+    """skid_turn to the other side (that one turns left in game, this one right): the Java picks it by the turn"""
+    return _mirror(skid_turn(t))
 
 
 def brake(t):
@@ -550,6 +565,7 @@ ANIMS = {
     "run": (run, RUN[0], True, "Movimento", "arrancada: corpo baixo e reto, cabeça parada"),
     "stalk": (stalk, WALK[0] * 1.6, True, "Movimento", "chegando perto da presa, cabeça travada no alvo"),
     "skid_turn": (skid_turn, 0.9, False, "Movimento", "curva em velocidade, derrapando"),
+    "skid_turn_r": (skid_turn_r, 0.9, False, "Movimento", "a mesma derrapagem, na curva para a direita"),
     "brake": (brake, 0.9, False, "Movimento", "freada no fim da arrancada"),
     "lock_on": (lock_on, 2.2, False, "Combate", "trava no alvo antes da arrancada (aviso para o jogador)"),
     "attack_quick": (attack_quick, 0.95, False, "Combate", "três mordidas rápidas"),

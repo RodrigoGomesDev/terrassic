@@ -17,7 +17,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("dilophosaurus", "jurassic", "carnivore", 7.0F, false, true, 4, 14.21F),
             new GuideSpecies("velociraptor", "late_cretaceous", "carnivore", 2.07F, false, true, 4, 32.03F),
             new GuideSpecies("compsognathus", "jurassic", "carnivore", 1.25F, false, false, 3, 80.3F),
-            new GuideSpecies("triceratops", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 11.06F),
+            new GuideSpecies("triceratops", "late_cretaceous", "herbivore", 9.0F, true, false, 5, 10.98F),
             new GuideSpecies("styracosaurus", "late_cretaceous", "herbivore", 5.5F, true, false, 4, 18.22F),
             new GuideSpecies("pachyrhinosaurus", "late_cretaceous", "herbivore", 8.0F, true, false, 5, 12.42F),
             new GuideSpecies("protoceratops", "late_cretaceous", "herbivore", 1.9F, false, false, 6, 50.53F),
