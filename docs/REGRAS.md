@@ -3,6 +3,21 @@
 Pedido do Rodrigo (24/10/2026): controlar a geração e as regras do jogo como na tela "Regras do ARK", e a geração
 padrão bem mais cheia: voadores voando de verdade pelo céu, muitos animais no mar, rebanhos nas planícies.
 
+## v1.6: configuração liberada e aba Convivência
+
+Rodrigo (02/11/2026): num modpack com Cobblemon os dinos caçavam os Pokémon. A 1.6 religa as regras no jogo com permissão:
+no servidor só operador (nível 2); num jogador só com cheats ou no criativo; os outros veem só para leitura
+(`RulesNetwork.canEdit`; a trava `regras_no_jogo` da v0.15.1 não vale mais). Botão "Terrassic" na tela Criar Novo Mundo
+(edita as regras padrão para mundos novos) e `/terrassic regra <chave> [valor]` para operadores, console e blocos de comando.
+Regras sim/não aparecem como botão Sim/Não.
+
+| Aba | Regra | Padrão | O que faz |
+|---|---|---|---|
+| Convivência | Caçar bichos de outros mods | Não | Dinos não caçam nem atacam mobs de outros mods; monstros hostis valem sempre. A tag `terrassic:protected` (Cobblemon) protege sempre |
+| Convivência | Selvagens caçam jogadores | Sim | Não = só revidam no jogador que bateu por último (5 s); o Tirano da Fenda sempre luta |
+| Convivência | Poupar bichos dos jogadores | Não | Sim = não atacam animais com dono nem com etiqueta de nome |
+| Convivência | Área segura no spawn | 0 | Raio (blocos) em volta do spawn do mundo sem dinos selvagens novos |
+
 ## Onde fica
 
 > **v0.15.1 (Rodrigo, 30/10/2026): por enquanto as regras não mudam dentro do jogo.** "Se todo mundo ficar mudando

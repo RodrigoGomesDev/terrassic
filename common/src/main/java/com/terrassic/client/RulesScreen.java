@@ -220,6 +220,9 @@ public class RulesScreen extends Screen {
         final Rule rule;
         final EditBox box;
         final Slider slider;
+        /** v1.6: yes/no rules get a button instead of the box and the slider. */
+        final StoneButton toggle;
+        boolean shown;
         int y;
 
         Row(Rule rule, int y) {
@@ -247,20 +250,45 @@ public class RulesScreen extends Screen {
             });
             RulesScreen.this.addRenderableWidget(this.box);
             RulesScreen.this.addRenderableWidget(this.slider);
+            if (rule.toggle()) {
+                this.toggle = new StoneButton(x, y + 12, 56, 14, this.onOff(), b -> this.flip(b), false, false, false);
+                this.toggle.active = RulesScreen.this.editable;
+                RulesScreen.this.addRenderableWidget(this.toggle);
+            } else {
+                this.toggle = null;
+            }
+        }
+
+        Component onOff() {
+            return Component.translatable(RulesScreen.this.edited.get(this.rule) >= 0.5D
+                    ? "rules.terrassic.ui.on" : "rules.terrassic.ui.off");
+        }
+
+        void flip(Button b) {
+            RulesScreen.this.edited.set(this.rule, RulesScreen.this.edited.get(this.rule) >= 0.5D ? 0.0D : 1.0D);
+            this.box.setValue(format(this.rule, RulesScreen.this.edited.get(this.rule)));
+            b.setMessage(this.onOff());
         }
 
         void place(int y) {
             this.y = y;
             this.box.setY(y + 15);
             this.slider.setY(y + 12);
-            boolean shown = y >= RulesScreen.this.listTop - 2 && y + ROW_H <= RulesScreen.this.listBottom + 4;
-            this.box.visible = shown;
-            this.slider.visible = shown;
+            this.shown = y >= RulesScreen.this.listTop - 2 && y + ROW_H <= RulesScreen.this.listBottom + 4;
+            this.box.visible = this.shown && this.toggle == null;
+            this.slider.visible = this.shown && this.toggle == null;
+            if (this.toggle != null) {
+                this.toggle.setY(y + 12);
+                this.toggle.visible = this.shown;
+            }
         }
 
         void refresh() {
             this.box.setValue(format(this.rule, RulesScreen.this.edited.get(this.rule)));
             this.slider.sync();
+            if (this.toggle != null) {
+                this.toggle.setMessage(this.onOff());
+            }
         }
 
         void commit() {
@@ -273,7 +301,7 @@ public class RulesScreen extends Screen {
         void drawLabel(GuiGraphics g) {
             Font font = RulesScreen.this.font;
             int x = RulesScreen.this.left + 14;
-            if (!this.box.visible) {
+            if (!this.shown) {
                 return;
             }
             Component name = TerrassicFonts.ui(this.rule.langKey());
@@ -282,12 +310,14 @@ public class RulesScreen extends Screen {
                 // changed from the default: a small amber mark after the name
                 TerrassicUi.mark(g, x + font.width(name) + 4, this.y + 3);
             }
-            TerrassicUi.well(g, x, this.y + 12, x + FIELD_W, this.y + 26, this.box.isFocused());
+            if (this.toggle == null) {
+                TerrassicUi.well(g, x, this.y + 12, x + FIELD_W, this.y + 26, this.box.isFocused());
+            }
         }
 
         boolean labelHovered(int mx, int my) {
             int w = RulesScreen.this.font.width(TerrassicFonts.ui(this.rule.langKey())) + 8;
-            return this.box.visible && mx >= RulesScreen.this.left + 14 && mx <= RulesScreen.this.left + 14 + w
+            return this.shown && mx >= RulesScreen.this.left + 14 && mx <= RulesScreen.this.left + 14 + w
                     && my >= this.y && my <= this.y + 10;
         }
     }

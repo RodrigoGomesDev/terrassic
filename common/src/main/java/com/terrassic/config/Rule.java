@@ -7,9 +7,10 @@ package com.terrassic.config;
 public enum Rule {
     DIFFICULTY("difficulty", Tab.GENERAL, 0.5D, 0.0D, 1.0D, 0.05D),
     DINO_DAMAGE("dino_damage", Tab.GENERAL, 1.0D, 0.1D, 5.0D, 0.1D),
-    OTHER_MODS_PREY("other_mods_prey", Tab.GENERAL, 0.0D, 0.0D, 1.0D, 1.0D),
-    WILD_HUNT_PLAYERS("wild_hunt_players", Tab.GENERAL, 1.0D, 0.0D, 1.0D, 1.0D),
-    SPARE_PETS("spare_pets", Tab.GENERAL, 0.0D, 0.0D, 1.0D, 1.0D),
+    OTHER_MODS_PREY("other_mods_prey", Tab.MODPACK, 0.0D, 0.0D, 1.0D, 1.0D),
+    WILD_HUNT_PLAYERS("wild_hunt_players", Tab.MODPACK, 1.0D, 0.0D, 1.0D, 1.0D),
+    SPARE_PETS("spare_pets", Tab.MODPACK, 0.0D, 0.0D, 1.0D, 1.0D),
+    SPAWN_SAFE_RADIUS("spawn_safe_radius", Tab.MODPACK, 0.0D, 0.0D, 512.0D, 16.0D),
     PLAYER_DAMAGE("player_damage", Tab.GENERAL, 1.0D, 0.1D, 5.0D, 0.1D),
     STRUCTURE_DAMAGE("structure_damage", Tab.GENERAL, 1.0D, 0.0D, 5.0D, 0.1D),
     PLAYER_RESISTANCE("player_resistance", Tab.GENERAL, 1.0D, 0.1D, 5.0D, 0.1D),
@@ -44,7 +45,7 @@ public enum Rule {
 
     /** The tabs of the Rules screen, in order. */
     public enum Tab {
-        GENERAL, BREEDING, SPAWNING, ALPHAS;
+        GENERAL, BREEDING, SPAWNING, ALPHAS, MODPACK;
 
         public String id() {
             return this.name().toLowerCase(java.util.Locale.ROOT);
@@ -79,6 +80,11 @@ public enum Rule {
     /** Whether the value is a whole number (a count rather than a multiplier). */
     public boolean whole() {
         return this.step >= 1.0D;
+    }
+
+    /** v1.6: a yes/no rule (0 or 1), shown as a button in the Rules screen. */
+    public boolean toggle() {
+        return this.min == 0.0D && this.max == 1.0D && this.step == 1.0D;
     }
 
     public String langKey() {

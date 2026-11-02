@@ -1,6 +1,12 @@
 package com.terrassic.network;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.terrassic.config.Rule;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
 import com.terrassic.Terrassic;
 import com.terrassic.config.Rules;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
@@ -62,6 +68,17 @@ public final class RulesNetwork {
                     return Command.SINGLE_SUCCESS;
                 })));
             }
+            // v1.6: /terrassic regra <rule> [value], for operators, the server console and command blocks
+            for (String name : new String[]{"regra", "rule", "regla"}) {
+                dispatcher.register(Commands.literal(Terrassic.MOD_ID).then(Commands.literal(name)
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.argument("rule", StringArgumentType.word())
+                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                        java.util.Arrays.stream(Rule.values()).map(r -> r.key), builder))
+                                .executes(ctx -> showRule(ctx))
+                                .then(Commands.argument("value", DoubleArgumentType.doubleArg())
+                                        .executes(ctx -> setRule(ctx))))));
+            }
         });
     }
 
@@ -97,6 +114,48 @@ public final class RulesNetwork {
         TOLD.put(player.getUUID(), edit);
         buf.writeBoolean(edit);
         NetworkManager.sendToPlayer(player, SYNC, buf);
+    }
+
+    private static String text(Rule rule, double v) {
+        return rule.whole() ? Integer.toString((int) Math.round(v)) : Double.toString(v);
+    }
+
+    private static Rule ruleArg(CommandContext<CommandSourceStack> ctx) {
+        String key = StringArgumentType.getString(ctx, "rule");
+        Rule rule = Rule.byKey(key);
+        if (rule == null) {
+            ctx.getSource().sendFailure(Component.translatable("rules.terrassic.ui.cmd_unknown", key));
+        }
+        return rule;
+    }
+
+    private static int showRule(CommandContext<CommandSourceStack> ctx) {
+        Rule rule = ruleArg(ctx);
+        if (rule == null) {
+            return 0;
+        }
+        double v = Rules.of(ctx.getSource().getServer()).get(rule);
+        ctx.getSource().sendSuccess(() -> Component.translatable("rules.terrassic.ui.cmd_value",
+                Component.translatable(rule.langKey()), text(rule, v)), false);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int setRule(CommandContext<CommandSourceStack> ctx) {
+        Rule rule = ruleArg(ctx);
+        if (rule == null) {
+            return 0;
+        }
+        MinecraftServer server = ctx.getSource().getServer();
+        Rules rules = Rules.of(server).copy();
+        rules.set(rule, DoubleArgumentType.getDouble(ctx, "value"));
+        Rules.apply(server, rules);
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+            sync(p);
+        }
+        double v = rules.get(rule);
+        ctx.getSource().sendSuccess(() -> Component.translatable("rules.terrassic.ui.cmd_set",
+                ctx.getSource().getDisplayName(), Component.translatable(rule.langKey()), text(rule, v)), true);
+        return Command.SINGLE_SUCCESS;
     }
 
     private static void receiveRules(ServerPlayer player, Rules rules) {
