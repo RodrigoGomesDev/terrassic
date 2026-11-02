@@ -460,7 +460,7 @@ SPECIES = [
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.4, 3.0, 400), step=("RAVAGER_STEP", 1.3, 0.45),
       xp=56, step_height=1.8, head=(20, 30), rideable=True, platform=True, jump=0.0, ride_offset=5.3, ride_forward=2.4, ride_speed=0.95, call=True),
  dict(id="giganotosaurus", cls="Giganotosaurus", base="PredatorDinosaur",
-      doc="Giganotosaurus carolinii - 12.5 m carcharodontosaur of the dry lands, as long as the T. rex and leaner, with a long low knife skull and blade teeth. Cuts, steps back and waits, circles; lives in loose pairs; the more it bleeds the harder it bites (rage). Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed. Behaviour in Giganotosaurine.",
+      doc="Giganotosaurus carolinii - 12.5 m carcharodontosaur of the dry lands, as long as the T. rex and leaner, with a long low knife skull and blade teeth. Cuts, steps back and waits, circles; lives in loose pairs; the more it bleeds the harder it bites (rage). Tamed by knockout or from a stolen wild egg; rideable with its own saddle (the recado). Behaviour in Giganotosaurine.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.2, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.7, 1.9, 240), step=("RAVAGER_STEP", 0.9, 0.65),

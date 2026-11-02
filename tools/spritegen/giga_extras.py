@@ -9,10 +9,11 @@ real reference. The shell is pale grey with a faint blue, like the animal's off-
 clutches: long eggs everywhere else (the T. rex pair, the Velociraptor's ring, the Carnotaurus' pairs on salt
 clay, the Protoceratops' soft eggs in red sand); only these are round and heaped.
 
-Saddle (item terrassic:giganotosaurus_saddle): 16x16, drawn like the T. rex saddle (rex_extras) so the saddles read
-as one family, but the Giganotosaurus' own, the recado of its model (giga.py saddle()): the woven wool jerga with its
-stepped wine and black band, the two dark leather rolls (bastos), the tan capybara-hide seat over them and a carved
-wooden bell stirrup.
+Saddle (item terrassic:giganotosaurus_saddle): 16x16, the recado of its model (giga.py saddle()) as it sits on the
+back: flat, in layers, with no pommel or cantle (review 02/11: the first icon had the T. rex frame with two raised
+ends and read as the Carnotaurus' saddle). Bottom to top: the woven wool jerga with its stepped wine and black band,
+the dark leather layer of the two rolls (bastos), the tan capybara-hide seat; the girth strap down the side with its
+iron ring, and the carved wooden bell stirrup under it.
 
 usage: python3 -B tools/spritegen/giga_extras.py   (sprites.py also calls main() and skips the CUSTOM_EGGS eggs)
 """
@@ -140,24 +141,26 @@ SADDLE_PAL = {
     "D": (155, 114, 70),   # carved wood light
     "d": (94, 65, 41),     # carved wood
     "s": (62, 42, 27),     # stirrup leather
+    "i": (112, 112, 114),  # girth ring iron
+    "I": (158, 158, 158),  # girth ring iron light
 }
 SADDLE_ART = [
     "................",
     "................",
-    "................",
-    "..oo........oo..",
-    ".oLlo......oLlo.",
-    ".olloooooooollo.",
-    ".olCCCCCCCCCClo.",
-    ".ookcccccccckoo.",
-    "oWWwWWwWWwWWwWWo",
-    "onrnnrnnrnnrnnro",
-    "orrnrrnrrnrrnrro",
-    "owWwwWwwWwwWwwWo",
-    ".oowwWwooowWwoo.",
-    "...ooooosoooo...",
-    ".......oDDo.....",
-    "......odddDo....",
+    ".....oooooo.....",
+    "....oCCCCCCo....",
+    "...ookcccckoo...",
+    "..oLLLLLLLLLLo..",
+    ".oolllllllllloo.",
+    "oWWWWWWWWWsWWWWo",
+    "orrrrrrrrrsrrrro",
+    "ownwwwnwwwswwwno",
+    "onnnwnnnwiInwnno",
+    "orrrrrrrrrsrrrro",
+    "oWwWwWwWwWsWwWwo",
+    ".ooooooooosooo..",
+    ".........oDdo...",
+    "........oDddDo..",
 ]
 
 

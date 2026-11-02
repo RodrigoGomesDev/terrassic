@@ -55,10 +55,19 @@ public abstract class Giganotosaurine extends ApexTheropod {
         super(type, level);
     }
 
+    /** Its own one-shots (no "look_back": its look round is "look_side"), plus an alpha's moves if it ever gets one,
+     *  as ApexTheropod adds them. */
     @Override
     protected String[] extraActions() {
-        return new String[]{"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink", "sniff", "shake", "yawn",
+        String[] own = {"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink", "sniff", "shake", "yawn",
                 "stretch", "look_side", "jaw_rub", "crest_show", "eye_aim", "slash", "lunge", "rip"};
+        if (!Alphas.hasAlpha(this.speciesId())) {
+            return own;
+        }
+        String[] alpha = AlphaMoves.actions(this.speciesId());
+        String[] all = java.util.Arrays.copyOf(own, own.length + alpha.length);
+        System.arraycopy(alpha, 0, all, own.length, alpha.length);
+        return all;
     }
 
     /** "attack" is its cut; "threat" its mouth shown in profile. */
@@ -157,6 +166,10 @@ public abstract class Giganotosaurine extends ApexTheropod {
      *  back. The rip holds on and needs no pause. */
     @Override
     public Pause pauseAfter(Strike strike) {
+        Pause alpha = super.pauseAfter(strike);   // an alpha's own rule first (none today: only the T. rex has alphas)
+        if (alpha != null) {
+            return alpha;
+        }
         if (strike == SLASH) {
             return new Pause(16, "eye_aim", 30, 30 + this.getRandom().nextInt(20));
         }
