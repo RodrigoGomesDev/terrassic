@@ -17,8 +17,8 @@ import net.minecraft.util.Mth;
  * network); the registered type only lends its sprites, and /particle terrassic:alpha_mote shows a pale mote.
  */
 public class AlphaMoteParticle extends TextureSheetParticle {
-    public static final int HAZE = 0;
-    public static final int MOTE = 1;
+    public static final int BLOCK = 0;
+    public static final int CHIP = 1;
     public static final int GLINT = 2;
     public static final int FLAKE = 3;
 
@@ -83,9 +83,6 @@ public class AlphaMoteParticle extends TextureSheetParticle {
             a *= 0.7F + 0.3F * Mth.sin(this.age * 1.3F + this.phase);
         }
         this.alpha = Math.max(0.2F, Mth.clamp(a, 0.0F, 1.0F) * this.peak);
-        // the heat curls: a slow sideways wobble
-        this.xd += Mth.sin(this.age * 0.35F + this.phase) * 0.0025D;
-        this.zd += Mth.cos(this.age * 0.35F + this.phase) * 0.0025D;
     }
 
     @Override
@@ -106,7 +103,7 @@ public class AlphaMoteParticle extends TextureSheetParticle {
         @Override
         public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
                                        double xd, double yd, double zd) {
-            return new AlphaMoteParticle(level, x, y, z, xd, yd, zd, MOTE, 0xF2EFE8, 0x8A857C, 0.25F, 40, 0.9F);
+            return new AlphaMoteParticle(level, x, y, z, xd, yd, zd, BLOCK, 0xF2EFE8, 0x8A857C, 0.25F, 40, 0.9F);
         }
     }
 }

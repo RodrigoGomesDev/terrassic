@@ -51,6 +51,9 @@ seção do estudo de cada dino refeito.
   em quatro camadas: névoa de calor fraca sobre as costas, pontos de luz das costas e flancos, brilhos que piscam e
   flocos de cinza (macho marfim) ou brasa (fêmea), e, quando ele luta, um anel que pulsa do peito a cada 1,5 s como
   batida de coração. Sem chama nem end rod do Minecraft. Menos camadas com partículas em "reduzidas" e "mínimas".
+  Rodada 3 (Rodrigo viu os testes: "mais sucinto e mais minecraft, sem círculos"): sem névoa e sem anel. Poucos
+  pontos quadrados com chanfro (claro em cima e à esquerda, escuro embaixo e à direita) e contorno escuro, que aparecem
+  de dia, e de vez em quando um brilho em cruz ou um floco. Cerca de um quarto das partículas da rodada 2.
 - A caixa de colisão fica na largura do maior bicho comum da espécie, para ele não travar entre as árvores. O modelo
   e a altura crescem.
 - T. rex alfa típico: uns 820 de vida e 35 de dano, contra uns 140 e 15 do comum.
