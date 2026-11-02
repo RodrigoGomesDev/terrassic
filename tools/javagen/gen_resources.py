@@ -112,6 +112,9 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # the pack deck: peeled poles and slats lashed on the low back, tied down to the flank plates (no girth), a bark-cloth
     # cushion at the shoulders and hide bales for the cargo
     "ankylosaurus_saddle": ("Ankylosaurus Pack Deck", "Deque de Carga de Anquilossauro", "Plataforma de carga de Anquilosaurio", "item/generated"),
+    # the diving harness: an oiled hide pad and a cantle, a girth of braided kelp, a hand cord with a bone toggle and the
+    # swim-bladder floats tied on (why its rider breathes under water)
+    "mosasaurus_saddle": ("Mosasaurus Diving Harness", "Arreio de Mergulho de Mossassauro", "Arnés de buceo de Mosasaurio", "item/generated"),
     # not a saddle: a hunting vest for the Velociraptor, armour for an animal too small to ride
     "velociraptor_harness": ("Hunting Harness", "Arreio de Caça", "Arnés de caza", "item/generated"),
     # Cretaceous food (docs/FAUNA.md): what the animals drop instead of vanilla beef, mutton and chicken
@@ -232,6 +235,8 @@ LENS_LANG = {
         "gui.terrassic.lens.how_feed_or_ko": "Tame: feed it by hand (1 in %s) or knock it out",
         "message.terrassic.tame_try": "%s took the food, still wary (1 in %s)",
         "message.terrassic.eats_from_ground": "%s won't take food from your hand: drop it in front of its beak",
+        "message.terrassic.mother_guard": "The mother is coming for you",
+        "message.terrassic.calf_mother_near": "The calf won't eat with its mother near: lure it away with fish first",
         "gui.terrassic.lens.how_feed_now": "Out cold: feed it now (use food on it)",
         "gui.terrassic.lens.eats": "Eats",
         "gui.terrassic.lens.cargo": "Bags: %s/%s slots",
@@ -255,6 +260,8 @@ LENS_LANG = {
         "gui.terrassic.lens.how_feed_or_ko": "Domar: comida na mão (1 em %s) ou nocaute",
         "message.terrassic.tame_try": "%s comeu, mas ainda desconfia (1 em %s)",
         "message.terrassic.eats_from_ground": "%s não come da sua mão: jogue a comida no chão, na frente do bico",
+        "message.terrassic.mother_guard": "A mãe está vindo atrás de você",
+        "message.terrassic.calf_mother_near": "O filhote não come com a mãe por perto: atraia ele para longe com peixe primeiro",
         "gui.terrassic.lens.how_feed_now": "Desacordado: alimente agora (use a comida nele)",
         "gui.terrassic.lens.eats": "Come",
         "gui.terrassic.lens.cargo": "Bolsas: %s/%s espaços",
@@ -278,6 +285,8 @@ LENS_LANG = {
         "gui.terrassic.lens.how_feed_or_ko": "Domar: comida en la mano (1 de %s) o noqueo",
         "message.terrassic.tame_try": "%s comió, pero aún desconfía (1 de %s)",
         "message.terrassic.eats_from_ground": "%s no come de tu mano: tira la comida al suelo, delante del pico",
+        "message.terrassic.mother_guard": "La madre viene a por ti",
+        "message.terrassic.calf_mother_near": "La cría no come con su madre cerca: atráela lejos con pescado primero",
         "gui.terrassic.lens.how_feed_now": "Inconsciente: aliméntalo ahora (usa la comida en él)",
         "gui.terrassic.lens.eats": "Come",
         "gui.terrassic.lens.cargo": "Alforjas: %s/%s huecos",
@@ -464,6 +473,7 @@ HUD_LANG = {
         "hud.terrassic.notice.herd_calm": "The herd lets you near",
         "hud.terrassic.notice.herd_fled": "The herd took fright",
         "hud.terrassic.notice.club_warn": "Get out from behind it",
+        "hud.terrassic.notice.born": "A calf was born at sea",
         "hud.terrassic.notice.hatched": "A baby hatched",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Hungry",
@@ -498,6 +508,7 @@ HUD_LANG = {
         "hud.terrassic.notice.herd_calm": "O bando deixou você chegar",
         "hud.terrassic.notice.herd_fled": "O bando se assustou",
         "hud.terrassic.notice.club_warn": "Saia de trás dele",
+        "hud.terrassic.notice.born": "Um filhote nasceu no mar",
         "hud.terrassic.notice.hatched": "Nasceu um filhote",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Com fome",
@@ -532,6 +543,7 @@ HUD_LANG = {
         "hud.terrassic.notice.herd_calm": "La manada te deja acercarte",
         "hud.terrassic.notice.herd_fled": "La manada se asustó",
         "hud.terrassic.notice.club_warn": "Sal de detrás de él",
+        "hud.terrassic.notice.born": "Nació una cría en el mar",
         "hud.terrassic.notice.hatched": "Nació una cría",
         "hud.terrassic.notice.name_sex": "%s · %s",
         "hud.terrassic.notice.hungry": "Con hambre",
@@ -896,6 +908,10 @@ def main():
     # string for the tie-downs to the flank plates
     shaped("ankylosaurus_saddle", ["PPP", "LHL", "C C"], {"P": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:ankylosaurus_hide", "C": "minecraft:string"}, "terrassic:ankylosaurus_saddle")
+    # the Mosasaurus' diving harness: dried kelp for the girth, leather for the pad on its own hide, string for the hand
+    # cord and the float ties (no wood, no iron: nothing that rots or rusts in the sea)
+    shaped("mosasaurus_saddle", ["KKK", "LHL", "S S"], {"K": "minecraft:dried_kelp", "L": "minecraft:leather",
+           "H": "terrassic:mosasaurus_hide", "S": "minecraft:string"}, "terrassic:mosasaurus_saddle")
     # the Velociraptor's hunting harness: leather flanks, a bone plate, string straps and an iron ring
     shaped("velociraptor_harness", ["LBL", "SNS"], {"L": "minecraft:leather", "B": "minecraft:bone", "S": "minecraft:string",
                                                      "N": "minecraft:iron_nugget"}, "terrassic:velociraptor_harness")

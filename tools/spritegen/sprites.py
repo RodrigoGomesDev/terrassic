@@ -1517,6 +1517,8 @@ if __name__ == "__main__":
     para_extras.main()    # the Parasaurolophus' round eggs in a raised mud crater under reeds, and its reed saddle
     import anky_extras
     anky_extras.main()    # the Ankylosaurus' leathery eggs half buried in a pit of forest loam, and its pack deck
+    import mosa_extras
+    mosa_extras.main()    # the Mosasaurus' diving harness (no egg block: it bears live young at sea)
     import armas
     armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
     import pocket_guide

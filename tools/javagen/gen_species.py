@@ -150,9 +150,11 @@ SIZES = {
     "ichthyornis":        dict(real=0.66, scale=0.115, w=0.4, h=0.4, baby=0.5, shadow=0.2),
     # Vegavis iaai: a small duck, ~0.7 m nose to tail, ~1 m wingspan (Clarke et al. 2005, 2016). Modelled at 4x, 47 px span.
     "vegavis":            dict(real=0.7,  scale=0.33, w=0.4, h=0.4, baby=0.5, shadow=0.2),
-    # Mosasaurus hoffmannii: largest estimates ~17 m (Grigoriev 2014: 17.1 m from the jaw CCMGE 1/12457).
-    # Mosasaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "mosasaurus":         dict(real=17.0, scale=1.00, w=3.0, h=2.0, baby=0.2,  shadow=2.3),
+    # Mosasaurus hoffmannii: about 12 m. The old 17-17.6 m (Lingham-Soliar 1995, Grigoriev 2014 for the Penza jaw) use
+    # Russell's unjustified 1:10 jaw-to-body ratio, which Cleary et al. 2018 call an overestimate; the skull at 1/7 of the
+    # body (Fanti et al. 2014, from a whole Prognathodon) gives the Penza animal 12 m (Gayford et al. 2024).
+    # Mosasaurus 1.5: hand-made at 16 px per 17/12 m and shown at scale 0.706 (12 m), its own study and rig.
+    "mosasaurus":         dict(real=12.0, scale=0.706, w=2.6, h=1.6, baby=0.2,  shadow=1.8),
     # Tylosaurus proriger: 12-13 m (the "Bunker" specimen KUVP 5033 ~13 m; Everhart 2005). Sleeker than the Mosasaurus.
     # Tylosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "tylosaurus":         dict(real=13.0, scale=0.95, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
@@ -663,13 +665,14 @@ SPECIES = [
       prey="false", hunts_players=False, feeding_tame=True, skittish=True, shoulder=True, call=True),
  # ---- marine reptiles (SwimmingDinosaur: smooth swimming, wild only for now)
  dict(id="mosasaurus", cls="Mosasaurus", base="SwimmingDinosaur",
-      doc="Mosasaurus hoffmannii - giant marine lizard, terror of the inland sea. Lives in deep oceans and hunts anything in the water, players swimming or in boats included. Gives birth to live calves, and only a calf can be tamed (fed fish); grown and saddled it is the giant aquatic mount.",
+      doc="Mosasaurus hoffmannii - 12 m marine lizard of the open sea, an air-breathing ambush hunter. A hungry wild adult does not swim at prey at the surface: it sinks under it and strikes from below (a rower is thrown out of the boat). It comes up every few minutes to breathe, blowing at the surface, and now and then leaps clear of the water. Live birth, no egg: wild calves keep near their mother, who defends them. Only a calf takes fish from a stranger, and only away from its mother: lure it off with fish first. Grown and fitted with its own diving harness it is the great sea mount; the jump key at the surface makes it leap.",
       attrs=dict(MAX_HEALTH=180, MOVEMENT_SPEED=1.1, ATTACK_DAMAGE=18, ATTACK_KNOCKBACK=1.0, ARMOR=6, KNOCKBACK_RESISTANCE=1.0, FOLLOW_RANGE=32),
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.45, 2.0, 400), xp=40, run=0.04,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof Pteranodon",
       prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
-      tame="baby", live_young=True, rideable=True, ride_offset=2.4, ride_forward=-0.25, ride_speed=1.0, dive=1.0),
+      tame="baby", live_young=True, rideable=True, ride_offset=2.2, ride_forward=4.75, ride_speed=1.0, dive=1.0,
+      saddle="MOSASAURUS_SADDLE", rig="Mosasaurid"),
  dict(id="tylosaurus", cls="Tylosaurus", base="SwimmingDinosaur",
       doc="Tylosaurus proriger - the top predator of the Western Interior Seaway before the Mosasaurus: slender, 13 m, small flippers and a toothless reinforced rostrum it rams prey with (the hit slows and dazes). Wild only for now (knockout taming in v0.7).",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=1.25, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=4, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),

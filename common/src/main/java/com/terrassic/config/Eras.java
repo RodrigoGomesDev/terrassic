@@ -21,7 +21,7 @@ public final class Eras {
     public static final Set<String> REMADE = Set.of(
             "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops",
             "spinosaurus", "velociraptor", "pteranodon", "triceratops", "gallimimus", "pachycephalosaurus",
-            "parasaurolophus", "ankylosaurus");
+            "parasaurolophus", "ankylosaurus", "mosasaurus");
     private static final Set<String> OFF_SPECIES = new HashSet<>();
 
     static {

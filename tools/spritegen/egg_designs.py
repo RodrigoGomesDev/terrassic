@@ -602,25 +602,52 @@ def pteranodon():
 
 
 def mosasaurus():
-    e = Egg("mosasaurus", {"b": "#3e5260", "c": "#d6dad0", "d": "#26343e", "n": "#1a242c",
-                           "f": "#2a3a46", "R": MOUTH, "s": "#6a8292"})
-    # flippers
-    for side in (0, 1):
-        pts = [(4, 21), (0, 25), (1, 27), (5, 24)]
-        if side:
-            pts = [(31 - x, y) for (x, y) in pts]
-        e.poly(pts, "f")
-    cap(e, "d", (6, 3, 25, 17), (3, 9, 28, 36))
-    for p in ((8, 7), (11, 5), (6, 11), (10, 9)):
-        e.px(e.mirror([p]), "s")
-    # long toothy jaw
-    e.rect((7, 22, 24, 31), "c", clip=True)
-    e.line([(7, 21), (24, 21)], "R")
-    e.pal["W"] = TOOTH
-    for x in (8, 11, 14):
-        e.px(e.mirror([(x, 22), (x, 23)]), "W")
-    eyes(e, 14, 9)
-    nostrils(e, 18, 14)
+    """Mosasaurus (02/11, the remade model, "garrafa"), front view like the other remade eggs: the head coming at you,
+    bottle green over the top and ivory under the mouth (countershaded, the line wavering), the two long nostril slits
+    running back along the top of the snout (only the top of the head breaks the surface to breathe), the model's eyes
+    high on the sides (gold, a round black pupil, the glint, a dark socket under the brow), the dark lip line with the
+    big conical teeth hanging over the pale lower jaw, the front flippers stepping out of the outline at the sides."""
+    e = Egg("mosasaurus", {
+        "a": "#0a1a10", "A": "#0c2816", "b": "#0b3019", "B": "#123f24", "h": "#2f6744",
+        "w": "#c6bca6", "W": "#ddd4bf", "v": "#aaa08e", "V": "#8c8375",
+        "t": "#e6dcc3", "T": "#bdb197", "m": "#4f2e2b",
+        "D": "#050c08", "S": "#07120b", "Y": "#c49a3a", "E": "#8e6a24", "P": "#050605", "G": "#f1ead6", "L": "#1f3a28"})
+    # the front flippers at the sides, swept down and back, dark on top with the paler edge under
+    for pts in ([(4, 21), (0, 25), (0, 28), (2, 28), (6, 24)],):
+        e.poly(pts, "A"); e.poly([(31 - x, y) for x, y in pts], "A")
+    e.line([(1, 28), (2, 28)], "V"); e.line([(29, 28), (30, 28)], "V")
+    # the head: bottle green all over; the long snout comes at you down the middle, tapering to the tip, a step
+    # lighter where the light falls, the spine of it lit
+    e.ell((2, 0, 29, 34), "b", clip=True)
+    e.poly([(9, 3), (22, 3), (19, 25), (12, 25)], "B")
+    e.line([(15, 2), (15, 22)], "h"); e.line([(16, 2), (16, 7)], "h")
+    # the nostrils: two long slits set far back along the top of the snout
+    e.line([(13, 9), (13, 13)], "a"); e.line([(18, 9), (18, 13)], "a")
+    # the countershading: ivory under the jaws (the line wavering, never straight)
+    e.poly([(0, 22), (4, 21), (8, 24), (12, 28), (19, 28), (23, 24), (27, 21), (31, 22), (31, 36), (0, 36)], "w", clip=True)
+    e.px(e.mirror([(6, 25), (10, 28), (13, 30)]), "v")
+    e.line([(12, 31), (19, 31)], "v")
+    # the jaws just parted: the dark upper lip, the dark gap, the big cones of the upper row hanging into it and
+    # the lower row coming up from the pale jaw (the odd gap, as on the model)
+    e.line([(3, 19), (8, 21), (12, 25), (19, 25), (23, 21), (28, 19)], "a")
+    e.line([(3, 20), (8, 22), (12, 26), (19, 26), (23, 22), (28, 20)], "m")
+    for (x, y) in ((5, 20), (9, 23), (11, 25), (14, 26)):
+        e.px(e.mirror([(x, y)]), "t")
+    for (x, y) in ((7, 21), (10, 24), (13, 26)):
+        e.px(e.mirror([(x, y + 1)]), "T")
+    e.px(e.mirror([(3, 21)]), "m")
+    # the brow over each eye, the eye itself high on the side as on the model: gold, the round lizard pupil, the
+    # glint, the dark socket around it and the green lid under
+    e.line([(3, 11), (9, 10)], "a", clip=True); e.line([(28, 11), (22, 10)], "a", clip=True)
+    eye = [".DDDD.",
+           "DYGYED",
+           "DEPPYD",
+           ".DEED.",
+           "..LL.."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(3 + i, 12 + j)]) if in_egg(*q)], ch)
     return e
 
 

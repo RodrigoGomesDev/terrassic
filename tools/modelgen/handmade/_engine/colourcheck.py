@@ -19,7 +19,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 TEX = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures", "entity")
-HANDMADE = ("tyrannosaurus", "velociraptor", "pteranodon", "spinosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus")
+HANDMADE = ("tyrannosaurus", "velociraptor", "pteranodon", "spinosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus")
 CLASH = 10.0
 
 
@@ -40,21 +40,28 @@ def signature(path):
     return np.concatenate([p.mean(0) for p in parts])
 
 
-def check(species, tex_dir=TEX):
-    """returns (errors, warnings, nearest): lists of (distance, other species)"""
-    mine = signature(os.path.join(tex_dir, f"{species}_male.png"))
-    dist = []
+def check(species, tex_dir=TEX, sex="male", against=("male", "female")):
+    """returns (errors, warnings, nearest): lists of (distance, other species). sex picks which of this species' skins
+    is measured; against which skins of the others it is measured with (since the Mosasaurus, 02/11/2026: both, the
+    females of the remade ones too, as the Parasaurolophus and the Ankylosaurus were measured by hand)"""
+    mine = signature(os.path.join(tex_dir, f"{species}_{sex}.png"))
+    best = {}
     for fn in sorted(os.listdir(tex_dir)):
-        if fn.endswith("_male.png") and fn[:-9] != species:
-            dist.append((float(np.linalg.norm(mine - signature(os.path.join(tex_dir, fn))) / np.sqrt(3)), fn[:-9]))
-    dist.sort()
+        for s in against:
+            suf = f"_{s}.png"
+            if fn.endswith(suf) and fn[:-len(suf)] != species:
+                o = fn[:-len(suf)]
+                d = float(np.linalg.norm(mine - signature(os.path.join(tex_dir, fn))) / np.sqrt(3))
+                if o not in best or d < best[o]:
+                    best[o] = d
+    dist = sorted((d, o) for o, d in best.items())
     errors = [d for d in dist if d[0] < CLASH and d[1] in HANDMADE]
     warnings = [d for d in dist if d[0] < CLASH and d[1] not in HANDMADE]
     return errors, warnings, dist[:5]
 
 
 if __name__ == "__main__":
-    e, w, near = check(sys.argv[1])
+    e, w, near = check(sys.argv[1], sex=sys.argv[2] if len(sys.argv) > 2 else "male", against=("male",))
     print("nearest:", ", ".join(f"{o} {d:.1f}" for d, o in near))
     for d, o in w:
         print(f"  warning: {o} {d:.1f} (old model: gets a free colour when it is remade)")
