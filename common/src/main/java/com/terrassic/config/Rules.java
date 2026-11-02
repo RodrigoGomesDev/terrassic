@@ -18,6 +18,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -297,11 +298,24 @@ public final class Rules {
         if (type.is(PROTECTED)) {
             return true;
         }
+        if (!(target instanceof DinosaurEntity) && of(target.level()).get(Rule.SPARE_PETS) >= 0.5D
+                && (target instanceof OwnableEntity pet && pet.getOwnerUUID() != null || target.hasCustomName())) {
+            return true;  // v1.6 "Spare players' animals"
+        }
         String mod = BuiltInRegistries.ENTITY_TYPE.getKey(type).getNamespace();
         if ("minecraft".equals(mod) || Terrassic.MOD_ID.equals(mod) || target instanceof Enemy) {
             return false;
         }
         return of(target.level()).get(Rule.OTHER_MODS_PREY) < 0.5D;
+    }
+
+    /**
+     * v1.6 "Wild dinos hunt players" at 0: a wild creature goes for a player only while that player is the last one to
+     * hit it (Mob#getLastHurtByMob, five seconds). The Rift Tyrant, a boss, always fights.
+     */
+    public static boolean sparesPlayer(DinosaurEntity attacker, Entity target) {
+        return target instanceof Player && !attacker.isTame() && !attacker.isRift()
+                && of(attacker.level()).get(Rule.WILD_HUNT_PLAYERS) < 0.5D && attacker.getLastHurtByMob() != target;
     }
 
     /** A rate scaled by a multiplier rule, rounded at random so fractions keep their average (3.4 -> 3 or 4). */

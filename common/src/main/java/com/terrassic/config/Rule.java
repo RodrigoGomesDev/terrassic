@@ -8,6 +8,8 @@ public enum Rule {
     DIFFICULTY("difficulty", Tab.GENERAL, 0.5D, 0.0D, 1.0D, 0.05D),
     DINO_DAMAGE("dino_damage", Tab.GENERAL, 1.0D, 0.1D, 5.0D, 0.1D),
     OTHER_MODS_PREY("other_mods_prey", Tab.GENERAL, 0.0D, 0.0D, 1.0D, 1.0D),
+    WILD_HUNT_PLAYERS("wild_hunt_players", Tab.GENERAL, 1.0D, 0.0D, 1.0D, 1.0D),
+    SPARE_PETS("spare_pets", Tab.GENERAL, 0.0D, 0.0D, 1.0D, 1.0D),
     PLAYER_DAMAGE("player_damage", Tab.GENERAL, 1.0D, 0.1D, 5.0D, 0.1D),
     STRUCTURE_DAMAGE("structure_damage", Tab.GENERAL, 1.0D, 0.0D, 5.0D, 0.1D),
     PLAYER_RESISTANCE("player_resistance", Tab.GENERAL, 1.0D, 0.1D, 5.0D, 0.1D),
