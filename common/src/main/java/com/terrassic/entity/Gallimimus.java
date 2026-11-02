@@ -80,7 +80,7 @@ public class Gallimimus extends Ornithomimid {
     }
 
     public double getPassengersRidingOffset() {
-        return 2.15D * this.getScale();
+        return 1.95D * this.getScale();
     }
 
     @Override

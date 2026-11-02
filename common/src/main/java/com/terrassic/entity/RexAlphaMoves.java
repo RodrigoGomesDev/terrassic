@@ -222,8 +222,9 @@ final class RexAlphaMoves extends AlphaMoves {
             }
         }
         if (this.rubAge == RUB_STRIP) {
-            // the bark comes off where it rubbed: a stripped log is the mark it leaves (only with mob griefing on)
-            if (level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            // the bark comes off where it rubbed: a stripped log is the mark it leaves. Only a wild alpha, only on a
+            // living tree (leaves on top) and only with mob griefing on: a log in a wall or a pillar is someone's house
+            if (level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && !this.mob.isTame() && inTree(level, this.rubLog)) {
                 BlockState stripped = stripped(log);
                 if (stripped != null) {
                     level.setBlock(this.rubLog, stripped, Block.UPDATE_ALL);
@@ -232,6 +233,21 @@ final class RexAlphaMoves extends AlphaMoves {
             }
             this.rubAge = -1;
         }
+    }
+
+    /** Whether the log is in a tree: up the trunk (at most 16 logs), leaves around its top. */
+    private static boolean inTree(ServerLevel level, BlockPos log) {
+        BlockPos.MutableBlockPos p = log.mutable();
+        for (int i = 0; i < 16 && level.getBlockState(p.above()).is(BlockTags.LOGS); i++) {
+            p.move(0, 1, 0);
+        }
+        BlockPos top = p.immutable();
+        for (BlockPos q : BlockPos.betweenClosed(top.offset(-2, -1, -2), top.offset(2, 2, 2))) {
+            if (level.getBlockState(q).is(BlockTags.LEAVES)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** "x_log" -> "stripped_x_log" (and "_wood", "_stem" alike) in the same namespace, keeping the axis. */

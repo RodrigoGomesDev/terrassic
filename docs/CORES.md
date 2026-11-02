@@ -24,16 +24,17 @@ uma cor livre quando for refeita.
 | Pachycephalosaurus | mel listrado (macho), mel escuro (fêmea), listras creme inclinadas, coroa clara na cúpula do macho | mel/ocre |
 | Parasaurolophus | ruivo de impala (macho) ou pardo-rosado (fêmea), barriga creme, bandeira preta de alarme na cauda, crista escurecendo até a ponta no macho | ruivo/laranja |
 | Ankylosaurus | jade escuro: pele cinza-azulada (petróleo acinzentado) sob placas de chifre escuro, quilhas claras, barriga cinza-esverdeada clara; fêmea com a pele um pouco mais cinza e o chifre mais quente | cinza-petróleo |
+| Mosasaurus | verde-garrafa: dorso verde-garrafa sobre barriga marfim, contrassombreado com linha nítida e ondulada; faixas escuras quebradas sobre o dorso (no macho descem até a linha; na fêmea viram duas fileiras de manchas), listra escura atrás do olho com uma linha clara embaixo, bordas claras nas nadadeiras; o macho com cicatrizes de mordida na cabeça, a fêmea um pouco mais cinza; olho dourado | verde-garrafa |
 
 ## Colisões que ainda existem (02/11/2026)
 
 - Pteranodon × Velociraptor: 8,6, as duas já refeitas. Uma das duas muda de cor.
-- Giganotosaurus × Dreadnoughtus 4,9, Pachyrhinosaurus 6,2, Brachiosaurus 7,1, Mosasaurus 7,5: as antigas mudam.
+- Giganotosaurus × Dreadnoughtus 4,9, Pachyrhinosaurus 6,2, Brachiosaurus 7,1: as antigas mudam (o Mosasaurus saiu, refeito em verde-garrafa).
 - Protoceratops × Mononykus 6,9, Compsognathus 8,1, Styracosaurus 8,3: as antigas mudam.
 - Carnotaurus × Majungasaurus 9,2: o Majungasaurus muda.
 - Triceratops: a mais perto é o Pachyrhinosaurus (antigo, 13,4); o Mosasaurus, do mesmo pacote 1.5, não pode usar ameixa.
-- Gallimimus × Hesperornis 6,4, Citipati 7,5, Tylosaurus 7,5, Mosasaurus 8,0: as antigas mudam. O Mosasaurus, último
-  do pacote 1.5, sai do azul-escuro quando for refeito. Nenhuma colisão com refeitos (Giganotosaurus e Pteranodon
+- Gallimimus × Hesperornis 6,4, Citipati 7,5, Tylosaurus 7,5: as antigas mudam. O Mosasaurus saiu do azul-escuro
+  (refeito em verde-garrafa). Nenhuma colisão com refeitos (Giganotosaurus e Pteranodon
   ficaram acima de 10 depois de o macho ir para o grafite-azulado).
 - Pachycephalosaurus: a mais perto é o Compsognathus (antigo, 12,9); nenhuma abaixo de 10. O castanho foi testado e
   descartado (5,9 do Carnotaurus), e a fêmea sépia ficava a 7,8 do Protoceratops. O Parasaurolophus, próximo do pacote
@@ -50,6 +51,12 @@ uma cor livre quando for refeita.
   contrassombreamento (dorso escuro, barriga clara) vem do nodossauro Borealopelta (Brown et al. 2017); o ruivo dele
   já está tomado pelo Parasaurolophus, então a pele ficou no cinza-petróleo. O Mosasaurus, último do pacote 1.5, não
   pode usar cinza-petróleo nem azul-escuro.
+- Mosasaurus: macho e fêmea medidos contra machos e fêmeas de todos (colourcheck.check com against=("male","female")).
+  Nenhum abaixo de 10: o mais perto é o Deinosuchus antigo (10,9 do macho, 10,7 da fêmea, já com as faixas da
+  revisão 1.5); dos refeitos, o Pteranodon fica a 12,0 da fêmea. O primeiro tom, "breu" (preto-sépia sobre marfim), foi descartado: 3,4 do
+  Velociraptor e 4,4 do Pteranodon. Sobrava pouco escuro livre (azul-escuro do Galimimo, cinza-petróleo do
+  Anquilossauro, ameixa do Tricerátops); o verde-garrafa saiu de uma busca em Lab pelo ponto mais longe de todos. O
+  pigmento escuro no dorso e a barriga clara vêm da pele fóssil de mosassauro com eumelanina (Lindgren et al. 2014).
 - O colourcheck compara só os machos. No Parasaurolophus as duas cores foram medidas também contra as fêmeas dos
   refeitos; vale fazer o mesmo nos próximos (a fêmea do Pachycephalosaurus quase pegou o macho ruivo).
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre

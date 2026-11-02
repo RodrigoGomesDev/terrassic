@@ -61,7 +61,7 @@ REST_HAND = {s: chain_angle(S, {}, [f"hand_{s}"]) for s in SIDES}
 HIND = {s: {f"{b}_{s}" for b in ("thigh", "shin", "foot", "toes")} for s in SIDES}
 FORE = {s: {f"{b}_{s}" for b in ("arm", "forearm", "hand")} for s in SIDES}
 STAND_DROP = 1.0        # the body sits this much lower than the model so the knees and elbows give a little
-HORNS = {b["name"] for b in S["bones"] if b["name"].startswith("brow_horn")}
+HORNS = {b["name"] for b in S["bones"] if b["name"].startswith(("brow_horn", "young_horn", "adult_horns"))}
 HEADB = {"neck", "head", "skull", "jaw", "frill"} | HORNS
 
 

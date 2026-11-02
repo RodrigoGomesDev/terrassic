@@ -278,6 +278,10 @@ public final class ModItems {
      *  for the cargo. */
     public static final RegistrySupplier<Item> ANKYLOSAURUS_SADDLE = ITEMS.register("ankylosaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Mosasaurus' own diving harness: only it saddles a Mosasaurus; oiled hide pad, kelp girth and swim-bladder
+     *  floats (why its rider breathes under water). */
+    public static final RegistrySupplier<Item> MOSASAURUS_SADDLE = ITEMS.register("mosasaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Pteranodon's own saddle (only it saddles a Pteranodon), with saddlebags like the T. rex's. */
     public static final RegistrySupplier<Item> PTERANODON_SADDLE = ITEMS.register("pteranodon_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

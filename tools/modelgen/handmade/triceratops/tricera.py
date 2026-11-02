@@ -70,9 +70,28 @@ HORN = [  # half width, length, bend of this segment (deg, about x; negative = f
 HORN_ROOT = (-42, 0, -12)      # the root's lean: forward, and out to the side
 
 
-def brow_horns(m, sk, hy, hz):
+# the calf's brow horns (Horner & Goodwin 2006, the growth series): short stubs that curve BACK; they straighten and
+# then turn forward only as the animal grows. Shown on babies only (bone "young_horns"; the adult's are "adult_horns")
+YOUNG_HORN = [(2, 5, 0), (1.5, 4, 32), (1, 3, 36)]
+YOUNG_ROOT = (-4, 0, -14)
+
+
+def young_horns(m, sk, hy, hz):
+    yh = m.bone("young_horns", sk, (0, hy + 16, hz - 11))
     for side, sx in (("l", 1), ("r", -1)):
-        parent = m.bone(f"brow_horn_{side}", sk, (5 * sx, hy + 16, hz - 11),
+        parent = m.bone(f"young_horn_{side}", yh, (5 * sx, hy + 16, hz - 11), (YOUNG_ROOT[0], 0, YOUNG_ROOT[2] * sx))
+        y = hy + 16
+        for k, (hw, ln, bend) in enumerate(YOUNG_HORN):
+            b = parent if k == 0 else m.bone(f"young_horn_{side}{k}", parent, (5 * sx, y, hz - 11), (bend, 0, 0))
+            m.cube(b, (5 * sx - hw, y - (1 if k else 2), hz - 11 - hw), (5 * sx + hw, y + ln, hz - 11 + hw),
+                   name=f"yhorn{k}_{side}", mat="horn", faces=OUT("down") if k else None, hseg=k + 1)
+            parent = b; y += ln
+
+
+def brow_horns(m, sk, hy, hz):
+    ah = m.bone("adult_horns", sk, (0, hy + 16, hz - 11))
+    for side, sx in (("l", 1), ("r", -1)):
+        parent = m.bone(f"brow_horn_{side}", ah, (5 * sx, hy + 16, hz - 11),
                         (HORN_ROOT[0], 0, HORN_ROOT[2] * sx))
         y = hy + 16
         for k, (hw, ln, bend) in enumerate(HORN):
@@ -107,6 +126,7 @@ def head(m, parent, hy, hz, sex="male", rest=(0, 0, 0)):
     # the brow over the eye: the swollen root of the horn, a heavy upper lid
     m.pair(sk, sk, *B(7, 12, -13, 9, 15, -7), name="brow", faces=OUT("west"))
     brow_horns(m, sk, hy, hz)
+    young_horns(m, sk, hy, hz)
     # the frill: its own bone at the back of the skull roof, leaning back. A solid plate in stepped widths, the
     # lower sides (the squamosals) curving down toward the neck, and a rim of low flat bumps
     fr = m.bone("frill", sk, (0, hy + 15, hz), (FRILL_TILT, 0, 0))
@@ -192,7 +212,7 @@ def horn_px(t, p):
     """keratin over bone: darker and ridged at the root, ivory toward the tip, lit on the upper side, worn smooth at
     the point; long grooves run along the horn (never rings: rings read as a screw)"""
     c = t.cube; f = t.face; k = c.get("hseg", 0)
-    along = (k + t.rel[1]) / 4.0 if c["name"].startswith("horn") else t.rel[1]
+    along = (k + t.rel[1]) / 4.0 if c["name"].startswith(("horn", "yhorn")) else t.rel[1]
     if c["name"] == "epijugal": return p["horn0"] if t.rel[1] > 0.5 else p["horn1"]
     tone = 1 if along < 0.18 else (2 if along < 0.5 else (3 if along < 0.85 else 4))
     if f in ("up", "north"): tone = min(4, tone + 1) if c["name"].startswith("horn") else tone

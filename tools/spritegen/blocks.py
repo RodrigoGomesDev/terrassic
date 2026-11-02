@@ -1746,7 +1746,10 @@ SKULLS.update({  # one skull per species added after the first fifteen
     "dreadnoughtus": [".......ooooo....", ".....oobllllo...", "...oobbbbbbbbo..", "..obbbbbbbeebo..", ".obbbbbbbbeebo..", ".obbbbbbbbbbbo..", ".otttttbbbbbo...", "..obbbbbbbbo....", "...oooooooo....."],
     "giganotosaurus": [".......ooooooo..", "....ooobblllbbo.", "..oobbbbbbbbbbbo", ".obbbeeebbbbeebo", "obbbbeeebbbbeebo", "obbbbbbbbbbbbbbo", "otttttttbbbbbbbo", ".t.t.t.t.obbbbo.", ".obbbbbbbbbbbo..", "..ooooooooooo..."],
     "carcharodontosaurus": ["......oooooo....", "....oobbblllo...", "..oobbbbbbbbbo..", ".obbbeeebbbbeeo.", "obbbbeeebbbbeebo", "obbbbbbbbbbbbbbo", "ottttttttbbbbbbo", ".t.t.t.t.tobbbo.", ".obbbbbbbbbbbo..", "..ooooooooooo..."],
-    "carnotaurus": [".........o..o...", "........olo.lo..", "......oobbbbbo..", "....oobbbbbeebo.", "..oobbbeebbeebo.", ".obbbbbeebbbbbo.", "obbbbbbbbbbbbo..", "otttttbbbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
+    # its own (1.5): short and deep, a blunt horn over each eye, a slender lower jaw (was the Majungasaurus' skull)
+    "carnotaurus": ["..........oo.o..", ".........oloolo.", ".......oolbllbo.", ".....oolllbbeebo", "...oollbbbbbeebo",
+                    "..ollbbbbebbbbbo", ".olbbbbeebbbbbo.", ".olbbbbbbbbbbo..", ".otttttttttoo...", "..t.t.t.t.o.....",
+                    "..obbbbbbo......", "...oooooo......."],
     "tarbosaurus": [".......oooooo...", ".....oobbbllo...", "...oobbbbbbbbo..", "..obbbeebbbeebo.", ".obbbbeebbbeebo.", "obbbbbbbbbbbbbo.", "otttttbbbbbbbo..", ".t.t.tobbbbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
     "daspletosaurus": ["..........o.....", "......oooolo....", "....oobbbbbbo...", "..oolbblbbbbbo..", ".obbbbeebbbeebo.", "obbbbbeebbbeebo.", "obbbbbbbbbbbbbo.", "otttttttbbbbbo..", ".t.t.t.tobbbo...", ".obbbbbbbbbo....", "..ooooooooo....."],
     "albertosaurus": ["........ooooo...", "......oobbllo...", "....oobbbbbbbo..", "..oobbbeebbbeeo.", ".obbbbbeebbbeebo", "obbbbbbbbbbbbbbo", "ottttttbbbbbbbo.", ".t.t.t.obbbbo...", "..obbbbbbbbo....", "...oooooooo....."],
@@ -2142,9 +2145,11 @@ def feather_bundle(top):
 
 
 def phase6_textures():
+    from couros_1_5 import SPECIES as REDRAWN  # remade species: their rug is drawn by couros_1_5.py
     out = {}
     for sid in SPECIES:
-        out[f"{sid}_hide_rug"] = hide_pattern(sid, species_ramp(sid), HIDE_PATTERN.get(sid, "scales"))
+        if sid not in REDRAWN:
+            out[f"{sid}_hide_rug"] = hide_pattern(sid, species_ramp(sid), HIDE_PATTERN.get(sid, "scales"))
         out[f"{sid}_skull_trophy"] = skull_sprite(sid)
         out[f"{sid}_skull_fossil"] = skull_fossil(sid)
     for hid in GENERIC_HIDES:

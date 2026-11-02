@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -17,10 +18,12 @@ import net.minecraft.world.phys.Vec3;
  * What it adds over a plain herbivore is only what those animations and the study need:
  * <ul>
  *   <li>the walk and the run follow the real speed (the feet do not slide);</li>
- *   <li>about one hit in three is the side blow of the dome into the flank ("flank_butt", Carpenter 1997);</li>
- *   <li>two wild adult males close together now and then clash dome to dome ("dome_clash", Peterson et al. 2013):
- *       a hollow knock at the hit and both are pushed back a little; a male near a female shows his dome
- *       ("dome_display");</li>
+ *   <li>the first hit on each target and every third after it is the side blow of the dome into the flank
+ *       ("flank_butt", Carpenter 1997), whoever chose the target (its own fight, the whistle, the owner's target);
+ *       that hit plays only "flank_butt", not "attack" as well;</li>
+ *   <li>two wild adult males within 6 blocks of each other square up and clash dome to dome ("dome_clash", Peterson
+ *       et al. 2013): they stop, turn to face each other, a hollow knock at the hit and both are pushed back a little;
+ *       then 90 s before either looks for another rival. A male near a female shows his dome ("dome_display");</li>
  *   <li>its own taming: a wild adult does not run from a player, but one who comes within 4 blocks WITHOUT its food in
  *       hand is warned (head down, a foot scuffing: "warn"), and if they stay close they are shoved away with the side
  *       of the dome, without damage. With its food in hand it lets them come and feed it;</li>
@@ -44,6 +47,12 @@ public abstract class Pachycephalosaurid extends HerbivoreDinosaur {
     private Player warned;
     private Pachycephalosaurid clashWith;
     private int clashTick = -1;
+    /** Ticks before this male looks for a rival again (a short wait after it spawns or loads, then 90 s per clash). */
+    private int rivalCooldown = 100;
+    /** Hits landed on the current target (by entity id): the first and every third after it is the flank blow. */
+    private int hitTargetId = -1;
+    private int hitCount;
+    private boolean flankThisHit;
 
     protected Pachycephalosaurid(EntityType<? extends Pachycephalosaurid> type, Level level) {
         super(type, level);
@@ -86,14 +95,39 @@ public abstract class Pachycephalosaurid extends HerbivoreDinosaur {
         return RUN_PX / 16.0D / RUN_TICKS * this.modelScale();
     }
 
-    /** About one hit in three is the side blow of the dome (the animation only: the damage is the same). */
+    /**
+     * The first hit on a target and every third after it is the side blow of the dome (the animation only: the damage
+     * is the same). It is chosen before the hit, so that hit sends only "flank_butt" and not "attack" in the same tick,
+     * and it does not depend on how the target was chosen (1.5 review: with a target given by the whistle or by the
+     * owner's fight it never showed, because the random third hit lost to the "attack" sent with it).
+     */
     @Override
     public boolean doHurtTarget(Entity target) {
-        boolean hit = super.doHurtTarget(target);
-        if (hit && !this.isBaby() && this.random.nextInt(3) == 0) {
-            triggerAnim(ACTION_CONTROLLER, "flank_butt");
+        if (target.getId() != this.hitTargetId) {
+            this.hitTargetId = target.getId();
+            this.hitCount = 0;
+        }
+        boolean flank = !this.isBaby() && this.hitCount % 3 == 0;
+        this.flankThisHit = flank;
+        boolean hit;
+        try {
+            hit = super.doHurtTarget(target);
+        } finally {
+            this.flankThisHit = false;
+        }
+        if (hit) {
+            this.hitCount++;
+            if (flank) {
+                triggerAnim(ACTION_CONTROLLER, "flank_butt");
+            }
         }
         return hit;
+    }
+
+    /** The base plays "attack" on a landed hit, except on the hit that is the flank blow. */
+    @Override
+    protected boolean animatesHits() {
+        return !this.flankThisHit;
     }
 
     private boolean holdsFood(Player player) {
@@ -113,6 +147,11 @@ public abstract class Pachycephalosaurid extends HerbivoreDinosaur {
         this.tickClash();
         if (this.warnLeft > 0) {
             this.tickWarning();
+        }
+        if (this.rivalCooldown > 0) {
+            this.rivalCooldown--;
+        } else if (this.clashTick < 0 && this.warnLeft == 0 && (this.tickCount + this.getId()) % 20 == 0) {
+            this.lookForRival();
         }
         if (this.still > 0) {
             this.still--;
@@ -150,21 +189,12 @@ public abstract class Pachycephalosaurid extends HerbivoreDinosaur {
         }
         if (!this.isTame() && !this.isFemale()) {
             Pachycephalosaurid other = this.nearestAdult(5.0D);
-            if (other != null && !other.isTame() && !other.busy() && other.clashTick < 0) {
+            if (other != null && other.isFemale() && !other.busy()) {
                 this.getLookControl().setLookAt(other, 30.0F, 30.0F);
                 other.getLookControl().setLookAt(this, 30.0F, 30.0F);
-                if (!other.isFemale()) {
-                    triggerAnim(ACTION_CONTROLLER, "dome_clash");
-                    other.triggerAnim(ACTION_CONTROLLER, "dome_clash");
-                    this.clashWith = other;
-                    this.clashTick = 0;
-                    this.still = 80;
-                    other.still = 80;
-                } else {
-                    triggerAnim(ACTION_CONTROLLER, "dome_display");
-                    this.still = 80;
-                    other.still = 40;
-                }
+                triggerAnim(ACTION_CONTROLLER, "dome_display");
+                this.still = 80;
+                other.still = 40;
                 return;
             }
         }
@@ -199,7 +229,61 @@ public abstract class Pachycephalosaurid extends HerbivoreDinosaur {
         }
     }
 
-    /** The clash: at the moment the domes meet, a hollow knock and both are pushed back a little. */
+    /** A wild grown male free to take on a rival: no target, no rope, awake, standing on dry ground. */
+    private boolean canClash() {
+        return !this.isBaby() && !this.isTame() && !this.isFemale() && !this.busy() && !this.isLeashed()
+                && this.onGround() && !this.isInWater() && this.clashTick < 0 && this.rivalCooldown <= 0 && this.warnLeft == 0;
+    }
+
+    /**
+     * Every second, a free wild male looks for another free wild male within 6 blocks; one time in three they square
+     * up. Not tied to the idle roll or to the path being finished (1.5 review: wandering, tempted or warning, they
+     * almost never met that roll, so in the Fabric 1.20.1 test run the clash never came).
+     */
+    private void lookForRival() {
+        if (!this.canClash() || this.random.nextInt(3) != 0) {
+            return;
+        }
+        Pachycephalosaurid best = null;
+        double bestD = 36.0D;
+        for (Pachycephalosaurid e : this.level().getEntitiesOfClass(Pachycephalosaurid.class, this.getBoundingBox().inflate(6.0D),
+                c -> c != this && c.getClass() == this.getClass() && c.isAlive() && c.canClash())) {
+            double d = this.distanceToSqr(e);
+            if (d < bestD && d > 4.0D) {
+                bestD = d;
+                best = e;
+            }
+        }
+        if (best == null) {
+            return;
+        }
+        this.clashWith = best;
+        this.clashTick = 0;
+        best.clashWith = this;
+        best.clashTick = 0;
+        for (Pachycephalosaurid p : List.of(this, best)) {
+            p.getNavigation().stop();
+            p.faceRival();
+            p.triggerAnim(ACTION_CONTROLLER, "dome_clash");
+            p.still = 80;
+            p.rivalCooldown = 1800;
+        }
+    }
+
+    /** Body and head turned square to the rival. */
+    private void faceRival() {
+        Pachycephalosaurid other = this.clashWith;
+        if (other == null) {
+            return;
+        }
+        float yaw = (float) (Mth.atan2(other.getZ() - this.getZ(), other.getX() - this.getX()) * Mth.RAD_TO_DEG) - 90.0F;
+        this.setYRot(yaw);
+        this.setYBodyRot(yaw);
+        this.setYHeadRot(yaw);
+        this.getLookControl().setLookAt(other, 30.0F, 30.0F);
+    }
+
+    /** The clash: they hold face to face; at the moment the domes meet, a hollow knock and both are pushed back a little. */
     private void tickClash() {
         if (this.clashTick < 0) {
             return;
@@ -211,7 +295,11 @@ public abstract class Pachycephalosaurid extends HerbivoreDinosaur {
             this.clashWith = null;
             return;
         }
-        if (this.clashTick == CLASH_HIT) {
+        if (this.clashTick < CLASH_HIT) {
+            this.faceRival();
+        }
+        // the knock and the push once per clash: from the one with the lower id
+        if (this.clashTick == CLASH_HIT && this.getId() < other.getId()) {
             this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GOAT_RAM_IMPACT, SoundSource.NEUTRAL, 1.2F, 0.8F);
             Vec3 away = this.position().subtract(other.position()).multiply(1.0D, 0.0D, 1.0D);
             if (away.lengthSqr() > 1.0E-4D) {

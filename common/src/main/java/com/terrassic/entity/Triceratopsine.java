@@ -1,11 +1,13 @@
 package com.terrassic.entity;
 
 import java.util.List;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
@@ -21,8 +23,9 @@ import software.bernie.geckolib.animation.PlayState;
  *   <li>a wild adult does not run from a wild predator (it fights back): within 14 blocks it stops, turns to face it
  *       and walks its hind end round its planted forefeet ("pivot");</li>
  *   <li>two adult males close together lock horns and twist; two calves butt each other at play;</li>
- *   <li>a wild adult standing in shallow water on a warm day wallows; idle, it now and then plows the ground with
- *       its beak or shears a branch.</li>
+ *   <li>an adult (wild or tame, not ridden or sitting) in shallow water, on mud or beside water, around midday,
+ *       now and then lies down and wallows; idle, it now and then plows the ground with its beak or shears a
+ *       branch.</li>
  * </ul>
  * Gameplay is unchanged: these are gestures, timed so they never fight the attack or the eating.
  */
@@ -156,8 +159,7 @@ public abstract class Triceratopsine extends HerbivoreDinosaur {
             return;
         }
         long time = this.level().getDayTime() % 24000L;
-        if (!this.isTame() && this.isInWater() && this.getFluidHeight(FluidTags.WATER) < this.getBbHeight() * 0.35D
-                && time > 4000L && time < 9000L && this.random.nextInt(500) == 0) {
+        if (time > 4000L && time < 9000L && this.random.nextInt(500) == 0 && this.byWetGround()) {
             triggerAnim(ACTION_CONTROLLER, "wallow");
             this.still = 120;
             return;
@@ -177,6 +179,23 @@ public abstract class Triceratopsine extends HerbivoreDinosaur {
         } else {
             triggerAnim(ACTION_CONTROLLER, this.random.nextBoolean() ? "plow" : "shear");
         }
+    }
+
+    /** Shallow water, mud underfoot, or water within two blocks of its feet: where it lies down to wallow. */
+    private boolean byWetGround() {
+        if (this.isInWater()) {
+            return this.getFluidHeight(FluidTags.WATER) < this.getBbHeight() * 0.35D;
+        }
+        BlockPos feet = this.blockPosition();
+        if (this.level().getBlockState(feet.below()).is(Blocks.MUD) || this.level().getBlockState(feet).is(Blocks.MUD)) {
+            return true;
+        }
+        for (BlockPos p : BlockPos.betweenClosed(feet.offset(-2, -1, -2), feet.offset(2, 0, 2))) {
+            if (this.level().getFluidState(p).is(FluidTags.WATER)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Triceratopsine nearest(double range, boolean baby) {

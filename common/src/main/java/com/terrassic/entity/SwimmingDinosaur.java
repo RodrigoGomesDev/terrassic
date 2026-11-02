@@ -226,6 +226,25 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
         return new Vec3(flat.x, dive, flat.z);
     }
 
+    /**
+     * The mount keeps its rider breathing, on the server every tick: tickRidden runs where the movement is computed,
+     * which for a ridden animal is the rider's client, so the effect given there did not reach the server on every
+     * loader (1.5 test: air 300 on Fabric, unreadable on Forge and NeoForge). The air gauge is refilled outright and
+     * the effect kept up, so it holds whatever the loader does with drowning.
+     */
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide() && this.getControllingPassenger() instanceof Player rider
+                && (rider.isUnderWater() || rider.getAirSupply() < rider.getMaxAirSupply())) {
+            rider.setAirSupply(rider.getMaxAirSupply());
+            MobEffectInstance cur = rider.getEffect(MobEffects.WATER_BREATHING);
+            if (cur == null || cur.getDuration() < 20) {
+                rider.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 60, 0, true, false, false));
+            }
+        }
+    }
+
     @Override
     protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);

@@ -232,11 +232,11 @@
   "render_scale": 0.5
  },
  "triceratops": {
-  "bones": 35,
-  "cubes": 115,
+  "bones": 43,
+  "cubes": 121,
   "texture": [
    256,
-   256
+   512
   ],
   "bounds_px": [
    [
@@ -591,36 +591,52 @@
  },
  "mosasaurus": {
   "bones": 18,
-  "cubes": 88,
+  "cubes": 73,
   "texture": [
    256,
-   512
+   256
   ],
   "bounds_px": [
    [
-    -32.92549103657604,
-    0.2916162130655806,
-    -96.99999361312365
+    -40.35220748835431,
+    -15.550988565627236,
+    -142.0
    ],
    [
-    32.92549103657604,
-    46.605887853587774,
-    175.03129629815888
+    40.35220748835431,
+    35.0,
+    131.43217704796348
    ]
   ],
   "animations": [
    "animation.mosasaurus.idle",
+   "animation.mosasaurus.swim",
    "animation.mosasaurus.walk",
    "animation.mosasaurus.run",
-   "animation.mosasaurus.sit",
+   "animation.mosasaurus.stranded",
+   "animation.mosasaurus.ambush",
+   "animation.mosasaurus.breach",
+   "animation.mosasaurus.breathe",
+   "animation.mosasaurus.swallow",
+   "animation.mosasaurus.shake",
+   "animation.mosasaurus.spar",
+   "animation.mosasaurus.gape",
+   "animation.mosasaurus.spyhop",
+   "animation.mosasaurus.birth",
    "animation.mosasaurus.attack",
+   "animation.mosasaurus.hurt",
+   "animation.mosasaurus.death",
+   "animation.mosasaurus.eat",
+   "animation.mosasaurus.sit",
+   "animation.mosasaurus.sleep",
+   "animation.mosasaurus.wake_sleep",
    "animation.mosasaurus.knocked_out",
    "animation.mosasaurus.wake",
-   "animation.mosasaurus.eat",
    "animation.mosasaurus.beg",
    "animation.mosasaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.706,
+  "handmade": true
  },
  "maiasaura": {
   "bones": 28,

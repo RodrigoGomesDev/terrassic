@@ -7,6 +7,8 @@ import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
 import com.terrassic.research.Research;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
+import dev.architectury.event.events.common.LifecycleEvent;
+import com.terrassic.world.continent.ModContinent;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -91,6 +93,22 @@ public final class Alphas {
 
     public static void init() {
         CommandRegistrationEvent.EVENT.register(Alphas::commands);
+        // the register is loaded here, on the server thread: an alpha can also be rolled while a chunk generates, on a
+        // worldgen thread, and the level's saved-data storage must not be opened from there
+        LifecycleEvent.SERVER_STARTED.register(Data::get);
+        LifecycleEvent.SERVER_STOPPED.register(s -> Data.forgetCached());
+    }
+
+    /** Share of the continent's radius that stands in for the "Min. distance from spawn" rule in a Terrassic world
+     *  (the land ends at the radius: 1,200 blocks by default, 800 on the small island, so 1,500 would rule every
+     *  alpha out). Half the radius is still half the way from the start to the coast. */
+    private static final double CONTINENT_DISTANCE_SHARE = 0.5D;
+
+    /** The "Min. distance from spawn" rule, held to half the continent's radius in a Terrassic world. */
+    static double minDistance(ServerLevel level, Rules rules) {
+        double rule = rules.get(Rule.ALPHA_DISTANCE);
+        int radius = ModContinent.radius(level.getServer().overworld());
+        return radius > 0 ? Math.min(rule, radius * CONTINENT_DISTANCE_SHARE) : rule;
     }
 
     public static boolean hasAlpha(String species) {
@@ -152,7 +170,7 @@ public final class Alphas {
         }
         BlockPos spawn = level.getSharedSpawnPos();
         double fromSpawn = Math.sqrt(Mth.square(dino.getX() - spawn.getX()) + Mth.square(dino.getZ() - spawn.getZ()));
-        if (fromSpawn < rules.get(Rule.ALPHA_DISTANCE)) {
+        if (fromSpawn < minDistance(level, rules)) {
             return false;
         }
         Data data = Data.get(level.getServer());
@@ -345,11 +363,32 @@ public final class Alphas {
         /** owner -> (alpha -> species) */
         private final Map<UUID, Map<UUID, String>> owners = new HashMap<>();
 
+        /** The register of the running server (opened at its start on the server thread; see {@link #init}). */
+        private static volatile MinecraftServer cachedServer;
+        private static volatile Data cached;
+
         public static Data get(MinecraftServer server) {
-            return server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, Data::load, DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
+            Data data = cached;
+            if (data != null && cachedServer == server) {
+                return data;
+            }
+            synchronized (Data.class) {
+                if (cached == null || cachedServer != server) {
+                    cached = server.overworld().getDataStorage().computeIfAbsent(new Factory<>(Data::new, Data::load, DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
+                    cachedServer = server;
+                }
+                return cached;
+            }
         }
 
-        int liveWild(long now) {
+        static void forgetCached() {
+            synchronized (Data.class) {
+                cached = null;
+                cachedServer = null;
+            }
+        }
+
+        synchronized int liveWild(long now) {
             int n = 0;
             for (Wild w : this.wild.values()) {
                 if (now - w.seen() < STALE_TICKS) {
@@ -359,7 +398,7 @@ public final class Alphas {
             return n;
         }
 
-        boolean alphaNear(String species, String dim, double x, double z, long now) {
+        synchronized boolean alphaNear(String species, String dim, double x, double z, long now) {
             for (Wild w : this.wild.values()) {
                 if (w.species().equals(species) && w.dim().equals(dim) && now - w.seen() < STALE_TICKS
                         && Mth.square(w.x() - x) + Mth.square(w.z() - z) < REGION * REGION) {
@@ -369,7 +408,7 @@ public final class Alphas {
             return false;
         }
 
-        boolean resting(String species, String dim, double x, double z, long now) {
+        synchronized boolean resting(String species, String dim, double x, double z, long now) {
             boolean changed = this.resting.removeIf(r -> r.until() <= now);
             if (changed) {
                 this.setDirty();
@@ -383,28 +422,28 @@ public final class Alphas {
             return false;
         }
 
-        void seen(UUID id, String species, String dim, double x, double z, long now) {
+        synchronized void seen(UUID id, String species, String dim, double x, double z, long now) {
             this.wild.put(id, new Wild(species, dim, x, z, now));
             this.setDirty();
         }
 
-        void forget(UUID id) {
+        synchronized void forget(UUID id) {
             if (this.wild.remove(id) != null) {
                 this.setDirty();
             }
         }
 
-        void rest(String species, String dim, double x, double z, long until) {
+        synchronized void rest(String species, String dim, double x, double z, long until) {
             this.resting.add(new Rest(species, dim, x, z, until));
             this.setDirty();
         }
 
-        void own(UUID owner, UUID alpha, String species) {
+        synchronized void own(UUID owner, UUID alpha, String species) {
             this.owners.computeIfAbsent(owner, k -> new HashMap<>()).put(alpha, species);
             this.setDirty();
         }
 
-        void untame(UUID owner, UUID alpha) {
+        synchronized void untame(UUID owner, UUID alpha) {
             Map<UUID, String> mine = this.owners.get(owner);
             if (mine != null && mine.remove(alpha) != null) {
                 this.setDirty();
@@ -413,7 +452,7 @@ public final class Alphas {
 
         /** Alphas of the species the player owns. One that is loaded and no longer theirs (or no longer alive, or no
          *  longer an alpha) frees its slot; one in an unloaded chunk still counts. */
-        int owned(MinecraftServer server, UUID owner, String species) {
+        synchronized int owned(MinecraftServer server, UUID owner, String species) {
             Map<UUID, String> mine = this.owners.get(owner);
             if (mine == null) {
                 return 0;
@@ -466,7 +505,7 @@ public final class Alphas {
         }
 
         @Override
-        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+        public synchronized CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
             ListTag wildList = new ListTag();
             this.wild.forEach((id, w) -> {
                 CompoundTag t = new CompoundTag();

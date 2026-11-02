@@ -1020,7 +1020,8 @@ FLINT = hexc("#4a4a4e"); FLINT_L = hexc("#7a7a80"); FLINT_D = hexc("#2c2c30")
 BONE = hexc("#e8e0c8"); BONE_D = hexc("#b8ad90"); BONE_L = hexc("#fbf6e8")
 IVORY = hexc("#efe6ca"); IVORY_D = hexc("#c9bc96")
 HORN_B = hexc("#7a6748")
-CLUB = hexc("#8b7d62"); CLUB_L = hexc("#b4a482"); CLUB_D = hexc("#5e5440"); SCUTE = hexc("#c9a05a")
+# the club of the Ankylosaurus 1.5 model: dark horn, its knobs catching the light
+CLUB = hexc("#645b4b"); CLUB_L = hexc("#807561"); CLUB_D = hexc("#35302a"); SCUTE = hexc("#a3987f")
 
 
 def handle(cv, x0, y0, length, wrap_from=None, wrap_len=0):
@@ -1467,7 +1468,9 @@ def hide_sprite(sid, pal):
 
 
 def hide_sprites():
-    return {sid: hide_sprite(sid, pal) for sid, pal in species_palettes().items()}
+    """Old-model species only: the hides of the remade ones are drawn by couros_1_5.py from their current skin."""
+    from couros_1_5 import SPECIES as REDRAWN
+    return {sid: hide_sprite(sid, pal) for sid, pal in species_palettes().items() if sid not in REDRAWN}
 
 
 def preview(path):
@@ -1517,6 +1520,8 @@ if __name__ == "__main__":
     para_extras.main()    # the Parasaurolophus' round eggs in a raised mud crater under reeds, and its reed saddle
     import anky_extras
     anky_extras.main()    # the Ankylosaurus' leathery eggs half buried in a pit of forest loam, and its pack deck
+    import mosa_extras
+    mosa_extras.main()    # the Mosasaurus' diving harness (no egg block: it bears live young at sea)
     import armas
     armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
     import pocket_guide

@@ -55,6 +55,7 @@ public final class Terrassic {
         ModContinent.init(); // v0.8: the Terrassic continent, its world border
         EnvExecutor.runInEnv(Env.CLIENT, () -> TerrassicWorldClient::init); // v0.8: storm effects, HUD
         Research.init();
+        com.terrassic.entity.Whistle.init(); // 1.5: whom each player last hit, for the whistle's "attack my target"
         Rules.init(); // world rules in the style of ARK (docs/REGRAS.md)
         com.terrassic.network.Net.declareServerToClient();
         com.terrassic.entity.Alphas.init(); // the alphas' command (docs/ALFAS.md)

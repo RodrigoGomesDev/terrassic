@@ -24,15 +24,16 @@ import net.minecraft.world.phys.Vec3;
  *   <li>the walk (on four) and the run (on two) follow the real speed, so the feet do not slide;</li>
  *   <li>the contact call: with its ambient sound a wild adult now and then calls ("call"); one or two of the herd
  *       within 32 blocks turn to it and answer a moment later ("answer");</li>
- *   <li>the alarm: a wild adult that sees a wild predator within 24 blocks, or is hurt, half-rears and gives the
+ *   <li>the alarm: a wild adult that sees a wild predator within 16 blocks, or is hurt, half-rears and gives the
  *       alarm ("alarm", the tail lifted on its black flag); every wild Parasaurolophus within 32 blocks wakes and
  *       runs from that threat;</li>
  *   <li>the young call: a baby more than 10 blocks from any adult peeps ("peep") and the nearest adult answers;</li>
  *   <li>the taming, built on the herd's watch: a wild herd does not bolt at the first sight of a player. One that
- *       sees a player within 16 blocks stares at them, head high and frozen ("vigilant"). If the player MOVES while
- *       it stares, it gives the alarm and the herd runs from that player for a while. If the player stands still
- *       for three seconds, the herd lets them be: it goes back to feeding and the player may walk up (not sprint)
- *       and hand-feed one. Sprinting or a blow ends it;</li>
+ *       sees a player within 12 blocks stares at them, head high and frozen ("vigilant"), and the player is told
+ *       ("hud.terrassic.notice.herd_watch"). The player has two seconds to stop. After that, coming closer while it
+ *       stares gives the alarm and the herd runs from that player for a while. Standing still for three seconds, or
+ *       keeping one's distance for twenty, and the herd lets them be: it goes back to feeding and the player may walk
+ *       up (not sprint) and hand-feed one. Sprinting or a blow ends it;</li>
  *   <li>idle: it rears to high leaves in front of it ("browse_high", a meal), drinks at the water ("drink"), and a
  *       wild adult male near an adult female rears and shows his crest ("crest_display").</li>
  * </ul>
@@ -46,9 +47,19 @@ public abstract class Lambeosaurine extends HerbivoreDinosaur {
     private static final double RUN_PX = 112.0D;
     private static final double RUN_TICKS = 13.2D;
     private static final double HERD = 32.0D;
-    private static final double WATCH = 16.0D;
-    /** Blocks a watched player may drift in half a second and still count as standing still. */
+    /** A wild herd starts to stare at a player this close (blocks), and stops staring past WATCH + 4. */
+    private static final double WATCH = 12.0D;
+    /** A wild adult gives the alarm at a wild predator this close, in sight. */
+    private static final double PREDATOR = 16.0D;
+    /** Ticks after the stare starts in which the player may still be moving: time to see the stare and stop. */
+    private static final int GRACE = 40;
+    /** Ticks of staring at a player who keeps their distance (moving, but never coming on) before the herd gets used
+     *  to them. */
+    private static final int HABITUATE = 400;
+    /** Blocks a watched player may come closer in half a second and still count as standing still. */
     private static final double DRIFT = 0.35D;
+    /** Blocks a watched player may move about in half a second (sideways or back) before it counts as moving. */
+    private static final double SHIFT = 1.0D;
     /** Ticks a watched player has to stand still before the herd lets them be. */
     private static final int STILL_TO_ACCEPT = 60;
     private static final int ACCEPT_TICKS = 2400;
@@ -284,7 +295,7 @@ public abstract class Lambeosaurine extends HerbivoreDinosaur {
         if (this.tickCount % 10 == 0) {
             // a wild predator in sight: the alarm
             if (this.alarmCooldown == 0) {
-                List<PredatorDinosaur> near = this.level().getEntitiesOfClass(PredatorDinosaur.class, this.getBoundingBox().inflate(24.0D),
+                List<PredatorDinosaur> near = this.level().getEntitiesOfClass(PredatorDinosaur.class, this.getBoundingBox().inflate(PREDATOR),
                         p -> p.isAlive() && !p.isTame() && !p.isBaby() && this.hasLineOfSight(p));
                 if (!near.isEmpty()) {
                     this.alarm(near.get(0));
@@ -297,11 +308,17 @@ public abstract class Lambeosaurine extends HerbivoreDinosaur {
                 if (p != null && !p.isCreative() && !p.isSpectator() && this.hasLineOfSight(p)
                         && this.accepted.getOrDefault(p.getUUID(), 0L) <= this.now()
                         && this.scaredOf.getOrDefault(p.getUUID(), 0L) <= this.now()) {
-                    this.watching = p.getUUID();
+                    UUID id = p.getUUID();
+                    boolean herdAlreadyWatching = this.herd(HERD).stream().anyMatch(e -> id.equals(e.watching));
+                    this.watching = id;
                     this.watchedAt = p.position();
                     this.watchedStill = 0;
                     this.watchTicks = 0;
                     triggerAnim(ACTION_CONTROLLER, "vigilant");
+                    if (!herdAlreadyWatching) {
+                        // the cue: the player has two seconds to see the stare and stop
+                        this.notice(p, ModNetwork.NOTICE_AMBER, Component.translatable("hud.terrassic.notice.herd_watch"), this.speciesName());
+                    }
                     return;
                 }
             }
@@ -315,7 +332,7 @@ public abstract class Lambeosaurine extends HerbivoreDinosaur {
     /** The stare: the player is watched every tick; moving gives the alarm, standing still earns the herd's leave. */
     private void watch() {
         Player p = this.watching == null ? null : this.level().getPlayerByUUID(this.watching);
-        if (p == null || !p.isAlive() || p.isCreative() || p.isSpectator() || this.distanceToSqr(p) > (WATCH + 8) * (WATCH + 8)
+        if (p == null || !p.isAlive() || p.isCreative() || p.isSpectator() || this.distanceToSqr(p) > (WATCH + 4) * (WATCH + 4)
                 || this.isTame() || this.busy()) {
             this.watching = null;
             return;
@@ -331,9 +348,24 @@ public abstract class Lambeosaurine extends HerbivoreDinosaur {
         }
         Vec3 pos = p.position();
         double moved = Math.sqrt(Math.pow(pos.x - this.watchedAt.x, 2) + Math.pow(pos.z - this.watchedAt.z, 2));
+        double closer = Math.sqrt(this.distanceToSqr(this.watchedAt)) - Math.sqrt(this.distanceToSqr(pos));
         this.watchedAt = pos;
-        if (moved > DRIFT || p.isSprinting()) {
+        if (p.isSprinting()) {
             this.alarm(p);
+            return;
+        }
+        if (moved > DRIFT) {
+            // still walking in the first two seconds of the stare: not yet a threat, the count starts again; after
+            // that, coming on (or milling about) gives the alarm
+            if (this.watchTicks > GRACE && (closer > DRIFT || moved > SHIFT)) {
+                this.alarm(p);
+                return;
+            }
+            this.watchedStill = 0;
+            if (this.watchTicks >= HABITUATE) {
+                // twenty seconds about the herd without coming on: it gets used to the player
+                this.accept(p);
+            }
             return;
         }
         this.watchedStill += 10;
