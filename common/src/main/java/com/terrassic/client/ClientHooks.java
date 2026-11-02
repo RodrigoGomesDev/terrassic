@@ -9,7 +9,9 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -64,10 +66,19 @@ public final class ClientHooks {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, RulesNetwork.OPEN, (buf, context) ->
                 context.queue(() -> rulesPending = true));
         // a "Terrassic Rules" button in the top left corner of the pause menu, to edit the world's rules, only for whoever
-        // the server lets edit them (v0.15.1: nobody for now, WorldConfig.rulesInGame). Not on the title screen since
-        // v0.14.3: Minecraft's own menu stays as it is (the defaults for new worlds are edited in
-        // config/terrassic-world.json until the menu comes back); and the "HUD" options beside it
+        // the server lets edit them (v1.6: RulesNetwork.canEdit, operators or creative in single player). Not on the title
+        // screen since v0.14.3: Minecraft's own menu stays as it is; and the "HUD" options beside it
         ClientGuiEvent.INIT_POST.register((screen, access) -> {
+            if (screen instanceof CreateWorldScreen) {
+                // v1.6: the defaults for new worlds (config/terrassic-world.json), set while creating one, bottom left
+                Component label = Component.translatable("rules.terrassic.ui.new_world");
+                RulesScreen.StoneButton button = new RulesScreen.StoneButton(6, screen.height - 26,
+                        Minecraft.getInstance().font.width(label) + 16, 18, label,
+                        b -> Minecraft.getInstance().setScreen(new RulesScreen(screen, false)), false, false, false);
+                button.setTooltip(Tooltip.create(Component.translatable("rules.terrassic.ui.new_world.tip")));
+                access.addRenderableWidget(button);
+                return;
+            }
             boolean pause = screen instanceof PauseScreen && Minecraft.getInstance().level != null;
             if (pause) {
                 boolean rules = ClientRules.canEdit();

@@ -215,6 +215,7 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
         LivingEntity owner = this.getOwner();
         List<LivingEntity> hit = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(reach, 1.0D, reach),
                 e -> e != this && e.isAlive() && !e.isSpectator() && e != owner && !this.hasPassenger(e)
+                        && !com.terrassic.config.Rules.spares(e)
                         && !(e instanceof Player p && p.isCreative())
                         && !(e instanceof DinosaurEntity d && d.isTame() && owner != null && d.getOwner() == owner)
                         && this.inArc(e) && this.sideOf(e.position()) == this.swingSide);

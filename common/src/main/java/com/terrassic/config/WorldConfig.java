@@ -35,7 +35,7 @@ import java.nio.file.Path;
  *   "borda_em_raios": 2.0,        // distance from the middle of the continent to the border, in continent radii
  *   "historia": false,            // v0.10: the story mode (config/Story); off until it comes back in a future version
  *   "vozes": false,               // v0.14.3: the animals' voices (DinosaurEntity#playSound); off until they are remade
- *   "regras_no_jogo": false,      // v0.15.1: the Terrassic Rules can be changed in game (operators only); off for now
+ *   "regras_no_jogo": false,      // v0.15.1 lock, ignored since v1.6 (RulesNetwork.canEdit: operators, or creative in single player)
  *   "titulo_da_era": false,       // v0.15.2: the era's title when a player first arrives ("Cretáceo Superior"); off for now
  *   "especies_antigas": false     // v1.5: species still on their old model live in the world too (config/Eras); restart
  * }

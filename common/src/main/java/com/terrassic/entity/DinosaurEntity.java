@@ -2211,6 +2211,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 || e instanceof DinosaurEntity d && !d.isTame() && !d.isBaby() && !d.isKnockedOut();
     }
 
+    /** v1.6: never a mob the world rules spare (Rules.spares), however the target was picked (packs, alarms, orders). */
+    @Override
+    public void setTarget(LivingEntity target) {
+        super.setTarget(target != null && Rules.spares(target) ? null : target);
+    }
+
     /** Tamed by its own owner: a wolf, a horse, another dinosaur. */
     private boolean sameOwner(LivingEntity target) {
         return target instanceof OwnableEntity pet && this.getOwnerUUID() != null && this.getOwnerUUID().equals(pet.getOwnerUUID());
@@ -2223,6 +2229,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      */
     @Override
     public boolean canAttack(LivingEntity target) {
+        if (Rules.spares(target)) {
+            return false;
+        }
         if (this.isTame() && (this.stance == DinoStance.PASSIVE || this.isCalmed() || this.sameOwner(target))) {
             return false;
         }
