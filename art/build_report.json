@@ -591,21 +591,21 @@
  },
  "mosasaurus": {
   "bones": 18,
-  "cubes": 69,
+  "cubes": 73,
   "texture": [
    256,
    256
   ],
   "bounds_px": [
    [
-    -33.792776785225,
-    -13.251408827331574,
-    -134.0
+    -40.35220748835431,
+    -15.550988565627236,
+    -142.0
    ],
    [
-    33.792776785225,
-    33.0,
-    128.3737390305415
+    40.35220748835431,
+    35.0,
+    131.43217704796348
    ]
   ],
   "animations": [
@@ -620,6 +620,8 @@
    "animation.mosasaurus.swallow",
    "animation.mosasaurus.shake",
    "animation.mosasaurus.spar",
+   "animation.mosasaurus.gape",
+   "animation.mosasaurus.spyhop",
    "animation.mosasaurus.birth",
    "animation.mosasaurus.attack",
    "animation.mosasaurus.hurt",

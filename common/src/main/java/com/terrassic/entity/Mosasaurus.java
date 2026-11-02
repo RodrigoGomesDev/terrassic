@@ -68,7 +68,7 @@ public class Mosasaurus extends Mosasaurid {
 
     @Override
     protected double cullingInflate() {
-        return 5.0D;
+        return 5.2D;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class Mosasaurus extends Mosasaurid {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.55D * this.getScale();
+        return 1.62D * this.getScale();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class Mosasaurus extends Mosasaurid {
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 6.91D * this.getScale());
+        return Math.max(super.riderReach(), 7.27D * this.getScale());
     }
 
     @Override

@@ -80,41 +80,44 @@ REST = {"neck": 0, "skull": 0, "tail1": 0, "tail2": 1, "tail3": 1, "tail4": 2, "
 
 
 def head(m, parent):
-    """skull, the two-part lower jaw, the teeth, the eyes' brows. The mouth line is at y = 14."""
+    """skull, the two-part lower jaw, the teeth, the eyes' brows. The mouth line is at y = 14. The skull is big, about a
+    seventh of the animal (Fanti et al. 2014, the ratio behind the 12 m): deep at the back where the jaw muscles sit,
+    a tall conical snout, the lower jaw deep and straight"""
     sk = m.bone("skull", parent, (0, 17, -106), (REST["skull"], 0, 0))
     # the upper skull: deep and broad at the back (the jaw muscles), narrowing to the snout, a short blunt rostrum
-    m.cube(sk, (-6, 14, -114), (6, 23, -105), name="cranium")
-    m.pair(sk, sk, (6, 14, -108), (7, 19, -103), name="temporal")             # the jaw muscle bulge behind the eye
-    m.pair(sk, sk, (5, 22, -116), (7, 23, -109), name="brow", faces=OUT("down"))   # the brow over the eye, 1 px proud
-    m.cube(sk, (-5, 14, -121), (5, 21, -114), name="snout_back")
-    m.cube(sk, (-4, 14, -127), (4, 20, -121), name="snout_mid", faces=OUT("south"))
-    m.cube(sk, (-3, 14, -132), (3, 19, -127), name="snout_front", faces=OUT("south"))
-    m.cube(sk, (-2, 14, -134), (2, 17, -132), name="rostrum", faces=OUT("south"))   # short: not the Tylosaurus' ram
+    m.cube(sk, (-7, 14, -115), (7, 25, -104), name="cranium")
+    m.pair(sk, sk, (7, 14, -108), (8, 20, -102), name="temporal")             # the jaw muscle bulge behind the eye
+    m.pair(sk, sk, (6, 24, -119), (8, 25, -110), name="brow", faces=OUT("down"))   # the brow over the eye, 1 px proud
+    m.cube(sk, (-6, 14, -124), (6, 23, -115), name="snout_back")
+    m.cube(sk, (-5, 14, -131), (5, 21, -124), name="snout_mid", faces=OUT("south"))
+    m.cube(sk, (-4, 14, -137), (4, 19, -131), name="snout_front", faces=OUT("south"))
+    m.cube(sk, (-3, 14, -142), (3, 18, -137), name="rostrum", faces=OUT("south"))   # short: not the Tylosaurus' ram
     # the roof of the mouth with the pterygoid teeth (two short rows that show only with the jaws open)
-    m.cube(sk, (-3, 13, -128), (3, 14, -107), name="palate", mat="mouth", faces=["down"])
-    m.pair(sk, sk, (1.5, 11, -118), (1.5, 13, -110), name="ptery_teeth", mat="teeth")
-    # the upper teeth: alpha planes hanging over the lower jaw with the mouth shut (the house style), big cones apart
-    m.pair(sk, sk, (3.5, 11, -133), (3.5, 14, -121), name="teeth_a", mat="teeth")
-    m.pair(sk, sk, (5.25, 11, -121), (5.25, 14, -113), name="teeth_b", mat="teeth")
-    # the lower jaw, back half: hinged at the quadrate behind the eye; the retroarticular process sticks out behind it
+    m.cube(sk, (-4, 13, -136), (4, 14, -108), name="palate", mat="mouth", faces=["down"])
+    m.pair(sk, sk, (2, 11, -121), (2, 13, -110), name="ptery_teeth", mat="teeth")
+    # the upper teeth: alpha planes hanging over the lower jaw with the mouth shut (the house style), big cones apart,
+    # long enough to read from a boat (a Mosasaurus tooth crown is as long as a hand)
+    m.pair(sk, sk, (4.5, 10, -141), (4.5, 14, -124), name="teeth_a", mat="teeth")
+    m.pair(sk, sk, (6.25, 10, -124), (6.25, 14, -113), name="teeth_b", mat="teeth")
+    # the lower jaw, back half: hinged at the quadrate behind the eye, deep (the jaw of a big Mosasaurus is a beam)
     jaw = m.bone("jaw", sk, (0, 14, -108))
-    m.cube(jaw, (-5, 10, -121), (5, 14, -103), name="jaw_back")
-    m.cube(jaw, (-4, 13, -120), (4, 14, -106), name="mouth_back", mat="mouth", faces=["up"])
+    m.cube(jaw, (-6, 8, -124), (6, 14, -103), name="jaw_back")
+    m.cube(jaw, (-5, 13, -123), (5, 14, -106), name="mouth_back", mat="mouth", faces=["up"])
     # the front half swings on the intramandibular joint (mosasaurs only): it can bow out and drop on its own
-    jf = m.bone("jaw_front", jaw, (0, 12, -120))
-    m.cube(jf, (-3, 10, -133), (3, 14, -120), name="jaw_front")
-    m.cube(jf, (-2, 13, -132), (2, 14, -121), name="mouth_front", mat="mouth", faces=["up"])
-    m.pair(jf, jf, (2.5, 14, -132), (2.5, 16, -122), name="teeth_lo", mat="teeth_lo")
+    jf = m.bone("jaw_front", jaw, (0, 11, -124))
+    m.cube(jf, (-4, 9, -141), (4, 14, -124), name="jaw_front")
+    m.cube(jf, (-3, 13, -140), (3, 14, -125), name="mouth_front", mat="mouth", faces=["up"])
+    m.pair(jf, jf, (3, 14, -140), (3, 17, -126), name="teeth_lo", mat="teeth_lo")
     return sk
 
 
 def neck(m, body):
     n = m.bone("neck", body, (0, 17, -88), (REST["neck"], 0, 0))
-    m.cube(n, (-8, 7, -107), (8, 27, -87), name="neck")
-    m.cube(n, (-6, 27, -105), (6, 28, -87), name="neck_top", faces=OUT("down"))
+    m.cube(n, (-9, 6, -107), (9, 28, -87), name="neck")
+    m.cube(n, (-7, 28, -105), (7, 29, -87), name="neck_top", faces=OUT("down"))
     # the throat skin under the jaws: its own bone, it swells when it swallows
-    th = m.bone("throat", n, (0, 10, -100))
-    m.cube(th, (-5, 7, -110), (5, 10, -96), name="throat", mat="belly")
+    th = m.bone("throat", n, (0, 8, -102))
+    m.cube(th, (-5, 5, -112), (5, 8, -96), name="throat", mat="belly")
     hd = m.bone("head", n, (0, 17, -106))
     head(m, hd)
 
@@ -126,17 +129,20 @@ def flippers(m, body):
         m.bone(f"flipper_f{side}", body, (11 * sx, 9, -80), (0, 0, 0))
         m.bone(f"flipper_h{side}", body, (9 * sx, 9, -24), (0, 0, 0))
     sweep_f, sweep_h = (0, -34, -10), (0, -40, -8)
-    m.pair("flipper_fl", "flipper_fr", (10, 6, -86), (16, 10, -74), name="fore_root", rot=sweep_f, origin=(11, 9, -80))
-    m.pair("flipper_fl", "flipper_fr", (16, 7, -86), (27, 9, -74), name="fore_blade", mat="fin", rot=sweep_f, origin=(11, 9, -80))
-    m.pair("flipper_fl", "flipper_fr", (27, 7.5, -85), (33, 8.5, -76), name="fore_mid", mat="fin", rot=sweep_f, origin=(11, 9, -80))
-    m.pair("flipper_fl", "flipper_fr", (33, 7.5, -83), (37, 8.5, -78), name="fore_tip", mat="fin", rot=sweep_f, origin=(11, 9, -80))
-    m.pair("flipper_hl", "flipper_hr", (8, 7, -29), (13, 10, -19), name="hind_root", rot=sweep_h, origin=(9, 9, -24))
-    m.pair("flipper_hl", "flipper_hr", (13, 7.5, -28), (21, 9.5, -20), name="hind_blade", mat="fin", rot=sweep_h, origin=(9, 9, -24))
-    m.pair("flipper_hl", "flipper_hr", (21, 8, -27), (25, 9, -22), name="hind_tip", mat="fin", rot=sweep_h, origin=(9, 9, -24))
+    # the paddles are big: hyperphalangy (extra finger bones) made a long, broad hydrofoil of the hand
+    m.pair("flipper_fl", "flipper_fr", (10, 6, -88), (16, 11, -73), name="fore_root", rot=sweep_f, origin=(11, 9, -80))
+    m.pair("flipper_fl", "flipper_fr", (16, 7, -89), (30, 9, -72), name="fore_blade", mat="fin", rot=sweep_f, origin=(11, 9, -80))
+    m.pair("flipper_fl", "flipper_fr", (30, 7.5, -88), (38, 8.5, -74), name="fore_mid", mat="fin", rot=sweep_f, origin=(11, 9, -80))
+    m.pair("flipper_fl", "flipper_fr", (38, 7.5, -86), (43, 8.5, -77), name="fore_tip", mat="fin", rot=sweep_f, origin=(11, 9, -80))
+    m.pair("flipper_hl", "flipper_hr", (8, 7, -30), (13, 10, -18), name="hind_root", rot=sweep_h, origin=(9, 9, -24))
+    m.pair("flipper_hl", "flipper_hr", (13, 7.5, -30), (23, 9.5, -19), name="hind_blade", mat="fin", rot=sweep_h, origin=(9, 9, -24))
+    m.pair("flipper_hl", "flipper_hr", (23, 8, -28), (28, 9, -21), name="hind_tip", mat="fin", rot=sweep_h, origin=(9, 9, -24))
 
 
-TAIL = [  # name, z0, z1, half width, y0, y1 (the tail deepens and flattens from side to side behind the hips)
-    ("tail1", 0, 30, 9, 6, 28), ("tail2", 28, 58, 6, 7, 27), ("tail3", 56, 86, 4, 8, 26), ("tail4", 84, 108, 3, 9, 23)]
+TAIL = [  # name, z0, z1, half width, y0, y1 (behind the hips the tail flattens from side to side and stays deep: the
+    #          tall haemal arches under it make a blade to scull with, deepest just before the bend into the fluke)
+    ("tail1", 0, 30, 9, 5, 29), ("tail2", 28, 58, 6, 5, 28), ("tail3", 56, 86, 4, 5, 27), ("tail4", 84, 108, 3, 6, 25)]
+KEEL = {"tail2": (2, 3), "tail3": (1.5, 2), "tail4": (1.5, 3)}   # the keel of the haemal arches under the tail: half width, y0
 
 
 def tail(m, body):
@@ -144,6 +150,9 @@ def tail(m, body):
     for k, (n, z0, z1, hw, y0, y1) in enumerate(TAIL):
         b = m.bone(n, parent, (0, (y0 + y1) / 2, z0 + (2 if k else 0)), (REST[n], 0, 0))
         m.cube(b, (-hw, y0, z0), (hw, y1, z1), name=n)
+        if n in KEEL:
+            kw, ky = KEEL[n]
+            m.cube(b, (-kw, ky, z0 + 2), (kw, y0, z1 - 1), name=n + "_keel", faces=OUT("up"))
         parent = b
     # the fluke: the spine bends down into the lower lobe (bone inside it), the soft upper lobe rises behind
     fl = m.bone("fluke", parent, (0, 16, 106), (REST["fluke"], 0, 0))
@@ -151,10 +160,10 @@ def tail(m, body):
     # the crescent, each lobe a broad root and a narrower tip swept back: the lower (the spine runs down inside it)
     # angled down and back, the upper (soft, no bone) up and back
     lo, up = dict(rot=(-58, 0, 0), origin=(0, 12, 108)), dict(rot=(36, 0, 0), origin=(0, 20, 108))
-    m.cube(fl, (-1, -8, 104), (1, 12, 116), name="lower_lobe", mat="fin", **lo)
-    m.cube(fl, (-1, -15, 106), (1, -8, 113), name="lower_tip", mat="fin", **lo)
-    m.cube(fl, (-1, 20, 104), (1, 35, 115), name="upper_lobe", mat="fin", **up)
-    m.cube(fl, (-1, 35, 106), (1, 41, 112), name="upper_tip", mat="fin", **up)
+    m.cube(fl, (-1, -10, 104), (1, 12, 117), name="lower_lobe", mat="fin", **lo)
+    m.cube(fl, (-1, -18, 106), (1, -10, 114), name="lower_tip", mat="fin", **lo)
+    m.cube(fl, (-1, 20, 104), (1, 37, 116), name="upper_lobe", mat="fin", **up)
+    m.cube(fl, (-1, 37, 106), (1, 44, 113), name="upper_tip", mat="fin", **up)
 
 
 def build(sex="male", saddle_on=True):
@@ -162,13 +171,14 @@ def build(sex="male", saddle_on=True):
     root = m.bone("root", None, (0, 0, 0))
     body = m.bone("body", root, (0, 17, -40))
     # the trunk: a long barrel, deepest at the middle, the chest narrowing to the neck and the hips to the tail
-    m.cube(body, (-12, 3, -64), (12, 31, -18), name="trunk")
-    m.cube(body, (-13, 9, -58), (13, 26, -26), name="flank")          # the widest part, so the barrel reads round
-    m.cube(body, (-10, 5, -88), (10, 29, -64), name="chest")
-    m.cube(body, (-10, 6, -18), (10, 29, 2), name="hips")
-    m.cube(body, (-9, 1, -60), (9, 3, -22), name="belly", mat="belly")
-    m.cube(body, (-8, 31, -60), (8, 33, -24), name="back", faces=OUT("down"))
-    m.cube(body, (-7, 29, -86), (7, 30, -64), name="chest_top", faces=OUT("down"))
+    m.cube(body, (-13, 2, -64), (13, 32, -18), name="trunk")
+    m.cube(body, (-14, 8, -58), (14, 27, -26), name="flank")          # the widest part, so the barrel reads round
+    m.cube(body, (-11, 4, -88), (11, 30, -64), name="chest")
+    m.cube(body, (-10, 5, -18), (10, 29, 2), name="hips")
+    m.cube(body, (-10, 0, -60), (10, 2, -22), name="belly", mat="belly")
+    m.cube(body, (-9, 32, -60), (9, 34, -24), name="back", faces=OUT("down"))
+    m.cube(body, (-5, 34, -52), (5, 35, -32), name="hump", faces=OUT("down"))   # the high point of the back, over the ribs
+    m.cube(body, (-8, 30, -86), (8, 31, -64), name="chest_top", faces=OUT("down"))
     m.cube(body, (-7, 29, -18), (7, 30, 0), name="hips_top", faces=OUT("down"))
     neck(m, body)
     flippers(m, body)
@@ -195,18 +205,18 @@ def saddle(m, body):
     it to slip on), a loop of cord in front of the pad to hold on to as it dives, and two floats of sealed swim bladder
     tied at the sides: the air the rider breathes when it goes under (why a rider does not drown on it)."""
     sd = m.bone("saddle", body, (0, 31, -74))
-    m.cube(sd, (-8, 30, -82), (8, 32, -66), name="pad", mat="pad")
-    m.cube(sd, (-6, 32, -80), (6, 33, -71), name="seat", mat="pad", faces=OUT("down"))
-    m.cube(sd, (-5, 32, -71), (5, 35, -68), name="cantle", mat="pad", faces=OUT("down"))
+    m.cube(sd, (-9, 31, -82), (9, 33, -66), name="pad", mat="pad")
+    m.cube(sd, (-6, 33, -80), (6, 34, -71), name="seat", mat="pad", faces=OUT("down"))
+    m.cube(sd, (-5, 33, -71), (5, 36, -68), name="cantle", mat="pad", faces=OUT("down"))
     # the girth: round the chest, a turn of cord on each side and one under
-    m.pair(sd, sd, (10, 6, -70), (11, 30, -68), name="girth", mat="kelp", faces=OUT("west"))
-    m.cube(sd, (-10, 4, -70), (10, 5, -68), name="girth_under", mat="kelp", faces=OUT("up"))
+    m.pair(sd, sd, (11, 5, -70), (12, 31, -68), name="girth", mat="kelp", faces=OUT("west"))
+    m.cube(sd, (-11, 3, -70), (11, 4, -68), name="girth_under", mat="kelp", faces=OUT("up"))
     # the hand loop: two cords from the pad to a bone toggle ahead of it
-    m.pair(sd, sd, (2, 32, -88), (3, 33, -82), name="hand_cord", mat="kelp", faces=OUT("west", "down"))
-    m.cube(sd, (-3, 32, -90), (3, 34, -88), name="toggle", mat="toggle")
+    m.pair(sd, sd, (2, 33, -88), (3, 34, -82), name="hand_cord", mat="kelp", faces=OUT("west", "down"))
+    m.cube(sd, (-3, 33, -90), (3, 35, -88), name="toggle", mat="toggle")
     # the floats: sealed bladders lashed on the flanks behind the pad, a cord round each
-    m.pair(sd, sd, (11, 18, -80), (15, 26, -67), name="float", mat="float")
-    m.pair(sd, sd, (10.5, 21, -75), (15.5, 22, -73), name="float_tie", mat="kelp", faces=OUT("down", "up"))
+    m.pair(sd, sd, (12, 18, -80), (16, 26, -67), name="float", mat="float")
+    m.pair(sd, sd, (11.5, 21, -75), (16.5, 22, -73), name="float_tie", mat="kelp", faces=OUT("down", "up"))
 
 
 def saddle_px(t):
@@ -244,7 +254,7 @@ CELL = 4.0
 def line_y(z):
     """the countershading line in model px (rest pose), along the body: just under the middle of the flank, dipping
     behind the flippers and rising toward the tail, wandering slowly (never a straight band along a cube edge)"""
-    base = 16.0 if z < 0 else 16.0 - 0.012 * z
+    base = 13.0 if z < 0 else 13.0 - 0.02 * z
     if z < -100: base = 14.5                                   # on the head: the line is the mouth
     return base + 1.7 * math.sin(z * 0.061 + 0.6) + 0.9 * math.sin(z * 0.17 + 1.3) + 0.5 * math.sin(z * 0.43 + 2.1)
 
@@ -301,6 +311,51 @@ def scar_at(t, p):
     return None
 
 
+# the pattern (its own, a hypothesis like every colour of an extinct animal): broken dark bands across the back, made of
+# whole scales, like the bands of a young monitor or a tiger shark's bars: they break the long outline seen from the
+# side and from above, which is what countershading alone cannot do for an animal that hunts from below. On the male
+# the bands run down to the countershading line; on the female they break into two rows of blotches. Behind the eye a
+# dark stripe runs back over the jaw muscles to the neck with a pale line under it (the postocular stripe of the
+# monitors, its nearest living kin).
+def _bars():
+    out, z, i = [], -98.0, 0
+    while z < 100:
+        w = 4 + h32(i, 61) % 3
+        out.append((z, z + w, i))
+        z += w + 9 + h32(i, 62) % 7; i += 1
+    return out
+
+
+BARS = _bars()
+
+
+def bar_at(z, y, ly, cid, p):
+    """'' outside a band, else 'bar' (the dark band) for this pixel; the edge is ragged by whole scales"""
+    zz = z + (h32(cid[0], cid[1], 63) % 3 - 1)
+    for z0, z1, i in BARS:
+        if z0 <= zz < z1:
+            # the tail end fades: the last bands stop higher up the flank
+            fade = max(0.0, (z - 40) * 0.06)
+            low = ly + 3 + fade + (h32(i, 64) % 3)
+            if y < low: return ""
+            if not p["male"]:
+                # the female's band breaks into two blotches: a gap across the middle of the flank
+                mid = (low + 30) / 2 + (h32(i, 65) % 3 - 1)
+                if abs(y - mid) < 1.6: return ""
+            return "bar"
+    return ""
+
+
+def stripe_at(n, f, z, y):
+    """the postocular stripe: 'dark', 'pale' or ''"""
+    if n not in ("cranium", "temporal", "neck") or f not in ("east", "west") or not (-109.5 < z < -93):
+        return ""
+    sy = 20.5 - 0.06 * (z + 109)
+    if sy - 1 <= y < sy + 1: return "dark"
+    if sy - 2 <= y < sy - 1: return "pale"
+    return ""
+
+
 def body_px(t, p):
     c = t.cube; n = c["name"]; f = t.face
     u_, w_ = skin.face_uv_coords(t)
@@ -316,26 +371,27 @@ def body_px(t, p):
     kind, cid = scales(u_, w_, cell, seed)
     if f == "up":
         # the top: the spine's line a step lighter where the light falls, the rest dark
-        cu, cv = _cell_centre(cid, cell)
-        tone = "d3" if abs(cu if n not in HEADP else t.L[0]) < 2.5 and n not in HEADP else "d2"
-        return dark_px(p, kind, cid, seed, tone)
+        if n not in HEADP and n not in JAW and bar_at(t.L[2], 99, 0, cid, p):
+            return dark_px(p, kind, cid, seed, "d0" if p["male"] or abs(t.L[0]) > 2 else "d1")
+        return dark_px(p, kind, cid, seed, "d2")
     y = t.L[1]; z = t.L[2] if f in ("east", "west") else (c["from"][2] if f == "north" else c["to"][2])
     if n in JAW:
         # the lower jaw: the scaly lip dark along the top (the upper teeth hang against it), pale below
         if y > 11: return p["d1"] if y > 13 else dark_px(p, kind, cid, seed, "d2")
         return belly_px(p, u_, w_, seed)
     ly = line_y(z)
-    # tone per whole scale: the scale's centre decides which side of the line it falls (no half scales)
-    cu, cv = _cell_centre(cid, cell)
-    yc = cv if f in ("east", "west") else y
+    st = stripe_at(n, f, z, y)
+    if st: return p["d0"] if st == "dark" else p["d4"]
     # the line is drawn per pixel, sharp like a shark's, and wanders slowly with the body (scales cross it)
     if y < ly:
         return belly_px(p, u_, w_, seed) if f in ("east", "west") else p["b1"]
     if y < ly + 1.0:
-        return dark_px(p, kind, cid, seed, "d3")       # the edge row: a step lighter, the line soft but sharp
+        return dark_px(p, kind, cid, seed, "d4")       # the edge row: a step lighter, the line soft but sharp
     if f in ("north", "south"):
         return dark_px(p, kind, cid, seed, "d1")
-    return dark_px(p, kind, cid, seed, "d2")
+    if n not in HEADP and bar_at(z, y, ly, cid, p):
+        return dark_px(p, kind, cid, seed, "d1")
+    return dark_px(p, kind, cid, seed, "d3")
 
 
 def fin_px(t, p):
@@ -346,15 +402,15 @@ def fin_px(t, p):
         if f == "north": return p["d0"]
         if f == "south": return p["d2"]
         zr = t.rel[2]
-        if zr > 0.75: return p["d3"]                         # the thin trailing edge
+        if zr > 0.75: return p["d4"]                         # the thin trailing edge, pale
         if n == "lower_lobe" and zr < 0.3: return p["d2"]    # the spine inside the lower lobe
         return p["d1"]
     if f == "down": return p["b1"] if t.rel[0] < 0.85 else p["b0"]
     if f == "up":
         zr = t.rel[2]
         if zr < 0.2: return p["d0"]                          # the leading edge
-        if zr > 0.8: return p["d3"]                          # the trailing edge
-        if n == "fore_blade" and t.j == t.h // 2: return p["d1"]   # the long fingers under the skin
+        if zr > 0.8: return p["d4"]                          # the trailing edge, pale (it shows the paddle's shape)
+        if n in ("fore_blade", "fore_mid") and t.j in (t.h // 3, 2 * t.h // 3): return p["d1"]   # the long fingers
         return p["d2"]
     return p["d1"]
 
@@ -372,12 +428,13 @@ def teeth_px(t, p):
     if mat == "teeth":
         k, short = _tooth_at(col, 31)
         if row == 0: return p["d0"]
-        if row == 1: return (p["tooth"] if k == 0 else p["tooth2"]) if k in (0, 1) else None
-        if row == 2: return p["tooth"] if k == 0 and not short else None
+        if row in (1, 2): return (p["tooth"] if k == 0 else p["tooth2"]) if k in (0, 1) and not (short and row == 2 and k == 1) else None
+        if row == 3: return p["tooth"] if k == 0 and not short else None
         return None
     k, short = _tooth_at(col, 47)
     if row == t.h - 1: return p["gum"]
-    if row == t.h - 2: return (p["tooth"] if k == 0 else p["tooth2"]) if k in (0, 1) and not (short and k == 1) else None
+    if row == t.h - 2: return (p["tooth"] if k == 0 else p["tooth2"]) if k in (0, 1) else None
+    if row == t.h - 3: return p["tooth"] if k == 0 and not short else None
     return None
 
 

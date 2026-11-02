@@ -121,7 +121,7 @@ def stranded(t):
     # the fluke folds over flat on the ground (the lower lobe would go into it)
     add(p, "fluke", rot=(-58, 0, 0))
     add(p, "tail4", rot=(-4, 0, 0))
-    add(p, "root", pos=(0, -1.0, 0))
+    add(p, "root", pos=(0, 0.35, 0))
     add(p, "body", rot=(0, -2 * s, 1.5 * s))
     head = max(0.0, math.sin(W(t, T) + 0.8))
     add(p, "neck", rot=(6 * head, 3 * s, 0))
@@ -366,7 +366,7 @@ def sleep(t):
     for i, b in enumerate(TAILS):
         add(p, b, rot=(-1, 2.0 * s * (i + 1) / 3, 0))
     add(p, "fluke", rot=(-58, 0, 0))
-    add(p, "root", pos=(0, -0.3, 0))
+    add(p, "root", pos=(0, 0.75, 0))
     add(p, "throat", scale=(1, 1 + 0.05 * math.sin(W(t, T / 2)), 1))
     return p
 
@@ -376,7 +376,7 @@ def wake_sleep(t):
     p = {}
     r = f(tr((0, 1), (0.5, 0.6), (2.0, 0)), t)
     add(p, "body", rot=(-2 * r, 0, 0))
-    add(p, "root", pos=(0, -1.0 * r, 0))
+    add(p, "root", pos=(0, 0.75 * r, 0))
     add(p, "fluke", rot=(-58 * r, 0, 0))
     flip(p, "f", (0, 10 * r, 12 * r))
     flip(p, "h", (0, 8 * r, 12 * r))
@@ -412,6 +412,43 @@ def tame(t):
     return p
 
 
+def gape(t):
+    """the warning: a wild adult turns broadside-on to whoever comes too close in the water and opens the jaws as wide
+    as they go, the front of the jaw bowing down on its own joint so the whole double hinge shows, the throat
+    ballooning and the head tilted to bare the teeth on the roof of the mouth; held, a slow sideways sweep of the head,
+    then a clap shut (the gape display of the monitors, its kin, on a jaw no lizard alive has)"""
+    p = {}
+    g = f(tr((0, 0), (0.45, 1, ease_out), (1.9, 1), (2.05, 0, ease_in), (2.8, 0)), t)
+    jaw(p, 44 * g, 18 * g)
+    add(p, "throat", scale=(1.0 + 0.15 * g, 1.0 + 0.5 * g, 1.0))
+    sweep = window(t, 0.5, 1.9, 0.25) * math.sin(W(t - 0.5, 1.4))
+    add(p, "neck", rot=(7 * g, 14 * sweep, 12 * g))
+    add(p, "skull", rot=(4 * g, 0, 6 * g))
+    add(p, "body", rot=(3 * g, 0, -5 * g))
+    flip(p, "f", (0, 10 * g, 20 * g))
+    flip(p, "h", (0, 6 * g, 12 * g))
+    wave(p, t, 1.4, 0.5)
+    return p
+
+
+def spyhop(t):
+    """it rises with the head straight up out of the water and hangs there, the flippers sculling, turning the head
+    slowly to one side and the other to look over the surface, then slides back under (a whale's habit, the hypothesis
+    of the study for an air-breathing hunter that hunts what is on top of the water)"""
+    p = {}
+    up = f(tr((0, 0), (0.8, 1, ease_out), (3.3, 1), (4.0, 0, ease_in)), t)
+    add(p, "body", rot=(62 * up, 0, 0))
+    add(p, "root", pos=(0, 12 * up, 4 * up))
+    look = f(tr((0, 0), (1.0, 0), (1.6, 28), (2.3, 28), (2.9, -24), (3.3, -24), (3.7, 0)), t)
+    add(p, "neck", rot=(-18 * up, 0.6 * look, 0))
+    add(p, "skull", rot=(-10 * up, 0.4 * look, 0))
+    for i, b in enumerate(TAILS):
+        add(p, b, rot=(-6 * up * (i > 1), 5 * up * math.sin(W(t, 1.2) - LAG[i]), 0))
+    flip(p, "f", (0, 12 * up * math.sin(W(t, 1.2)), 24 * up))
+    flip(p, "h", (0, 8 * up * math.sin(W(t, 1.2) + 1.0), 14 * up))
+    return p
+
+
 ANIMS = {
     "idle": (idle, 4.0, True, "Parado", "paira na água: as nadadeiras remam devagar, fora de compasso, a cauda balança pouco"),
     "swim": (swim, 1.6, True, "Movimento", "nado de cruzeiro: o tronco firme, a cauda bate e a meia-lua faz o trabalho"),
@@ -424,6 +461,8 @@ ANIMS = {
     "swallow": (swallow, 2.4, False, "Só dele", "engole em etapas: a mandíbula de duas dobras e os dentes do céu da boca puxam a presa"),
     "shake": (shake, 1.4, False, "Só dele", "presa grande demais: três sacudidas de cabeça, o corpo rolando contra"),
     "spar": (spar, 2.6, False, "Só dele", "dois machos: a boca escancarada, a cabeça de lado, a mordida na cabeça do rival"),
+    "gape": (gape, 2.8, False, "Só dele", "o aviso: escancara a boca de lado para quem chega perto, a frente da mandíbula dobrando na junta, a garganta inchada"),
+    "spyhop": (spyhop, 4.0, False, "Só dele", "põe a cabeça de pé para fora d'água e olha em volta, devagar, antes de afundar de novo"),
     "birth": (birth, 3.6, False, "Só dele", "a fêmea dá à luz no mar, a cauda do filhote primeiro: o corpo curva, a base da cauda força"),
     "attack": (attack, 0.8, False, "Combate", "a mordida: a frente da mandíbula dobra na junta do meio, o bote, o fechar"),
     "hurt": (hurt, 0.5, False, "Combate", "ao levar dano"),

@@ -24,7 +24,7 @@ uma cor livre quando for refeita.
 | Pachycephalosaurus | mel listrado (macho), mel escuro (fêmea), listras creme inclinadas, coroa clara na cúpula do macho | mel/ocre |
 | Parasaurolophus | ruivo de impala (macho) ou pardo-rosado (fêmea), barriga creme, bandeira preta de alarme na cauda, crista escurecendo até a ponta no macho | ruivo/laranja |
 | Ankylosaurus | jade escuro: pele cinza-azulada (petróleo acinzentado) sob placas de chifre escuro, quilhas claras, barriga cinza-esverdeada clara; fêmea com a pele um pouco mais cinza e o chifre mais quente | cinza-petróleo |
-| Mosasaurus | verde-garrafa: dorso verde-garrafa fundo sobre barriga marfim, contrassombreado com linha nítida e ondulada; o macho com cicatrizes de mordida na cabeça, a fêmea lisa e um pouco mais cinza; olho dourado | verde-garrafa |
+| Mosasaurus | verde-garrafa: dorso verde-garrafa sobre barriga marfim, contrassombreado com linha nítida e ondulada; faixas escuras quebradas sobre o dorso (no macho descem até a linha; na fêmea viram duas fileiras de manchas), listra escura atrás do olho com uma linha clara embaixo, bordas claras nas nadadeiras; o macho com cicatrizes de mordida na cabeça, a fêmea um pouco mais cinza; olho dourado | verde-garrafa |
 
 ## Colisões que ainda existem (02/11/2026)
 
@@ -52,8 +52,8 @@ uma cor livre quando for refeita.
   já está tomado pelo Parasaurolophus, então a pele ficou no cinza-petróleo. O Mosasaurus, último do pacote 1.5, não
   pode usar cinza-petróleo nem azul-escuro.
 - Mosasaurus: macho e fêmea medidos contra machos e fêmeas de todos (colourcheck.check com against=("male","female")).
-  Nenhum abaixo de 10: o mais perto é o Deinosuchus antigo (10,7 do macho, 10,4 da fêmea); dos refeitos, o
-  Velociraptor fica a 12,0 da fêmea. O primeiro tom, "breu" (preto-sépia sobre marfim), foi descartado: 3,4 do
+  Nenhum abaixo de 10: o mais perto é o Deinosuchus antigo (10,9 do macho, 10,7 da fêmea, já com as faixas da
+  revisão 1.5); dos refeitos, o Pteranodon fica a 12,0 da fêmea. O primeiro tom, "breu" (preto-sépia sobre marfim), foi descartado: 3,4 do
   Velociraptor e 4,4 do Pteranodon. Sobrava pouco escuro livre (azul-escuro do Galimimo, cinza-petróleo do
   Anquilossauro, ameixa do Tricerátops); o verde-garrafa saiu de uma busca em Lab pelo ponto mais longe de todos. O
   pigmento escuro no dorso e a barriga clara vêm da pele fóssil de mosassauro com eumelanina (Lindgren et al. 2014).

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 /**
- * The hand-made Mosasaurus rig (tools/modelgen/handmade/mosasaurus, its own study and 23 animations), the first animal
+ * The hand-made Mosasaurus rig (tools/modelgen/handmade/mosasaurus, its own study and 25 animations), the first animal
  * of the sea remade by hand. Its touch is the AMBUSH FROM BELOW of an air-breathing lizard of the sea. What it adds over
  * a plain {@link SwimmingDinosaur}:
  * <ul>
@@ -47,6 +48,9 @@ import software.bernie.geckolib.core.object.PlayState;
  *       leap with the jump key at the surface;</li>
  *   <li>it swallows small prey in steps (the pterygoid ratchet, "swallow") and shakes what is too big ("shake"); two
  *       wild males spar with their jaws now and then, without harm ("spar");</li>
+ *   <li>it warns before it hunts: a wild adult that is not hunting turns its gape on whoever swims or rows within 10
+ *       blocks ("gape", the whole double-hinged jaw open, the throat ballooning); and now and then at the surface it
+ *       puts its head straight up out of the water and looks round ("spyhop");</li>
  *   <li>live birth, no egg: a calf is born at sea next to its mother's tail ("birth") and goes up for its first breath;
  *       born to tame parents, it is its owner's. Wild calves keep near their mother;</li>
  *   <li>its own taming: only a calf eats from a stranger's hand, and not with its mother near: she comes to defend it.
@@ -73,6 +77,8 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
     private int ambushCooldown;
     private int breachCooldown;
     private int sparCooldown;
+    private int gapeCooldown;
+    private int spyhopCooldown;
     /** Client of the rider: the leap asked with the jump key, applied in travel. */
     private float breachPower;
     /** Ticks after a breach: the splash when it comes back into the water. */
@@ -80,16 +86,19 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
 
     protected Mosasaurid(EntityType<? extends Mosasaurid> type, Level level) {
         super(type, level);
-        this.breathTimer = 600 + level.getRandom().nextInt(1800);
-        this.breachCooldown = 1200;
+        // the first breath and the first leap come soon after it appears (seen within a minute), then every 1-2 and
+        // 1.5-3 minutes
+        this.breathTimer = 200 + level.getRandom().nextInt(400);
+        this.breachCooldown = 300;
         this.sparCooldown = 1200;
+        this.spyhopCooldown = 1200 + level.getRandom().nextInt(1200);
     }
 
     // ------------------------------------------------------------------ animations
 
     @Override
     protected String[] extraActions() {
-        return new String[]{"ambush", "breach", "breathe", "swallow", "shake", "spar", "birth"};
+        return new String[]{"ambush", "breach", "breathe", "swallow", "shake", "spar", "birth", "gape", "spyhop"};
     }
 
     @Override
@@ -151,6 +160,8 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
         this.goalSelector.addGoal(1, new AmbushGoal());
         this.goalSelector.addGoal(3, new BreatheGoal());
         this.goalSelector.addGoal(5, new StayByMotherGoal());
+        // the sea animals had no BreedGoal (1.5 test: a fed tame couple never bred): two in love swim together
+        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
     }
 
     /** At the surface: swimming in the top block of water, or in a boat. */
@@ -331,7 +342,7 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
         @Override
         public void stop() {
             Mosasaurid m = Mosasaurid.this;
-            m.breathTimer = 2400 + m.random.nextInt(1200);
+            m.breathTimer = 1200 + m.random.nextInt(1200);
         }
 
         @Override
@@ -429,6 +440,12 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
         if (this.sparCooldown > 0) {
             this.sparCooldown--;
         }
+        if (this.gapeCooldown > 0) {
+            this.gapeCooldown--;
+        }
+        if (this.spyhopCooldown > 0) {
+            this.spyhopCooldown--;
+        }
         if (this.airborne > 0) {
             this.airborne--;
             if (this.isInWater() && this.airborne < 30) {
@@ -442,12 +459,48 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
         if (this.isFemale()) {
             this.guardCalves();
         }
-        if (this.getTarget() == null && this.breachCooldown <= 0 && this.isSated() && this.random.nextInt(60) == 0) {
+        if (this.getTarget() == null && this.breachCooldown <= 0 && (this.isSated() || this.getHunger() >= HUNTS_BELOW)
+                && this.random.nextInt(15) == 0) {
             this.wildBreach();
         }
         if (!this.isFemale() && this.getTarget() == null && this.sparCooldown <= 0 && this.random.nextInt(45) == 0) {
             this.spar();
         }
+        if (this.getTarget() == null && this.gapeCooldown <= 0) {
+            this.gapeWarning();
+        }
+        if (this.getTarget() == null && this.spyhopCooldown <= 0 && this.random.nextInt(90) == 0) {
+            this.spyhop();
+        }
+    }
+
+    /** A wild adult that is not hunting: whoever swims or rows within 10 blocks gets the gape first, broadside on. */
+    private void gapeWarning() {
+        Player p = this.level().getNearestPlayer(this, 10.0D);
+        if (p == null || p.isCreative() || p.isSpectator() || !(p.isInWater() || p.getVehicle() instanceof Boat)) {
+            return;
+        }
+        this.getNavigation().stop();
+        this.getLookControl().setLookAt(p, 30.0F, 30.0F);
+        this.triggerAnim(ACTION_CONTROLLER, "gape");
+        this.playSound(this.getAmbientSound(), this.getSoundVolume(), 0.75F);
+        this.gapeCooldown = 600 + this.random.nextInt(600);
+    }
+
+    /** At the surface, now and then: the head straight up out of the water, looking round (at a player, if one is near). */
+    private void spyhop() {
+        double surface = this.surfaceAbove();
+        if (Double.isNaN(surface) || this.getY() + this.getBbHeight() < surface - 2.0D) {
+            return;
+        }
+        this.spyhopCooldown = 2400 + this.random.nextInt(2400);
+        this.getNavigation().stop();
+        Player p = this.level().getNearestPlayer(this, 24.0D);
+        if (p != null) {
+            this.getLookControl().setLookAt(p, 30.0F, 30.0F);
+        }
+        this.triggerAnim(ACTION_CONTROLLER, "spyhop");
+        this.spray(4);
     }
 
     /** A wild mother: a player near one of her calves, in the water or in a boat, is driven off. */
@@ -480,7 +533,7 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
         if (!this.deepUnder(land.add(0.0D, 1.0D, 0.0D), 5)) {
             return;
         }
-        this.breachCooldown = 2400 + this.random.nextInt(2400);
+        this.breachCooldown = 1800 + this.random.nextInt(1800);
         this.leap(1.0F);
     }
 

@@ -20,6 +20,7 @@ painted on the animal), and its marking comes from its own study (docs/CORES.md)
   pachycephalosaurus  honey skin with slanted cream stripes
   parasaurolophus     impala: russet back, a dark line, then the cream belly
   ankylosaurus        dark horn osteoderms with pale keels on blue-grey skin
+  mosasaurus          small keeled scales in bottle green, crossed by the dark broken bands of its back
 
 The hide item keeps the stretched-pelt outline every hide in the mod has (that is what tells a player "hide"), and
 its inside is cut from the species' own rug, with the rolled edge and the outline on top.  The alpha T. rex rugs
@@ -60,12 +61,13 @@ SPECIES = {
     "pachycephalosaurus": ("fine_scales", "slant_stripes", ["#dccaa3"]),
     "parasaurolophus": ("fine_scales", "impala", ["#452013", "#ac987a"]),
     "ankylosaurus": ("osteoderms", "horn", ["#26211d", "#7e877b"]),
-    "mosasaurus": ("fine_scales", None, []),
+    "mosasaurus": ("fine_scales", "broken_bands", ["#0c2816"]),
 }
 
 
 # species whose five tones are picked by hand from the skin (snapped to it) instead of the luminance spread
-RAMP = {"gallimimus": ["#1d202d", "#37323d", "#384258", "#656873", "#9c9a96"]}
+RAMP = {"gallimimus": ["#1d202d", "#37323d", "#384258", "#656873", "#9c9a96"],
+        "mosasaurus": ["#0a1a10", "#0e3a1f", "#1a4f2f", "#2f6744", "#4a845d"]}   # the back only: the ivory belly made it speckled
 
 
 def skin_colours(sid):
@@ -155,6 +157,14 @@ def rug(sid):
         for x in range(N):
             if rnd.random() < 0.5:
                 put(g, x, 10, 20)
+    elif mark == "broken_bands":  # the Mosasaurus' dark bands across the back, made of whole scales, broken here and there
+        for y in range(N):
+            for x in range(N):
+                k = (x + (1 if (y // 3) % 2 else 0)) % 8
+                if k in (0, 1, 2) and not (y % 7 == 3 and k == 1):
+                    g[y][x] = 20 if g[y][x] >= 4 else 30
+                elif g[y][x] < 2:
+                    g[y][x] += 1          # between the bands the green a step lighter, so the bands read
     elif mark == "horn":  # osteoderms in dark horn, keels pale, skin between them stays blue-grey
         for y in range(N):
             for x in range(N):

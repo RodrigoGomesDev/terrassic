@@ -671,7 +671,7 @@ SPECIES = [
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.45, 2.0, 400), xp=40, run=0.04,
       prey="e instanceof WaterAnimal || e instanceof Turtle || e instanceof Pteranodon",
       prey_imports=["net.minecraft.world.entity.animal.WaterAnimal", "net.minecraft.world.entity.animal.Turtle"],
-      tame="baby", live_young=True, rideable=True, ride_offset=2.2, ride_forward=4.75, ride_speed=1.0, dive=1.0,
+      tame="baby", live_young=True, rideable=True, ride_offset=2.3, ride_forward=4.75, ride_speed=1.0, dive=1.0,
       saddle="MOSASAURUS_SADDLE", rig="Mosasaurid"),
  dict(id="tylosaurus", cls="Tylosaurus", base="SwimmingDinosaur",
       doc="Tylosaurus proriger - the top predator of the Western Interior Seaway before the Mosasaurus: slender, 13 m, small flippers and a toothless reinforced rostrum it rams prey with (the hit slows and dazes). Wild only for now (knockout taming in v0.7).",
