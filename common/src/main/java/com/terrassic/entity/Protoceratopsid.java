@@ -174,6 +174,11 @@ public abstract class Protoceratopsid extends HerbivoreDinosaur {
             this.noonNap = NOON_NAP;
             return;
         }
+        // standing on grass or dirt it crops the low plants now and then ("graze": head down, beak clipping ferns)
+        if (!sand && this.random.nextInt(500) == 0 && this.level().getBlockState(below).is(BlockTags.DIRT)) {
+            triggerAnim(ACTION_CONTROLLER, "graze");
+            return;
+        }
         if (this.random.nextInt(700) != 0) {
             return;
         }
