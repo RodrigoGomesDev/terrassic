@@ -176,7 +176,7 @@ public class PocketGuideScreen extends Screen {
     /** %key:name% -> the key the player has bound for it. */
     private static String keys(String text) {
         Minecraft mc = Minecraft.getInstance();
-        for (String name : new String[]{"use", "attack", "jump", "sneak", "inventory", "dino_screen", "descend"}) {
+        for (String name : new String[]{"use", "attack", "jump", "sneak", "inventory", "dino_screen", "descend", "whistle"}) {
             String token = "%key:" + name + "%";
             if (!text.contains(token)) {
                 continue;
@@ -188,6 +188,7 @@ public class PocketGuideScreen extends Screen {
                 case "sneak" -> mc.options.keyShift;
                 case "inventory" -> mc.options.keyInventory;
                 case "dino_screen" -> DinoControls.DINO_SCREEN;
+                case "whistle" -> DinoControls.WHISTLE;
                 default -> DinoControls.DESCEND;
             };
             text = text.replace(token, "[" + key.getTranslatedKeyMessage().getString() + "]");

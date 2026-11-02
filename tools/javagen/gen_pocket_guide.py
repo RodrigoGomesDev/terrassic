@@ -137,16 +137,22 @@ TOPICS = [
         "pt_br": ("Ordens",
                   "Agache e use a mão vazia no seu dino para abrir a tela dele; montado, use %key:inventory%.\n"
                   "Seguir, Esperar, Vagar (anda perto de onde você mandou) e Pare (larga a briga por 10 segundos).\n"
+                  "Apito: segure %key:whistle%, aponte com o mouse e solte. A ordem vale para todos os seus dinos a até 24 blocos. "
+                  "Atacar meu alvo manda todos atrás do bicho que você mira.\n"
                   "Modo: Passivo nunca ataca; Neutro defende você e a si; Agressivo vai atrás de monstros e dinos selvagens por perto.\n"
                   "Seus dinos nunca atacam outros bichos seus."),
         "en_us": ("Orders",
                   "Sneak and use an empty hand on your dinosaur to open its screen; while riding, press %key:inventory%.\n"
                   "Follow, Wait, Wander (it roams near where you told it) and Stop (it drops the fight for 10 seconds).\n"
+                  "Whistle: hold %key:whistle%, point with the mouse and let go. The order goes to all your dinosaurs within 24 blocks. "
+                  "Attack my target sends them all after the creature you aim at.\n"
                   "Stance: Passive never attacks; Neutral defends you and itself; Aggressive goes after monsters and wild dinosaurs nearby.\n"
                   "Your dinosaurs never attack your other animals."),
         "es_es": ("Órdenes",
                   "Agáchate y usa la mano vacía en tu dinosaurio para abrir su pantalla; montado, pulsa %key:inventory%.\n"
                   "Seguir, Esperar, Deambular (anda cerca de donde lo dejaste) y Alto (deja la pelea durante 10 segundos).\n"
+                  "Silbato: mantén %key:whistle%, apunta con el ratón y suelta. La orden vale para todos tus dinosaurios a 24 bloques. "
+                  "Atacar mi objetivo los manda a todos a por la criatura que apuntas.\n"
                   "Modo: Pasivo nunca ataca; Neutral te defiende a ti y a sí mismo; Agresivo va a por monstruos y dinosaurios salvajes cercanos.\n"
                   "Tus dinosaurios nunca atacan a tus otros animales."),
     }),

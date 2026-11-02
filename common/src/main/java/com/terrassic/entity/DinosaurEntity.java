@@ -2150,6 +2150,27 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.navigation.stop();
     }
 
+    /**
+     * The whistle's "attack my target" (1.5, entity/Whistle): it goes for the target even where its neutral stance
+     * would stay out (a player, someone's tamed animal) and even right after a "Stop". It refuses in the passive
+     * stance, while waiting, as a young one, when its species flees instead of fighting, against its owner's own
+     * animals, and as a swimmer when the target is out of the water. True when it took the target.
+     */
+    public boolean orderAttack(LivingEntity target) {
+        if (target == null || target == this || !target.isAlive() || this.isOrderedToSit() || this.isBaby()
+                || !this.fightsInStance() || this.isKnockedOut() || this.isSleeping()
+                || this instanceof SwimmingDinosaur && !target.isInWater()) {
+            return false;
+        }
+        this.calmUntil = Long.MIN_VALUE;
+        if (!this.canAttack(target)) {
+            return false;
+        }
+        this.setTarget(target);
+        this.setAggressive(true);
+        return true;
+    }
+
     /** Within the ten seconds after a "Stop". */
     public boolean isCalmed() {
         return this.level().getGameTime() < this.calmUntil;

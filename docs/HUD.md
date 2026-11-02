@@ -146,11 +146,10 @@ da GUI. Na tela de opções do HUD, o botão "Tamanho" troca entre automático, 
 
 Os corações do modo compacto, a placa de nome, a Lupa, a tela do dino e o título da era ficam na escala da GUI.
 
-## Fica para uma versão própria: a roda do apito
+## Roda do apito (1.5)
 
-A roda do apito da prévia (segurar H: seguir, esperar, vagar por perto, atacar meu alvo, juntar o bando, ficar
-passivo, com "N dinos ouvem o apito") não é só HUD: quatro dessas ordens ainda não existem no jogo. Ela entra como uma
-versão própria, depois que o Rodrigo aprovar como cada ordem funciona.
+Entrou na 1.5, com as seis ordens da prévia e o mesmo desenho, na escala da GUI. Funcionamento e motivo da tecla H:
+docs/ORDENS.md, seção "Roda do apito".
 
 ## v0.14.5: F3 e Lupa
 

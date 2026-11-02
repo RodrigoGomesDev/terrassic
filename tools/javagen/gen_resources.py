@@ -795,6 +795,8 @@ def main():
     gen_leap.main()
     import gen_pocket_guide  # v1.1.2 (docs/AJUDA.md): the Pocket Guide's texts
     pocket_lang = gen_pocket_guide.build_lang()
+    import gen_whistle  # 1.5 (docs/ORDENS.md): the whistle wheel's texts
+    whistle_lang = gen_whistle.build_lang()
     for code in lang:
         lang[code].update(gen_blocks.LANG[code])
         lang[code].update(gen_science.LANG[code])
@@ -803,6 +805,7 @@ def main():
         lang[code].update(gen_rules.LANG[code])
         lang[code].update(gen_leap.LANG[code])
         lang[code].update(pocket_lang[code])
+        lang[code].update(whistle_lang[code])
     missing = set(lang["en_us"]) ^ set(lang["pt_br"]) | set(lang["en_us"]) ^ set(lang["es_es"])
     if missing:
         raise SystemExit(f"lang keys missing in some language: {sorted(missing)}")

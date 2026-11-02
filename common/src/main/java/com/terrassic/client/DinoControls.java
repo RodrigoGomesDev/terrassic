@@ -27,6 +27,8 @@ import org.lwjgl.glfw.GLFW;
  *   <li>{@link #DESCEND} (Z) dives a flyer; in the air sneak does the same (mixin/PlayerMixin keeps you in the
  *       saddle), on the ground it gets off.</li>
  * </ul>
+ * {@link #WHISTLE} (H), held, opens the whistle wheel (1.5, client/WhistleWheelScreen): one order for all your dinos
+ * that hear it. H was checked against popular mods (docs/ORDENS.md): only Mekanism uses it, for the MekaSuit HUD.
  * On foot, sneak + use with an empty hand on your dinosaur opens its screen. {@link #DINO_SCREEN} does the same for the
  * one you look at; it has no key by default (bind one in Controls if you like).
  */
@@ -36,6 +38,8 @@ public final class DinoControls {
             InputConstants.UNKNOWN.getValue(), CATEGORY);
     public static final KeyMapping DESCEND = new KeyMapping("key.terrassic.descend", InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_Z, CATEGORY);
+    public static final KeyMapping WHISTLE = new KeyMapping("key.terrassic.whistle", InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_H, CATEGORY);
 
     private DinoControls() {
     }
@@ -43,6 +47,7 @@ public final class DinoControls {
     public static void init() {
         KeyMappingRegistry.register(DINO_SCREEN);
         KeyMappingRegistry.register(DESCEND);
+        KeyMappingRegistry.register(WHISTLE);
         // before vanilla reads the keys of this tick, so the clicks taken here never reach it
         ClientTickEvent.CLIENT_PRE.register(DinoControls::tick);
     }
@@ -58,6 +63,15 @@ public final class DinoControls {
             flyer.riderDescending = mount == flyer && mc.screen == null && (DESCEND.isDown() || mc.options.keyShift.isDown());
         }
         if (mc.screen != null) {
+            return;
+        }
+        boolean whistle = false;
+        while (WHISTLE.consumeClick()) {
+            whistle = true;
+        }
+        if (whistle) {
+            // the wheel stays while the key is held and gives the order when it is let go
+            mc.setScreen(new WhistleWheelScreen());
             return;
         }
         while (DINO_SCREEN.consumeClick()) {
@@ -91,6 +105,13 @@ public final class DinoControls {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeVarInt(id);
         NetworkManager.sendToServer(DinoNetwork.ASK, buf);
+    }
+
+    /** Blows the whistle with an order of the wheel (network/DinoNetwork, entity/Whistle). */
+    static void whistle(String order) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeUtf(order);
+        NetworkManager.sendToServer(DinoNetwork.WHISTLE, buf);
     }
 
     private static void mount(String action) {
