@@ -977,7 +977,10 @@ def egg_blocks():
     from spino_extras import CUSTOM_EGGS as SPINO_EGGS
     from tri_extras import CUSTOM_EGGS as TRI_EGGS
     from galli_extras import CUSTOM_EGGS as GALLI_EGGS
-    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS}
+    from pachy_extras import CUSTOM_EGGS as PACHY_EGGS
+    from para_extras import CUSTOM_EGGS as PARA_EGGS
+    from anky_extras import CUSTOM_EGGS as ANKY_EGGS
+    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1508,6 +1511,12 @@ if __name__ == "__main__":
     tri_extras.main()   # the Triceratops' oval eggs under rotting leaves and its pack saddle
     import galli_extras
     galli_extras.main()   # the Gallimimus' speckled eggs in a ring on a gravel bar and its riding pad
+    import pachy_extras
+    pachy_extras.main()   # the Pachycephalosaurus' soft eggs among tree roots under needle litter
+    import para_extras
+    para_extras.main()    # the Parasaurolophus' round eggs in a raised mud crater under reeds, and its reed saddle
+    import anky_extras
+    anky_extras.main()    # the Ankylosaurus' leathery eggs half buried in a pit of forest loam, and its pack deck
     import armas
     armas.main()   # the dart's flight texture and the blowgun tube (docs/ARMAS.md)
     import pocket_guide

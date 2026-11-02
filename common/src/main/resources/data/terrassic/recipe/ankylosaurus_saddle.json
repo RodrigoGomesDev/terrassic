@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "PPP",
+    "LHL",
+    "C C"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:stick"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "H": {
+      "item": "terrassic:ankylosaurus_hide"
+    },
+    "C": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "terrassic:ankylosaurus_saddle"
+  }
+}

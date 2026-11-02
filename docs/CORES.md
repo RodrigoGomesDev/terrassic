@@ -21,6 +21,9 @@ uma cor livre quando for refeita.
 | Protoceratops | areia quente com selas ferrugem | areia |
 | Triceratops | ameixa: cinza-arroxeado, babado com faixa terracota no macho | roxo-acinzentado |
 | Gallimimus | grafite-azulado (macho) ou canela (fêmea), barriga e garganta giz, canelas rosadas | azul-preto |
+| Pachycephalosaurus | mel listrado (macho), mel escuro (fêmea), listras creme inclinadas, coroa clara na cúpula do macho | mel/ocre |
+| Parasaurolophus | ruivo de impala (macho) ou pardo-rosado (fêmea), barriga creme, bandeira preta de alarme na cauda, crista escurecendo até a ponta no macho | ruivo/laranja |
+| Ankylosaurus | jade escuro: pele cinza-azulada (petróleo acinzentado) sob placas de chifre escuro, quilhas claras, barriga cinza-esverdeada clara; fêmea com a pele um pouco mais cinza e o chifre mais quente | cinza-petróleo |
 
 ## Colisões que ainda existem (02/11/2026)
 
@@ -32,5 +35,22 @@ uma cor livre quando for refeita.
 - Gallimimus × Hesperornis 6,4, Citipati 7,5, Tylosaurus 7,5, Mosasaurus 8,0: as antigas mudam. O Mosasaurus, último
   do pacote 1.5, sai do azul-escuro quando for refeito. Nenhuma colisão com refeitos (Giganotosaurus e Pteranodon
   ficaram acima de 10 depois de o macho ir para o grafite-azulado).
+- Pachycephalosaurus: a mais perto é o Compsognathus (antigo, 12,9); nenhuma abaixo de 10. O castanho foi testado e
+  descartado (5,9 do Carnotaurus), e a fêmea sépia ficava a 7,8 do Protoceratops. O Parasaurolophus, próximo do pacote
+  1.5, não pode usar mel nem ocre.
+- Parasaurolophus: o macho ruivo fica a 14,6 do Pachycephalosaurus e a 14,7 do Carnotaurus (machos); contra a fêmea
+  mel-escuro do Pachycephalosaurus, 12,3. O primeiro ruivo, mais escuro, ficava a 7,6 do Carnotaurus, e o segundo a
+  7,7 da fêmea do Pachycephalosaurus: os dois foram descartados. A fêmea pardo-rosada fica a 10,3 do Carnotaurus e
+  acima de 10 de todos os refeitos (a cinza-parda ficava a 9,6 da fêmea do Spinosaurus e 9,9 da do Pteranodon). Das
+  antigas, a mais perto é o Majungasaurus (9,3, aviso; ele já muda por causa do Carnotaurus).
+- Ankylosaurus: macho e fêmea medidos contra machos e fêmeas de todos. O refeito mais perto é o Spinosaurus (macho:
+  11,1 do nosso macho, 10,9 da nossa fêmea); das antigas, o Hatzegopteryx (10,3 a 10,7, sem colisão). Testados e
+  descartados: "líquen" (cinza-esverdeado sob chifre sálvia, 9,4 da fêmea do Spinosaurus), "musgo claro" (7,6 do
+  Euoplocephalus antigo) e o mesmo jade com placas cor de marfim (lia como as placas claras do modelo antigo). O
+  contrassombreamento (dorso escuro, barriga clara) vem do nodossauro Borealopelta (Brown et al. 2017); o ruivo dele
+  já está tomado pelo Parasaurolophus, então a pele ficou no cinza-petróleo. O Mosasaurus, último do pacote 1.5, não
+  pode usar cinza-petróleo nem azul-escuro.
+- O colourcheck compara só os machos. No Parasaurolophus as duas cores foram medidas também contra as fêmeas dos
+  refeitos; vale fazer o mesmo nos próximos (a fêmea do Pachycephalosaurus quase pegou o macho ruivo).
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre
   nesta tabela antes de pintar.

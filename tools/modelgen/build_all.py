@@ -102,7 +102,10 @@ HANDMADE = {"tyrannosaurus": os.path.join(HERE, "handmade", "tyrannosaurus", "bu
             "giganotosaurus": os.path.join(HERE, "handmade", "giganotosaurus", "build.py"),
             "protoceratops": os.path.join(HERE, "handmade", "protoceratops", "build.py"),
             "triceratops": os.path.join(HERE, "handmade", "triceratops", "build.py"),
-            "gallimimus": os.path.join(HERE, "handmade", "gallimimus", "build.py")}
+            "gallimimus": os.path.join(HERE, "handmade", "gallimimus", "build.py"),
+            "pachycephalosaurus": os.path.join(HERE, "handmade", "pachycephalosaurus", "build.py"),
+            "parasaurolophus": os.path.join(HERE, "handmade", "parasaurolophus", "build.py"),
+            "ankylosaurus": os.path.join(HERE, "handmade", "ankylosaurus", "build.py")}
 
 
 async def run(names, force_py=False):

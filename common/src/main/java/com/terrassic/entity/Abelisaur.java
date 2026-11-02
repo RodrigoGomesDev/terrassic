@@ -61,6 +61,17 @@ public abstract class Abelisaur extends ApexTheropod {
      *  bends goes a few degrees a tick, a sharp corner or a target that dodged swings the heading at once. */
     private static final float SKID_TURN = 40.0F;
     private static final int TURN_TICKS = 4;
+    /** In a chase the heading hardly swings: inside 6 blocks ApexBiteGoal runs at the target only while it is within
+     *  40 degrees of the nose and otherwise stops and turns on the spot (5 degrees a tick), and further out the path is
+     *  re-aimed every 8 ticks; from 20 degrees off it already eases to 0.6 of its pace, so the sprint is gone within two
+     *  ticks. A chase skids on the bearing instead: prey that cut across it, 20 degrees or more off the nose (where the
+     *  goal gives up running straight at it) while it was at a sprint the two ticks before, and close (10 blocks at size
+     *  1.0, where the goal steers it straight). Simulated on the goal's own rules: a player sprinting or walking fast
+     *  across its path 6 to 12 blocks ahead makes it skid within a second or two; a straight chase never does.
+     *  Through the skid it swings round at {@link #SKID_SWING} degrees a tick instead of stopping dead to turn. */
+    private static final float SKID_BEARING = 20.0F;
+    private static final double SKID_CHASE_RANGE = 10.0D;
+    private static final float SKID_SWING = 9.0F;
     /** The brake: at least this many ticks of sprint, then under {@link #STOPPED} within {@link #BRAKE_WINDOW} ticks
      *  of the last one (letting go of the run, the ground friction takes 0.3 to under 0.07 in three ticks). */
     private static final int SPRINT_TICKS = 10;
@@ -100,6 +111,8 @@ public abstract class Abelisaur extends ApexTheropod {
     /** Ticks into the skid under way (0 = none). */
     private int skidding;
     private boolean skidRight;
+    /** The skid under way came from prey cutting across it (it swings round to it). */
+    private boolean skidAtTarget;
     /** Ticks into the brake under way (0 = none). */
     private int braking;
 
@@ -285,14 +298,18 @@ public abstract class Abelisaur extends ApexTheropod {
             turned += this.turns[i];
             fast &= this.speeds[i] >= sprint;
         }
-        if (fast && Math.abs(turned) >= SKID_TURN && this.skidCooldown <= 0 && !this.isVehicle()) {
+        if (this.skidCooldown <= 0 && !this.isVehicle()) {
             // a heading that grows turns it to the right (south to west): the clip that leans that way
-            this.skidRight = turned > 0.0F;
-            this.triggerAnim(ACTION_CONTROLLER, this.skidRight ? "skid_turn_r" : "skid_turn");
-            this.busy(SKID_TICKS);
-            this.skidding = 1;
-            this.skidCooldown = SKID_COOLDOWN;
-            return;
+            if (fast && Math.abs(turned) >= SKID_TURN) {
+                this.skid(turned > 0.0F, false);
+                return;
+            }
+            float bearing = this.chaseBearing();
+            if (Math.abs(bearing) >= SKID_BEARING && this.speeds[0] >= sprint * 0.75D && this.speeds[1] >= sprint
+                    && this.speeds[2] >= sprint) {
+                this.skid(bearing > 0.0F, true);
+                return;
+            }
         }
         if (this.brakeCooldown <= 0 && this.speeds[0] < STOPPED && !this.horizontalCollision && this.sprintedThenStopped(sprint)) {
             this.triggerAnim(ACTION_CONTROLLER, "brake");
@@ -302,6 +319,30 @@ public abstract class Abelisaur extends ApexTheropod {
             // the turn-in that came with the stop is not a skid as well
             this.skidCooldown = Math.max(this.skidCooldown, SKID_TICKS);
         }
+    }
+
+    private void skid(boolean right, boolean atTarget) {
+        this.skidRight = right;
+        this.skidAtTarget = atTarget;
+        this.triggerAnim(ACTION_CONTROLLER, right ? "skid_turn_r" : "skid_turn");
+        this.busy(SKID_TICKS);
+        this.skidding = 1;
+        this.skidCooldown = SKID_COOLDOWN;
+    }
+
+    /** How far off the nose the prey it chases is (degrees, + to its right), 0 when it is not chasing anything close. */
+    private float chaseBearing() {
+        LivingEntity target = this.getTarget();
+        if (target == null || !target.isAlive() || !this.isAggressive()) {
+            return 0.0F;
+        }
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        double range = SKID_CHASE_RANGE * this.getScale();
+        if (dx * dx + dz * dz > range * range) {
+            return 0.0F;
+        }
+        return Mth.wrapDegrees((float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F - this.getYRot());
     }
 
     /** The last tick at a sprint was a few ticks ago, after a run of at least {@link #SPRINT_TICKS} of them. A stop
@@ -341,6 +382,13 @@ public abstract class Abelisaur extends ApexTheropod {
                 move.setWantedPosition(move.getWantedX(), move.getWantedY(), move.getWantedZ(), move.getSpeedModifier() * 0.5D);
             }
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.8D, 1.0D, 0.8D));
+            LivingEntity target = this.getTarget();
+            if (this.skidAtTarget && target != null) {
+                // swinging round on the slide, faster than the goal's turn on the spot
+                float yaw = Mth.approachDegrees(this.getYRot(), this.getYRot() + this.chaseBearing(), SKID_SWING);
+                this.setYRot(yaw);
+                this.setYBodyRot(yaw);
+            }
             // the outer side of the curve: the left foot on a right turn
             this.kickUp(level, this.skidRight ? -1.0D : 1.0D, 0.0D, 2);
         }

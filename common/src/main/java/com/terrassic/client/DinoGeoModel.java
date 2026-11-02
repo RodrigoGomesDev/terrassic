@@ -14,6 +14,10 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
  *   <li>Bone "male_display" is only shown on males, "female_display" only on females</li>
  *   <li>Bone "saddle" is only shown when the animal is saddled</li>
  *   <li>Bones "adult_l" and "adult_r" are hidden on babies (plumage the young did not have)</li>
+ *   <li>The growth series of the Pachycephalosaurus: "adult_dome" is hidden on babies and "young_spikes" shown only on
+ *       them; "adult_dome_male" / "adult_dome_female" carry the adult crown of each sex</li>
+ *   <li>The Parasaurolophus' crest: "adult_crest" is hidden on babies and "young_crest" (the low dome a hatchling had,
+ *       Farke et al. 2013) shown only on them</li>
  *   <li>Bone "head" follows the look direction (handled by DefaultedEntityGeoModel)</li>
  * </ul>
  */
@@ -51,6 +55,18 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         // adult-only plumage (the Gallimimus' wing fans: the young had only down)
         hide("adult_l", animatable.isBaby());
         hide("adult_r", animatable.isBaby());
+        // the Pachycephalosaurus grows its dome: the young are flat-headed and spiky (Horner & Goodwin 2009)
+        boolean baby = animatable.isBaby();
+        hide("adult_dome", baby);
+        hide("adult_dome_male", baby || female);
+        hide("adult_dome_female", baby || !female);
+        hide("young_spikes", !baby);
+        // the Parasaurolophus grows its crest: a year-old had only a low dome over the skull (Farke et al. 2013)
+        hide("adult_crest", baby);
+        hide("young_crest", !baby);
+        // the Ankylosaurus grows its club: a juvenile Pinacosaurus had only a plain tail tip (Currie et al. 2011)
+        hide("adult_club", baby);
+        hide("young_tail", !baby);
     }
 
     private void hide(String bone, boolean hidden) {

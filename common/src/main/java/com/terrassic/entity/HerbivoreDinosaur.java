@@ -51,6 +51,11 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         return true;
     }
 
+    /** false = keeps its stance but fights with its own goal (the Ankylosaurus swings its tail instead of charging). */
+    protected boolean usesMeleeGoal() {
+        return true;
+    }
+
     /** Whether a wild runner flees from this player (false lets the player come close, e.g. crouching with food). */
     protected boolean fleesFrom(Player player) {
         return true;
@@ -117,7 +122,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.4D, true) {
             @Override
             public boolean canUse() {
-                return HerbivoreDinosaur.this.fightsBack() && super.canUse();
+                return HerbivoreDinosaur.this.fightsBack() && HerbivoreDinosaur.this.usesMeleeGoal() && super.canUse();
             }
         });
         this.goalSelector.addGoal(5, new OrderedFollowOwnerGoal(this, 1.15D, followStartDistance(), followStopDistance(), false));
