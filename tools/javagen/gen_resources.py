@@ -12,7 +12,8 @@ sys.path.insert(0, os.path.join(ROOT, "tools", "spritegen"))
 from rex_extras import CUSTOM_EGGS as REX_EGGS  # noqa: E402  (eggs with their own nest model: the T. rex pair)
 from ptera_extras import CUSTOM_EGGS as PTERA_EGGS  # noqa: E402  (the Pteranodon's clutch in a sand scrape)
 from rapt_extras import CUSTOM_EGGS as RAPT_EGGS  # noqa: E402  (the Velociraptor's clutch in a desert scrape)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS}
+from proto_extras import CUSTOM_EGGS as PROTO_EGGS  # noqa: E402  (the Protoceratops' soft eggs in a red sand mound)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),

@@ -844,10 +844,74 @@ def pachyrhinosaurus():
 
 
 def protoceratops():
-    e = ceratopsian("protoceratops", {"b": "#9a8460", "c": "#dccaa0", "e": "#a8483a", "w": "#e8d8b4",
-                                      "D": "#6e2a20", "i": "#f2e8cc", "j": "#c8b48c", "d": "#7a6648",
-                                      "n": "#4e3e2a"}, frill=(4, 2, 27, 20), knobs=((10, 7), (21, 7)),
-                    brow=False, nose=None)
+    """Protoceratops (02/11, skin B 'penhasco'), front view like the T. rex egg: the frill is the silhouette, a fan
+    behind the egg with the pale rim and its bumps, the male's rust flush at the corners and the grooves of the blood
+    vessels running out from the middle. Under it the deep short face with drawn scales, the rust nasal bump, the
+    model's eyes (the house almond: dark socket, pale top, amber, pupil toward the beak, glint, a small brow), the
+    cheeks flaring out to their dark keratin points and the grey hooked beak over the pale jaw."""
+    e = Egg("protoceratops", {
+        "f": "#7a5a3f", "F": "#8d6a4b", "v": "#5e4330", "w": "#e2cfa6", "W": "#c9b088", "x": "#b2553a", "X": "#8e3e2a",
+        "b": "#b08e64", "l": "#c6a676", "d": "#977552", "o": "#7d5f42", "s": "#4e2f22", "c": "#ead9b0", "C": "#d6c09a",
+        "r": "#74432c", "R": "#8a5233", "h": "#5a4332", "k": "#3a2a20",
+        "B": "#3e372f", "m": "#665d52", "M": "#867c6e", "j": "#b2a892",
+        "D": "#1e1712", "Y": "#f6d27a", "E": "#e0a33a", "e": "#a8681c", "P": "#120c09", "G": "#fff4d6", "L": "#d9c39b"})
+    # the frill: a fan behind the top of the egg, pale rim with bumps, rust flush at the corners
+    e.ell((0, 0, 31, 23), "w")
+    e.ell((2, 2, 29, 21), "f")
+    e.px(e.mirror([(3, 4), (1, 8), (0, 12), (7, 1), (12, 1)]), "W")          # the bumps along the rim
+    e.px(e.mirror([(2, 6), (2, 7), (3, 5), (3, 6), (4, 4), (5, 3), (1, 9), (2, 8), (1, 10), (6, 3)]), "x")
+    e.px(e.mirror([(4, 5), (3, 7), (2, 9)]), "X")
+    # the grooves of the blood vessels running out from the middle, branching
+    for pts in ([(11, 6), (9, 2)], [(9, 8), (5, 5)]):
+        e.line(pts, "v"); e.line([(N - 1 - x, y) for x, y in pts], "v")
+    e.line([(15, 1), (15, 8)], "F"); e.line([(16, 1), (16, 8)], "F")    # the midline ridge
+    # the face: the egg under the frill, dark edge against it, a shade darker cap
+    e.ell((5, 6, 26, 40), "s")
+    e.ell((6, 7, 25, 40), "b")
+    for y in range(N):
+        for x in range(N):
+            if y > 14 and not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((8, 7, 23, 17), "d", clip=True)
+    # drawn scales: small plates lit on their upper side, in rows on the cap and the cheeks
+    for x, y in ((10, 8), (12, 10)):
+        e.px(e.mirror([(x, y)]), "b")
+        e.px(e.mirror([(x, y + 1)]), "o")
+    for x, y in ((8, 20), (10, 22), (8, 23)):
+        e.px(e.mirror([(x, y)]), "l")
+        e.px(e.mirror([(x, y + 1)]), "d")
+    # the cheeks flaring out under the eyes with their dark keratin point (the epijugal)
+    e.poly([(4, 18), (8, 18), (8, 22), (4, 21)], "o")
+    e.px([(4, 18), (27, 18)], "d")
+    e.px([(3, 20), (28, 20), (3, 19), (28, 19)], "h"); e.px([(2, 20), (29, 20), (2, 21), (29, 21)], "k")
+    # the rust nasal bump down the middle, lit along its left side
+    e.poly([(14, 8), (17, 8), (18, 18), (13, 18)], "r")
+    e.line([(14, 9), (14, 16)], "R"); e.line([(15, 8), (15, 12)], "R")
+    e.line([(17, 10), (17, 17)], "s")
+    # the eyes, as on the model, big like the T. rex egg's
+    eye = ["..kkkk..",
+           ".DDDDDD.",
+           "DYYYYGPD",
+           "DEYYEPPD",
+           "DeEEEEeD",
+           ".DDDDDD.",
+           "..LLL..."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(5 + i, 11 + j)]) if 0 <= q[0] < N], ch)
+    # the pale jaw at the bottom, the mouth line climbing to the cheek
+    e.ell((9, 23, 22, 35), "c", clip=True)
+    e.px(e.mirror([(11, 30), (12, 31), (10, 29)]), "C")
+    e.line([(8, 24), (11, 26), (13, 26)], "s"); e.line([(23, 24), (20, 26), (18, 26)], "s")
+    # the beak: grey horn narrowing down from the nostrils, a pale edge, the dark hooked tip over the small lower
+    # beak, the nostrils either side of the bump
+    e.poly([(13, 18), (18, 18), (18, 23), (17, 27), (14, 27), (13, 23)], "m")
+    e.line([(14, 18), (14, 23)], "j"); e.line([(13, 19), (13, 22)], "M")
+    e.line([(18, 19), (18, 23)], "B")
+    e.poly([(14, 26), (17, 26), (16, 29), (15, 29)], "B")
+    e.px([(15, 30), (16, 30), (14, 30), (17, 30)], "h")
+    e.px(e.mirror([(12, 18), (12, 19)]), "k")
     return e
 
 
