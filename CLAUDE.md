@@ -238,6 +238,11 @@ Suporte, diagnóstico de log, Guia de Campo, relatos de bug e avisos; documentad
   `mod_version` em `gradle.properties`, **sem precisar de tag**. Depende do secret `DISCORD_BUILDS_WEBHOOK`
   (webhook do canal #builds no Discord; configurar com `gh secret set DISCORD_BUILDS_WEBHOOK` — nunca colar a URL
   em commit, issue ou chat). Sem o secret, o workflow só mostra no log o que mandaria, sem falhar a build.
+- **Terceiro canal, `#novas-especies`:** quem avisa é o repositório do **site** (`terrassic-site`,
+  `.github/workflows/discord-species.yml`), quando um id entra em `models.ready` de `src/site-config.js`: posta o
+  cartão `public/assets/cards/<id>.webp` (gerado por `npm run cards` lá, do modelo do jogo) e a ficha do Guia. Ao
+  liberar uma espécie refeita, rode `npm run build && npm run thumbs && npm run cards` no site antes do push.
+  Estrutura do servidor (canais, cargos, banners, painéis): `rexpert/docs/SERVIDOR.md`.
 - Daqui para frente, a versão em `gradle.properties` é o sinal de "saiu build nova" para a comunidade: ao fechar
   um lote de trabalho que vale avisar, suba `mod_version`. Taguear (`git tag vX.Y.Z`) continua sendo só para quando
   quiser o anúncio oficial maior em `#avisos`; passou muito tempo sem taguear (`v1.1.4` → `1.5.0` direto em
