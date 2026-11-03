@@ -228,5 +228,20 @@ em `docs/ROSTER.md`; tamanhos em `docs/TAMANHOS.md`.
   mods complementares futuros, pacote de texturas embutido, HUD próprio e ambientação.
 - Todo texto em pt_br, en_us e es_es.
 
+## Discord
+Bot da comunidade: **Rexpert** (`/Users/rodrigogs/projects/rexpert`, repositório à parte, não commitado aqui).
+Suporte, diagnóstico de log, Guia de Campo, relatos de bug e avisos; documentado em `rexpert/README.md` e
+`rexpert/docs/ROADMAP.md`. Rodando no homelab do Rodrigo (`rexpert/docs/HOMELAB.md`), token nunca neste repositório.
+- **Avisos de versão têm dois canais, por desenho:** `#avisos` é o Rexpert vigiando **tags** `vX.Y.Z` (lançamento
+  oficial, com changelog da mensagem da tag). `#builds` é este repositório avisando sozinho: o workflow
+  `.github/workflows/discord-build.yml` roda `tools/discord/announce_build.py` a cada push em `main` que muda
+  `mod_version` em `gradle.properties`, **sem precisar de tag**. Depende do secret `DISCORD_BUILDS_WEBHOOK`
+  (webhook do canal #builds no Discord; configurar com `gh secret set DISCORD_BUILDS_WEBHOOK` — nunca colar a URL
+  em commit, issue ou chat). Sem o secret, o workflow só mostra no log o que mandaria, sem falhar a build.
+- Daqui para frente, a versão em `gradle.properties` é o sinal de "saiu build nova" para a comunidade: ao fechar
+  um lote de trabalho que vale avisar, suba `mod_version`. Taguear (`git tag vX.Y.Z`) continua sendo só para quando
+  quiser o anúncio oficial maior em `#avisos`; passou muito tempo sem taguear (`v1.1.4` → `1.5.0` direto em
+  `gradle.properties`, 39 commits sem tag em 02/11/2026) e `#avisos` ficou mudo nesse meio tempo — não é bug do bot.
+
 ## Como registrar o progresso
 Ao terminar uma etapa: atualize este arquivo (versão, pendências) e faça commit no nome do Rodrigo.

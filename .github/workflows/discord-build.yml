@@ -1,0 +1,36 @@
+name: Aviso de build no Discord
+
+# Dispara a cada push em main que muda gradle.properties. Só avisa de verdade se mod_version mudou
+# (tools/discord/announce_build.py confere e sai quieto se não mudou). Canal de builds, não o de
+# lançamentos oficiais: esse continua sendo o Rexpert, avisando quando uma tag vX.Y.Z é publicada.
+on:
+  push:
+    branches: [main]
+    paths: [gradle.properties]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: discord-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  announce:
+    name: Avisar a versão nova no canal de builds
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Obter o histórico completo (precisa para achar o aviso anterior)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Testar a lógica antes de avisar
+        run: python3 -B -m unittest discover -s tools/discord -p 'test_*.py'
+
+      - name: Avisar no Discord
+        env:
+          DISCORD_BUILDS_WEBHOOK: ${{ secrets.DISCORD_BUILDS_WEBHOOK }}
+        run: python3 -B tools/discord/announce_build.py
