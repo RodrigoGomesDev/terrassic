@@ -97,7 +97,7 @@ class TestAnnounceBuild(unittest.TestCase):
         commit(self.repo, "1.1.0", "1.1.0: número da versão")
         since_sha, _ = ab.find_previous_bump(ab.bump_commits(), "1.1.0")
         embed = ab.build_embed("1.1.0", ab.changelog(since_sha), since_sha, "x" * 40)
-        self.assertIn("…e mais 3 commit(s).", embed["description"])
+        self.assertIn("…and 3 more commit(s).", embed["description"])
 
     def test_primeira_versao_sem_webhook_nao_falha(self):
         commit(self.repo, "0.1.0", "0.1.0: primeira versão")

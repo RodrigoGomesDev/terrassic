@@ -1,4 +1,5 @@
 """Avisa no Discord quando mod_version muda em gradle.properties, com o changelog desde o aviso anterior.
+O servidor do Discord é organizado em inglês: a moldura do aviso é em inglês; o changelog são os assuntos dos commits.
 
 Rodado pelo GitHub Actions (.github/workflows/discord-build.yml) a cada push em main que toca gradle.properties.
 É o canal de BUILDS: toda vez que a versão muda, mesmo sem tag git. O aviso OFICIAL de lançamento
@@ -82,14 +83,14 @@ def changelog(since_sha):
 def build_embed(version, subjects, since_sha, head_sha):
     shown = subjects[:MAX_COMMITS]
     extra = len(subjects) - len(shown)
-    lines = [f"• {s}" for s in shown] or ["Sem commits descritos desde o último aviso."]
+    lines = [f"• {s}" for s in shown] or ["No described commits since the last announcement."]
     if extra > 0:
-        lines.append(f"…e mais {extra} commit(s).")
+        lines.append(f"…and {extra} more commit(s).")
     embed = {
-        "title": f"🦖 Terrassic {version} · build nova",
+        "title": f"🦖 Terrassic {version} · new build",
         "description": "\n".join(lines),
         "color": COLOR,
-        "footer": {"text": "Build automática a cada versão nova em gradle.properties — não é o lançamento oficial."},
+        "footer": {"text": "Automatic build on every new version — not the official release."},
     }
     if since_sha:
         embed["url"] = f"https://github.com/{REPO}/compare/{since_sha[:12]}...{head_sha[:12]}"
