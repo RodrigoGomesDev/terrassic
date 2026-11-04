@@ -43,7 +43,7 @@ public class Styracosaurus extends HerbivoreDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 80.0D)
+                .add(Attributes.MAX_HEALTH, 160.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.24D)
                 .add(Attributes.ATTACK_DAMAGE, 9.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.0D)

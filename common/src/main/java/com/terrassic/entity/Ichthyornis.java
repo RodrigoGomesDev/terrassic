@@ -39,7 +39,7 @@ public class Ichthyornis extends FlyingDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 8.0D)
+                .add(Attributes.MAX_HEALTH, 12.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.FLYING_SPEED, 0.75D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0D)

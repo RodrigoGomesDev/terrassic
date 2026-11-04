@@ -42,7 +42,7 @@ public class Euoplocephalus extends HerbivoreDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 85.0D)
+                .add(Attributes.MAX_HEALTH, 170.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.18D)
                 .add(Attributes.ATTACK_DAMAGE, 9.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.8D)

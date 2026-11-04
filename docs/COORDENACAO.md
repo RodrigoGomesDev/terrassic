@@ -1,5 +1,19 @@
 # Terrassic — coordenação entre frentes
 
+## Feedback de jogador, 1.7.0 — 04/11/2026 (Claude principal, main)
+
+Escopo: os seis pontos do feedback e os dois pedidos extras (`docs/FEEDBACK_1_7.md`). Arquivos tocados:
+`DinosaurEntity.java` (provocação, nocaute, meta de comida, vida salva, registro dos domados), `Ankylosaurid.java`,
+`Alphas.java` (FOOD_GOAL), `DinoLevels.java` (limiares), `Whistle.java` (alcance), `Rules.java`/`Rule.java`
+(`gen_rules.py`), `VanillaShare.java`, `EcoSpawner.java`, `ModItems.java` (clavas), `Terrassic.java`,
+`LensOverlay.java`, `PocketGuideScreen.java`, `DinoControls.java`, `WhistleWheelScreen.java`, `TerrassicClient.java`,
+novos `TamedRegistry`, `TamedNetwork`, `MyDinosScreen`, `DinoTracker`; geradores `gen_species.py` (vida),
+`gen_pocket_guide.py`, `gen_whistle.py`, `gen_resources.py` (textos e Better Combat) e os arquivos gerados.
+Validação: `check_project.py` passou (59 espécies, 5.093 JSONs, 2.143 chaves); `javac --release 17` contra o jar
+mapeado da loom-cache + Architectury + GeckoLib: mesmos erros da main antes da mudança (só bibliotecas ausentes),
+nenhum erro novo. Pendentes: `./gradlew build`, `check_spawn_budget.py` e teste no jogo nos dois loaders.
+As alterações locais de `tools/capagen/` (outra frente) ficaram fora do commit. Arquivos liberados.
+
 ## Comunicação das lojas — 01/11/2026 (Codex)
 
 Escopo: preservar a descrição anterior em `docs/arquivo/DESCRICAO_LOJAS_VISAO_FUTURA.md`.

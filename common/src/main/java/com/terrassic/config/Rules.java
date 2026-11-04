@@ -83,9 +83,12 @@ public final class Rules {
      * default "Dinos no mundo normal" went from 0.25 to 0.35 (Rodrigo, 31/10/2026: "o spawn de dinos ainda tá meio
      * baixo"). Rules are not edited in game since v0.15.1, so a 0.25 saved before it is the old default and moves up.
      */
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
     private static final String VERSION_KEY = "rules_version";
     private static final double OLD_DINO_SHARE = 0.25D;
+    /** 3 = 1.7 (player feedback, 04/11/2026: "dinos spawn too frequently, at least three times rarer than normal
+     *  animals"): the default went back from 0.35 to 0.25, so a 0.35 saved before it is the old default and moves down. */
+    private static final double V2_DINO_SHARE = 0.35D;
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
@@ -110,11 +113,16 @@ public final class Rules {
 
     /** Brings rules saved by an older version up to date; true if something changed. */
     private boolean migrate(int version) {
+        boolean changed = false;
         if (version < 2 && Math.abs(this.get(Rule.DINO_SHARE) - OLD_DINO_SHARE) < 1.0E-6D) {
             this.set(Rule.DINO_SHARE, Rule.DINO_SHARE.defaultValue);
-            return true;
+            changed = true;
         }
-        return false;
+        if (version < 3 && Math.abs(this.get(Rule.DINO_SHARE) - V2_DINO_SHARE) < 1.0E-6D) {
+            this.set(Rule.DINO_SHARE, Rule.DINO_SHARE.defaultValue);
+            changed = true;
+        }
+        return changed;
     }
 
     public JsonObject toJson() {
@@ -285,10 +293,19 @@ public final class Rules {
      */
     public static final TagKey<EntityType<?>> PROTECTED = TagKey.create(Registries.ENTITY_TYPE, Terrassic.id("protected"));
 
+    /** The {@link #PROTECTED} tag: never a target, not even when it hits back or the owner orders it. */
+    public static boolean sparesAlways(Entity target) {
+        return target != null && !(target instanceof Player) && target.getType().is(PROTECTED);
+    }
+
     /**
      * v1.6: whether the creatures leave this one alone (Rodrigo, 02/11/2026: in a Cobblemon modpack the dinos hunted
      * the Pokémon). The {@link #PROTECTED} tag always; and, while "Hunt other mods' animals" is 0, every mob of another
      * mod that is not a monster. Players, Minecraft's and Terrassic's own mobs and hostile monsters stay fair game.
+     * <p>1.7 (player feedback: "dinos can't defend themselves from mobs from other mods and tames can't attack them, not
+     * even when commanded"): this only keeps them from HUNTING; DinosaurEntity lets a spared mob through when it was
+     * provoked (it hit the dino or its owner, or the owner ordered the attack), except for the {@link #PROTECTED} tag.
+     * A mob of another mod registered as a monster counts as hostile even when it does not implement {@link Enemy}.
      */
     public static boolean spares(Entity target) {
         if (target == null || target instanceof Player) {
@@ -297,6 +314,9 @@ public final class Rules {
         EntityType<?> type = target.getType();
         if (type.is(PROTECTED)) {
             return true;
+        }
+        if (type.getCategory() == net.minecraft.world.entity.MobCategory.MONSTER) {
+            return false;
         }
         if (!(target instanceof DinosaurEntity) && of(target.level()).get(Rule.SPARE_PETS) >= 0.5D
                 && (target instanceof OwnableEntity pet && pet.getOwnerUUID() != null || target.hasCustomName())) {

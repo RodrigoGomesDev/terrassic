@@ -42,7 +42,7 @@ public class Albertosaurus extends PredatorDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 95.0D)
+                .add(Attributes.MAX_HEALTH, 190.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.29D)
                 .add(Attributes.ATTACK_DAMAGE, 12.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0D)

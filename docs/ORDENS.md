@@ -4,6 +4,14 @@ Pedido do Rodrigo (30/10/2026): mecânicas de ordem como no ARK. Estudo com a ta
 faltava): https://claude.ai/artifact/DcT3Nc1WbkV5YFmRX9hvpY. Esta versão traz as ordens de um dino só, pela tela do dino.
 A roda do apito (segurar H, todos os dinos que ouvem) entrou na 1.5: seção abaixo.
 
+## 1.7: alcance do apito e "Meus dinos"
+Feedback de jogador (04/11): "não dá para ver onde estão os dinos, e o apito só funciona a uns 50 blocos". O apito
+alcança **96 blocos** (dentro do alcance de rastreio das entidades, 8 a 10 chunks). **Agachado + H** (ou a tecla
+"Meus dinos", sem tecla padrão, ou `/terrassic dinos`) abre a lista de todos os domados com distância, direção,
+coordenadas, se esperam ali e quando foram vistos; **Rastrear** põe uma seta no alto da tela. Posições em
+`entity/TamedRegistry` (salvas no mundo), pacotes em `network/TamedNetwork`, telas em `client/MyDinosScreen` e
+`client/DinoTracker`. Também: o modo Neutro e as ordens valem contra bichos de outros mods que provocaram a briga.
+
 ## Na tela do dino
 
 Linha de baixo: **Seguir**, **Esperar**, **Vagar** e **Pare**. Linha de cima: **Modo** (um clique passa para o próximo),

@@ -2,6 +2,14 @@
 
 Status: **implementado** (torpor, nocaute, alimentar derrubado, eficiência, acordar; zarabatana, dardo de narcótico e erva sonífera; ver "O que já está no jogo"). Era: planejado para a **v0.7** (ver `docs/ROSTER.md`, linha 127). Pedido do Rodrigo em 24/10/2026: domar por nocaute como no ARK, com animação de nocaute nos bichos. Nada disto entra na v0.3; os modelos novos já saem com a animação `knocked_out` pronta.
 
+## 1.7 (feedback de jogador, 04/11/2026; `docs/FEEDBACK_1_7.md`)
+- Nocaute dura a regra "Duração do nocaute" (**20 s** por padrão, 3/4 nos que mordem com 8+); não drena enquanto o bicho
+  come (2 s depois de cada porção). Alfa: 60 s como antes.
+- Meta de comida (`foodGoal`): carnívoro 64 por cada 100 de vida base (1 a 5 pilhas); os outros vida/6 (6 a 64).
+  Vale também para a doma acordada, que agora acumula progresso em vez do sorteio 1 em 4. Filhote = 1/4; alfa x1,5.
+- A vida dobrou (x1,5 abaixo de 20), então o torpor máximo dobrou junto. Clava mais lenta (0,25 e 0,2 ataques/s).
+- Os números abaixo são de antes da 1.7 onde divergirem.
+
 ## O que já está no jogo
 - **Torpor** (só em criaturas selvagens): máximo = a vida máxima (mínimo 10). Clava: 2,5x o dano em torpor e metade do
   dano. Punho: 2 + 2x o dano. Lâminas e pontas: só 10% do dano. Dardo de narcótico: 16 + 6% do máximo (x1,5 com fôlego cheio), ferida mínima.

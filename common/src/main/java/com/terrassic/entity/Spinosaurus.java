@@ -43,7 +43,7 @@ public class Spinosaurus extends Spinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 140.0D)
+                .add(Attributes.MAX_HEALTH, 280.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.23D)
                 .add(Attributes.ATTACK_DAMAGE, 14.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0D)

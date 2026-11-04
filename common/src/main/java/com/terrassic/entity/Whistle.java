@@ -50,8 +50,10 @@ import java.util.UUID;
  * Every animal that obeys shows a note over its head. No whistle sound yet: the mod's sounds are on hold (docs/SONS.md).
  */
 public final class Whistle {
-    /** How far the whistle carries (blocks). */
-    public static final double RANGE = 24.0D;
+    /** How far the whistle carries (blocks). 1.7 (player feedback: "the whistle only works for about 50 blocks"):
+     *  24 -> 96, within the entity tracking range of the dinosaurs (8 to 10 chunks), so the wheel counts them all.
+     *  Farther than that, the "My dinos" list (TamedRegistry, client/MyDinosScreen) shows where each one is. */
+    public static final double RANGE = 96.0D;
     /** How far "attack my target" looks for the target (blocks). */
     public static final double TARGET_RANGE = 32.0D;
     /** The wheel's orders, clockwise from the top (lang: gui.terrassic.whistle.&lt;order&gt;). */

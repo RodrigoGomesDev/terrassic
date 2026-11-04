@@ -3,6 +3,14 @@
 Pedido do Rodrigo (24/10/2026): controlar a geração e as regras do jogo como na tela "Regras do ARK", e a geração
 padrão bem mais cheia: voadores voando de verdade pelo céu, muitos animais no mar, rebanhos nas planícies.
 
+## 1.7: menos dinos, carnívoros mais raros, nocaute curto
+Feedback de jogador (04/11/2026, `docs/FEEDBACK_1_7.md`). "Dinos no mundo normal" voltou de 0,35 para **0,25** (um
+dino para três animais do Minecraft; mundos com 0,35 salvo migram, `Rules.VERSION` 3). Regras novas: **Carnívoros**
+(`predator_spawns`, aba Ecossistema, 0,4: multiplica o peso dos carnívoros no spawn natural e no EcoSpawner, também no
+Cretáceo) e **Duração do nocaute** (`knockout_seconds`, Geral, 20 s). "Velocidade de domesticação" agora multiplica o
+valor de cada porção (a doma não é mais um sorteio). "Caçar bichos de outros mods" = 0 só impede a caça: defesa,
+defesa do dono e ataque por ordem valem sempre (menos a etiqueta `terrassic:protected`).
+
 ## v1.6: configuração liberada e aba Convivência
 
 Rodrigo (02/11/2026): num modpack com Cobblemon os dinos caçavam os Pokémon. A 1.6 religa as regras no jogo com permissão:

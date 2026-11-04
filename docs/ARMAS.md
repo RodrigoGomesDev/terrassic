@@ -7,6 +7,12 @@ https://claude.ai/artifact/79FSKssTmZofQTHUWtj4sw
 Regra: só poses que o próprio Minecraft já tem (arco, tridente, chifre de cabra) e modelos 3D simples no estilo da
 flecha e do tridente vanilla. Arte desenhada à mão pixel a pixel em `tools/spritegen/armas.py`.
 
+## 1.7: clavas mais lentas e Better Combat
+Feedback de jogador (04/11/2026): "a clava é forte demais, 0,20 de velocidade seria justo". Clava de Cauda 0,6 → 0,2
+ataques por segundo, Clava de Osso 0,8 → 0,25 (`ModItems`). Better Combat: `data/terrassic/weapon_attributes/` dá às
+armas os presets do mod (Clava de Osso = `mace`, Clava de Cauda = `hammer`, lanças = `spear`, faca e adaga = `dagger`,
+machadinha = `axe`; tabela `BETTER_COMBAT` em `gen_resources.py`). Antes só a adaga funcionava, pelo nome.
+
 ## Passo 1: zarabatana e dardo (feito)
 - `item/BlowgunItem`: segurar = pose do chifre de cabra (`UseAnim.TOOT_HORN`) e fôlego até 1 s (`FULL_BREATH` = 20
   ticks, "clique" baixo quando enche); soltar sopra. Menos de 3 ticks não atira. Velocidade 1,4 + 1,6·fôlego,

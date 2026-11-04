@@ -36,7 +36,7 @@ public class Struthiomimus extends HerbivoreDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 26.0D)
+                .add(Attributes.MAX_HEALTH, 52.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.37D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.FOLLOW_RANGE, 20.0D);

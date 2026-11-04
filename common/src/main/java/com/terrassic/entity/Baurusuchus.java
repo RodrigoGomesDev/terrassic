@@ -41,7 +41,7 @@ public class Baurusuchus extends PredatorDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 55.0D)
+                .add(Attributes.MAX_HEALTH, 110.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE, 9.0D)
                 .add(Attributes.ARMOR, 5.0D)

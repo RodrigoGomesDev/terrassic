@@ -50,7 +50,7 @@ public class Carcharodontosaurus extends PredatorDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 150.0D)
+                .add(Attributes.MAX_HEALTH, 300.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.24D)
                 .add(Attributes.ATTACK_DAMAGE, 15.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.3D)

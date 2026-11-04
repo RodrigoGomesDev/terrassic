@@ -26,7 +26,9 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
  *       that leaves it at the chosen share of that list, {@code share / (1 - share) * vanilla weight / dino weight}.
  *       The roll is the same for every member of one group (chunk and tick), so a herd spawns whole or not at all.</li>
  *   <li><b>EcoSpawner</b> (the replenishment around each player): its targets are multiplied by
- *       {@link #ecoFactor}: about half of the continent's at the default share (0.35 since v1.0.1).</li>
+ *       {@link #ecoFactor}: about a third of the continent's at the default share (0.25 since 1.7; 0.35 from v1.0.1).</li>
+ *   <li>1.7: a carnivore ({@code DinosaurEntity.isHunter}) is let through only {@link Rule#PREDATOR_SPAWNS} times as
+ *       often on top of that, in the Cretaceous biomes too.</li>
  * </ul>
  * In the Cretaceous biomes of the Terrassic world type nothing changes: there the dinosaurs are the fauna.
  */
@@ -122,10 +124,11 @@ public final class VanillaShare {
             return true;
         }
         Holder<Biome> biome = level.getBiome(pos);
-        if (biome.is(CretaceousBiomes.CRETACEOUS)) {
-            return true;
-        }
-        double chance = chance(biome.value(), type.getCategory(), Rules.of(server.getLevel()).get(Rule.DINO_SHARE));
+        Rules rules = Rules.of(server.getLevel());
+        // 1.7: the carnivores are thinned once more, everywhere ("Carnivores" rule, 0.4 by default)
+        double predators = com.terrassic.entity.DinosaurEntity.isHunter(type) ? rules.get(Rule.PREDATOR_SPAWNS) : 1.0D;
+        double chance = biome.is(CretaceousBiomes.CRETACEOUS) ? 1.0D : chance(biome.value(), type.getCategory(), rules.get(Rule.DINO_SHARE));
+        chance *= predators;
         return chance >= 1.0D || chance > 0.0D && roll(pos, server.getLevel().getGameTime(), type) < chance;
     }
 

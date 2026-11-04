@@ -44,7 +44,7 @@ public class Tylosaurus extends SwimmingDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 150.0D)
+                .add(Attributes.MAX_HEALTH, 300.0D)
                 .add(Attributes.MOVEMENT_SPEED, 1.25D)
                 .add(Attributes.ATTACK_DAMAGE, 14.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)

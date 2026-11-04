@@ -8,6 +8,12 @@
       ]
     },
     {
+      "id": "dinos",
+      "icon": "terrassic:tyrannosaurus_spawn_egg",
+      "recipes": [],
+      "list": "species"
+    },
+    {
       "id": "weapons",
       "icon": "terrassic:flint_spear",
       "recipes": [
@@ -34,6 +40,11 @@
         "terrassic:bola",
         "terrassic:bola_from_hide"
       ]
+    },
+    {
+      "id": "taming",
+      "icon": "terrassic:raw_prime_meat",
+      "recipes": []
     },
     {
       "id": "knockout",

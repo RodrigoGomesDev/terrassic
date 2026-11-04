@@ -39,7 +39,7 @@ public class Saltasaurus extends HerbivoreDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 220.0D)
+                .add(Attributes.MAX_HEALTH, 440.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.19D)
                 .add(Attributes.ATTACK_DAMAGE, 14.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)

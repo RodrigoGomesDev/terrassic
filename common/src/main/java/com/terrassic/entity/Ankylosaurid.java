@@ -1,9 +1,7 @@
 package com.terrassic.entity;
 
-import com.terrassic.config.Rule;
 import com.terrassic.config.Rules;
 import com.terrassic.network.ModNetwork;
-import com.terrassic.research.Research;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -329,6 +327,7 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
             return;
         }
         ItemStack stack = item.getItem();
+        ItemStack eaten = stack.copyWithCount(1);
         stack.shrink(1);
         if (stack.isEmpty()) {
             item.discard();
@@ -341,14 +340,7 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
         if (thrower == null || this.isTame() || this.isBaby() || !this.canBeTamedNow() || thrower.distanceToSqr(this) > 24.0D * 24.0D) {
             return;
         }
-        int chance = Research.isStudied(thrower, this.speciesId()) ? Math.max(2, this.tameChance() - 1) : this.tameChance();
-        if (this.random.nextDouble() < Rules.of(this.level()).get(Rule.TAMING_SPEED) / chance) {
-            this.grantTamingBonus(100);      // fed without a fight: full effectiveness
-            this.tameBy(thrower);
-        } else {
-            this.level().broadcastEntityEvent(this, (byte) 6);
-            thrower.displayClientMessage(Component.translatable("message.terrassic.tame_try", this.getDisplayName(), chance), true);
-        }
+        this.tameBite(thrower, eaten);   // 1.7: every meal adds to the taming, as by hand (fed without a fight: full effectiveness)
     }
 
     // ------------------------------------------------------------------ the warning

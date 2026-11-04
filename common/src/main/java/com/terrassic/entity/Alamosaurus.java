@@ -39,7 +39,7 @@ public class Alamosaurus extends HerbivoreDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 360.0D)
+                .add(Attributes.MAX_HEALTH, 720.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.17D)
                 .add(Attributes.ATTACK_DAMAGE, 20.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.5D)

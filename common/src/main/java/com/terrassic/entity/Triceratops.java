@@ -40,7 +40,7 @@ public class Triceratops extends Triceratopsine {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 110.0D)
+                .add(Attributes.MAX_HEALTH, 220.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.22D)
                 .add(Attributes.ATTACK_DAMAGE, 11.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.5D)
