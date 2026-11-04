@@ -582,7 +582,9 @@ def c_floresta(W=1920, H=1080):
     return post(img)
 
 
-def c_espreita(W=1920, H=1080):
+def c_espreita(W=1920, H=1080, v2=False):
+    if v2:
+        os.environ.setdefault("CLEARC", "4.5")  # nothing right in front of the lens
     """Close on the T. rex stalking through the ferns of the misty forest, head low, one shaft of sun on its face;
     behind it only fog and trunks."""
     cx, cz = 100.5, 190.5
@@ -605,12 +607,26 @@ def c_espreita(W=1920, H=1080):
         # a shaft of sun on the face, from high on the camera's left, through a gap in the canopy
         src = (head[0] + envf("SHX", -7), head[1] + envf("SHY", 16), head[2] + envf("SHZ", 5))
         look["spots"] = [(src, head, envf("SHE", 90000), envf("SHA", 9), (1.0, 0.86, 0.62))]
+    if v2:
+        # round 5 finish (Rodrigo 03/11): lower in the ferns, a Mesodma frozen right in front of the lens looking up
+        # at what is coming, the series' shader pack and a touch of zoom on the head
+        cam = (cam[0] + envf("CX2", 0.6), gy(cx, cz) + envf("CY2", 1.5), cam[2])
+        target = (head[0] + envf("TX2", -1.4), head[1] - envf("TDY2", 1.2), head[2])
+        mp = in_view(cam, target, envf("MD", 1.9), envf("MX", -0.7), 0)
+        mp = (mp[0], gy(mp[0], mp[2]), mp[2])
+        shot.add("mesodma", ENV("MANIM", "idle"), envf("MT", 0.2), mp, face_to(mp, head) + envf("MYAW", -35), sex="male")
+        look = {**look, **PACK}
+        fov = envf("FOV2", 44)
+        img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, head), envf("FSTOP2", 4.0),
+                     ((rx, 80, rz), (220, 44, 220)), exposure=envf("EXPO", 0.3))
+        return punch(series_post(img, 0.35, 0.5), cam, target, fov, head, envf("ZOOM", 0.012))
     img = render(shot, W, H, cam, target, envf("FOV", 38), sun, look, math.dist(cam, head), envf("FSTOP", 2.0),
                  ((rx, 80, rz), (220, 44, 220)), exposure=envf("EXPO", 0.3))
     return post(img)
 
 
 SCENES["espreita"] = c_espreita
+SCENES["espreita2"] = lambda W=1920, H=1080: c_espreita(W, H, True)
 
 
 RAPTOR = "velociraptor"
@@ -693,7 +709,7 @@ CARCASS = {k: tuple(v) for k, v in __import__("json").loads(ENV("CARC", __import
 CARCASS_REST = ("body",)  # the belly on the sand; wingtips and toes sink in a little
 
 
-def c_praia_carcaca(W=1920, H=1080):
+def c_praia_carcaca(W=1920, H=1080, v2=False):
     """Afternoon on the beach of the Inland Sea: a Pteranodon lies dead on the sand, wings spread, a dark stain
     under it, and a pack of Velociraptors is at it: two tear at the neck and the wing, one screeches from on top,
     one comes in. Daylight from behind the camera, so sand, sea and the animals all read."""
@@ -754,16 +770,32 @@ def c_praia_carcaca(W=1920, H=1080):
     near = body[(np.abs(body[:, 0] - sp[0]) < 0.5) & (np.abs(body[:, 2] - sp[2]) < 0.5)]
     sy = float(near[:, 1].max()) if len(near) else float(body[:, 1].max())
     sp = (float(sp[0]), sy, float(sp[2]))
-    shot.add(RAPTOR, ENV("STOP", "screech"), envf("ST", 0.45), sp, face_to(sp, cam) + envf("SYAW", 30))
+    if v2:  # mid-hop on the carcass, sand kicked up round the feeders
+        sp = (sp[0], sp[1] + envf("HOP", 0.45), sp[2])
+        shot.add(RAPTOR, ENV("STOP", "screech"), envf("ST", 0.45), sp, face_to(sp, cam) + envf("SYAW", 30), ground=False)
+        rng2 = np.random.default_rng(5)
+        shot.debris(rng2, (centre[0], k[1], centre[2]), int(envf("SAND", 90)), 3.2, (0.05, 1.2), ["sand", "wet_sand"],
+                    (0.03, 0.07))
+    else:
+        shot.add(RAPTOR, ENV("STOP", "screech"), envf("ST", 0.45), sp, face_to(sp, cam) + envf("SYAW", 30))
     target = (centre[0] + envf("TX", 0), centre[1] + envf("TY", 0.7), centre[2] + envf("TZ", 0))
     look = dict(GOLDEN, fog_scale=envf("FOGS", 0.03), **SHADERS)
     sun = sun_from(cam, target, envf("SUNYAW", 200), envf("SUNEL", 38))
+    if v2:
+        # the other Pteranodons circling low overhead, waiting their turn at their own colony-mate
+        swarm(shot, np.random.default_rng(8), cam, target, int(envf("NP", 6)), (14, 45), 14, (6, 16))
+        look = {**look, **PACK}
+        fov = envf("FOV", 42)
+        img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, centre), envf("FSTOP", 5.6),
+                     ((kx, 70, rz), (300, 24, 300)), exposure=envf("EXPO", 0.0))
+        return punch(series_post(img, 0.3, 0.6), cam, target, fov, sp, envf("ZOOM", 0.015))
     img = render(shot, W, H, cam, target, envf("FOV", 42), sun, look, math.dist(cam, centre), envf("FSTOP", 5.6),
                  ((kx, 70, rz), (300, 24, 300)), exposure=envf("EXPO", 0.0))
     return post(img, 0.25)
 
 
 SCENES["praia_carcaca"] = c_praia_carcaca
+SCENES["praia_carcaca2"] = lambda W=1920, H=1080: c_praia_carcaca(W, H, True)
 
 
 def decal(shot, centre, size, image, yaw=0.0, lift=0.03):
@@ -1389,6 +1421,658 @@ def c_rochedo(W=1920, H=1080):
 
 
 SCENES["rochedo"] = c_rochedo
+
+
+# ------------------------------------------------------------------ round 5 (Rodrigo 03/11): the new handmade rigs, behaviour
+# caught mid-action, documentary camera (low, side-on, off-centre), light that has a reason to be there
+PROTO, PACHY, ANKY, GIGA = "protoceratops", "pachycephalosaurus", "ankylosaurus", "giganotosaurus"
+GALLI, PARA, CARNO, MOSA = "gallimimus", "parasaurolophus", "carnotaurus", "mosasaurus"
+
+
+def fwd(yaw):
+    return np.array((-math.sin(math.radians(yaw)), 0.0, -math.cos(math.radians(yaw))))
+
+
+def head_of(species, anim, t, pos, yaw, depth=1.0, **kw):
+    """Middle of the front `depth` blocks of the posed model along its facing: the head."""
+    v, _ = gk.quads(species, anim, t, pos=pos, yaw=yaw, **kw)
+    a = v[:, :3] @ fwd(yaw)
+    return v[a > a.max() - depth, :3].mean(0)
+
+
+def tail_of(species, anim, t, pos, yaw, depth=1.0, **kw):
+    v, _ = gk.quads(species, anim, t, pos=pos, yaw=yaw, **kw)
+    a = v[:, :3] @ fwd(yaw)
+    return v[a < a.min() + depth, :3].mean(0)
+
+
+def peak_t(species, anim, measure, n=24, ground=True):
+    """The moment of an animation where measure(verts) is largest (the head furthest forward, the tail furthest out)."""
+    best = (-1e9, 0.0)
+    for i in range(n):
+        t = i / n
+        v, _ = gk.quads(species, anim, t, pos=(0, 64, 0), yaw=0, ground=ground)
+        best = max(best, (float(measure(v[:, :3])), t))
+    return best[1]
+
+
+def open_land(seed, base, amp, top_fn, under="dirt", nx=200, nz=200, scale=30, ridge=None):
+    """Rolling open ground (no sea): height = base + noise * amp (+ ridge(x, z))."""
+    rng = np.random.default_rng(seed)
+    hn = noise2d(nz, nx, scale, rng, 4)
+    height = lambda x, z: base + hn[int(z) % nz, int(x) % nx] * amp + (ridge(x, z) if ridge else 0)  # noqa: E731
+    world = vx.World()
+    vx.terrain(world, 0, 0, nx, nz, height, under=under, top_fn=lambda x, z: top_fn(x, z, hn[z % nz, x % nx]))
+    gy = lambda x, z: int(round(height(x, z))) + 1  # noqa: E731
+    return world, gy, height, rng
+
+
+def strew(world, rng, height, n, kinds, ok, nx=200, nz=200, tall=("cycad",)):
+    for _ in range(n):
+        x, z = int(rng.uniform(0, nx)), int(rng.uniform(0, nz))
+        h = int(round(height(x, z)))
+        if (x, h + 1, z) in world.blocks or (x, h, z) not in world.blocks or not ok(x, z):
+            continue
+        kind = kinds[int(rng.integers(len(kinds)))]
+        big = kind in tall or kind.startswith("tall_")
+        world.plants.append((x, h + 1, z, kind, rng.uniform(1.5, 2.1) if big else rng.uniform(0.8, 1.2)))
+
+
+def boulder(world, rng, bx, by, bz, r, blocks=("laterite", "conglomerate")):
+    for x in range(int(bx - r - 1), int(bx + r + 2)):
+        for z in range(int(bz - r - 1), int(bz + r + 2)):
+            for y in range(int(by - 2), int(by + r + 1)):
+                if ((x - bx) / r) ** 2 + ((z - bz) / r) ** 2 + ((y - by) / (r * 0.8)) ** 2 < 1:
+                    world.set(x, y, z, blocks[int(rng.integers(len(blocks)))])
+
+
+def egg_texture(seed, base=(214, 200, 172)):
+    """A pixel egg shell: pale, a few darker speckles, like the mod's egg blocks."""
+    rng = np.random.default_rng(seed)
+    a = np.zeros((8, 8, 4), np.uint8)
+    col = np.array(base) * (1 + rng.normal(0, 0.04, (8, 8, 1)))
+    a[..., :3] = np.clip(col, 0, 255)
+    a[..., 3] = 255
+    sp = rng.random((8, 8)) < 0.12
+    a[sp, :3] = (150, 128, 100)
+    return Image.fromarray(a, "RGBA")
+
+
+def box(shot, centre, size, image, yaw=0.0, tilt=0.0):
+    """A small textured box (an egg, a rock): size = (w, h, d) in blocks."""
+    c, s_ = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+    ct, st = math.cos(math.radians(tilt)), math.sin(math.radians(tilt))
+    out = []
+    for nrm, corners, _sh in vx.FACES.values():
+        cs = []
+        for (x, y, z) in corners:
+            x, y, z = (x - 0.5) * size[0], (y - 0.5) * size[1], (z - 0.5) * size[2]
+            y, z = y * ct - z * st, y * st + z * ct
+            cs.append((centre[0] + x * c - z * s_, centre[1] + y, centre[2] + x * s_ + z * c))
+        n = np.array(nrm, float)
+        n = (n[0] * c - n[2] * s_, n[1], n[0] * s_ + n[2] * c)
+        out += gl.quad_verts(cs, [(0, 0), (1, 0), (1, 1), (0, 1)], n, 1.0)
+    shot.meshes.append(gl.Mesh(np.array(out, np.float32), image))
+
+
+def nest_ground(world, centre, gy):
+    """The scrape of the nest: a patch of litter pressed into the ground (before the Shot is built)."""
+    cx, cz = centre
+    for x in range(int(cx - 2), int(cx + 3)):
+        for z in range(int(cz - 2), int(cz + 3)):
+            if math.hypot(x + 0.5 - cx, z + 0.5 - cz) < 1.9:
+                world.set(x, gy(x, z) - 1, z, "needle_litter")
+
+
+def eggs(shot, rng, centre, gy, n=9, r=0.55):
+    """A clutch of eggs half buried in a ring in the scrape."""
+    cx, cz = centre
+    for i in range(n):
+        a = 2 * math.pi * i / n + rng.uniform(-0.2, 0.2)
+        p = (cx + r * math.cos(a), gy(cx, cz) + 0.06, cz + r * math.sin(a))
+        box(shot, p, (0.17, 0.28, 0.17), egg_texture(i), math.degrees(a), float(rng.uniform(-35, 35)))
+
+
+PACK = dict(tex_bump=envf("TBUMP", 0.45), tex_bump_dist=0.02, leaf_trans=envf("LEAFT", 0.55),
+            creature_bump=envf("CBUMP", 0.7), creature_rough=envf("CROUGH", 0.45), creature_spec=envf("CSPEC", 0.6))
+
+
+def series_post(img, bloom=0.3, warm=0.0):
+    """The finish every cover of the series shares: bloom on the bright light, a touch of warmth in the highlights."""
+    img = post(img, bloom)
+    if warm:
+        a = np.asarray(img, float)
+        lum = a.mean(-1, keepdims=True) / 255
+        a = a + warm * lum ** 2 * np.array((14, 6, -10))
+        img = Image.fromarray(a.clip(0, 255).astype(np.uint8))
+    return img
+
+
+DESERT = dict(GOLDEN, top=(0.20, 0.36, 0.64), mid=(0.56, 0.64, 0.78), hor=(0.96, 0.86, 0.70), glow=(1.0, 0.88, 0.64),
+              sun_col=(1.50, 1.24, 0.94), sky_amb=(0.52, 0.58, 0.72), gnd_amb=(0.34, 0.26, 0.20),
+              fog_col=(0.96, 0.84, 0.70), fog_density=0.004, clouds=0.2, sun_strength=envf("SUNS", 11.0),
+              fill=envf("FILL", 0.8), fog_scale=envf("FOGS", 0.03), **PACK)
+
+
+def screen_xy(cam, target, fov, W, H, p):
+    """Where a world point lands in the frame (pixels)."""
+    f, r, u = frame(cam, target)
+    d = np.asarray(p, float) - np.asarray(cam, float)
+    th = math.tan(math.radians(fov) / 2)
+    return (W / 2 + (d @ r) / (d @ f) / th * H / 2, H / 2 - (d @ u) / (d @ f) / th * H / 2)
+
+
+def punch(img, cam, target, fov, p, zoom=0.02, shk=0.0):
+    """The hit, felt: a zoom blur out of the point of impact, and a little camera shake."""
+    img = radial_blur(img, screen_xy(cam, target, fov, img.size[0], img.size[1], p), zoom)
+    return shake(img, shk) if shk else img
+
+
+VEGAVIS, MESODMA = "vegavis", "mesodma"
+
+
+def c_ninho(W=1920, H=1080):
+    """The Fighting Dinosaurs, seen from the nest: a hatchling Protoceratops has just poked its head out of the egg,
+    beak wide open, and right behind the clutch its mother shoves back a Velociraptor that is leaping at her."""
+    world, gy, height, rng = open_land(int(envf("SEED", 4)), 64, 1.4, lambda x, z, n: "sand" if n > 0.6 else
+                                       ("cracked_mud" if n < -0.4 else "lateritic_soil"), under="laterite", scale=34)
+    px, pz = 100.5, 100.5
+    pyaw = envf("PYAW", 90)  # the mother faces -X
+    pp = (px, gy(px, pz), pz)
+    panim, pt = ENV("PANIM", "shove"), envf("PT", 0.5)
+    ph = head_of(PROTO, panim, pt, pp, pyaw)
+    ranim, rt = ENV("RANIM", "pounce"), envf("RT", 0.35)
+    ryaw = pyaw + 180 + envf("RDYAW", -18)
+    rh0 = head_of(RAPTOR, ranim, rt, (0, 0, 0), ryaw, ground=False)
+    lift = envf("RLIFT", 0.55)  # in the air, mid-leap
+    rp = ph + fwd(pyaw) * envf("GAP", 0.25) - rh0 + np.array((0, lift + 0.25, 0))
+    rp = (float(rp[0]), float(rp[1]), float(rp[2]))
+    mid = (np.array(pp) + np.array((rp[0], pp[1], rp[2]))) / 2
+    # the camera lies on the ground beside the nest, between us and the fight
+    cam = (mid[0] + envf("CX", 1.6), gy(mid[0], mid[2] + 4) + envf("CY", 0.28), mid[2] + envf("CD", 4.2))
+    nc = (cam[0] + envf("NX", 0.35), cam[2] - envf("ND", 1.6))
+    for (bx, bz, r) in ((118, 82, 2.4), (76, 76, 3.2), (134, 70, 2.0)):
+        boulder(world, rng, bx, gy(bx, bz), bz, r)
+    strew(world, rng, height, 2600, ["cretaceous_grass"] * 3 + ["horsetail", "clubmoss", "cycad"],
+          lambda x, z: math.hypot(x - mid[0], z - mid[2]) > 4 and math.hypot(x - cam[0], z - cam[2]) > 3)
+    for _ in range(26):
+        x, z = rng.uniform(20, 180), rng.uniform(20, 180)
+        if math.hypot(x - mid[0], z - mid[2]) > 22:
+            vx.tree_fern(world, int(x), gy(x, z), int(z), int(rng.uniform(6, 10)), rng, log="sabal_log", leaves="sabal_leaves")
+    shot = Shot(world)
+    shot.add(PROTO, panim, pt, pp, pyaw, sex="female")
+    shot.add(RAPTOR, ranim, rt, rp, ryaw, sex="male", ground=False)
+    # the clutch: eggs in a ring, one cracked open with the hatchling in it, shell bits around
+    g = gy(*nc)
+    erng = np.random.default_rng(1)
+    for i in range(int(envf("NEGGS", 7))):
+        a = 2 * math.pi * i / 7 + erng.uniform(-0.2, 0.2)
+        p = (nc[0] + 0.26 * math.cos(a), g + 0.06, nc[1] + 0.26 * math.sin(a))
+        box(shot, p, (0.11, 0.17, 0.11), egg_texture(i), math.degrees(a), float(erng.uniform(-30, 30)))
+    tc = np.array((cam[0] - nc[0], 0.0, cam[2] - nc[1]))
+    tc /= np.linalg.norm(tc)
+    hp = (nc[0] + tc[0] * envf("HF", 0.45), g, nc[1] + tc[2] * envf("HF", 0.45))
+    box(shot, (hp[0], g + 0.035, hp[2]), (0.13, 0.07, 0.13), egg_texture(9))  # the bottom half of the shell
+    for k in range(5):
+        a = erng.uniform(0, 2 * math.pi)
+        box(shot, (hp[0] + 0.18 * math.cos(a), g + 0.015, hp[2] + 0.18 * math.sin(a)), (0.04, 0.02, 0.035),
+            egg_texture(20 + k), float(erng.uniform(0, 360)), float(erng.uniform(-40, 40)))
+    byaw = face_to(hp, cam) + envf("BYAW", -25)
+    shot.add(PROTO, ENV("BANIM", "beg"), envf("BT", 0.3), (hp[0], g + 0.03, hp[2]), byaw, size=envf("BSIZE", 0.16),
+             sex="female")
+    shot.debris(rng, (mid[0], pp[1], mid[2]), int(envf("DUST", 70)), 1.8, (0.05, 1.1), ["sand", "lateritic_soil"],
+                (0.03, 0.07))
+    target = (mid[0] + envf("TX", 0.4), pp[1] + envf("TY", 0.75), mid[2])
+    look = dict(DESERT, fill=envf("FILL", 0.9))
+    look["dust"] = ((mid[0], pp[1] + 0.6, mid[2]), (6, 1.4, 5), envf("DUSTD", 0.14), (0.86, 0.62, 0.44))
+    sun = sun_from(cam, target, envf("SUNYAW", 120), envf("SUNEL", 34))
+    fov = envf("FOV", 46)
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, hp) * envf("FOCK", 1.25), envf("FSTOP", 8.0),
+                 ((100, 70, 100), (300, 20, 300)), exposure=envf("EXPO", -0.3))
+    return punch(series_post(img, 0.2, 0.6), cam, target, fov, ph, envf("ZOOM", 0.015))
+
+
+SCENES["ninho"] = c_ninho
+
+
+def c_cranios(W=1920, H=1080):
+    """Two male Pachycephalosaurus meet dome to dome on an upland meadow at sunset: the instant of the clash, a ring
+    of dust thrown off the ground, grit in the air, the sun right behind them. Off to one side a female goes on
+    grazing, not impressed at all."""
+    world, gy, height, rng = open_land(int(envf("SEED", 12)), 70, 3.0, lambda x, z, n: "litter" if n > 0.4 else "grass",
+                                       scale=40)
+    anim = ENV("ANIM", "dome_clash")
+    ct = envf("CT", -1)
+    if ct < 0:
+        ct = peak_t(PACHY, anim, lambda v: v[:, 2].min() * -1)
+    ax, az = 100.5, 100.5
+    yaw_a = envf("AYAW", 90)
+    pa = (ax, gy(ax, az), az)
+    ha = head_of(PACHY, anim, ct, pa, yaw_a)
+    yaw_b = yaw_a + 180 + envf("BDYAW", 6)
+    hb0 = head_of(PACHY, anim, ct, (0, 64, 0), yaw_b)
+    pb = ha + fwd(yaw_a) * envf("GAP", 0.15) - np.array((hb0[0], 0, hb0[2]))
+    pb = (float(pb[0]), gy(pb[0], pb[2]), float(pb[2]))
+    contact = (np.array(ha) + np.array(head_of(PACHY, anim, ct, pb, yaw_b))) / 2
+    camx, camz = contact[0] + envf("CX", -2.2), contact[2] + envf("CD", 5.6)
+    fx, fz = contact[0] - envf("FEMX", 6.0), contact[2] - envf("FEMZ", 7.0)  # the female, grazing
+    lane = cenas.clear_of((camx, camz), (contact[0], contact[2]), 2.5)
+    keep = lambda x, z: (math.hypot(x - contact[0], z - contact[2]) > 5 and math.hypot(x - camx, z - camz) > 6  # noqa: E731
+                         and lane(x, z) and math.hypot(x - fx, z - fz) > 3)
+    for _ in range(60):
+        x, z = rng.uniform(5, 195), rng.uniform(5, 195)
+        if keep(x, z) and z < contact[2] - 25 and abs(x - contact[0]) > (contact[2] - z) * 0.35:
+            vx.conifer(world, int(x), gy(x, z), int(z), int(rng.uniform(14, 26)), rng)
+    strew(world, rng, height, 9000, ["cretaceous_grass"] * 6 + ["clubmoss"], keep)
+    shot = Shot(world)
+    shot.add(PACHY, anim, ct, pa, yaw_a, sex="male")
+    shot.add(PACHY, anim, ct, pb, yaw_b, sex="male")
+    shot.add(PACHY, ENV("FANIM", "graze"), envf("FT", 0.4), (fx, gy(fx, fz), fz), face_to((fx, 0, fz), (camx, 0, camz)) + 70,
+             sex="female")
+    g = gy(contact[0], contact[2])
+    shot.debris(rng, tuple(contact), int(envf("CHIPS", 30)), 1.0, (-0.3, 0.9), ["grass_top", "dirt", "gravel"], (0.03, 0.07))
+    # a ring of dust thrown out along the ground from under the clash
+    for i in range(int(envf("RING", 80))):
+        a = rng.uniform(0, 2 * math.pi)
+        r = rng.uniform(1.6, 2.6)
+        shot.debris(rng, (contact[0] + r * math.cos(a), g, contact[2] + r * math.sin(a)), 1, 0.2, (0.02, 0.35),
+                    ["dirt", "grass_top"], (0.03, 0.06))
+    cam = (camx, g + envf("CY", 0.35), camz)
+    target = (contact[0] + envf("TX", -1.4), contact[1] + envf("TY", 0.2), contact[2])
+    look = dict(GOLDEN, fog_scale=envf("FOGS", 0.12), fog_density=0.008, **PACK)
+    look["dust"] = ((contact[0], g + 0.6, contact[2]), (7, 1.4, 6), envf("DUSTD", 0.22), (0.82, 0.66, 0.50))
+    sun = sun_from(cam, target, envf("SUNYAW", 10), envf("SUNEL", 5))
+    fov = envf("FOV", 50)
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, contact), envf("FSTOP", 4.0),
+                 ((100, 80, 100), (300, 30, 300)), exposure=envf("EXPO", 0.2))
+    return punch(series_post(img, 0.35, 0.8), cam, target, fov, contact, envf("ZOOM", 0.012), envf("SHAKE", 0))
+
+
+SCENES["cranios"] = c_cranios
+
+
+def c_clava(W=1920, H=1080):
+    """An Ankylosaurus swings its tail club at a Giganotosaurus that rears back from it, at the edge of a fern
+    floodplain; ferns and dirt burst off the club, a few Vegavis flap up in fright. Low camera on the club's side."""
+    cx0, cz0 = 100.5, 100.5
+    world, gy, height, rng = open_land(int(envf("SEED", 9)), 64, 1.2, lambda x, z, n: "fern_litter" if n > 0.1 else "grass",
+                                       scale=28)
+    aanim = ENV("AANIM", "club_l")
+    at = envf("AT", -1)
+    ayaw = envf("AYAW", 200)
+    if at < 0:
+        at = peak_t(ANKY, aanim, lambda v: np.abs(v[v[:, 2] > v[:, 2].max() - 1.2, 0]).max())
+    pa = (cx0, gy(cx0, cz0), cz0)
+    club = tail_of(ANKY, aanim, at, pa, ayaw, 0.8)
+    ganim, gt = ENV("GANIM", "back_off"), envf("GT", 0.45)
+    gyaw = face_to(club, pa) + envf("GDYAW", 25)
+    gh0 = head_of(GIGA, ganim, gt, (0, 64, 0), gyaw)
+    toward = np.array(club) - np.array(pa)
+    toward[1] = 0
+    toward /= np.linalg.norm(toward)
+    gp = np.array(club) + toward * envf("GGAP", 0.9) - np.array((gh0[0], 0, gh0[2]))
+    gp = (float(gp[0]), gy(gp[0], gp[2]), float(gp[2]))
+    keep = lambda x, z: (math.hypot(x - pa[0], z - pa[2]) > 9 and math.hypot(x - gp[0], z - gp[2]) > 11  # noqa: E731
+                         and math.hypot(x - club[0], z - club[2]) > 7)
+    for _ in range(140):
+        x, z = rng.uniform(4, 196), rng.uniform(4, 196)
+        if keep(x, z) and math.hypot(x - cx0, z - cz0) > 18:
+            if rng.random() < 0.5:
+                vx.tree_fern(world, int(x), gy(x, z), int(z), int(rng.uniform(5, 8)), rng)
+            else:
+                vx.araucaria(world, int(x), gy(x, z), int(z), int(rng.uniform(14, 24)), rng)
+    strew(world, rng, height, 11000, ["royal_fern"] * 4 + ["bracken", "tall_bracken", "horsetail", "tall_horsetail",
+                                                            "cycad"], keep)
+    shot = Shot(world)
+    shot.add(ANKY, aanim, at, pa, ayaw, sex="male")
+    shot.add(GIGA, ganim, gt, gp, gyaw, sex="male")
+    shot.debris(rng, tuple(club), int(envf("BITS", 110)), 1.8, (-0.5, 1.6), ["royal_fern", "bracken", "dirt", "grass_top"],
+                (0.05, 0.14))
+    g0 = gy(club[0], club[2])
+    shot.debris(rng, (club[0], g0, club[2]), int(envf("DIRT", 60)), 2.2, (0.02, 0.6), ["dirt", "fern_litter"], (0.03, 0.07))
+    back = np.array(pa) - toward * envf("CB", 2.0)
+    side = np.array((-toward[2], 0, toward[0])) * envf("CS", -6.5)
+    g = gy(back[0] + side[0], back[2] + side[2])
+    cam = (float(back[0] + side[0]), g + envf("CY", 0.6), float(back[2] + side[2]))
+    gh = head_of(GIGA, ganim, gt, gp, gyaw)
+    target = tuple(np.array(club) * (1 - envf("TK", 0.45)) + np.array(gh) * envf("TK", 0.45) + np.array((0, envf("TY", 0), 0)))
+    # Vegavis startled out of the ferns, flapping up and away from the fight
+    for i in range(int(envf("NB", 4))):
+        p = np.array(in_view(cam, target, rng.uniform(7, 11), rng.uniform(-1.0, 3.5), rng.uniform(1.8, 3.6)))
+        shot.add(VEGAVIS, "fly", float(rng.uniform(0, 1)), tuple(p), face_to(tuple(p), cam) + float(rng.uniform(100, 160)),
+                 roll=float(rng.uniform(-25, 25)), pitch=20, ground=False, sex="female" if i % 2 else "male")
+    look = dict(GOLDEN, fog_scale=envf("FOGS", 0.25), fog_density=0.01, fill=envf("FILL", 0.9), **PACK)
+    look["dust"] = ((club[0], g0 + 0.5, club[2]), (5, 1.2, 5), envf("DUSTD", 0.15), (0.70, 0.60, 0.46))
+    sun = sun_from(cam, target, envf("SUNYAW", -55), envf("SUNEL", 24))
+    fov = envf("FOV", 54)
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, club), envf("FSTOP", 4.0),
+                 ((100, 80, 100), (300, 30, 300)), exposure=envf("EXPO", 0.1))
+    return punch(series_post(img, 0.3, 0.6), cam, target, fov, club, envf("ZOOM", 0.012), envf("SHAKE", 0))
+
+
+SCENES["clava"] = c_clava
+
+
+def c_debandada(W=1920, H=1080):
+    """A stampede across the dry floodplain, straight at the camera: the lead Gallimimus airborne over the lens, the
+    herd and the Parasaurolophus behind, the Carnotaurus roaring in the dust, and two little Mesodma running for
+    their lives between the legs. Low sun behind the herd lighting the dust."""
+    world, gy, height, rng = open_land(int(envf("SEED", 21)), 64, 1.0, lambda x, z, n: "cracked_mud" if n > 0.5 else "grass", scale=36)
+    cx, cz = 100.5, 170.5
+    cam = (cx + envf("CX", -4), gy(cx, cz) + envf("CY", 0.45), cz)
+    shot_parts = []
+    lead = envf("LEAD", 5.5)
+    for i in range(int(envf("NG", 11))):
+        d = lead + i * 2.4 + float(rng.uniform(-1, 1.5))
+        x = cx + float(rng.uniform(-1, 1)) * (2.5 + d * 0.28)
+        z = cz - d
+        anim = "jink" if rng.random() < 0.2 else "run"
+        up = envf("LIFT", 0.45) if i == 0 else 0.0  # the lead one mid-stride, both feet off the ground
+        shot_parts.append((GALLI, anim, float(rng.uniform(0, 1)), (x, gy(x, z) + up, z), 180 + float(rng.uniform(-14, 14)),
+                           "female" if i % 2 else "male", float(rng.uniform(0.92, 1.05)), not up))
+    for i in range(int(envf("NP", 5))):
+        d = lead + 24 + i * 4 + float(rng.uniform(-2, 2))
+        x = cx + float(rng.uniform(-1, 1)) * (4 + d * 0.25)
+        z = cz - d
+        shot_parts.append((PARA, "run", float(rng.uniform(0, 1)), (x, gy(x, z), z), 180 + float(rng.uniform(-10, 10)),
+                           "female" if i % 2 else "male", float(rng.uniform(0.9, 1.0)), True))
+    kx, kz = cx + envf("KX", 3), cz - lead - envf("KD", 34)
+    shot_parts.append((CARNO, ENV("KANIM", "roar"), envf("KT", 0.45), (kx, gy(kx, kz), kz), 180 + envf("KYAW", -10), "male", 1.0, True))
+    for i in range(int(envf("NM", 2))):  # the little ones fleeing too
+        mx, mz = cam[0] + envf("MX", 1.4) + i * 0.7, cam[2] - envf("MD", 2.6) - i * 0.9
+        shot_parts.append((MESODMA, "run", 0.3 + 0.4 * i, (mx, gy(mx, mz), mz), 180 + 25 - 30 * i, "male", 1.0, True))
+    herd = lambda x, z: abs(x - cx) < 6 + (cz - z) * 0.35 and z < cz  # noqa: E731
+    for _ in range(50):
+        x, z = rng.uniform(4, 196), rng.uniform(4, 160)
+        if not herd(x, z) and abs(x - cx) > 14:
+            vx.araucaria(world, int(x), gy(x, z), int(z), int(rng.uniform(12, 22)), rng)
+    strew(world, rng, height, 2500, ["clubmoss"] * 3 + ["cretaceous_grass"], lambda x, z: math.hypot(x - cx, z - cz) > 25)
+    shot = Shot(world)
+    for (sp, an, t, p, yw, sx, sz, gr) in shot_parts:
+        shot.add(sp, an, t, p, yw, sex=sx, size=sz, ground=gr)
+    mid = (cx, gy(cx, cz - 30), cz - 30)
+    shot.debris(rng, (cx, gy(cx, cz - 18), cz - 18), int(envf("CLODS", 110)), 9, (0.05, 1.0),
+                ["lateritic_soil", "dirt", "cracked_mud"], (0.04, 0.09))
+    shot.debris(rng, (cam[0], cam[1], cam[2] - 2.5), int(envf("NEAR", 18)), 1.5, (-0.3, 1.0), ["dirt", "cracked_mud"],
+                (0.03, 0.06))  # clods flying at the lens
+    target = (cx + envf("TX", 0), gy(cx, cz - 30) + envf("TY", 2.4), cz - 30)
+    look = dict(GOLDEN, fog_scale=envf("FOGS", 0.08), fog_density=0.006, **PACK)
+    look["dust"] = ((cx, mid[1] + 2, cz - 40), (40, 4, 50), envf("DUSTD", 0.1), (0.86, 0.68, 0.48))
+    sun = sun_from(cam, target, envf("SUNYAW", 28), envf("SUNEL", 14))
+    lead_p = shot_parts[0][3]
+    fov = envf("FOV", 32)
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, lead_p) * envf("FOCK", 1.0),
+                 envf("FSTOP", 2.8), ((100, 80, 100), (300, 30, 300)), exposure=envf("EXPO", 0.15))
+    return punch(series_post(img, 0.3, 0.7), cam, target, fov, target, envf("ZOOM", 0.022), envf("SHAKE", 0))
+
+
+SCENES["debandada"] = c_debandada
+
+
+def c_mar(W=1920, H=1080):
+    """Morning at the water's edge: a Parasaurolophus has its head down drinking and hasn't noticed a thing, while a
+    Mosasaurus bursts out of the shallows right in front of its face; behind it, the other one rears up and calls the
+    alarm. Spray in pixels, the sun low over the sea."""
+    rz = envf("RZ", 196)
+    world, coast, height, rng = beach_world(rz, envf("RXO", 2))
+    gy = lambda x, z: max(61.0, int(round(height(x, z))) + 1.0)  # noqa: E731
+    shot = Shot(world)
+    dz = rz
+    dx = coast(dz) + envf("DXO", 1.2)
+    dyaw = envf("DYAW", 90)  # drinking, facing the sea (-X)
+    danim, dt = ENV("DANIM", "drink"), envf("DT", 0.5)
+    dp = (dx, gy(dx, dz), dz)
+    shot.add(PARA, danim, dt, dp, dyaw, sex="male")
+    snout = head_of(PARA, danim, dt, dp, dyaw, 0.6)
+    az = dz + envf("AZ", -7)
+    ax = coast(az) + envf("AXO", 5)
+    shot.add(PARA, ENV("AANIM", "alarm"), envf("AT", 0.4), (ax, gy(ax, az), az), envf("AYAW", 140), sex="female")
+    manim, mt = ENV("MANIM", "breach"), envf("MT", -1)
+    skull = lambda t, yw=0.0: gk.quads(MOSA, manim, t, pos=(0, 0, 0), yaw=yw, ground=False,  # noqa: E731
+                                       only=("skull", "jaw"))[0][:, :3].mean(0)
+    if mt < 0:  # the frame where the head is highest out of the water (later in the clip the tail comes up instead)
+        mt = max((skull(i / 24)[1], i / 24) for i in range(24))[1]
+    sea = fwd(dyaw)  # toward the sea
+    myaw = dyaw + 180 + envf("MDYAW", 0)  # coming out of the sea at the drinker
+    top_rel = skull(mt, myaw)
+    want = snout + sea * envf("MGAP", 2.4) + np.array((0, envf("MUP", 2.0), 0))  # leaping well clear of the water
+    mp = want - top_rel
+    mp = (float(mp[0]), float(mp[1]), float(mp[2]))
+    shot.add(MOSA, manim, mt, mp, myaw, ground=False, tweak={"jaw": (envf("JAW", -40), 0, 0)})  # jaws wide open
+    mh = want
+    shot.debris(rng, (mh[0], 60.9, mh[2]), int(envf("SPRAY", 300)), 3.2, (0.0, max(1.5, mh[1] - 59.5)), ["chalk", "chalk_pebbles"],
+                (0.04, 0.11))
+    shot.debris(rng, (mh[0] - sea[0], 60.9, mh[2] - sea[2]), int(envf("SPRAY2", 60)), 1.5, (0.0, 1.0), ["chalk"], (0.03, 0.07))
+    for k in range(3):
+        decal(shot, (mh[0] + rng.uniform(-0.5, 0.5), 60.92, mh[2] + rng.uniform(-0.5, 0.5)), (3 + 2.5 * k, 3 + 2.5 * k),
+              ring_texture(k), 0, 0.0)
+    # the camera low on the wet sand, side-on to the drinker, a little out toward the water
+    ccx, ccz = dx + envf("CX", 1.0), dz + envf("CD", 9.5)
+    cam = (ccx, gy(ccx, ccz) + envf("CY", 0.6), ccz)
+    target = ((snout[0] + mh[0]) / 2 + envf("TX", 0.5), envf("TY", 63.0), (snout[2] + mh[2]) / 2)
+    look = dict(GOLDEN, fog_scale=envf("FOGS", 0.04), water_color=(0.10, 0.34, 0.40), water_trans=0.45, **PACK)
+    sun = sun_from(cam, target, envf("SUNYAW", -40), envf("SUNEL", 12))
+    fov = envf("FOV", 44)
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, mh), envf("FSTOP", 5.6),
+                 ((110, 70, rz), (400, 24, 400)), exposure=envf("EXPO", 0.1))
+    return punch(series_post(img, 0.3, 0.6), cam, target, fov, mh, envf("ZOOM", 0.02))
+
+
+SCENES["mar"] = c_mar
+
+
+
+# ------------------------------------------------------------------ banners (Rodrigo 04/11): one wide master, cropped per platform
+TRI, SPINO = "triceratops", "spinosaurus"
+
+
+def open_beach(seed=7, nx=260, nz=300):
+    """A wide, low beach for banners: sand, then grass dunes rising only a block or two, trees far back, so whatever
+    walks along the shore stands against the sky when seen from the water."""
+    rng = np.random.default_rng(seed)
+    cn = noise2d(nz, 1, 20, rng, 3)
+    hn = noise2d(nz, nx, 24, rng, 4)
+    coast = lambda z: 96 + 4 * math.sin(z / 60.0) + cn[int(z) % nz, 0] * 3  # noqa: E731
+
+    def height(x, z):
+        d = x - coast(z)
+        if d < 0:
+            return max(50, 60.6 + d * 0.18)
+        return 61 + min(1.6, max(0.0, d - 8) * 0.06) + hn[int(z) % nz, int(x) % nx] * 0.6 * min(1.0, max(0.0, d - 10) / 10)
+
+    world = vx.World()
+    vx.terrain(world, 0, 0, nx, nz, height, sea=60, beach=1, under="soil",
+               top_fn=lambda x, z: "grass" if hn[z % nz, x % nx] > -0.2 else "litter")
+    world.water = [(-3000, -3000, 3000, 3000, 60.9)]
+    for _ in range(int(envf("TREES", 70))):
+        z = rng.uniform(5, nz - 5)
+        x = coast(z) + rng.uniform(55, 150)
+        if x < nx - 3:
+            y = int(round(height(x, z))) + 1
+            if rng.random() < 0.7:
+                vx.araucaria(world, int(x), y, int(z), int(rng.uniform(13, 22)), rng)
+            else:
+                vx.tree_fern(world, int(x), y, int(z), int(rng.uniform(5, 8)), rng)
+    kinds = ["cretaceous_grass"] * 4 + ["clubmoss", "horsetail", "cycad"]
+    for _ in range(6000):
+        x, z = int(rng.uniform(0, nx)), int(rng.uniform(0, nz))
+        h = int(round(height(x, z)))
+        if x - coast(z) > 9 and (x, h + 1, z) not in world.blocks and (x, h, z) in world.blocks:
+            k = kinds[int(rng.integers(len(kinds)))]
+            world.plants.append((x, h + 1, z, k, rng.uniform(1.5, 2.0) if k == "cycad" else rng.uniform(0.8, 1.2)))
+    return world, coast, height, rng
+
+
+def c_desfile(W=3840, H=2160):
+    """Banner master: the Cretaceous on parade along the beach of the Inland Sea at golden hour, seen side-on from
+    the water with a long lens. Everyone walks to the left in one line, small to big; a Spinosaurus fishes in the
+    shallows, a Mosasaurus peeks out to watch, the T. rex brings up the rear, Pteranodons wheel high on the sides.
+    All the action sits in a band across the middle, so every platform crop (16:9, 3:1, 5:2, YouTube's safe strip)
+    keeps it; the sky above stays clear for the title."""
+    rz = envf("RZ", 150)
+    world, coast, height, rng = open_beach(int(envf("SEED", 7)))
+    shot = Shot(world)
+    gy = lambda x, z: max(61.0, int(round(height(x, z))) + 1.0)  # noqa: E731
+    D = envf("D", 3.5)  # how far up the sand the line walks
+    line = [  # (z offset, species, anim, t, sex, size, extra dx)
+        (-44, GALLI, "run", 0.1, "male", 1.0, 1.0), (-39, GALLI, "run", 0.55, "female", 0.95, 2.5),
+        (-32, PROTO, "walk", 0.2, "female", 1.0, 0.0), (-30, PROTO, "walk", 0.7, "male", 0.6, 0.8),
+        (-24, PARA, "walk", 0.3, "male", 1.0, 1.0), (-15, PARA, "call", 0.4, "female", 1.0, 3.0),
+        (-7, TRI, "walk", 0.45, "male", 1.0, 0.5), (1, PACHY, "hop_play", 0.35, "male", 1.0, -0.5),
+        (8, ANKY, "walk", 0.6, "female", 1.0, 1.0), (16, RAPTOR, "stalk", 0.3, "male", 1.0, 2.5),
+        (19, RAPTOR, "stalk", 0.7, "female", 1.0, 1.0), (30, REX, "walk", 0.25, "male", 1.0, 2.0),
+    ]
+    for (dz, sp, an, t, sx, sz, dx) in line:
+        z = rz + dz * envf("SPREAD", 0.56)
+        x = coast(z) + D + dx
+        shot.add(sp, an, t, (x, gy(x, z), z), envf("WYAW", 0) + float(rng.uniform(-6, 6)), sex=sx, size=sz)
+    # in the water: the Spinosaurus fishing knee-deep, the Mosasaurus head up watching the parade go by
+    sz_ = rz + envf("SPZ", -6)
+    sx_ = coast(sz_) - envf("SPX", 7)
+    shot.add(SPINO, ENV("SPANIM", "fish"), envf("SPT", 0.4), (sx_, 57.6, sz_), envf("SPYAW", 60), sex="male", ground=False)
+    mz = rz + envf("MOZ", 8)
+    mx = coast(mz) - envf("MOX", 9)
+    shot.add(MOSA, ENV("MOANIM", "spyhop"), envf("MOT", 0.4), (mx, envf("MOY", 59.3), mz), envf("MOYAW", -90), ground=False)
+    cx = coast(rz) - envf("CD", 54)
+    cam = (cx, envf("CY", 61.8), rz + envf("CZ", 0))
+    target = (coast(rz) + D, envf("TY", 64.6), rz)
+    # Pteranodons high on the left and right, the middle of the sky kept clear for the title
+    swarm(shot, np.random.default_rng(3), cam, target, int(envf("NP", 12)), (55, 120), 50, (10, 24),
+          avoid=lambda sx, sy: abs(sx) < 0.35)
+    look = dict(GOLDEN, fog_scale=envf("FOGS", 0.04), **PACK)
+    sun = sun_from(cam, target, envf("SUNYAW", -150), envf("SUNEL", 18))
+    fov = envf("FOV", 24)
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, target), envf("FSTOP", 4.0),
+                 ((110, 72, rz), (500, 26, 500)), exposure=envf("EXPO", 0.0))
+    return series_post(img, 0.25, 0.5)
+
+
+SCENES["desfile"] = c_desfile
+
+
+
+def speed_blur(img, keep_x, strength=0.012, steps=10):
+    """Panning blur: the frame smeared sideways, strongest far from keep_x (the part the camera is following)."""
+    W, H = img.size
+    a = np.asarray(img, float)
+    acc = np.zeros_like(a)
+    n = max(1, int(W * strength))
+    for i in range(steps):
+        acc += np.roll(a, int(n * (i / steps - 0.5)), axis=1)
+    blur = acc / steps
+    xx = np.arange(W)[None, :, None]
+    m = (np.abs(xx - keep_x) / (W * 0.5)).clip(0, 1) ** 1.5
+    return Image.fromarray((a * (1 - m) + blur * m).clip(0, 255).astype(np.uint8))
+
+
+def c_fuga(W=3840, H=2160):
+    """Banner master: the chase. Across the whole width the herd flees to the left over the dry floodplain at sunset,
+    dust lit from behind, Pteranodons scattering; from the right a T. rex charges right past the lens, jaws open,
+    the Giganotosaurus and the Carnotaurus behind it. Title in the dust sky over the middle."""
+    world, gy, height, rng = open_land(int(envf("SEED", 31)), 64, 0.8,
+                                       lambda x, z, n: "cracked_mud" if n > 0.3 else ("lateritic_soil" if n > -0.1 else "grass"),
+                                       scale=40, nx=240, nz=260)
+    cx, cz = 60.5, 130.5
+    cam = (cx, gy(cx, cz) + envf("CY", 1.5), cz)
+    target = (cx + 40, gy(cx + 40, cz) + envf("TY", 2.6), cz + envf("TZ", 0))
+    parts = []
+    # the herd: running to screen-left (-Z), spread in depth so they overlap
+    for i in range(int(envf("NG", 14))):
+        d = float(rng.uniform(13, 30))
+        z = cz + float(rng.uniform(-26, 2)) * d / 30
+        parts.append((GALLI, "jink" if rng.random() < 0.2 else "run", float(rng.uniform(0, 1)), cx + d, z,
+                      float(rng.uniform(-12, 12)), "female" if i % 2 else "male", 1.0))
+    for i in range(int(envf("NPA", 5))):
+        d = float(rng.uniform(22, 36))
+        z = cz + float(rng.uniform(-22, 4)) * d / 30
+        parts.append((PARA, "run", float(rng.uniform(0, 1)), cx + d, z, float(rng.uniform(-8, 8)),
+                      "female" if i % 2 else "male", 1.0))
+    for i in range(3):
+        d = float(rng.uniform(12, 20))
+        z = cz + float(rng.uniform(-16, -4))
+        parts.append((PROTO, "run", float(rng.uniform(0, 1)), cx + d, z, float(rng.uniform(-10, 10)), "male", 1.0))
+    # the hunters, coming in from the right
+    parts.append((REX, ENV("RANIM", "run"), envf("RT", 0.3), cx + envf("RD", 21), cz + envf("RZ", 9.5), envf("RYAW", -8), "male", 1.0))
+    parts.append((GIGA, "run", 0.65, cx + envf("GD", 34), cz + envf("GZ", 18), -4, "male", 1.0))
+    parts.append((CARNO, "run", 0.15, cx + envf("KD", 27), cz + envf("KZ", 13), -12, "female", 1.0))
+    occupied = [(p[3], p[4]) for p in parts]
+    for _ in range(40):
+        x, z = rng.uniform(cx + 60, 236), rng.uniform(4, 256)
+        vx.araucaria(world, int(x), gy(x, z), int(z), int(rng.uniform(12, 22)), rng)
+    strew(world, rng, height, 5000, ["cretaceous_grass"] * 3 + ["clubmoss", "horsetail"],
+          lambda x, z: x > cx + 16 and all(math.hypot(x - a, z - b) > 3 for a, b in occupied), nx=240, nz=260)
+    shot = Shot(world)
+    for (sp, an, t, x, z, yw, sx, sz) in parts:
+        jaws = {"jaw": (envf("JAW", -32), 0, 0)} if sp in (REX, GIGA) else None  # hunters charge jaws open
+        shot.add(sp, an, t, (x, gy(x, z), z), yw, sex=sx, size=sz, tweak=jaws)
+    shot.debris(rng, (cx + 25, gy(cx + 25, cz), cz - 4), int(envf("CLODS", 220)), 22, (0.05, 1.6),
+                ["lateritic_soil", "dirt", "cracked_mud"], (0.05, 0.12))
+    shot.debris(rng, (cx + envf("RD", 21), gy(cx + 21, cz + 9.5), cz + envf("RZ", 9.5)), 50, 3, (0.05, 1.2),
+                ["dirt", "cracked_mud"], (0.06, 0.14))
+    swarm(shot, np.random.default_rng(4), cam, target, int(envf("NP", 10)), (40, 110), 60, (10, 30),
+          avoid=lambda sx, sy: abs(sx) < 0.3 and sy > 0.12)
+    look = dict(GOLDEN, fog_scale=envf("FOGS", 0.12), fog_density=0.008, **PACK)
+    look["dust"] = ((cx + 30, gy(cx + 30, cz) + 3, cz - 5), (50, 7, 70), envf("DUSTD", 0.14), (0.90, 0.68, 0.46))
+    sun = sun_from(cam, target, envf("SUNYAW", -38), envf("SUNEL", 7))
+    fov = envf("FOV", 34)
+    rex = (cx + envf("RD", 21), gy(cx + 21, cz + 9.5) + 4, cz + envf("RZ", 9.5))
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, rex), envf("FSTOP", 5.6),
+                 ((cx + 40, 80, cz), (300, 30, 300)), exposure=envf("EXPO", 0.15))
+    img = series_post(img, 0.35, 0.8)
+    return speed_blur(img, screen_xy(cam, target, fov, W, H, rex)[0], envf("PAN", 0.005))
+
+
+SCENES["fuga"] = c_fuga
+
+
+
+def c_revoada(W=3840, H=2160):
+    """Banner master: flying with the Pteranodon colony low over the Inland Sea at sunset. One glides right past the
+    lens, banking; on the left a Mosasaurus bursts out of the water jaws open at another that was skimming the
+    surface and now claws for height; the rest of the colony streams along the chalk cliffs. Sky clear in the middle
+    for the title."""
+    world, coast, height, top_y, rng, topmap = chalk_coast()
+    cz = envf("CZ", 230)
+    cam = (coast(cz) - envf("CX", 34), envf("CY", 64.0), cz)
+    target = (cam[0] + envf("TX", 10), envf("TY", 69.0), cz - 60)
+    # the strike, on the left third
+    manim = ENV("MANIM", "breach")
+    skull = lambda t, yw=0.0: gk.quads(MOSA, manim, t, pos=(0, 0, 0), yaw=yw, ground=False,  # noqa: E731
+                                       only=("skull", "jaw"))[0][:, :3].mean(0)
+    mt = envf("MT", -1)
+    if mt < 0:
+        mt = max((skull(i / 24)[1], i / 24) for i in range(24))[1]
+    head = np.array(in_view(cam, target, envf("MD", 26), envf("MX", -9.5), 0))
+    head[1] = 60.9 + envf("MUP", 4.2)
+    prey = head + np.array((envf("PRX", 0.6), envf("PRY", 2.4), envf("PRZ", -0.4)))
+    myaw = face_to(head, prey) + envf("MDYAW", 25)
+    mp = head - skull(mt, myaw)
+    shot = Shot(world)
+    shot.add(MOSA, manim, mt, tuple(mp), myaw, ground=False, tweak={"jaw": (envf("JAW", -42), 0, 0)})
+    shot.add(PTERO, ENV("PREYANIM", "fly"), envf("PREYT", 0.15), tuple(prey), face_to(prey, cam) + envf("PREYYAW", 70),
+             pitch=envf("PREYPITCH", 35), roll=envf("PREYROLL", 20), ground=False, sex="female")
+    shot.debris(rng, (head[0], 60.9, head[2]), int(envf("SPRAY", 260)), 3.4, (0.0, 5.0), ["chalk", "chalk_pebbles"],
+                (0.05, 0.13))
+    for k in range(3):
+        decal(shot, (head[0] + rng.uniform(-1, 1), 60.92, head[2] + rng.uniform(-1, 1)), (5 + 3 * k, 5 + 3 * k),
+              ring_texture(k), 0, 0.0)
+    # the one gliding past the lens, banking, on the right third
+    hero = in_view(cam, target, envf("HD", 12), envf("HX", 5.2), envf("HY", 0.6))
+    shot.add(PTERO, ENV("HANIM", "glide"), envf("HT", 0.3), hero, envf("HYAW", 10), roll=envf("HROLL", -28),
+             pitch=envf("HPITCH", -6), ground=False, sex="male")
+    swarm(shot, np.random.default_rng(6), cam, target, int(envf("NP", 40)), (16, 110), 55, (0, 14),
+          avoid=lambda sx, sy: abs(sx) < 0.18 and sy > 0.12)
+    look = dict(GOLDEN, fog_scale=envf("FOGS", 0.05), ripple=envf("RIP", 0.8), **PACK)
+    sun = sun_from(cam, target, envf("SUNYAW", -30), envf("SUNEL", 7))
+    fov = envf("FOV", 46)
+    img = render(shot, W, H, cam, target, fov, sun, look, math.dist(cam, head), envf("FSTOP", 5.6),
+                 ((cam[0] + 40, 75, cz - 60), (600, 60, 600)), exposure=envf("EXPO", 0.0))
+    img = series_post(img, 0.35, 0.7)
+    return punch(img, cam, target, fov, head, envf("ZOOM", 0.012))
+
+
+SCENES["revoada"] = c_revoada
+
 
 
 if __name__ == "__main__":
