@@ -19,35 +19,46 @@ D = os.path.join(RES, "data", "terrassic")
 TOPICS = [
     ("start", "terrassic:field_lens", ["pocket_guide"], {
         "pt_br": ("Começo",
-                  "Os dinossauros vivem no mundo normal, no meio dos outros animais: mais ou menos um a cada três bichos. "
+                  "Os dinossauros vivem no mundo normal, no meio dos outros animais: mais ou menos um a cada quatro bichos, e os carnívoros são bem mais raros que os herbívoros. "
                   "Os grandes andam em bando, os voadores fazem colônias na costa e os répteis marinhos ficam no oceano.\n"
                   "Quase tudo começa com sílex, que sai do cascalho, e com junco, que cresce na beira de rios e pântanos.\n"
                   "O Velociraptor caça de noite: não ande sozinho no escuro no começo."),
         "en_us": ("Getting Started",
-                  "Dinosaurs live in the normal world among the other animals: roughly one in every three. "
+                  "Dinosaurs live in the normal world among the other animals: roughly one in every four, and the carnivores are much rarer than the herbivores. "
                   "The big ones roam in herds, the flyers nest in colonies on the coast and the sea reptiles keep to the ocean.\n"
                   "Almost everything starts with flint, from gravel, and rush, which grows along rivers and swamps.\n"
                   "The Velociraptor hunts at night: early on, do not walk alone in the dark."),
         "es_es": ("Primeros pasos",
-                  "Los dinosaurios viven en el mundo normal, entre los demás animales: más o menos uno de cada tres. "
+                  "Los dinosaurios viven en el mundo normal, entre los demás animales: más o menos uno de cada cuatro, y los carnívoros son mucho más raros que los herbívoros. "
                   "Los grandes van en manada, los voladores anidan en colonias en la costa y los reptiles marinos viven en el océano.\n"
                   "Casi todo empieza con sílex, que sale de la grava, y con junco, que crece a orillas de ríos y pantanos.\n"
                   "El Velociraptor caza de noche: al principio, no camines solo a oscuras."),
     }),
+    ("dinos", "terrassic:tyrannosaurus_spawn_egg", [], {
+        "pt_br": ("Os dinossauros",
+                  "Todas as espécies que vivem no mundo. Em cada uma: o que come, o tamanho real, como se doma e quanta comida a doma pede.\n"
+                  "Carnívoros pedem pilhas de carne: os pequenos uma pilha, os grandes de duas a cinco."),
+        "en_us": ("The Dinosaurs",
+                  "Every species living in the world. For each: what it eats, its real size, how it is tamed and how much food taming takes.\n"
+                  "Carnivores take stacks of meat: the small ones one stack, the big ones two to five."),
+        "es_es": ("Los dinosaurios",
+                  "Todas las especies que viven en el mundo. En cada una: qué come, su tamaño real, cómo se doma y cuánta comida pide la doma.\n"
+                  "Los carnívoros piden pilas de carne: los pequeños una pila, los grandes de dos a cinco."),
+    }),
     ("weapons", "terrassic:flint_spear", ["flint_spear", "bone_club", "hunting_bow", "flint_arrow"], {
         "pt_br": ("Armas",
                   "Lança: um toque rápido em %key:use% dá uma estocada que alcança uns 4 blocos; segure para arremessar.\n"
-                  "Clava: atordoa. Enche o torpor do bicho e fere pouco, boa para o nocaute.\n"
+                  "Clava: atordoa. Golpe lento que enche o torpor do bicho e fere pouco, boa para o nocaute.\n"
                   "Arco de caça: puxada mais longa e tiro mais forte que o arco comum. Usa qualquer flecha.\n"
                   "Flecha de sílex: um pouco mais de dano que a flecha comum."),
         "en_us": ("Weapons",
                   "Spear: a quick tap of %key:use% thrusts about 4 blocks ahead; hold it to throw.\n"
-                  "Club: it stuns. It fills the animal's torpor and barely wounds, good for a knockout.\n"
+                  "Club: it stuns. A slow blow that fills the animal's torpor and barely wounds, good for a knockout.\n"
                   "Hunting bow: a longer draw and a stronger shot than the plain bow. Takes any arrow.\n"
                   "Flint arrow: a little more damage than the plain arrow."),
         "es_es": ("Armas",
                   "Lanza: un toque rápido de %key:use% da una estocada de unos 4 bloques; mantén pulsado para lanzarla.\n"
-                  "Garrote: aturde. Llena el letargo del animal y hiere poco, bueno para noquear.\n"
+                  "Garrote: aturde. Un golpe lento que llena el letargo del animal y hiere poco, bueno para noquear.\n"
                   "Arco de caza: tensado más largo y tiro más fuerte que el arco normal. Usa cualquier flecha.\n"
                   "Flecha de sílex: un poco más de daño que la flecha normal."),
     }),
@@ -85,22 +96,42 @@ TOPICS = [
                   "Los gigantes rompen la cuerda.\n"
                   "Derriba al Pteranodon y usa la cerbatana mientras está atado."),
     }),
+    ("taming", "terrassic:raw_prime_meat", [], {
+        "pt_br": ("Domesticação",
+                  "Herbívoros e bichos pequenos: dê a comida da espécie na mão. Segure %key:use% em cima dele: cada porção enche a barra de doma, e cheia ele é seu.\n"
+                  "Carnívoros: só filhotes, ovos ou por nocaute. Um carnívoro pequeno pede uma pilha de carne (64); os grandes, de duas a cinco pilhas.\n"
+                  "Carne nobre vale por duas porções. Estudar a espécie no Caderno de Campo faz cada porção render um quarto a mais.\n"
+                  "No nocaute ele dorme uns 20 segundos, mas não acorda enquanto come: tenha a comida toda na mão antes. Erva sonífera e dardos dão mais tempo.\n"
+                  "A Lupa de Campo mostra o que ele come e quanto falta. Filhotes pedem um quarto da comida."),
+        "en_us": ("Taming",
+                  "Herbivores and small animals: hand-feed them their species' food. Hold %key:use% on it: every bite fills the taming bar, and once it is full it is yours.\n"
+                  "Carnivores: only as babies, from eggs or by knockout. A small carnivore takes a stack of meat (64); the big ones two to five stacks.\n"
+                  "Prime meat counts as two bites. Studying the species in the Field Notebook makes every bite count a quarter more.\n"
+                  "Knocked out it sleeps for about 20 seconds, but it does not wake while it eats: have all the food at hand first. Sleep herb and darts add time.\n"
+                  "The Field Lens shows what it eats and how much is left. Babies take a quarter of the food."),
+        "es_es": ("Domesticación",
+                  "Herbívoros y animales pequeños: dales de comer en la mano la comida de su especie. Mantén %key:use% sobre él: cada bocado llena la barra de doma, y llena es tuyo.\n"
+                  "Carnívoros: solo crías, huevos o por noqueo. Un carnívoro pequeño pide una pila de carne (64); los grandes, de dos a cinco pilas.\n"
+                  "La carne selecta vale por dos bocados. Estudiar la especie en el Cuaderno de Campo hace que cada bocado rinda un cuarto más.\n"
+                  "Noqueado duerme unos 20 segundos, pero no despierta mientras come: ten toda la comida a mano antes. La hierba somnífera y los dardos dan más tiempo.\n"
+                  "La Lupa de Campo muestra qué come y cuánto falta. Las crías piden un cuarto de la comida."),
+    }),
     ("knockout", "terrassic:bone_club", [], {
         "pt_br": ("Nocaute",
                   "Para domar um bicho selvagem, encha o torpor dele até ele desmaiar: clava, soco, dardos e flechas narcóticas.\n"
                   "Desmaiado, clique nele com a comida da espécie até a barra encher. Carne nobre vale por duas.\n"
                   "Cada ferida enquanto ele dorme baixa a eficiência, e eficiência alta dá mais níveis. "
-                  "Se ele acordar antes, metade do progresso se perde: mais dardos ou erva sonífera o mantêm dormindo."),
+                  "Ele fica uns 20 segundos desacordado, mas não acorda enquanto você estiver dando comida. Se acordar antes, metade do progresso se perde: mais dardos ou erva sonífera o mantêm dormindo."),
         "en_us": ("Knockout",
                   "To tame a wild animal, fill its torpor until it passes out: club, fists, darts and narcotic arrows.\n"
                   "Once it is out, use its species' food on it until the bar is full. Prime meat counts twice.\n"
                   "Every wound while it sleeps lowers the effectiveness, and high effectiveness gives more levels. "
-                  "If it wakes up first, half the progress is lost: more darts or sleep herb keep it asleep."),
+                  "It stays out for about 20 seconds, but it does not wake while you keep feeding it. If it wakes up first, half the progress is lost: more darts or sleep herb keep it asleep."),
         "es_es": ("Noqueo",
                   "Para domar a un animal salvaje, llena su letargo hasta que se desmaye: garrote, puños, dardos y flechas narcóticas.\n"
                   "Desmayado, usa en él la comida de su especie hasta llenar la barra. La carne selecta cuenta doble.\n"
                   "Cada herida mientras duerme baja la eficacia, y una eficacia alta da más niveles. "
-                  "Si despierta antes, se pierde la mitad del progreso: más dardos o hierba somnífera lo mantienen dormido."),
+                  "Queda inconsciente unos 20 segundos, pero no despierta mientras le sigas dando comida. Si despierta antes, se pierde la mitad del progreso: más dardos o hierba somnífera lo mantienen dormido."),
     }),
     ("eggs", "terrassic:triceratops_egg", [], {
         "pt_br": ("Ovos e filhotes",
@@ -137,23 +168,23 @@ TOPICS = [
         "pt_br": ("Ordens",
                   "Agache e use a mão vazia no seu dino para abrir a tela dele; montado, use %key:inventory%.\n"
                   "Seguir, Esperar, Vagar (anda perto de onde você mandou) e Pare (larga a briga por 10 segundos).\n"
-                  "Apito: segure %key:whistle%, aponte com o mouse e solte. A ordem vale para todos os seus dinos a até 24 blocos. "
+                  "Apito: segure %key:whistle%, aponte com o mouse e solte. A ordem vale para todos os seus dinos a até 96 blocos. Agachado + %key:whistle% mostra onde estão todos, mesmo longe, e rastreia um com uma seta. "
                   "Atacar meu alvo manda todos atrás do bicho que você mira.\n"
-                  "Modo: Passivo nunca ataca; Neutro defende você e a si; Agressivo vai atrás de monstros e dinos selvagens por perto.\n"
+                  "Modo: Passivo nunca ataca; Neutro defende você e a si, também de bichos de outros mods; Agressivo vai atrás de monstros e dinos selvagens por perto.\n"
                   "Seus dinos nunca atacam outros bichos seus."),
         "en_us": ("Orders",
                   "Sneak and use an empty hand on your dinosaur to open its screen; while riding, press %key:inventory%.\n"
                   "Follow, Wait, Wander (it roams near where you told it) and Stop (it drops the fight for 10 seconds).\n"
-                  "Whistle: hold %key:whistle%, point with the mouse and let go. The order goes to all your dinosaurs within 24 blocks. "
+                  "Whistle: hold %key:whistle%, point with the mouse and let go. The order goes to all your dinosaurs within 96 blocks. Sneak + %key:whistle% shows where they all are, even far away, and tracks one with an arrow. "
                   "Attack my target sends them all after the creature you aim at.\n"
-                  "Stance: Passive never attacks; Neutral defends you and itself; Aggressive goes after monsters and wild dinosaurs nearby.\n"
+                  "Stance: Passive never attacks; Neutral defends you and itself, from other mods' creatures too; Aggressive goes after monsters and wild dinosaurs nearby.\n"
                   "Your dinosaurs never attack your other animals."),
         "es_es": ("Órdenes",
                   "Agáchate y usa la mano vacía en tu dinosaurio para abrir su pantalla; montado, pulsa %key:inventory%.\n"
                   "Seguir, Esperar, Deambular (anda cerca de donde lo dejaste) y Alto (deja la pelea durante 10 segundos).\n"
-                  "Silbato: mantén %key:whistle%, apunta con el ratón y suelta. La orden vale para todos tus dinosaurios a 24 bloques. "
+                  "Silbato: mantén %key:whistle%, apunta con el ratón y suelta. La orden vale para todos tus dinosaurios a 96 bloques. Agachado + %key:whistle% muestra dónde están todos, aunque estén lejos, y rastrea uno con una flecha. "
                   "Atacar mi objetivo los manda a todos a por la criatura que apuntas.\n"
-                  "Modo: Pasivo nunca ataca; Neutral te defiende a ti y a sí mismo; Agresivo va a por monstruos y dinosaurios salvajes cercanos.\n"
+                  "Modo: Pasivo nunca ataca; Neutral te defiende a ti y a sí mismo, también de criaturas de otros mods; Agresivo va a por monstruos y dinosaurios salvajes cercanos.\n"
                   "Tus dinosaurios nunca atacan a tus otros animales."),
     }),
     ("levels", "minecraft:experience_bottle", [], {
@@ -228,6 +259,26 @@ TOPICS = [
     }),
 ]
 
+# 1.7: topics followed by a list drawn by the screen (client/PocketGuideScreen): "species" = every active species
+# with its egg, diet, size, how it is tamed and the food it takes (player feedback: "a section that shows all the dinos")
+LISTS = {"dinos": "species"}
+
+# the species list's texts (client/PocketGuideScreen)
+LIST_TEXT = {
+    "pt_br": {"diet.carnivore": "Carnívoro", "diet.herbivore": "Herbívoro", "diet.omnivore": "Onívoro",
+              "diet.piscivore": "Come peixe", "size": "%s m", "tame.egg": "Doma: filhote, ovo ou nocaute",
+              "tame.feed": "Doma: na mão ou nocaute", "food": "Comida: %s porções", "food.stacks": "Comida: %s pilhas (%s)", "food.stack": "Comida: 1 pilha (64)", "rideable": "Montável",
+              "count": "%s espécies"},
+    "en_us": {"diet.carnivore": "Carnivore", "diet.herbivore": "Herbivore", "diet.omnivore": "Omnivore",
+              "diet.piscivore": "Fish-eater", "size": "%s m", "tame.egg": "Tame: baby, egg or knockout",
+              "tame.feed": "Tame: by hand or knockout", "food": "Food: %s bites", "food.stacks": "Food: %s stacks (%s)", "food.stack": "Food: 1 stack (64)", "rideable": "Rideable",
+              "count": "%s species"},
+    "es_es": {"diet.carnivore": "Carnívoro", "diet.herbivore": "Herbívoro", "diet.omnivore": "Omnívoro",
+              "diet.piscivore": "Come peces", "size": "%s m", "tame.egg": "Doma: cría, huevo o noqueo",
+              "tame.feed": "Doma: en la mano o noqueo", "food": "Comida: %s bocados", "food.stacks": "Comida: %s pilas (%s)", "food.stack": "Comida: 1 pila (64)", "rideable": "Montable",
+              "count": "%s especies"},
+}
+
 BOOK = {
     "pt_br": ("Guia de Bolso", "do Terrassic", "Guia de Bolso"),
     "en_us": ("Pocket Guide", "to Terrassic", "Pocket Guide"),
@@ -249,6 +300,9 @@ def build_lang():
         lang[code]["guide.terrassic.pocket.title"] = title
         lang[code]["guide.terrassic.pocket.subtitle"] = subtitle
         lang[code]["item.terrassic.pocket_guide"] = item
+    for code, texts in LIST_TEXT.items():
+        for key, text in texts.items():
+            lang[code][f"guide.terrassic.pocket.list.{key}"] = text
     for tid, _, _, texts in TOPICS:
         assert set(texts) == set(BOOK), tid
         for code, (title, body) in texts.items():
@@ -268,7 +322,8 @@ def main():
         for r in recs:
             assert os.path.exists(os.path.join(recipes, f"{r}.json")), f"{tid}: no recipe {r}"
     _write(os.path.join(A, "pocket_guide.json"), {"topics": [
-        {"id": tid, "icon": icon, "recipes": [f"terrassic:{r}" for r in recs]} for tid, icon, recs, _ in TOPICS]})
+        dict({"id": tid, "icon": icon, "recipes": [f"terrassic:{r}" for r in recs]},
+             **({"list": LISTS[tid]} if tid in LISTS else {})) for tid, icon, recs, _ in TOPICS]})
     _write(os.path.join(A, "models", "item", "pocket_guide.json"),
            {"parent": "item/generated", "textures": {"layer0": "terrassic:item/pocket_guide"}})
     # one book for every player, on the first tick they spend in a world (vanilla advancement rewards are once per player)

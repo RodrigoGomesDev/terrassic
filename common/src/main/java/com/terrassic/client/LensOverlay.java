@@ -146,6 +146,7 @@ public final class LensOverlay {
         boolean tame = t.getBoolean("Tame");
         int points = t.getInt("Points");
         boolean torpor = !ko && !tame && t.getFloat("Torpor") > 0.5F;
+        boolean fed = !ko && !tame && t.getFloat("Progress") > 0.0F;   // 1.7: taming by hand shows its bar too
 
         Component name = d.hasCustomName() ? d.getCustomName() : d.speciesName();
         Component dot = Component.literal(name.getString() + " · ");
@@ -174,7 +175,7 @@ public final class LensOverlay {
             lines.add(Component.translatable("gui.terrassic.lens.points", points));
             colours.add(TerrassicPalette.AMBER_300);
         }
-        int bars = 2 + (ko ? 2 : torpor ? 1 : 0);
+        int bars = 2 + (ko ? 2 : torpor ? 1 : 0) + (fed ? 1 : 0);
         // as wide as the longest line, 172 at least
         int w = Math.max(MIN_W, 33 + AmberHud.width(font, dot) + AmberHud.width(font, level) + 16);
         w = Math.max(w, 33 + Math.max(AmberHud.width(font, age), AmberHud.width(font, who)) + 6);
@@ -217,6 +218,12 @@ public final class LensOverlay {
         } else if (torpor) {
             bar(g, font, x, yy, w, Component.translatable("gui.terrassic.lens.torpor"), t.getFloat("Torpor") / t.getFloat("MaxTorpor"),
                     AmberHud.TORPOR, Mth.ceil(t.getFloat("Torpor")) + "/" + Mth.ceil(t.getFloat("MaxTorpor")));
+            yy += 10;
+        }
+        if (fed) {
+            float progress = Math.min(1.0F, t.getFloat("Progress") / Math.max(0.01F, t.getFloat("Goal")));
+            bar(g, font, x, yy, w, Component.translatable("gui.terrassic.lens.taming"), progress, AmberHud.FERN,
+                    Math.round(progress * 100) + "%");
             yy += 10;
         }
 

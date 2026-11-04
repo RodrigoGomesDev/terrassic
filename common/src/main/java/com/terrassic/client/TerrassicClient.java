@@ -163,6 +163,7 @@ public final class TerrassicClient {
         LensOverlay.init(); // the Field Lens card (item/FieldLensItem)
         DinoNameplate.init(); // v0.14.1: the nameplate and taming bars over the animal you look at
         DinoControls.init(); // v0.12: the mod's keys and the mounted controls
+        DinoTracker.init(); // 1.7: "My dinos" list and the HUD arrow to a tracked dino
         DinoScreen.register(); // v0.12: the dino screen
         BuildingBlocksClient.init();
         TerrassicMenuScreen.register(); // the Terrassic main menu (docs/MENU.md)

@@ -81,7 +81,8 @@ public final class Alphas {
     /** Knockout (Rodrigo: "dificuldade para torpor ... mais difícil"): torpor gauge, narcotics, food. */
     public static final float TORPOR_GAUGE = 4.0F;
     public static final float NARCOTIC_EFFECT = 0.5F;
-    public static final float FOOD_GOAL = 3.0F;
+    /** 1.7: the species' own goal now asks stacks of meat (DinosaurEntity.foodGoal), so the alpha's share went from 3 to 1.5. */
+    public static final float FOOD_GOAL = 1.5F;
     public static final float AWAKE_RECOVERY = 1.0F;
     /** Seconds an alpha stays down from a full gauge (it wakes at a quarter); effectiveness lost per wound. */
     public static final float KO_SECONDS = 60.0F;

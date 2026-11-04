@@ -20,9 +20,15 @@ v1.1.2, 31/10/2026. Rodrigo pediu "um livrinho de ajuda", aprovou os tópicos e 
 - `%key:use%`, `%key:attack%`, `%key:jump%`, `%key:sneak%`, `%key:inventory%`, `%key:dino_screen%`, `%key:descend%` e `%key:whistle%` (1.5)
   viram a tecla que o jogador configurou, entre colchetes.
 
-## Tópicos (13)
-Começo, Armas, Zarabatana, Boleadeira, Nocaute, Ovos e filhotes, Montaria, Ordens, Níveis, Fome e sono, Carga e ombro,
-Construção, Regras do mundo.
+## Tópicos (15)
+Começo, Os dinossauros, Armas, Zarabatana, Boleadeira, Domesticação, Nocaute, Ovos e filhotes, Montaria, Ordens, Níveis,
+Fome e sono, Carga e ombro, Construção, Regras do mundo.
+
+1.7 (feedback de jogador, 04/11/2026: "uma seção com todos os dinos e uma de domesticação"): **Os dinossauros** tem
+`"list": "species"` no `pocket_guide.json` (`LISTS` no gerador): depois do texto, o livro desenha cada espécie ativa
+(`config/Eras`) com o ovo, o nome, dieta, tamanho real, se monta, como doma, quanta comida pede e até 6 itens que ela
+come (`PocketGuideScreen.SpeciesEntry`, dados de `GuideSpecies` e de um animal de mentira criado só para ler a dieta e a
+meta). Textos da lista em `LIST_TEXT`. **Domesticação** explica a doma por comida, as pilhas dos carnívoros e o nocaute.
 
 ## Onde mexer
 - Textos, ícones, receitas mostradas e ordem: `TOPICS` em `tools/javagen/gen_pocket_guide.py` (pt-BR, inglês, espanhol;

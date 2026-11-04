@@ -46,7 +46,7 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 120.0D)
+                .add(Attributes.MAX_HEALTH, 240.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.21D)
                 .add(Attributes.ATTACK_DAMAGE, 11.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.4D)

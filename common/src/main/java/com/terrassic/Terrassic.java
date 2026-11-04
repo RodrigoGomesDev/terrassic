@@ -62,6 +62,7 @@ public final class Terrassic {
         RulesNetwork.init();
         com.terrassic.network.LensNetwork.init(); // the Field Lens card (item/FieldLensItem)
         com.terrassic.network.DinoNetwork.init(); // v0.12: the dino screen and the mounted controls
+        com.terrassic.network.TamedNetwork.init(); // 1.7: where the player's tamed dinos are ("My dinos", /terrassic dinos)
         com.terrassic.entity.DinosaurEntity.registerEvents(); // v0.13.2: kill experience of tame animals, both loaders
         com.terrassic.item.WeaponDispensing.init(); // v1.1.4: dispensers shoot the mod's arrows and darts
         EcoSpawner.init(); // the living ecosystem around every player

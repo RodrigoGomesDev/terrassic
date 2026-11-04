@@ -55,6 +55,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.PlayerRideableJumping;
@@ -264,6 +265,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private float tameProgress;
     private int tameEffectiveness = 100;
     private UUID tamer;
+    /** 1.7: game time until which a knocked-out animal does not drain torpor (it is being fed). Not saved. */
+    private long eatingUntil = Long.MIN_VALUE;
+    /** 1.7: how long one bite keeps a knocked-out animal from waking (ticks): holding use feeds every 4 ticks. */
+    private static final long EATING_HOLD_TICKS = 40L;
+    /** 1.7: mobs it may fight even where the world rules spare them (they hit it or its owner, or the owner ordered
+     *  the attack), with the game time the leave runs out. Not saved. */
+    private final java.util.Map<UUID, Long> provoked = new java.util.HashMap<>();
+    private static final long PROVOKED_TICKS = 600L;
     private RawAnimation knockedOutAnim;
     private RawAnimation deathAnim;
     private RawAnimation sleepAnim;
@@ -997,6 +1006,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
+        this.refreshBaseHealth();
         if (tag.contains("Female")) {
             this.setFemale(tag.getBoolean("Female"));
         }
@@ -1194,6 +1204,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public boolean hurt(DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player && Research.isStudied(player, this.speciesId())) {
             amount *= 1.2F;
+        }
+        if (!this.level().isClientSide() && source.getEntity() instanceof LivingEntity attacker && attacker != this) {
+            this.provokedBy(attacker);   // 1.7: whoever hits it may be fought back, whatever mod it comes from
         }
         float torporHit = 0.0F;
         if (!this.level().isClientSide() && !this.isTame()) {
@@ -1562,19 +1575,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
         if (!this.isTame() && this.isFood(stack) && this.canBeTamedNow()) {
             if (!client) {
+                ItemStack bite = stack.copyWithCount(1);
                 this.usePlayerItem(player, hand, stack);
-                // studying the species (Field Guide "studied") makes taming faster, and so does the Taming speed rule
-                int chance = Research.isStudied(player, this.speciesId()) ? Math.max(2, tameChance() - 1) : tameChance();
-                if (this.random.nextDouble() < Rules.of(this.level()).get(Rule.TAMING_SPEED) / chance) {
-                    if (!this.isBaby()) {
-                        this.grantTamingBonus(100);   // hand-fed without a fight: full effectiveness
-                    }
-                    this.tameBy(player);
-                } else {
-                    this.level().broadcastEntityEvent(this, (byte) 6);
-                    // every bite says so: it took the food, not yet won over (1 in N per bite)
-                    player.displayClientMessage(Component.translatable("message.terrassic.tame_try", this.getDisplayName(), chance), true);
-                }
+                this.tameBite(player, bite);
             }
             return InteractionResult.sidedSuccess(client);
         }
@@ -1593,9 +1596,43 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.tameBy(player, false);
     }
 
+    /**
+     * 1.7 (player feedback: "taming is too easy, at least a stack of meat for the smaller carnivores and several for the
+     * bigger ones"): an awake animal is no longer won over by a 1-in-4 roll per bite. Every bite adds to its taming
+     * progress, as in the knockout, until it reaches {@link #tameGoal}; then it is tamed at full effectiveness.
+     */
+    protected void tameBite(Player player, ItemStack food) {
+        this.tamer = player.getUUID();
+        this.tameProgress += this.biteValue(player, food);
+        float goal = this.tameGoal();
+        if (this.tameProgress >= goal) {
+            if (!this.isBaby()) {
+                this.grantTamingBonus(100);   // hand-fed without a fight: full effectiveness
+            }
+            this.tameBy(player);
+            return;
+        }
+        this.level().broadcastEntityEvent(this, (byte) 6);
+        int percent = Mth.floor(100.0F * this.tameProgress / goal);
+        int left = Mth.ceil((goal - this.tameProgress) / Math.max(0.01F, this.biteValue(player, food)));
+        player.displayClientMessage(Component.translatable("message.terrassic.tame_try", this.getDisplayName(), percent, left), true);
+    }
+
+    /** What one bite of this food counts towards taming: prime meat double, a studied species a quarter more, times
+     *  the "Taming speed" rule. */
+    protected float biteValue(Player player, ItemStack food) {
+        float bite = food.is(ModItems.RAW_PRIME_MEAT.get()) ? 2.0F : 1.0F;
+        if (Research.isStudied(player, this.speciesId())) {
+            bite *= 1.25F;   // studied: it knows what the animal likes best
+        }
+        return bite * (float) Rules.of(this.level()).get(Rule.TAMING_SPEED);
+    }
+
     /** Tamed by the player; {@code hatched}: it just came out of an egg next to them (the notice says so). */
     public void tameBy(Player player, boolean hatched) {
+        this.tameProgress = 0.0F;
         this.tame(player);
+        TamedRegistry.update(this);
         if (player instanceof ServerPlayer sp) {
             Research.tamed(sp, this);
         }
@@ -1664,6 +1701,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             Alphas.gone(this, !this.isTame(), true);
         }
         if (!this.level().isClientSide() && this.isTame() && !this.isRemoved() && !this.dead) {
+            TamedRegistry.remove(this);
             Component name = this.hasCustomName() ? this.getCustomName() : this.getType().getDescription();
             this.notice(this.getOwner(), ModNetwork.NOTICE_BLOOD, Component.translatable("hud.terrassic.notice.died", name),
                     Component.translatable("hud.terrassic.notice.where", this.getBlockX(), this.getBlockY(), this.getBlockZ()));
@@ -1872,10 +1910,80 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return attack != null && attack.getBaseValue() >= 8.0D;
     }
 
-    /** Food bites a knocked-out animal needs to be tamed (prime meat counts double). */
+    /** Food bites it needs to be tamed, awake or knocked out (prime meat counts double): {@link #foodGoal()}, a
+     *  quarter of it for a young one, more for an alpha. */
     public float tameGoal() {
-        float goal = Mth.clamp(this.getMaxHealth() / 8.0F, 3.0F, 30.0F);
+        float goal = this.foodGoal();
+        if (this.isBaby()) {
+            goal = Math.max(4.0F, goal * 0.25F);
+        }
         return this.isAlpha() ? goal * Alphas.FOOD_GOAL * this.alphaTaming() : goal;
+    }
+
+    /**
+     * 1.7: the bites a wild adult of the species needs (Field Guide and Pocket Guide show it too). A carnivore
+     * ({@link #isHunter}) a stack of 64 for every 100 points of the species' health, from one to five stacks: a
+     * Velociraptor or a Troodon one stack, a Carnotaurus two, a T. rex four. The rest about one bite for every 6 points
+     * of health, from 6 to 64. The animal's own level and size do not change it.
+     */
+    public int foodGoal() {
+        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        double base = health != null ? health.getBaseValue() : 20.0D;
+        if (this.isHunter()) {
+            return 64 * Mth.clamp(Mth.ceil(base / 100.0D), 1, 5);
+        }
+        return Mth.clamp((int) Math.round(base / 6.0D), 6, 64);
+    }
+
+    /** A meat- or fish-eater with a real bite (4 damage or more): what the stack goals and the rarer spawns mean by
+     *  "carnivore" (the tiny scavengers and the fish stay with the rest). */
+    public boolean isHunter() {
+        return isHunter(this.getType());
+    }
+
+    private static final java.util.Map<EntityType<?>, Boolean> HUNTERS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** {@link #isHunter()} for a type, from the Field Guide's diet and the type's default attack (any thread). */
+    @SuppressWarnings("unchecked")
+    public static boolean isHunter(EntityType<?> type) {
+        return HUNTERS.computeIfAbsent(type, t -> {
+            net.minecraft.resources.ResourceLocation id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(t);
+            com.terrassic.research.GuideSpecies g = com.terrassic.research.GuideSpecies.byId(id.getPath());
+            if (g == null || !Terrassic.MOD_ID.equals(id.getNamespace())
+                    || !(g.diet().equals("carnivore") || g.diet().equals("piscivore"))) {
+                return false;
+            }
+            try {
+                var supplier = net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(
+                        (EntityType<? extends LivingEntity>) t);
+                return supplier.hasAttribute(Attributes.ATTACK_DAMAGE) && supplier.getBaseValue(Attributes.ATTACK_DAMAGE) >= 4.0D;
+            } catch (RuntimeException e) {
+                return false;
+            }
+        });
+    }
+
+    /** 1.7: brings a saved animal's base health to its species' current value (the health table went up), keeping
+     *  the share of health it had. Its levels, size and alpha bonus are modifiers and stay as they were. */
+    private void refreshBaseHealth() {
+        AttributeInstance health = this.getAttribute(Attributes.MAX_HEALTH);
+        if (health == null || this.level().isClientSide()) {
+            return;
+        }
+        double want;
+        try {
+            @SuppressWarnings("unchecked")
+            EntityType<? extends LivingEntity> type = (EntityType<? extends LivingEntity>) this.getType();
+            want = net.minecraft.world.entity.ai.attributes.DefaultAttributes.getSupplier(type).getBaseValue(Attributes.MAX_HEALTH);
+        } catch (RuntimeException e) {
+            return;
+        }
+        if (Math.abs(health.getBaseValue() - want) < 1.0E-3D) {
+            return;
+        }
+        float share = this.getMaxHealth() > 0.0F ? this.getHealth() / this.getMaxHealth() : 1.0F;
+        health.setBaseValue(want);
+        this.setHealth(Math.max(1.0F, share * this.getMaxHealth()));
     }
 
     /** What an unconscious animal accepts from the hand (its usual food). */
@@ -1919,10 +2027,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private void torporTick() {
         float max = this.maxTorpor();
         if (this.isKnockedOut()) {
-            // about 2.5 minutes asleep from a full gauge (1.5 for the big biters) unless kept down with narcotics;
-            // an alpha: one minute, and it gets up at a quarter of the gauge
+            // 1.7 (player feedback: "the stun is way too long, it should be about 20 seconds"): the "Knockout duration"
+            // rule from a full gauge, 20 s by default (three quarters for the big biters), unless kept down with
+            // narcotics; it does not drain while it is being fed (EATING_HOLD_TICKS after each bite), so a tamer with
+            // the food at hand finishes. An alpha: one minute, and it gets up at a quarter of the gauge.
+            if (this.level().getGameTime() < this.eatingUntil) {
+                return;
+            }
             this.torpor -= this.isAlpha() ? max * (1.0F - Alphas.WAKE_SHARE) / (Alphas.KO_SECONDS * 20.0F)
-                    : max / ((this.wakesFast() ? 90.0F : 150.0F) * 20.0F);
+                    : max / (this.knockoutSeconds() * 20.0F);
             if (this.torpor <= (this.isAlpha() ? max * Alphas.WAKE_SHARE : 0.0F)) {
                 this.wakeUp();
             } else if (this.isAlpha() && !this.stirred && this.torpor <= max * Alphas.WAKE_SHARE * 1.25F) {
@@ -1936,6 +2049,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             float recovery = this.isAlpha() ? Alphas.AWAKE_RECOVERY : 1.0F;
             this.torpor = Math.max(0.0F, this.torpor - max * 0.02F * recovery / 20.0F);   // awake: 2% of the gauge a second
         }
+    }
+
+    /** Seconds it stays down from a full gauge (the "Knockout duration" rule; three quarters for the big biters). */
+    protected float knockoutSeconds() {
+        float seconds = (float) Rules.of(this.level()).get(Rule.KNOCKOUT_SECONDS);
+        return Math.max(1.0F, this.wakesFast() ? seconds * 0.75F : seconds);
     }
 
     /** Knocked out and about to wake (an alpha, a few seconds before it gets up); a rig may show it. */
@@ -1973,14 +2092,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 return InteractionResult.sidedSuccess(client);
             }
             if (!client) {
-                float bite = stack.is(ModItems.RAW_PRIME_MEAT.get()) ? 2.0F : 1.0F;
-                if (Research.isStudied(player, this.speciesId())) {
-                    bite *= 1.25F;   // studied: it knows what the animal likes best
-                }
-                bite *= (float) Rules.of(this.level()).get(Rule.TAMING_SPEED);
+                float bite = this.biteValue(player, stack);
                 this.usePlayerItem(player, hand, stack);
                 this.tamer = player.getUUID();
                 this.tameProgress += bite;
+                this.eatingUntil = this.level().getGameTime() + EATING_HOLD_TICKS;   // eating, it stays down
                 this.feed(10);
                 triggerAnim(ACTION_CONTROLLER, "eat");
                 this.playSound(SoundEvents.GENERIC_EAT, 0.7F, 0.9F);
@@ -2008,7 +2124,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Foods each species accepts from the hand, found once by testing every item (the Field Lens lists them). */
     private static final java.util.Map<String, List<String>> FOODS = new java.util.HashMap<>();
 
-    private List<String> acceptedFoods() {
+    /** The item ids it eats from the hand (at most 8; the Field Lens and the Pocket Guide show them). */
+    public List<String> acceptedFoods() {
         return FOODS.computeIfAbsent(this.speciesId(), id -> {
             List<String> found = new java.util.ArrayList<>();
             for (Item item : net.minecraft.core.registries.BuiltInRegistries.ITEM) {
@@ -2177,6 +2294,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return false;
         }
         this.calmUntil = Long.MIN_VALUE;
+        this.provokedBy(target);   // 1.7: the owner's order lets it fight a mob the rules would spare
         if (!this.canAttack(target)) {
             return false;
         }
@@ -2208,13 +2326,57 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return false;
         }
         return e instanceof Enemy && !(e instanceof Creeper)
+                || e.getType().getCategory() == net.minecraft.world.entity.MobCategory.MONSTER && !(e instanceof Creeper)
+                && !(e instanceof OwnableEntity pet && pet.getOwnerUUID() != null)
                 || e instanceof DinosaurEntity d && !d.isTame() && !d.isBaby() && !d.isKnockedOut();
     }
 
-    /** v1.6: never a mob the world rules spare (Rules.spares), however the target was picked (packs, alarms, orders). */
+    /** v1.6: never a mob the world rules spare (Rules.spares), however the target was picked (packs, alarms, orders);
+     *  1.7: unless it provoked this one ({@link #spared}). */
     @Override
     public void setTarget(LivingEntity target) {
-        super.setTarget(target != null && Rules.spares(target) ? null : target);
+        super.setTarget(target != null && this.spared(target) ? null : target);
+    }
+
+    /** 1.7: lets it fight this mob for the next {@link #PROVOKED_TICKS} even if the rules spare it (never a
+     *  protected one: Rules.sparesAlways). */
+    public void provokedBy(LivingEntity e) {
+        if (e != null && e != this && !this.level().isClientSide() && !Rules.sparesAlways(e)) {
+            if (this.provoked.size() > 16) {
+                long now = this.level().getGameTime();
+                this.provoked.values().removeIf(until -> until < now);
+            }
+            this.provoked.put(e.getUUID(), this.level().getGameTime() + PROVOKED_TICKS);
+        }
+    }
+
+    /**
+     * 1.7 (player feedback: "dinos can't defend themselves from mobs from other mods, and tames can't attack them, not
+     * even when commanded"): a mob the rules spare from the hunt is still fair game once it picks the fight. It hit
+     * this one lately, or the owner gave the order ({@link #provokedBy}), or it is going for this one, its owner or
+     * another dinosaur, or (tamed) it hurt the owner or the owner hit it in the last ten seconds.
+     */
+    private boolean provokes(LivingEntity t) {
+        long now = this.level().getGameTime();
+        Long until = this.provoked.get(t.getUUID());
+        if (until != null) {
+            if (now < until) {
+                return true;
+            }
+            this.provoked.remove(t.getUUID());
+        }
+        LivingEntity owner = this.isTame() ? this.getOwner() : null;
+        if (t instanceof Mob mob && mob.getTarget() != null
+                && (mob.getTarget() == this || mob.getTarget() instanceof DinosaurEntity || owner != null && mob.getTarget() == owner)) {
+            return true;
+        }
+        return owner != null && (owner.getLastHurtByMob() == t
+                || owner.getLastHurtMob() == t && owner.tickCount - owner.getLastHurtMobTimestamp() < 200);
+    }
+
+    /** Whether the world rules keep it off this mob now (see {@link #provokes}). */
+    private boolean spared(LivingEntity t) {
+        return Rules.sparesAlways(t) || Rules.spares(t) && !this.provokes(t);
     }
 
     /** Tamed by its own owner: a wolf, a horse, another dinosaur. */
@@ -2229,7 +2391,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      */
     @Override
     public boolean canAttack(LivingEntity target) {
-        if (Rules.spares(target) || Rules.sparesPlayer(this, target)) {
+        if (this.spared(target) || Rules.sparesPlayer(this, target)) {
             return false;
         }
         if (this.isTame() && (this.stance == DinoStance.PASSIVE || this.isCalmed() || this.sameOwner(target))) {
@@ -2379,7 +2541,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         // feeding species can also be knocked out and fed; the rest only by knockout (or as babies)
         t.putString("Method", this.isTame() ? "" : this.isBaby() ? "feed"
                 : this.tameMethod() == TameMethod.FEEDING ? "feed_or_knockout" : "knockout");
-        t.putInt("Chance", Research.isStudied(viewer, this.speciesId()) ? Math.max(2, this.tameChance() - 1) : this.tameChance());
+        // 1.7: the bites still needed (the taming goal minus the progress, at this viewer's bite value)
+        t.putInt("Chance", Mth.ceil(Math.max(0.0F, this.tameGoal() - this.tameProgress) / Math.max(0.01F, this.biteValue(viewer, ItemStack.EMPTY))));
         t.putBoolean("KnockedOut", this.isKnockedOut());
         t.putFloat("Torpor", this.torpor);
         t.putFloat("MaxTorpor", this.maxTorpor());
@@ -2396,7 +2559,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.isKnockedOut()) {
             t.putInt("WakeSeconds", this.isAlpha()
                     ? Mth.ceil(Math.max(0.0F, this.torpor / this.maxTorpor() - Alphas.WAKE_SHARE) / (1.0F - Alphas.WAKE_SHARE) * Alphas.KO_SECONDS)
-                    : Mth.ceil(this.torpor * (this.wakesFast() ? 90.0F : 150.0F) / this.maxTorpor()));
+                    : Mth.ceil(this.torpor * this.knockoutSeconds() / this.maxTorpor()));
         }
         t.putBoolean("Saddled", this.isSaddled());
         if (this.cargo != null && this.hasCargo()) {
@@ -2516,6 +2679,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 this.ensureLevels();
             }
             this.rideXpTick();
+            if (this.isTame() && this.isAlive() && (this.tickCount + this.getId()) % TamedRegistry.REFRESH_TICKS == 0) {
+                TamedRegistry.update(this);   // 1.7: where it is, for the owner's "My dinos" list
+            }
             if (this.isAlpha() && !this.isTame() && this.isAlive() && (this.tickCount + this.getId()) % 100 == 0) {
                 this.alphaTick();
             }

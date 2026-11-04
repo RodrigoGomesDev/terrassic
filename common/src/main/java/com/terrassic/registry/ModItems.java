@@ -224,7 +224,8 @@ public final class ModItems {
     public static final RegistrySupplier<Item> FLINT_HATCHET = ITEMS.register("flint_hatchet",
             () -> new FlintHatchetItem(ModTiers.FLINT, 5.0F, -3.1F, new Item.Properties().arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> BONE_CLUB = ITEMS.register("bone_club",
-            () -> new ClubItem(ModTiers.BONE, 5, -3.2F, 0.6F, new Item.Properties().arch$tab(ModTabs.MAIN)));
+            // 1.7 (player feedback: "the club is way too strong, its attack speed should be about 0.20"): 0.8 -> 0.25
+            () -> new ClubItem(ModTiers.BONE, 5, -3.75F, 0.6F, new Item.Properties().arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> FLINT_SPEAR = ITEMS.register("flint_spear",
             () -> new SpearItem(6.0F, -2.8F, 7.0F, new Item.Properties().durability(180).arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> HORN_SPEAR = ITEMS.register("horn_spear",
@@ -232,7 +233,8 @@ public final class ModItems {
     public static final RegistrySupplier<Item> REX_TOOTH_DAGGER = ITEMS.register("rex_tooth_dagger",
             () -> new SwordItem(ModTiers.REX_TOOTH, new Item.Properties().attributes(SwordItem.createAttributes(ModTiers.REX_TOOTH, 3, -1.8F)).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     public static final RegistrySupplier<Item> TAIL_CLUB = ITEMS.register("tail_club",
-            () -> new ClubItem(ModTiers.ANKYLO_CLUB, 6, -3.4F, 1.2F, new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+            // 1.7: 0.6 -> 0.2 attacks a second, the feedback's number for the strongest club
+            () -> new ClubItem(ModTiers.ANKYLO_CLUB, 6, -3.8F, 1.2F, new Item.Properties().rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     // knockout taming (docs/DOMESTICACAO.md): the reed blowgun, its narcotic darts and the sleep herb
     public static final RegistrySupplier<Item> BLOWGUN = ITEMS.register("blowgun",
             () -> new BlowgunItem(new Item.Properties().durability(96).arch$tab(ModTabs.MAIN)));

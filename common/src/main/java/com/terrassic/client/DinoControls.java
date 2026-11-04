@@ -39,6 +39,9 @@ public final class DinoControls {
             GLFW.GLFW_KEY_Z, CATEGORY);
     public static final KeyMapping WHISTLE = new KeyMapping("key.terrassic.whistle", InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_H, CATEGORY);
+    /** 1.7: "My dinos" (client/MyDinosScreen); unbound by default: sneaking while pressing the whistle key opens it too. */
+    public static final KeyMapping MY_DINOS = new KeyMapping("key.terrassic.my_dinos", InputConstants.Type.KEYSYM,
+            InputConstants.UNKNOWN.getValue(), CATEGORY);
 
     private DinoControls() {
     }
@@ -47,6 +50,7 @@ public final class DinoControls {
         KeyMappingRegistry.register(DINO_SCREEN);
         KeyMappingRegistry.register(DESCEND);
         KeyMappingRegistry.register(WHISTLE);
+        KeyMappingRegistry.register(MY_DINOS);
         // before vanilla reads the keys of this tick, so the clicks taken here never reach it
         ClientTickEvent.CLIENT_PRE.register(DinoControls::tick);
     }
@@ -66,13 +70,24 @@ public final class DinoControls {
             while (WHISTLE.consumeClick()) {
                 wheelClosedAt = mc.level.getGameTime();
             }
+            while (MY_DINOS.consumeClick()) {
+                // swallowed under a screen
+            }
             return;
         }
         boolean whistle = false;
         while (WHISTLE.consumeClick()) {
             whistle = true;
         }
+        boolean list = false;
+        while (MY_DINOS.consumeClick()) {
+            list = true;
+        }
         long now = mc.level.getGameTime();
+        if (list || whistle && mount == null && mc.options.keyShift.isDown()) {
+            MyDinosScreen.open();   // 1.7: sneak + whistle (or its own key): where your dinos are
+            return;
+        }
         if (whistle && (now - wheelClosedAt > 2L || now < wheelClosedAt)) {
             // the wheel stays while the key is held and gives the order when it is let go
             mc.setScreen(new WhistleWheelScreen());

@@ -57,8 +57,8 @@ import java.util.Map;
  * the target but are never culled by this spawner. The doMobSpawning game rule turns it off.
  *
  * <p>v0.15: outside the Cretaceous biomes (a normal Minecraft world) every target is multiplied by
- * {@link VanillaShare#ecoFactor}, 0.54 at the default {@link Rule#DINO_SHARE} of 0.35 (v1.0.1): 10 on land, 6 at sea, 2 in
- * the sky.
+ * {@link VanillaShare#ecoFactor}, 0.33 at the default {@link Rule#DINO_SHARE} of 0.25 (1.7; 0.54 at 0.35 before): 6 on
+ * land, 4 at sea, 1 in the sky. 1.7: a carnivore's weight is times {@link Rule#PREDATOR_SPAWNS} (0.4) in {@link #pick}.
  */
 public final class EcoSpawner {
     /** Ticks between spawn rounds. */
@@ -380,26 +380,34 @@ public final class EcoSpawner {
                                                      RandomSource random) {
         Holder<Biome> biome = level.getBiome(pos);
         List<MobSpawnSettings.SpawnerData> options = new ArrayList<>();
+        List<Double> weights = new ArrayList<>();
         int total = 0;
+        double weighed = 0.0D;
+        // 1.7 (player feedback: "the carnivores should be even rarer"): a carnivore's weight times the "Carnivores" rule
+        double predators = Rules.of(level).get(Rule.PREDATOR_SPAWNS);
         for (MobSpawnSettings.SpawnerData data : biome.value().getMobSettings().getMobs(category).unwrap()) {
             if (kindOf(level, data.type) == kind && !(kind == Kind.FLYER && COLONIAL.contains(data.type))) {
+                double w = data.getWeight().asInt() * (DinosaurEntity.isHunter(data.type) ? predators : 1.0D);
                 options.add(data);
+                weights.add(w);
                 total += data.getWeight().asInt();
+                weighed += w;
             }
         }
-        if (total <= 0) {
+        if (total <= 0 || weighed <= 0.0D) {
             return null;
         }
         // v1.6 (players: "too many T. rex"): a biome with only a few rare species left in it (the old-model ones are off
         // since 1.5) gets as little life as its weights say, not the full target made of whatever is left. With
         // the T. rex the only species in the jungle, every land spawn there was a rex.
-        if (kind == Kind.LAND && total < SPARSE_WEIGHT && random.nextInt(SPARSE_WEIGHT) >= total) {
+        if (kind == Kind.LAND && weighed < SPARSE_WEIGHT && random.nextDouble() * SPARSE_WEIGHT >= weighed) {
             return null;
         }
-        int roll = random.nextInt(total);
-        for (MobSpawnSettings.SpawnerData data : options) {
-            roll -= data.getWeight().asInt();
-            if (roll < 0) {
+        double roll = random.nextDouble() * weighed;
+        for (int i = 0; i < options.size(); i++) {
+            roll -= weights.get(i);
+            if (roll < 0.0D) {
+                MobSpawnSettings.SpawnerData data = options.get(i);
                 return rareCrowded(level, pos, data) ? null : data;
             }
         }

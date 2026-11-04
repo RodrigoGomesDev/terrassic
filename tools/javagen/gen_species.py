@@ -740,6 +740,19 @@ def culling(size, bounds):
     return round(max(out, 0.0) + 0.5, 1)
 
 
+# 1.7 (player feedback, 04/11/2026: "the dinos have too little health"): the attrs keep the health of before and the
+# generated attributes double it for the dinosaurs (x1.5 below 20 points). The small game that stands in for vanilla's
+# animals (docs/FAUNA.md) keeps its own. Saved animals move to the new value when loaded (DinosaurEntity.refreshBaseHealth).
+GAME_FAUNA = {"leptoceratops", "mesodma", "vegavis", "basilemys", "enchodus", "lepisosteus"}
+
+
+def health_of(s):
+    hp = s["attrs"]["MAX_HEALTH"]
+    if s["id"] in GAME_FAUNA:
+        return hp
+    return hp * (2.0 if hp >= 20 else 1.5)
+
+
 def gen(s, bounds):
     cls, base = s["cls"], s["base"]
     size = SIZES[s["id"]]
@@ -791,6 +804,8 @@ def gen(s, bounds):
     body.append("    public static AttributeSupplier.Builder createAttributes() {")
     body.append("        return Animal.createMobAttributes()")
     for k, v in s["attrs"].items():
+        if k == "MAX_HEALTH":
+            v = health_of(s)
         body.append(f"                .add(Attributes.{k}, {float(v)}D)")
     body[-1] += ";"
     body.append("    }")

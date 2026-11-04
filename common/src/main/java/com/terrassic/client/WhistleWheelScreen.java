@@ -254,6 +254,10 @@ public class WhistleWheelScreen extends Screen {
                 DinoControls.WHISTLE.getTranslatedKeyMessage());
         AmberHud.text(g, this.font, release, cx - AmberHud.width(this.font, release) / 2, y + (this.hovered >= 0 ? 20 : 10),
                 TerrassicPalette.STONE_200);
+        // 1.7: how to find the ones out of earshot
+        Component list = Component.translatable("gui.terrassic.whistle.dinos_hint", DinoControls.WHISTLE.getTranslatedKeyMessage());
+        AmberHud.text(g, this.font, list, cx - AmberHud.width(this.font, list) / 2, y + (this.hovered >= 0 ? 30 : 20),
+                TerrassicPalette.STONE_300);
         super.render(g, mouseX, mouseY, partialTick);
     }
 

@@ -48,7 +48,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 600.0D)
+                .add(Attributes.MAX_HEALTH, 1200.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.15D)
                 .add(Attributes.ATTACK_DAMAGE, 28.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 3.0D)

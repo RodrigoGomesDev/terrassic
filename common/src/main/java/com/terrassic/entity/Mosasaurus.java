@@ -42,7 +42,7 @@ public class Mosasaurus extends Mosasaurid {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 180.0D)
+                .add(Attributes.MAX_HEALTH, 360.0D)
                 .add(Attributes.MOVEMENT_SPEED, 1.1D)
                 .add(Attributes.ATTACK_DAMAGE, 18.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0D)

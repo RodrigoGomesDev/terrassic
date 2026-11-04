@@ -39,7 +39,7 @@ public class Quetzalcoatlus extends FlyingDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 90.0D)
+                .add(Attributes.MAX_HEALTH, 180.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.FLYING_SPEED, 0.7D)
                 .add(Attributes.ATTACK_DAMAGE, 9.0D)

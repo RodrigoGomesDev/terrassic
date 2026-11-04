@@ -39,7 +39,7 @@ public class Hesperornis extends SwimmingDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 14.0D)
+                .add(Attributes.MAX_HEALTH, 21.0D)
                 .add(Attributes.MOVEMENT_SPEED, 1.1D)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D)
                 .add(Attributes.FOLLOW_RANGE, 16.0D);

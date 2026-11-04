@@ -44,6 +44,13 @@ de coautoria de IA (pedido do Rodrigo, 24/10/2026).
 ## O que é
 Mod de dinossauros para Minecraft 1.20.1, Fabric + Forge (Architectury), modelos GeckoLib no estilo Cobblemon.
 Versão atual: **v1.1.4** (01/11/2026, acabamento das armas: dardo cravado, dose na invencibilidade, espirais, dispensador; Guia de Bolso desde a v1.1.2, docs/AJUDA.md; tags git v0.1.0, v0.2.0, v1.0.0, v1.0.1, v1.0.2, v1.1.0, v1.1.1, v1.1.2 e v1.1.3; `mod_version` em gradle.properties). A v0.1 compilou e rodou no Mac do Rodrigo (Fabric runClient).
+**1.7.0 (04/11/2026, `mod_version`)**: feedback de jogador em `docs/FEEDBACK_1_7.md` — apito a 96 blocos e lista "Meus dinos"
+com rastreio (`entity/TamedRegistry`, `network/TamedNetwork`, `client/MyDinosScreen`, `client/DinoTracker`, agachado + H,
+`/terrassic dinos`); defesa e ordens contra mobs de outros mods (`DinosaurEntity.provokes`); clavas a 0,25/0,2 ataques/s;
+nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come; spawn 0,25 e regra `predator_spawns` 0,4;
+vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
+"Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
+Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
 A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; o cliente gráfico Forge ainda não foi validado.
 Os servidores dedicados Fabric e Forge foram validados posteriormente pelos roteiros de entidades e Caderno.
 Nome: o projeto se chamava **PrimalEra** e foi renomeado para **Terrassic** em 23/10/2026: mod id `terrassic`,

@@ -231,9 +231,9 @@ LENS_LANG = {
         "gui.terrassic.lens.taming": "Taming",
         "gui.terrassic.lens.effectiveness": "Effectiveness: %s%%",
         "gui.terrassic.lens.how_knockout": "Tame: knock it out, then feed it",
-        "gui.terrassic.lens.how_feed": "Tame: feed it by hand (1 in %s per bite)",
-        "gui.terrassic.lens.how_feed_or_ko": "Tame: feed it by hand (1 in %s) or knock it out",
-        "message.terrassic.tame_try": "%s took the food, still wary (1 in %s)",
+        "gui.terrassic.lens.how_feed": "Tame: feed it by hand (%s bites)",
+        "gui.terrassic.lens.how_feed_or_ko": "Tame: %s bites by hand, or knock it out",
+        "message.terrassic.tame_try": "%s ate · tamed %s%% · %s bites to go",
         "message.terrassic.eats_from_ground": "%s won't take food from your hand: drop it in front of its beak",
         "message.terrassic.mother_guard": "The mother is coming for you",
         "message.terrassic.calf_mother_near": "The calf won't eat with its mother near: lure it away with fish first",
@@ -256,9 +256,9 @@ LENS_LANG = {
         "gui.terrassic.lens.taming": "Doma",
         "gui.terrassic.lens.effectiveness": "Eficiência: %s%%",
         "gui.terrassic.lens.how_knockout": "Domar: nocauteie e depois alimente",
-        "gui.terrassic.lens.how_feed": "Domar: dê comida na mão (1 em %s por porção)",
-        "gui.terrassic.lens.how_feed_or_ko": "Domar: comida na mão (1 em %s) ou nocaute",
-        "message.terrassic.tame_try": "%s comeu, mas ainda desconfia (1 em %s)",
+        "gui.terrassic.lens.how_feed": "Domar: dê comida na mão (%s porções)",
+        "gui.terrassic.lens.how_feed_or_ko": "Domar: %s porções na mão, ou nocaute",
+        "message.terrassic.tame_try": "%s comeu · domado %s%% · faltam %s porções",
         "message.terrassic.eats_from_ground": "%s não come da sua mão: jogue a comida no chão, na frente do bico",
         "message.terrassic.mother_guard": "A mãe está vindo atrás de você",
         "message.terrassic.calf_mother_near": "O filhote não come com a mãe por perto: atraia ele para longe com peixe primeiro",
@@ -281,9 +281,9 @@ LENS_LANG = {
         "gui.terrassic.lens.taming": "Doma",
         "gui.terrassic.lens.effectiveness": "Eficacia: %s%%",
         "gui.terrassic.lens.how_knockout": "Domar: noquéalo y luego aliméntalo",
-        "gui.terrassic.lens.how_feed": "Domar: dale comida en la mano (1 de %s por bocado)",
-        "gui.terrassic.lens.how_feed_or_ko": "Domar: comida en la mano (1 de %s) o noqueo",
-        "message.terrassic.tame_try": "%s comió, pero aún desconfía (1 de %s)",
+        "gui.terrassic.lens.how_feed": "Domar: dale comida en la mano (%s bocados)",
+        "gui.terrassic.lens.how_feed_or_ko": "Domar: %s bocados en la mano, o noqueo",
+        "message.terrassic.tame_try": "%s comió · domado %s%% · faltan %s bocados",
         "message.terrassic.eats_from_ground": "%s no come de tu mano: tira la comida al suelo, delante del pico",
         "message.terrassic.mother_guard": "La madre viene a por ti",
         "message.terrassic.calf_mother_near": "La cría no come con su madre cerca: atráela lejos con pescado primero",
@@ -620,6 +620,18 @@ for _lang, _keys in ALPHA_LANG.items():
 # Minecraft treats every Spanish locale as its own language and falls back to English when one is missing,
 # so the es_es file is copied to the other Spanish variants.
 SPANISH_VARIANTS = ("es_ar", "es_cl", "es_ec", "es_mx", "es_uy", "es_ve")
+
+
+# Better Combat presets (bettercombat/weapon_attributes in that mod, branch 1.20.1) for the archaic weapons
+BETTER_COMBAT = {
+    "bone_club": "mace",
+    "tail_club": "hammer",
+    "flint_spear": "spear",
+    "horn_spear": "spear",
+    "flint_knife": "dagger",
+    "rex_tooth_dagger": "dagger",
+    "flint_hatchet": "axe",
+}
 
 
 def write(path, data):
@@ -1052,6 +1064,11 @@ def main():
                 bad.append(f"{name}: {tex}")
     if bad:
         raise SystemExit("item models without texture (run tools/spritegen/sprites.py, science.py or blocks.py):\n  " + "\n  ".join(bad))
+    # 1.7 (player feedback: "make the weapons compatible with Better Combat; the rex dagger works but the clubs don't"):
+    # Better Combat reads data/<mod>/weapon_attributes/<item>.json and gives the item one of its own presets; without
+    # the mod these files are never read. Its fallback only matched names like "dagger", so the clubs had no swing.
+    for item, preset in BETTER_COMBAT.items():
+        write(f"{D}/weapon_attributes/{item}.json", {"parent": f"bettercombat:{preset}"})
     gen_pocket_guide.main()  # the book's content file, advancement, loot and recipe (checks the recipes it shows)
     import gen_recipe_unlocks  # v1.0.2: every recipe shows in the recipe book once an ingredient is picked up
     gen_recipe_unlocks.main()

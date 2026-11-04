@@ -42,7 +42,7 @@ public class Tarbosaurus extends PredatorDinosaur {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 170.0D)
+                .add(Attributes.MAX_HEALTH, 340.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.23D)
                 .add(Attributes.ATTACK_DAMAGE, 15.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)

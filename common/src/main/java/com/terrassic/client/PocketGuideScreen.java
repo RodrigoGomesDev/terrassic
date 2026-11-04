@@ -82,7 +82,8 @@ public class PocketGuideScreen extends Screen {
 
     // ------------------------------------------------------------------ layout
 
-    private record Topic(String id, ItemStack icon, List<ResourceLocation> recipes) {
+    /** {@code list}: a list drawn after the text ("species": every active species, 1.7). */
+    private record Topic(String id, ItemStack icon, List<ResourceLocation> recipes, String list) {
     }
 
     private List<Topic> topics() {
@@ -101,7 +102,7 @@ public class PocketGuideScreen extends Screen {
                 for (JsonElement r : rs) {
                     recipes.add(ResourceLocation.parse(r.getAsString()));
                 }
-                out.add(new Topic(GsonHelper.getAsString(t, "id"), icon, recipes));
+                out.add(new Topic(GsonHelper.getAsString(t, "id"), icon, recipes, GsonHelper.getAsString(t, "list", "")));
             }
         } catch (Exception ex) {
             LogUtils.getLogger().warn("Pocket Guide: could not read {}", CONTENT, ex);
@@ -141,6 +142,16 @@ public class PocketGuideScreen extends Screen {
                     page = this.add(page, new TextLine(line, INK));
                 }
             }
+            if ("species".equals(t.list())) {
+                List<SpeciesEntry> species = this.species();
+                page = this.add(page, new Gap(5));
+                page = this.add(page, new TextLine(Component.translatable("guide.terrassic.pocket.list.count", species.size())
+                        .getVisualOrderText(), MUTED));
+                for (SpeciesEntry e : species) {
+                    page = this.add(page, new Gap(4));
+                    page = this.add(page, e);
+                }
+            }
             for (ResourceLocation id : t.recipes()) {
                 Optional<RecipeHolder<?>> recipe = this.minecraft != null && this.minecraft.level != null
                         ? this.minecraft.level.getRecipeManager().byKey(id).map(holder -> (RecipeHolder<?>) holder) : Optional.empty();
@@ -172,6 +183,31 @@ public class PocketGuideScreen extends Screen {
             next.add(e);
         }
         return next;
+    }
+
+    /**
+     * 1.7 (player feedback: "add a section that shows all the dinos and a taming section to the guidebook"): every
+     * species that lives in the world now (config/Eras), in the Field Guide's order, with what the Field Guide and the
+     * animal itself say: diet, real size, whether it is ridden, how it is tamed, what it eats and how much.
+     */
+    private List<SpeciesEntry> species() {
+        List<SpeciesEntry> out = new ArrayList<>();
+        Minecraft mc = Minecraft.getInstance();
+        for (com.terrassic.research.GuideSpecies s : com.terrassic.research.GuideSpecies.ALL) {
+            if (!com.terrassic.config.Eras.active(s)) {
+                continue;
+            }
+            net.minecraft.world.entity.EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(Terrassic.id(s.id()));
+            com.terrassic.entity.DinosaurEntity dino = null;
+            if (mc.level != null && type.create(mc.level) instanceof com.terrassic.entity.DinosaurEntity d) {
+                dino = d;
+            }
+            out.add(new SpeciesEntry(s, dino));
+            if (dino != null) {
+                dino.discard();
+            }
+        }
+        return out;
     }
 
     /** %key:name% -> the key the player has bound for it. */
@@ -414,6 +450,78 @@ public class PocketGuideScreen extends Screen {
             g.drawString(font, number, nx, y + 4, MUTED, false);
             for (int dx = x + 22 + font.width(this.name); dx < nx - 3; dx += 3) {
                 g.fill(dx, y + 11, dx + 1, y + 12, MUTED);
+            }
+        }
+    }
+
+    /** One species of the "The Dinosaurs" topic: its egg and name, then diet and size, how it is tamed, and its food
+     *  with the amount taming takes. Kept whole on one page. */
+    private final class SpeciesEntry implements Element {
+        private final ItemStack egg;
+        private final Component name;
+        private final List<FormattedCharSequence> lines = new ArrayList<>();
+        private final List<ItemStack> foods = new ArrayList<>();
+
+        SpeciesEntry(com.terrassic.research.GuideSpecies s, com.terrassic.entity.DinosaurEntity dino) {
+            this.egg = MyDinosScreen.egg(s.id());
+            this.name = Component.translatable("entity.terrassic." + s.id()).withStyle(ChatFormatting.BOLD);
+            String length = s.length() >= 10.0F ? String.valueOf(Math.round(s.length()))
+                    : String.format(java.util.Locale.ROOT, "%.1f", s.length()).replace(".0", "");
+            Component about = Component.translatable("guide.terrassic.pocket.list.diet." + s.diet())
+                    .append(" · ").append(Component.translatable("guide.terrassic.pocket.list.size", length));
+            if (s.rideable()) {
+                about = about.copy().append(" · ").append(Component.translatable("guide.terrassic.pocket.list.rideable"));
+            }
+            var font = PocketGuideScreen.this.font;
+            this.lines.addAll(font.split(about, PAGE_W));
+            boolean feeding = dino != null && dino.tameMethod() == com.terrassic.entity.DinosaurEntity.TameMethod.FEEDING;
+            Component how = Component.translatable(feeding ? "guide.terrassic.pocket.list.tame.feed" : "guide.terrassic.pocket.list.tame.egg");
+            this.lines.addAll(font.split(how, PAGE_W));
+            if (dino != null) {
+                for (String id : dino.acceptedFoods()) {
+                    if (this.foods.size() >= 6) {
+                        break;
+                    }
+                    ResourceLocation rl = ResourceLocation.tryParse(id);
+                    if (rl != null) {
+                        this.foods.add(new ItemStack(BuiltInRegistries.ITEM.get(rl)));
+                    }
+                }
+                int goal = dino.foodGoal();
+                Component amount = dino.isHunter() ? (goal == 64 ? Component.translatable("guide.terrassic.pocket.list.food.stack")
+                        : Component.translatable("guide.terrassic.pocket.list.food.stacks", goal / 64, goal))
+                        : Component.translatable("guide.terrassic.pocket.list.food", goal);
+                this.lines.addAll(font.split(amount, PAGE_W));
+            }
+        }
+
+        @Override
+        public int height() {
+            return 18 + this.lines.size() * 10 + (this.foods.isEmpty() ? 0 : 18);
+        }
+
+        @Override
+        public void render(GuiGraphics g, int x, int y, int mouseX, int mouseY) {
+            var font = PocketGuideScreen.this.font;
+            g.renderItem(this.egg, x, y);
+            if (inside(mouseX, mouseY, x, y, 16, 16)) {
+                PocketGuideScreen.this.hoveredStack = this.egg;
+            }
+            g.drawString(font, this.name, x + 20, y + 4, TITLE, false);
+            int yy = y + 18;
+            for (FormattedCharSequence line : this.lines) {
+                g.drawString(font, line, x, yy, INK, false);
+                yy += 10;
+            }
+            if (!this.foods.isEmpty()) {
+                int fx = x;
+                for (ItemStack food : this.foods) {
+                    g.renderItem(food, fx, yy);
+                    if (inside(mouseX, mouseY, fx, yy, 16, 16)) {
+                        PocketGuideScreen.this.hoveredStack = food;
+                    }
+                    fx += 17;
+                }
             }
         }
     }

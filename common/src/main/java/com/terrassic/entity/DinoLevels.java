@@ -90,16 +90,17 @@ public final class DinoLevels {
     }
 
     /** The species' weights in the draw, from its table health and damage: giants (low damage for their bulk)
-     *  lean to health and food, quick hunters (high damage for their bulk) to attack, the rest in between. */
+     *  lean to health and food, quick hunters (high damage for their bulk) to attack, the rest in between.
+     *  1.7: the dinosaurs' health doubled (gen_species.health_of), so the thresholds doubled with it. */
     public static double[] weightsFor(double health, double damage) {
-        double ratio = health > 0.0D ? damage / health : 0.1D;
+        double ratio = health > 0.0D ? damage / health : 0.05D;
         double[] w = new double[STATS.length];
-        if (health >= 200.0D || ratio < 0.07D) {
+        if (health >= 400.0D || ratio < 0.035D) {
             w[Stat.HEALTH.ordinal()] = 4.0D;
             w[Stat.ATTACK.ordinal()] = 1.0D;
             w[Stat.FOOD.ordinal()] = 2.0D;
             w[Stat.TORPOR.ordinal()] = 1.0D;
-        } else if (ratio >= 0.14D) {
+        } else if (ratio >= 0.07D) {
             w[Stat.HEALTH.ordinal()] = 2.5D;
             w[Stat.ATTACK.ordinal()] = 3.0D;
             w[Stat.FOOD.ordinal()] = 1.0D;
