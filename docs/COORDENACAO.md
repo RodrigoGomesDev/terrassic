@@ -1,5 +1,15 @@
 # Terrassic — coordenação entre frentes
 
+## Partes de acerto e porte da 1.7 para 1.21.1 — 04/11/2026 (Claude principal, main e mc/1.21.1)
+
+Escopo: `docs/PLANO_PARTES.md`. Arquivos: `DinosaurEntity.java` (partes, ids, `hurtByPart`, zona do dardo), novos
+`entity/parts/*`, `mixin/parts/*`, `mixin/client/PartHitboxMixin`, `ai/HeadMeleeAttackGoal`; `TranqDart`, `ThrownSpear`,
+`ThrownBola`, `Whistle`, `AmberLensItem`, `SketchCharcoalItem`, `DinoControls`, `StuckProjectilesLayer`, as quatro
+classes-base com `MeleeAttackGoal`; `tools/javagen/parts.py`, `gen_species.py` (13 classes geradas),
+`tools/validation/parts_regression.py`. Na `mc/1.21.1`: cherry-pick dos três commits da 1.7 e um commit de API 1.21.
+Validação em `docs/PLANO_PARTES.md` (build das duas branches; regressões de servidor real nos loaders citados lá).
+Cliente gráfico ainda não revisado. Arquivos liberados.
+
 ## Feedback de jogador, 1.7.0 — 04/11/2026 (Claude principal, main)
 
 Escopo: os seis pontos do feedback e os dois pedidos extras (`docs/FEEDBACK_1_7.md`). Arquivos tocados:
