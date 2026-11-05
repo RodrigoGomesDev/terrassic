@@ -1,5 +1,11 @@
 # Terrassic — coordenação entre frentes
 
+## Validação da 1.7 estável — 05/11/2026 (Claude principal, main e mc/1.21.1)
+
+Partes que cobrem o modelo animado, teste no cliente real (`client/dev/PartsShowcase`), Better Combat no cliente de teste
+(`fabric/build.gradle`, só com `-PbetterCombat`), `density_regression.py`. Resultados em `docs/FEEDBACK_1_7.md` e
+`docs/PLANO_PARTES.md`. Arquivos liberados.
+
 ## Partes de acerto e porte da 1.7 para 1.21.1 — 04/11/2026 (Claude principal, main e mc/1.21.1)
 
 Escopo: `docs/PLANO_PARTES.md`. Arquivos: `DinosaurEntity.java` (partes, ids, `hurtByPart`, zona do dardo), novos
