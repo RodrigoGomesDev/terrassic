@@ -131,7 +131,7 @@ public final class PartsShowcase {
             // out of the world rather than killed: a killed creature lies dying (and leaves a carcass) for a while
             command(mc, "tp @e[type=!player] 0 -400 0");
             command(mc, String.format(Locale.ROOT, "summon terrassic:%s 0.5 %s 0.5 {NoAI:1b,PersistenceRequired:1b,Size:1f,BirthSize:1f,"
-                    + "UUID:[I;%d,%d,%d,%d],Rotation:[%df,0f],Attributes:[{Name:\"minecraft:generic.armor\",Base:0d}]}", species, Y,
+                    + "UUID:[I;%d,%d,%d,%d],Rotation:[%df,0f],attributes:[{id:\"minecraft:generic.armor\",base:0d}]}", species, Y,
                     (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
                     (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits(), yaw));
             park(mc.player);
