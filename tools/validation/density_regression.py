@@ -27,9 +27,11 @@ sys.path.insert(0, str(ROOT / "tools" / "javagen"))
 import gen_species  # noqa: E402
 
 PLAYER = "TerraDensity"
-# Places 1200 blocks apart (different biomes on most seeds), and how long the world is left to fill each one.
-SPOTS = [(x, z) for x in (-1800, -600, 600, 1800) for z in (-600, 600)]
-SETTLE = 75
+# The biomes measured (temperate and warm ones, where dinosaurs and Minecraft's animals live together; a snowy region
+# has neither), each found with /locate from a different corner of the map, and how long the world fills each one.
+BIOMES = [("plains", 0, 0), ("forest", 3000, 0), ("savanna", 0, 3000), ("jungle", -3000, 0), ("swamp", 0, -3000),
+          ("taiga", 3000, 3000), ("flower_forest", -3000, -3000), ("sparse_jungle", 3000, -3000)]
+SETTLE = 120
 
 
 def hunters():
@@ -71,7 +73,15 @@ def main():
                         "scoreboard objectives add dens dummy"):
             server.command(command)
         checks.barrier()
-        for x, z in SPOTS:
+        for biome_id, ox, oz in BIOMES:
+            cursor = len(server.lines)
+            server.command(f"execute positioned {ox} 100 {oz} run locate biome minecraft:{biome_id}")
+            checks.barrier()
+            found = re.search(r"is at \[(-?\d+), [~\-0-9]+, (-?\d+)\]", " ".join(server.lines[cursor:]))
+            if not found:
+                print(f"INFO {server.loader}: no {biome_id} found", flush=True)
+                continue
+            x, z = int(found.group(1)), int(found.group(2))
             # on the ground, in creative: a spectator does not count for the natural spawns
             server.command(f"execute in minecraft:overworld run tp {PLAYER} {x} 200 {z}")
             checks.barrier()

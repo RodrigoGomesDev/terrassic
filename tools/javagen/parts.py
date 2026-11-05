@@ -25,7 +25,7 @@ ANIM = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terra
 # held it would be hit in empty air the rest of the time. Resting, sleeping and knocked out are left out too
 # (DinosaurEntity#tickParts lowers the parts for lying down), and so are the displays. Every keyframe time of these, up
 # to POSE_SAMPLES per animation, is one pose.
-POSES = ("idle", "walk", "run", "stalk", "fly", "glide", "bank_left", "bank_right")
+POSES = ("idle", "walk", "run", "stalk", "fly", "glide", "bank_left", "bank_right", "look_side")
 FLIGHT_POSES = ("fly", "glide", "bank_left", "bank_right")
 # Lying down (asleep, sitting, brooding, knocked out): a layout of its own, with the same pieces (DinoPart.Spec#lying).
 LYING_POSES = ("sit", "sleep", "knocked_out", "brood")
