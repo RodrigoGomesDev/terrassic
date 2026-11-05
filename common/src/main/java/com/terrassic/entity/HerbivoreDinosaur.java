@@ -119,7 +119,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
                 return !HerbivoreDinosaur.this.fightsBack() && !HerbivoreDinosaur.this.isTame() && super.canUse();
             }
         });
-        this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.4D, true) {
+        this.goalSelector.addGoal(4, new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, 1.4D, true) {
             @Override
             public boolean canUse() {
                 return HerbivoreDinosaur.this.fightsBack() && HerbivoreDinosaur.this.usesMeleeGoal() && super.canUse();

@@ -70,7 +70,9 @@ public class ThrownSpear extends AbstractArrow {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        Entity target = result.getEntity();
+        Entity hit = result.getEntity();
+        // 1.7: a head or tail part takes the blow (and its multiplier); the effects go to its creature
+        Entity target = com.terrassic.entity.parts.DinoParts.owner(hit);
         float damage = this.thrownDamage;
         if (target instanceof LivingEntity living) {
             damage += EnchantmentHelper.getDamageBonus(this.spearItem, living.getMobType());
@@ -78,7 +80,7 @@ public class ThrownSpear extends AbstractArrow {
         Entity owner = this.getOwner();
         DamageSource source = this.damageSources().trident(this, owner == null ? this : owner);
         this.dealtDamage = true;
-        if (target.hurt(source, damage)) {
+        if (hit.hurt(source, damage)) {
             if (target.getType() == EntityType.ENDERMAN) {
                 return;
             }

@@ -12,6 +12,14 @@ GUIDE_OUT = os.path.join(os.path.dirname(OUT), "research", "GuideSpecies.java")
 REPORT = os.path.join(os.path.dirname(__file__), "..", "..", "art", "build_report.json")
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "soundgen"))
 from recipes import SPECIES_VOICE, VOICE_SETS, field as sound_field  # noqa: E402
+import parts as hit_parts  # noqa: E402
+
+# 1.7: species with hit parts (head, neck, tail; tools/javagen/parts.py, docs/PLANO_PARTES.md). The remade ones
+# (config/Eras.REMADE), whose models are measured at rest. Add a species here when it is remade.
+PARTS_SPECIES = {
+    "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
+    "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus",
+}
 
 # In-game size of each species. 1 block = 1 metre, so the player (1.8 blocks) is a 1.8 m tall person.
 # Lengths are the upper end of the published estimates for adults (largest known specimens), see docs/TAMANHOS.md.
@@ -1060,6 +1068,18 @@ def gen(s, bounds):
         imports.add("net.minecraft.world.item.Item")
         imports.add("com.terrassic.registry.ModItems")
         body.append(f"    @Override\n    protected Item speciesSaddle() {{\n        return ModItems.{s['saddle']}.get();\n    }}\n")
+    if s["id"] in PARTS_SPECIES:
+        # 1.7: hit parts measured from the model at rest (tools/javagen/parts.py); DinoPart scales them by getScale()
+        imports.add("com.terrassic.entity.parts.DinoPart")
+        rows = hit_parts.parts(s["id"], size["scale"])
+        pivot_f, pivot_u = hit_parts.neck_base(s["id"])
+        k = size["scale"] / 16.0
+        specs = ",\n".join(f"            new DinoPart.Spec(DinoPart.Kind.{kind.upper()}, {f}F, {u}F, {w}F, {h}F)"
+                            for kind, f, u, w, h in rows)
+        body.append("    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */")
+        body.append(f"    private static final DinoPart.Spec[] PARTS = {{\n{specs}\n    }};\n")
+        body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
+        body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
     if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):

@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -149,6 +150,28 @@ public class Giganotosaurus extends Giganotosaurine {
     @Override
     protected Item speciesSaddle() {
         return ModItems.GIGANOTOSAURUS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.857F, 3.005F, 0.834F, 0.885F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.691F, 3.046F, 0.834F, 0.792F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 3.242F, 2.066F, 1.01F, 1.63F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 4.252F, 2.479F, 1.01F, 1.281F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.64F, 3.085F, 1.555F, 0.384F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.085F, 2.932F, 1.555F, 0.643F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.53F, 2.507F, 1.555F, 1.29F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.975F, 2.258F, 1.555F, 1.66F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 3.085F;
     }
 
     @Override

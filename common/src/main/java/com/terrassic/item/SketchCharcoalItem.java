@@ -91,6 +91,6 @@ public class SketchCharcoalItem extends Item {
         AABB box = player.getBoundingBox().expandTowards(player.getViewVector(1.0F).scale(RANGE)).inflate(1.0D);
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, end, box,
                 e -> e instanceof DinosaurEntity && !e.isSpectator(), RANGE * RANGE);
-        return hit != null && hit.getEntity() instanceof DinosaurEntity dino && player.hasLineOfSight(dino) ? dino : null;
+        return hit != null && com.terrassic.entity.parts.DinoParts.owner(hit.getEntity()) instanceof DinosaurEntity dino && player.hasLineOfSight(dino) ? dino : null;
     }
 }

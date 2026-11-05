@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -94,6 +95,24 @@ public class Velociraptor extends Raptor {
     @Override
     protected Item speciesSaddle() {
         return ModItems.VELOCIRAPTOR_HARNESS.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.04F, 0.609F, 0.666F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 0.575F, 0.558F, 0.498F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.193F, 0.64F, 0.675F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.518F, 0.575F, 0.675F, 0.35F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 0.406F;
     }
 
     @Override

@@ -106,7 +106,7 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
         this.goalSelector.addGoal(1, new RestInWaterGoal(this));   // tame ones (hand-fed or knocked out) rest when told
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.3D, true));
+        this.goalSelector.addGoal(2, new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, 1.3D, true));
         this.goalSelector.addGoal(3, new FollowOwnerSwimGoal(this, 1.2D, 10.0F, Math.max(3.0F, this.getBbWidth() * 1.5F)));
         if (this.tameable()) {
             this.goalSelector.addGoal(4, new TemptGoal(this, 1.1D, this.food(), false));

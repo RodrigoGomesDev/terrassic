@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -112,6 +113,26 @@ public class Triceratops extends Triceratopsine {
     @Override
     protected Item speciesSaddle() {
         return ModItems.TRICERATOPS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.958F, 0.188F, 2.1F, 2.271F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.995F, 0.73F, 1.161F, 1.169F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.632F, 1.236F, 0.934F, 0.518F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.698F, 1.451F, 0.934F, 0.752F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.764F, 1.507F, 0.934F, 0.92F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.83F, 1.559F, 0.934F, 0.971F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 2.751F;
     }
 
     @Override

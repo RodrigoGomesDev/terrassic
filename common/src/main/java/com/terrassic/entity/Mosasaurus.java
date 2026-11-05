@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -139,6 +140,27 @@ public class Mosasaurus extends Mosasaurid {
     @Override
     protected Item speciesSaddle() {
         return ModItems.MOSASAURUS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.942F, 0.353F, 0.882F, 0.752F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.824F, 0.353F, 0.882F, 0.662F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 4.39F, 0.221F, 1.103F, 1.059F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.075F, -0.686F, 1.45F, 2.1F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.625F, 0.025F, 1.45F, 1.13F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.175F, 0.055F, 1.45F, 1.176F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.725F, 0.132F, 1.45F, 1.147F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 3.883F;
     }
 
     @Override

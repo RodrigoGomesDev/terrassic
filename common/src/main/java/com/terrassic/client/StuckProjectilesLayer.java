@@ -43,7 +43,9 @@ public class StuckProjectilesLayer<T extends DinosaurEntity> extends GeoRenderLa
      *  block ahead of the origin, the shaft and fletching behind it), in blocks. */
     private static final float DEPTH = 0.02F;
 
-    private final Map<BakedGeoModel, Surface> surfaces = new WeakHashMap<>();
+    /** Per model: every face, then the faces of the body, of the head and neck, and of the tail (1.7: a dart is drawn
+     *  in the part it hit, DinosaurEntity#stuckDartZone). */
+    private final Map<BakedGeoModel, Surface[]> surfaces = new WeakHashMap<>();
     private Arrow arrow;
     private TranqDart dart;
 
@@ -59,13 +61,22 @@ public class StuckProjectilesLayer<T extends DinosaurEntity> extends GeoRenderLa
         if (darts + arrows == 0 || animatable.isInvisible() || bone.isHidden()) {
             return;
         }
-        Surface surface = this.surfaces.computeIfAbsent(this.getDefaultBakedModel(animatable), Surface::of);
-        if (surface.faces.isEmpty()) {
+        Surface[] zones = this.surfaces.computeIfAbsent(this.getDefaultBakedModel(animatable), Surface::zones);
+        Surface all = zones[0];
+        if (all.faces.isEmpty()) {
             return;
         }
+        boolean parts = animatable.parts().length > 0;
         boolean drew = false;
         for (int i = 0; i < darts + arrows; i++) {
             RandomSource random = RandomSource.create(animatable.getId() * 341873128712L + i * 132897987541L);
+            Surface surface = all;
+            if (i < darts && parts) {
+                Surface zone = zones[1 + animatable.stuckDartZone(i)];
+                if (!zone.faces.isEmpty()) {
+                    surface = zone;
+                }
+            }
             Face face = surface.pick(random.nextFloat());
             if (face.bone != bone) {
                 continue;
@@ -135,10 +146,19 @@ public class StuckProjectilesLayer<T extends DinosaurEntity> extends GeoRenderLa
 
     /** Every face that can take a dart, and the running total of their areas for a weighted pick. */
     private record Surface(List<Face> faces, float[] cumulative) {
-        static Surface of(BakedGeoModel model) {
+        /** All faces, then those of zone 0 (body), 1 (head and neck) and 2 (tail). */
+        static Surface[] zones(BakedGeoModel model) {
+            Surface[] out = new Surface[4];
+            for (int z = -1; z < 3; z++) {
+                out[z + 1] = of(model, z);
+            }
+            return out;
+        }
+
+        static Surface of(BakedGeoModel model, int zone) {
             List<Face> faces = new ArrayList<>();
             for (GeoBone bone : model.topLevelBones()) {
-                collect(bone, faces);
+                collect(bone, faces, zone, 0);
             }
             float[] cumulative = new float[faces.size()];
             float total = 0.0F;
@@ -149,10 +169,13 @@ public class StuckProjectilesLayer<T extends DinosaurEntity> extends GeoRenderLa
             return new Surface(faces, cumulative);
         }
 
-        private static void collect(GeoBone bone, List<Face> faces) {
+        private static void collect(GeoBone bone, List<Face> faces, int zone, int inherited) {
             String name = bone.getName().toLowerCase(java.util.Locale.ROOT);
+            int own = name.equals("head") || name.startsWith("neck") || name.equals("throat") ? 1
+                    : name.startsWith("tail") ? 2 : inherited;
             // the saddle, the eyelids and the parts only one sex shows (male_display) never take one
-            boolean skip = name.contains("saddle") || name.contains("display") || name.startsWith("lid");
+            boolean skip = name.contains("saddle") || name.contains("display") || name.startsWith("lid")
+                    || (zone >= 0 && own != zone);
             if (!skip) {
                 for (GeoCube cube : bone.getCubes()) {
                     // a plane (teeth, frill membranes, feathers) has no inside to stick into
@@ -173,11 +196,14 @@ public class StuckProjectilesLayer<T extends DinosaurEntity> extends GeoRenderLa
                 }
             }
             for (GeoBone child : bone.getChildBones()) {
-                collect(child, faces);
+                collect(child, faces, zone, own);
             }
         }
 
         Face pick(float roll) {
+            if (this.faces.isEmpty()) {
+                return null;
+            }
             float target = roll * this.cumulative[this.cumulative.length - 1];
             for (int i = 0; i < this.cumulative.length; i++) {
                 if (target <= this.cumulative[i]) {

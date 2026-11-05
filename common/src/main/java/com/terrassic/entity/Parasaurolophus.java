@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -114,6 +115,28 @@ public class Parasaurolophus extends Lambeosaurine {
     @Override
     protected Item speciesSaddle() {
         return ModItems.PARASAUROLOPHUS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.179F, 1.867F, 1.032F, 1.076F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.211F, 1.555F, 1.032F, 0.974F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.592F, 1.344F, 0.762F, 1.076F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 3.354F, 1.531F, 0.762F, 0.985F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.636F, 1.509F, 1.196F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.44F, 1.484F, 1.196F, 0.699F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.244F, 1.46F, 1.196F, 0.982F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.047F, 1.389F, 1.196F, 1.25F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 2.501F;
     }
 
     @Override

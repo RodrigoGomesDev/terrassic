@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -144,6 +145,27 @@ public class Tyrannosaurus extends ApexTheropod {
     @Override
     protected Item speciesSaddle() {
         return ModItems.TYRANNOSAURUS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.706F, 3.535F, 1.913F, 2.25F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.221F, 3.493F, 1.785F, 2.272F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.621F, 3.074F, 1.851F, 2.055F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -6.164F, 3.497F, 1.443F, 0.642F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.721F, 3.271F, 1.443F, 1.036F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.278F, 2.969F, 1.443F, 1.541F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.836F, 2.889F, 1.443F, 1.658F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 2.167F;
     }
 
     @Override

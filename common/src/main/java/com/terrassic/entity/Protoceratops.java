@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -80,6 +81,23 @@ public class Protoceratops extends Protoceratopsid {
     @Override
     protected double runThresholdSqr() {
         return 0.003D;
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 0.773F, 0.146F, 0.579F, 0.571F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 0.664F, 0.235F, 0.35F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.519F, 0.239F, 0.797F, 0.514F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 0.583F;
     }
 
     @Override

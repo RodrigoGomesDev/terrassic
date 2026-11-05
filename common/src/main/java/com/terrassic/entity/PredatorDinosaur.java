@@ -76,7 +76,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
 
     /** The fight itself (priority 3): the vanilla melee by default. */
     protected Goal createAttackGoal() {
-        return new MeleeAttackGoal(this, attackSpeed(), true);
+        return new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, attackSpeed(), true);
     }
 
     /** Hook for extra goals (leap, avoid...). Called at the end of {@link #registerGoals()}. */
