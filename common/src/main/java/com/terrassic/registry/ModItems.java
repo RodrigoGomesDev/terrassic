@@ -278,6 +278,10 @@ public final class ModItems {
     /** The Triceratops' own pack saddle (cangalha): only it saddles a Triceratops; its two baskets carry the cargo. */
     public static final RegistrySupplier<Item> TRICERATOPS_SADDLE = ITEMS.register("triceratops_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Styracosaurus' own running pad (1.8): only it saddles a Styracosaurus; a thick hide pad with a grip bar in
+     *  front, rope foot loops with bone toggles and a rush girth. */
+    public static final RegistrySupplier<Item> STYRACOSAURUS_SADDLE = ITEMS.register("styracosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Gallimimus' own riding pad: only it saddles a Gallimimus; the rider sits over the hips, holding a bone grip. */
     public static final RegistrySupplier<Item> GALLIMIMUS_SADDLE = ITEMS.register("gallimimus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

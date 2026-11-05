@@ -20,6 +20,9 @@ import software.bernie.geckolib.model.DefaultedEntityGeoModel;
  *       Farke et al. 2013) shown only on them</li>
  *   <li>The Triceratops' brow horns: "adult_horns" is hidden on babies and "young_horns" (short, curving back) shown
  *       only on them</li>
+ *   <li>The Styracosaurus' crown: "adult_frill" (the spikes, with "male_display" / "female_display" for each sex) is
+ *       hidden on babies and "young_frill" (the calf's small points) shown only on them; its nose horn uses
+ *       "adult_horns" / "young_horns"</li>
  *   <li>Bone "head" follows the look direction (handled by DefaultedEntityGeoModel)</li>
  * </ul>
  */
@@ -72,6 +75,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         // the Triceratops' brow horns: a calf's are short stubs curving back (Horner & Goodwin 2006)
         hide("adult_horns", baby);
         hide("young_horns", !baby);
+        // the Styracosaurus' crown: a calf's frill has small points that later grow into the spikes (1.8)
+        hide("adult_frill", baby);
+        hide("young_frill", !baby);
     }
 
     private void hide(String bone, boolean hidden) {

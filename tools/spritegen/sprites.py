@@ -980,7 +980,8 @@ def egg_blocks():
     from pachy_extras import CUSTOM_EGGS as PACHY_EGGS
     from para_extras import CUSTOM_EGGS as PARA_EGGS
     from anky_extras import CUSTOM_EGGS as ANKY_EGGS
-    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS}
+    from styr_extras import CUSTOM_EGGS as STYR_EGGS
+    CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1520,6 +1521,8 @@ if __name__ == "__main__":
     para_extras.main()    # the Parasaurolophus' round eggs in a raised mud crater under reeds, and its reed saddle
     import anky_extras
     anky_extras.main()    # the Ankylosaurus' leathery eggs half buried in a pit of forest loam, and its pack deck
+    import styr_extras
+    styr_extras.main()    # the Styracosaurus' long soft eggs on a heap of reed stalks, and its running pad
     import mosa_extras
     mosa_extras.main()    # the Mosasaurus' diving harness (no egg block: it bears live young at sea)
     import armas

@@ -1157,15 +1157,66 @@ def corythosaurus():
 
 
 def styracosaurus():
-    e = ceratopsian("styracosaurus", {"b": "#8a7a5e", "c": "#c4b48e", "e": "#b84a2c", "w": "#ece0c0",
-                                      "D": "#6e2414", "i": "#f2e8cc", "j": "#b8a87e", "d": "#6a5c44",
-                                      "n": "#4a3e30"}, frill=(3, 4, 28, 22), knobs=((8, 11), (23, 11)),
-                    brow=False)
-    # the long frill spikes
-    for (x0, y0, x1, y1) in ((7, 6, 4, 0), (10, 4, 9, -1), (13, 4, 13, -1)):
-        e.line([(x0, y0), (x1, y1)], "i", 2)
-        e.line([(31 - x0, y0), (31 - x1, y1)], "i", 2)
-    e.poly([(14, 22), (17, 22), (16, 14), (15, 14)], "i")
+    """Styracosaurus (05/11, the "argila rosada" of the new model), front view like the Triceratops egg: the short
+    frill is the dome behind the egg, wine-red inside a pale bone rim on the male's colours; the crown of long ivory
+    spikes fans out from the rim past the egg's outline, darkening to the tips (the first thing you see in the
+    hotbar); the one tall nose horn standing up the middle of the face; low bumps over the eyes; the narrow dark beak
+    over the pale jaw."""
+    e = Egg("styracosaurus", {
+        "w": "#dcc8b6", "W": "#bea996", "x": "#6a2f34", "X": "#4a1d23", "f": "#843f46",
+        "b": "#a87d81", "l": "#bb9193", "d": "#8e686b", "s": "#3c2629", "h": "#56393d", "c": "#cfb3a9", "C": "#bfa098",
+        "i": "#e2d6c0", "I": "#cbbda2", "j": "#a8987d", "o": "#7c6c58", "O": "#4e4236",
+        "k": "#3a3132", "K": "#231c1d", "B": "#524647", "n": "#2a1a1e",
+        "D": "#1c1418", "Y": "#e3b866", "E": "#c9973e", "e": "#7a5426", "P": "#120d0b", "G": "#fff4d6"})
+    # the crown first, so the frill dome covers the spike roots: six long spikes fanned out, ivory to a dark tip
+    for (x0, y0, x1, y1) in ((13, 6, 12, 0), (10, 7, 6, 0), (7, 10, 1, 4), (5, 14, 0, 10)):
+        for side in (0, 1):
+            p0 = (x0 if not side else N - 1 - x0, y0); p1 = (x1 if not side else N - 1 - x1, y1)
+            e.line([p0, p1], "i", 2)
+            e.px([p1], "O")
+            mid = ((p0[0] + p1[0]) // 2, (p0[1] + p1[1]) // 2)
+            e.px([mid], "j")
+    # the frill: a dome behind the egg, a pale bone rim, wine inside with darker vessel grooves
+    e.ell((4, 5, 27, 24), "w")
+    e.ell((5, 6, 26, 23), "x")
+    e.ell((8, 9, 23, 20), "f")
+    for pts in ([(12, 9), (9, 7)], [(10, 12), (6, 11)], [(14, 8), (13, 6)]):
+        e.line(pts, "X"); e.line([(N - 1 - x, y) for x, y in pts], "X")
+    # the face: the egg under the frill, a dark edge against it
+    e.ell((6, 10, 25, 41), "s")
+    e.ell((7, 11, 24, 41), "b")
+    for y in range(N):
+        for x in range(N):
+            if y > 16 and not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((9, 11, 22, 19), "d", clip=True)
+    for x, y in ((11, 13), (9, 23), (12, 25)):
+        e.px(e.mirror([(x, y)]), "l")
+        e.px(e.mirror([(x, y + 1)]), "h")
+    # the eyes under the low brow bumps
+    eye = ["hhhhh.",
+           "DDDDD.",
+           "DYYGP.",
+           "DEEPP.",
+           ".DDD.."]
+    for j, row in enumerate(eye):
+        for i, ch in enumerate(row):
+            if ch != ".":
+                e.px([q for q in e.mirror([(6 + i, 15 + j)]) if 0 <= q[0] < N], ch)
+    e.px(e.mirror([(8, 14), (9, 14)]), "I")
+    # the snout down the middle with the tall nose horn standing on it
+    e.poly([(13, 14), (18, 14), (19, 25), (12, 25)], "l")
+    e.poly([(14, 22), (17, 22), (16, 8), (15, 8)], "i")
+    e.line([(17, 21), (16, 10)], "I")
+    e.px([(15, 8), (16, 8)], "O"); e.px([(15, 9), (16, 9), (15, 10)], "o"); e.px([(14, 21), (17, 21)], "j")
+    e.px(e.mirror([(12, 22), (12, 23)]), "n")
+    # the pale jaw, the mouth line, the narrow dark beak
+    e.ell((9, 26, 22, 36), "c", clip=True)
+    e.px(e.mirror([(11, 31), (12, 32)]), "C")
+    e.line([(9, 26), (12, 28), (14, 28)], "s"); e.line([(22, 26), (19, 28), (17, 28)], "s")
+    e.poly([(14, 24), (17, 24), (17, 27), (16, 30), (15, 30), (14, 27)], "k")
+    e.line([(15, 24), (15, 28)], "B")
+    e.px([(15, 31), (16, 31)], "K")
     return e
 
 

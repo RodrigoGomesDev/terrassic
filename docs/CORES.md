@@ -25,6 +25,7 @@ uma cor livre quando for refeita.
 | Parasaurolophus | ruivo de impala (macho) ou pardo-rosado (fêmea), barriga creme, bandeira preta de alarme na cauda, crista escurecendo até a ponta no macho | ruivo/laranja |
 | Ankylosaurus | jade escuro: pele cinza-azulada (petróleo acinzentado) sob placas de chifre escuro, quilhas claras, barriga cinza-esverdeada clara; fêmea com a pele um pouco mais cinza e o chifre mais quente | cinza-petróleo |
 | Mosasaurus | verde-garrafa: dorso verde-garrafa sobre barriga marfim, contrassombreado com linha nítida e ondulada; faixas escuras quebradas sobre o dorso (no macho descem até a linha; na fêmea viram duas fileiras de manchas), listra escura atrás do olho com uma linha clara embaixo, bordas claras nas nadadeiras; o macho com cicatrizes de mordida na cabeça, a fêmea um pouco mais cinza; olho dourado | verde-garrafa |
+| Styracosaurus | argila rosada: corpo cinza-rosado de couro de hipopótamo, dorso mais escuro, barriga clara, sem listras; gola cor de vinho no macho e marrom-rosado apagado na fêmea, chifre e espinhos cor de osso escurecendo nas pontas | rosa-acinzentado |
 
 ## Colisões que ainda existem (02/11/2026)
 
@@ -57,6 +58,11 @@ uma cor livre quando for refeita.
   Velociraptor e 4,4 do Pteranodon. Sobrava pouco escuro livre (azul-escuro do Galimimo, cinza-petróleo do
   Anquilossauro, ameixa do Tricerátops); o verde-garrafa saiu de uma busca em Lab pelo ponto mais longe de todos. O
   pigmento escuro no dorso e a barriga clara vêm da pele fóssil de mosassauro com eumelanina (Lindgren et al. 2014).
+- Styracosaurus (1.8, 05/11/2026): macho e fêmea medidos contra machos e fêmeas de todos. Nenhum abaixo de 10: o
+  macho fica a 11,2 do Parasaurolophus (o refeito mais perto) e a 11,8 do Mesodma; a fêmea a 10,6 do Mesodma e 10,9
+  do Deinocheirus antigos, 11,6 do Parasaurolophus. Na amostra do estudo a argila dava 17 de todos; com a pele inteira
+  pintada (barriga clara, gola) a assinatura chega mais perto, mas ainda livre. O "mogno" (vinho escuro no corpo todo)
+  foi descartado no estudo. O Pachyrhinosaurus, próximo centrossauríneo, não pode usar rosa nem vinho.
 - O colourcheck compara só os machos. No Parasaurolophus as duas cores foram medidas também contra as fêmeas dos
   refeitos; vale fazer o mesmo nos próximos (a fêmea do Pachycephalosaurus quase pegou o macho ruivo).
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre
