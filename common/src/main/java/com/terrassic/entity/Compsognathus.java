@@ -27,11 +27,11 @@ import net.minecraft.world.level.Level;
  */
 public class Compsognathus extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~1.25 m. */
-    public static final float WIDTH = 0.4F;
-    public static final float HEIGHT = 0.5F;
+    public static final float WIDTH = 0.424F;
+    public static final float HEIGHT = 0.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.28F;
-    public static final float SHADOW = 0.25F;
+    public static final float MODEL_SCALE = 0.296F;
+    public static final float SHADOW = 0.265F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.COD, Items.SALMON, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Compsognathus(EntityType<? extends Compsognathus> type, Level level) {

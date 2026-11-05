@@ -25,11 +25,11 @@ import net.minecraft.world.level.Level;
  */
 public class Ichthyornis extends FlyingDinosaur {
     /** Hitbox (blocks). Adult real length ~0.66 m. */
-    public static final float WIDTH = 0.4F;
-    public static final float HEIGHT = 0.4F;
+    public static final float WIDTH = 0.424F;
+    public static final float HEIGHT = 0.424F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.115F;
-    public static final float SHADOW = 0.2F;
+    public static final float MODEL_SCALE = 0.122F;
+    public static final float SHADOW = 0.212F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Ichthyornis(EntityType<? extends Ichthyornis> type, Level level) {

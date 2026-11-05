@@ -24,11 +24,11 @@ import net.minecraft.world.level.Level;
  */
 public class Leptoceratops extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~2.0 m. */
-    public static final float WIDTH = 0.6F;
-    public static final float HEIGHT = 0.7F;
+    public static final float WIDTH = 0.635F;
+    public static final float HEIGHT = 0.741F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.39F;
-    public static final float SHADOW = 0.5F;
+    public static final float MODEL_SCALE = 0.413F;
+    public static final float SHADOW = 0.529F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.SWEET_BERRIES, Items.WHEAT, Items.APPLE);
 
     public Leptoceratops(EntityType<? extends Leptoceratops> type, Level level) {

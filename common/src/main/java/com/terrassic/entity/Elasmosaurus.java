@@ -27,11 +27,11 @@ import net.minecraft.world.level.Level;
  */
 public class Elasmosaurus extends Plesiosaurid {
     /** Hitbox (blocks). Adult real length ~10.3 m. */
-    public static final float WIDTH = 2.0F;
-    public static final float HEIGHT = 1.4F;
+    public static final float WIDTH = 2.118F;
+    public static final float HEIGHT = 1.482F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.8F;
-    public static final float SHADOW = 1.5F;
+    public static final float MODEL_SCALE = 0.847F;
+    public static final float SHADOW = 1.588F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Elasmosaurus(EntityType<? extends Elasmosaurus> type, Level level) {
@@ -66,7 +66,7 @@ public class Elasmosaurus extends Plesiosaurid {
 
     @Override
     protected double cullingInflate() {
-        return 5.7D;
+        return 6.0D;
     }
 
     @Override
@@ -85,17 +85,17 @@ public class Elasmosaurus extends Plesiosaurid {
     }
 
     public double getPassengersRidingOffset() {
-        return 1.81D * this.getScale();
+        return 1.91D * this.getScale();
     }
 
     @Override
     protected double riderForwardOffset() {
-        return 1.4D;
+        return 1.48D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 10.61D * this.getScale());
+        return Math.max(super.riderReach(), 11.18D * this.getScale());
     }
 
     @Override
@@ -138,33 +138,37 @@ public class Elasmosaurus extends Plesiosaurid {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{9.123F, 0.0F, -0.575F, 1.077F, 2.81F, 1.19F},
-                    new float[]{9.156F, 0.0F, -0.716F, 1.06F, 2.313F, 2.787F},
-                    new float[]{9.183F, 0.0F, -0.687F, 0.996F, 0.6F, 1.315F}),
+                    new float[]{9.918F, 0.0F, -0.606F, 0.617F, 2.969F, 1.206F},
+                    new float[]{9.948F, 0.0F, -0.755F, 0.608F, 2.443F, 2.945F},
+                    new float[]{9.96F, 0.0F, -0.725F, 0.575F, 0.629F, 1.303F}),
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{9.401F, 0.0F, -0.572F, 0.617F, 2.949F, 1.22F},
+                    new float[]{9.44F, 0.0F, -0.707F, 0.608F, 2.429F, 2.85F},
+                    new float[]{9.485F, 0.0F, -0.623F, 0.575F, 0.629F, 1.284F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{7.82F, 0.0F, -0.365F, 2.456F, 2.45F, 1.466F},
-                    new float[]{7.891F, 0.0F, -0.485F, 2.37F, 2.113F, 2.408F},
-                    new float[]{7.868F, 0.0F, -0.31F, 2.358F, 0.65F, 1.305F}),
+                    new float[]{8.279F, 0.0F, -0.383F, 2.595F, 2.588F, 1.546F},
+                    new float[]{8.355F, 0.0F, -0.51F, 2.503F, 2.232F, 2.543F},
+                    new float[]{8.331F, 0.0F, -0.325F, 2.491F, 0.682F, 1.376F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{5.463F, 0.0F, 0.275F, 2.456F, 1.566F, 1.282F},
-                    new float[]{5.621F, 0.0F, 0.225F, 2.37F, 1.459F, 1.59F},
-                    new float[]{5.61F, 0.0F, 0.322F, 2.358F, 0.85F, 1.17F}),
+                    new float[]{5.784F, 0.0F, 0.294F, 2.595F, 1.652F, 1.352F},
+                    new float[]{5.952F, 0.0F, 0.241F, 2.503F, 1.539F, 1.678F},
+                    new float[]{5.94F, 0.0F, 0.343F, 2.491F, 0.894F, 1.233F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{3.107F, 0.0F, 0.692F, 2.456F, 1.167F, 1.174F},
-                    new float[]{3.351F, 0.0F, 0.635F, 2.37F, 1.216F, 1.195F},
-                    new float[]{3.352F, 0.0F, 0.741F, 2.358F, 1.0F, 1.057F}),
+                    new float[]{3.29F, 0.0F, 0.735F, 2.595F, 1.23F, 1.237F},
+                    new float[]{3.548F, 0.0F, 0.676F, 2.503F, 1.281F, 1.259F},
+                    new float[]{3.549F, 0.0F, 0.788F, 2.491F, 1.053F, 1.114F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{0.729F, 0.0F, 0.256F, 3.757F, 5.079F, 1.845F},
-                    new float[]{0.767F, 0.0F, 0.569F, 3.56F, 5.027F, 1.729F},
-                    new float[]{0.769F, 0.0F, 0.663F, 3.564F, 4.989F, 1.2F}),
+                    new float[]{0.771F, 0.0F, 0.274F, 3.972F, 5.372F, 1.948F},
+                    new float[]{0.812F, 0.0F, 0.606F, 3.764F, 5.316F, 1.825F},
+                    new float[]{0.815F, 0.0F, 0.704F, 3.767F, 5.276F, 1.265F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-2.357F, 0.0F, 0.943F, 1.014F, 0.69F, 0.854F},
-                    new float[]{-2.35F, 0.0F, 0.844F, 1.001F, 0.679F, 0.833F},
-                    new float[]{-2.35F, 0.0F, 0.963F, 1.0F, 0.6F, 0.7F}),
+                    new float[]{-2.496F, 0.0F, 1.002F, 1.067F, 0.724F, 0.898F},
+                    new float[]{-2.488F, 0.0F, 0.897F, 1.054F, 0.713F, 0.876F},
+                    new float[]{-2.488F, 0.0F, 1.022F, 1.053F, 0.629F, 0.735F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.443F, 0.0F, 0.87F, 1.014F, 0.925F, 0.796F},
-                    new float[]{-1.449F, 0.0F, 0.833F, 1.001F, 0.992F, 0.86F},
-                    new float[]{-1.45F, 0.0F, 0.913F, 1.0F, 0.9F, 0.7F})
+                    new float[]{-1.528F, 0.0F, 0.924F, 1.067F, 0.973F, 0.837F},
+                    new float[]{-1.534F, 0.0F, 0.885F, 1.054F, 1.044F, 0.904F},
+                    new float[]{-1.535F, 0.0F, 0.969F, 1.053F, 0.947F, 0.735F})
     };
 
     @Override
@@ -174,12 +178,12 @@ public class Elasmosaurus extends Plesiosaurid {
 
     @Override
     public float partPivot() {
-        return 9.0F;
+        return 9.529F;
     }
 
     @Override
     public float partPivotUp() {
-        return 1.263F;
+        return 1.337F;
     }
 
     @Override

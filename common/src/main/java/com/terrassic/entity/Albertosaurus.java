@@ -26,11 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Albertosaurus extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~9.5 m. */
-    public static final float WIDTH = 1.9F;
-    public static final float HEIGHT = 3.6F;
+    public static final float WIDTH = 2.012F;
+    public static final float HEIGHT = 3.812F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.43F;
-    public static final float SHADOW = 1.8F;
+    public static final float MODEL_SCALE = 1.514F;
+    public static final float SHADOW = 1.906F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
 
@@ -73,7 +73,7 @@ public class Albertosaurus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 4.3D;
+        return 4.5D;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Albertosaurus extends PredatorDinosaur {
     }
 
     public double getPassengersRidingOffset() {
-        return 2.86D * this.getScale();
+        return 3.03D * this.getScale();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Albertosaurus extends PredatorDinosaur {
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 5.31D * this.getScale());
+        return Math.max(super.riderReach(), 5.56D * this.getScale());
     }
 
     @Override

@@ -34,11 +34,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Troodon extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~2.4 m. */
-    public static final float WIDTH = 0.6F;
-    public static final float HEIGHT = 1.1F;
+    public static final float WIDTH = 0.635F;
+    public static final float HEIGHT = 1.165F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.55F;
-    public static final float SHADOW = 0.4F;
+    public static final float MODEL_SCALE = 0.582F;
+    public static final float SHADOW = 0.424F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get());
 
     public Troodon(EntityType<? extends Troodon> type, Level level) {

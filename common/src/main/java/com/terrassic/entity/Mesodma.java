@@ -27,11 +27,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Mesodma extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~0.25 m. */
-    public static final float WIDTH = 0.3F;
-    public static final float HEIGHT = 0.2F;
+    public static final float WIDTH = 0.318F;
+    public static final float HEIGHT = 0.212F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.09F;
-    public static final float SHADOW = 0.15F;
+    public static final float MODEL_SCALE = 0.095F;
+    public static final float SHADOW = 0.159F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.SWEET_BERRIES, Items.GLOW_BERRIES);
 
     public Mesodma(EntityType<? extends Mesodma> type, Level level) {

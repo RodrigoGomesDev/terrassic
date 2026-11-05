@@ -27,11 +27,11 @@ import net.minecraft.world.level.Level;
  */
 public class Vegavis extends FlyingDinosaur {
     /** Hitbox (blocks). Adult real length ~0.7 m. */
-    public static final float WIDTH = 0.4F;
-    public static final float HEIGHT = 0.4F;
+    public static final float WIDTH = 0.424F;
+    public static final float HEIGHT = 0.424F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.33F;
-    public static final float SHADOW = 0.2F;
+    public static final float MODEL_SCALE = 0.349F;
+    public static final float SHADOW = 0.212F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.SWEET_BERRIES, Items.COD, ModItems.ENCHODUS.get());
 
     public Vegavis(EntityType<? extends Vegavis> type, Level level) {

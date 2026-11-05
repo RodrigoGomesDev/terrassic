@@ -33,11 +33,11 @@ import net.minecraft.world.phys.AABB;
  */
 public class Argentinosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~35.0 m. */
-    public static final float WIDTH = 6.0F;
-    public static final float HEIGHT = 10.0F;
+    public static final float WIDTH = 6.353F;
+    public static final float HEIGHT = 10.588F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.02F;
-    public static final float SHADOW = 6.5F;
+    public static final float MODEL_SCALE = 1.08F;
+    public static final float SHADOW = 6.882F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
     public Argentinosaurus(EntityType<? extends Argentinosaurus> type, Level level) {
@@ -75,7 +75,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 14.9D;
+        return 15.8D;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class Argentinosaurus extends HerbivoreDinosaur {
     }
 
     public double getPassengersRidingOffset() {
-        return 7.34D * this.getScale();
+        return 7.78D * this.getScale();
     }
 
     @Override
@@ -109,12 +109,12 @@ public class Argentinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 6.22D;
+        return 6.59D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 19.28D * this.getScale());
+        return Math.max(super.riderReach(), 20.36D * this.getScale());
     }
 
     @Override

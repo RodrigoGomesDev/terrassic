@@ -21,7 +21,7 @@ PARTS_SPECIES = {
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
 }
 
-# In-game size of each species. 1 block = 1 metre, so the player (1.8 blocks) is a 1.8 m tall person.
+# In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
 # Lengths are the upper end of the published estimates for adults (largest known specimens), see docs/TAMANHOS.md.
 # scale  = renderer scale of the GeckoLib model (the model's pixel size comes from tools/modelgen,
 #          see art/build_report.json); length = scale * model length.
@@ -30,12 +30,12 @@ PARTS_SPECIES = {
 # baby   = size of a hatchling relative to the adult (hitbox and model).
 # shadow = shadow radius in blocks.
 # var    = optional (min, max) adult size of an individual relative to this row (DinosaurEntity.minSize/maxSize);
-#          default 0.86-1.04: each animal rolls its own size, most near the middle (docs/TAMANHOS.md).
+#          default 0.94-1.06: each animal rolls its own size, most near the middle (docs/TAMANHOS.md).
 # Riding offsets (ride_offset, ride_forward in SPECIES) are given at scale 1.0 and multiplied by scale.
 SIZES = {
     #                   real length (m)  scale   w     h    baby   shadow
     # T. rex v3 is modelled at 2x (16 px = 1 m). Adults 11-13.3 m: Stan ~12 m, Sue 12.3-12.8 m, Scotty 13 m.
-    "tyrannosaurus":      dict(real=13.0, scale=1.02, w=2.6, h=4.8, baby=0.25, shadow=2.4, var=(0.85, 1.02)),
+    "tyrannosaurus":      dict(real=13.0, scale=1.02, w=2.6, h=4.8, baby=0.25, shadow=2.4, var=(0.92, 1.04)),
     # Spinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "spinosaurus":        dict(real=14.0, scale=0.95, w=2.5, h=4.6, baby=0.25, shadow=2.4),
     # Dilophosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
@@ -189,6 +189,16 @@ SIZES = {
     # Baurusuchus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "baurusuchus":        dict(real=3.5, scale=0.73, w=1.0, h=1.0, baby=0.3,  shadow=0.9),
 }
+
+# The player as a person of 1.70 m (Rodrigo, 05/11/2026: "lide com o Steve tendo 1,70, um humano padrão, e deixe maior
+# os dinos"). The rows above are in metres, drawn until now at 1 block = 1 m, which made the 1.8-block player a 1.8 m
+# person; at 1.70 m a metre is 1.8 / 1.7 = 1.059 blocks. Model scale, hitbox and shadow grow by it; everything measured
+# from the scale (hit parts, saddle seats, bite reach, culling) follows. "real" stays in metres.
+HUMAN = 1.70
+METRE = 1.8 / HUMAN
+for _row in SIZES.values():
+    for _k in ("scale", "w", "h", "shadow"):
+        _row[_k] = round(_row[_k] * METRE, 3)
 
 # Field Guide data (texts live in tools/javagen/lore.py). era: late_cretaceous | early_cretaceous | jurassic | triassic.
 # diet: carnivore | piscivore | herbivore | omnivore. fossil = relative chance of its fossil in fossil rock.

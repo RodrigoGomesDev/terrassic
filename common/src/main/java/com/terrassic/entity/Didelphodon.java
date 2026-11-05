@@ -37,11 +37,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Didelphodon extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~1.0 m. */
-    public static final float WIDTH = 0.5F;
-    public static final float HEIGHT = 0.4F;
+    public static final float WIDTH = 0.529F;
+    public static final float HEIGHT = 0.424F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.26F;
-    public static final float SHADOW = 0.3F;
+    public static final float MODEL_SCALE = 0.275F;
+    public static final float SHADOW = 0.318F;
     private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.CHICKEN, Items.RABBIT, Items.COD, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get());
 
     public Didelphodon(EntityType<? extends Didelphodon> type, Level level) {
@@ -79,7 +79,7 @@ public class Didelphodon extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 0.7D;
+        return 0.8D;
     }
 
     @Override

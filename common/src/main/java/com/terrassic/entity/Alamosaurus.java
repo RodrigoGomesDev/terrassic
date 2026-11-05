@@ -24,11 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Alamosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~30.0 m. */
-    public static final float WIDTH = 5.0F;
-    public static final float HEIGHT = 9.0F;
+    public static final float WIDTH = 5.294F;
+    public static final float HEIGHT = 9.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.01F;
-    public static final float SHADOW = 5.5F;
+    public static final float MODEL_SCALE = 1.069F;
+    public static final float SHADOW = 5.824F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
     public Alamosaurus(EntityType<? extends Alamosaurus> type, Level level) {
@@ -65,7 +65,7 @@ public class Alamosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 13.0D;
+        return 13.7D;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Alamosaurus extends HerbivoreDinosaur {
     }
 
     public double getPassengersRidingOffset() {
-        return 6.46D * this.getScale();
+        return 6.84D * this.getScale();
     }
 
     @Override
@@ -99,12 +99,12 @@ public class Alamosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 4.44D;
+        return 4.7D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 16.89D * this.getScale());
+        return Math.max(super.riderReach(), 17.82D * this.getScale());
     }
 
     @Override

@@ -29,11 +29,11 @@ import net.minecraft.world.phys.AABB;
  */
 public class Opisthocoelicaudia extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~12.0 m. */
-    public static final float WIDTH = 2.6F;
-    public static final float HEIGHT = 3.6F;
+    public static final float WIDTH = 2.753F;
+    public static final float HEIGHT = 3.812F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.93F;
-    public static final float SHADOW = 2.8F;
+    public static final float MODEL_SCALE = 0.985F;
+    public static final float SHADOW = 2.965F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
     public Opisthocoelicaudia(EntityType<? extends Opisthocoelicaudia> type, Level level) {
@@ -70,7 +70,7 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.2D;
+        return 5.5D;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
     }
 
     public double getPassengersRidingOffset() {
-        return 2.42D * this.getScale();
+        return 2.56D * this.getScale();
     }
 
     @Override
@@ -104,12 +104,12 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 1.67D;
+        return 1.77D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 7.11D * this.getScale());
+        return Math.max(super.riderReach(), 7.47D * this.getScale());
     }
 
     @Override

@@ -29,11 +29,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Thescelosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~4.0 m. */
-    public static final float WIDTH = 1.0F;
-    public static final float HEIGHT = 1.6F;
+    public static final float WIDTH = 1.059F;
+    public static final float HEIGHT = 1.694F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.76F;
-    public static final float SHADOW = 0.8F;
+    public static final float MODEL_SCALE = 0.805F;
+    public static final float SHADOW = 0.847F;
     private static final Ingredient FOOD = Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT, Items.FERN);
 
     public Thescelosaurus(EntityType<? extends Thescelosaurus> type, Level level) {
@@ -74,7 +74,7 @@ public class Thescelosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 2.0D;
+        return 2.1D;
     }
 
     @Override

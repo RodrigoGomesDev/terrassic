@@ -35,11 +35,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Protoceratops extends Protoceratopsid {
     /** Hitbox (blocks). Adult real length ~1.9 m. */
-    public static final float WIDTH = 0.7F;
-    public static final float HEIGHT = 0.8F;
+    public static final float WIDTH = 0.741F;
+    public static final float HEIGHT = 0.847F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.3333F;
-    public static final float SHADOW = 0.5F;
+    public static final float MODEL_SCALE = 0.353F;
+    public static final float SHADOW = 0.529F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.CARROT, Items.BEETROOT, Items.FERN);
 
     public Protoceratops(EntityType<? extends Protoceratops> type, Level level) {
@@ -75,7 +75,7 @@ public class Protoceratops extends Protoceratopsid {
 
     @Override
     protected double cullingInflate() {
-        return 1.1D;
+        return 1.2D;
     }
 
     @Override
@@ -88,25 +88,25 @@ public class Protoceratops extends Protoceratopsid {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{0.761F, 0.0F, -0.014F, 0.702F, 0.613F, 0.78F},
-                    new float[]{0.757F, 0.0F, -0.05F, 0.769F, 0.967F, 0.599F},
-                    new float[]{0.769F, 0.0F, -0.044F, 0.662F, 0.542F, 0.773F}),
+                    new float[]{0.806F, 0.0F, -0.011F, 0.737F, 0.643F, 0.82F},
+                    new float[]{0.802F, 0.0F, -0.05F, 0.809F, 1.018F, 0.628F},
+                    new float[]{0.815F, 0.0F, -0.043F, 0.695F, 0.568F, 0.813F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{0.658F, 0.0F, 0.082F, 0.393F, 0.481F, 0.515F},
-                    new float[]{0.682F, 0.0F, -0.0F, 0.434F, 0.749F, 0.396F},
-                    new float[]{0.648F, 0.0F, 0.075F, 0.365F, 0.346F, 0.479F}),
+                    new float[]{0.697F, 0.0F, 0.09F, 0.411F, 0.504F, 0.54F},
+                    new float[]{0.723F, 0.0F, 0.003F, 0.454F, 0.787F, 0.413F},
+                    new float[]{0.686F, 0.0F, 0.082F, 0.381F, 0.36F, 0.502F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{0.55F, 0.0F, -0.062F, 0.654F, 0.671F, 0.729F},
-                    new float[]{0.47F, 0.0F, -0.141F, 0.526F, 1.099F, 0.668F},
-                    new float[]{0.43F, 0.0F, -0.037F, 0.512F, 0.625F, 0.695F}),
+                    new float[]{0.582F, 0.0F, -0.063F, 0.687F, 0.704F, 0.767F},
+                    new float[]{0.498F, 0.0F, -0.146F, 0.551F, 1.158F, 0.701F},
+                    new float[]{0.456F, 0.0F, -0.037F, 0.537F, 0.656F, 0.73F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{-0.004F, 0.0F, -0.066F, 0.654F, 0.603F, 0.807F},
-                    new float[]{0.044F, 0.0F, -0.157F, 0.526F, 1.125F, 0.697F},
-                    new float[]{0.018F, 0.0F, -0.05F, 0.512F, 0.56F, 0.773F}),
+                    new float[]{-0.004F, 0.0F, -0.067F, 0.687F, 0.633F, 0.849F},
+                    new float[]{0.047F, 0.0F, -0.163F, 0.551F, 1.185F, 0.733F},
+                    new float[]{0.019F, 0.0F, -0.05F, 0.537F, 0.588F, 0.813F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-0.518F, 0.0F, 0.136F, 0.917F, 0.389F, 0.667F},
-                    new float[]{-0.519F, 0.0F, -0.02F, 0.927F, 0.72F, 0.592F},
-                    new float[]{-0.524F, 0.0F, 0.195F, 0.925F, 0.328F, 0.589F})
+                    new float[]{-0.548F, 0.0F, 0.147F, 0.966F, 0.406F, 0.701F},
+                    new float[]{-0.55F, 0.0F, -0.018F, 0.976F, 0.757F, 0.621F},
+                    new float[]{-0.555F, 0.0F, 0.21F, 0.973F, 0.341F, 0.617F})
     };
 
     @Override
@@ -116,12 +116,12 @@ public class Protoceratops extends Protoceratopsid {
 
     @Override
     public float partPivot() {
-        return 0.771F;
+        return 0.816F;
     }
 
     @Override
     public float partPivotUp() {
-        return 0.462F;
+        return 0.489F;
     }
 
     @Override

@@ -26,11 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Majungasaurus extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~7.5 m. */
-    public static final float WIDTH = 1.6F;
-    public static final float HEIGHT = 3.0F;
+    public static final float WIDTH = 1.694F;
+    public static final float HEIGHT = 3.176F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.26F;
-    public static final float SHADOW = 1.5F;
+    public static final float MODEL_SCALE = 1.334F;
+    public static final float SHADOW = 1.588F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
 
@@ -73,7 +73,7 @@ public class Majungasaurus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 3.5D;
+        return 3.6D;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Majungasaurus extends PredatorDinosaur {
     }
 
     public double getPassengersRidingOffset() {
-        return 2.14D * this.getScale();
+        return 2.27D * this.getScale();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Majungasaurus extends PredatorDinosaur {
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 4.01D * this.getScale());
+        return Math.max(super.riderReach(), 4.19D * this.getScale());
     }
 
     @Override

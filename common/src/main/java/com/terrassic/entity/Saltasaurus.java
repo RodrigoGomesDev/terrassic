@@ -24,11 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Saltasaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~12.0 m. */
-    public static final float WIDTH = 2.8F;
-    public static final float HEIGHT = 3.8F;
+    public static final float WIDTH = 2.965F;
+    public static final float HEIGHT = 4.024F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.96F;
-    public static final float SHADOW = 3.0F;
+    public static final float MODEL_SCALE = 1.016F;
+    public static final float SHADOW = 3.176F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
     public Saltasaurus(EntityType<? extends Saltasaurus> type, Level level) {
@@ -66,7 +66,7 @@ public class Saltasaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.1D;
+        return 5.3D;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Saltasaurus extends HerbivoreDinosaur {
     }
 
     public double getPassengersRidingOffset() {
-        return 2.78D * this.getScale();
+        return 2.95D * this.getScale();
     }
 
     @Override
@@ -100,12 +100,12 @@ public class Saltasaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 2.02D;
+        return 2.13D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 7.19D * this.getScale());
+        return Math.max(super.riderReach(), 7.55D * this.getScale());
     }
 
     @Override

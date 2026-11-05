@@ -25,11 +25,11 @@ import net.minecraft.world.level.Level;
  */
 public class Enchodus extends SwimmingDinosaur {
     /** Hitbox (blocks). Adult real length ~0.8 m. */
-    public static final float WIDTH = 0.4F;
-    public static final float HEIGHT = 0.3F;
+    public static final float WIDTH = 0.424F;
+    public static final float HEIGHT = 0.318F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.14F;
-    public static final float SHADOW = 0.3F;
+    public static final float MODEL_SCALE = 0.148F;
+    public static final float SHADOW = 0.318F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.TROPICAL_FISH, ModItems.ENCHODUS.get());
 
     public Enchodus(EntityType<? extends Enchodus> type, Level level) {

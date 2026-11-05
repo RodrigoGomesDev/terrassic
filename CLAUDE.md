@@ -116,8 +116,9 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   (`DinosaurEntity.isRoamer`, somem a 96+ blocos se selvagens e sem nome). Voadores selvagens voam em bandos (`ai/SoarGoal`).
 - 59 espécies GERADAS por `tools/javagen/gen_species.py` (edite a tabela lá e rode o script, não edite os .java).
 - REGRA (Rodrigo, 24/10/2026): toda espécie nova usa o tamanho real dos fósseis (topo das estimativas publicadas
-  para adultos, 1 bloco = 1 metro), com a fonte anotada em `docs/TAMANHOS.md`.
-- Tamanhos: tabela `SIZES` em `gen_species.py` (1 bloco = 1 metro; escala do modelo, hitbox, filhote, sombra).
+  para adultos), com a fonte anotada em `docs/TAMANHOS.md`. Desde 05/11/2026 o jogador é uma pessoa de 1,70 m: 1 metro =
+  1,059 bloco (`METRE` em `gen_species.py`, aplicado na geração; a tabela continua em metros).
+- Tamanhos: tabela `SIZES` em `gen_species.py` (em metros, vezes `METRE`; escala do modelo, hitbox, filhote, sombra).
   O script lê `art/build_report.json` (medidas dos modelos) e gera as constantes WIDTH/HEIGHT/MODEL_SCALE/SHADOW,
   `babyScale()`, culling e altura da sela; `ModEntities` e `TerrassicClient` só leem essas constantes.
   Comparação visual: `art/tamanhos/comparacao_tamanhos.png`. A `render_scale` dos arquivos de tools/modelgen

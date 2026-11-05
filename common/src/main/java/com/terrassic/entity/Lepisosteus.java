@@ -24,11 +24,11 @@ import net.minecraft.world.level.Level;
  */
 public class Lepisosteus extends SwimmingDinosaur {
     /** Hitbox (blocks). Adult real length ~1.0 m. */
-    public static final float WIDTH = 0.4F;
-    public static final float HEIGHT = 0.3F;
+    public static final float WIDTH = 0.424F;
+    public static final float HEIGHT = 0.318F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.15F;
-    public static final float SHADOW = 0.3F;
+    public static final float MODEL_SCALE = 0.159F;
+    public static final float SHADOW = 0.318F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Lepisosteus(EntityType<? extends Lepisosteus> type, Level level) {

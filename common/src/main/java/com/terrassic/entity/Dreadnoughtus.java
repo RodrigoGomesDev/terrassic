@@ -24,11 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Dreadnoughtus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~26.0 m. */
-    public static final float WIDTH = 4.5F;
-    public static final float HEIGHT = 9.0F;
+    public static final float WIDTH = 4.765F;
+    public static final float HEIGHT = 9.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.95F;
-    public static final float SHADOW = 5.0F;
+    public static final float MODEL_SCALE = 1.006F;
+    public static final float SHADOW = 5.294F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
     public Dreadnoughtus(EntityType<? extends Dreadnoughtus> type, Level level) {
@@ -70,7 +70,7 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 11.2D;
+        return 11.8D;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
     }
 
     public double getPassengersRidingOffset() {
-        return 5.03D * this.getScale();
+        return 5.33D * this.getScale();
     }
 
     @Override
@@ -104,12 +104,12 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 2.28D;
+        return 2.41D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 15.87D * this.getScale());
+        return Math.max(super.riderReach(), 16.74D * this.getScale());
     }
 
     @Override

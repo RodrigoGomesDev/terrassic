@@ -24,11 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Stegosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~9.0 m. */
-    public static final float WIDTH = 2.2F;
-    public static final float HEIGHT = 3.2F;
+    public static final float WIDTH = 2.329F;
+    public static final float HEIGHT = 3.388F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.86F;
-    public static final float SHADOW = 1.8F;
+    public static final float MODEL_SCALE = 0.911F;
+    public static final float SHADOW = 1.906F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.LARGE_FERN, Items.MELON_SLICE, Items.WHEAT);
 
     public Stegosaurus(EntityType<? extends Stegosaurus> type, Level level) {
@@ -64,7 +64,7 @@ public class Stegosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 3.9D;
+        return 4.1D;
     }
 
     @Override

@@ -30,11 +30,11 @@ import net.minecraft.world.level.Level;
  */
 public class Tylosaurus extends SwimmingDinosaur {
     /** Hitbox (blocks). Adult real length ~13.0 m. */
-    public static final float WIDTH = 2.6F;
-    public static final float HEIGHT = 1.8F;
+    public static final float WIDTH = 2.753F;
+    public static final float HEIGHT = 1.906F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.95F;
-    public static final float SHADOW = 2.0F;
+    public static final float MODEL_SCALE = 1.006F;
+    public static final float SHADOW = 2.118F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Tylosaurus(EntityType<? extends Tylosaurus> type, Level level) {
@@ -70,7 +70,7 @@ public class Tylosaurus extends SwimmingDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.7D;
+        return 6.0D;
     }
 
     @Override

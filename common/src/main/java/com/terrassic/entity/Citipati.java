@@ -23,11 +23,11 @@ import net.minecraft.world.level.Level;
  */
 public class Citipati extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~3.0 m. */
-    public static final float WIDTH = 0.9F;
-    public static final float HEIGHT = 2.0F;
+    public static final float WIDTH = 0.953F;
+    public static final float HEIGHT = 2.118F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.85F;
-    public static final float SHADOW = 0.6F;
+    public static final float MODEL_SCALE = 0.9F;
+    public static final float SHADOW = 0.635F;
     private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES, Items.APPLE);
 
     public Citipati(EntityType<? extends Citipati> type, Level level) {
