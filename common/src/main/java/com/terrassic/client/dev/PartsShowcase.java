@@ -64,7 +64,8 @@ public final class PartsShowcase {
         ClientTickEvent.CLIENT_POST.register(PartsShowcase::tick);
         // the model in motion is measured once a frame is drawn: the parts were placed for that frame before the
         // crosshair was aimed (mixin.client.PartFrameMixin) and GeckoLib has just drawn the bones
-        dev.architectury.event.events.client.ClientGuiEvent.RENDER_HUD.register((graphics, partialTick) -> {
+        dev.architectury.event.events.client.ClientGuiEvent.RENDER_HUD.register((graphics, delta) -> {
+            float partialTick = delta.getGameTimeDeltaPartialTick(true);
             Measuring m = measuring;
             Minecraft mc = Minecraft.getInstance();
             if (m != null && m.dino != null && !m.dino.isRemoved() && mc.level != null) {
@@ -439,10 +440,10 @@ public final class PartsShowcase {
                 com.mojang.blaze3d.vertex.PoseStack ps = new com.mojang.blaze3d.vertex.PoseStack();
                 ps.last().pose().set(world);
                 // GeckoLib keeps the bone's matrix before its last step (back from the pivot); the cubes are drawn after it
-                software.bernie.geckolib.util.RenderUtils.translateAwayFromPivotPoint(ps, b);
-                software.bernie.geckolib.util.RenderUtils.translateToPivotPoint(ps, cube);
-                software.bernie.geckolib.util.RenderUtils.rotateMatrixAroundCube(ps, cube);
-                software.bernie.geckolib.util.RenderUtils.translateAwayFromPivotPoint(ps, cube);
+                software.bernie.geckolib.util.RenderUtil.translateAwayFromPivotPoint(ps, b);
+                software.bernie.geckolib.util.RenderUtil.translateToPivotPoint(ps, cube);
+                software.bernie.geckolib.util.RenderUtil.rotateMatrixAroundCube(ps, cube);
+                software.bernie.geckolib.util.RenderUtil.translateAwayFromPivotPoint(ps, cube);
                 org.joml.Matrix4f m = ps.last().pose();
                 for (software.bernie.geckolib.cache.object.GeoQuad q : cube.quads()) {
                     if (q == null) {
@@ -575,7 +576,7 @@ public final class PartsShowcase {
             mc.setScreen(null);
             StringBuilder goals = new StringBuilder("feedback taming goal (portions of food; carnivores in meat):");
             for (String sp : SPECIES) {
-                Entity e = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(new net.minecraft.resources.ResourceLocation("terrassic", sp))
+                Entity e = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("terrassic", sp))
                         .create(mc.getSingleplayerServer().overworld());
                 if (e instanceof DinosaurEntity d) {
                     goals.append(String.format(Locale.ROOT, " %s %d (%s, base health %.0f)", sp, d.foodGoal(), d.isHunter() ? "carnivore" : "other",
@@ -605,7 +606,7 @@ public final class PartsShowcase {
             for (String id : new String[]{"bone_club", "tail_club", "flint_spear", "horn_spear", "flint_knife", "rex_tooth_dagger",
                     "flint_hatchet"}) {
                 net.minecraft.world.item.Item item = net.minecraft.core.registries.BuiltInRegistries.ITEM.get(
-                        new net.minecraft.resources.ResourceLocation("terrassic", id));
+                        net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("terrassic", id));
                 try {
                     Object a = registry.getMethod("getAttributes", net.minecraft.world.item.ItemStack.class)
                             .invoke(null, new net.minecraft.world.item.ItemStack(item));
@@ -627,7 +628,7 @@ public final class PartsShowcase {
                 command(mc, "tp @e[type=!player] 0 -400 0");
                 command(mc, "item replace entity @a weapon.mainhand with terrassic:" + weapon);
                 command(mc, String.format(Locale.ROOT, "summon terrassic:tyrannosaurus 0.5 %s 0.5 {NoAI:1b,PersistenceRequired:1b,Size:1f,BirthSize:1f,"
-                        + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f],Attributes:[{Name:\"minecraft:generic.armor\",Base:0d}]}", Y,
+                        + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f],attributes:[{id:\"minecraft:generic.armor\",base:0d}]}", Y,
                         (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
                         (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits()));
                 return 30;
@@ -775,7 +776,7 @@ public final class PartsShowcase {
         STEPS.add(mc -> {
             command(mc, "tp @e[type=!player] 0 -400 0");
             command(mc, String.format(Locale.ROOT, "summon terrassic:pteranodon 0.5 %s 0.5 {NoAI:1b,PersistenceRequired:1b,Size:1f,BirthSize:1f,"
-                    + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f],Attributes:[{Name:\"minecraft:generic.armor\",Base:0d}]}", Y + 8.0D,
+                    + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f],attributes:[{id:\"minecraft:generic.armor\",base:0d}]}", Y + 8.0D,
                     (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
                     (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits()));
             return 30;
