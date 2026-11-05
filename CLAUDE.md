@@ -51,6 +51,9 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
+**1.8.0 (05/11/2026, `mod_version`)**: três refeitos com estudo próprio (Estiracossauro, Deinossuco, Elasmossauro; rigs
+`Centrosaurine`, `Crocodylian`, `Plesiosaurid`), Manta de Corrida e Sela de Pescoço, ovos e ninhos novos, e as correções
+do teste de comportamento (`docs/TESTES_1_8.md`: `ai/DinoBreedGoal`, alvo morto, presa do Deinossuco, ovo na margem).
 **1.7.1 (05/11/2026, `mod_version`)**: Guia de Bolso rediagramado (margens, índice numa página dupla, sem linha
 órfã, tópicos curtos dividindo página) e sprite de livro; as espécies saíram do Guia para quatro **Bestiários** fabricáveis
 (Carnívoros, Herbívoros, Voadores, Marinhos; `VOLUMES` em `gen_pocket_guide.py`, `docs/AJUDA.md`). Fotos de todas as
