@@ -251,12 +251,10 @@ em `docs/ROSTER.md`; tamanhos em `docs/TAMANHOS.md`.
 Bot da comunidade: **Rexpert** (`/Users/rodrigogs/projects/rexpert`, repositório à parte, não commitado aqui).
 Suporte, diagnóstico de log, Guia de Campo, relatos de bug e avisos; documentado em `rexpert/README.md` e
 `rexpert/docs/ROADMAP.md`. Rodando no homelab do Rodrigo (`rexpert/docs/HOMELAB.md`), token nunca neste repositório.
-- **Avisos de versão têm dois canais, por desenho:** `#avisos` é o Rexpert vigiando **tags** `vX.Y.Z` (lançamento
-  oficial, com changelog da mensagem da tag). `#builds` é este repositório avisando sozinho: o workflow
-  `.github/workflows/discord-build.yml` roda `tools/discord/announce_build.py` a cada push em `main` que muda
-  `mod_version` em `gradle.properties`, **sem precisar de tag**. Depende do secret `DISCORD_BUILDS_WEBHOOK`
-  (webhook do canal #builds no Discord; configurar com `gh secret set DISCORD_BUILDS_WEBHOOK` — nunca colar a URL
-  em commit, issue ou chat). Sem o secret, o workflow só mostra no log o que mandaria, sem falhar a build.
+- **Avisos de versão têm dois canais, os dois postados pelo Rexpert:** `#avisos` quando aparece uma **tag** `vX.Y.Z`
+  (lançamento oficial) e `#builds` quando `mod_version` sobe em `gradle.properties` na `main`, **sem precisar de
+  tag** (o Rexpert confere a cada 30 min; `rexpert/src/lib/builds.js`). Até 05/11/2026 o `#builds` era um webhook
+  deste repositório (`discord-build.yml`, "Terrassic Builds"); saiu para o bot postar com a própria cara.
 - **O texto dos avisos é em inglês** (o servidor é organizado em inglês, pedido do Rodrigo em 05/11/2026): os dois
   avisos (#builds e #avisos) publicam a seção `## English` de `docs/changelog/X.Y.Z.md`, o mesmo changelog das lojas,
   que entra no repositório junto com a versão (`docs/VERSOES.md`, passo 5). Os commits continuam em português e não vão
