@@ -99,7 +99,9 @@ def build_embed(version, subjects, since_sha, head_sha):
 
 def send(webhook, embed):
     body = json.dumps({"embeds": [embed]}).encode("utf-8")
-    req = urllib.request.Request(webhook, data=body, headers={"Content-Type": "application/json"}, method="POST")
+    # Discord (Cloudflare) answers 403 to the default "Python-urllib" agent: a bot names itself, in Discord's format
+    headers = {"Content-Type": "application/json", "User-Agent": f"DiscordBot (https://github.com/{REPO}, 1.0)"}
+    req = urllib.request.Request(webhook, data=body, headers=headers, method="POST")
     with urllib.request.urlopen(req, timeout=15) as res:
         return res.status
 
