@@ -119,6 +119,10 @@ public final class PartsShowcase {
     }
 
     private static void plan() {
+        if ("density".equals(System.getenv("TERRASSIC_PARTS_PHASES"))) {
+            planDensity();
+            return;
+        }
         STEPS.add(mc -> {
             for (String c : new String[]{"gamerule doMobSpawning false", "gamerule doDaylightCycle false", "time set noon",
                     "weather clear", "gamemode creative @a", "tp @e[type=!player] 0 -400 0", "difficulty peaceful",
@@ -480,6 +484,110 @@ public final class PartsShowcase {
                 }
             }
         }
+    }
+
+    // ------------------------------------------------------------------ spawn density (1.7 feedback, point 4)
+
+    /** A normal Minecraft world (TERRASSIC_PARTS_PHASES=density, nothing else changed: spawns on, normal difficulty):
+     *  the player is set down in several temperate and warm biomes, the world fills for two minutes around them, and the
+     *  mobs within 128 blocks are counted: Minecraft's land animals against the wild dinosaurs, the carnivores among
+     *  them, the sea, and every entity. The target: one dino for three Minecraft animals, carnivores rarer still. */
+    private static void planDensity() {
+        String[] biomes = {"plains", "forest", "savanna", "jungle", "swamp", "taiga", "birch_forest", "meadow", "flower_forest",
+                "sparse_jungle"};
+        long[] total = new long[5];   // vanilla land, dino land, hunters, dino sea, vanilla sea
+        STEPS.add(mc -> {
+            for (String c : new String[]{"gamemode creative @a", "time set day", "weather clear"}) {
+                command(mc, c);
+            }
+            mc.options.hideGui = true;
+            REPORT.add("spawn density in a normal world, " + biomes.length + " biomes, 2 minutes each, within 128 blocks");
+            return 40;
+        });
+        for (int i = 0; i < biomes.length; i++) {
+            String biome = biomes[i];
+            int origin = 4000 * (i + 1);
+            int[] at = new int[2];
+            STEPS.add(mc -> {
+                MinecraftServer srv = mc.getSingleplayerServer();
+                net.minecraft.server.level.ServerLevel level = srv.overworld();
+                var found = level.findClosestBiome3d(h -> h.unwrapKey().map(k -> k.location().getPath().equals(biome)).orElse(false),
+                        new net.minecraft.core.BlockPos(origin, 64, origin / 2), 6400, 32, 64);
+                if (found == null) {
+                    REPORT.add("  " + biome + ": not found");
+                    at[0] = Integer.MIN_VALUE;
+                    return 1;
+                }
+                at[0] = found.getFirst().getX();
+                at[1] = found.getFirst().getZ();
+                command(mc, String.format(Locale.ROOT, "spreadplayers %d %d 0 1 false @a", at[0], at[1]));
+                return 2400;   // two minutes: the chunks around generate (with their animals) and the spawners run
+            });
+            STEPS.add(mc -> {
+                if (at[0] == Integer.MIN_VALUE) {
+                    return 1;
+                }
+                MinecraftServer srv = mc.getSingleplayerServer();
+                net.minecraft.server.level.ServerPlayer sp = srv.getPlayerList().getPlayer(mc.player.getUUID());
+                net.minecraft.server.level.ServerLevel level = sp.serverLevel();
+                AABB box = sp.getBoundingBox().inflate(128.0D, 384.0D, 128.0D);
+                int vanillaLand = 0, dinoLand = 0, hunters = 0, dinoSea = 0, vanillaSea = 0, all = 0;
+                java.util.Map<String, Integer> kinds = new java.util.TreeMap<>();
+                for (Entity e : level.getEntities((Entity) null, box, x -> !(x instanceof net.minecraft.world.entity.player.Player)
+                        && !(x instanceof DinoPart))) {
+                    all++;
+                    if (!(e instanceof net.minecraft.world.entity.Mob mob)) {
+                        continue;
+                    }
+                    boolean ours = "terrassic".equals(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).getNamespace());
+                    if (ours && e instanceof DinosaurEntity d && d.isTame()) {
+                        continue;
+                    }
+                    net.minecraft.world.entity.MobCategory c = e.getType().getCategory();
+                    kinds.merge(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).getPath(), 1, Integer::sum);
+                    if (ours && e instanceof DinosaurEntity d && d.isHunter()) {
+                        hunters++;
+                    }
+                    if (c == net.minecraft.world.entity.MobCategory.CREATURE) {
+                        if (ours) {
+                            dinoLand++;
+                        } else {
+                            vanillaLand++;
+                        }
+                    } else if (c == net.minecraft.world.entity.MobCategory.WATER_CREATURE) {
+                        if (ours) {
+                            dinoSea++;
+                        } else {
+                            vanillaSea++;
+                        }
+                    }
+                }
+                total[0] += vanillaLand;
+                total[1] += dinoLand;
+                total[2] += hunters;
+                total[3] += dinoSea;
+                total[4] += vanillaSea;
+                String here = level.getBiome(sp.blockPosition()).unwrapKey().map(k -> k.location().getPath()).orElse("?");
+                REPORT.add(String.format(Locale.ROOT, "  %s (at %d %d, standing in %s): land %d Minecraft / %d dinos (%d carnivores); sea %d / %d dinos; %d entities: %s",
+                        biome, at[0], at[1], here, vanillaLand, dinoLand, hunters, vanillaSea, dinoSea, all, kinds));
+                return 1;
+            });
+        }
+        STEPS.add(mc -> {
+            REPORT.add(String.format(Locale.ROOT, "TOTAL land %d Minecraft animals / %d wild dinos (%s Minecraft animals per dino); carnivores %d of %d dinos; sea %d Minecraft / %d dinos",
+                    total[0], total[1], total[1] == 0 ? "-" : String.format(Locale.ROOT, "%.1f", total[0] / (double) total[1]),
+                    total[2], total[1] + total[3], total[4], total[3]));
+            try {
+                Files.write(mc.gameDirectory.toPath().resolve("terrassic_parts_report.txt"), REPORT, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return 10;
+        });
+        STEPS.add(mc -> {
+            mc.stop();
+            return 1000;
+        });
     }
 
     // ------------------------------------------------------------------ the player feedback of 1.7 (docs/FEEDBACK_1_7.md)

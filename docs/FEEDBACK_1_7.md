@@ -29,7 +29,7 @@ o teste agora confere que a ordem é aceita contra o bicho protegido, que é o q
 depois do nocaute da Clava de Cauda; 64ª carne doma o Velociraptor; 10ª semente doma o Gallimimus.
 `knockout_regression.py` 18/18 e `dart_regression.py` 25/25 nos dois loaders, ajustados para a 1.7 (regra
 `knockout_seconds 300` nos mundos de teste, metas de comida novas, ferida medida contra a vida anterior).
-Telas (Meus dinos, seta, Guia de Bolso) ainda sem revisão no jogo: o cliente não pôde ser controlado desta sessão.
+Telas (Meus dinos, seta, Guia de Bolso) conferidas depois no cliente real: ver a seção seguinte.
 
 ## Ainda na 1.7 (pedido do Rodrigo, 04/11): partes de acerto e porte para 1.21.1
 Sugestão da comunidade: as hitboxes não batem com os modelos (T. rex 13 m numa caixa 2,6 x 4,8). Decisão: **partes de
@@ -38,3 +38,27 @@ de colisão fica como está (andar na mata, caminho). **Feito** (04/11): `docs/P
 mordida medida pela cabeça e a regressão `parts_regression.py`. A `mc/1.21.1` recebeu a 1.7 inteira (feedback, testes e
 partes), com as APIs da 1.21 (`SavedData.Factory`, pacotes com `RegistryFriendlyByteBuf`, telas, `Entity`,
 `MeleeAttackGoal.canPerformAttack`, encantamentos por item).
+
+## Validação para a 1.7 estável (05/11/2026, Mac do Rodrigo)
+Cliente gráfico de verdade com `client/dev/PartsShowcase` (`TERRASSIC_PARTS_SHOWCASE=1`, fase `feedback`; relatório e
+fotos em `run/`), servidor dedicado com cliente de protocolo, nos loaders indicados.
+
+| # | Pedido | Como foi testado | Resultado |
+|---|--------|------------------|-----------|
+| 1 | Achar os dinos; apito de ~50 blocos | Cliente: dois raptores domados sentados a 90 e 100 blocos, apito "seguir"; tela Meus dinos; rastreio | O de 90 ouve, o de 100 não; o de 90 veio de 90 a 3-9 blocos em 20 s. Tela com nome, distância, coordenadas, estado e Rastrear; seta "↓ Longe · 100 m" (Fabric e Forge 1.20.1) |
+| 2 | Defesa e ordens contra bichos de outros mods | `feedback17` (servidor): lobo poupado pela regra, mordida e "atacar meu alvo" | Revida e obedece (Fabric e Forge). Testado com um bicho vanilla protegido no papel do bicho de outro mod; com um mod de terceiros real, não |
+| 3 | Clava 0,20 e atordoamento de ~20 s | `feedback17` | Clava de Osso 0,25/s, Clava de Cauda 0,20/s; acorda 19,6 s depois do nocaute; não acorda enquanto come |
+| 4 | Dinos 3x mais raros que os animais; carnívoros mais raros | Cliente real (fase `density`): mundo normal novo, 10 biomas temperados e quentes, 2 min em cada, contagem num raio de 128 blocos | 281 animais do Minecraft / 63 dinos selvagens = **4,5 por dino** (4,9 sem duas medições que repetiram o lugar anterior); **2 carnívoros em 63 dinos**. O `density_regression.py` com cliente de protocolo conta 0 animais (não mantém os chunks como um cliente real) e fica só como ferramenta |
+| 5 | Pouca vida | `feedback17` e cliente | Vida x2 (Velociraptor 48, T. rex 320); salvos migram |
+| 6 | Doma fácil: uma pilha para carnívoros pequenos, várias para grandes | `feedback17` e cliente | Velociraptor e Pteranodonte 64 (1 pilha), Carnotauro 128 (2), Giganotossauro e Espinossauro 192 (3), T. rex e Mosassauro 256 (4); herbívoros 8 a 37 porções. 64ª carne doma o raptor, 10ª semente o Gallimimus |
+| + | Seção dos dinos e de domesticação no Guia | Cliente: o Guia folheado inteiro em português (29 páginas duplas fotografadas) | "Os dinossauros" (13 espécies: dieta, tamanho real, montável, como doma, comida em pilhas) e "Domesticação" presentes e corretas |
+| + | Armas no Better Combat (clavas não funcionavam) | Cliente com Better Combat 1.9.0 (`-PbetterCombat`) | As 7 armas reconhecidas (clavas = maça e martelo); Clava de Cauda acerta cabeça/corpo/cauda a 125/100/75%; domados poupados na varredura |
+| + | Hitboxes (partes de acerto) | `docs/PLANO_PARTES.md` | Cobrem o modelo parado e em movimento; 0 falhas de mira em ~6.900 tentativas por loader |
+
+Regressões de servidor com o código final: `parts` 8/8, `feedback17` 23/23, `knockout` 18/18, `dart` 25/25 em Fabric
+e Forge 1.20.1. Na `mc/1.21.1` (Fabric): as mesmas quatro regressões passaram (8/8, 23/23, 18/18, 25/25), o cliente
+deu 6.880 miras sem falha e os mesmos golpes, apito e voo; Better Combat 2.4.0 reconhece as 7 armas, a Clava de Cauda
+dá 125/100/75% e a de Osso também acerta a cabeça (1,25 do corpo); o domado (NEUTRAL nessa versão) não é varrido.
+NeoForge 1.21.1 só compilado.
+
+Não coberto por teste automático: jogar de verdade (sensação de combate, densidade percebida numa exploração longa).
