@@ -124,6 +124,14 @@ public final class PartsShowcase {
             return;
         }
         STEPS.add(mc -> {
+            if (!mc.player.isAlive()) {
+                mc.player.respawn();   // a run that ended with the player fallen out of the world
+                mc.setScreen(null);
+                return 40;
+            }
+            return 1;
+        });
+        STEPS.add(mc -> {
             for (String c : new String[]{"gamerule doMobSpawning false", "gamerule doDaylightCycle false", "time set noon",
                     "weather clear", "gamemode creative @a", "tp @e[type=!player] 0 -400 0", "difficulty peaceful",
                     "item replace entity @a weapon.mainhand with minecraft:stone_axe"}) {
@@ -146,6 +154,17 @@ public final class PartsShowcase {
         }
         if (phases.contains("eggs")) {
             planEggs(species);
+        }
+        if (phases.contains("hats")) {
+            for (String sp : species) {
+                planHats(sp);
+            }
+        }
+        if (phases.contains("fall")) {
+            for (String sp : species) {
+                planFall(sp, true);
+                planFall(sp, false);
+            }
         }
         if (phases.contains("still")) {
             for (String sp : species) {
@@ -800,6 +819,165 @@ public final class PartsShowcase {
             REPORT.add("photo " + species + ": done");
             return 1;
         });
+    }
+
+    /** A death or a knockout filmed (05/11/2026, player report: "it falls and suddenly flicks to the other side", and
+     *  "I killed one and another of the same species stayed in the death animation, alive and moving"): the victim is
+     *  hit by the player (with the knockback of a real blow) beside a second one of its species; a frame every 3 ticks
+     *  (fall_&lt;species&gt;_&lt;kill|ko&gt;_NN.png) and the body yaw and the animations of both in the report. */
+    private static void planFall(String species, boolean kill) {
+        DinosaurEntity[] dino = new DinosaurEntity[2];
+        java.util.UUID[] ids = {new java.util.UUID(0x7E55A51C00000000L, ++serial), new java.util.UUID(0x7E55A51C00000000L, ++serial)};
+        String tag = species + "_" + (kill ? "kill" : "ko");
+        STEPS.add(mc -> {
+            command(mc, "tp @e[type=!player] 0 -400 0");
+            command(mc, "kill @e[type=terrassic:carcass]");
+            for (int i = 0; i < 2; i++) {
+                java.util.UUID id = ids[i];
+                command(mc, String.format(Locale.ROOT, "summon terrassic:%s %.1f %s 0.5 {PersistenceRequired:1b,Size:1f,BirthSize:1f,Female:%db,"
+                        + "UUID:[I;%d,%d,%d,%d],Rotation:[%df,0f]}", species, i == 0 ? 0.5D : 9.5D, Y, i,
+                        (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
+                        (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits(), i == 0 ? 0 : 180));
+            }
+            park(mc.player);
+            return 40;
+        });
+        STEPS.add(mc -> {
+            dino[0] = dino[1] = null;
+            for (Entity e : mc.level.entitiesForRendering()) {
+                for (int i = 0; i < 2; i++) {
+                    if (e instanceof DinosaurEntity d && ids[i].equals(d.getUUID())) {
+                        dino[i] = d;
+                    }
+                }
+            }
+            if (dino[0] == null || dino[1] == null) {
+                REPORT.add("fall " + tag + ": NOT FOUND");
+                return 1;
+            }
+            Vec3 c = dino[0].position().add(4.5D, 0.0D, 0.0D);
+            double size = Math.max(dino[0].getBbWidth(), dino[0].getBbHeight()) + 9.0D;
+            look(mc.player, c.add(0.0D, size * 0.45D, -size * 1.1D), c.add(0.0D, 1.0D, 0.0D));
+            serverTp(mc);
+            return 10;
+        });
+        STEPS.add(mc -> {
+            if (dino[0] == null) {
+                return 1;
+            }
+            Entity server = serverDino(mc, dino[0]);
+            net.minecraft.server.level.ServerPlayer player = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            if (server instanceof DinosaurEntity d) {
+                mc.getSingleplayerServer().execute(() -> {
+                    if (kill) {
+                        d.hurt(d.damageSources().playerAttack(player), 100000.0F);
+                    } else {
+                        d.addTorpor(100000.0F, player);
+                    }
+                    d.knockback(0.4D, Mth.sin(player.getYRot() * Mth.DEG_TO_RAD), -Mth.cos(player.getYRot() * Mth.DEG_TO_RAD));
+                });
+            }
+            REPORT.add(String.format(Locale.ROOT, "fall %s: before yaw %.1f, other: %s", tag, dino[0].yBodyRot, playing(dino[1])));
+            return 1;
+        });
+        for (int f = 0; f < 26; f++) {
+            int frame = f;
+            STEPS.add(mc -> {
+                if (dino[0] == null) {
+                    return 1;
+                }
+                Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "fall_%s_%02d.png", tag, frame), mc.getMainRenderTarget(), msg -> {
+                });
+                String carcass = "";
+                for (Entity e : mc.level.entitiesForRendering()) {
+                    if (e instanceof com.terrassic.entity.CarcassEntity k) {
+                        carcass = String.format(Locale.ROOT, " carcass yaw %.1f", k.getYRot());
+                    }
+                }
+                REPORT.add(String.format(Locale.ROOT, "  %s t%02d victim %s yaw %.1f head %.1f hp %.1f [%s] | other hp %.1f dying %b [%s]%s", tag,
+                        frame * 3, dino[0].isRemoved() ? "removed" : "", dino[0].yBodyRot, dino[0].yHeadRot, dino[0].getHealth(),
+                        playing(dino[0]), dino[1].getHealth(), dino[1].isDeadOrDying(), playing(dino[1]), carcass));
+                return 3;
+            });
+        }
+    }
+
+    /** Hats Renewed (dev client with -PhatsRenewed): an adult and a baby with a random hat, the adult walking in place,
+     *  photographed from the side at three quarters (hats_&lt;species&gt;_N.png). */
+    private static void planHats(String species) {
+        DinosaurEntity[] dino = new DinosaurEntity[1];
+        java.util.UUID id = new java.util.UUID(0x7E55A51C00000000L, ++serial);
+        java.util.UUID baby = new java.util.UUID(0x7E55A51C00000000L, ++serial);
+        STEPS.add(mc -> {
+            command(mc, "tp @e[type=!player] 0 -400 0");
+            command(mc, "kill @e[type=terrassic:carcass]");
+            mc.getEntityRenderDispatcher().setRenderHitBoxes(false);
+            for (java.util.UUID u : new java.util.UUID[]{id, baby}) {
+                boolean small = u == baby;
+                command(mc, String.format(Locale.ROOT, "summon terrassic:%s %s %s 0.5 {NoAI:1b,PersistenceRequired:1b,Size:1f,BirthSize:1f,Female:0b,%s"
+                        + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f]}", species, small ? "-3.5" : "0.5", Y, small ? "Age:-24000," : "",
+                        (int) (u.getMostSignificantBits() >> 32), (int) u.getMostSignificantBits(),
+                        (int) (u.getLeastSignificantBits() >> 32), (int) u.getLeastSignificantBits()));
+            }
+            command(mc, "hats give @e[type=terrassic:" + species + "] random");
+            park(mc.player);
+            serverTp(mc);
+            return 30;
+        });
+        for (int v = 0; v < 3; v++) {
+            int view = v;
+            STEPS.add(mc -> {
+                dino[0] = null;
+                for (Entity e : mc.level.entitiesForRendering()) {
+                    if (e instanceof DinosaurEntity d && id.equals(d.getUUID())) {
+                        dino[0] = d;
+                    }
+                }
+                if (dino[0] == null) {
+                    REPORT.add("hats " + species + ": NOT FOUND");
+                    return 1;
+                }
+                if (view == 2) {
+                    command(mc, "hats give @e[type=terrassic:" + species + "] random");
+                }
+                org.joml.Matrix4f anchor = com.terrassic.client.compat.HatsCompat.anchor(dino[0]);
+                float yaw = dino[0].yBodyRot;
+                Vec3 c = dino[0].position().add(0.0D, dino[0].getBbHeight(), 0.0D);
+                if (anchor != null) {
+                    org.joml.Vector3f t = new org.joml.Matrix4f().rotateY((180.0F - yaw) * Mth.DEG_TO_RAD).mul(anchor)
+                            .getTranslation(new org.joml.Vector3f());
+                    c = dino[0].position().add(t.x, t.y, t.z);
+                }
+                StringBuilder heads = new StringBuilder();
+                for (DinoPart part : dino[0].parts()) {
+                    if (part.kind() == DinoPart.Kind.HEAD) {
+                        heads.append(String.format(Locale.ROOT, " head part %.2f %.2f %.2f", part.getX() - dino[0].getX(),
+                                part.getBoundingBox().maxY - dino[0].getY(), part.getZ() - dino[0].getZ()));
+                    }
+                }
+                REPORT.add("   " + heads);
+                REPORT.add(String.format(Locale.ROOT, "hats %s view %d: crown at %.2f %.2f %.2f from the feet", species, view,
+                        c.x - dino[0].getX(), c.y - dino[0].getY(), c.z - dino[0].getZ()));
+                double size = 1.6D + dino[0].getBbHeight() * 0.5D;
+                float r = yaw * Mth.DEG_TO_RAD;
+                Vec3 forward = new Vec3(-Mth.sin(r), 0, Mth.cos(r));
+                Vec3 side = new Vec3(-Mth.cos(r), 0, -Mth.sin(r));
+                Vec3 eye = view == 1 ? c.add(forward.scale(size)).add(side.scale(size * 0.6D)).add(0, size * 0.4D, 0)
+                        : c.add(side.scale(size)).add(forward.scale(size * 0.3D)).add(0, size * 0.25D, 0);
+                look(mc.player, eye, c);
+                serverTp(mc);
+                return 20;
+            });
+            STEPS.add(mc -> {
+                if (dino[0] != null) {
+                    Screenshot.grab(mc.gameDirectory, "hats_" + species + "_" + view + ".png", mc.getMainRenderTarget(), msg -> {
+                    });
+                    REPORT.add("hats " + species + " view " + view + ": " + (com.terrassic.client.compat.HatsCompat.anchor(dino[0]) != null
+                            ? "anchored" : "no anchor"));
+                }
+                return 5;
+            });
+        }
     }
 
     /** The egg blocks of the species in their three hatch stages on the ground, and their spawn eggs in the hotbar

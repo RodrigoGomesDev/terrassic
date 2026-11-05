@@ -29,7 +29,8 @@
     "client.HeldSpearMixin",
     "client.BlowgunMouthMixin",
     "client.PartHitboxMixin",
-    "client.PartFrameMixin"
+    "client.PartFrameMixin",
+    "client.HatsHeadMixin"
   ],
   "injectors": {
     "defaultRequire": 1
