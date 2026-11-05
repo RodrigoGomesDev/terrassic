@@ -1156,6 +1156,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.swimAnim = RawAnimation.begin().thenLoop(anim("swim"));
         AnimationController<DinosaurEntity> movement = new AnimationController<>(this, "movement", 6, state -> {
             if (this.isDeadOrDying()) {
+                // a call or a bite under way would keep moving the bones over the fall (this GeckoLib has no
+                // stopTriggeredAnimation: the action controller is stopped here, on the client)
+                AnimationController<?> gesture = this.getAnimatableInstanceCache().getManagerForId(this.getId()).getAnimationControllers().get(ACTION_CONTROLLER);
+                if (gesture != null && gesture.getCurrentAnimation() != null) {
+                    gesture.stop();
+                }
                 this.cycleSpeed = 1.0D;
                 return state.setAndContinue(this.deathTime > this.deathAnimTicks() ? this.knockedOutAnim : this.deathAnim);
             }
@@ -1998,8 +2004,6 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public void die(DamageSource source) {
         if (!this.level().isClientSide() && !this.dead) {
             this.settleYaw();
-            // a call or a bite under way would keep moving the bones over the fall
-            this.stopTriggeredAnimation(ACTION_CONTROLLER, null);
         }
         if (!this.level().isClientSide() && this.isAlpha() && !this.isRemoved() && !this.dead) {
             if (!this.isTame()) {
