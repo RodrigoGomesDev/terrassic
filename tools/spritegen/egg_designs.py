@@ -1429,10 +1429,37 @@ def tylosaurus():
 
 
 def elasmosaurus():
-    e = marine("elasmosaurus", {"b": "#4a7a7e", "c": "#d6e0d8", "d": "#24484c", "n": "#183236",
-                                "f": "#2e5a5e"}, teeth=(9, 11, 13, 15))
-    for p in ((8, 8), (12, 6), (6, 12)):
-        e.px(e.mirror([p, (p[0] + 1, p[1])]), "c")
+    """Elasmosaurus (05/11, the "turquesa pintada" of the new model), seen from the front as it comes up out of the
+    water: the small head at the top of the egg with its golden eyes and the needle teeth crossing outside the mouth,
+    the long neck widening down into the shoulders, the pale throat and belly down the middle, loose pale spots on the
+    dark teal, a fore flipper reaching out at each side at the bottom."""
+    e = Egg("elasmosaurus", {
+        "k": "#163a3c", "d": "#1f4c4f", "b": "#2d6266", "l": "#3d7a7e", "c": "#d4e2dc", "C": "#bfd2cc",
+        "s": "#bcd2cc", "Y": "#d8b04a", "P": "#100e0b", "W": "#ece4cc", "f": "#163a3c"})
+    e.ell((2, 4, 29, 42), "b")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
+    # the neck: a column widening from the head down to the shoulders, a darker edge
+    e.poly([(12, 12), (19, 12), (24, 31), (7, 31)], "d")
+    e.poly([(13, 12), (18, 12), (21, 31), (10, 31)], "b")
+    e.poly([(14, 14), (17, 14), (18, 31), (13, 31)], "c")              # the pale throat
+    e.line([(15, 16), (15, 30)], "C")
+    # the head at the top: small, the snout pointing at us, eyes on the sides, needle teeth crossing at the mouth
+    e.rect((11, 4, 20, 11), "d")
+    e.rect((12, 3, 19, 10), "b")
+    e.rect((13, 6, 18, 11), "l")
+    for x in (11, 19):
+        e.px([(x, 6), (x + 1, 6)], "Y"); e.px([(x + (1 if x == 11 else 0), 6)], "P")
+    e.line([(13, 10), (18, 10)], "k")
+    e.px([(13, 9), (15, 11), (17, 9), (14, 11), (16, 9), (18, 11)], "W")
+    # fore flippers out at the sides of the shoulders
+    e.poly([(7, 30), (2, 34), (3, 36), (9, 33)], "k")
+    e.poly([(24, 30), (29, 34), (28, 36), (22, 33)], "k")
+    # loose pale spots on the dark teal
+    for p in ((6, 14), (8, 20), (5, 25), (24, 16), (25, 22), (22, 26), (10, 37), (21, 38), (16, 36)):
+        e.px([p], "s")
     return e
 
 

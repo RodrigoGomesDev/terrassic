@@ -38,7 +38,7 @@ import java.util.Locale;
 public final class PartsShowcase {
     private static final String[] SPECIES = {"tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor",
             "triceratops", "protoceratops", "ankylosaurus", "pachycephalosaurus", "parasaurolophus", "gallimimus",
-            "pteranodon", "mosasaurus", "styracosaurus", "deinosuchus"};
+            "pteranodon", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus"};
     private static final int[] YAWS = {0, 45};
     private static final double Y = -60.0D;
 
@@ -144,6 +144,9 @@ public final class PartsShowcase {
             for (String sp : species) {
                 planPhotos(sp);
             }
+        }
+        if (phases.contains("eggs")) {
+            planEggs(species);
         }
         if (phases.contains("still")) {
             for (String sp : species) {
@@ -314,8 +317,13 @@ public final class PartsShowcase {
         DinosaurEntity[] dino = new DinosaurEntity[1];
         java.util.UUID id = new java.util.UUID(0x7E55A51D00000000L, ++serial);
         Measuring m = new Measuring();
+        boolean swimmer = "elasmosaurus".equals(species) || "mosasaurus".equals(species);
         STEPS.add(mc -> {
             command(mc, "tp @e[type=!player] 0 -400 0");
+            if (swimmer) {
+                // a deep pool: a swimmer measured in the water, swimming and turning, not stranded on the grass
+                command(mc, String.format(Locale.ROOT, "fill -24 %d -24 24 %d 24 minecraft:water", (int) Y - 3, (int) Y + 6));
+            }
             command(mc, String.format(Locale.ROOT, "summon terrassic:%s 0.5 %s 0.5 {PersistenceRequired:1b,Size:1f,BirthSize:1f,"
                     + "UUID:[I;%d,%d,%d,%d]}", species, Y, (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
                     (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits()));
@@ -357,6 +365,11 @@ public final class PartsShowcase {
         STEPS.add(mc -> {
             measuring = null;
             mc.options.hideGui = true;
+            if (swimmer) {
+                command(mc, String.format(Locale.ROOT, "fill -24 %d -24 24 %d 24 minecraft:air", (int) Y, (int) Y + 6));
+                command(mc, String.format(Locale.ROOT, "fill -24 %d -24 24 %d 24 minecraft:grass_block", (int) Y - 1, (int) Y - 1));
+                command(mc, String.format(Locale.ROOT, "fill -24 %d -24 24 %d 24 minecraft:dirt", (int) Y - 3, (int) Y - 2));
+            }
             REPORT.add(String.format(Locale.ROOT, "%s moving, %d frames measured: %.2f%% of vertices outside the boxes; a vertex more than 0.5 m out in %d frames (%.1f%%)",
                     species, m.frames[0], 100.0D * (m.counts[1] + m.counts[3]) / Math.max(1, m.counts[0] + m.counts[2]), m.frames[1],
                     100.0D * m.frames[1] / Math.max(1, m.frames[0])));
@@ -712,11 +725,19 @@ public final class PartsShowcase {
     private static void planPhotos(String species) {
         STEPS.add(mc -> {
             mc.getEntityRenderDispatcher().setRenderHitBoxes(false);
+            if ("elasmosaurus".equals(species)) {
+                // a pool for the swimmer, so it shows its swimming poses, not the stranded one
+                command(mc, String.format(Locale.ROOT, "fill -14 %d -14 14 %d 14 minecraft:water", (int) Y - 4, (int) Y - 1));
+            }
             command(mc, "time set noon");
             command(mc, "weather clear");
             return 5;
         });
-        String[][] variants = "deinosuchus".equals(species)
+        String[][] variants = "elasmosaurus".equals(species)
+                ? new String[][]{{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
+                        {"saddled", "Female:0b,Saddled:1b"}, {"neck_strike", "Female:0b"}, {"breathe", "Female:0b"},
+                        {"gastrolith", "Female:0b"}}
+                : "deinosuchus".equals(species)
                 ? new String[][]{{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
                         {"bask", "Female:0b"}, {"lunge", "Female:0b"}, {"bellow", "Female:0b"}, {"death_roll", "Female:0b"}}
                 : new String[][]{{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
@@ -728,7 +749,7 @@ public final class PartsShowcase {
             STEPS.add(mc -> {
                 command(mc, "tp @e[type=!player] 0 -400 0");
                 command(mc, String.format(Locale.ROOT, "summon terrassic:%s 0.5 %s 0.5 {NoAI:1b,PersistenceRequired:1b,Size:1f,BirthSize:1f,%s,"
-                        + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f]}", species, Y, v[1],
+                        + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f]}", species, "elasmosaurus".equals(species) ? Y - 1.6D : Y, v[1],
                         (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
                         (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits()));
                 park(mc.player);
@@ -772,8 +793,54 @@ public final class PartsShowcase {
         }
         STEPS.add(mc -> {
             mc.getEntityRenderDispatcher().setRenderHitBoxes(true);
+            if ("elasmosaurus".equals(species)) {
+                command(mc, String.format(Locale.ROOT, "fill -14 %d -14 14 %d 14 minecraft:grass_block", (int) Y - 1, (int) Y - 1));
+                command(mc, String.format(Locale.ROOT, "fill -14 %d -14 14 %d 14 minecraft:dirt", (int) Y - 3, (int) Y - 2));
+                command(mc, String.format(Locale.ROOT, "fill -14 %d -14 14 %d 14 minecraft:bedrock", (int) Y - 4, (int) Y - 4));
+            }
             REPORT.add("photo " + species + ": done");
             return 1;
+        });
+    }
+
+    /** The egg blocks of the species in their three hatch stages on the ground, and their spawn eggs in the hotbar
+     *  (eggs_blocks.png, eggs_items.png). */
+    private static void planEggs(List<String> species) {
+        STEPS.add(mc -> {
+            command(mc, "tp @e[type=!player] 0 -400 0");
+            command(mc, "time set noon");
+            int z = 0;
+            for (String sp : species) {
+                for (int stage = 0; stage < 3; stage++) {
+                    command(mc, String.format(Locale.ROOT, "setblock %d %d %d terrassic:%s_egg[hatch=%d]", stage * 2, (int) Y, z, sp, stage));
+                }
+                z += 2;
+            }
+            command(mc, "clear @p");
+            for (String sp : species) {
+                command(mc, "give @p terrassic:" + sp + "_spawn_egg");
+            }
+            mc.options.hideGui = false;
+            look(mc.player, new Vec3(2.5D, Y + 3.2D, -3.0D), new Vec3(2.5D, Y + 0.3D, species.size()));
+            serverTp(mc);
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "eggs_blocks.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 5;
+        });
+        STEPS.add(mc -> {
+            mc.options.hideGui = true;
+            int z = 0;
+            for (String sp : species) {
+                for (int stage = 0; stage < 3; stage++) {
+                    command(mc, String.format(Locale.ROOT, "setblock %d %d %d minecraft:air", stage * 2, (int) Y, z));
+                }
+                z += 2;
+            }
+            REPORT.add("eggs: " + species);
+            return 5;
         });
     }
 

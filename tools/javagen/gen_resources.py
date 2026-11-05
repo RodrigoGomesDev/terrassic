@@ -107,6 +107,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "giganotosaurus_saddle": ("Giganotosaurus Saddle", "Sela de Giganotossauro", "Silla de Giganotosaurio", "item/generated"),
     # the drover's pack saddle (cangalha) with two woven baskets: the Triceratops carries its cargo in them
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
+    # 1.8: the Elasmosaurus' neck saddle: a hide seat behind the neck, a rope loop to hold, two driftwood floats
+    "elasmosaurus_saddle": ("Elasmosaurus Neck Saddle", "Sela de Pescoço de Elasmossauro", "Silla de cuello de Elasmosaurio", "item/generated"),
     # 1.8: the Styracosaurus' running pad: a thick hide pad with a grip bar in front, rope foot loops, a rush girth
     "styracosaurus_saddle": ("Styracosaurus Running Pad", "Manta de Corrida de Estiracossauro", "Manta de carrera de Styracosaurus", "item/generated"),
     # a light riding pad for the racer: felt blanket, hide pad with knee rolls, a bone grip; the rider sits over the hips
@@ -916,6 +918,9 @@ def main():
     # the Triceratops' pack saddle: two wooden heads of the frame, a hide seat on leather, two woven rush baskets
     shaped("triceratops_saddle", ["S S", "LHL", "R R"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")
+    # the Elasmosaurus' neck saddle: its hide on leather, a rope loop (string), two driftwood floats (logs)
+    shaped("elasmosaurus_saddle", ["SSS", "LHL", "W W"], {"S": "minecraft:string", "L": "minecraft:leather",
+           "H": "terrassic:elasmosaurus_hide", "W": "minecraft:oak_log"}, "terrassic:elasmosaurus_saddle")
     # the Styracosaurus' running pad: the grip bar (a stick), its hide on leather, rush foot loops with a bone toggle
     shaped("styracosaurus_saddle", [" S ", "LHL", "RBR"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:styracosaurus_hide", "B": "minecraft:bone", "R": "terrassic:rush"}, "terrassic:styracosaurus_saddle")

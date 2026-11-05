@@ -1522,6 +1522,8 @@ if __name__ == "__main__":
     para_extras.main()    # the Parasaurolophus' round eggs in a raised mud crater under reeds, and its reed saddle
     import anky_extras
     anky_extras.main()    # the Ankylosaurus' leathery eggs half buried in a pit of forest loam, and its pack deck
+    import elas_extras
+    elas_extras.main()    # the Elasmosaurus' neck saddle (no egg block: live young)
     import deino_extras
     deino_extras.main()   # the Deinosuchus' hard white eggs in a hole dug in the beach sand
     import styr_extras

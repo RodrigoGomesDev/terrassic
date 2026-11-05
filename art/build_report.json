@@ -812,37 +812,49 @@
   "render_scale": 0.5
  },
  "elasmosaurus": {
-  "bones": 26,
-  "cubes": 57,
+  "bones": 28,
+  "cubes": 59,
   "texture": [
    256,
    256
   ],
   "bounds_px": [
    [
-    -41.11971366557505,
-    0.7308482087424064,
-    -158.99997952907844
+    -47.10462974557025,
+    7.105427357601002e-15,
+    -192.21648141274096
    ],
    [
-    41.11971366557505,
-    22.999950278095287,
-    40.27366585337905
+    47.10462974557025,
+    36.24828870563894,
+    56.05
    ]
   ],
   "animations": [
    "animation.elasmosaurus.idle",
+   "animation.elasmosaurus.swim",
    "animation.elasmosaurus.walk",
    "animation.elasmosaurus.run",
-   "animation.elasmosaurus.sit",
+   "animation.elasmosaurus.stranded",
+   "animation.elasmosaurus.breathe",
+   "animation.elasmosaurus.dive",
+   "animation.elasmosaurus.neck_strike",
    "animation.elasmosaurus.attack",
+   "animation.elasmosaurus.gastrolith",
+   "animation.elasmosaurus.nuzzle",
+   "animation.elasmosaurus.eat",
+   "animation.elasmosaurus.hurt",
+   "animation.elasmosaurus.death",
+   "animation.elasmosaurus.sit",
+   "animation.elasmosaurus.sleep",
+   "animation.elasmosaurus.wake_sleep",
    "animation.elasmosaurus.knocked_out",
    "animation.elasmosaurus.wake",
-   "animation.elasmosaurus.eat",
    "animation.elasmosaurus.beg",
    "animation.elasmosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.8,
+  "handmade": true
  },
  "xiphactinus": {
   "bones": 14,

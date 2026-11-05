@@ -18,7 +18,7 @@ import parts as hit_parts  # noqa: E402
 # (config/Eras.REMADE), whose models are measured at rest. Add a species here when it is remade.
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
-    "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus",
+    "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
 }
 
 # In-game size of each species. 1 block = 1 metre, so the player (1.8 blocks) is a 1.8 m tall person.
@@ -169,8 +169,9 @@ SIZES = {
     # Tylosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "tylosaurus":         dict(real=13.0, scale=0.95, w=2.6, h=1.8, baby=0.2,  shadow=2.0),
     # Elasmosaurus platyurus: ~10.3 m, of which ~7 m of neck (Sachs 2005). "real" is the total length.
-    # Elasmosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "elasmosaurus":       dict(real=10.3, scale=0.83, w=2.0, h=1.4, baby=0.2,  shadow=1.5),
+    # Elasmosaurus v1 (05/11, the 1.8) is hand-made at 20 px/m and shown at 10.3 m (16 / 20 = 0.8), its own study and
+    # rig (page "Elasmossauro: estudo para a 1.8").
+    "elasmosaurus":       dict(real=10.3, scale=0.8,  w=2.0, h=1.4, baby=0.2,  shadow=1.5),
     # Xiphactinus audax: 4.5-6 m, the biggest of its family (Everhart 2005; the "fish within a fish" FHSM VP-333 is ~4 m).
     # Xiphactinus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "xiphactinus":        dict(real=6.0, scale=0.95, w=1.6, h=1.2, baby=0.3,  shadow=1.0),
@@ -699,7 +700,8 @@ SPECIES = [
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("DOLPHIN_AMBIENT_WATER", "DOLPHIN_HURT", "DOLPHIN_DEATH", 0.55, 1.6, 320), xp=18, run=0.05,
       prey="e instanceof AbstractFish",
-      tame="feeding", live_young=True, rideable=True, ride_offset=1.25, ride_forward=0.0, ride_speed=1.1, dive=1.2),
+      tame="feeding", live_young=True, rideable=True, ride_offset=2.26, ride_forward=1.75, ride_speed=1.1, dive=1.2,
+      saddle="ELASMOSAURUS_SADDLE", rig="Plesiosaurid"),
  dict(id="xiphactinus", cls="Xiphactinus", base="SwimmingDinosaur",
       doc="Xiphactinus audax - a 6 m predatory bony fish with a bulldog face and fangs, fast and always hungry: it swallows fish whole and lunges at anything that enters its water. Wild only (cannot be tamed).",
       attrs=dict(MAX_HEALTH=40, MOVEMENT_SPEED=1.35, ATTACK_DAMAGE=7, ARMOR=1, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=24),
@@ -845,7 +847,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1089,7 +1091,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

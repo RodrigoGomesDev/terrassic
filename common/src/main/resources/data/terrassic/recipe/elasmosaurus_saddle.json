@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SSS",
+    "LHL",
+    "W W"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "H": {
+      "item": "terrassic:elasmosaurus_hide"
+    },
+    "W": {
+      "item": "minecraft:oak_log"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "terrassic:elasmosaurus_saddle"
+  }
+}
