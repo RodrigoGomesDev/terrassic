@@ -38,7 +38,7 @@ import java.util.Locale;
 public final class PartsShowcase {
     private static final String[] SPECIES = {"tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor",
             "triceratops", "protoceratops", "ankylosaurus", "pachycephalosaurus", "parasaurolophus", "gallimimus",
-            "pteranodon", "mosasaurus", "styracosaurus"};
+            "pteranodon", "mosasaurus", "styracosaurus", "deinosuchus"};
     private static final int[] YAWS = {0, 45};
     private static final double Y = -60.0D;
 
@@ -716,7 +716,10 @@ public final class PartsShowcase {
             command(mc, "weather clear");
             return 5;
         });
-        String[][] variants = {{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
+        String[][] variants = "deinosuchus".equals(species)
+                ? new String[][]{{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
+                        {"bask", "Female:0b"}, {"lunge", "Female:0b"}, {"bellow", "Female:0b"}, {"death_roll", "Female:0b"}}
+                : new String[][]{{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
                 {"saddled", "Female:0b,Saddled:1b"}, {"crown_display", "Female:0b"}, {"attack", "Female:0b"},
                 {"rival_display", "Female:0b"}, {"head_shake", "Female:1b"}};
         for (String[] v : variants) {
@@ -757,7 +760,7 @@ public final class PartsShowcase {
                         d.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, v[0]);
                     }
                 }
-                return "attack".equals(v[0]) ? 9 : 32;
+                return "attack".equals(v[0]) || "lunge".equals(v[0]) ? 9 : "death_roll".equals(v[0]) ? 14 : 32;
             });
             STEPS.add(mc -> {
                 if (dino[0] != null) {

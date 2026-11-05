@@ -1471,8 +1471,44 @@ def archelon():
 
 
 def deinosuchus():
-    return croc("deinosuchus", {"b": "#4e5e3e", "c": "#c8c49a", "d": "#2a3420", "n": "#1a2014",
-                                "s": "#6e7e52"})
+    """Deinosuchus (05/11, the "carvão-ouro" of the new model), seen from above like a head poking out of the water: the
+    broad rounded snout down the egg with its swollen tip and the two pits in front of the nostril at the bottom, the
+    raised orbits with the yellow-green eyes and slit pupils high up, the pitted skull table, the thick plates of the
+    neck at the top, broken gold bands on the sides, the upper teeth showing along the lip."""
+    e = Egg("deinosuchus", {
+        "k": "#1c1a16", "d": "#302c24", "m": "#433e33", "l": "#565043", "g": "#8a7440", "G": "#a68c4e",
+        "b": "#d0b46a", "Y": "#c6c24e", "P": "#100e0b", "W": "#e2d8bc", "o": "#16140f"})
+    e.ell((3, 2, 28, 42), "d")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
+    # the neck plates and the pitted skull table at the top
+    for x0, y0 in ((9, 3), (13, 2), (17, 2), (21, 3), (11, 6), (15, 5), (19, 6)):
+        e.rect((x0, y0, x0 + 2, y0 + 1), "k")
+        e.px([(x0 + 1, y0)], "o")
+    e.rect((10, 9, 21, 13), "m")
+    e.px([(12, 10), (15, 11), (18, 10), (13, 12), (19, 12)], "k")
+    # the orbits and the eyes
+    for cx in (9, 21):
+        e.rect((cx, 11, cx + 2, 14), "l")
+        e.px([(cx + 1, 12), (cx + 1, 13)], "P")
+        e.px([(cx, 12), (cx + 2, 12), (cx, 13), (cx + 2, 13)], "Y")
+    # the snout: tapering to the waist, then the swollen tip at the bottom
+    e.poly([(9, 15), (22, 15), (20, 23), (19, 25), (12, 25), (11, 23)], "m")
+    e.poly([(10, 25), (21, 25), (22, 29), (20, 31), (11, 31), (9, 29)], "m")
+    e.line([(12, 16), (13, 24)], "l"); e.line([(19, 16), (18, 24)], "l")
+    e.px([(13, 27), (14, 27), (17, 27), (18, 27)], "k")         # the two pits
+    e.px([(15, 29), (16, 29)], "P")                             # the nostril
+    # the lip line with the upper teeth showing, the gold of the jaw under it
+    for x, y in ((8, 17), (8, 20), (9, 23), (8, 27), (9, 30)):
+        e.px(e.mirror([(x, y)]), "W")
+    e.line([(8, 15), (8, 30)], "b"); e.line([(23, 15), (23, 30)], "b")
+    # broken gold bands on the sides of the neck and the body behind the head
+    for y in (5, 8):
+        e.px(e.mirror([(5, y), (6, y), (6, y + 1)]), "g")
+    e.px(e.mirror([(4, 14), (5, 15), (4, 18)]), "G")
+    return e
 
 
 def baurusuchus():

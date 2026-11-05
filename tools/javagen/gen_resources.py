@@ -22,7 +22,8 @@ from pachy_extras import CUSTOM_EGGS as PACHY_EGGS  # noqa: E402  (the Pachyceph
 from para_extras import CUSTOM_EGGS as PARA_EGGS  # noqa: E402  (the Parasaurolophus' round eggs in a mud crater)
 from anky_extras import CUSTOM_EGGS as ANKY_EGGS  # noqa: E402  (the Ankylosaurus' leathery eggs in a pit of forest loam)
 from styr_extras import CUSTOM_EGGS as STYR_EGGS  # noqa: E402  (the Styracosaurus' long soft eggs on a heap of reed stalks)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+from deino_extras import CUSTOM_EGGS as DEINO_EGGS  # noqa: E402  (the Deinosuchus' white eggs in a hole in the beach sand)
+CUSTOM_EGGS = {**DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
