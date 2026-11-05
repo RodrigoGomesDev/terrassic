@@ -26,11 +26,11 @@ import net.minecraft.world.level.Level;
  */
 public class Oviraptor extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~2.0 m. */
-    public static final float WIDTH = 0.7F;
-    public static final float HEIGHT = 1.4F;
+    public static final float WIDTH = 0.741F;
+    public static final float HEIGHT = 1.482F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.65F;
-    public static final float SHADOW = 0.45F;
+    public static final float MODEL_SCALE = 0.688F;
+    public static final float SHADOW = 0.476F;
     private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES);
 
     public Oviraptor(EntityType<? extends Oviraptor> type, Level level) {
@@ -63,7 +63,7 @@ public class Oviraptor extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 1.1D;
+        return 1.2D;
     }
 
     @Override

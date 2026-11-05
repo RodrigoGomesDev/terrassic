@@ -22,11 +22,11 @@ import net.minecraft.world.level.Level;
  */
 public class Edmontosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~12.0 m. */
-    public static final float WIDTH = 2.4F;
-    public static final float HEIGHT = 3.6F;
+    public static final float WIDTH = 2.541F;
+    public static final float HEIGHT = 3.812F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.89F;
-    public static final float SHADOW = 2.0F;
+    public static final float MODEL_SCALE = 0.942F;
+    public static final float SHADOW = 2.118F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES);
 
     public Edmontosaurus(EntityType<? extends Edmontosaurus> type, Level level) {
@@ -66,7 +66,7 @@ public class Edmontosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.3D;
+        return 5.6D;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class Edmontosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.76D * this.getScale();
+        return 2.92D * this.getScale();
     }
 
     @Override
@@ -91,12 +91,12 @@ public class Edmontosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.8D;
+        return 0.85D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 6.31D * this.getScale());
+        return Math.max(super.riderReach(), 6.62D * this.getScale());
     }
 
     @Override

@@ -32,11 +32,11 @@ import net.minecraft.world.phys.AABB;
  */
 public class Styracosaurus extends Centrosaurine {
     /** Hitbox (blocks). Adult real length ~5.5 m. */
-    public static final float WIDTH = 1.6F;
-    public static final float HEIGHT = 2.0F;
+    public static final float WIDTH = 1.694F;
+    public static final float HEIGHT = 2.118F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.5F;
-    public static final float SHADOW = 1.4F;
+    public static final float MODEL_SCALE = 0.529F;
+    public static final float SHADOW = 1.482F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.LARGE_FERN);
 
     public Styracosaurus(EntityType<? extends Styracosaurus> type, Level level) {
@@ -72,7 +72,7 @@ public class Styracosaurus extends Centrosaurine {
 
     @Override
     protected double cullingInflate() {
-        return 2.5D;
+        return 2.6D;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Styracosaurus extends Centrosaurine {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.72D * this.getScale();
+        return 1.82D * this.getScale();
     }
 
     @Override
@@ -97,12 +97,12 @@ public class Styracosaurus extends Centrosaurine {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.8D;
+        return 0.84D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 4.38D * this.getScale());
+        return Math.max(super.riderReach(), 4.58D * this.getScale());
     }
 
     @Override
@@ -125,37 +125,37 @@ public class Styracosaurus extends Centrosaurine {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{2.956F, 0.0F, -0.029F, 0.954F, 1.221F, 1.474F},
-                    new float[]{2.972F, 0.0F, 0.121F, 1.133F, 3.304F, 1.783F},
-                    new float[]{3.025F, 0.0F, -0.039F, 0.936F, 0.723F, 1.621F}),
+                    new float[]{3.127F, 0.0F, -0.028F, 1.003F, 1.286F, 1.553F},
+                    new float[]{3.144F, 0.0F, 0.131F, 1.193F, 3.49F, 1.88F},
+                    new float[]{3.2F, 0.0F, -0.038F, 0.984F, 0.759F, 1.709F}),
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{2.102F, 0.0F, 0.016F, 0.954F, 1.207F, 1.9F},
-                    new float[]{1.939F, 0.0F, 0.12F, 1.133F, 3.013F, 1.573F},
-                    new float[]{2.189F, 0.0F, 0.025F, 0.936F, 1.341F, 1.852F}),
+                    new float[]{2.224F, 0.0F, 0.019F, 1.003F, 1.271F, 2.005F},
+                    new float[]{2.051F, 0.0F, 0.13F, 1.193F, 3.181F, 1.658F},
+                    new float[]{2.316F, 0.0F, 0.029F, 0.984F, 1.413F, 1.953F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{1.769F, 0.0F, 0.336F, 0.91F, 1.021F, 1.096F},
-                    new float[]{1.879F, 0.0F, 0.099F, 1.08F, 1.982F, 1.237F},
-                    new float[]{1.809F, 0.0F, 0.371F, 0.888F, 0.855F, 0.999F}),
+                    new float[]{1.871F, 0.0F, 0.358F, 0.957F, 1.074F, 1.154F},
+                    new float[]{1.988F, 0.0F, 0.108F, 1.137F, 2.091F, 1.302F},
+                    new float[]{1.914F, 0.0F, 0.395F, 0.934F, 0.899F, 1.051F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{1.463F, 0.0F, -0.096F, 1.517F, 1.221F, 1.985F},
-                    new float[]{1.358F, 0.0F, -0.055F, 1.216F, 3.116F, 1.607F},
-                    new float[]{1.211F, 0.0F, -0.068F, 1.145F, 1.135F, 1.927F}),
+                    new float[]{1.548F, 0.0F, -0.099F, 1.599F, 1.286F, 2.094F},
+                    new float[]{1.437F, 0.0F, -0.056F, 1.281F, 3.291F, 1.694F},
+                    new float[]{1.281F, 0.0F, -0.069F, 1.205F, 1.195F, 2.033F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{0.046F, 0.0F, -0.088F, 1.517F, 1.303F, 2.098F},
-                    new float[]{0.242F, 0.0F, 0.103F, 1.216F, 3.04F, 1.55F},
-                    new float[]{0.166F, 0.0F, -0.054F, 1.145F, 1.244F, 2.028F}),
+                    new float[]{0.049F, 0.0F, -0.09F, 1.599F, 1.373F, 2.214F},
+                    new float[]{0.256F, 0.0F, 0.112F, 1.281F, 3.211F, 1.634F},
+                    new float[]{0.176F, 0.0F, -0.054F, 1.205F, 1.31F, 2.14F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.845F, 0.0F, 0.529F, 0.75F, 1.069F, 0.932F},
-                    new float[]{-1.737F, 0.0F, 0.282F, 0.697F, 1.045F, 0.861F},
-                    new float[]{-1.745F, 0.0F, 0.852F, 0.694F, 0.603F, 0.614F}),
+                    new float[]{-1.952F, 0.0F, 0.563F, 0.788F, 1.125F, 0.981F},
+                    new float[]{-1.838F, 0.0F, 0.302F, 0.731F, 1.099F, 0.905F},
+                    new float[]{-1.846F, 0.0F, 0.904F, 0.729F, 0.632F, 0.644F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.196F, 0.0F, 0.68F, 0.75F, 0.882F, 1.073F},
-                    new float[]{-1.14F, 0.0F, 0.388F, 0.697F, 0.979F, 0.969F},
-                    new float[]{-1.151F, 0.0F, 0.951F, 0.694F, 0.782F, 0.796F}),
+                    new float[]{-1.265F, 0.0F, 0.722F, 0.788F, 0.927F, 1.129F},
+                    new float[]{-1.207F, 0.0F, 0.414F, 0.731F, 1.03F, 1.019F},
+                    new float[]{-1.217F, 0.0F, 1.009F, 0.729F, 0.822F, 0.836F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-0.546F, 0.0F, 0.804F, 0.75F, 0.855F, 1.015F},
-                    new float[]{-0.544F, 0.0F, 0.422F, 0.697F, 0.984F, 0.944F},
-                    new float[]{-0.557F, 0.0F, 0.977F, 0.694F, 0.771F, 0.81F})
+                    new float[]{-0.577F, 0.0F, 0.853F, 0.788F, 0.898F, 1.068F},
+                    new float[]{-0.575F, 0.0F, 0.449F, 0.731F, 1.035F, 0.993F},
+                    new float[]{-0.589F, 0.0F, 1.037F, 0.729F, 0.81F, 0.852F})
     };
 
     @Override
@@ -165,12 +165,12 @@ public class Styracosaurus extends Centrosaurine {
 
     @Override
     public float partPivot() {
-        return 2.062F;
+        return 2.182F;
     }
 
     @Override
     public float partPivotUp() {
-        return 1.054F;
+        return 1.115F;
     }
 
     @Override

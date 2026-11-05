@@ -32,11 +32,11 @@ import net.minecraft.world.phys.AABB;
  */
 public class Pachyrhinosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~8.0 m. */
-    public static final float WIDTH = 2.4F;
-    public static final float HEIGHT = 3.6F;
+    public static final float WIDTH = 2.541F;
+    public static final float HEIGHT = 3.812F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.0F;
-    public static final float SHADOW = 2.0F;
+    public static final float MODEL_SCALE = 1.059F;
+    public static final float SHADOW = 2.118F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES);
 
     public Pachyrhinosaurus(EntityType<? extends Pachyrhinosaurus> type, Level level) {
@@ -77,7 +77,7 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 3.3D;
+        return 3.5D;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.95D * this.getScale();
+        return 3.12D * this.getScale();
     }
 
     @Override
@@ -102,12 +102,12 @@ public class Pachyrhinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.2D;
+        return 0.21D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 5.39D * this.getScale());
+        return Math.max(super.riderReach(), 5.65D * this.getScale());
     }
 
     @Override

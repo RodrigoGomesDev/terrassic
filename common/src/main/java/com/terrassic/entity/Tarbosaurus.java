@@ -26,11 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Tarbosaurus extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~12.0 m. */
-    public static final float WIDTH = 2.5F;
-    public static final float HEIGHT = 4.3F;
+    public static final float WIDTH = 2.647F;
+    public static final float HEIGHT = 4.553F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.79F;
-    public static final float SHADOW = 2.3F;
+    public static final float MODEL_SCALE = 1.895F;
+    public static final float SHADOW = 2.435F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
 
@@ -73,7 +73,7 @@ public class Tarbosaurus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.3D;
+        return 5.5D;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class Tarbosaurus extends PredatorDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 3.58D * this.getScale();
+        return 3.79D * this.getScale();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class Tarbosaurus extends PredatorDinosaur {
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 6.61D * this.getScale());
+        return Math.max(super.riderReach(), 6.94D * this.getScale());
     }
 
     @Override

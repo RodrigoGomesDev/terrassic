@@ -23,11 +23,11 @@ import net.minecraft.world.level.Level;
  */
 public class Maiasaura extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~9.0 m. */
-    public static final float WIDTH = 2.0F;
-    public static final float HEIGHT = 2.8F;
+    public static final float WIDTH = 2.118F;
+    public static final float HEIGHT = 2.965F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.83F;
-    public static final float SHADOW = 1.6F;
+    public static final float MODEL_SCALE = 0.879F;
+    public static final float SHADOW = 1.694F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.SWEET_BERRIES);
 
     public Maiasaura(EntityType<? extends Maiasaura> type, Level level) {
@@ -67,7 +67,7 @@ public class Maiasaura extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 4.0D;
+        return 4.2D;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class Maiasaura extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.12D * this.getScale();
+        return 2.24D * this.getScale();
     }
 
     @Override
@@ -92,12 +92,12 @@ public class Maiasaura extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.66D;
+        return 0.7D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 4.83D * this.getScale());
+        return Math.max(super.riderReach(), 5.05D * this.getScale());
     }
 
     @Override

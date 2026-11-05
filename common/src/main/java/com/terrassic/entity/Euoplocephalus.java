@@ -28,11 +28,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Euoplocephalus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~6.0 m. */
-    public static final float WIDTH = 2.0F;
-    public static final float HEIGHT = 1.8F;
+    public static final float WIDTH = 2.118F;
+    public static final float HEIGHT = 1.906F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.74F;
-    public static final float SHADOW = 1.6F;
+    public static final float MODEL_SCALE = 0.784F;
+    public static final float SHADOW = 1.694F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES, Items.MELON_SLICE);
 
     public Euoplocephalus(EntityType<? extends Euoplocephalus> type, Level level) {
@@ -69,7 +69,7 @@ public class Euoplocephalus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 2.5D;
+        return 2.6D;
     }
 
     @Override

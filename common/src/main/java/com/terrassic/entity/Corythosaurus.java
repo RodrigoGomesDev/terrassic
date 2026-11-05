@@ -24,11 +24,11 @@ import net.minecraft.world.level.Level;
  */
 public class Corythosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~9.0 m. */
-    public static final float WIDTH = 2.0F;
-    public static final float HEIGHT = 3.3F;
+    public static final float WIDTH = 2.118F;
+    public static final float HEIGHT = 3.494F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.83F;
-    public static final float SHADOW = 1.6F;
+    public static final float MODEL_SCALE = 0.879F;
+    public static final float SHADOW = 1.694F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES);
 
     public Corythosaurus(EntityType<? extends Corythosaurus> type, Level level) {
@@ -68,7 +68,7 @@ public class Corythosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 4.0D;
+        return 4.2D;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Corythosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.12D * this.getScale();
+        return 2.24D * this.getScale();
     }
 
     @Override
@@ -93,12 +93,12 @@ public class Corythosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.66D;
+        return 0.7D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 4.84D * this.getScale());
+        return Math.max(super.riderReach(), 5.07D * this.getScale());
     }
 
     @Override

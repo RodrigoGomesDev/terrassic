@@ -23,11 +23,11 @@ import net.minecraft.world.level.Level;
  */
 public class Pachycephalosaurus extends Pachycephalosaurid {
     /** Hitbox (blocks). Adult real length ~4.5 m. */
-    public static final float WIDTH = 1.0F;
-    public static final float HEIGHT = 1.9F;
+    public static final float WIDTH = 1.059F;
+    public static final float HEIGHT = 2.012F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.5F;
-    public static final float SHADOW = 0.8F;
+    public static final float MODEL_SCALE = 0.529F;
+    public static final float SHADOW = 0.847F;
     private static final Ingredient FOOD = Ingredient.of(Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.APPLE);
 
     public Pachycephalosaurus(EntityType<? extends Pachycephalosaurus> type, Level level) {
@@ -63,7 +63,7 @@ public class Pachycephalosaurus extends Pachycephalosaurid {
 
     @Override
     protected double cullingInflate() {
-        return 2.1D;
+        return 2.2D;
     }
 
     @Override
@@ -81,37 +81,41 @@ public class Pachycephalosaurus extends Pachycephalosaurid {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{1.692F, 0.0F, 0.65F, 1.048F, 0.914F, 1.474F},
-                    new float[]{1.682F, 0.0F, 0.151F, 1.047F, 3.357F, 1.28F},
-                    new float[]{1.617F, 0.0F, 0.11F, 1.196F, 0.593F, 2.417F}),
+                    new float[]{2.041F, 0.0F, 0.691F, 0.601F, 0.961F, 1.518F},
+                    new float[]{2.03F, 0.0F, 0.162F, 0.601F, 3.545F, 1.332F},
+                    new float[]{2.001F, 0.0F, 0.132F, 0.68F, 0.587F, 2.354F}),
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{1.539F, 0.0F, 0.719F, 0.601F, 0.937F, 1.525F},
+                    new float[]{1.53F, 0.0F, 0.234F, 0.601F, 3.538F, 1.276F},
+                    new float[]{1.421F, 0.0F, 0.119F, 0.68F, 0.622F, 2.552F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{1.204F, 0.0F, 1.057F, 0.856F, 0.582F, 0.77F},
-                    new float[]{1.267F, 0.0F, 0.353F, 0.763F, 3.167F, 0.776F},
-                    new float[]{1.226F, 0.0F, 0.671F, 0.869F, 0.471F, 1.482F}),
+                    new float[]{1.274F, 0.0F, 1.122F, 0.9F, 0.61F, 0.809F},
+                    new float[]{1.34F, 0.0F, 0.376F, 0.802F, 3.344F, 0.815F},
+                    new float[]{1.298F, 0.0F, 0.712F, 0.913F, 0.492F, 1.562F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{0.871F, 0.0F, -0.073F, 0.714F, 0.801F, 1.736F},
-                    new float[]{0.914F, 0.0F, -0.047F, 0.596F, 3.026F, 1.04F},
-                    new float[]{0.936F, 0.0F, 0.485F, 0.626F, 0.694F, 1.273F}),
+                    new float[]{0.922F, 0.0F, -0.074F, 0.75F, 0.842F, 1.831F},
+                    new float[]{0.967F, 0.0F, -0.047F, 0.625F, 3.196F, 1.095F},
+                    new float[]{0.99F, 0.0F, 0.516F, 0.656F, 0.728F, 1.341F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{0.257F, 0.0F, -0.075F, 0.714F, 0.851F, 1.831F},
-                    new float[]{0.418F, 0.0F, -0.013F, 0.596F, 3.21F, 1.092F},
-                    new float[]{0.41F, 0.0F, -0.053F, 0.626F, 0.829F, 1.832F}),
+                    new float[]{0.272F, 0.0F, -0.076F, 0.75F, 0.894F, 1.932F},
+                    new float[]{0.442F, 0.0F, -0.011F, 0.625F, 3.39F, 1.15F},
+                    new float[]{0.434F, 0.0F, -0.053F, 0.656F, 0.871F, 1.933F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{-0.358F, 0.0F, -0.062F, 0.714F, 0.901F, 1.821F},
-                    new float[]{-0.079F, 0.0F, 0.05F, 0.596F, 3.233F, 1.053F},
-                    new float[]{-0.116F, 0.0F, -0.053F, 0.626F, 0.832F, 1.842F}),
+                    new float[]{-0.378F, 0.0F, -0.063F, 0.75F, 0.948F, 1.921F},
+                    new float[]{-0.083F, 0.0F, 0.055F, 0.625F, 3.415F, 1.108F},
+                    new float[]{-0.122F, 0.0F, -0.053F, 0.656F, 0.875F, 1.943F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.812F, 0.0F, 0.839F, 0.717F, 0.453F, 0.781F},
-                    new float[]{-1.794F, 0.0F, 0.475F, 0.727F, 3.12F, 0.697F},
-                    new float[]{-1.806F, 0.0F, 1.211F, 0.735F, 0.3F, 0.627F}),
+                    new float[]{-1.917F, 0.0F, 0.891F, 0.753F, 0.473F, 0.821F},
+                    new float[]{-1.898F, 0.0F, 0.506F, 0.763F, 3.295F, 0.732F},
+                    new float[]{-1.911F, 0.0F, 1.284F, 0.772F, 0.3F, 0.658F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.195F, 0.0F, 0.842F, 0.717F, 0.504F, 0.987F},
-                    new float[]{-1.167F, 0.0F, 0.283F, 0.727F, 3.371F, 0.973F},
-                    new float[]{-1.171F, 0.0F, 1.056F, 0.735F, 0.537F, 0.911F}),
+                    new float[]{-1.264F, 0.0F, 0.894F, 0.753F, 0.528F, 1.039F},
+                    new float[]{-1.235F, 0.0F, 0.302F, 0.763F, 3.561F, 1.024F},
+                    new float[]{-1.239F, 0.0F, 1.12F, 0.772F, 0.563F, 0.958F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-0.578F, 0.0F, 0.754F, 0.717F, 0.584F, 1.123F},
-                    new float[]{-0.54F, 0.0F, 0.267F, 0.727F, 3.396F, 0.986F},
-                    new float[]{-0.536F, 0.0F, 0.916F, 0.735F, 0.537F, 1.04F})
+                    new float[]{-0.611F, 0.0F, 0.8F, 0.753F, 0.613F, 1.182F},
+                    new float[]{-0.571F, 0.0F, 0.286F, 0.763F, 3.587F, 1.038F},
+                    new float[]{-0.567F, 0.0F, 0.972F, 0.772F, 0.563F, 1.095F})
     };
 
     @Override
@@ -121,12 +125,12 @@ public class Pachycephalosaurus extends Pachycephalosaurid {
 
     @Override
     public float partPivot() {
-        return 1.562F;
+        return 1.653F;
     }
 
     @Override
     public float partPivotUp() {
-        return 1.386F;
+        return 1.467F;
     }
 
     @Override

@@ -25,11 +25,11 @@ import net.minecraft.world.level.Level;
  */
 public class Hesperornis extends SwimmingDinosaur {
     /** Hitbox (blocks). Adult real length ~1.8 m. */
-    public static final float WIDTH = 0.6F;
-    public static final float HEIGHT = 0.6F;
+    public static final float WIDTH = 0.635F;
+    public static final float HEIGHT = 0.635F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.39F;
-    public static final float SHADOW = 0.4F;
+    public static final float MODEL_SCALE = 0.413F;
+    public static final float SHADOW = 0.424F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Hesperornis(EntityType<? extends Hesperornis> type, Level level) {

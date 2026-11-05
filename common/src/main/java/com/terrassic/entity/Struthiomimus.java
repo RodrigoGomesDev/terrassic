@@ -22,11 +22,11 @@ import net.minecraft.world.level.Level;
  */
 public class Struthiomimus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~4.3 m. */
-    public static final float WIDTH = 1.0F;
-    public static final float HEIGHT = 2.4F;
+    public static final float WIDTH = 1.059F;
+    public static final float HEIGHT = 2.541F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.81F;
-    public static final float SHADOW = 0.8F;
+    public static final float MODEL_SCALE = 0.858F;
+    public static final float SHADOW = 0.847F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES, Items.EGG);
 
     public Struthiomimus(EntityType<? extends Struthiomimus> type, Level level) {
@@ -59,7 +59,7 @@ public class Struthiomimus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 2.2D;
+        return 2.3D;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Struthiomimus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.5D * this.getScale();
+        return 1.59D * this.getScale();
     }
 
     @Override
@@ -89,12 +89,12 @@ public class Struthiomimus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.16D;
+        return 0.17D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 2.55D * this.getScale());
+        return Math.max(super.riderReach(), 2.64D * this.getScale());
     }
 
     @Override

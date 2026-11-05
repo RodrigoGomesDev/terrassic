@@ -24,11 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Brachiosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~22.0 m. */
-    public static final float WIDTH = 4.0F;
-    public static final float HEIGHT = 9.0F;
+    public static final float WIDTH = 4.235F;
+    public static final float HEIGHT = 9.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.05F;
-    public static final float SHADOW = 4.5F;
+    public static final float MODEL_SCALE = 1.112F;
+    public static final float SHADOW = 4.765F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 
     public Brachiosaurus(EntityType<? extends Brachiosaurus> type, Level level) {
@@ -65,7 +65,7 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 9.5D;
+        return 10.1D;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 6.41D * this.getScale();
+        return 6.78D * this.getScale();
     }
 
     @Override
@@ -100,12 +100,12 @@ public class Brachiosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 3.36D;
+        return 3.56D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 12.41D * this.getScale());
+        return Math.max(super.riderReach(), 13.08D * this.getScale());
     }
 
     @Override

@@ -26,11 +26,11 @@ import net.minecraft.world.level.Level;
  */
 public class Archelon extends SwimmingDinosaur {
     /** Hitbox (blocks). Adult real length ~4.6 m. */
-    public static final float WIDTH = 2.2F;
-    public static final float HEIGHT = 1.1F;
+    public static final float WIDTH = 2.329F;
+    public static final float HEIGHT = 1.165F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.01F;
-    public static final float SHADOW = 1.6F;
+    public static final float MODEL_SCALE = 1.069F;
+    public static final float SHADOW = 1.694F;
     private static final Ingredient FOOD = Ingredient.of(Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Archelon(EntityType<? extends Archelon> type, Level level) {
@@ -85,17 +85,17 @@ public class Archelon extends SwimmingDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 0.91D * this.getScale();
+        return 0.96D * this.getScale();
     }
 
     @Override
     protected double riderForwardOffset() {
-        return 0.1D;
+        return 0.11D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 3.71D * this.getScale());
+        return Math.max(super.riderReach(), 3.87D * this.getScale());
     }
 
     @Override

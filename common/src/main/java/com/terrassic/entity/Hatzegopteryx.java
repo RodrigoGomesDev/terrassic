@@ -25,11 +25,11 @@ import net.minecraft.world.level.Level;
  */
 public class Hatzegopteryx extends FlyingDinosaur {
     /** Hitbox (blocks). Adult real length ~12.0 m. */
-    public static final float WIDTH = 2.5F;
-    public static final float HEIGHT = 4.6F;
+    public static final float WIDTH = 2.647F;
+    public static final float HEIGHT = 4.871F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.76F;
-    public static final float SHADOW = 2.1F;
+    public static final float MODEL_SCALE = 0.805F;
+    public static final float SHADOW = 2.224F;
     private static final Ingredient FOOD = Ingredient.of(Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
 
     public Hatzegopteryx(EntityType<? extends Hatzegopteryx> type, Level level) {
@@ -66,7 +66,7 @@ public class Hatzegopteryx extends FlyingDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.2D;
+        return 5.5D;
     }
 
     @Override
@@ -86,12 +86,12 @@ public class Hatzegopteryx extends FlyingDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 3.27D * this.getScale();
+        return 3.46D * this.getScale();
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 5.55D * this.getScale());
+        return Math.max(super.riderReach(), 5.82D * this.getScale());
     }
 
     @Override

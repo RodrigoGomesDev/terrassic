@@ -28,11 +28,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Deinocheirus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~11.0 m. */
-    public static final float WIDTH = 2.4F;
-    public static final float HEIGHT = 4.8F;
+    public static final float WIDTH = 2.541F;
+    public static final float HEIGHT = 5.082F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.99F;
-    public static final float SHADOW = 2.2F;
+    public static final float MODEL_SCALE = 1.048F;
+    public static final float SHADOW = 2.329F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
     public Deinocheirus(EntityType<? extends Deinocheirus> type, Level level) {
@@ -74,7 +74,7 @@ public class Deinocheirus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 4.8D;
+        return 5.0D;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class Deinocheirus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 4.06D * this.getScale();
+        return 4.3D * this.getScale();
     }
 
     @Override
@@ -109,12 +109,12 @@ public class Deinocheirus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 2.67D;
+        return 2.83D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 7.19D * this.getScale());
+        return Math.max(super.riderReach(), 7.55D * this.getScale());
     }
 
     @Override

@@ -30,11 +30,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Carcharodontosaurus extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~12.5 m. */
-    public static final float WIDTH = 2.4F;
-    public static final float HEIGHT = 4.6F;
+    public static final float WIDTH = 2.541F;
+    public static final float HEIGHT = 4.871F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.8F;
-    public static final float SHADOW = 2.3F;
+    public static final float MODEL_SCALE = 1.906F;
+    public static final float SHADOW = 2.435F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
     private static final UUID KILLS_ATTACK_ID = UUID.fromString("5d2b7f10-3c4e-4a6b-8e1f-28092a8ad990");
@@ -81,7 +81,7 @@ public class Carcharodontosaurus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 5.6D;
+        return 5.9D;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class Carcharodontosaurus extends PredatorDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 3.96D * this.getScale();
+        return 4.19D * this.getScale();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class Carcharodontosaurus extends PredatorDinosaur {
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 6.76D * this.getScale());
+        return Math.max(super.riderReach(), 7.1D * this.getScale());
     }
 
     @Override

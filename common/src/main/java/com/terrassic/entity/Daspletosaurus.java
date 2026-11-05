@@ -26,11 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Daspletosaurus extends PredatorDinosaur {
     /** Hitbox (blocks). Adult real length ~9.0 m. */
-    public static final float WIDTH = 2.1F;
-    public static final float HEIGHT = 3.8F;
+    public static final float WIDTH = 2.224F;
+    public static final float HEIGHT = 4.024F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.49F;
-    public static final float SHADOW = 2.0F;
+    public static final float MODEL_SCALE = 1.578F;
+    public static final float SHADOW = 2.118F;
     private static final Ingredient FOOD = Ingredient.of(Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
     private int displayCooldown;
 
@@ -73,7 +73,7 @@ public class Daspletosaurus extends PredatorDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 3.9D;
+        return 4.1D;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class Daspletosaurus extends PredatorDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 2.98D * this.getScale();
+        return 3.16D * this.getScale();
     }
 
     @Override
@@ -108,7 +108,7 @@ public class Daspletosaurus extends PredatorDinosaur {
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 5.12D * this.getScale());
+        return Math.max(super.riderReach(), 5.36D * this.getScale());
     }
 
     @Override

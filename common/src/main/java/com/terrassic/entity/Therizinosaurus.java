@@ -29,11 +29,11 @@ import net.minecraft.world.phys.AABB;
  */
 public class Therizinosaurus extends HerbivoreDinosaur {
     /** Hitbox (blocks). Adult real length ~10.0 m. */
-    public static final float WIDTH = 2.4F;
-    public static final float HEIGHT = 5.0F;
+    public static final float WIDTH = 2.541F;
+    public static final float HEIGHT = 5.294F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.03F;
-    public static final float SHADOW = 2.0F;
+    public static final float MODEL_SCALE = 1.091F;
+    public static final float SHADOW = 2.118F;
     private static final Ingredient FOOD = Ingredient.of(Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.MELON_SLICE);
 
     public Therizinosaurus(EntityType<? extends Therizinosaurus> type, Level level) {
@@ -70,7 +70,7 @@ public class Therizinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double cullingInflate() {
-        return 4.3D;
+        return 4.5D;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class Therizinosaurus extends HerbivoreDinosaur {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 4.33D * this.getScale();
+        return 4.58D * this.getScale();
     }
 
     @Override
@@ -105,12 +105,12 @@ public class Therizinosaurus extends HerbivoreDinosaur {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.41D;
+        return 0.44D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 6.09D * this.getScale());
+        return Math.max(super.riderReach(), 6.39D * this.getScale());
     }
 
     @Override

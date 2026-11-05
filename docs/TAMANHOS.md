@@ -1,6 +1,10 @@
 # Tamanhos dos dinossauros
 
-Regra: **1 bloco = 1 metro**. O jogador tem 1,8 bloco, então ele é uma pessoa de 1,8 m ao lado do bicho.
+Regra (Rodrigo, 05/11/2026): **o jogador é uma pessoa de 1,70 m**. Ele tem 1,8 bloco, então 1 metro = 1,8 / 1,7 =
+**1,059 bloco** (`HUMAN` e `METRE` em `gen_species.py`). As medidas abaixo são em metros; o modelo, a hitbox e a sombra
+crescem por esse fator na geração (até 05/11 era 1 bloco = 1 metro, e o jogador era uma pessoa de 1,8 m).
+Cada animal sorteia o próprio tamanho entre 0,94 e 1,06 da linha (antes 0,86 a 1,04: alguns saíam 14% menores que o
+fóssil grande; o T. rex vai de 0,92 a 1,04). As colunas "no jogo" estão em metros.
 Tudo sai da tabela `SIZES` em `tools/javagen/gen_species.py` (rode `python3 gen_species.py` depois de mudar).
 Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra cinza = antigo).
 

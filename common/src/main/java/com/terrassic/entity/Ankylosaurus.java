@@ -27,11 +27,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class Ankylosaurus extends Ankylosaurid {
     /** Hitbox (blocks). Adult real length ~7.0 m. */
-    public static final float WIDTH = 2.4F;
-    public static final float HEIGHT = 1.8F;
+    public static final float WIDTH = 2.541F;
+    public static final float HEIGHT = 1.906F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 0.667F;
-    public static final float SHADOW = 1.6F;
+    public static final float MODEL_SCALE = 0.706F;
+    public static final float SHADOW = 1.694F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES);
 
     public Ankylosaurus(EntityType<? extends Ankylosaurus> type, Level level) {
@@ -68,7 +68,7 @@ public class Ankylosaurus extends Ankylosaurid {
 
     @Override
     protected double cullingInflate() {
-        return 2.9D;
+        return 3.0D;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Ankylosaurus extends Ankylosaurid {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 1.5D * this.getScale();
+        return 1.59D * this.getScale();
     }
 
     @Override
@@ -93,12 +93,12 @@ public class Ankylosaurus extends Ankylosaurid {
 
     @Override
     protected double riderForwardOffset() {
-        return 1.71D;
+        return 1.81D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 4.62D * this.getScale());
+        return Math.max(super.riderReach(), 4.83D * this.getScale());
     }
 
     @Override
@@ -121,29 +121,29 @@ public class Ankylosaurus extends Ankylosaurid {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{3.093F, 0.0F, 0.414F, 1.254F, 1.56F, 1.048F},
-                    new float[]{3.088F, 0.0F, -0.043F, 1.262F, 1.555F, 1.071F},
-                    new float[]{3.039F, 0.0F, -0.049F, 1.258F, 1.531F, 1.436F}),
+                    new float[]{3.274F, 0.0F, 0.441F, 1.322F, 1.645F, 1.104F},
+                    new float[]{3.269F, 0.0F, -0.043F, 1.33F, 1.64F, 1.128F},
+                    new float[]{3.216F, 0.0F, -0.049F, 1.325F, 1.615F, 1.514F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{2.613F, 0.0F, 0.513F, 0.967F, 1.439F, 1.224F},
-                    new float[]{2.588F, 0.0F, 0.109F, 1.006F, 1.446F, 1.228F},
-                    new float[]{2.572F, 0.0F, 0.237F, 1.005F, 1.391F, 1.439F}),
+                    new float[]{2.766F, 0.0F, 0.546F, 1.017F, 1.517F, 1.29F},
+                    new float[]{2.74F, 0.0F, 0.119F, 1.059F, 1.524F, 1.294F},
+                    new float[]{2.722F, 0.0F, 0.254F, 1.058F, 1.466F, 1.517F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{1.099F, 0.0F, -0.104F, 3.465F, 2.42F, 1.954F},
-                    new float[]{1.0F, 0.0F, -0.05F, 3.188F, 2.375F, 1.607F},
-                    new float[]{0.999F, 0.0F, -0.082F, 3.191F, 2.358F, 1.907F}),
+                    new float[]{1.163F, 0.0F, -0.107F, 3.662F, 2.555F, 2.062F},
+                    new float[]{1.058F, 0.0F, -0.05F, 3.369F, 2.508F, 1.696F},
+                    new float[]{1.057F, 0.0F, -0.084F, 3.372F, 2.49F, 2.012F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-3.027F, 0.0F, 0.71F, 1.137F, 1.78F, 0.854F},
-                    new float[]{-3.017F, 0.0F, 0.21F, 1.15F, 3.55F, 0.826F},
-                    new float[]{-3.032F, 0.0F, 0.734F, 1.127F, 1.223F, 0.757F}),
+                    new float[]{-3.204F, 0.0F, 0.754F, 1.197F, 1.878F, 0.898F},
+                    new float[]{-3.194F, 0.0F, 0.225F, 1.211F, 3.752F, 0.868F},
+                    new float[]{-3.209F, 0.0F, 0.78F, 1.188F, 1.289F, 0.795F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.99F, 0.0F, 0.867F, 1.137F, 1.325F, 0.571F},
-                    new float[]{-1.967F, 0.0F, 0.346F, 1.15F, 3.274F, 0.718F},
-                    new float[]{-2.005F, 0.0F, 0.895F, 1.127F, 1.161F, 0.492F}),
+                    new float[]{-2.107F, 0.0F, 0.921F, 1.197F, 1.396F, 0.599F},
+                    new float[]{-2.082F, 0.0F, 0.369F, 1.211F, 3.46F, 0.754F},
+                    new float[]{-2.122F, 0.0F, 0.95F, 1.188F, 1.223F, 0.515F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-0.954F, 0.0F, 0.764F, 1.137F, 1.341F, 0.833F},
-                    new float[]{-0.917F, 0.0F, 0.4F, 1.15F, 1.528F, 0.89F},
-                    new float[]{-0.977F, 0.0F, 0.792F, 1.127F, 1.227F, 0.782F})
+                    new float[]{-1.009F, 0.0F, 0.812F, 1.197F, 1.413F, 0.876F},
+                    new float[]{-0.971F, 0.0F, 0.426F, 1.211F, 1.612F, 0.936F},
+                    new float[]{-1.034F, 0.0F, 0.841F, 1.188F, 1.293F, 0.822F})
     };
 
     @Override
@@ -153,12 +153,12 @@ public class Ankylosaurus extends Ankylosaurid {
 
     @Override
     public float partPivot() {
-        return 2.918F;
+        return 3.089F;
     }
 
     @Override
     public float partPivotUp() {
-        return 1.215F;
+        return 1.286F;
     }
 
     @Override

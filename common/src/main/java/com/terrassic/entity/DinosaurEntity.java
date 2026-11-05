@@ -674,12 +674,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Smallest adult of the species, relative to its SIZES row (the row is the upper end of the fossil estimates). */
     protected float minSize() {
-        return 0.86F;
+        return 0.94F;
     }
 
     /** Largest adult of the species, relative to its SIZES row. */
     protected float maxSize() {
-        return 1.04F;
+        return 1.06F;
     }
 
     /** This animal's adult size relative to the species' standard. */
