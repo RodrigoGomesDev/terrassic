@@ -51,6 +51,10 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
+**1.7.1 (05/11/2026, `mod_version`)**: Guia de Bolso rediagramado (margens, índice numa página dupla, sem linha
+órfã, tópicos curtos dividindo página) e sprite de livro; as espécies saíram do Guia para quatro **Bestiários** fabricáveis
+(Carnívoros, Herbívoros, Voadores, Marinhos; `VOLUMES` em `gen_pocket_guide.py`, `docs/AJUDA.md`). Fotos de todas as
+páginas: fase `guide` do `PartsShowcase`. Pelo `VERSOES.md` seria 1.8.0; o Rodrigo escolheu 1.7.1.
 **Partes de acerto (1.7, `docs/PLANO_PARTES.md`)**: cabeça 125%, pescoço 100%, cauda 75% nas 13 espécies refeitas
 (`entity/parts/DinoPart`, mixins em `mixin/parts`, medidas de `tools/javagen/parts.py` via `gen_species.PARTS_SPECIES`;
 espécie refeita nova entra lá); mordida medida da cabeça (`ai/HeadMeleeAttackGoal`). Regressão: `parts_regression.py`.
