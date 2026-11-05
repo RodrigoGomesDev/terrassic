@@ -77,27 +77,47 @@ class TestAnnounceBuild(unittest.TestCase):
         self.assertIn("Tricerátopo: revisão 1.5", log)
         self.assertNotIn("Espinossauro: nado novo", log)
 
-    def test_embed_lista_os_commits_com_cor_e_link_de_comparacao(self):
+    def notes(self, version, text):
+        path = self.repo / "docs" / "changelog" / f"{version}.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+
+    def test_embed_usa_a_secao_em_ingles_do_changelog_e_nunca_os_commits(self):
         commit(self.repo, "1.0.0", "1.0.0: número da versão")
         commit(self.repo, "1.0.0", "Tricerátopo: revisão 1.5")
         commit(self.repo, "1.1.0", "1.1.0: número da versão")
+        self.notes("1.1.0", "# Terrassic 1.1.0\n\n## Português\n\n### Tricerátopo\n- Modelo novo.\n\n"
+                            "## English\n\n### Triceratops\n- New model.\n  - with a frill\n")
         since_sha, _ = ab.find_previous_bump(ab.bump_commits(), "1.1.0")
         head = git(self.repo, "rev-parse", "HEAD").strip()
-        embed = ab.build_embed("1.1.0", ab.changelog(since_sha), since_sha, head)
+        embed = ab.build_embed("1.1.0", ab.english_notes("1.1.0"), since_sha, head)
         self.assertEqual(embed["color"], ab.COLOR)
         self.assertIn("1.1.0", embed["title"])
-        self.assertIn("Tricerátopo: revisão 1.5", embed["description"])
+        self.assertEqual(embed["description"], "**Triceratops**\n- New model.\n  - with a frill")
+        self.assertNotIn("Tricerátopo", embed["description"])
         self.assertIn(since_sha[:12], embed["url"])
         self.assertIn(head[:12], embed["url"])
 
-    def test_mais_de_12_commits_resume_com_contagem(self):
+    def test_sem_changelog_o_aviso_sai_em_ingles_sem_os_commits(self):
         commit(self.repo, "1.0.0", "1.0.0: número da versão")
-        for n in range(15):
-            commit(self.repo, "1.0.0", f"Ajuste {n}")
+        commit(self.repo, "1.0.0", "Tricerátopo: revisão 1.5")
         commit(self.repo, "1.1.0", "1.1.0: número da versão")
-        since_sha, _ = ab.find_previous_bump(ab.bump_commits(), "1.1.0")
-        embed = ab.build_embed("1.1.0", ab.changelog(since_sha), since_sha, "x" * 40)
-        self.assertIn("…and 3 more commit(s).", embed["description"])
+        self.assertIsNone(ab.english_notes("1.1.0"))
+        self.notes("1.1.0", "# Terrassic 1.1.0\n\n## Português\n- só português\n")
+        self.assertIsNone(ab.english_notes("1.1.0"), "sem a seção English, nada")
+        embed = ab.build_embed("1.1.0", None, None, "x" * 40)
+        self.assertEqual(embed["description"], "A new build is out. Patch notes come with the release.")
+
+    def test_linha_quebrada_no_meio_da_frase_vira_uma_so(self):
+        self.notes("1.2.0", "## English\n\n- Dinos are hit where you see them, with boxes that\n  follow the model.\n  - a real sub-item\n")
+        self.assertEqual(ab.english_notes("1.2.0"), "- Dinos are hit where you see them, with boxes that follow the model.\n  - a real sub-item")
+
+    def test_notas_longas_cortam_na_linha_com_link_para_as_completas(self):
+        long = "\n".join(f"- change number {n} with some words" for n in range(300))
+        out = ab.fit(long, "https://example.com/full")
+        self.assertLessEqual(len(out), 4096)
+        self.assertTrue(out.endswith("[Full patch notes](https://example.com/full)"))
+        self.assertIn("\n…\n", out)
 
     def test_primeira_versao_sem_webhook_nao_falha(self):
         commit(self.repo, "0.1.0", "0.1.0: primeira versão")

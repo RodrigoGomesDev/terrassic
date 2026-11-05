@@ -257,6 +257,10 @@ Suporte, diagnóstico de log, Guia de Campo, relatos de bug e avisos; documentad
   `mod_version` em `gradle.properties`, **sem precisar de tag**. Depende do secret `DISCORD_BUILDS_WEBHOOK`
   (webhook do canal #builds no Discord; configurar com `gh secret set DISCORD_BUILDS_WEBHOOK` — nunca colar a URL
   em commit, issue ou chat). Sem o secret, o workflow só mostra no log o que mandaria, sem falhar a build.
+- **O texto dos avisos é em inglês** (o servidor é organizado em inglês, pedido do Rodrigo em 05/11/2026): os dois
+  avisos (#builds e #avisos) publicam a seção `## English` de `docs/changelog/X.Y.Z.md`, o mesmo changelog das lojas,
+  que entra no repositório junto com a versão (`docs/VERSOES.md`, passo 5). Os commits continuam em português e não vão
+  mais para o Discord.
 - **Terceiro canal, `#novas-especies`:** quem avisa é o repositório do **site** (`terrassic-site`,
   `.github/workflows/discord-species.yml`), quando um id entra em `models.ready` de `src/site-config.js`: posta o
   cartão `public/assets/cards/<id>.webp` (gerado por `npm run cards` lá, do modelo do jogo) e a ficha do Guia. Ao

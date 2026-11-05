@@ -1,5 +1,9 @@
-"""Avisa no Discord quando mod_version muda em gradle.properties, com o changelog desde o aviso anterior.
-O servidor do Discord é organizado em inglês: a moldura do aviso é em inglês; o changelog são os assuntos dos commits.
+"""Avisa no Discord quando mod_version muda em gradle.properties, com as notas da versão EM INGLÊS.
+
+O servidor do Discord é organizado em inglês. O texto do aviso vem da seção "## English" de
+docs/changelog/X.Y.Z.md (o mesmo changelog que vai para as lojas, docs/VERSOES.md). Os assuntos dos commits não vão
+mais para o Discord: são em português e falam a língua da equipe, não a do jogador. Versão sem changelog no
+repositório: o aviso sai só com "build nova" e o link das mudanças, e o log da Action avisa que faltou o arquivo.
 
 Rodado pelo GitHub Actions (.github/workflows/discord-build.yml) a cada push em main que toca gradle.properties.
 É o canal de BUILDS: toda vez que a versão muda, mesmo sem tag git. O aviso OFICIAL de lançamento
@@ -22,7 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 REPO = "RodrigoGomesDev/terrassic"
 COLOR = 0xF07A1A  # laranja da Fenda, o mesmo do site e do Rexpert
-MAX_COMMITS = 12
+MAX_DESCRIPTION = 3900  # o limite do Discord é 4096; sobra espaço para o "notas completas"
 
 # Mensagens só com o número da versão, sem descrever nada: "1.5.0: número da versão", "Versão 1.0.0", "v1.0.0".
 GENERIC_BUMP = re.compile(r"^(v|versão\s+)?\d+\.\d+\.\d+(:\s*número da versão)?$", re.IGNORECASE)
@@ -80,15 +84,47 @@ def changelog(since_sha):
     return subjects
 
 
-def build_embed(version, subjects, since_sha, head_sha):
-    shown = subjects[:MAX_COMMITS]
-    extra = len(subjects) - len(shown)
-    lines = [f"• {s}" for s in shown] or ["No described commits since the last announcement."]
-    if extra > 0:
-        lines.append(f"…and {extra} more commit(s).")
+def notes_path(version):
+    return ROOT / "docs" / "changelog" / f"{version}.md"
+
+
+def english_notes(version):
+    """A seção "## English" de docs/changelog/<versão>.md, pronta para o Discord, ou None se não houver.
+
+    Títulos "###" viram negrito (o embed não mostra título de markdown); o resto (listas, negrito) o Discord já mostra.
+    """
+    path = notes_path(version)
+    if not path.exists():
+        return None
+    m = re.search(r"^##\s+English\s*$(.*?)(?=^##\s|\Z)", path.read_text(encoding="utf-8"), re.MULTILINE | re.DOTALL)
+    if not m:
+        return None
+    lines = []
+    for line in m.group(1).strip().splitlines():
+        line = re.sub(r"^#{3,}\s+(.*)$", r"**\1**", line.rstrip())
+        # Linha quebrada no meio da frase (continuação recuada, sem "- "): o Discord mostra cada quebra, então junta.
+        if lines and lines[-1] and re.match(r"^\s+(?![-*]\s)\S", line):
+            lines[-1] += " " + line.strip()
+        else:
+            lines.append(line)
+    text = re.sub(r"\n{3,}", "\n\n", "\n".join(lines)).strip()
+    return text or None
+
+
+def fit(text, more_url):
+    """Corta nas quebras de linha para caber no embed, com o link das notas completas no fim."""
+    if len(text) <= MAX_DESCRIPTION:
+        return text
+    cut = text[:MAX_DESCRIPTION].rsplit("\n", 1)[0].rstrip()
+    return f"{cut}\n…\n[Full patch notes]({more_url})"
+
+
+def build_embed(version, notes, since_sha, head_sha):
+    full = f"https://github.com/{REPO}/blob/main/docs/changelog/{version}.md"
+    description = fit(notes, full) if notes else "A new build is out. Patch notes come with the release."
     embed = {
         "title": f"🦖 Terrassic {version} · new build",
-        "description": "\n".join(lines),
+        "description": description,
         "color": COLOR,
         "footer": {"text": "Automatic build on every new version — not the official release."},
     }
@@ -124,8 +160,11 @@ def main():
 
     head_sha = git("rev-parse", "HEAD").strip()
     subjects = changelog(since_sha) if since_sha else []
+    notes = english_notes(current)
     print(f"Nova versão: {current} (antes: {previous or 'nenhuma — primeira registrada'}). {len(subjects)} commit(s).")
-    embed = build_embed(current, subjects, since_sha, head_sha)
+    if not notes:
+        print(f"Sem a seção '## English' em {notes_path(current).relative_to(ROOT)}: o aviso sai sem as notas (docs/VERSOES.md).")
+    embed = build_embed(current, notes, since_sha, head_sha)
 
     if not webhook:
         print("DISCORD_BUILDS_WEBHOOK não configurado: mostrando o que seria enviado, sem enviar.")
