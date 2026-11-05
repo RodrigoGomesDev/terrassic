@@ -119,18 +119,54 @@ public class Gallimimus extends Ornithomimid {
         return ModItems.GALLIMIMUS_SADDLE.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 2.131F, 0.0F, 2.398F, 0.571F, 0.3F, 0.325F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 1.49F, 0.0F, 1.747F, 1.07F, 0.381F, 0.966F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.889F, 0.0F, 1.266F, 0.901F, 0.662F, 0.962F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.088F, 0.0F, -0.053F, 0.901F, 0.751F, 2.313F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.223F, 0.0F, 1.962F, 0.767F, 0.3F, 0.3F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.557F, 0.0F, 1.952F, 0.767F, 0.3F, 0.3F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.89F, 0.0F, 1.92F, 0.767F, 0.3F, 0.334F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.223F, 0.0F, 1.769F, 0.767F, 0.412F, 0.512F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.557F, 0.0F, 1.693F, 0.767F, 0.412F, 0.61F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{2.161F, 0.0F, 1.831F, 0.658F, 0.996F, 0.95F},
+                    new float[]{1.788F, 0.0F, 0.34F, 1.348F, 3.25F, 1.194F},
+                    new float[]{2.067F, 0.0F, 0.17F, 1.138F, 0.515F, 3.059F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{1.833F, 0.0F, 2.041F, 0.652F, 0.586F, 0.721F},
+                    new float[]{1.838F, 0.0F, 0.414F, 0.649F, 3.519F, 1.09F},
+                    new float[]{1.916F, 0.0F, 0.563F, 0.745F, 0.405F, 2.425F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{1.281F, 0.0F, 1.677F, 0.652F, 0.497F, 1.018F},
+                    new float[]{1.289F, 0.0F, 0.289F, 0.649F, 3.334F, 1.123F},
+                    new float[]{1.272F, 0.0F, 0.536F, 0.745F, 0.414F, 2.302F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.949F, 0.0F, -0.06F, 0.837F, 0.717F, 2.348F},
+                    new float[]{1.077F, 0.0F, -0.051F, 0.637F, 2.887F, 0.966F},
+                    new float[]{1.03F, 0.0F, 0.991F, 0.641F, 0.662F, 1.286F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.212F, 0.0F, -0.063F, 0.837F, 0.763F, 2.343F},
+                    new float[]{0.54F, 0.0F, -0.044F, 0.637F, 2.87F, 0.957F},
+                    new float[]{0.488F, 0.0F, -0.053F, 0.641F, 0.739F, 2.321F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-0.525F, 0.0F, -0.051F, 0.837F, 0.742F, 2.311F},
+                    new float[]{0.003F, 0.0F, -0.05F, 0.637F, 2.88F, 0.979F},
+                    new float[]{-0.053F, 0.0F, -0.054F, 0.641F, 0.778F, 2.341F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-3.223F, 0.0F, 1.517F, 0.767F, 0.792F, 0.799F},
+                    new float[]{-3.161F, 0.0F, 0.452F, 0.757F, 3.156F, 0.759F},
+                    new float[]{-3.169F, 0.0F, 1.836F, 0.76F, 0.3F, 1.234F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-2.557F, 0.0F, 1.541F, 0.767F, 0.635F, 0.766F},
+                    new float[]{-2.503F, 0.0F, 0.421F, 0.757F, 3.06F, 0.722F},
+                    new float[]{-2.51F, 0.0F, 1.847F, 0.76F, 0.3F, 1.169F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.89F, 0.0F, 1.567F, 0.767F, 0.504F, 0.732F},
+                    new float[]{-1.846F, 0.0F, 0.377F, 0.757F, 4.657F, 0.991F},
+                    new float[]{-1.85F, 0.0F, 1.831F, 0.76F, 0.3F, 0.988F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.223F, 0.0F, 1.548F, 0.767F, 0.46F, 0.756F},
+                    new float[]{-1.189F, 0.0F, 0.306F, 0.757F, 2.961F, 0.792F},
+                    new float[]{-1.19F, 0.0F, 1.785F, 0.76F, 0.412F, 0.941F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.557F, 0.0F, 1.481F, 0.767F, 0.453F, 0.822F},
+                    new float[]{-0.531F, 0.0F, 0.272F, 0.757F, 2.919F, 0.698F},
+                    new float[]{-0.53F, 0.0F, 1.678F, 0.76F, 0.412F, 0.867F})
     };
 
     @Override
@@ -140,7 +176,12 @@ public class Gallimimus extends Ornithomimid {
 
     @Override
     public float partPivot() {
-        return 1.188F;
+        return 2.219F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 1.975F;
     }
 
     @Override

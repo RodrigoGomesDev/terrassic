@@ -28,7 +28,8 @@
     "client.BowZoomMixin",
     "client.HeldSpearMixin",
     "client.BlowgunMouthMixin",
-    "client.PartHitboxMixin"
+    "client.PartHitboxMixin",
+    "client.PartFrameMixin"
   ],
   "injectors": {
     "defaultRequire": 1

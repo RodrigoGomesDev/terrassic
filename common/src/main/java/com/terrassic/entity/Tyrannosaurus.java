@@ -146,17 +146,46 @@ public class Tyrannosaurus extends ApexTheropod {
         return ModItems.TYRANNOSAURUS_SADDLE.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.221F, 0.0F, 3.443F, 1.615F, 1.885F, 2.365F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.706F, 0.0F, 3.485F, 1.615F, 2.013F, 2.35F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.621F, 0.0F, 3.024F, 1.951F, 1.503F, 2.155F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.51F, 0.0F, -0.05F, 3.925F, 2.905F, 4.843F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -6.164F, 0.0F, 3.444F, 1.543F, 0.737F, 0.744F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.721F, 0.0F, 3.225F, 1.543F, 1.12F, 1.133F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.278F, 0.0F, 2.913F, 1.543F, 1.503F, 1.648F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.836F, 0.0F, 2.839F, 1.543F, 1.503F, 1.758F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{5.246F, 0.0F, 2.201F, 1.857F, 3.416F, 3.854F},
+                    new float[]{5.306F, 0.0F, -0.05F, 1.739F, 8.182F, 4.389F},
+                    new float[]{5.153F, 0.0F, 0.194F, 2.104F, 4.564F, 5.826F}),
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{3.489F, 0.0F, 2.591F, 1.857F, 3.063F, 3.351F},
+                    new float[]{3.667F, 0.0F, 0.421F, 1.739F, 8.469F, 3.848F},
+                    new float[]{3.149F, 0.0F, -0.037F, 2.104F, 4.018F, 5.9F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{2.642F, 0.0F, 2.657F, 2.071F, 1.956F, 2.649F},
+                    new float[]{2.644F, 0.0F, 0.803F, 1.912F, 7.328F, 2.816F},
+                    new float[]{2.646F, 0.0F, 1.785F, 1.902F, 2.12F, 3.334F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{1.818F, 0.0F, -0.133F, 2.888F, 3.04F, 4.966F},
+                    new float[]{1.497F, 0.0F, -0.036F, 2.063F, 6.333F, 3.322F},
+                    new float[]{1.498F, 0.0F, -0.05F, 2.182F, 2.905F, 4.716F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-0.971F, 0.0F, -0.126F, 2.888F, 3.089F, 5.057F},
+                    new float[]{-0.466F, 0.0F, -0.056F, 2.063F, 6.351F, 3.345F},
+                    new float[]{-0.584F, 0.0F, -0.05F, 2.182F, 2.905F, 4.844F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-6.157F, 0.0F, 1.936F, 1.557F, 2.003F, 2.399F},
+                    new float[]{-6.074F, 0.0F, 1.328F, 1.512F, 5.829F, 1.803F},
+                    new float[]{-6.058F, 0.0F, 2.885F, 1.535F, 1.017F, 1.302F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-4.7F, 0.0F, 2.171F, 1.557F, 1.646F, 2.301F},
+                    new float[]{-4.662F, 0.0F, 1.056F, 1.512F, 5.646F, 1.82F},
+                    new float[]{-4.623F, 0.0F, 3.206F, 1.535F, 1.253F, 1.143F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-3.243F, 0.0F, 2.159F, 1.557F, 1.747F, 2.509F},
+                    new float[]{-3.25F, 0.0F, 0.802F, 1.512F, 5.955F, 2.157F},
+                    new float[]{-3.189F, 0.0F, 2.906F, 1.535F, 1.547F, 1.689F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.786F, 0.0F, 2.21F, 1.557F, 1.707F, 2.472F},
+                    new float[]{-1.838F, 0.0F, 0.795F, 1.512F, 5.919F, 2.211F},
+                    new float[]{-1.754F, 0.0F, 2.722F, 1.535F, 1.536F, 1.876F})
     };
 
     @Override
@@ -166,7 +195,12 @@ public class Tyrannosaurus extends ApexTheropod {
 
     @Override
     public float partPivot() {
-        return 2.167F;
+        return 3.188F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 4.17F;
     }
 
     @Override

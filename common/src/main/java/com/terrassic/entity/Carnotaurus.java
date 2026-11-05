@@ -141,20 +141,54 @@ public class Carnotaurus extends Abelisaur {
         return ModItems.CARNOTAURUS_SADDLE.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.542F, 0.0F, 2.144F, 1.076F, 1.098F, 0.904F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 3.047F, 0.0F, 2.062F, 0.69F, 0.475F, 0.896F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.457F, 0.0F, 1.767F, 0.69F, 0.559F, 1.057F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 1.867F, 0.0F, 1.652F, 0.69F, 0.559F, 1.062F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 1.494F, 0.0F, 1.518F, 1.447F, 0.85F, 1.357F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.147F, 0.0F, -0.054F, 1.447F, 1.453F, 2.972F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.705F, 0.0F, 2.264F, 0.861F, 0.35F, 0.353F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.944F, 0.0F, 2.168F, 0.861F, 0.517F, 0.563F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.184F, 0.0F, 2.067F, 0.861F, 0.85F, 0.775F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.423F, 0.0F, 1.697F, 0.861F, 0.934F, 1.24F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.662F, 0.0F, 1.645F, 0.861F, 0.934F, 1.275F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{3.515F, 0.0F, 1.746F, 1.183F, 1.525F, 1.394F},
+                    new float[]{3.504F, 0.0F, -0.039F, 1.213F, 4.004F, 1.641F},
+                    new float[]{3.379F, 0.0F, -0.121F, 1.464F, 1.115F, 3.167F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{3.048F, 0.0F, 1.793F, 0.691F, 0.701F, 1.273F},
+                    new float[]{3.059F, 0.0F, 0.285F, 0.671F, 3.77F, 1.176F},
+                    new float[]{3.043F, 0.0F, 0.46F, 0.701F, 0.507F, 2.497F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{2.458F, 0.0F, 1.532F, 0.691F, 0.7F, 1.451F},
+                    new float[]{2.488F, 0.0F, 0.215F, 0.671F, 3.517F, 1.104F},
+                    new float[]{2.442F, 0.0F, 0.604F, 0.701F, 0.601F, 2.22F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{1.867F, 0.0F, 1.459F, 0.691F, 0.691F, 1.41F},
+                    new float[]{1.917F, 0.0F, 0.117F, 0.671F, 3.398F, 1.133F},
+                    new float[]{1.84F, 0.0F, 0.76F, 0.701F, 0.63F, 1.955F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{1.405F, 0.0F, -0.073F, 1.705F, 1.383F, 3.03F},
+                    new float[]{1.508F, 0.0F, -0.05F, 1.445F, 3.713F, 1.622F},
+                    new float[]{1.484F, 0.0F, -0.068F, 1.535F, 1.332F, 2.943F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-0.2F, 0.0F, -0.073F, 1.705F, 1.453F, 3.016F},
+                    new float[]{0.162F, 0.0F, 0.002F, 1.445F, 3.843F, 1.657F},
+                    new float[]{0.049F, 0.0F, -0.081F, 1.535F, 1.516F, 2.999F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-3.7F, 0.0F, 0.854F, 0.889F, 0.672F, 1.83F},
+                    new float[]{-3.692F, 0.0F, 0.183F, 0.871F, 2.58F, 0.882F},
+                    new float[]{-3.775F, 0.0F, 1.975F, 0.896F, 0.376F, 0.61F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-2.911F, 0.0F, 1.032F, 0.889F, 0.758F, 1.763F},
+                    new float[]{-2.92F, 0.0F, 0.274F, 0.871F, 3.08F, 0.911F},
+                    new float[]{-2.979F, 0.0F, 1.927F, 0.896F, 0.557F, 0.804F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-2.122F, 0.0F, 1.222F, 0.889F, 0.973F, 1.653F},
+                    new float[]{-2.149F, 0.0F, 0.317F, 0.871F, 3.506F, 1.008F},
+                    new float[]{-2.184F, 0.0F, 1.911F, 0.896F, 0.877F, 0.923F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.333F, 0.0F, 1.28F, 0.889F, 0.986F, 1.668F},
+                    new float[]{-1.377F, 0.0F, 0.159F, 0.871F, 3.766F, 1.268F},
+                    new float[]{-1.388F, 0.0F, 1.504F, 0.896F, 0.959F, 1.318F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.544F, 0.0F, 1.238F, 0.889F, 0.967F, 1.685F},
+                    new float[]{-0.606F, 0.0F, 0.091F, 0.871F, 3.805F, 1.336F},
+                    new float[]{-0.593F, 0.0F, 1.362F, 0.896F, 0.951F, 1.558F})
     };
 
     @Override
@@ -164,7 +198,12 @@ public class Carnotaurus extends Abelisaur {
 
     @Override
     public float partPivot() {
-        return 2.168F;
+        return 3.21F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 2.324F;
     }
 
     @Override

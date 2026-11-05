@@ -97,15 +97,38 @@ public class Velociraptor extends Raptor {
         return ModItems.VELOCIRAPTOR_HARNESS.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.032F, 0.0F, 0.55F, 0.781F, 0.35F, 0.521F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 0.538F, 0.0F, 0.508F, 0.672F, 0.3F, 0.574F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.219F, 0.0F, -0.05F, 0.975F, 0.6F, 0.988F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.488F, 0.0F, 0.559F, 0.623F, 0.436F, 0.3F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.965F, 0.0F, 0.55F, 0.623F, 0.346F, 0.3F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.442F, 0.0F, 0.525F, 0.623F, 0.319F, 0.309F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{1.022F, 0.0F, 0.227F, 0.812F, 0.808F, 0.892F},
+                    new float[]{0.694F, 0.0F, 0.079F, 1.488F, 1.592F, 0.735F},
+                    new float[]{0.952F, 0.0F, 0.05F, 0.943F, 0.403F, 1.309F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{0.552F, 0.0F, 0.39F, 0.699F, 0.39F, 0.722F},
+                    new float[]{0.581F, 0.0F, 0.184F, 0.622F, 1.674F, 0.652F},
+                    new float[]{0.545F, 0.0F, 0.375F, 0.701F, 0.3F, 0.752F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.514F, 0.0F, -0.063F, 0.664F, 0.615F, 1.053F},
+                    new float[]{0.457F, 0.0F, 0.004F, 0.553F, 1.523F, 0.722F},
+                    new float[]{0.43F, 0.0F, -0.05F, 0.552F, 0.6F, 0.988F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-0.05F, 0.0F, -0.063F, 0.664F, 0.625F, 1.039F},
+                    new float[]{0.003F, 0.0F, 0.083F, 0.553F, 1.498F, 0.671F},
+                    new float[]{-0.022F, 0.0F, -0.05F, 0.552F, 0.6F, 0.989F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.485F, 0.0F, 0.203F, 0.628F, 0.589F, 0.64F},
+                    new float[]{-1.428F, 0.0F, 0.233F, 0.618F, 2.275F, 0.454F},
+                    new float[]{-1.441F, 0.0F, 0.62F, 0.603F, 0.436F, 0.3F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.957F, 0.0F, 0.277F, 0.628F, 0.537F, 0.555F},
+                    new float[]{-0.91F, 0.0F, 0.273F, 0.618F, 2.499F, 0.397F},
+                    new float[]{-0.939F, 0.0F, 0.584F, 0.603F, 0.346F, 0.305F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.43F, 0.0F, 0.354F, 0.628F, 0.345F, 0.48F},
+                    new float[]{-0.392F, 0.0F, 0.261F, 0.618F, 1.281F, 0.35F},
+                    new float[]{-0.436F, 0.0F, 0.525F, 0.603F, 0.319F, 0.33F})
     };
 
     @Override
@@ -115,7 +138,12 @@ public class Velociraptor extends Raptor {
 
     @Override
     public float partPivot() {
-        return 0.406F;
+        return 0.812F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 0.669F;
     }
 
     @Override

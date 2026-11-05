@@ -76,16 +76,42 @@ public class Pachycephalosaurus extends Pachycephalosaurid {
         return 700;
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.726F, 0.0F, 1.24F, 0.971F, 0.506F, 0.835F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 1.183F, 0.0F, 1.125F, 0.815F, 0.444F, 0.689F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.773F, 0.0F, 0.647F, 0.866F, 0.694F, 0.993F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.008F, 0.0F, -0.053F, 0.866F, 0.835F, 1.786F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.812F, 0.0F, 1.268F, 0.713F, 0.3F, 0.323F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.199F, 0.0F, 1.116F, 0.713F, 0.444F, 0.708F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.586F, 0.0F, 0.947F, 0.713F, 0.537F, 0.929F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{1.692F, 0.0F, 0.65F, 1.048F, 0.914F, 1.474F},
+                    new float[]{1.682F, 0.0F, 0.151F, 1.047F, 3.357F, 1.28F},
+                    new float[]{1.617F, 0.0F, 0.11F, 1.196F, 0.593F, 2.417F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{1.204F, 0.0F, 1.057F, 0.856F, 0.582F, 0.77F},
+                    new float[]{1.267F, 0.0F, 0.353F, 0.763F, 3.167F, 0.776F},
+                    new float[]{1.226F, 0.0F, 0.671F, 0.869F, 0.471F, 1.482F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.871F, 0.0F, -0.073F, 0.714F, 0.801F, 1.736F},
+                    new float[]{0.914F, 0.0F, -0.047F, 0.596F, 3.026F, 1.04F},
+                    new float[]{0.936F, 0.0F, 0.485F, 0.626F, 0.694F, 1.273F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.257F, 0.0F, -0.075F, 0.714F, 0.851F, 1.831F},
+                    new float[]{0.418F, 0.0F, -0.013F, 0.596F, 3.21F, 1.092F},
+                    new float[]{0.41F, 0.0F, -0.053F, 0.626F, 0.829F, 1.832F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-0.358F, 0.0F, -0.062F, 0.714F, 0.901F, 1.821F},
+                    new float[]{-0.079F, 0.0F, 0.05F, 0.596F, 3.233F, 1.053F},
+                    new float[]{-0.116F, 0.0F, -0.053F, 0.626F, 0.832F, 1.842F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.812F, 0.0F, 0.839F, 0.717F, 0.453F, 0.781F},
+                    new float[]{-1.794F, 0.0F, 0.475F, 0.727F, 3.12F, 0.697F},
+                    new float[]{-1.806F, 0.0F, 1.211F, 0.735F, 0.3F, 0.627F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.195F, 0.0F, 0.842F, 0.717F, 0.504F, 0.987F},
+                    new float[]{-1.167F, 0.0F, 0.283F, 0.727F, 3.371F, 0.973F},
+                    new float[]{-1.171F, 0.0F, 1.056F, 0.735F, 0.537F, 0.911F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.578F, 0.0F, 0.754F, 0.717F, 0.584F, 1.123F},
+                    new float[]{-0.54F, 0.0F, 0.267F, 0.727F, 3.396F, 0.986F},
+                    new float[]{-0.536F, 0.0F, 0.916F, 0.735F, 0.537F, 1.04F})
     };
 
     @Override
@@ -95,7 +121,12 @@ public class Pachycephalosaurus extends Pachycephalosaurid {
 
     @Override
     public float partPivot() {
-        return 1.0F;
+        return 1.562F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 1.386F;
     }
 
     @Override

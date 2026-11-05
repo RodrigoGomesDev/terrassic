@@ -115,14 +115,34 @@ public class Ankylosaurus extends Ankylosaurid {
         return ModItems.ANKYLOSAURUS_SADDLE.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.151F, 0.0F, 0.509F, 1.034F, 1.507F, 0.908F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.582F, 0.0F, 0.57F, 0.883F, 1.267F, 1.156F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.98F, 0.0F, -0.062F, 3.227F, 2.358F, 1.91F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.776F, 0.0F, 0.771F, 1.632F, 0.85F, 0.58F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.244F, 0.0F, 0.827F, 1.632F, 1.341F, 0.77F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{3.093F, 0.0F, 0.414F, 1.254F, 1.56F, 1.048F},
+                    new float[]{3.088F, 0.0F, -0.043F, 1.262F, 1.555F, 1.071F},
+                    new float[]{3.039F, 0.0F, -0.049F, 1.258F, 1.531F, 1.436F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{2.613F, 0.0F, 0.513F, 0.967F, 1.439F, 1.224F},
+                    new float[]{2.588F, 0.0F, 0.109F, 1.006F, 1.446F, 1.228F},
+                    new float[]{2.572F, 0.0F, 0.237F, 1.005F, 1.391F, 1.439F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{1.099F, 0.0F, -0.104F, 3.465F, 2.42F, 1.954F},
+                    new float[]{1.0F, 0.0F, -0.05F, 3.188F, 2.375F, 1.607F},
+                    new float[]{0.999F, 0.0F, -0.082F, 3.191F, 2.358F, 1.907F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-3.027F, 0.0F, 0.71F, 1.137F, 1.78F, 0.854F},
+                    new float[]{-3.017F, 0.0F, 0.21F, 1.15F, 3.55F, 0.826F},
+                    new float[]{-3.032F, 0.0F, 0.734F, 1.127F, 1.223F, 0.757F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.99F, 0.0F, 0.867F, 1.137F, 1.325F, 0.571F},
+                    new float[]{-1.967F, 0.0F, 0.346F, 1.15F, 3.274F, 0.718F},
+                    new float[]{-2.005F, 0.0F, 0.895F, 1.127F, 1.161F, 0.492F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.954F, 0.0F, 0.764F, 1.137F, 1.341F, 0.833F},
+                    new float[]{-0.917F, 0.0F, 0.4F, 1.15F, 1.528F, 0.89F},
+                    new float[]{-0.977F, 0.0F, 0.792F, 1.127F, 1.227F, 0.782F})
     };
 
     @Override
@@ -132,7 +152,12 @@ public class Ankylosaurus extends Ankylosaurid {
 
     @Override
     public float partPivot() {
-        return 2.335F;
+        return 2.918F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 1.215F;
     }
 
     @Override
