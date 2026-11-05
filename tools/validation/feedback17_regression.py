@@ -91,9 +91,11 @@ def main():
         for name, species, x in (("guard", "velociraptor", 20), ("guard2", "triceratops", 60)):
             server.command(f"summon terrassic:{species} {x} -60 0 {{Tags:[\"f17_{name}\"],UUID:{int_uuid(ids[name])},"
                            f"Size:1f,BirthSize:1f,Owner:{owner},Sitting:0b}}")
+        # 1.21: an owner read from NBT does not apply the taming side effects (the wolf would keep its wild 8 health and
+        # die to the first bite, leaving the checks without an entity): 40, as a wolf tamed in play
         for name, x in (("pet1", 23), ("pet2", 63)):
             server.command(f"summon minecraft:wolf {x} -60 0 {{Tags:[\"f17_{name}\"],UUID:{int_uuid(ids[name])},"
-                           f"Owner:[I;1,2,3,4],Sitting:1b,Health:20f}}")
+                           f"Owner:[I;1,2,3,4],Sitting:1b,Health:40f,attributes:[{{id:\"minecraft:generic.max_health\",base:40d}}]}}")
         server.command(f"tp {PLAYER} 20 -60 -4")
         checks.barrier()
 
@@ -101,7 +103,7 @@ def main():
             """Polls until the pet is hurt; prints where the guard is and the pet's health every two seconds."""
             deadline = time.monotonic() + seconds
             while time.monotonic() < deadline:
-                if checks.condition(state(f"f17_{pet}", "{Health:20.0f}"), negate=True):
+                if checks.condition(state(f"f17_{pet}", "{Health:40.0f}"), negate=True):
                     return True
                 cursor = len(server.lines)
                 server.command(f"data get entity {selector('f17_' + guard)} Pos")
@@ -113,7 +115,7 @@ def main():
             return False
 
         time.sleep(4.0)
-        checks.expect("the tamed dino leaves a spared pet alone", state("f17_pet1", "{Health:20.0f}"))
+        checks.expect("the tamed dino leaves a spared pet alone", state("f17_pet1", "{Health:40.0f}"))
         server.command(f"damage {selector('f17_guard')} 1 minecraft:mob_attack by {selector('f17_pet1')}")
         passed = watch("guard", "pet1", 20)
         checks.results.append({"name": "it fights back against the pet that bit it", "passed": passed})
