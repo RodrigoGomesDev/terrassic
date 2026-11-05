@@ -17,7 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntityRenderDispatcher.class)
 public abstract class PartHitboxMixin {
     @Inject(method = "renderHitbox", at = @At("TAIL"), require = 0)
-    private static void terrassic$parts(PoseStack pose, VertexConsumer buffer, Entity entity, float partialTick, CallbackInfo ci) {
+    private static void terrassic$parts(PoseStack pose, VertexConsumer buffer, Entity entity, float partialTick,
+                                         float red, float green, float blue, CallbackInfo ci) {
         if (!(entity instanceof DinosaurEntity dino) || !dino.partsActive()) {
             return;
         }

@@ -45,7 +45,7 @@ def nbt_double(data, key):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     parser.add_argument("--startup-timeout", type=int, default=600)
     args = parser.parse_args()
@@ -146,7 +146,7 @@ def main():
         # 5: health doubled; a saved animal with the old base moves to the new one
         server.command('summon terrassic:velociraptor 6 -60 8 {Tags:["f17_new"],NoAI:1b,Size:1f,BirthSize:1f}')
         server.command('summon terrassic:velociraptor 9 -60 8 {Tags:["f17_old"],NoAI:1b,Size:1f,BirthSize:1f,'
-                       'Attributes:[{Name:"minecraft:generic.max_health",Base:24.0d}]}')
+                       'attributes:[{id:"minecraft:generic.max_health",base:24.0d}]}')
         checks.barrier()
         score("hp_new", f"attribute {selector('f17_new')} minecraft:generic.max_health base get")
         checks.expect("new Velociraptor has 48 base health (was 24)", "score hp_new f17 matches 48")

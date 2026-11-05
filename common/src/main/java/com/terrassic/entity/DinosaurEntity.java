@@ -1334,20 +1334,20 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             player.setLastHurtMob(this);
             ItemStack weapon = player.getMainHandItem();
             if (!weapon.isEmpty()) {
-                weapon.hurtEnemy(this, player);
+                if (weapon.hurtEnemy(this, player)) {
+                    weapon.postHurtEnemy(this, player);
+                }
                 if (weapon.isEmpty()) {
                     player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 }
             }
-            EnchantmentHelper.doPostHurtEffects(this, player);
         } else if (direct instanceof AbstractArrow arrow && !(direct instanceof ThrownSpear)) {
             // AbstractArrow#onHitEntity: the stuck arrow, the enchantments and the arrow's own effect (a dart's)
             if (arrow.getPierceLevel() <= 0) {
                 this.setArrowCount(this.getArrowCount() + 1);
             }
-            if (arrow.getOwner() instanceof LivingEntity shooter) {
-                EnchantmentHelper.doPostHurtEffects(this, shooter);
-                EnchantmentHelper.doPostDamageEffects(shooter, this);
+            if (this.level() instanceof ServerLevel server) {
+                EnchantmentHelper.doPostAttackEffectsWithItemSource(server, this, source, arrow.getWeaponItem());
             }
             ((AbstractArrowInvoker) arrow).terrassic$doPostHurtEffects(this);
         }

@@ -21,17 +21,15 @@ public class HeadMeleeAttackGoal extends MeleeAttackGoal {
     }
 
     @Override
-    protected void checkAndPerformAttack(LivingEntity target, double distanceSqr) {
+    protected boolean canPerformAttack(LivingEntity target) {
         AABB head = this.head();
         if (head == null) {
-            super.checkAndPerformAttack(target, distanceSqr);
-            return;
+            return super.canPerformAttack(target);
         }
         // in reach of the head, or pressed against the body (a small target under the chin)
         boolean reach = head.inflate(BITE * Math.max(0.5F, ((DinosaurEntity) this.mob).getScale())).intersects(target.getBoundingBox())
                 || this.mob.getBoundingBox().inflate(0.3D).intersects(target.getBoundingBox());
-        // the vanilla check, with a distance that says "in reach" or "not in reach"
-        super.checkAndPerformAttack(target, reach ? 0.0D : Double.MAX_VALUE);
+        return reach && this.isTimeToAttack() && this.mob.getSensing().hasLineOfSight(target);
     }
 
     /** The union of the head parts, or null when there are none (or they are not active). */

@@ -2,6 +2,9 @@ package com.terrassic.entity.parts;
 
 import com.terrassic.entity.DinosaurEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.InteractionHand;
@@ -62,7 +65,7 @@ public class DinoPart extends Entity {
 
     /** Resizes the box to the owner's current size (a growing hatchling, a big individual, an alpha). */
     public void resize(float scale) {
-        if (Math.abs(this.size.width - this.spec.width() * scale) > 0.01F) {
+        if (Math.abs(this.size.width() - this.spec.width() * scale) > 0.01F) {
             this.size = EntityDimensions.scalable(this.spec.width() * scale, this.spec.height() * scale);
             this.refreshDimensions();
         }
@@ -74,7 +77,7 @@ public class DinoPart extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
     @Override
@@ -124,7 +127,7 @@ public class DinoPart extends Entity {
     }
 
     @Override
-    public boolean ignoreExplosion() {
+    public boolean ignoreExplosion(Explosion explosion) {
         return true;   // the explosion reaches the owner's own box; the parts would only count it again
     }
 
@@ -150,8 +153,8 @@ public class DinoPart extends Entity {
     }
 
     @Override
-    public void setSecondsOnFire(int seconds) {
-        this.owner.setSecondsOnFire(seconds);   // a fire-aspect blow on the head sets the creature alight
+    public void setRemainingFireTicks(int ticks) {
+        this.owner.setRemainingFireTicks(ticks);   // a fire-aspect blow on the head sets the creature alight
     }
 
     @Override
@@ -177,7 +180,7 @@ public class DinoPart extends Entity {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity entity) {
         throw new UnsupportedOperationException("A hit part is never sent: it is rebuilt with its owner");
     }
 }

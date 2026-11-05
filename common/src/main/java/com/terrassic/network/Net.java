@@ -28,7 +28,7 @@ public final class Net {
         }
         for (ResourceLocation id : new ResourceLocation[]{ModNetwork.SYNC, ModNetwork.DELTA, ModNetwork.INTRO, ModNetwork.STORY,
                 ModNetwork.ERA_TITLE, ModNetwork.NOTICE, RulesNetwork.SYNC, RulesNetwork.OPEN, DinoNetwork.SCREEN, LensNetwork.INFO,
-                IslandMap.SYNC, RiftStorm.SYNC, LeapNetwork.RITUAL, LeapNetwork.FLASH}) {
+                IslandMap.SYNC, RiftStorm.SYNC, LeapNetwork.RITUAL, LeapNetwork.FLASH, TamedNetwork.LIST}) {
             NetworkManager.registerS2CPayloadType(id);
         }
     }

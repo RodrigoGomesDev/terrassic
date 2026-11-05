@@ -31,7 +31,7 @@ WEAPON_DAMAGE = 9.0   # stone axe, no armour on the target (Attributes below), n
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--loader", choices=["fabric", "forge"], required=True)
+    parser.add_argument("--loader", choices=["fabric"], required=True)
     parser.add_argument("--eula-file", type=Path, required=True)
     parser.add_argument("--startup-timeout", type=int, default=600)
     args = parser.parse_args()
@@ -66,7 +66,7 @@ def main():
         checks.barrier()
         time.sleep(1.6)
         before = health()
-        client.send(16, varint(entity_id) + varint(1) + b"\x00")   # ServerboundInteractPacket ATTACK, not sneaking
+        client.send(22, varint(entity_id) + varint(1) + b"\x00")   # ServerboundInteractPacket ATTACK, not sneaking
         time.sleep(0.8)   # past the 10 invulnerable ticks for the next one
         return before - health()
 
@@ -80,7 +80,7 @@ def main():
             server.command(command)
         # facing +Z (Rotation 0): head forward at +Z, tail at -Z; no armour, so the damage is the weapon's times the rules
         server.command(f"summon terrassic:tyrannosaurus 0 -60 0 {{Tags:[\"{tag}\"],UUID:{int_uuid(rex)},NoAI:1b,"
-                       f"Size:1f,BirthSize:1f,Rotation:[0f,0f],Attributes:[{{Name:\"minecraft:generic.armor\",Base:0d}}]}}")
+                       f"Size:1f,BirthSize:1f,Rotation:[0f,0f],attributes:[{{id:\"minecraft:generic.armor\",base:0d}}]}}")
         checks.barrier()
         client.wait_for(lambda c: str(rex) in c.entities)
         rex_id = client.entities[str(rex)]

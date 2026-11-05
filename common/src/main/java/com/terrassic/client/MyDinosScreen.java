@@ -99,7 +99,7 @@ public class MyDinosScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double delta) {
         int max = Math.max(0, this.rows.size() - this.visible);
         int next = Math.max(0, Math.min(max, this.scroll + (delta < 0 ? 1 : -1)));
         if (next != this.scroll) {
@@ -109,9 +109,18 @@ public class MyDinosScreen extends Screen {
         return true;
     }
 
+    /** 1.21: Screen#render would draw the background over the panel; it is drawn first, here. */
+    @Override
+    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    }
+
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(g);
+        if (this.minecraft != null && this.minecraft.level != null) {
+            this.renderTransparentBackground(g);
+        } else {
+            super.renderBackground(g, mouseX, mouseY, partialTick);
+        }
         int x0 = this.left;
         int y0 = this.top;
         TerrassicUi.slab(g, x0, y0, x0 + W, y0 + this.panelH);
@@ -193,7 +202,7 @@ public class MyDinosScreen extends Screen {
 
     /** The species' spawn egg, for its picture in the row (a bone when it has none). */
     static ItemStack egg(String species) {
-        Item item = BuiltInRegistries.ITEM.get(new ResourceLocation("terrassic", species + "_spawn_egg"));
+        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("terrassic", species + "_spawn_egg"));
         return new ItemStack(item == Items.AIR ? Items.BONE : item);
     }
 }

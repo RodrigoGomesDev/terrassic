@@ -7,6 +7,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.util.datafix.DataFixTypes;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,7 +38,7 @@ public class TamedRegistry extends SavedData {
     private final Map<UUID, Entry> entries = new LinkedHashMap<>();
 
     public static TamedRegistry get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(TamedRegistry::load, TamedRegistry::new, NAME);
+        return server.overworld().getDataStorage().computeIfAbsent(new SavedData.Factory<>(TamedRegistry::new, (tag, registries) -> TamedRegistry.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
     }
 
     private static TamedRegistry load(CompoundTag tag) {
@@ -58,7 +60,7 @@ public class TamedRegistry extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag list = new ListTag();
         for (Entry e : this.entries.values()) {
             list.add(write(e));

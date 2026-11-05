@@ -65,7 +65,7 @@ public final class DinoTracker {
 
     /** Asks the server for the list again. */
     static void ask() {
-        NetworkManager.sendToServer(TamedNetwork.ASK, new FriendlyByteBuf(Unpooled.buffer()));
+        NetworkManager.sendToServer(TamedNetwork.ASK, ClientNet.buf());
     }
 
     private static void receive(CompoundTag tag) {
@@ -170,7 +170,7 @@ public final class DinoTracker {
                 : Component.literal(t.getString("Name"));
     }
 
-    private static void render(GuiGraphics g, float partialTick) {
+    private static void render(GuiGraphics g, net.minecraft.client.DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (tracked == null || player == null || mc.level == null || mc.options.hideGui) {

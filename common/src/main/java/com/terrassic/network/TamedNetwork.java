@@ -92,7 +92,7 @@ public final class TamedNetwork {
     private static void send(ServerPlayer player) {
         CompoundTag tag = new CompoundTag();
         tag.put("Dinos", list(player));
-        FriendlyByteBuf out = new FriendlyByteBuf(Unpooled.buffer());
+        net.minecraft.network.RegistryFriendlyByteBuf out = Net.buf(player.registryAccess());
         out.writeNbt(tag);
         NetworkManager.sendToPlayer(player, LIST, out);
     }
