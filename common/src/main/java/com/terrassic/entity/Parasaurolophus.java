@@ -117,16 +117,22 @@ public class Parasaurolophus extends Lambeosaurine {
         return ModItems.PARASAUROLOPHUS_SADDLE.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.179F, 1.867F, 1.032F, 1.076F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.211F, 1.555F, 1.032F, 0.974F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.592F, 1.344F, 0.762F, 1.076F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 3.354F, 1.531F, 0.762F, 0.985F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.636F, 1.509F, 1.196F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.44F, 1.484F, 1.196F, 0.699F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.244F, 1.46F, 1.196F, 0.982F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.047F, 1.389F, 1.196F, 1.25F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.211F, 0.0F, 1.505F, 1.132F, 0.475F, 1.074F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.179F, 0.0F, 1.817F, 1.132F, 0.433F, 1.176F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 3.481F, 0.0F, 1.621F, 0.608F, 0.684F, 0.945F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.973F, 0.0F, 1.294F, 0.608F, 0.684F, 1.184F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.465F, 0.0F, 1.328F, 0.608F, 0.684F, 0.964F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 2.29F, 0.0F, -0.052F, 1.266F, 1.228F, 2.567F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 1.124F, 0.0F, 0.882F, 1.266F, 1.017F, 1.815F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, -0.042F, 0.0F, -0.051F, 1.266F, 1.294F, 2.826F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.755F, 0.0F, 1.459F, 1.057F, 0.308F, 0.398F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.799F, 0.0F, 1.467F, 1.057F, 0.392F, 0.595F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.842F, 0.0F, 1.41F, 1.057F, 0.642F, 1.021F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.885F, 0.0F, 1.339F, 1.057F, 0.767F, 1.27F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.928F, 0.0F, 1.347F, 1.057F, 0.767F, 1.343F)
     };
 
     @Override

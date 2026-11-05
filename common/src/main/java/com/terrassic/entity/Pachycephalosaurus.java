@@ -76,13 +76,16 @@ public class Pachycephalosaurus extends Pachycephalosaurid {
         return 700;
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.726F, 1.29F, 0.871F, 0.735F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 1.183F, 1.175F, 0.715F, 0.589F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.812F, 1.318F, 0.613F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.199F, 1.168F, 0.613F, 0.482F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.586F, 0.997F, 0.613F, 0.674F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.726F, 0.0F, 1.24F, 0.971F, 0.506F, 0.835F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 1.183F, 0.0F, 1.125F, 0.815F, 0.444F, 0.689F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.773F, 0.0F, 0.647F, 0.866F, 0.694F, 0.993F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.008F, 0.0F, -0.053F, 0.866F, 0.835F, 1.786F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.812F, 0.0F, 1.268F, 0.713F, 0.3F, 0.323F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.199F, 0.0F, 1.116F, 0.713F, 0.444F, 0.708F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.586F, 0.0F, 0.947F, 0.713F, 0.537F, 0.929F)
     };
 
     @Override

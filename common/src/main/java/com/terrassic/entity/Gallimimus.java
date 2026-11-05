@@ -120,14 +120,18 @@ public class Gallimimus extends Ornithomimid {
         return ModItems.GALLIMIMUS_SADDLE.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 2.131F, 2.448F, 0.471F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 1.49F, 1.797F, 0.97F, 0.866F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.14F, 2.047F, 0.833F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.307F, 1.985F, 0.833F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.473F, 1.893F, 0.833F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.64F, 1.743F, 0.833F, 0.51F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 2.131F, 0.0F, 2.398F, 0.571F, 0.3F, 0.325F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 1.49F, 0.0F, 1.747F, 1.07F, 0.381F, 0.966F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.889F, 0.0F, 1.266F, 0.901F, 0.662F, 0.962F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.088F, 0.0F, -0.053F, 0.901F, 0.751F, 2.313F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.223F, 0.0F, 1.962F, 0.767F, 0.3F, 0.3F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.557F, 0.0F, 1.952F, 0.767F, 0.3F, 0.3F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.89F, 0.0F, 1.92F, 0.767F, 0.3F, 0.334F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.223F, 0.0F, 1.769F, 0.767F, 0.412F, 0.512F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.557F, 0.0F, 1.693F, 0.767F, 0.412F, 0.61F)
     };
 
     @Override

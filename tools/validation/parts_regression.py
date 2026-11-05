@@ -22,10 +22,21 @@ from local_server import LocalServer
 from minecraft_client import LocalClient, varint
 
 PLAYER = "TerraParts"
-# Order of tools/javagen/parts.py for the Tyrannosaurus: head, head, neck, tail (tip first) x4. Index -> id offset + 1.
-HEAD, TAIL_TIP = 0, 3
-# Forward (blocks at size 1) of those parts, from the generated Tyrannosaurus.PARTS.
-HEAD_FORWARD, TAIL_FORWARD = 3.706, -6.164
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def rex_parts():
+    """The Tyrannosaurus parts in the generated order (id = owner id + 1 + index): [(kind, forward, side)]."""
+    text = (ROOT / "common/src/main/java/com/terrassic/entity/Tyrannosaurus.java").read_text()
+    return [(kind, float(f), float(s)) for kind, f, s in
+            re.findall(r"DinoPart\.Kind\.(\w+), (-?[0-9.]+)F, (-?[0-9.]+)F", text)]
+
+
+PARTS = rex_parts()
+HEAD = max((i for i, p in enumerate(PARTS) if p[0] == "HEAD"), key=lambda i: PARTS[i][1])      # the snout piece
+TAIL_TIP = min((i for i, p in enumerate(PARTS) if p[0] == "TAIL"), key=lambda i: PARTS[i][1])  # the tail tip
+BODY = next(i for i, p in enumerate(PARTS) if p[0] == "BODY")
+HEAD_FORWARD, TAIL_FORWARD, BODY_FORWARD = PARTS[HEAD][1], PARTS[TAIL_TIP][1], PARTS[BODY][1]
 WEAPON_DAMAGE = 9.0   # stone axe, no armour on the target (Attributes below), no crit, full swing
 
 
@@ -36,8 +47,7 @@ def main():
     parser.add_argument("--startup-timeout", type=int, default=600)
     args = parser.parse_args()
     server = LocalServer(args.loader, args.eula_file, report="parts-regression")
-    root = Path(__file__).resolve().parents[2]
-    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     _, temporary = freeze_sources(server, revision)
     checks = Checks(server)
     client = None
@@ -87,10 +97,12 @@ def main():
         time.sleep(1.0)
 
         body = hit(rex_id, 2.5, 0)
+        body_part = hit(rex_id + 1 + BODY, 2.5, BODY_FORWARD)
         head = hit(rex_id + 1 + HEAD, 2.5, HEAD_FORWARD)
         tail = hit(rex_id + 1 + TAIL_TIP, 2.0, TAIL_FORWARD)
-        print(f"INFO {server.loader}: body {body:.3f}, head {head:.3f}, tail {tail:.3f}", flush=True)
+        print(f"INFO {server.loader}: body {body:.3f}, body part {body_part:.3f}, head {head:.3f}, tail {tail:.3f}", flush=True)
         record("the body takes the blow", body > 0.0, f"({body:.3f})")
+        record("the body part = 100% of the body", body > 0.0 and abs(body_part / body - 1.0) < 0.02, f"({body_part:.3f})")
         record("the head part takes the blow by its id", head > 0.0, f"({head:.3f})")
         record("the tail part takes the blow by its id", tail > 0.0, f"({tail:.3f})")
         if body > 0.0:
@@ -106,7 +118,7 @@ def main():
         record("an arrow on the tail tip hits the animal", arrow > 0.0, f"({arrow:.3f})")
 
         # a narcotic dart falling on the snout doses it (dart's own after-effect through the part)
-        server.command(f"summon terrassic:tranq_dart 0 -53 {HEAD_FORWARD + 1.2} {{Motion:[0d,-1.5d,0d],pickup:0b}}")
+        server.command(f"summon terrassic:tranq_dart 0 -53 {HEAD_FORWARD} {{Motion:[0d,-1.5d,0d],pickup:0b}}")
         checks.barrier()
         time.sleep(1.5)
         torpor = value("Torpor")

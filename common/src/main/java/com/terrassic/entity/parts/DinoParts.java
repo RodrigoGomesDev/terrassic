@@ -11,8 +11,8 @@ import java.util.function.Predicate;
 
 /** Hit parts (1.7): the lookups shared by the mixins and by the code that asks "which creature is this?". */
 public final class DinoParts {
-    /** No species has more parts than this (tools/javagen/parts.py: 2 head + 2 neck + 4 tail). */
-    public static final int MAX_PARTS = 8;
+    /** No species has more parts than this (tools/javagen/parts.py MAX_TOTAL). */
+    public static final int MAX_PARTS = 20;
 
     private DinoParts() {
     }
@@ -38,7 +38,7 @@ public final class DinoParts {
                 continue;
             }
             for (DinoPart part : owner.parts()) {
-                if (part != except && part.getBoundingBox().intersects(box) && filter.test(part)) {
+                if (part != except && part.enabled() && part.getBoundingBox().intersects(box) && filter.test(part)) {
                     out.add(part);
                 }
             }

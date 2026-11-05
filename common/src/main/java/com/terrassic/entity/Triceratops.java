@@ -115,14 +115,17 @@ public class Triceratops extends Triceratopsine {
         return ModItems.TRICERATOPS_SADDLE.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.958F, 0.188F, 2.1F, 2.271F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.995F, 0.73F, 1.161F, 1.169F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.632F, 1.236F, 0.934F, 0.518F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.698F, 1.451F, 0.934F, 0.752F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.764F, 1.507F, 0.934F, 0.92F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.83F, 1.559F, 0.934F, 0.971F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.958F, 0.0F, 0.138F, 2.2F, 1.601F, 2.371F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.995F, 0.0F, 0.68F, 1.261F, 1.101F, 1.269F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 2.085F, 0.0F, -0.07F, 1.879F, 1.741F, 2.728F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.306F, 0.0F, -0.055F, 1.879F, 1.882F, 2.888F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.632F, 0.0F, 1.186F, 1.034F, 0.35F, 0.609F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.698F, 0.0F, 1.401F, 1.034F, 0.767F, 0.852F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.764F, 0.0F, 1.457F, 1.034F, 1.017F, 1.02F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.83F, 0.0F, 1.498F, 1.034F, 1.017F, 1.081F)
     };
 
     @Override

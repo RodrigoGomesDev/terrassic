@@ -128,12 +128,21 @@ public class Pteranodon extends Pterosaur {
         return ModItems.PTERANODON_SADDLE.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.923F, 1.494F, 1.449F, 0.694F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.373F, 1.612F, 1.449F, 0.475F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 0.611F, 1.181F, 0.6F, 0.611F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 1.211F, 1.386F, 0.6F, 0.68F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.373F, 0.0F, 1.562F, 1.549F, 0.455F, 0.576F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.923F, 0.0F, 1.444F, 1.549F, 0.605F, 0.794F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 1.211F, 0.0F, 1.336F, 0.7F, 0.45F, 0.78F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 0.611F, 0.0F, 1.131F, 0.7F, 0.45F, 0.763F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.351F, 0.0F, -0.05F, 1.001F, 1.054F, 1.752F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, -0.55F, 0.0F, -0.05F, 1.001F, 0.805F, 1.66F),
+            new DinoPart.Spec(DinoPart.Kind.WING, -0.025F, -4.585F, 1.309F, 0.85F, 1.834F, 0.3F),
+            new DinoPart.Spec(DinoPart.Kind.WING, -0.073F, -2.851F, 1.305F, 1.454F, 1.834F, 0.308F),
+            new DinoPart.Spec(DinoPart.Kind.WING, -0.099F, -1.117F, 1.11F, 1.602F, 1.834F, 0.55F),
+            new DinoPart.Spec(DinoPart.Kind.WING, -0.025F, 4.585F, 1.309F, 0.85F, 1.834F, 0.3F),
+            new DinoPart.Spec(DinoPart.Kind.WING, -0.073F, 2.851F, 1.305F, 1.454F, 1.834F, 0.308F),
+            new DinoPart.Spec(DinoPart.Kind.WING, -0.099F, 1.117F, 1.11F, 1.602F, 1.834F, 0.55F)
     };
 
     @Override

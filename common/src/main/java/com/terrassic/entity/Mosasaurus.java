@@ -142,15 +142,18 @@ public class Mosasaurus extends Mosasaurid {
         return ModItems.MOSASAURUS_SADDLE.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.942F, 0.353F, 0.882F, 0.752F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.824F, 0.353F, 0.882F, 0.662F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 4.39F, 0.221F, 1.103F, 1.059F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.075F, -0.686F, 1.45F, 2.1F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.625F, 0.025F, 1.45F, 1.13F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.175F, 0.055F, 1.45F, 1.176F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.725F, 0.132F, 1.45F, 1.147F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.825F, 0.0F, 0.303F, 0.982F, 0.652F, 0.762F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.942F, 0.0F, 0.303F, 0.982F, 0.806F, 0.852F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 4.39F, 0.0F, 0.171F, 1.203F, 0.894F, 1.159F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 2.225F, 0.0F, -0.05F, 4.727F, 3.546F, 1.644F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.22F, 0.0F, -0.736F, 1.26F, 0.365F, 2.2F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.06F, 0.0F, -0.04F, 1.26F, 0.453F, 1.225F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.9F, 0.0F, -0.016F, 1.26F, 0.629F, 1.283F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.74F, 0.0F, 0.066F, 1.26F, 0.894F, 1.263F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.58F, 0.0F, 0.171F, 1.26F, 0.894F, 1.159F)
     };
 
     @Override

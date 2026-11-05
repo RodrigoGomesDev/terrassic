@@ -114,16 +114,20 @@ public class Spinosaurus extends Spinosaur {
         return false;
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.098F, 3.531F, 1.555F, 1.228F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.653F, 3.314F, 1.555F, 0.87F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.209F, 2.755F, 1.05F, 1.746F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 3.259F, 2.812F, 1.05F, 1.979F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -6.993F, 2.554F, 1.693F, 1.603F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.301F, 2.476F, 1.693F, 1.861F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.608F, 2.468F, 1.693F, 1.976F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.915F, 2.476F, 1.693F, 1.956F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.653F, 0.0F, 3.264F, 1.655F, 0.753F, 0.98F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.098F, 0.0F, 3.481F, 1.655F, 1.05F, 1.328F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 3.259F, 0.0F, 2.762F, 1.15F, 1.05F, 2.079F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.209F, 0.0F, 2.705F, 1.15F, 1.05F, 1.846F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 1.633F, 0.0F, -0.053F, 2.059F, 2.356F, 5.767F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, -0.327F, 0.0F, -0.053F, 2.059F, 2.356F, 5.767F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -7.162F, 0.0F, 2.504F, 1.454F, 0.516F, 1.703F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.808F, 0.0F, 2.439F, 1.454F, 0.753F, 1.949F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.454F, 0.0F, 2.418F, 1.454F, 0.991F, 1.959F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.1F, 0.0F, 2.426F, 1.454F, 1.169F, 2.068F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.746F, 0.0F, 2.617F, 1.454F, 1.169F, 1.853F)
     };
 
     @Override

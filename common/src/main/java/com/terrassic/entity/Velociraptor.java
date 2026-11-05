@@ -97,12 +97,15 @@ public class Velociraptor extends Raptor {
         return ModItems.VELOCIRAPTOR_HARNESS.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.04F, 0.609F, 0.666F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 0.575F, 0.558F, 0.498F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.193F, 0.64F, 0.675F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.518F, 0.575F, 0.675F, 0.35F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.032F, 0.0F, 0.55F, 0.781F, 0.35F, 0.521F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 0.538F, 0.0F, 0.508F, 0.672F, 0.3F, 0.574F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.219F, 0.0F, -0.05F, 0.975F, 0.6F, 0.988F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.488F, 0.0F, 0.559F, 0.623F, 0.436F, 0.3F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.965F, 0.0F, 0.55F, 0.623F, 0.346F, 0.3F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.442F, 0.0F, 0.525F, 0.623F, 0.319F, 0.309F)
     };
 
     @Override

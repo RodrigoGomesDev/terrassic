@@ -1262,7 +1262,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
-    /** Puts the parts where the model has them: the tail behind the body, the head and neck turned with the head. */
+    /** Puts the parts where the model has them: the body and tail with the body, the head and neck turned with the
+     *  head about the base of the neck. A flyer's wings stand only while it flies (on the ground they are folded). */
     private void tickParts() {
         if (this.parts.length == 0) {
             return;
@@ -1272,31 +1273,37 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             ((PartOwners) this.level()).terrassic$addPartOwner(this);
         }
         float scale = this.getScale();
-        // lying down knocked out or sitting, the head and tail are nearer the ground
+        // lying down knocked out or asleep, or sitting, the parts come down with the model
         float low = this.isKnockedOut() || this.isSleeping() ? 0.35F : this.isInSittingPose() ? 0.6F : 1.0F;
+        boolean wings = this instanceof FlyingDinosaur flyer && flyer.isFlying();
+        float headYawDeg = this.yBodyRot + Mth.clamp(Mth.wrapDegrees(this.yHeadRot - this.yBodyRot), -75.0F, 75.0F);
         float bodyYaw = this.yBodyRot * Mth.DEG_TO_RAD;
-        float headYaw = (this.yBodyRot + Mth.clamp(Mth.wrapDegrees(this.yHeadRot - this.yBodyRot), -75.0F, 75.0F)) * Mth.DEG_TO_RAD;
-        double bx = -Mth.sin(bodyYaw), bz = Mth.cos(bodyYaw);
+        float headYaw = headYawDeg * Mth.DEG_TO_RAD;
+        double bx = -Mth.sin(bodyYaw), bz = Mth.cos(bodyYaw);      // forward
+        double sx = -Mth.cos(bodyYaw), sz = -Mth.sin(bodyYaw);     // the model's +x
         double hx = -Mth.sin(headYaw), hz = Mth.cos(headYaw);
+        double hsx = -Mth.cos(headYaw), hsz = -Mth.sin(headYaw);
         double pivot = this.partPivot() * scale;
         double minX = this.getX(), minY = this.getY(), minZ = this.getZ(), maxX = minX, maxY = minY, maxZ = minZ;
         for (DinoPart part : this.parts) {
             DinoPart.Spec spec = part.spec;
             double f = spec.forward() * scale;
+            double side = spec.side() * scale;
+            boolean turnsWithHead = spec.kind() == DinoPart.Kind.HEAD || spec.kind() == DinoPart.Kind.NECK;
             double x, z;
-            if (spec.kind() == DinoPart.Kind.HEAD || spec.kind() == DinoPart.Kind.NECK) {
-                x = this.getX() + bx * pivot + hx * (f - pivot);
-                z = this.getZ() + bz * pivot + hz * (f - pivot);
+            if (turnsWithHead) {
+                x = this.getX() + bx * pivot + hx * (f - pivot) + hsx * side;
+                z = this.getZ() + bz * pivot + hz * (f - pivot) + hsz * side;
             } else {
-                x = this.getX() + bx * f;
-                z = this.getZ() + bz * f;
+                x = this.getX() + bx * f + sx * side;
+                z = this.getZ() + bz * f + sz * side;
             }
-            part.resize(scale);
-            part.xo = part.getX();
-            part.yo = part.getY();
-            part.zo = part.getZ();
-            part.setPos(x, this.getY() + spec.up() * scale * low, z);
-            part.setYRot(this.yBodyRot);
+            boolean on = spec.kind() != DinoPart.Kind.WING || wings;
+            part.place(x, this.getY() + spec.up() * scale * low, z, turnsWithHead ? headYawDeg : this.yBodyRot, scale,
+                    low, on);
+            if (!on) {
+                continue;
+            }
             AABB box = part.getBoundingBox();
             minX = Math.min(minX, box.minX);
             minY = Math.min(minY, box.minY);
