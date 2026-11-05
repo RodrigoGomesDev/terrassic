@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -112,6 +113,24 @@ public class Ankylosaurus extends Ankylosaurid {
     @Override
     protected Item speciesSaddle() {
         return ModItems.ANKYLOSAURUS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.151F, 0.559F, 1.407F, 0.808F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.582F, 0.62F, 1.167F, 1.056F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.776F, 0.821F, 1.532F, 0.48F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.244F, 0.877F, 1.532F, 0.67F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 2.335F;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModSounds;
 import net.minecraft.server.level.ServerLevel;
@@ -73,6 +74,25 @@ public class Pachycephalosaurus extends Pachycephalosaurid {
     @Override
     protected int hungerInterval() {
         return 700;
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.726F, 1.29F, 0.871F, 0.735F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 1.183F, 1.175F, 0.715F, 0.589F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.812F, 1.318F, 0.613F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.199F, 1.168F, 0.613F, 0.482F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.586F, 0.997F, 0.613F, 0.674F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 1.0F;
     }
 
     @Override

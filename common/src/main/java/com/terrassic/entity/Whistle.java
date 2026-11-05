@@ -248,7 +248,7 @@ public final class Whistle {
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, end, box,
                 e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && worthChasing(e, player),
                 eye.distanceToSqr(end));
-        if (hit != null && hit.getEntity() instanceof LivingEntity living) {
+        if (hit != null && com.terrassic.entity.parts.DinoParts.owner(hit.getEntity()) instanceof LivingEntity living) {
             return living;
         }
         LastHit last = LAST_HIT.get(player.getUUID());

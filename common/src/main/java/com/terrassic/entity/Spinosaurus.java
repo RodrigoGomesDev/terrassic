@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -106,6 +107,28 @@ public class Spinosaurus extends Spinosaur {
     @Override
     public boolean isPushedByFluid() {
         return false;
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.098F, 3.531F, 1.555F, 1.228F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.653F, 3.314F, 1.555F, 0.87F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.209F, 2.755F, 1.05F, 1.746F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 3.259F, 2.812F, 1.05F, 1.979F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -6.993F, 2.554F, 1.693F, 1.603F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.301F, 2.476F, 1.693F, 1.861F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.608F, 2.468F, 1.693F, 1.976F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.915F, 2.476F, 1.693F, 1.956F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 2.137F;
     }
 
     @Override

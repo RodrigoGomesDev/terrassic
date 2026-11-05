@@ -8,7 +8,11 @@
     "NoiseGeneratorSettingsMixin",
     "MobMixin",
     "ChunkMapMixin",
-    "RecipeManagerMixin"
+    "RecipeManagerMixin",
+    "parts.LevelMixin",
+    "parts.ServerLevelMixin",
+    "parts.EntityCounterAccessor",
+    "parts.AbstractArrowInvoker"
   ],
   "client": [
     "client.InventoryKeyMixin",
@@ -23,7 +27,8 @@
     "client.WorldCreationUiStateMixin",
     "client.BowZoomMixin",
     "client.HeldSpearMixin",
-    "client.BlowgunMouthMixin"
+    "client.BlowgunMouthMixin",
+    "client.PartHitboxMixin"
   ],
   "injectors": {
     "defaultRequire": 1

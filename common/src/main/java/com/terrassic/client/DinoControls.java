@@ -96,7 +96,7 @@ public final class DinoControls {
         while (DINO_SCREEN.consumeClick()) {
             if (mount != null) {
                 ask(-1);
-            } else if (mc.hitResult instanceof EntityHitResult hit && hit.getEntity() instanceof DinosaurEntity d
+            } else if (mc.hitResult instanceof EntityHitResult hit && com.terrassic.entity.parts.DinoParts.owner(hit.getEntity()) instanceof DinosaurEntity d
                     && d.isTame() && d.isOwnedBy(player)) {
                 ask(d.getId());
             }

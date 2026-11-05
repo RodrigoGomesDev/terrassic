@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -138,6 +139,27 @@ public class Carnotaurus extends Abelisaur {
     @Override
     protected Item speciesSaddle() {
         return ModItems.CARNOTAURUS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.542F, 2.194F, 0.998F, 0.804F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.015F, 1.702F, 0.885F, 1.008F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.9F, 1.909F, 0.885F, 0.998F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.61F, 2.312F, 0.951F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.659F, 2.213F, 0.951F, 0.467F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.708F, 1.972F, 0.951F, 0.82F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.758F, 1.695F, 0.951F, 1.193F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 2.168F;
     }
 
     @Override

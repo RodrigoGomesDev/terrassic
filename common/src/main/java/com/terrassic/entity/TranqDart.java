@@ -59,7 +59,7 @@ public class TranqDart extends AbstractArrow {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        Entity target = result.getEntity();
+        Entity target = com.terrassic.entity.parts.DinoParts.owner(result.getEntity());   // 1.7: a hit part's creature
         if (target instanceof DinosaurEntity dino && dino.isKnockedOut()) {
             // keeps it asleep without a wound
             if (!this.level().isClientSide()) {

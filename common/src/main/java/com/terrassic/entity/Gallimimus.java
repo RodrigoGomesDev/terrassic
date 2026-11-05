@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -116,6 +117,26 @@ public class Gallimimus extends Ornithomimid {
     @Override
     protected Item speciesSaddle() {
         return ModItems.GALLIMIMUS_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 2.131F, 2.448F, 0.471F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 1.49F, 1.797F, 0.97F, 0.866F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.14F, 2.047F, 0.833F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.307F, 1.985F, 0.833F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.473F, 1.893F, 0.833F, 0.35F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.64F, 1.743F, 0.833F, 0.51F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 1.188F;
     }
 
     @Override

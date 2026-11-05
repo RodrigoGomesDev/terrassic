@@ -1,5 +1,6 @@
 package com.terrassic.entity;
 
+import com.terrassic.entity.parts.DinoPart;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModSounds;
@@ -124,6 +125,24 @@ public class Pteranodon extends Pterosaur {
     @Override
     protected Item speciesSaddle() {
         return ModItems.PTERANODON_SADDLE.get();
+    }
+
+    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    private static final DinoPart.Spec[] PARTS = {
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.923F, 1.494F, 1.449F, 0.694F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.373F, 1.612F, 1.449F, 0.475F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 0.611F, 1.181F, 0.6F, 0.611F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 1.211F, 1.386F, 0.6F, 0.68F)
+    };
+
+    @Override
+    public DinoPart.Spec[] partSpecs() {
+        return PARTS;
+    }
+
+    @Override
+    public float partPivot() {
+        return 0.45F;
     }
 
     @Override

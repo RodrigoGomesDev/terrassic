@@ -57,7 +57,7 @@ public class ThrownBola extends ThrowableItemProjectile {
         if (this.level().isClientSide()) {
             return;
         }
-        Entity target = result.getEntity();
+        Entity target = com.terrassic.entity.parts.DinoParts.owner(result.getEntity());   // 1.7: a hit part's creature
         Entity thrower = this.getOwner();
         if (target instanceof DinosaurEntity dino) {
             if (!mayTie(dino, thrower)) {
