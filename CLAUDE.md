@@ -243,5 +243,11 @@ em `docs/ROSTER.md`; tamanhos em `docs/TAMANHOS.md`.
   mods complementares futuros, pacote de texturas embutido, HUD próprio e ambientação.
 - Todo texto em pt_br, en_us e es_es.
 
+## Versões
+Regra em `docs/VERSOES.md` (Rodrigo, 05/11/2026; seguir sempre, sem perguntar): SemVer (correção = conserto, menor =
+conteúdo ou mecânica nova, maior = era nova ou quebra de mundo); o mesmo número nas duas branches; o número sobe só
+quando a build vai para `~/Desktop/terrassic-builds`; o Codex publica e põe o changelog; depois push da main e da
+mc/1.21.1 (aviso no #builds).
+
 ## Como registrar o progresso
 Ao terminar uma etapa: atualize este arquivo (versão, pendências) e faça commit no nome do Rodrigo.
