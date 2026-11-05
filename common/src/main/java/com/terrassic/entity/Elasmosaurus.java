@@ -138,33 +138,33 @@ public class Elasmosaurus extends Plesiosaurid {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{9.122F, 0.0F, -0.575F, 1.077F, 2.81F, 1.19F},
-                    new float[]{9.155F, 0.0F, -0.716F, 1.061F, 2.313F, 2.786F},
-                    new float[]{9.182F, 0.0F, -0.687F, 0.997F, 0.6F, 1.315F}),
+                    new float[]{9.123F, 0.0F, -0.575F, 1.077F, 2.81F, 1.19F},
+                    new float[]{9.156F, 0.0F, -0.716F, 1.06F, 2.313F, 2.787F},
+                    new float[]{9.183F, 0.0F, -0.687F, 0.996F, 0.6F, 1.315F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{7.819F, 0.0F, -0.365F, 2.456F, 2.449F, 1.466F},
-                    new float[]{7.891F, 0.0F, -0.485F, 2.37F, 2.113F, 2.407F},
-                    new float[]{7.868F, 0.0F, -0.309F, 2.358F, 0.6F, 1.305F}),
+                    new float[]{7.82F, 0.0F, -0.365F, 2.456F, 2.45F, 1.466F},
+                    new float[]{7.891F, 0.0F, -0.485F, 2.37F, 2.113F, 2.408F},
+                    new float[]{7.868F, 0.0F, -0.31F, 2.358F, 0.65F, 1.305F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{5.463F, 0.0F, 0.275F, 2.456F, 1.516F, 1.282F},
-                    new float[]{5.621F, 0.0F, 0.226F, 2.37F, 1.41F, 1.585F},
-                    new float[]{5.61F, 0.0F, 0.322F, 2.358F, 0.8F, 1.17F}),
+                    new float[]{5.463F, 0.0F, 0.275F, 2.456F, 1.566F, 1.282F},
+                    new float[]{5.621F, 0.0F, 0.225F, 2.37F, 1.459F, 1.59F},
+                    new float[]{5.61F, 0.0F, 0.322F, 2.358F, 0.85F, 1.17F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{3.107F, 0.0F, 0.721F, 2.456F, 1.117F, 1.145F},
-                    new float[]{3.351F, 0.0F, 0.635F, 2.37F, 1.158F, 1.195F},
-                    new float[]{3.352F, 0.0F, 0.775F, 2.358F, 1.0F, 1.024F}),
+                    new float[]{3.107F, 0.0F, 0.692F, 2.456F, 1.167F, 1.174F},
+                    new float[]{3.351F, 0.0F, 0.635F, 2.37F, 1.216F, 1.195F},
+                    new float[]{3.352F, 0.0F, 0.741F, 2.358F, 1.0F, 1.057F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
                     new float[]{0.729F, 0.0F, 0.256F, 3.757F, 5.079F, 1.845F},
                     new float[]{0.767F, 0.0F, 0.569F, 3.56F, 5.027F, 1.729F},
-                    new float[]{0.769F, 0.0F, 0.662F, 3.564F, 4.989F, 1.2F}),
+                    new float[]{0.769F, 0.0F, 0.663F, 3.564F, 4.989F, 1.2F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
                     new float[]{-2.357F, 0.0F, 0.943F, 1.014F, 0.69F, 0.854F},
                     new float[]{-2.35F, 0.0F, 0.844F, 1.001F, 0.679F, 0.833F},
-                    new float[]{-2.35F, 0.0F, 0.962F, 1.0F, 0.6F, 0.7F}),
+                    new float[]{-2.35F, 0.0F, 0.963F, 1.0F, 0.6F, 0.7F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
                     new float[]{-1.443F, 0.0F, 0.87F, 1.014F, 0.925F, 0.796F},
                     new float[]{-1.449F, 0.0F, 0.833F, 1.001F, 0.992F, 0.86F},
-                    new float[]{-1.45F, 0.0F, 0.912F, 1.0F, 0.9F, 0.7F})
+                    new float[]{-1.45F, 0.0F, 0.913F, 1.0F, 0.9F, 0.7F})
     };
 
     @Override
@@ -179,7 +179,7 @@ public class Elasmosaurus extends Plesiosaurid {
 
     @Override
     public float partPivotUp() {
-        return 1.262F;
+        return 1.263F;
     }
 
     @Override

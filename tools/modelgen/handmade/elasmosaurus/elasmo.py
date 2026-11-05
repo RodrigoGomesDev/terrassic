@@ -31,8 +31,8 @@ SCHEMES = {
     "turquesa": {
         "k0": "0f2a2c", "k1": "163a3c", "k2": "1f4c4f", "k3": "2d6266", "k4": "3d7a7e", "k5": "4f9094",
         "b0": "a9bfb8", "b1": "bfd2cc", "b2": "d4e2dc", "b3": "e4eee9",
-        "sp": "bcd2cc", "sp2": "8fb2ac", "spots": 0.12,
-        "female": {"k1": "1d4446", "k2": "285658", "k3": "3a7072", "k4": "4a888a", "k5": "5c9c9e", "spots": 0.06},
+        "sp": "a9c4bd", "sp2": "8fb2ac", "spots": 0.42,
+        "female": {"k1": "1d4446", "k2": "285658", "k3": "3a7072", "k4": "4a888a", "k5": "5c9c9e", "spots": 0.24},
     },
 }
 SCHEME = ["turquesa"]
@@ -58,7 +58,7 @@ def pal_for(sex, scheme=None):
 OUT = lambda *d: [f for f in P.geo.FACES if f not in d]
 
 # neck segments from the shoulders to the head: (half width, y0, y1) at 20 px each; it tapers and drops a little
-NECK = [(9, 9, 25), (8, 10, 24), (7, 11, 23), (6, 11, 21), (5, 11, 20), (4.5, 11, 19), (4, 11, 18)]
+NECK = [(9, 9, 25), (8.5, 9.5, 24.5), (7.5, 10, 23), (6.5, 10.5, 21.5), (5.5, 11, 20), (5, 11, 19), (4, 11, 18)]
 NECK_REST = (-3, -2, -2, -1, -1, -1, 0)      # a slight droop along the neck (degrees each)
 
 
@@ -108,8 +108,12 @@ def flipper(m, body, side, sx, front):
     for k, (L, Wd) in enumerate(zip(ln, wd)):
         b = parent if k == 0 else m.bone(f"{name}{k}_{side}", parent, (x * sx, 10, z), (0, -10 * sx, 0))
         x0, x1 = (x, x + L) if sx > 0 else (-x - L, -x)
-        m.cube(b, (x0, th[k][0], z - Wd / 2 + (2 if k else 0)), (x1, th[k][1], z + Wd / 2 + (2 if k else 0)), name=f"{name}{k}_{side}",
+        zc = z + (2 if k else 0)
+        m.cube(b, (x0, th[k][0], zc - Wd / 2), (x1, th[k][1], zc + Wd / 2), name=f"{name}{k}_{side}",
                mat="flipper", fseg=k)
+        if k < 2:     # the leading edge: a rounded bar one px proud above and below along the front third
+            m.cube(b, (x0, th[k][0] - 1, zc - Wd / 2 - 0.5), (x1, th[k][1] + 1, zc - Wd / 2 + 3.5),
+                   name=f"{name}{k}_lead_{side}", mat="flipper", fseg=k, lead=True)
         parent = b
         x += L - 1
 
@@ -191,13 +195,39 @@ def saddle_px(t):
     return p["H2"]
 
 
-def _spot(u, v, seed, p):
-    """loose pale spots: one or two texels, scattered by a hash, never in rows"""
-    cu, cv = math.floor(u / 3), math.floor(v / 3)
-    r = h32(cu, cv, seed, 5)
-    if (r % 1000) / 1000.0 >= p["spots"] * 3.0: return False
-    ou, ov = r % 3, (r // 3) % 3
-    return math.floor(u) - cu * 3 == ou and math.floor(v) - cv * 3 == ov
+def _spot(L, f, p, kind):
+    """the pale spots: sunlight on a shallow floor. Placed in WORLD (model) space so they run across the cube seams;
+    they gather in loose clouds on the back and the shoulders, thin out down the flanks and up the neck, and come in
+    three sizes (a single texel, a pair, a small cross); none on the belly"""
+    x, y, z = math.floor(L[0]), math.floor(L[1]), math.floor(L[2])
+    cloud = 0.5 + 0.5 * math.sin(z * 0.09 + 1.1) * math.cos(x * 0.21 + z * 0.03)      # where the spots gather
+    if z < -60: cloud *= 0.45                                                            # fewer up the neck
+    if f in ("east", "west"): cloud *= 0.6                                               # fewer down the flanks
+    density = p["spots"] * (0.4 + 1.6 * cloud)
+    for cx, cy, cz, size in _spot_seeds(x, y, z):
+        if (h32(cx, cy, cz, 77) % 1000) / 1000.0 >= density: continue
+        dx, dy, dz = x - cx, y - cy, z - cz
+        hit = (dx, dy, dz) == (0, 0, 0)
+        if size == 2:      # a pair along the body
+            hit = dx == 0 and dy == 0 and dz in (0, 1)
+        elif size == 3:    # a small blot, 2 x 2 on whatever face it shows
+            hit = dx in (0, 1) and dy in (0, 1) and dz in (0, 1)
+        if hit:
+            return "sp2" if kind == "up" else "sp"
+    return None
+
+
+def _spot_seeds(x, y, z):
+    """one candidate spot in each 4 x 4 x 4 cell of model space around the texel, at a hashed point, of a hashed size"""
+    out = []
+    gx, gy, gz = x // 4, y // 4, z // 4
+    for dx in (-1, 0, 1):
+        for dz in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                cx, cy, cz = gx + dx, gy + dy, gz + dz
+                r = h32(cx, cy, cz, 5)
+                out.append((cx * 4 + r % 4, cy * 4 + (r >> 2) % 4, cz * 4 + (r >> 4) % 4, 1 + (r >> 6) % 3))
+    return out
 
 
 def shader_for(sex):
@@ -224,14 +254,17 @@ def shader_for(sex):
             if f == "up": return p["mouth"]
             return p["b1"] if t.rel[1] < 0.6 else p["k3"]
         if f == "up":
-            if _spot(u, v, seed, p): return p["sp2"]
+            sp_ = _spot(t.L, f, p, "up")
+            if sp_: return p[sp_]
             return p["k1"] if sc == "edge" else p["k2"]
         rel = t.rel[1]
         line = 0.32 + 0.05 * math.sin(t.L[2] * 0.25)
         if f in ("east", "west") and rel < line and not n.startswith(("cranium", "snout", "tip", "brow")):
             return p["b2"] if sc != "edge" else p["b1"]
         base = "k3" if rel < 0.7 else "k2"
-        if _spot(u, v, seed + 1, p) and rel > 0.4: return p["sp"]
+        if rel > 0.45:
+            sp_ = _spot(t.L, f, p, "side")
+            if sp_: return p[sp_]
         return p[STEP_DN[base]] if sc == "edge" else p[base]
     return sh
 

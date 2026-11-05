@@ -379,17 +379,22 @@ def saddle(m, body):
     on the flanks; in front a grip bar on two short posts (the rider sits behind the crown and holds on in the
     charge); knotted rope foot loops with bone toggles; a woven rush girth under the chest."""
     sd = m.bone("saddle", body, (0, 58, -26), (-6, 0, 0))
+    # the pad over the back, its sides hanging down the flanks outside the torso (16 px from the spine)
     m.cube(sd, (-12, 58, -40), (12, 61, -14), name="pad", mat="hide", faces=OUT("down"))
-    m.pair(sd, sd, (12, 50, -39), (13, 61, -15), name="pad_side", mat="hide", faces=OUT("east"))
-    m.pair(sd, sd, (13, 47, -38), (14, 51, -16), name="fringe", mat="fringe", faces=OUT("east"))
+    m.pair(sd, sd, (12, 52, -39), (17, 59, -15), name="pad_shoulder", mat="hide", faces=OUT("down"))
+    m.pair(sd, sd, (16, 44, -38), (17, 52, -16), name="pad_side", mat="hide", faces=OUT("east"))
+    m.pair(sd, sd, (16, 41, -37), (17, 44, -17), name="fringe", mat="fringe", faces=OUT("east", "up"))
     m.cube(sd, (-7, 61, -33), (7, 63, -18), name="seat", mat="hide", faces=OUT("down"))
-    m.pair(sd, sd, (4, 61, -40), (6, 67, -38), name="post", mat="wood", faces=OUT("down"))
-    m.cube(sd, (-6, 67, -41), (6, 69, -37), name="grip", mat="wood")
-    m.pair(sd, sd, (14, 40, -27), (15, 51, -25), name="loop_rope", mat="rope", faces=OUT("east"))
-    m.pair(sd, sd, (14, 38, -29), (17, 40, -23), name="loop_foot", mat="rope")
-    m.pair(sd, sd, (16, 40, -27), (18, 42, -25), name="toggle", mat="bone")
-    m.pair(sd, sd, (12, 26, -30), (13, 50, -27), name="girth_side", mat="girth", faces=OUT("east"))
-    m.cube(sd, (-13, 23, -30), (13, 24, -27), name="girth_under", mat="girth", faces=OUT("up"))
+    # the grip bar in front of the seat: low, on two short posts
+    m.pair(sd, sd, (4, 61, -38), (6, 64, -36), name="post", mat="wood", faces=OUT("down"))
+    m.cube(sd, (-6, 64, -39), (6, 66, -35), name="grip", mat="wood")
+    # rope foot loops from the pad's edge, a bone toggle on each
+    m.pair(sd, sd, (17, 34, -27), (18, 44, -25), name="loop_rope", mat="rope", faces=OUT("east"))
+    m.pair(sd, sd, (17, 32, -29), (20, 34, -23), name="loop_foot", mat="rope")
+    m.pair(sd, sd, (18, 34, -27), (20, 36, -25), name="toggle", mat="bone")
+    # the rush girth: down the flank under the pad, across the chest
+    m.pair(sd, sd, (16, 26, -30), (17, 41, -27), name="girth_side", mat="girth", faces=OUT("east"))
+    m.cube(sd, (-17, 24, -30), (17, 26, -27), name="girth_under", mat="girth", faces=OUT("up"))
 
 
 def saddle_px(t):
@@ -434,7 +439,7 @@ LEG = {"shin", "meta", "pes", "forearm", "hand"}
 BODY_PARTS = TRUNK | UNDERSIDE | LEG
 UNDER = {"chest": 0.22, "torso": 0.18, "hips": 0.12, "neck": 0.28, "tail1": 0.2, "tail2": 0.24, "tail3": 0.28,
          "tail4": 0.32}
-CELL = 4.2
+CELL = 4.8
 
 
 def _line(n, z):
@@ -481,8 +486,14 @@ def body_px(t, p):
             if e1 > 2.0: return p[STEP_DN[base]]
             if w_ - tt[3] > 0.6: return p[STEP_UP[base]]
             return p[base]
+    # the dorsal patches: a few big soft darker saddles over the back and the hips, whole scales, never a pattern
+    if side and vc > 0.62 and n in ("hips", "torso", "chest", "tail1", "tail2", "neck"):
+        zc = cc[2] if f in ("east", "west") else t.L[2]
+        if math.sin(zc * 0.16 + 0.9) + 0.35 * math.sin(zc * 0.41) > 0.55:
+            base = STEP_DN[base]
     sc = skin.scales(u_, w_, cell=CELL, seed=seed)
-    if sc == "edge": return p[STEP_DN[base]]
+    # calmer skin: a scale's seam is drawn on two scales in three, so the hide does not read as cracked mud
+    if sc == "edge" and h32(math.floor(cc[2]), math.floor(cc[3]), seed, 31) % 3 != 0: return p[STEP_DN[base]]
     if sc == "hi" and base != "k5": return p[STEP_UP[base]] if h32(int(u_), int(w_), seed) % 3 == 0 else p[base]
     return p[base]
 

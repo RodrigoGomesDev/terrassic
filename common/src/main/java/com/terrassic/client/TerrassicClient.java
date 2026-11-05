@@ -155,6 +155,7 @@ public final class TerrassicClient {
         EntityRendererRegistry.register(ModEntities.BOLA, BolaRenderer::new);
         WeaponPoses.init(); // the weapons' held poses (item model overrides)
         com.terrassic.client.dev.PartsShowcase.init(); // off unless TERRASSIC_PARTS_SHOWCASE=1 (docs/PLANO_PARTES.md)
+        com.terrassic.client.dev.BehaviorTest.init(); // off unless TERRASSIC_BEHAVIOR_TEST=1
         EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();
         ParticleProviderRegistry.register(ModParticles.ROAR_WAVE, RoarWaveParticle.Provider::new);

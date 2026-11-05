@@ -161,7 +161,7 @@ public abstract class Mosasaurid extends SwimmingDinosaur {
         this.goalSelector.addGoal(3, new BreatheGoal());
         this.goalSelector.addGoal(5, new StayByMotherGoal());
         // the sea animals had no BreedGoal (1.5 test: a fed tame couple never bred): two in love swim together
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new com.terrassic.entity.ai.DinoBreedGoal(this, 1.0D));
     }
 
     /** At the surface: swimming in the top block of water, or in a boat. */

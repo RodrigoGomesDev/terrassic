@@ -8,7 +8,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -126,7 +125,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
             }
         });
         this.goalSelector.addGoal(5, new OrderedFollowOwnerGoal(this, 1.15D, followStartDistance(), followStopDistance(), false));
-        this.goalSelector.addGoal(6, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new com.terrassic.entity.ai.DinoBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(8, new MigrateGoal(this));

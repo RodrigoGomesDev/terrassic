@@ -156,15 +156,23 @@ def tail(m, body):
 
 
 def osteoderms(m, body):
-    """the plates: two big rows down the back (thick, pitted), a smaller row on each side; uneven on purpose"""
-    for i, z in enumerate(range(-60, 6, 6)):
-        w = 5 if -48 < z < -4 else 4
-        h = 2 if -50 < z < -6 else 1
-        for col, x0 in ((0, 2), (1, 8)):
-            if col == 1 and not (-54 < z < 2):
-                continue
-            ww = w - col
-            m.pair(body, body, (x0, 23, z), (x0 + ww, 23 + h, z + 5), name=f"osteo{col}_{i}", mat="osteo", faces=OUT("down"))
+    """the plates: two big rows down the back (thick, pitted), the outer row smaller and staggered; their length,
+    width and height vary from plate to plate as on a real back, one missing now and then (an old wound)"""
+    z = -60
+    i = 0
+    while z < 4:
+        r = h32("osteo", i)
+        ln = 4 + r % 3                                   # 4-6 long
+        w = 4 + (r >> 3) % 2 + (1 if -46 < z < -6 else 0)
+        h = 2 if -50 < z < -4 and (r >> 5) % 4 else 1
+        if (r >> 8) % 11 != 0:                           # a missing plate, rarely
+            m.pair(body, body, (2, 23, z), (2 + w, 23 + h, z + ln), name=f"osteo0_{i}", mat="osteo", faces=OUT("down"))
+        if -54 < z < 0 and (r >> 12) % 5 != 0:
+            off = 2 + (r >> 14) % 2
+            m.pair(body, body, (8, 23, z + off), (8 + w - 1, 24, z + off + ln - 1), name=f"osteo1_{i}", mat="osteo",
+                   faces=OUT("down"))
+        z += ln + 1
+        i += 1
 
 
 def build(sex="male"):
@@ -227,7 +235,8 @@ def osteo_px(t, p):
     if f == "up":
         cx, cz = t.w // 2, t.h // 2
         if (t.i, t.j) == (cx, cz) or (t.w >= 4 and (t.i, t.j) == (cx - 1, cz)): return p["k0"]
-        return p["k3"] if (t.i + t.j) % 3 else p["k2"]
+        if t.j == 0: return p["k5"]                                   # the lit front edge of the plate
+        return p["k4"] if (t.i + t.j) % 3 else p["k3"]
     if f == "down": return p["k0"]
     return p["k1"] if t.j < t.h - 1 else p["k0"]
 
@@ -252,9 +261,13 @@ def belly_px(t, p):
 
 
 def _band(n, z, x, seed):
-    """the broken crossbands: a band every 12-15 px along the body, wandering, gaps where a scale breaks it"""
-    k = (z + 3 * math.sin(x * 0.5 + seed)) / 13.5
-    return (k % 1.0) < 0.26 and h32(int(k), int(z // 3), seed) % 4 != 0
+    """the broken crossbands of a young alligator, kept in the adult: one every 13-16 px, 3-4 px wide, the edges
+    jagged by whole scales, a few broken through"""
+    k = (z + 2.5 * math.sin(x * 0.7 + 1.3) + 1.5 * math.sin(x * 1.9)) / 14.5
+    band = int(math.floor(k))
+    if h32("band", band) % 7 == 0:
+        return False                                     # a band missing altogether
+    return (k % 1.0) < 0.32 and h32(band, int(z // 2), int(x // 2), seed) % 5 != 0
 
 
 def body_px(t, p):
@@ -265,7 +278,9 @@ def body_px(t, p):
         base = "k2" if f in ("east", "west", "north", "up") else "k1"
         return p[STEP_DN[base]] if skin.scales(u_, w_, cell=2.6, seed=seed) == "edge" else p[base]
     if f == "up":
-        # the back between the plates: small square scales, dark
+        # the back between the plates: small square scales, dark, the bands crossing it fainter
+        if n.startswith("tail") and _band(n, t.L[2], 0, seed):
+            return p["g0"]
         return p["k1"] if (math.floor(u_) + math.floor(w_)) % 3 == 0 else p["k2"]
     if f == "down":
         return belly_px(t, p) if n not in ("thigh", "arm") else p["b1"]

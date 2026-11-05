@@ -9,7 +9,6 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -95,7 +94,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
                 || this.getNavigation() instanceof FlyingPathNavigation
                 ? new OrderedFollowOwnerGoal(this, 1.2D, 10.0F, stop, false)
                 : new FollowOwnerPathGoal(this, 1.2D, 10.0F, stop));
-        this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new com.terrassic.entity.ai.DinoBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.1D));
         if (!this.solitary()) {
