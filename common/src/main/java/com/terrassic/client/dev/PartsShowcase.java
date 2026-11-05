@@ -38,7 +38,7 @@ import java.util.Locale;
 public final class PartsShowcase {
     private static final String[] SPECIES = {"tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor",
             "triceratops", "protoceratops", "ankylosaurus", "pachycephalosaurus", "parasaurolophus", "gallimimus",
-            "pteranodon", "mosasaurus"};
+            "pteranodon", "mosasaurus", "styracosaurus"};
     private static final int[] YAWS = {0, 45};
     private static final double Y = -60.0D;
 
@@ -139,6 +139,11 @@ public final class PartsShowcase {
         String phases = System.getenv().getOrDefault("TERRASSIC_PARTS_PHASES", "still,flight,moving");
         String only = System.getenv("TERRASSIC_PARTS_SPECIES");
         List<String> species = only == null ? List.of(SPECIES) : List.of(only.split(","));
+        if (phases.contains("photo")) {
+            for (String sp : species) {
+                planPhotos(sp);
+            }
+        }
         if (phases.contains("still")) {
             for (String sp : species) {
                 for (int yaw : YAWS) {
@@ -696,6 +701,75 @@ public final class PartsShowcase {
             }
             REPORT.add(goals.toString());
             return 5;
+        });
+    }
+
+    // ------------------------------------------------------------------ photos for a species' page
+
+    /** Photos without boxes, at noon, three quarters from the front: the male, the female, a baby, the male saddled,
+     *  and the male in three of its own animations (photo_<species>_<what>.png). */
+    private static void planPhotos(String species) {
+        STEPS.add(mc -> {
+            mc.getEntityRenderDispatcher().setRenderHitBoxes(false);
+            command(mc, "time set noon");
+            command(mc, "weather clear");
+            return 5;
+        });
+        String[][] variants = {{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
+                {"saddled", "Female:0b,Saddled:1b"}, {"crown_display", "Female:0b"}, {"attack", "Female:0b"},
+                {"rival_display", "Female:0b"}, {"head_shake", "Female:1b"}};
+        for (String[] v : variants) {
+            DinosaurEntity[] dino = new DinosaurEntity[1];
+            java.util.UUID id = new java.util.UUID(0x7E55A51C00000000L, ++serial);
+            STEPS.add(mc -> {
+                command(mc, "tp @e[type=!player] 0 -400 0");
+                command(mc, String.format(Locale.ROOT, "summon terrassic:%s 0.5 %s 0.5 {NoAI:1b,PersistenceRequired:1b,Size:1f,BirthSize:1f,%s,"
+                        + "UUID:[I;%d,%d,%d,%d],Rotation:[0f,0f]}", species, Y, v[1],
+                        (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
+                        (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits()));
+                park(mc.player);
+                return 30;
+            });
+            STEPS.add(mc -> {
+                dino[0] = null;
+                for (Entity e : mc.level.entitiesForRendering()) {
+                    if (e instanceof DinosaurEntity d && id.equals(d.getUUID())) {
+                        dino[0] = d;
+                    }
+                }
+                if (dino[0] == null) {
+                    REPORT.add("photo " + species + " " + v[0] + ": NOT FOUND");
+                    return 1;
+                }
+                AABB all = dino[0].getBoundingBox().minmax(dino[0].partsBounds());
+                Vec3 c = all.getCenter();
+                double size = Math.max(all.getXsize(), Math.max(all.getYsize(), all.getZsize()));
+                float bodyYaw = dino[0].yBodyRot * Mth.DEG_TO_RAD;
+                Vec3 side = new Vec3(-Mth.cos(bodyYaw), 0, -Mth.sin(bodyYaw));
+                Vec3 forward = new Vec3(-Mth.sin(bodyYaw), 0, Mth.cos(bodyYaw));
+                double distance = size * 0.6D + 0.8D;
+                look(mc.player, c.add(side.scale(distance * 0.8D)).add(forward.scale(distance * 0.6D)).add(0, size * 0.3D, 0), c);
+                serverTp(mc);
+                if (!"male".equals(v[0]) && !"female".equals(v[0]) && !"baby".equals(v[0]) && !"saddled".equals(v[0])) {
+                    Entity server = serverDino(mc, dino[0]);
+                    if (server instanceof DinosaurEntity d) {
+                        d.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, v[0]);
+                    }
+                }
+                return "attack".equals(v[0]) ? 9 : 32;
+            });
+            STEPS.add(mc -> {
+                if (dino[0] != null) {
+                    Screenshot.grab(mc.gameDirectory, "photo_" + species + "_" + v[0] + ".png", mc.getMainRenderTarget(), msg -> {
+                    });
+                }
+                return 5;
+            });
+        }
+        STEPS.add(mc -> {
+            mc.getEntityRenderDispatcher().setRenderHitBoxes(true);
+            REPORT.add("photo " + species + ": done");
+            return 1;
         });
     }
 

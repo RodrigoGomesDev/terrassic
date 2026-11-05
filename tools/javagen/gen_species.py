@@ -18,7 +18,7 @@ import parts as hit_parts  # noqa: E402
 # (config/Eras.REMADE), whose models are measured at rest. Add a species here when it is remade.
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
-    "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus",
+    "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus",
 }
 
 # In-game size of each species. 1 block = 1 metre, so the player (1.8 blocks) is a 1.8 m tall person.
@@ -49,8 +49,10 @@ SIZES = {
     # at 24 px/m and shown at its real 9 m (16 / 24 = 0.667), its own study and rig; the hitbox is kept.
     "triceratops":        dict(real=9.0,  scale=0.667, w=2.4, h=3.0, baby=0.3,  shadow=2.0),
     # Styracosaurus albertensis: 5-5.5 m, ~2.7 t (Ryan et al. 2007); frill spikes included in the height.
-    # Styracosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "styracosaurus":      dict(real=5.5,  scale=0.86,  w=1.6, h=2.9, baby=0.3,  shadow=1.4),
+    # Styracosaurus v1 (05/11, the 1.8) is hand-made at 32 px/m and shown at its real 5.5 m (16 / 32 = 0.5), its own
+    # study and rig (page "Estiracossauro: estudo para a 1.8"); the hitbox covers the body (the hips at 1.9 m), the hit
+    # parts the crown.
+    "styracosaurus":      dict(real=5.5,  scale=0.5,  w=1.6, h=2.0, baby=0.3,  shadow=1.4),
     # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
     # Pachyrhinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "pachyrhinosaurus":   dict(real=8.0,  scale=1.0,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
@@ -383,7 +385,8 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=9, ATTACK_KNOCKBACK=2.0, ARMOR=7, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=20),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.4, 0.9, 280), step=("RAVAGER_STEP", 0.5, 0.9),
-      xp=16, rideable=True, jump=0.5, ride_offset=2.1, ride_forward=0.2, ride_speed=1.1, trample=True),
+      xp=16, rideable=True, jump=0.5, ride_offset=3.44, ride_forward=1.59, ride_speed=1.1, trample=True,
+      saddle="STYRACOSAURUS_SADDLE", rig="Centrosaurine"),
  dict(id="pachyrhinosaurus", cls="Pachyrhinosaurus", base="HerbivoreDinosaur",
       doc="Pachyrhinosaurus canadensis - 8 m horned herbivore of the cold north with a bony boss instead of a nose horn. Territorial: gores with the boss. Its musk calms the herbivores around it and draws the predators onto itself. Tamed with plants; rideable, breaks the brush in its way.",
       attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
@@ -841,7 +844,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1086,7 +1089,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

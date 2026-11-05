@@ -21,7 +21,8 @@ from galli_extras import CUSTOM_EGGS as GALLI_EGGS  # noqa: E402  (the Gallimimu
 from pachy_extras import CUSTOM_EGGS as PACHY_EGGS  # noqa: E402  (the Pachycephalosaurus' soft eggs among tree roots)
 from para_extras import CUSTOM_EGGS as PARA_EGGS  # noqa: E402  (the Parasaurolophus' round eggs in a mud crater)
 from anky_extras import CUSTOM_EGGS as ANKY_EGGS  # noqa: E402  (the Ankylosaurus' leathery eggs in a pit of forest loam)
-CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS}
+from styr_extras import CUSTOM_EGGS as STYR_EGGS  # noqa: E402  (the Styracosaurus' long soft eggs on a heap of reed stalks)
+CUSTOM_EGGS = {**REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -105,6 +106,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "giganotosaurus_saddle": ("Giganotosaurus Saddle", "Sela de Giganotossauro", "Silla de Giganotosaurio", "item/generated"),
     # the drover's pack saddle (cangalha) with two woven baskets: the Triceratops carries its cargo in them
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
+    # 1.8: the Styracosaurus' running pad: a thick hide pad with a grip bar in front, rope foot loops, a rush girth
+    "styracosaurus_saddle": ("Styracosaurus Running Pad", "Manta de Corrida de Estiracossauro", "Manta de carrera de Styracosaurus", "item/generated"),
     # a light riding pad for the racer: felt blanket, hide pad with knee rolls, a bone grip; the rider sits over the hips
     "gallimimus_saddle": ("Gallimimus Riding Pad", "Manta de Montaria de Galimimo", "Manta de montar de Gallimimus", "item/generated"),
     # the floodplain reed saddle: a woven rush mat on a hide pad, rolled bundles of matting strapped along the flanks
@@ -912,6 +915,9 @@ def main():
     # the Triceratops' pack saddle: two wooden heads of the frame, a hide seat on leather, two woven rush baskets
     shaped("triceratops_saddle", ["S S", "LHL", "R R"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")
+    # the Styracosaurus' running pad: the grip bar (a stick), its hide on leather, rush foot loops with a bone toggle
+    shaped("styracosaurus_saddle", [" S ", "LHL", "RBR"], {"S": "minecraft:stick", "L": "minecraft:leather",
+           "H": "terrassic:styracosaurus_hide", "B": "minecraft:bone", "R": "terrassic:rush"}, "terrassic:styracosaurus_saddle")
     # the Gallimimus' riding pad: a bone for the grip, two leather knee rolls on the Gallimimus hide pad, string to lace it
     shaped("gallimimus_saddle", [" B ", "LHL", " S "], {"B": "minecraft:bone", "L": "minecraft:leather",
            "H": "terrassic:gallimimus_hide", "S": "minecraft:string"}, "terrassic:gallimimus_saddle")

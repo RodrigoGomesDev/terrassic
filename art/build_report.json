@@ -1080,38 +1080,53 @@
   "render_scale": 0.5
  },
  "styracosaurus": {
-  "bones": 27,
-  "cubes": 134,
+  "bones": 48,
+  "cubes": 155,
   "texture": [
    256,
    256
   ],
   "bounds_px": [
    [
-    -18.76794861679037,
-    4.249790642002196e-05,
-    -55.62390354581781
+    -25.960318213544916,
+    -0.05000424785578094,
+    -108.20480697780374
    ],
    [
-    18.76794861679037,
-    47.11894948198682,
-    46.45967042306856
+    25.960318213544916,
+    71.4477624830617,
+    69.45196945214147
    ]
   ],
   "animations": [
    "animation.styracosaurus.idle",
    "animation.styracosaurus.walk",
    "animation.styracosaurus.run",
+   "animation.styracosaurus.charge",
+   "animation.styracosaurus.swim",
    "animation.styracosaurus.attack",
-   "animation.styracosaurus.sit",
+   "animation.styracosaurus.horn_hook",
+   "animation.styracosaurus.paw_scrape",
+   "animation.styracosaurus.crown_display",
+   "animation.styracosaurus.rival_display",
+   "animation.styracosaurus.horn_rub",
+   "animation.styracosaurus.head_shake",
+   "animation.styracosaurus.call",
+   "animation.styracosaurus.frill_shove",
+   "animation.styracosaurus.hurt",
+   "animation.styracosaurus.death",
+   "animation.styracosaurus.eat",
    "animation.styracosaurus.graze",
+   "animation.styracosaurus.sit",
+   "animation.styracosaurus.sleep",
+   "animation.styracosaurus.wake_sleep",
    "animation.styracosaurus.knocked_out",
    "animation.styracosaurus.wake",
-   "animation.styracosaurus.eat",
    "animation.styracosaurus.beg",
    "animation.styracosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.5,
+  "handmade": true
  },
  "euoplocephalus": {
   "bones": 25,
