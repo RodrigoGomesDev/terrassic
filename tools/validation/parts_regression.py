@@ -26,10 +26,10 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def rex_parts():
-    """The Tyrannosaurus parts in the generated order (id = owner id + 1 + index): [(kind, forward, side)]."""
+    """The Tyrannosaurus parts in the generated order (id = owner id + 1 + index): [(kind, forward, side)] standing."""
     text = (ROOT / "common/src/main/java/com/terrassic/entity/Tyrannosaurus.java").read_text()
     return [(kind, float(f), float(s)) for kind, f, s in
-            re.findall(r"DinoPart\.Kind\.(\w+), (-?[0-9.]+)F, (-?[0-9.]+)F", text)]
+            re.findall(r"DinoPart\.Kind\.(\w+),\s*new float\[\]\{(-?[0-9.]+)F, (-?[0-9.]+)F", text)]
 
 
 PARTS = rex_parts()

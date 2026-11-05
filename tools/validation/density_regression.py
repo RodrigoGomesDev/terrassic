@@ -67,35 +67,36 @@ def main():
         server.start("density", timeout=args.startup_timeout)
         client = LocalClient(server.port, PLAYER, server.loader)
         client.wait_for(lambda c: c.knowledge is not None)
-        for command in (f"op {PLAYER}", f"gamemode spectator {PLAYER}", "gamerule doDaylightCycle false", "time set noon",
+        for command in (f"op {PLAYER}", f"gamemode creative {PLAYER}", "gamerule doDaylightCycle false", "time set noon",
                         "scoreboard objectives add dens dummy"):
             server.command(command)
         checks.barrier()
         for x, z in SPOTS:
-            server.command(f"execute in minecraft:overworld run tp {PLAYER} {x} 120 {z}")
+            # on the ground, in creative: a spectator does not count for the natural spawns
+            server.command(f"execute in minecraft:overworld run tp {PLAYER} {x} 200 {z}")
+            checks.barrier()
+            time.sleep(3)
+            server.command(f"spreadplayers {x} {z} 0 1 false {PLAYER}")
             checks.barrier()
             time.sleep(SETTLE)
-            heard = len(client.messages)
+            cursor = len(server.lines)
             server.command(f"execute as {PLAYER} at @s run terrassic fauna")
+            server.command(f"execute as {PLAYER} at @s store result score all dens if entity @e[type=!player,distance=..128]")
             server.command(f"execute as {PLAYER} at @s store result score hunters dens if entity "
                            f"@e[type=#terrassic_test:hunters,distance=..128]")
-            cursor = len(server.lines)
             server.command("scoreboard players get hunters dens")
+            server.command("scoreboard players get all dens")
             checks.barrier()
-            deadline = time.monotonic() + 10
-            said = ""
-            while time.monotonic() < deadline:
-                said = " ".join(client.messages[heard:])
-                if "a 128 blocos" in said:
-                    break
-                time.sleep(0.2)
+            # /terrassic fauna answers the player; the server log carries the same lines
+            said = " ".join(server.lines[cursor:])
             m = re.search(r"terra (\d+) dinos / (\d+) vanilla; mar (\d+) dinos / (\d+) vanilla", said)
             biome = re.search(r"bioma ([a-z_:]+)", said)
             h = re.search(r"hunters has (\d+)", " ".join(server.lines[cursor:]))
             row = {"spot": [x, z], "biome": biome.group(1) if biome else "?",
                    "dinos": int(m.group(1)) if m else None, "vanilla": int(m.group(2)) if m else None,
                    "sea_dinos": int(m.group(3)) if m else None, "sea_vanilla": int(m.group(4)) if m else None,
-                   "hunters": int(h.group(1)) if h else None}
+                   "hunters": int(h.group(1)) if h else None,
+                   "entities": int(a.group(1)) if (a := re.search(r"all has (\d+)", said)) else None}
             rows.append(row)
             print(f"INFO {server.loader}: {row}", flush=True)
         dinos = sum(r["dinos"] or 0 for r in rows)
