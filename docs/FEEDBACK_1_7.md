@@ -34,4 +34,7 @@ Telas (Meus dinos, seta, Guia de Bolso) ainda sem revisão no jogo: o cliente n�
 ## Ainda na 1.7 (pedido do Rodrigo, 04/11): partes de acerto e porte para 1.21.1
 Sugestão da comunidade: as hitboxes não batem com os modelos (T. rex 13 m numa caixa 2,6 x 4,8). Decisão: **partes de
 acerto como no Ender Dragon**, com dano diferente por parte: **cabeça 125%, corpo 100%, cauda e pernas 75%**. A caixa
-de colisão fica como está (andar na mata, caminho). Plano em `docs/PLANO_PARTES.md`. A `mc/1.21.1` também recebe a 1.7.
+de colisão fica como está (andar na mata, caminho). **Feito** (04/11): `docs/PLANO_PARTES.md` descreve as partes, a
+mordida medida pela cabeça e a regressão `parts_regression.py`. A `mc/1.21.1` recebeu a 1.7 inteira (feedback, testes e
+partes), com as APIs da 1.21 (`SavedData.Factory`, pacotes com `RegistryFriendlyByteBuf`, telas, `Entity`,
+`MeleeAttackGoal.canPerformAttack`, encantamentos por item).

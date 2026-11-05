@@ -51,6 +51,10 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
+**Partes de acerto (1.7, `docs/PLANO_PARTES.md`)**: cabeça 125%, pescoço 100%, cauda 75% nas 13 espécies refeitas
+(`entity/parts/DinoPart`, mixins em `mixin/parts`, medidas de `tools/javagen/parts.py` via `gen_species.PARTS_SPECIES`;
+espécie refeita nova entra lá); mordida medida da cabeça (`ai/HeadMeleeAttackGoal`). Regressão: `parts_regression.py`.
+A `mc/1.21.1` tem a 1.7 inteira portada (Fabric + NeoForge compilam; regressões de protocolo só Fabric nessa branch).
 A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; o cliente gráfico Forge ainda não foi validado.
 Os servidores dedicados Fabric e Forge foram validados posteriormente pelos roteiros de entidades e Caderno.
 Nome: o projeto se chamava **PrimalEra** e foi renomeado para **Terrassic** em 23/10/2026: mod id `terrassic`,
