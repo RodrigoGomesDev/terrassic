@@ -44,9 +44,16 @@ public class PocketGuideScreen extends Screen {
     private static final int TEX_W = 512;
     private static final int TEX_H = 256;
     private static final int ARROW_V = 184;
-    private static final int PAGE_W = 116;
-    private static final int TOP = 12;
-    private static final int BOTTOM = H - 28;
+    /** Text width and the page margins: 8 px from the cover, 9 from the spine, 10 from the top (05/11/2026). */
+    private static final int PAGE_W = 110;
+    private static final int LEFT_PAGE = 18;
+    private static final int RIGHT_PAGE = 148;
+    private static final int TOP = 18;
+    private static final int BOTTOM = H - 30;
+    private static final int LINE = 10;
+    private static final int PARAGRAPH = 5;
+    /** A topic starts on the same page as the one before when its title and this many lines still fit. */
+    private static final int MIN_START_LINES = 4;
     private static final int INK = 0xFF3F2A14;
     private static final int TITLE = 0xFF5C3412;
     private static final int MUTED = 0xFF806240;
@@ -60,6 +67,11 @@ public class PocketGuideScreen extends Screen {
     private int top;
     private ItemStack hoveredStack = ItemStack.EMPTY;
     private IndexEntry hoveredEntry;
+
+    /** The spread shown (for the development checks in client/dev). */
+    public int spreadIndex() {
+        return this.spread;
+    }
 
     public static void open() {
         Minecraft mc = Minecraft.getInstance();
@@ -109,7 +121,11 @@ public class PocketGuideScreen extends Screen {
         return out;
     }
 
-    /** Index first, then each topic from a fresh page; an element that does not fit starts the next page. */
+    /**
+     * Index first, then the topics. A topic starts on a fresh page unless its title and a few lines still fit under the
+     * one before (with a rule between them). Paragraphs break between lines, never leaving one line alone at the foot
+     * of a page or at the head of the next; recipes, species and titles are kept whole.
+     */
     private void layout() {
         this.pages.clear();
         List<Topic> topics = this.topics();
@@ -117,7 +133,7 @@ public class PocketGuideScreen extends Screen {
         List<Element> page = new ArrayList<>();
         page.add(new TitleLine(Component.translatable("guide.terrassic.pocket.title"), ItemStack.EMPTY));
         page.add(new TextLine(Component.translatable("guide.terrassic.pocket.subtitle").getVisualOrderText(), MUTED));
-        page.add(new Gap(8));
+        page.add(new Gap(6));
         List<IndexEntry> entries = new ArrayList<>();
         for (Topic t : topics) {
             IndexEntry entry = new IndexEntry(Component.translatable("guide.terrassic.pocket." + t.id() + ".title"), t.icon());
@@ -126,28 +142,31 @@ public class PocketGuideScreen extends Screen {
         }
         this.pages.add(page);
         // topics
+        page = new ArrayList<>();
         for (int i = 0; i < topics.size(); i++) {
             Topic t = topics.get(i);
+            TitleLine title = new TitleLine(Component.translatable("guide.terrassic.pocket." + t.id() + ".title"), t.icon());
+            if (!page.isEmpty()) {
+                if (used(page) + Rule.HEIGHT + title.height() + MIN_START_LINES * LINE <= BOTTOM - TOP) {
+                    page.add(new Rule());
+                } else {
+                    this.pages.add(page);
+                    page = new ArrayList<>();
+                }
+            }
             entries.get(i).target = this.pages.size();
-            page = new ArrayList<>();
-            page.add(new TitleLine(Component.translatable("guide.terrassic.pocket." + t.id() + ".title"), t.icon()));
+            page.add(title);
             String body = keys(Component.translatable("guide.terrassic.pocket." + t.id() + ".body").getString());
             String[] paragraphs = body.split("\n");
             for (int p = 0; p < paragraphs.length; p++) {
-                if (p > 0) {
-                    page = this.add(page, new Gap(5));
-                }
-                for (FormattedCharSequence line : this.font.split(FormattedText.of(paragraphs[p]), PAGE_W)) {
-                    page = this.add(page, new TextLine(line, INK));
-                }
+                page = this.paragraph(page, this.font.split(FormattedText.of(paragraphs[p]), PAGE_W), p > 0 ? PARAGRAPH : 0, INK);
             }
             if ("species".equals(t.list())) {
                 List<SpeciesEntry> species = this.species();
-                page = this.add(page, new Gap(5));
-                page = this.add(page, new TextLine(Component.translatable("guide.terrassic.pocket.list.count", species.size())
-                        .getVisualOrderText(), MUTED));
+                page = this.paragraph(page, this.font.split(Component.translatable("guide.terrassic.pocket.list.count",
+                        species.size()), PAGE_W), PARAGRAPH, MUTED);
                 for (SpeciesEntry e : species) {
-                    page = this.add(page, new Gap(4));
+                    page = this.add(page, new Gap(8));
                     page = this.add(page, e);
                 }
             }
@@ -155,10 +174,12 @@ public class PocketGuideScreen extends Screen {
                 Optional<? extends Recipe<?>> recipe = this.minecraft != null && this.minecraft.level != null
                         ? this.minecraft.level.getRecipeManager().byKey(id) : Optional.empty();
                 if (recipe.isPresent()) {
-                    page = this.add(page, new Gap(6));
+                    page = this.add(page, new Gap(8));
                     page = this.add(page, new RecipeGrid(recipe.get()));
                 }
             }
+        }
+        if (!page.isEmpty()) {
             this.pages.add(page);
         }
         if (this.pages.size() % 2 == 1) {
@@ -166,13 +187,55 @@ public class PocketGuideScreen extends Screen {
         }
     }
 
-    /** Adds the element to the page, or closes the page and starts the next one with it. A gap never opens a page. */
-    private List<Element> add(List<Element> page, Element e) {
+    private static int used(List<Element> page) {
         int used = 0;
         for (Element x : page) {
             used += x.height();
         }
-        if (TOP + used + e.height() <= BOTTOM) {
+        return used;
+    }
+
+    /**
+     * A paragraph, after a gap: as many lines as fit, the rest on the next page, but never a single line left behind
+     * or carried over (a two-line paragraph moves whole).
+     */
+    private List<Element> paragraph(List<Element> page, List<FormattedCharSequence> lines, int gap, int colour) {
+        int from = 0;
+        while (from < lines.size()) {
+            int left = lines.size() - from;
+            int room = page.isEmpty() ? (BOTTOM - TOP) / LINE : (BOTTOM - TOP - used(page) - gap) / LINE;
+            int take = Math.min(left, Math.max(0, room));
+            if (take < left) {
+                if (left - take < 2) {
+                    take = left - 2;
+                }
+                if (take < 2 && !page.isEmpty()) {
+                    take = 0;
+                }
+            }
+            if (take <= 0) {
+                this.pages.add(page);
+                page = new ArrayList<>();
+                continue;
+            }
+            if (!page.isEmpty() && gap > 0) {
+                page.add(new Gap(gap));
+            }
+            for (int i = 0; i < take; i++) {
+                page.add(new TextLine(lines.get(from + i), colour));
+            }
+            from += take;
+            if (from < lines.size()) {
+                this.pages.add(page);
+                page = new ArrayList<>();
+            }
+        }
+        return page;
+    }
+
+    /** Adds the element to the page, or closes the page and starts the next one with it. A gap never opens a page. */
+    private List<Element> add(List<Element> page, Element e) {
+        if (TOP + used(page) + e.height() <= BOTTOM) {
             page.add(e);
             return page;
         }
@@ -249,7 +312,7 @@ public class PocketGuideScreen extends Screen {
             if (index >= this.pages.size()) {
                 continue;
             }
-            int x = this.left + (side == 0 ? 14 : W / 2 + 6);
+            int x = this.left + (side == 0 ? LEFT_PAGE : RIGHT_PAGE);
             int y = this.top + TOP;
             for (Element e : this.pages.get(index)) {
                 e.render(g, x, y, mouseX, mouseY);
@@ -271,6 +334,21 @@ public class PocketGuideScreen extends Screen {
         if (!this.hoveredStack.isEmpty()) {
             g.renderTooltip(this.font, this.hoveredStack, mouseX, mouseY);
         }
+    }
+
+    /** Draws a line of text, shrunk to {@code room} when it is wider (a long name or title never runs into the spine). */
+    private void fitted(GuiGraphics g, Component text, int x, int y, int room, int colour) {
+        int width = this.font.width(text);
+        if (width <= room) {
+            g.drawString(this.font, text, x, y, colour, false);
+            return;
+        }
+        float scale = room / (float) width;
+        g.pose().pushPose();
+        g.pose().translate(x, y + (8 - 8 * scale) / 2, 0);
+        g.pose().scale(scale, scale, 1);
+        g.drawString(this.font, text, 0, 0, colour, false);
+        g.pose().popPose();
     }
 
     private boolean overBack(double mx, double my) {
@@ -366,6 +444,23 @@ public class PocketGuideScreen extends Screen {
         }
     }
 
+    /** The dotted rule between two topics that share a page. */
+    private record Rule() implements Element {
+        static final int HEIGHT = 16;
+
+        @Override
+        public int height() {
+            return HEIGHT;
+        }
+
+        @Override
+        public void render(GuiGraphics g, int x, int y, int mouseX, int mouseY) {
+            for (int dx = x + 20; dx < x + PAGE_W - 20; dx += 3) {
+                g.fill(dx, y + 6, dx + 1, y + 7, MUTED);
+            }
+        }
+    }
+
     private final class TextLine implements Element {
         private final FormattedCharSequence text;
         private final int colour;
@@ -403,7 +498,7 @@ public class PocketGuideScreen extends Screen {
 
         @Override
         public void render(GuiGraphics g, int x, int y, int mouseX, int mouseY) {
-            g.drawString(PocketGuideScreen.this.font, this.text, x, y + (this.icon.isEmpty() ? 2 : 5), TITLE, false);
+            PocketGuideScreen.this.fitted(g, this.text, x, y + (this.icon.isEmpty() ? 2 : 5), this.icon.isEmpty() ? PAGE_W : PAGE_W - 22, TITLE);
             if (!this.icon.isEmpty()) {
                 PocketGuideScreen.this.slot(g, x + PAGE_W - 18, y, this.icon, mouseX, mouseY);
             }
@@ -423,23 +518,23 @@ public class PocketGuideScreen extends Screen {
 
         @Override
         public int height() {
-            return 18;
+            return 15;
         }
 
         @Override
         public void render(GuiGraphics g, int x, int y, int mouseX, int mouseY) {
-            boolean over = inside(mouseX, mouseY, x, y, PAGE_W, 18);
+            boolean over = inside(mouseX, mouseY, x, y, PAGE_W, 15);
             if (over) {
                 PocketGuideScreen.this.hoveredEntry = this;
             }
             var font = PocketGuideScreen.this.font;
-            g.renderItem(this.icon, x, y);
-            g.drawString(font, this.name, x + 20, y + 4, over ? LINK : INK, false);
+            g.renderItem(this.icon, x, y - 1);
             String number = String.valueOf(this.target + 1);
             int nx = x + PAGE_W - font.width(number);
-            g.drawString(font, number, nx, y + 4, MUTED, false);
+            PocketGuideScreen.this.fitted(g, this.name, x + 20, y + 3, nx - 4 - x - 20, over ? LINK : INK);
+            g.drawString(font, number, nx, y + 3, MUTED, false);
             for (int dx = x + 22 + font.width(this.name); dx < nx - 3; dx += 3) {
-                g.fill(dx, y + 11, dx + 1, y + 12, MUTED);
+                g.fill(dx, y + 10, dx + 1, y + 11, MUTED);
             }
         }
     }
@@ -497,7 +592,7 @@ public class PocketGuideScreen extends Screen {
             if (inside(mouseX, mouseY, x, y, 16, 16)) {
                 PocketGuideScreen.this.hoveredStack = this.egg;
             }
-            g.drawString(font, this.name, x + 20, y + 4, TITLE, false);
+            PocketGuideScreen.this.fitted(g, this.name, x + 20, y + 4, PAGE_W - 20, TITLE);
             int yy = y + 18;
             for (FormattedCharSequence line : this.lines) {
                 g.drawString(font, line, x, yy, INK, false);
@@ -526,7 +621,7 @@ public class PocketGuideScreen extends Screen {
 
         @Override
         public int height() {
-            return 56;
+            return 54;
         }
 
         @Override
@@ -545,8 +640,9 @@ public class PocketGuideScreen extends Screen {
                         stack = options[(int) (second % options.length)];
                     }
                 }
-                PocketGuideScreen.this.slot(g, x + 2 + col * 18, y + row * 18, stack, mouseX, mouseY);
+                PocketGuideScreen.this.slot(g, x + 9 + col * 18, y + row * 18, stack, mouseX, mouseY);
             }
+            x += 7;
             g.blit(TEXTURE, x + 60, y + 23, 0, ARROW_V, 8, 7, TEX_W, TEX_H);
             Minecraft mc = Minecraft.getInstance();
             ItemStack result = mc.level != null ? this.recipe.getResultItem(mc.level.registryAccess()) : ItemStack.EMPTY;
