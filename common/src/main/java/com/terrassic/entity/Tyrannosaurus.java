@@ -146,15 +146,17 @@ public class Tyrannosaurus extends ApexTheropod {
         return ModItems.TYRANNOSAURUS_SADDLE.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.706F, 3.535F, 1.913F, 2.25F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.221F, 3.493F, 1.785F, 2.272F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.621F, 3.074F, 1.851F, 2.055F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -6.164F, 3.497F, 1.443F, 0.642F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.721F, 3.271F, 1.443F, 1.036F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.278F, 2.969F, 1.443F, 1.541F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.836F, 2.889F, 1.443F, 1.658F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.221F, 0.0F, 3.443F, 1.615F, 1.885F, 2.365F),
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.706F, 0.0F, 3.485F, 1.615F, 2.013F, 2.35F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.621F, 0.0F, 3.024F, 1.951F, 1.503F, 2.155F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.51F, 0.0F, -0.05F, 3.925F, 2.905F, 4.843F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -6.164F, 0.0F, 3.444F, 1.543F, 0.737F, 0.744F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.721F, 0.0F, 3.225F, 1.543F, 1.12F, 1.133F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.278F, 0.0F, 2.913F, 1.543F, 1.503F, 1.648F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.836F, 0.0F, 2.839F, 1.543F, 1.503F, 1.758F)
     };
 
     @Override

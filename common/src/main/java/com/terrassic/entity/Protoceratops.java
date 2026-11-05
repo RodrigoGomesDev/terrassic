@@ -83,11 +83,13 @@ public class Protoceratops extends Protoceratopsid {
         return 0.003D;
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 0.773F, 0.146F, 0.579F, 0.571F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 0.664F, 0.235F, 0.35F, 0.35F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.519F, 0.239F, 0.797F, 0.514F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 0.773F, 0.0F, 0.096F, 0.679F, 0.517F, 0.671F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 0.664F, 0.0F, 0.185F, 0.38F, 0.308F, 0.413F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.229F, 0.0F, -0.05F, 0.892F, 0.601F, 0.791F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.519F, 0.0F, 0.189F, 0.897F, 0.308F, 0.614F)
     };
 
     @Override

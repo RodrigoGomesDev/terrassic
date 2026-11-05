@@ -1073,9 +1073,10 @@ def gen(s, bounds):
         rows = hit_parts.parts(s["id"], size["scale"])
         pivot_f, pivot_u = hit_parts.neck_base(s["id"])
         k = size["scale"] / 16.0
-        specs = ",\n".join(f"            new DinoPart.Spec(DinoPart.Kind.{kind.upper()}, {f}F, {u}F, {w}F, {h}F)"
-                            for kind, f, u, w, h in rows)
-        body.append("    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */")
+        specs = ",\n".join(f"            new DinoPart.Spec(DinoPart.Kind.{kind.split('_')[0].upper()}, {f}F, {sd}F, {u}F, {ln}F, {wd}F, {h}F)"
+                            for kind, f, sd, u, ln, wd, h in rows)
+        body.append("    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1")
+        body.append("     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */")
         body.append(f"    private static final DinoPart.Spec[] PARTS = {{\n{specs}\n    }};\n")
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")

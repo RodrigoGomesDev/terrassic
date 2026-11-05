@@ -115,12 +115,14 @@ public class Ankylosaurus extends Ankylosaurid {
         return ModItems.ANKYLOSAURUS_SADDLE.get();
     }
 
-    /** Hit parts: kind, forward, bottom, width and height in blocks at size 1 (tools/javagen/parts.py). */
+    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.151F, 0.559F, 1.407F, 0.808F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.582F, 0.62F, 1.167F, 1.056F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.776F, 0.821F, 1.532F, 0.48F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.244F, 0.877F, 1.532F, 0.67F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.151F, 0.0F, 0.509F, 1.034F, 1.507F, 0.908F),
+            new DinoPart.Spec(DinoPart.Kind.NECK, 2.582F, 0.0F, 0.57F, 0.883F, 1.267F, 1.156F),
+            new DinoPart.Spec(DinoPart.Kind.BODY, 0.98F, 0.0F, -0.062F, 3.227F, 2.358F, 1.91F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.776F, 0.0F, 0.771F, 1.632F, 0.85F, 0.58F),
+            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.244F, 0.0F, 0.827F, 1.632F, 1.341F, 0.77F)
     };
 
     @Override
