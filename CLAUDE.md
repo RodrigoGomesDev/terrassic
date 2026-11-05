@@ -279,10 +279,12 @@ Suporte, diagnóstico de log, Guia de Campo, relatos de bug e avisos; documentad
   avisos (#builds e #avisos) publicam a seção `## English` de `docs/changelog/X.Y.Z.md`, o mesmo changelog das lojas,
   que entra no repositório junto com a versão (`docs/VERSOES.md`, passo 5). Os commits continuam em português e não vão
   mais para o Discord.
-- **Terceiro canal, `#novas-especies`:** quem avisa é o repositório do **site** (`terrassic-site`,
-  `.github/workflows/discord-species.yml`), quando um id entra em `models.ready` de `src/site-config.js`: posta o
-  cartão `public/assets/cards/<id>.webp` (gerado por `npm run cards` lá, do modelo do jogo) e a ficha do Guia. Ao
-  liberar uma espécie refeita, rode `npm run build && npm run thumbs && npm run cards` no site antes do push.
+- **Terceiro canal, `#new-species`:** quem avisa é o repositório do **site** (`terrassic-site`,
+  `.github/workflows/discord-species.yml`), **só quando a arte de anúncio APROVADA entra em
+  `public/assets/announce/<id>.webp`** (ou `.png`/`.jpg`, até 8 MB): posta essa imagem e a ficha do Guia, em inglês.
+  A arte é feita e aprovada à mão (pedido do Rodrigo em 05/11/2026: nada de imagem automática). Marcar a espécie em
+  `models.ready` só atualiza o site; trocar uma arte que já está lá não posta de novo. Ao liberar uma espécie refeita
+  no site, rode `npm run build && npm run thumbs` lá antes do push.
   Estrutura do servidor (canais, cargos, banners, painéis): `rexpert/docs/SERVIDOR.md`.
 - Daqui para frente, a versão em `gradle.properties` é o sinal de "saiu build nova" para a comunidade: ao fechar
   um lote de trabalho que vale avisar, suba `mod_version`. Taguear (`git tag vX.Y.Z`) continua sendo só para quando
