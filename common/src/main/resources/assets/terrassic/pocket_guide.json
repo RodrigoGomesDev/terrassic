@@ -10,8 +10,12 @@
     {
       "id": "dinos",
       "icon": "terrassic:tyrannosaurus_spawn_egg",
-      "recipes": [],
-      "list": "species"
+      "recipes": [
+        "terrassic:bestiary_carnivores",
+        "terrassic:bestiary_herbivores",
+        "terrassic:bestiary_flyers",
+        "terrassic:bestiary_marine"
+      ]
     },
     {
       "id": "weapons",

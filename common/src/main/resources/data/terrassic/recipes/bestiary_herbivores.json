@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    [
+      {
+        "item": "terrassic:cycad"
+      },
+      {
+        "tag": "minecraft:leaves"
+      }
+    ]
+  ],
+  "result": {
+    "item": "terrassic:bestiary_herbivores"
+  }
+}

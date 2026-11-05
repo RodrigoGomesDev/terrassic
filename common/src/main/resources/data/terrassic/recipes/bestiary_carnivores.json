@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    [
+      {
+        "item": "terrassic:raw_dino_meat"
+      },
+      {
+        "item": "terrassic:raw_prime_meat"
+      },
+      {
+        "item": "terrassic:rex_tooth"
+      }
+    ]
+  ],
+  "result": {
+    "item": "terrassic:bestiary_carnivores"
+  }
+}

@@ -34,16 +34,16 @@ TOPICS = [
                   "Casi todo empieza con sílex, que sale de la grava, y con junco, que crece a orillas de ríos y pantanos.\n"
                   "El Velociraptor caza de noche: al principio, no camines solo a oscuras."),
     }),
-    ("dinos", "terrassic:tyrannosaurus_spawn_egg", [], {
+    ("dinos", "terrassic:tyrannosaurus_spawn_egg", ["bestiary_carnivores", "bestiary_herbivores", "bestiary_flyers", "bestiary_marine"], {
         "pt_br": ("Os dinossauros",
-                  "Todas as espécies que vivem no mundo. Em cada uma: o que come, o tamanho real, como se doma e quanta comida a doma pede.\n"
-                  "Carnívoros pedem pilhas de carne: os pequenos uma pilha, os grandes de duas a cinco."),
+                  "Cada espécie tem sua página num dos quatro Bestiários: Carnívoros, Herbívoros, Voadores e Marinhos. Em cada página: o que come, o tamanho real, como se doma e quanta comida a doma pede.\n"
+                  "Faça os Bestiários com um livro e um pouco do assunto: carne, folhas, uma pena ou um peixe."),
         "en_us": ("The Dinosaurs",
-                  "Every species living in the world. For each: what it eats, its real size, how it is tamed and how much food taming takes.\n"
-                  "Carnivores take stacks of meat: the small ones one stack, the big ones two to five."),
+                  "Every species has its page in one of the four Bestiaries: Carnivores, Herbivores, Flyers and Sea Reptiles. On each page: what it eats, its real size, how it is tamed and how much food taming takes.\n"
+                  "Make the Bestiaries from a book and a bit of their subject: meat, leaves, a feather or a fish."),
         "es_es": ("Los dinosaurios",
-                  "Todas las especies que viven en el mundo. En cada una: qué come, su tamaño real, cómo se doma y cuánta comida pide la doma.\n"
-                  "Los carnívoros piden pilas de carne: los pequeños una pila, los grandes de dos a cinco."),
+                  "Cada especie tiene su página en uno de los cuatro Bestiarios: Carnívoros, Herbívoros, Voladores y Marinos. En cada página: qué come, su tamaño real, cómo se doma y cuánta comida pide la doma.\n"
+                  "Haz los Bestiarios con un libro y un poco de su tema: carne, hojas, una pluma o un pez."),
     }),
     ("weapons", "terrassic:flint_spear", ["flint_spear", "bone_club", "hunting_bow", "flint_arrow"], {
         "pt_br": ("Armas",
@@ -261,22 +261,73 @@ TOPICS = [
 
 # 1.7: topics followed by a list drawn by the screen (client/PocketGuideScreen): "species" = every active species
 # with its egg, diet, size, how it is tamed and the food it takes (player feedback: "a section that shows all the dinos")
-LISTS = {"dinos": "species"}
+LISTS = {}
+
+# 1.7.1 (Rodrigo, 05/11/2026: "vai ter muitos dinos... já já vai ficar com 300 páginas"): the species live in four
+# Bestiaries instead of the Pocket Guide, by diet and habitat (client/PocketGuideScreen groups them: flyers and sea
+# reptiles by their kind, the rest by diet; omnivores go with the herbivores). Each is made from a book and a bit of
+# its subject. id, ingredients (any of), {lang: (item and book title, the line under it, the opening text)}
+VOLUMES = [
+    ("carnivores", [{"item": "terrassic:raw_dino_meat"}, {"item": "terrassic:raw_prime_meat"}, {"item": "terrassic:rex_tooth"}], {
+        "pt_br": ("Bestiário: Carnívoros", "caçadores e comedores de peixe",
+                  "Os caçadores de terra. Carnívoros adultos só se domam por nocaute; filhotes e ovos são o caminho mais fácil.\n"
+                  "A doma pede pilhas de carne, e carne nobre vale por duas porções."),
+        "en_us": ("Bestiary: Carnivores", "hunters and fish-eaters",
+                  "The hunters of the land. Adult carnivores are tamed only by knockout; babies and eggs are the easy way.\n"
+                  "Taming takes stacks of meat, and prime meat counts as two portions."),
+        "es_es": ("Bestiario: Carnívoros", "cazadores y comedores de peces",
+                  "Los cazadores de tierra. Los carnívoros adultos solo se doman por noqueo; las crías y los huevos son el camino fácil.\n"
+                  "La doma pide pilas de carne, y la carne selecta vale por dos bocados."),
+    }),
+    ("herbivores", [{"item": "terrassic:cycad"}, {"tag": "minecraft:leaves"}], {
+        "pt_br": ("Bestiário: Herbívoros", "e onívoros",
+                  "Os que pastam e os que comem de tudo. A maioria se doma com a comida dela na mão; os grandes também por nocaute.\n"
+                  "Muitos andam em bando e defendem o grupo."),
+        "en_us": ("Bestiary: Herbivores", "and omnivores",
+                  "The grazers and the ones that eat anything. Most are tamed with their food in your hand; the big ones also by knockout.\n"
+                  "Many roam in herds and defend the group."),
+        "es_es": ("Bestiario: Herbívoros", "y omnívoros",
+                  "Los que pastan y los que comen de todo. La mayoría se doma con su comida en la mano; los grandes también por noqueo.\n"
+                  "Muchos van en manada y defienden al grupo."),
+    }),
+    ("flyers", [{"item": "minecraft:feather"}], {
+        "pt_br": ("Bestiário: Voadores", "pterossauros e aves",
+                  "Os donos do céu. Fazem colônias na costa e nos penhascos.\n"
+                  "A boleadeira derruba um voador no ar; preso no chão, ele pode ser domado."),
+        "en_us": ("Bestiary: Flyers", "pterosaurs and birds",
+                  "The masters of the sky. They nest in colonies on coasts and cliffs.\n"
+                  "A bola brings a flyer down; held on the ground, it can be tamed."),
+        "es_es": ("Bestiario: Voladores", "pterosaurios y aves",
+                  "Los dueños del cielo. Anidan en colonias en la costa y los acantilados.\n"
+                  "La boleadora derriba a un volador; sujeto en el suelo, se puede domar."),
+    }),
+    ("marine", [{"tag": "minecraft:fishes"}], {
+        "pt_br": ("Bestiário: Marinhos", "répteis e peixes do mar",
+                  "Os que vivem na água: répteis marinhos, tartarugas e os peixes do Cretáceo.\n"
+                  "Ficam no oceano e nos rios; os grandes atacam quem nada perto."),
+        "en_us": ("Bestiary: Sea Reptiles", "and Cretaceous fish",
+                  "The ones living in the water: sea reptiles, turtles and the fish of the Cretaceous.\n"
+                  "They keep to the ocean and the rivers; the big ones attack swimmers."),
+        "es_es": ("Bestiario: Marinos", "reptiles y peces del mar",
+                  "Los que viven en el agua: reptiles marinos, tortugas y los peces del Cretácico.\n"
+                  "Viven en el océano y los ríos; los grandes atacan a quien nada cerca."),
+    }),
+]
 
 # the species list's texts (client/PocketGuideScreen)
 LIST_TEXT = {
     "pt_br": {"diet.carnivore": "Carnívoro", "diet.herbivore": "Herbívoro", "diet.omnivore": "Onívoro",
               "diet.piscivore": "Come peixe", "size": "%s m", "tame.egg": "Doma: filhote, ovo ou nocaute",
               "tame.feed": "Doma: na mão ou nocaute", "food": "Comida: %s porções", "food.stacks": "Comida: %s pilhas (%s)", "food.stack": "Comida: 1 pilha (64)", "rideable": "Montável",
-              "count": "%s espécies"},
+              "count": "%s espécies", "count.one": "1 espécie"},
     "en_us": {"diet.carnivore": "Carnivore", "diet.herbivore": "Herbivore", "diet.omnivore": "Omnivore",
               "diet.piscivore": "Fish-eater", "size": "%s m", "tame.egg": "Tame: baby, egg or knockout",
               "tame.feed": "Tame: by hand or knockout", "food": "Food: %s bites", "food.stacks": "Food: %s stacks (%s)", "food.stack": "Food: 1 stack (64)", "rideable": "Rideable",
-              "count": "%s species"},
+              "count": "%s species", "count.one": "1 species"},
     "es_es": {"diet.carnivore": "Carnívoro", "diet.herbivore": "Herbívoro", "diet.omnivore": "Omnívoro",
               "diet.piscivore": "Come peces", "size": "%s m", "tame.egg": "Doma: cría, huevo o noqueo",
               "tame.feed": "Doma: en la mano o noqueo", "food": "Comida: %s bocados", "food.stacks": "Comida: %s pilas (%s)", "food.stack": "Comida: 1 pila (64)", "rideable": "Montable",
-              "count": "%s especies"},
+              "count": "%s especies", "count.one": "1 especie"},
 }
 
 BOOK = {
@@ -300,6 +351,13 @@ def build_lang():
         lang[code]["guide.terrassic.pocket.title"] = title
         lang[code]["guide.terrassic.pocket.subtitle"] = subtitle
         lang[code]["item.terrassic.pocket_guide"] = item
+    for vid, _, texts in VOLUMES:
+        assert set(texts) == set(BOOK), vid
+        for code, (title, subtitle, body) in texts.items():
+            lang[code][f"item.terrassic.bestiary_{vid}"] = title
+            lang[code][f"guide.terrassic.bestiary.{vid}.title"] = title.split(": ")[-1]
+            lang[code][f"guide.terrassic.bestiary.{vid}.subtitle"] = subtitle
+            lang[code][f"guide.terrassic.bestiary.{vid}.body"] = body
     for code, texts in LIST_TEXT.items():
         for key, text in texts.items():
             lang[code][f"guide.terrassic.pocket.list.{key}"] = text
@@ -318,6 +376,13 @@ def main():
         "type": "minecraft:crafting_shapeless", "category": "misc",
         "ingredients": [{"item": "minecraft:book"}, {"item": "minecraft:flint"}],
         "result": {"item": "terrassic:pocket_guide"}})
+    for vid, ingredient, _ in VOLUMES:
+        _write(os.path.join(recipes, f"bestiary_{vid}.json"), {
+            "type": "minecraft:crafting_shapeless", "category": "misc",
+            "ingredients": [{"item": "minecraft:book"}, ingredient],
+            "result": {"item": f"terrassic:bestiary_{vid}"}})
+        _write(os.path.join(A, "models", "item", f"bestiary_{vid}.json"),
+               {"parent": "item/generated", "textures": {"layer0": f"terrassic:item/bestiary_{vid}"}})
     for tid, icon, recs, _ in TOPICS:
         for r in recs:
             assert os.path.exists(os.path.join(recipes, f"{r}.json")), f"{tid}: no recipe {r}"

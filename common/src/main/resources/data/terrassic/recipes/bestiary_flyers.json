@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    [
+      {
+        "item": "minecraft:feather"
+      }
+    ]
+  ],
+  "result": {
+    "item": "terrassic:bestiary_flyers"
+  }
+}

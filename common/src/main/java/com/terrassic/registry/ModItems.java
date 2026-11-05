@@ -253,6 +253,15 @@ public final class ModItems {
     // v1.1.2: the Pocket Guide, the help book every player gets on joining (docs/AJUDA.md)
     public static final RegistrySupplier<Item> POCKET_GUIDE = ITEMS.register("pocket_guide",
             () -> new PocketGuideItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.MAIN)));
+    // 1.7.1: the four Bestiaries, where the species pages went (tools/javagen/gen_pocket_guide.py VOLUMES)
+    public static final RegistrySupplier<Item> BESTIARY_CARNIVORES = ITEMS.register("bestiary_carnivores",
+            () -> new PocketGuideItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.MAIN), "carnivores"));
+    public static final RegistrySupplier<Item> BESTIARY_HERBIVORES = ITEMS.register("bestiary_herbivores",
+            () -> new PocketGuideItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.MAIN), "herbivores"));
+    public static final RegistrySupplier<Item> BESTIARY_FLYERS = ITEMS.register("bestiary_flyers",
+            () -> new PocketGuideItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.MAIN), "flyers"));
+    public static final RegistrySupplier<Item> BESTIARY_MARINE = ITEMS.register("bestiary_marine",
+            () -> new PocketGuideItem(new Item.Properties().stacksTo(1).arch$tab(ModTabs.MAIN), "marine"));
     // v1.1: the bola ties legs and wings (docs/ARMAS.md)
     public static final RegistrySupplier<Item> BOLA = ITEMS.register("bola",
             () -> new BolaItem(new Item.Properties().stacksTo(16).arch$tab(ModTabs.MAIN)));
