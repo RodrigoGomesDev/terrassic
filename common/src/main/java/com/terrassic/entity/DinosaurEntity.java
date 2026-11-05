@@ -609,13 +609,46 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     /** Ticks of the species' "death" animation; the body stays that long and then turns into the carcass (lying in
-     *  its knocked_out pose, which the animation ends in). 0 = the vanilla death (one second, tipping over). */
+     *  its knocked_out pose, which the animation ends in). 0 = no death animation of its own: it sinks into the
+     *  knocked_out pose for a second (05/11/2026, player report: the vanilla tipping over fell to one side and the
+     *  carcass then lay on the other, "it falls and suddenly flicks to the other side"). */
     protected int deathAnimTicks() {
         return 0;
     }
 
     public boolean hasDeathAnimation() {
         return this.deathAnimTicks() > 0;
+    }
+
+    /** The facing becomes the body yaw it falls with, so the client can match it (see tickHeadTurn). */
+    private void settleYaw() {
+        this.setYRot(this.yBodyRot);
+        this.yRotO = this.yBodyRot;
+    }
+
+    /** How long the dying body stays before the carcass takes its place. */
+    private int dyingTicks() {
+        return this.hasDeathAnimation() ? this.deathAnimTicks() + SETTLE_TICKS : 20;
+    }
+
+    /** After its own death animation the body settles into the knocked_out pose the carcass lies in (the two differ by up
+     *  to 45 degrees at the knees in some rigs, and the carcass used to snap from one to the other). */
+    private static final int SETTLE_TICKS = 8;
+
+    /** Dead or knocked out, the body does not turn any more: the knockback of the last blow used to swing it round
+     *  towards where it slid (65 degrees in a tenth of a second, a Triceratops in the 05/11 test) and the head look
+     *  pulled it back after. It slides, but lies the way it fell; the carcass is laid with the same yaw. */
+    @Override
+    protected float tickHeadTurn(float bodyTarget, float walked) {
+        if (this.isDeadOrDying() || this.isKnockedOut()) {
+            // the client works its body yaw out by itself and can be some degrees off the server's, the one the carcass
+            // is laid with: the server sends it as the facing when the animal falls, and the client eases onto it
+            this.yBodyRot = this.level().isClientSide()
+                    ? Mth.approachDegrees(this.yBodyRotO, this.getYRot(), 3.0F) : this.yBodyRotO;
+            this.yHeadRot = this.yHeadRotO;
+            return walked;
+        }
+        return super.tickHeadTurn(bodyTarget, walked);
     }
 
     /** Whether the species has its own "sleep" loop and "wake_sleep" (else it sleeps in the "sit" pose). */
@@ -1118,13 +1151,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.broodAnim = RawAnimation.begin().thenLoop(anim("brood"));
 
         this.knockedOutAnim = RawAnimation.begin().thenLoop(anim("knocked_out"));
-        this.deathAnim = RawAnimation.begin().thenPlayAndHold(anim("death"));
+        this.deathAnim = this.hasDeathAnimation() ? RawAnimation.begin().thenPlayAndHold(anim("death")) : this.knockedOutAnim;
         this.sleepAnim = RawAnimation.begin().thenLoop(anim("sleep"));
         this.swimAnim = RawAnimation.begin().thenLoop(anim("swim"));
         AnimationController<DinosaurEntity> movement = new AnimationController<>(this, "movement", 6, state -> {
-            if (this.hasDeathAnimation() && this.isDeadOrDying()) {
+            if (this.isDeadOrDying()) {
                 this.cycleSpeed = 1.0D;
-                return state.setAndContinue(this.deathAnim);
+                return state.setAndContinue(this.deathTime > this.deathAnimTicks() ? this.knockedOutAnim : this.deathAnim);
             }
             if (this.isKnockedOut()) {
                 this.cycleSpeed = 1.0D;
@@ -1591,22 +1624,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             loot = this.capturedLoot;
             this.capturedLoot = null;
         }
-        if (this.hasDeathAnimation()) {
-            this.pendingCarcassLoot = loot;  // laid when the death animation ends (tickDeath)
-            return;
-        }
-        server.addFreshEntity(CarcassEntity.of(server, this, loot));
+        this.pendingCarcassLoot = loot;  // laid when the body has finished falling (tickDeath)
     }
 
-    /** Species with a death animation: the body plays it to the end, then the carcass takes its place (no puff). */
+    /** The body plays its death animation (or sinks into the knocked_out pose) to the end, then the carcass takes its
+     *  place in the same pose and yaw (no puff). */
     @Override
     protected void tickDeath() {
-        if (!this.hasDeathAnimation()) {
-            super.tickDeath();
-            return;
-        }
         ++this.deathTime;
-        if (this.deathTime >= this.deathAnimTicks() && !this.isRemoved() && this.level() instanceof ServerLevel server) {
+        if (this.deathTime >= this.dyingTicks() && !this.isRemoved() && this.level() instanceof ServerLevel server) {
             if (this.pendingCarcassLoot != null) {
                 server.addFreshEntity(CarcassEntity.of(server, this, this.pendingCarcassLoot));
                 this.pendingCarcassLoot = null;
@@ -1970,6 +1996,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Its owner hears of its death wherever they are, with where it lies (vanilla also says it in the chat). */
     @Override
     public void die(DamageSource source) {
+        if (!this.level().isClientSide() && !this.dead) {
+            this.settleYaw();
+            // a call or a bite under way would keep moving the bones over the fall
+            this.stopTriggeredAnimation(ACTION_CONTROLLER, null);
+        }
         if (!this.level().isClientSide() && this.isAlpha() && !this.isRemoved() && !this.dead) {
             if (!this.isTame()) {
                 Alphas.announce(this, "fell", source.getEntity());
@@ -2281,6 +2312,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     private void knockOut(Entity by) {
         this.entityData.set(DATA_KNOCKED_OUT, true);
+        this.settleYaw();
         this.tameEffectiveness = 100;
         this.navigation.stop();
         this.setTarget(null);

@@ -2,6 +2,7 @@ package com.terrassic.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.terrassic.client.compat.HatsCompat;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.registry.ModItems;
@@ -73,6 +74,9 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
     @Override
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+        if (HatsCompat.PRESENT) {
+            HatsCompat.capture(entity, this.getGeoModel(), this.renderScale(entity));
+        }
         if (entity.isEntangled()) {
             this.renderBola(entity, partialTick, poseStack, buffer, packedLight);
         }
@@ -99,10 +103,11 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
         poseStack.popPose();
     }
 
-    /** Species with their own death animation fall in it; no vanilla tipping over on top. */
+    /** No vanilla tipping over: they fall in their own death animation or sink into the knocked_out pose, the one the
+     *  carcass lies in (DinosaurEntity#tickDeath). */
     @Override
     protected float getDeathMaxRotation(T animatable) {
-        return animatable.hasDeathAnimation() ? 0.0F : super.getDeathMaxRotation(animatable);
+        return 0.0F;
     }
 
     /** A perched animal rides centred on the player; draw it on the left shoulder instead. */
