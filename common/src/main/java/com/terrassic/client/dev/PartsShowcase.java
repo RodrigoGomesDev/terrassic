@@ -145,6 +145,9 @@ public final class PartsShowcase {
         if (phases.contains("flight")) {
             planFlight();
         }
+        if (phases.contains("feedback")) {
+            planFeedback();
+        }
         if (phases.contains("bettercombat")) {
             planBetterCombat();
         }
@@ -477,6 +480,112 @@ public final class PartsShowcase {
                 }
             }
         }
+    }
+
+    // ------------------------------------------------------------------ the player feedback of 1.7 (docs/FEEDBACK_1_7.md)
+
+    /** The whistle heard at 96 blocks (not 100), the "My dinos" list, the tracking arrow, every spread of the Pocket
+     *  Guide, and how much food each remade species takes to tame. */
+    private static void planFeedback() {
+        java.util.UUID near = new java.util.UUID(0x7E55A52200000000L, ++serial);
+        java.util.UUID far = new java.util.UUID(0x7E55A52300000000L, ++serial);
+        STEPS.add(mc -> {
+            command(mc, "tp @e[type=!player] 0 -400 0");
+            int[] o = uuidInts(mc.player.getUUID());
+            for (Object[] d : new Object[][]{{near, 90}, {far, 100}}) {
+                int[] u = uuidInts((java.util.UUID) d[0]);
+                command(mc, String.format(Locale.ROOT, "summon terrassic:velociraptor %d %s 0.5 {PersistenceRequired:1b,Size:1f,BirthSize:1f,"
+                        + "UUID:[I;%d,%d,%d,%d],Owner:[I;%d,%d,%d,%d],Sitting:1b,CustomName:'\"%s\"'}", (Integer) d[1], Y,
+                        u[0], u[1], u[2], u[3], o[0], o[1], o[2], o[3], d[0] == near ? "Perto" : "Longe"));
+            }
+            look(mc.player, new Vec3(0.5D, Y + 1.62D, 0.5D), new Vec3(10.0D, Y + 1.0D, 0.5D));
+            serverTp(mc);
+            return 60;
+        });
+        double[] start = new double[1];
+        STEPS.add(mc -> {
+            MinecraftServer srv = mc.getSingleplayerServer();
+            net.minecraft.server.level.ServerPlayer sp = srv.getPlayerList().getPlayer(mc.player.getUUID());
+            List<DinosaurEntity> hearing = com.terrassic.entity.Whistle.hearing(sp);
+            boolean hearsNear = hearing.stream().anyMatch(d -> d.getUUID().equals(near));
+            boolean hearsFar = hearing.stream().anyMatch(d -> d.getUUID().equals(far));
+            Entity n = srv.overworld().getEntity(near);
+            start[0] = n == null ? -1.0D : n.distanceTo(sp);
+            REPORT.add(String.format(Locale.ROOT, "feedback whistle: the tamed raptor at %.0f blocks %s, the one at %.0f blocks %s (range %.0f)",
+                    start[0], hearsNear ? "hears it" : "does NOT hear it",
+                    srv.overworld().getEntity(far) == null ? -1.0D : srv.overworld().getEntity(far).distanceTo(sp),
+                    hearsFar ? "HEARS it" : "does not", com.terrassic.entity.Whistle.RANGE));
+            command(mc, "execute as " + mc.player.getGameProfile().getName() + " run terrassic apito follow");
+            return 400;
+        });
+        STEPS.add(mc -> {
+            MinecraftServer srv = mc.getSingleplayerServer();
+            Entity n = srv.overworld().getEntity(near);
+            Entity f = srv.overworld().getEntity(far);
+            net.minecraft.server.level.ServerPlayer sp = srv.getPlayerList().getPlayer(mc.player.getUUID());
+            REPORT.add(String.format(Locale.ROOT, "feedback whistle \"follow\": after 20 s the near one is %.0f blocks away (was %.0f); the far one %.0f",
+                    n == null ? -1.0D : n.distanceTo(sp), start[0], f == null ? -1.0D : f.distanceTo(sp)));
+            mc.options.hideGui = true;
+            com.terrassic.client.MyDinosScreen.open();
+            return 60;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "feedback_my_dinos.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 5;
+        });
+        STEPS.add(mc -> {
+            mc.setScreen(null);
+            try {
+                java.lang.reflect.Method toggle = Class.forName("com.terrassic.client.DinoTracker").getDeclaredMethod("toggle", java.util.UUID.class);
+                toggle.setAccessible(true);
+                toggle.invoke(null, far);
+            } catch (ReflectiveOperationException e) {
+                REPORT.add("feedback tracker: " + e);
+            }
+            mc.options.hideGui = false;
+            look(mc.player, mc.player.getEyePosition(), mc.player.getEyePosition().add(-1.0D, 0.0D, 0.0D));   // facing away
+            return 120;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "feedback_tracker.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 5;
+        });
+        STEPS.add(mc -> {
+            mc.options.hideGui = true;
+            com.terrassic.client.PocketGuideScreen.open();
+            return 20;
+        });
+        for (int i = 0; i < 40; i++) {
+            int page = i;
+            STEPS.add(mc -> {
+                Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "feedback_guide_%02d.png", page), mc.getMainRenderTarget(), msg -> {
+                });
+                return 3;
+            });
+            STEPS.add(mc -> {
+                if (mc.screen != null) {
+                    mc.screen.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT, 0, 0);
+                }
+                return 6;
+            });
+        }
+        STEPS.add(mc -> {
+            mc.setScreen(null);
+            StringBuilder goals = new StringBuilder("feedback taming goal (portions of food; carnivores in meat):");
+            for (String sp : SPECIES) {
+                Entity e = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(new net.minecraft.resources.ResourceLocation("terrassic", sp))
+                        .create(mc.getSingleplayerServer().overworld());
+                if (e instanceof DinosaurEntity d) {
+                    goals.append(String.format(Locale.ROOT, " %s %d (%s, base health %.0f)", sp, d.foodGoal(), d.isHunter() ? "carnivore" : "other",
+                            d.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).getBaseValue()));
+                    e.discard();
+                }
+            }
+            REPORT.add(goals.toString());
+            return 5;
+        });
     }
 
     // ------------------------------------------------------------------ Better Combat
