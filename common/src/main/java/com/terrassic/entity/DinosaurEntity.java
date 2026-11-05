@@ -1275,7 +1275,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         float scale = this.getScale();
         // lying down knocked out or asleep, or sitting, the parts come down with the model
         float low = this.isKnockedOut() || this.isSleeping() ? 0.35F : this.isInSittingPose() ? 0.6F : 1.0F;
-        boolean wings = this instanceof FlyingDinosaur flyer && flyer.isFlying();
+        boolean wings = this instanceof FlyingDinosaur flyer && flyer.isAirborne();   // isFlying reads "up" on a client for one standing still since it loaded
         float headYawDeg = this.yBodyRot + Mth.clamp(Mth.wrapDegrees(this.yHeadRot - this.yBodyRot), -75.0F, 75.0F);
         float bodyYaw = this.yBodyRot * Mth.DEG_TO_RAD;
         float headYaw = headYawDeg * Mth.DEG_TO_RAD;
