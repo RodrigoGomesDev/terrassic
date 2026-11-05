@@ -8,47 +8,68 @@ e na `mc/1.21.1` (04/11/2026); validado em servidor real, ainda sem revisão no 
   `PartOwners` (lista dos donos guardada no `Level`). Mixins comuns em `mixin/parts`: `LevelMixin`
   (`getEntities(Entity, AABB, Predicate)` também devolve as partes que caem na caixa), `ServerLevelMixin`
   (`getEntityOrPart` acha a parte pelo id), `EntityCounterAccessor` (bloco de ids: dono, depois 1..n partes, como o
-  dragão) e `AbstractArrowInvoker`; cliente: `PartHitboxMixin` (F3+B: cabeça vermelha, pescoço amarelo, corpo verde,
-  cauda azul, asa violeta). Não usa o `PartEntity` do Forge/NeoForge: o mesmo caminho nos dois loaders.
-- **Cobrem o modelo inteiro** (correção de 04/11 depois do teste do Rodrigo, que achou espaços: o tronco ficava só com
-  a caixa de colisão, estreita, e as caixas quadradas deixavam cantos nas diagonais). `tools/javagen/parts.py` lê o
-  `.geo.json` em repouso e separa cabeça, pescoço (`neck*`/`throat`), corpo (tronco, pernas e braços), cauda (`tail*`) e,
-  em quem tem membrana (`mem_*`, Pteranodonte), as asas; cada tipo é cortado ao longo do seu eixo (o corpo para a
-  frente, a asa para fora) em pedaços (até 2/3/4/5/3 por tipo, nunca menores que 0,5 m, folga de 5 cm). Cada pedaço é
-  um retângulo (comprimento ao longo do corpo, largura de lado, altura) que gira com o animal: no jogo a caixa é a menor
-  que contém o retângulo girado (`DinoPart.place`), então vizinhos sempre se encontram. `tools/javagen/parts_coverage.py`
-  confere: todo ponto do modelo (amostras a cada ~2 px) dentro de alguma parte em 7 ângulos; 0% de fora nas 13 espécies.
-  O `gen_species.py` grava `PARTS` e `partPivot()` em `PARTS_SPECIES`. Escala com `getScale()`; cabeça e pescoço giram
-  com `yHeadRot` (até 75°) em torno da base do pescoço; deitado (nocaute, sono) as partes descem a 35%, sentado a 60%.
-  As asas só valem no ar (`FlyingDinosaur.isAirborne`; no chão estão dobradas).
+  dragão) e `AbstractArrowInvoker`. Cliente: `PartFrameMixin` (antes da mira de cada quadro, as partes vão para onde o
+  modelo é desenhado naquele quadro) e `PartHitboxMixin` (F3+B: cabeça vermelha, pescoço amarelo, corpo verde, cauda
+  azul, asa violeta). Não usa o `PartEntity` do Forge/NeoForge: o mesmo caminho nos dois loaders.
+- **Cobrem o modelo inteiro, parado e se mexendo** (correções de 04 e 05/11 depois do teste do Rodrigo, que achou
+  espaços). `tools/javagen/parts.py` lê o `.geo.json` e as animações: separa cabeça (o osso `head` e filhos), pescoço,
+  corpo (tronco, pernas e braços), cauda e, em quem tem membrana (Pteranodonte), as asas abertas (dobradas no chão
+  contam como corpo). Mede o modelo em repouso e em cada quadro-chave das animações de locomoção (`POSES`: parado,
+  andar, correr, espreitar, voar, planar, curvas, olhar de lado) e corta cada tipo em pedaços ao longo do seu eixo.
+  Três layouts com os mesmos pedaços: **em pé**, **deitado** (dormindo, sentado, nocauteado: poses `sit`/`sleep`/
+  `knocked_out`/`brood`) e **cabeça baixa** (pastando, comendo, bebendo: `graze`/`eat`/`drink`/`sift`/`grit`/`pluck`;
+  `DinosaurEntity.isHeadDown`: no cliente, a animação que o controlador `action` toca; no servidor, 3 s depois do
+  `triggerAnim`). Cada pedaço é uma caixa orientada no corpo do animal: a cabeça gira e inclina com o olhar em torno do
+  osso `head` (como o GeckoLib gira esse osso), o voador inteiro inclina e rola como o `DinosaurRenderer` o desenha,
+  tudo gira com o corpo; a caixa da parte é a menor que contém a peça (`DinosaurEntity.placeParts`). Ataques (o bote
+  que joga a cabeça 2,5 m de lado) ficam de fora de propósito: uma caixa que os cobrisse seria acertada no ar o resto do
+  tempo. `tools/javagen/parts_coverage.py` confere os três layouts: todo ponto do modelo dentro de alguma parte, em 7
+  ângulos. Espécie refeita nova entra em `gen_species.PARTS_SPECIES`.
 - Dano: `DinoPart.Kind` (cabeça 1,25; pescoço e corpo 1,0; cauda e asa 0,75) em `DinosaurEntity.hurtByPart`; a caixa de
-  colisão continua contando 100% (nos pequenos ela fica por fora do pedaço do corpo). O torpor da clava sai do dano já
-  multiplicado. O que o motor só faz com alvo vivo é refeito para a parte: desgaste e efeito da arma, último alvo do
-  jogador, flecha cravada, encantamentos e o efeito da flecha/dardo. Lança, dardo e boleadeira desembrulham a parte
-  (`DinoParts.owner`); o dardo cravado é desenhado na zona acertada. Lupa, carvão, apito e controles também.
+  colisão continua contando 100% (nos pequenos ela fica por fora do pedaço do corpo). Pernas contam como corpo. O
+  torpor da clava sai do dano já multiplicado. O que o motor só faz com alvo vivo é refeito para a parte: desgaste e
+  efeito da arma, último alvo do jogador, flecha cravada, encantamentos e o efeito da flecha/dardo. Lança, dardo e
+  boleadeira desembrulham a parte (`DinoParts.owner`); o dardo cravado é desenhado na zona acertada. Lupa, carvão,
+  apito e controles também. A parte responde pelo dono do animal (`OwnableEntity`): mods de combate que poupam os
+  bichos do jogador poupam as partes também.
 - Mordida pela cabeça: `ai/HeadMeleeAttackGoal` substitui o `MeleeAttackGoal` de herbívoros, predadores, voadores e
   marinhos: alcança o que toca a cabeça (+0,8 bloco) ou encosta no corpo; sem partes, o alcance do vanilla.
-- Pernas contam como corpo (100%): ficam no pedaço do corpo e sob a caixa de colisão.
+- Better Combat: `./gradlew :fabric:runClient -PbetterCombat` roda com ele (só no cliente de teste, nunca no jar).
 
-## Validação
-- `parts_coverage.py`: 0% do modelo descoberto, 13 espécies x 7 ângulos.
+## Validação (05/11/2026, Mac do Rodrigo)
+- `parts_coverage.py`: **0% do modelo fora** nas 13 espécies, nos três layouts, em 7 ângulos.
 - Servidor real (`parts_regression.py`, ataque pelo id da parte): machadinha de pedra num T. rex sem armadura dá 9 na
   caixa, 9 no pedaço do corpo, 11,25 na cabeça e 6,75 na ponta da cauda; flecha na ponta da cauda acerta; dardo no
-  focinho dá torpor. 8/8 em Fabric e Forge 1.20.1 e em Fabric 1.21.1.
-- **Cliente gráfico de verdade** (`client/dev/PartsShowcase`, ligado só com `TERRASSIC_PARTS_SHOWCASE=1`; rodar
-  `TERRASSIC_PARTS_SHOWCASE=1 ./gradlew :fabric:runClient --args="--quickPlaySingleplayer <mundo plano>"`): as 13
-  espécies de frente e giradas 45°, F3+B fotografado de lado e de cima (`run/screenshots/parts_*.png`), a mira do
-  vanilla (`GameRenderer.pick`) varrendo a linha do corpo a cada 10 cm dos dois lados e de cima, e golpes reais
-  (`gameMode.attack`) com machadinha na caixa, no corpo, na cabeça e na ponta da cauda. Fabric 1.20.1, Forge 1.20.1 e
-  Fabric 1.21.1: **6.408 miras, 0 falhas; 47 golpes, todos exatos** (9 / 9 / 11,25 / 6,75), relatório em
-  `run/terrassic_parts_report.txt`. As fotos conferidas uma a uma: o modelo fica dentro das caixas em todas.
-- Antes: `feedback17`, `knockout` e `dart_regression` repetidos (1.20.1 Fabric e Forge: 23/23, 18/18, 25/25; 1.21.1
-  Fabric: os mesmos). NeoForge 1.21.1 só compilado. `./gradlew build` passou nas duas branches.
+  focinho dá torpor. **8/8 em Fabric e Forge 1.20.1.**
+- **Cliente gráfico de verdade** (`client/dev/PartsShowcase`, só com `TERRASSIC_PARTS_SHOWCASE=1`;
+  `TERRASSIC_PARTS_PHASES` escolhe entre `still`, `flight`, `moving`, `feedback`, `bettercombat`; relatório em
+  `run/terrassic_parts_report.txt`, fotos em `run/screenshots/`). Fabric e Forge 1.20.1:
+  - parado, de frente e girado 45°: a mira do vanilla varrendo a linha do corpo a cada 10 cm, dos dois lados e de
+    cima, mais o Pteranodonte em voo de ponta a ponta das asas: **6.874 e 6.880 miras, 0 falhas**;
+  - golpes reais (`gameMode.attack`): caixa e corpo 9, cabeça 11,25, cauda 6,75, asa 6,75 em todas as espécies (no
+    Protocerátops, o golpe de lado na cabeça pega o pedaço do corpo, que é mais próximo: as caixas se sobrepõem);
+  - **em movimento** (IA ligada 10 s, depois provocado 10 s), todo vértice do modelo como o GeckoLib o desenhou em
+    cada quadro, contra as caixas: 0 a 4,7% dos vértices fora; quadros com algum vértice a mais de 0,5 m fora: 0% em
+    8 espécies, 0,6 a 7% nas outras, sempre em animações curtas de parado (`yawn`, `stretch`, `call`), no acordar
+    levando golpe ou no salto de esquiva do Gallimimus (pior caso 0,95 m).
+- `mc/1.21.1` (Fabric): as mesmas regressões e o mesmo cliente (6.880 miras, 0 falhas; golpes iguais); Better Combat
+  2.4.0 com a Clava de Cauda a 125/100/75% e a de Osso acertando a cabeça; o domado poupado.
+- Better Combat 1.9.0 (Fabric 1.20.1): as 7 armas do mod reconhecidas (Clava de Osso = maça, Clava de Cauda = martelo
+  de duas mãos, lanças, faca, adaga, machadinha); a Clava de Cauda dá cabeça 6,875 / corpo 5,5 / cauda 4,125
+  (125/100/75%); a varredura acerta o selvagem e não o domado ao lado (o Better Combat vê o domado e as 11 partes como
+  FRIENDLY). O Better Combat acha a parte pelo `getEntityOrPart` (1.9 e 2.4).
+- `feedback17` 23/23, `knockout` 18/18, `dart_regression` 25/25 em Fabric e Forge 1.20.1 com o código final.
 
 ## Pendências
-- A mira foi testada com o animal parado (idle); na corrida e nas animações de ataque a cauda e o pescoço se movem um
-  pouco além da folga. Asas do Pteranodonte em voo não foram fotografadas (o teste usa o animal parado no chão).
-- Better Combat resolve o alvo por `getEntity`, então com ele só a caixa de colisão é acertada.
+- Clava de Osso com Better Combat: o primeiro golpe do combo não pegou a cabeça do T. rex no teste (o corpo e a cauda
+  sim); não investigado.
+- Animações curtas de parado e de ataque saem das caixas por até ~1 m durante o movimento (ver acima).
+- Pteranodonte em voo: ao bater as asas, a ponta da membrana passa até ~1 m da caixa em menos de 1% dos vértices da
+  asa (sempre a da direita; não é o sinal da inclinação nem o lado, testados); a mira de ponta a ponta das asas não
+  falha.
+- Na 1.21.1, o Better Combat 2.x embute o `tiny-config`, que o cliente de desenvolvimento não carrega de dentro do jar:
+  `fabric/build.gradle` o inclui à parte com `-PbetterCombat`.
+- Revisão a olho, jogando: o teste automático não substitui.
 
 ## Plano original
 
