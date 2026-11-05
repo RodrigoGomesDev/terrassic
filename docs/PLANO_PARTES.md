@@ -8,36 +8,47 @@ e na `mc/1.21.1` (04/11/2026); validado em servidor real, ainda sem revisão no 
   `PartOwners` (lista dos donos guardada no `Level`). Mixins comuns em `mixin/parts`: `LevelMixin`
   (`getEntities(Entity, AABB, Predicate)` também devolve as partes que caem na caixa), `ServerLevelMixin`
   (`getEntityOrPart` acha a parte pelo id), `EntityCounterAccessor` (bloco de ids: dono, depois 1..n partes, como o
-  dragão) e `AbstractArrowInvoker`; cliente: `PartHitboxMixin` (F3+B: cabeça vermelha, pescoço amarelo, cauda azul).
-  Não usa o `PartEntity` do Forge/NeoForge: o mesmo caminho nos dois loaders.
-- Medidas geradas: `tools/javagen/parts.py` lê o `.geo.json` em repouso (ossos `head`, `neck*`/`throat`, `tail*`;
-  sela, `*_display` e `young_*` fora), corta cabeça/pescoço/cauda em pedaços quadrados (até 2/2/4, nunca menores que
-  0,6 m) e o `gen_species.py` grava `PARTS` e `partPivot()` nas 13 espécies de `PARTS_SPECIES`. Os limites batem com o
-  `art/build_report.json` (T. rex: idênticos). Escala com `getScale()`; cabeça e pescoço giram com `yHeadRot` (até 75°)
-  em torno da base do pescoço; deitado (nocaute, sono) as partes descem a 35%, sentado a 60%.
-- Dano: `DinoPart.Kind` (cabeça 1,25; pescoço 1,0; cauda 0,75) em `DinosaurEntity.hurtByPart`; o corpo é a própria caixa
-  (100%). O torpor da clava sai do dano já multiplicado. O que o motor só faz com alvo vivo é refeito para a parte:
-  desgaste e efeito da arma, último alvo do jogador (lobos e dinos domados seguem), flecha cravada, encantamentos e o
-  efeito da flecha/dardo. Lança, dardo e boleadeira desembrulham a parte (`DinoParts.owner`); o dardo cravado é
-  desenhado na zona acertada (`DATA_DART_ZONES`, `StuckProjectilesLayer`). Lupa, carvão, apito e controles também.
+  dragão) e `AbstractArrowInvoker`; cliente: `PartHitboxMixin` (F3+B: cabeça vermelha, pescoço amarelo, corpo verde,
+  cauda azul, asa violeta). Não usa o `PartEntity` do Forge/NeoForge: o mesmo caminho nos dois loaders.
+- **Cobrem o modelo inteiro** (correção de 04/11 depois do teste do Rodrigo, que achou espaços: o tronco ficava só com
+  a caixa de colisão, estreita, e as caixas quadradas deixavam cantos nas diagonais). `tools/javagen/parts.py` lê o
+  `.geo.json` em repouso e separa cabeça, pescoço (`neck*`/`throat`), corpo (tronco, pernas e braços), cauda (`tail*`) e,
+  em quem tem membrana (`mem_*`, Pteranodonte), as asas; cada tipo é cortado ao longo do seu eixo (o corpo para a
+  frente, a asa para fora) em pedaços (até 2/3/4/5/3 por tipo, nunca menores que 0,5 m, folga de 5 cm). Cada pedaço é
+  um retângulo (comprimento ao longo do corpo, largura de lado, altura) que gira com o animal: no jogo a caixa é a menor
+  que contém o retângulo girado (`DinoPart.place`), então vizinhos sempre se encontram. `tools/javagen/parts_coverage.py`
+  confere: todo ponto do modelo (amostras a cada ~2 px) dentro de alguma parte em 7 ângulos; 0% de fora nas 13 espécies.
+  O `gen_species.py` grava `PARTS` e `partPivot()` em `PARTS_SPECIES`. Escala com `getScale()`; cabeça e pescoço giram
+  com `yHeadRot` (até 75°) em torno da base do pescoço; deitado (nocaute, sono) as partes descem a 35%, sentado a 60%.
+  As asas só valem no ar (`FlyingDinosaur.isAirborne`; no chão estão dobradas).
+- Dano: `DinoPart.Kind` (cabeça 1,25; pescoço e corpo 1,0; cauda e asa 0,75) em `DinosaurEntity.hurtByPart`; a caixa de
+  colisão continua contando 100% (nos pequenos ela fica por fora do pedaço do corpo). O torpor da clava sai do dano já
+  multiplicado. O que o motor só faz com alvo vivo é refeito para a parte: desgaste e efeito da arma, último alvo do
+  jogador, flecha cravada, encantamentos e o efeito da flecha/dardo. Lança, dardo e boleadeira desembrulham a parte
+  (`DinoParts.owner`); o dardo cravado é desenhado na zona acertada. Lupa, carvão, apito e controles também.
 - Mordida pela cabeça: `ai/HeadMeleeAttackGoal` substitui o `MeleeAttackGoal` de herbívoros, predadores, voadores e
   marinhos: alcança o que toca a cabeça (+0,8 bloco) ou encosta no corpo; sem partes, o alcance do vanilla.
-- Desempenho: a lista de donos é cópia na escrita; cada consulta testa primeiro a caixa que envolve todas as partes.
+- Pernas contam como corpo (100%): ficam no pedaço do corpo e sob a caixa de colisão.
 
 ## Validação
-`tools/validation/parts_regression.py` (servidor dedicado + cliente de protocolo, ataque pelo id da parte): mesma
-machadinha de pedra num T. rex sem armadura dá 9 no corpo, 11,25 na cabeça e 6,75 na cauda; flecha caindo na ponta da
-cauda, fora da caixa, acerta; dardo no focinho dá torpor. 7/7 em Fabric e Forge (1.20.1) e em Fabric 1.21.1.
-Repetidas depois da mudança: 1.20.1 Fabric e Forge, feedback17 23/23, knockout 18/18, dart 25/25; 1.21.1 Fabric, as
-mesmas 23/23, 18/18 e 25/25 (na 1.21 a regressão feedback17 dá 40 de vida máxima ao lobo: o dono lido do NBT não aplica
-os efeitos da doma e o lobo de 8 morria na primeira mordida). NeoForge 1.21.1 só compilado (o cliente de protocolo
-desta branch é só Fabric). `./gradlew build` passou nas duas branches.
+- `parts_coverage.py`: 0% do modelo descoberto, 13 espécies x 7 ângulos.
+- Servidor real (`parts_regression.py`, ataque pelo id da parte): machadinha de pedra num T. rex sem armadura dá 9 na
+  caixa, 9 no pedaço do corpo, 11,25 na cabeça e 6,75 na ponta da cauda; flecha na ponta da cauda acerta; dardo no
+  focinho dá torpor. 8/8 em Fabric e Forge 1.20.1 e em Fabric 1.21.1.
+- **Cliente gráfico de verdade** (`client/dev/PartsShowcase`, ligado só com `TERRASSIC_PARTS_SHOWCASE=1`; rodar
+  `TERRASSIC_PARTS_SHOWCASE=1 ./gradlew :fabric:runClient --args="--quickPlaySingleplayer <mundo plano>"`): as 13
+  espécies de frente e giradas 45°, F3+B fotografado de lado e de cima (`run/screenshots/parts_*.png`), a mira do
+  vanilla (`GameRenderer.pick`) varrendo a linha do corpo a cada 10 cm dos dois lados e de cima, e golpes reais
+  (`gameMode.attack`) com machadinha na caixa, no corpo, na cabeça e na ponta da cauda. Fabric 1.20.1, Forge 1.20.1 e
+  Fabric 1.21.1: **6.408 miras, 0 falhas; 47 golpes, todos exatos** (9 / 9 / 11,25 / 6,75), relatório em
+  `run/terrassic_parts_report.txt`. As fotos conferidas uma a uma: o modelo fica dentro das caixas em todas.
+- Antes: `feedback17`, `knockout` e `dart_regression` repetidos (1.20.1 Fabric e Forge: 23/23, 18/18, 25/25; 1.21.1
+  Fabric: os mesmos). NeoForge 1.21.1 só compilado. `./gradlew build` passou nas duas branches.
 
 ## Pendências
-- Cliente gráfico: mira e acerto na cabeça/cauda, F3+B, flecha e dardo vistos no couro, dino montado (o jogador não
-  acerta a própria montaria), Better Combat (resolve o alvo por `getEntity`, então só acerta o corpo).
-- Pernas e asas (Pteranodonte) não viraram partes: ficam sob a caixa do corpo ou fora dela. Espécies não refeitas não
-  têm partes. Inclinação de voo/nado não move as partes.
+- A mira foi testada com o animal parado (idle); na corrida e nas animações de ataque a cauda e o pescoço se movem um
+  pouco além da folga. Asas do Pteranodonte em voo não foram fotografadas (o teste usa o animal parado no chão).
+- Better Combat resolve o alvo por `getEntity`, então com ele só a caixa de colisão é acertada.
 
 ## Plano original
 
