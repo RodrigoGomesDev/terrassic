@@ -19,7 +19,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -154,7 +153,7 @@ public abstract class FlyingDinosaur extends DinosaurEntity implements FlyingAni
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(3, new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(4, new OrderedFollowOwnerGoal(this, 1.2D, 10.0F, 3.0F, true));
-        this.goalSelector.addGoal(5, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new com.terrassic.entity.ai.DinoBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(7, new FollowParentGoal(this, 1.1D));
         if (this.colonial()) {

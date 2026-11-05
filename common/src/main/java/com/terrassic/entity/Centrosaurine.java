@@ -145,7 +145,7 @@ public abstract class Centrosaurine extends HerbivoreDinosaur {
             return;
         }
         if (this.isBaby()) {
-            if (this.random.nextInt(600) == 0) {
+            if (this.random.nextInt(2400) == 0) {
                 Centrosaurine other = this.nearest(3.0D, true);
                 if (other != null && !other.isSleeping()) {
                     this.getLookControl().setLookAt(other, 30.0F, 30.0F);

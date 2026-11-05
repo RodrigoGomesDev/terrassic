@@ -356,6 +356,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        // 1.8 (found in the behaviour test): a herd member set on a target by the alarm keeps it after it dies, since no
+        // target goal of its own is running to drop it; a dead target blocked hand taming forever (canBeTamedNow)
+        LivingEntity target = this.getTarget();
+        if (target != null && (!target.isAlive() || target.isRemoved())) {
+            this.setTarget(null);
+        }
         this.ordersTick();
         if (!this.pivotsToTurn()) {
             return;
@@ -1243,8 +1249,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return HEAD_DOWN.contains(name.substring(name.lastIndexOf('.') + 1));
     }
 
+    /** Development only (client/dev/BehaviorTest): told of every one-shot animation a creature triggers; null in play. */
+    public static volatile java.util.function.BiConsumer<DinosaurEntity, String> triggerLog;
+
     @Override
     public void triggerAnim(String controllerName, String animName) {
+        java.util.function.BiConsumer<DinosaurEntity, String> log = triggerLog;
+        if (log != null && !this.level().isClientSide()) {
+            log.accept(this, animName);
+        }
         if (ACTION_CONTROLLER.equals(controllerName) && HEAD_DOWN.contains(animName)) {
             this.headDownUntil = this.tickCount + 60;
         }
@@ -3431,9 +3444,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         boolean worldgen = level instanceof WorldGenRegion;
         int cx = center.getX() >> 4;
         int cz = center.getZ() >> 4;
-        for (int r = 1; r <= 3; r++) {
+        // 1.8: out to 8 blocks (was 3): a pair mating in a river lays on the bank instead of dropping the egg in the water
+        for (int r = 1; r <= 8; r++) {
             for (int dx = -r; dx <= r; dx++) {
                 for (int dz = -r; dz <= r; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) != r) {
+                        continue;   // the ring at this distance only: the inner ones were looked at already
+                    }
                     for (int dy = 1; dy >= -1; dy--) {
                         BlockPos pos = center.offset(dx, dy, dz);
                         int px = pos.getX() >> 4;

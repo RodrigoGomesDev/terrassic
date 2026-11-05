@@ -106,7 +106,7 @@ public class Deinosuchus extends Crocodylian {
 
     @Override
     protected boolean isPrey(LivingEntity e) {
-        return e.isInWaterOrBubble() || e.getBbWidth() < 1.6F && !(e instanceof Deinosuchus);
+        return !(e instanceof Deinosuchus) && (e.isInWaterOrBubble() || e.getBbWidth() < 1.6F);
     }
 
     @Override

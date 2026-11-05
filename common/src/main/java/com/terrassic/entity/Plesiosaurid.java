@@ -106,7 +106,7 @@ public abstract class Plesiosaurid extends SwimmingDinosaur {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(3, new BreatheGoal());
-        this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new com.terrassic.entity.ai.DinoBreedGoal(this, 1.0D));
     }
 
     @Override

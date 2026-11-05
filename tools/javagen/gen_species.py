@@ -728,7 +728,7 @@ SPECIES = [
       food="Items.COD, Items.SALMON, Items.TROPICAL_FISH, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get(), ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.6, 0.6),
       xp=38, step_height=1.0, head=(40, 20),
-      prey="e.isInWaterOrBubble() || e.getBbWidth() < 1.6F && !(e instanceof Deinosuchus)", prey_interval=140, fish=True,
+      prey="!(e instanceof Deinosuchus) && (e.isInWaterOrBubble() || e.getBbWidth() < 1.6F)", prey_interval=140, fish=True,
       amphibious=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 1)], rig="Crocodylian"),
  dict(id="baurusuchus", cls="Baurusuchus", base="PredatorDinosaur",
       doc="Baurusuchus salgadoensis - 3.5 m land crocodylomorph on upright legs with a deep dog-like skull and blade teeth: a fast runner of the hot plains that hunts anything smaller than itself, alone or in pairs. Egg taming only until the knockout (v0.7); a tamed one is a base guard.",
