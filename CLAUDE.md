@@ -263,5 +263,11 @@ Suporte, diagnóstico de log, Guia de Campo, relatos de bug e avisos; documentad
   quiser o anúncio oficial maior em `#avisos`; passou muito tempo sem taguear (`v1.1.4` → `1.5.0` direto em
   `gradle.properties`, 39 commits sem tag em 02/11/2026) e `#avisos` ficou mudo nesse meio tempo — não é bug do bot.
 
+## Versões
+Regra em `docs/VERSOES.md` (Rodrigo, 05/11/2026; seguir sempre, sem perguntar): SemVer (correção = conserto, menor =
+conteúdo ou mecânica nova, maior = era nova ou quebra de mundo); o mesmo número nas duas branches; o número sobe só
+quando a build vai para `~/Desktop/terrassic-builds`; o Codex publica e põe o changelog; depois push da main e da
+mc/1.21.1 (aviso no #builds).
+
 ## Como registrar o progresso
 Ao terminar uma etapa: atualize este arquivo (versão, pendências) e faça commit no nome do Rodrigo.
