@@ -129,6 +129,7 @@ class LocalClient:
         self.respawn_packets = 0
         self.dimension = None
         self.entities = {}  # Spawned entity UUID -> current protocol id, scoped to this connection.
+        self.messages = []  # System chat and action bar texts (JSON), in arrival order.
         self.island_map = None
         self._use_sequence = 0
         self.error = None
@@ -231,6 +232,10 @@ class LocalClient:
                     self.send(0, varint(read_varint(packet)))
                 elif packet_id == 29:
                     raise RuntimeError("play disconnected: " + repr(read_nbt(packet.read())))
+                elif packet_id == 108:  # SystemChat (1.21.1): the component as network NBT, then the action-bar flag.
+                    with self._condition:
+                        self.messages.append(repr(read_nbt(packet.read())))
+                        self._condition.notify_all()
                 elif packet_id == 71:  # Respawn (also sent on dimension change): dimension type id, then its key.
                     read_varint(packet)
                     with self._condition:

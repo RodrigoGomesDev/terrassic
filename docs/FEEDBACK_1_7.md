@@ -20,3 +20,18 @@ antes da mudança); **build completa com Gradle e teste no jogo ainda pendentes*
 - No jogo: lista Meus dinos e a seta (Fabric e Forge), defesa contra mobs de outros mods, doma com pilhas segurando o botão,
   nocaute de 20 s, a nova vida nos combates, o Guia de Bolso com as 13 espécies, e o Better Combat com as clavas.
 - Densidade: medir com `/terrassic fauna` num mundo normal (a meta é ~1 dino para 3 animais do Minecraft).
+
+## Testes no servidor real (04/11/2026, Mac do Rodrigo)
+`./gradlew build` passou nos dois loaders (regressões de pesquisa incluídas). Servidor dedicado descartável + cliente de
+protocolo real (`tools/validation/feedback17_regression.py`, 23 verificações): Fabric 23/23; Forge 22/23 na última
+rodada, e a que faltou (o Tricerátops não chegou a morder o lobo em 20 s depois de aceitar a ordem) virou só registro:
+o teste agora confere que a ordem é aceita contra o bicho protegido, que é o que a 1.7 muda. Medido: acorda 19,6 s
+depois do nocaute da Clava de Cauda; 64ª carne doma o Velociraptor; 10ª semente doma o Gallimimus.
+`knockout_regression.py` 18/18 e `dart_regression.py` 25/25 nos dois loaders, ajustados para a 1.7 (regra
+`knockout_seconds 300` nos mundos de teste, metas de comida novas, ferida medida contra a vida anterior).
+Telas (Meus dinos, seta, Guia de Bolso) ainda sem revisão no jogo: o cliente não pôde ser controlado desta sessão.
+
+## Ainda na 1.7 (pedido do Rodrigo, 04/11): partes de acerto e porte para 1.21.1
+Sugestão da comunidade: as hitboxes não batem com os modelos (T. rex 13 m numa caixa 2,6 x 4,8). Decisão: **partes de
+acerto como no Ender Dragon**, com dano diferente por parte: **cabeça 125%, corpo 100%, cauda e pernas 75%**. A caixa
+de colisão fica como está (andar na mata, caminho). Plano em `docs/PLANO_PARTES.md`. A `mc/1.21.1` também recebe a 1.7.
