@@ -142,18 +142,46 @@ public class Mosasaurus extends Mosasaurid {
         return ModItems.MOSASAURUS_SADDLE.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 5.825F, 0.0F, 0.303F, 0.982F, 0.652F, 0.762F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.942F, 0.0F, 0.303F, 0.982F, 0.806F, 0.852F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 4.39F, 0.0F, 0.171F, 1.203F, 0.894F, 1.159F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 2.225F, 0.0F, -0.05F, 4.727F, 3.546F, 1.644F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -5.22F, 0.0F, -0.736F, 1.26F, 0.365F, 2.2F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.06F, 0.0F, -0.04F, 1.26F, 0.453F, 1.225F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.9F, 0.0F, -0.016F, 1.26F, 0.629F, 1.283F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.74F, 0.0F, 0.066F, 1.26F, 0.894F, 1.263F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.58F, 0.0F, 0.171F, 1.26F, 0.894F, 1.159F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{5.825F, 0.0F, 0.227F, 0.982F, 0.771F, 0.838F},
+                    new float[]{5.803F, 0.0F, 0.037F, 0.924F, 1.619F, 0.882F},
+                    new float[]{5.903F, 0.0F, -0.46F, 1.014F, 0.684F, 1.699F}),
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{4.942F, 0.0F, 0.234F, 0.982F, 0.917F, 0.987F},
+                    new float[]{4.978F, 0.0F, -0.006F, 0.924F, 1.347F, 1.139F},
+                    new float[]{4.988F, 0.0F, -0.071F, 1.014F, 0.835F, 1.391F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{4.388F, 0.0F, 0.105F, 1.236F, 0.984F, 1.281F},
+                    new float[]{4.355F, 0.0F, -0.035F, 1.23F, 1.308F, 1.37F},
+                    new float[]{4.435F, 0.0F, 0.104F, 1.406F, 0.919F, 1.3F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{2.435F, 0.0F, -0.081F, 5.163F, 3.584F, 1.706F},
+                    new float[]{2.162F, 0.0F, -1.29F, 4.635F, 3.683F, 3.552F},
+                    new float[]{2.292F, 0.0F, -0.05F, 4.863F, 3.476F, 1.644F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-5.218F, 0.0F, -0.769F, 1.263F, 3.617F, 2.279F},
+                    new float[]{-5.524F, 0.0F, -0.699F, 1.335F, 3.937F, 2.304F},
+                    new float[]{-5.164F, 0.0F, -0.682F, 1.277F, 1.164F, 2.102F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-4.055F, 0.0F, -0.103F, 1.263F, 2.644F, 1.353F},
+                    new float[]{-4.289F, 0.0F, -0.046F, 1.335F, 3.109F, 2.378F},
+                    new float[]{-3.987F, 0.0F, -0.028F, 1.277F, 0.917F, 1.214F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-2.892F, 0.0F, -0.078F, 1.263F, 1.487F, 1.371F},
+                    new float[]{-3.054F, 0.0F, -0.036F, 1.335F, 2.074F, 1.557F},
+                    new float[]{-2.81F, 0.0F, -0.016F, 1.277F, 0.729F, 1.284F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.729F, 0.0F, 0.022F, 1.263F, 0.997F, 1.308F},
+                    new float[]{-1.819F, 0.0F, 0.047F, 1.335F, 1.615F, 1.453F},
+                    new float[]{-1.633F, 0.0F, 0.065F, 1.277F, 0.908F, 1.265F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.565F, 0.0F, 0.137F, 1.263F, 0.945F, 1.225F},
+                    new float[]{-0.584F, 0.0F, 0.02F, 1.335F, 1.262F, 1.46F},
+                    new float[]{-0.456F, 0.0F, 0.171F, 1.277F, 0.908F, 1.159F})
     };
 
     @Override
@@ -163,7 +191,12 @@ public class Mosasaurus extends Mosasaurid {
 
     @Override
     public float partPivot() {
-        return 3.883F;
+        return 4.677F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 0.75F;
     }
 
     @Override

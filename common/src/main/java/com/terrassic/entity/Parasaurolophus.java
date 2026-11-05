@@ -117,22 +117,66 @@ public class Parasaurolophus extends Lambeosaurine {
         return ModItems.PARASAUROLOPHUS_SADDLE.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 4.211F, 0.0F, 1.505F, 1.132F, 0.475F, 1.074F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.179F, 0.0F, 1.817F, 1.132F, 0.433F, 1.176F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 3.481F, 0.0F, 1.621F, 0.608F, 0.684F, 0.945F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.973F, 0.0F, 1.294F, 0.608F, 0.684F, 1.184F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 2.465F, 0.0F, 1.328F, 0.608F, 0.684F, 0.964F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 2.29F, 0.0F, -0.052F, 1.266F, 1.228F, 2.567F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 1.124F, 0.0F, 0.882F, 1.266F, 1.017F, 1.815F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, -0.042F, 0.0F, -0.051F, 1.266F, 1.294F, 2.826F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -4.755F, 0.0F, 1.459F, 1.057F, 0.308F, 0.398F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -3.799F, 0.0F, 1.467F, 1.057F, 0.392F, 0.595F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -2.842F, 0.0F, 1.41F, 1.057F, 0.642F, 1.021F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -1.885F, 0.0F, 1.339F, 1.057F, 0.767F, 1.27F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.928F, 0.0F, 1.347F, 1.057F, 0.767F, 1.343F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{4.183F, 0.0F, 1.381F, 1.187F, 1.519F, 1.639F},
+                    new float[]{4.007F, 0.0F, 0.497F, 1.432F, 1.62F, 1.564F},
+                    new float[]{4.157F, 0.0F, 0.187F, 1.082F, 1.04F, 2.398F}),
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{3.097F, 0.0F, 1.724F, 1.187F, 0.923F, 1.752F},
+                    new float[]{2.675F, 0.0F, 0.147F, 1.432F, 3.425F, 2.154F},
+                    new float[]{3.176F, 0.0F, 0.177F, 1.082F, 0.813F, 2.838F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{3.503F, 0.0F, 1.584F, 0.617F, 1.018F, 1.458F},
+                    new float[]{3.497F, 0.0F, 0.34F, 0.604F, 1.004F, 1.668F},
+                    new float[]{3.605F, 0.0F, 1.122F, 0.58F, 0.887F, 1.406F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{2.986F, 0.0F, 1.22F, 0.617F, 0.874F, 1.731F},
+                    new float[]{2.993F, 0.0F, 0.318F, 0.604F, 2.441F, 1.583F},
+                    new float[]{3.126F, 0.0F, 1.086F, 0.58F, 0.824F, 1.373F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{2.469F, 0.0F, 1.289F, 0.617F, 0.853F, 1.409F},
+                    new float[]{2.489F, 0.0F, 0.323F, 0.604F, 2.331F, 1.281F},
+                    new float[]{2.646F, 0.0F, 1.013F, 0.58F, 0.743F, 1.242F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{2.598F, 0.0F, -0.073F, 1.148F, 1.39F, 2.651F},
+                    new float[]{2.539F, 0.0F, -0.192F, 0.97F, 4.161F, 1.621F},
+                    new float[]{2.451F, 0.0F, -0.06F, 0.944F, 1.262F, 2.313F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{1.55F, 0.0F, -0.067F, 1.148F, 1.208F, 2.821F},
+                    new float[]{1.669F, 0.0F, 0.055F, 0.97F, 2.428F, 1.714F},
+                    new float[]{1.607F, 0.0F, 0.713F, 0.944F, 1.11F, 1.83F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.502F, 0.0F, -0.088F, 1.148F, 1.345F, 2.863F},
+                    new float[]{0.8F, 0.0F, -0.297F, 0.97F, 3.998F, 2.267F},
+                    new float[]{0.763F, 0.0F, -0.052F, 0.944F, 1.281F, 2.792F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-0.545F, 0.0F, -0.056F, 1.148F, 1.326F, 2.831F},
+                    new float[]{-0.07F, 0.0F, -0.198F, 0.97F, 3.464F, 2.174F},
+                    new float[]{-0.081F, 0.0F, -0.052F, 0.944F, 1.294F, 2.828F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-4.758F, 0.0F, 1.224F, 1.072F, 1.348F, 0.666F},
+                    new float[]{-4.765F, 0.0F, 0.523F, 1.071F, 3.179F, 0.737F},
+                    new float[]{-4.771F, 0.0F, 1.397F, 1.063F, 0.71F, 0.933F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-3.786F, 0.0F, 1.171F, 1.072F, 1.181F, 0.89F},
+                    new float[]{-3.795F, 0.0F, 0.476F, 1.071F, 2.607F, 0.931F},
+                    new float[]{-3.807F, 0.0F, 1.409F, 1.063F, 0.722F, 0.998F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-2.814F, 0.0F, 1.042F, 1.072F, 1.065F, 1.389F},
+                    new float[]{-2.824F, 0.0F, 0.33F, 1.071F, 1.957F, 1.266F},
+                    new float[]{-2.844F, 0.0F, 1.358F, 1.063F, 0.798F, 1.165F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-1.842F, 0.0F, 0.975F, 1.072F, 1.055F, 1.642F},
+                    new float[]{-1.853F, 0.0F, 0.252F, 1.071F, 1.553F, 1.603F},
+                    new float[]{-1.881F, 0.0F, 1.291F, 1.063F, 0.839F, 1.424F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.871F, 0.0F, 0.99F, 1.072F, 0.974F, 1.7F},
+                    new float[]{-0.882F, 0.0F, 0.255F, 1.071F, 1.416F, 1.638F},
+                    new float[]{-0.917F, 0.0F, 1.298F, 1.063F, 0.829F, 1.413F})
     };
 
     @Override
@@ -142,7 +186,12 @@ public class Parasaurolophus extends Lambeosaurine {
 
     @Override
     public float partPivot() {
-        return 2.501F;
+        return 3.794F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 1.766F;
     }
 
     @Override

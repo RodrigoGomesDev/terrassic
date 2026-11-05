@@ -128,21 +128,62 @@ public class Pteranodon extends Pterosaur {
         return ModItems.PTERANODON_SADDLE.get();
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 3.373F, 0.0F, 1.562F, 1.549F, 0.455F, 0.576F),
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 1.923F, 0.0F, 1.444F, 1.549F, 0.605F, 0.794F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 1.211F, 0.0F, 1.336F, 0.7F, 0.45F, 0.78F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 0.611F, 0.0F, 1.131F, 0.7F, 0.45F, 0.763F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.351F, 0.0F, -0.05F, 1.001F, 1.054F, 1.752F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, -0.55F, 0.0F, -0.05F, 1.001F, 0.805F, 1.66F),
-            new DinoPart.Spec(DinoPart.Kind.WING, -0.025F, -4.585F, 1.309F, 0.85F, 1.834F, 0.3F),
-            new DinoPart.Spec(DinoPart.Kind.WING, -0.073F, -2.851F, 1.305F, 1.454F, 1.834F, 0.308F),
-            new DinoPart.Spec(DinoPart.Kind.WING, -0.099F, -1.117F, 1.11F, 1.602F, 1.834F, 0.55F),
-            new DinoPart.Spec(DinoPart.Kind.WING, -0.025F, 4.585F, 1.309F, 0.85F, 1.834F, 0.3F),
-            new DinoPart.Spec(DinoPart.Kind.WING, -0.073F, 2.851F, 1.305F, 1.454F, 1.834F, 0.308F),
-            new DinoPart.Spec(DinoPart.Kind.WING, -0.099F, 1.117F, 1.11F, 1.602F, 1.834F, 0.55F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{3.346F, 0.0F, 0.726F, 1.62F, 4.949F, 1.796F},
+                    new float[]{2.457F, 0.0F, -0.044F, 3.383F, 4.326F, 1.743F},
+                    new float[]{3.181F, 0.0F, 0.573F, 1.682F, 0.455F, 3.806F}),
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{1.826F, 0.0F, 1.071F, 1.62F, 3.709F, 1.526F},
+                    new float[]{-0.826F, 0.0F, 0.735F, 3.383F, 2.724F, 0.868F},
+                    new float[]{1.598F, 0.0F, 1.089F, 1.682F, 0.605F, 2.81F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{1.271F, 0.0F, 1.336F, 0.796F, 1.437F, 1.123F},
+                    new float[]{1.215F, 0.0F, 0.629F, 0.93F, 0.947F, 0.988F},
+                    new float[]{1.167F, 0.0F, 1.428F, 0.723F, 0.45F, 1.146F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{0.575F, 0.0F, 1.131F, 0.796F, 0.967F, 1.269F},
+                    new float[]{0.385F, 0.0F, 0.545F, 0.93F, 1.688F, 1.298F},
+                    new float[]{0.544F, 0.0F, 1.254F, 0.723F, 0.45F, 1.344F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{1.12F, 0.0F, 0.885F, 1.169F, 3.843F, 2.211F},
+                    new float[]{1.2F, 0.0F, -0.16F, 1.202F, 6.992F, 2.389F},
+                    new float[]{1.047F, 0.0F, 0.958F, 0.886F, 3.772F, 2.027F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.051F, 0.0F, -0.062F, 1.169F, 3.74F, 3.107F},
+                    new float[]{0.098F, 0.0F, -0.038F, 1.202F, 7.625F, 2.311F},
+                    new float[]{0.261F, 0.0F, 0.611F, 0.886F, 3.451F, 2.227F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-1.018F, 0.0F, -0.062F, 1.169F, 2.868F, 2.948F},
+                    new float[]{-1.004F, 0.0F, -0.038F, 1.202F, 8.45F, 2.189F},
+                    new float[]{-0.526F, 0.0F, -0.061F, 0.886F, 2.884F, 2.682F}),
+            new DinoPart.Spec(DinoPart.Kind.WING,
+                    new float[]{0.157F, -2.748F, -1.95F, 2.332F, 1.903F, 6.792F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F}),
+            new DinoPart.Spec(DinoPart.Kind.WING,
+                    new float[]{0.14F, -4.551F, -1.695F, 2.041F, 1.903F, 7.174F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F}),
+            new DinoPart.Spec(DinoPart.Kind.WING,
+                    new float[]{-0.099F, -0.946F, 0.313F, 1.841F, 1.903F, 3.076F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F}),
+            new DinoPart.Spec(DinoPart.Kind.WING,
+                    new float[]{0.157F, 2.742F, -1.95F, 2.332F, 1.907F, 6.792F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F}),
+            new DinoPart.Spec(DinoPart.Kind.WING,
+                    new float[]{0.148F, 4.549F, -1.695F, 2.024F, 1.907F, 7.174F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F}),
+            new DinoPart.Spec(DinoPart.Kind.WING,
+                    new float[]{-0.099F, 0.935F, 0.313F, 1.862F, 1.907F, 3.076F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F},
+                    new float[]{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F})
     };
 
     @Override
@@ -152,7 +193,12 @@ public class Pteranodon extends Pterosaur {
 
     @Override
     public float partPivot() {
-        return 0.45F;
+        return 1.5F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 1.36F;
     }
 
     @Override

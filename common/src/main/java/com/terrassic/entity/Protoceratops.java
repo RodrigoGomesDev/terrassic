@@ -83,13 +83,30 @@ public class Protoceratops extends Protoceratopsid {
         return 0.003D;
     }
 
-    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1
-     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */
+    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down
+     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1
+     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
-            new DinoPart.Spec(DinoPart.Kind.HEAD, 0.773F, 0.0F, 0.096F, 0.679F, 0.517F, 0.671F),
-            new DinoPart.Spec(DinoPart.Kind.NECK, 0.664F, 0.0F, 0.185F, 0.38F, 0.308F, 0.413F),
-            new DinoPart.Spec(DinoPart.Kind.BODY, 0.229F, 0.0F, -0.05F, 0.892F, 0.601F, 0.791F),
-            new DinoPart.Spec(DinoPart.Kind.TAIL, -0.519F, 0.0F, 0.189F, 0.897F, 0.308F, 0.614F)
+            new DinoPart.Spec(DinoPart.Kind.HEAD,
+                    new float[]{0.761F, 0.0F, -0.014F, 0.702F, 0.613F, 0.78F},
+                    new float[]{0.757F, 0.0F, -0.05F, 0.769F, 0.967F, 0.599F},
+                    new float[]{0.769F, 0.0F, -0.044F, 0.662F, 0.542F, 0.773F}),
+            new DinoPart.Spec(DinoPart.Kind.NECK,
+                    new float[]{0.658F, 0.0F, 0.082F, 0.393F, 0.481F, 0.515F},
+                    new float[]{0.682F, 0.0F, -0.0F, 0.434F, 0.749F, 0.396F},
+                    new float[]{0.648F, 0.0F, 0.075F, 0.365F, 0.346F, 0.479F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{0.55F, 0.0F, -0.062F, 0.654F, 0.671F, 0.729F},
+                    new float[]{0.47F, 0.0F, -0.141F, 0.526F, 1.099F, 0.668F},
+                    new float[]{0.43F, 0.0F, -0.037F, 0.512F, 0.625F, 0.695F}),
+            new DinoPart.Spec(DinoPart.Kind.BODY,
+                    new float[]{-0.004F, 0.0F, -0.066F, 0.654F, 0.603F, 0.807F},
+                    new float[]{0.044F, 0.0F, -0.157F, 0.526F, 1.125F, 0.697F},
+                    new float[]{0.018F, 0.0F, -0.05F, 0.512F, 0.56F, 0.773F}),
+            new DinoPart.Spec(DinoPart.Kind.TAIL,
+                    new float[]{-0.518F, 0.0F, 0.136F, 0.917F, 0.389F, 0.667F},
+                    new float[]{-0.519F, 0.0F, -0.02F, 0.927F, 0.72F, 0.592F},
+                    new float[]{-0.524F, 0.0F, 0.195F, 0.925F, 0.328F, 0.589F})
     };
 
     @Override
@@ -99,7 +116,12 @@ public class Protoceratops extends Protoceratopsid {
 
     @Override
     public float partPivot() {
-        return 0.583F;
+        return 0.771F;
+    }
+
+    @Override
+    public float partPivotUp() {
+        return 0.462F;
     }
 
     @Override

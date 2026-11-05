@@ -1071,16 +1071,21 @@ def gen(s, bounds):
     if s["id"] in PARTS_SPECIES:
         # 1.7: hit parts measured from the model at rest (tools/javagen/parts.py); DinoPart scales them by getScale()
         imports.add("com.terrassic.entity.parts.DinoPart")
-        rows = hit_parts.parts(s["id"], size["scale"])
+        rows, lying, low = hit_parts.layouts(s["id"], size["scale"])
         pivot_f, pivot_u = hit_parts.neck_base(s["id"])
         k = size["scale"] / 16.0
-        specs = ",\n".join(f"            new DinoPart.Spec(DinoPart.Kind.{kind.split('_')[0].upper()}, {f}F, {sd}F, {u}F, {ln}F, {wd}F, {h}F)"
-                            for kind, f, sd, u, ln, wd, h in rows)
-        body.append("    /** Hit parts covering the model: kind, forward, side, bottom, length, width and height in blocks at size 1")
-        body.append("     *  (tools/javagen/parts.py; tools/javagen/parts_coverage.py checks they leave no gaps). */")
+        def floats(row):
+            return "new float[]{" + ", ".join(f"{v}F" for v in row[1:]) + "}"
+        specs = ",\n".join(f"            new DinoPart.Spec(DinoPart.Kind.{r[0].split('_')[0].upper()},\n"
+                            f"                    {floats(r)},\n                    {floats(l)},\n                    {floats(d)})"
+                            for r, l, d in zip(rows, lying, low))
+        body.append("    /** Hit parts covering the model: kind, then standing, lying down (asleep, sitting, knocked out) and head down")
+        body.append("     *  (grazing, eating, drinking), each forward, side, bottom, length, width and height in blocks at size 1")
+        body.append("     *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */")
         body.append(f"    private static final DinoPart.Spec[] PARTS = {{\n{specs}\n    }};\n")
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
+        body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
     if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
