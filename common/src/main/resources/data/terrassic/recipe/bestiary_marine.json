@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    [
+      {
+        "tag": "minecraft:fishes"
+      }
+    ]
+  ],
+  "result": {
+    "id": "terrassic:bestiary_marine"
+  }
+}

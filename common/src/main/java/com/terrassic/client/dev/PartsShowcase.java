@@ -702,12 +702,20 @@ public final class PartsShowcase {
 
     // ------------------------------------------------------------------ the Pocket Guide, page by page
 
-    /** Opens the Pocket Guide and photographs every spread (guide_00.png, guide_01.png...) until the last one. */
+    /** Opens the Pocket Guide and the four Bestiaries and photographs every spread (guide_00.png..., then
+     *  guide_carnivores_00.png...) until the last one of each. */
     private static void planGuide() {
+        for (String volume : new String[]{"", "carnivores", "herbivores", "flyers", "marine"}) {
+            planBook(volume);
+        }
+    }
+
+    private static void planBook(String volume) {
         int[] last = {-1};
+        String prefix = volume.isEmpty() ? "guide_" : "guide_" + volume + "_";
         STEPS.add(mc -> {
             mc.options.hideGui = true;
-            com.terrassic.client.PocketGuideScreen.open();
+            com.terrassic.client.PocketGuideScreen.open(volume);
             return 20;
         });
         for (int i = 0; i < 60; i++) {
@@ -716,13 +724,13 @@ public final class PartsShowcase {
                 if (!(mc.screen instanceof com.terrassic.client.PocketGuideScreen g) || last[0] >= 0) {
                     return 0;
                 }
-                Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "guide_%02d.png", page), mc.getMainRenderTarget(), msg -> {
+                Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "%s%02d.png", prefix, page), mc.getMainRenderTarget(), msg -> {
                 });
                 int before = g.spreadIndex();
                 g.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT, 0, 0);
                 if (g.spreadIndex() == before) {
                     last[0] = page;
-                    REPORT.add("guide: " + (page + 1) + " spreads photographed");
+                    REPORT.add(prefix + ": " + (page + 1) + " spreads photographed");
                 }
                 return 4;
             });

@@ -90,18 +90,34 @@ ITEM_PAL = {"D": hexc("#2a1a0c"), "L": hexc("#6b4526"), "l": hexc("#845631"), "s
             "B": hexc("#e6dcc2"), "b": hexc("#b5a684"), "P": hexc("#eadfbf"), "p": hexc("#cdbf98"),
             "a": hexc("#e8a33a"), "A": hexc("#a8661a"), "h": hexc("#ffd88a")}
 
+# 1.7.1: the four Bestiaries (gen_pocket_guide.VOLUMES) are the same book in their own leather: cover, its light edge
+# and its shade
+VOLUME_COVERS = {
+    "carnivores": ("#7a2e22", "#964030", "#5a2018"),
+    "herbivores": ("#4f6a2c", "#66843a", "#3a4f20"),
+    "flyers": ("#3f5a78", "#557494", "#2e4258"),
+    "marine": ("#2b6a6a", "#3a8584", "#1f4e4e"),
+}
+
+
+def _item(palette):
+    item = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for y, row in enumerate(ITEM):
+        for x, ch in enumerate(row):
+            if ch != ".":
+                item.putpixel((x, y), palette[ch])
+    return item
+
 
 def main():
     sheet = Image.new("RGBA", (512, 256), (0, 0, 0, 0))
     _book(sheet)
     _arrows(sheet)
     save_png(sheet, os.path.join(TEX, "gui", "pocket_guide.png"))
-    item = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for y, row in enumerate(ITEM):
-        for x, ch in enumerate(row):
-            if ch != ".":
-                item.putpixel((x, y), ITEM_PAL[ch])
-    save_png(item, os.path.join(TEX, "item", "pocket_guide.png"))
+    save_png(_item(ITEM_PAL), os.path.join(TEX, "item", "pocket_guide.png"))
+    for vid, (cover, light, shade) in VOLUME_COVERS.items():
+        palette = dict(ITEM_PAL, L=hexc(cover), l=hexc(light), s=hexc(shade))
+        save_png(_item(palette), os.path.join(TEX, "item", f"bestiary_{vid}.png"))
 
 
 if __name__ == "__main__":

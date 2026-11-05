@@ -59,8 +59,11 @@ public class PocketGuideScreen extends Screen {
     private static final int TITLE = 0xFF5C3412;
     private static final int MUTED = 0xFF806240;
     private static final int LINK = 0xFF285078;
-    /** The spread open last time, so the book reopens where the player left it (this session). */
-    private static int lastSpread;
+    /** The spread open last time in each book, so it reopens where the player left it (this session). */
+    private static final java.util.Map<String, Integer> LAST_SPREAD = new java.util.HashMap<>();
+
+    /** Empty for the Pocket Guide, or the Bestiary shown: "carnivores", "herbivores", "flyers", "marine" (1.7.1). */
+    private final String volume;
 
     private final List<List<Element>> pages = new ArrayList<>();
     private int spread;
@@ -75,13 +78,18 @@ public class PocketGuideScreen extends Screen {
     }
 
     public static void open() {
+        open("");
+    }
+
+    public static void open(String volume) {
         Minecraft mc = Minecraft.getInstance();
-        mc.setScreen(new PocketGuideScreen());
+        mc.setScreen(new PocketGuideScreen(volume));
         mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
     }
 
-    public PocketGuideScreen() {
-        super(Component.translatable("guide.terrassic.pocket.title"));
+    public PocketGuideScreen(String volume) {
+        super(Component.translatable(volume.isEmpty() ? "guide.terrassic.pocket.title" : "item.terrassic.bestiary_" + volume));
+        this.volume = volume;
     }
 
     @Override
@@ -89,7 +97,7 @@ public class PocketGuideScreen extends Screen {
         this.left = (this.width - W) / 2;
         this.top = (this.height - H) / 2;
         this.layout();
-        this.spread = Math.min(lastSpread, this.lastSpread());
+        this.spread = Math.min(LAST_SPREAD.getOrDefault(this.volume, 0), this.lastSpread());
     }
 
     // ------------------------------------------------------------------ layout
@@ -129,6 +137,10 @@ public class PocketGuideScreen extends Screen {
      */
     private void layout() {
         this.pages.clear();
+        if (!this.volume.isEmpty()) {
+            this.layoutVolume();
+            return;
+        }
         List<Topic> topics = this.topics();
         // index
         List<Element> page = new ArrayList<>();
@@ -164,8 +176,7 @@ public class PocketGuideScreen extends Screen {
             }
             if ("species".equals(t.list())) {
                 List<SpeciesEntry> species = this.species();
-                page = this.paragraph(page, this.font.split(Component.translatable("guide.terrassic.pocket.list.count",
-                        species.size()), PAGE_W), PARAGRAPH, MUTED);
+                page = this.paragraph(page, this.font.split(count(species.size()), PAGE_W), PARAGRAPH, MUTED);
                 for (SpeciesEntry e : species) {
                     page = this.add(page, new Gap(8));
                     page = this.add(page, e);
@@ -186,6 +197,61 @@ public class PocketGuideScreen extends Screen {
         if (this.pages.size() % 2 == 1) {
             this.pages.add(new ArrayList<>());
         }
+    }
+
+    /**
+     * A Bestiary (1.7.1): its title, the opening text and an index of its species (each line jumps to the page), then
+     * a page for every species. The Pocket Guide grew a page per species; with the eras to come that would be hundreds.
+     */
+    private void layoutVolume() {
+        String key = "guide.terrassic.bestiary." + this.volume;
+        List<Element> page = new ArrayList<>();
+        page.add(new TitleLine(Component.translatable(key + ".title"), ItemStack.EMPTY));
+        page = this.paragraph(page, this.font.split(Component.translatable(key + ".subtitle"), PAGE_W), 0, MUTED);
+        page.add(new Gap(6));
+        String[] paragraphs = Component.translatable(key + ".body").getString().split("\n");
+        for (int p = 0; p < paragraphs.length; p++) {
+            page = this.paragraph(page, this.font.split(FormattedText.of(paragraphs[p]), PAGE_W), p > 0 ? PARAGRAPH : 0, INK);
+        }
+        List<SpeciesEntry> species = this.species();
+        page = this.paragraph(page, this.font.split(count(species.size()), PAGE_W), PARAGRAPH, MUTED);
+        page = this.add(page, new Gap(4));
+        List<IndexEntry> entries = new ArrayList<>();
+        for (SpeciesEntry e : species) {
+            IndexEntry entry = new IndexEntry(e.name.copy().withStyle(ChatFormatting.RESET), e.egg);
+            entries.add(entry);
+            page = this.add(page, entry);
+        }
+        for (int i = 0; i < species.size(); i++) {
+            if (!page.isEmpty()) {
+                this.pages.add(page);
+            }
+            page = new ArrayList<>();
+            entries.get(i).target = this.pages.size();
+            page.add(species.get(i));
+        }
+        if (!page.isEmpty()) {
+            this.pages.add(page);
+        }
+        if (this.pages.size() % 2 == 1) {
+            this.pages.add(new ArrayList<>());
+        }
+    }
+
+    private static Component count(int species) {
+        return species == 1 ? Component.translatable("guide.terrassic.pocket.list.count.one")
+                : Component.translatable("guide.terrassic.pocket.list.count", species);
+    }
+
+    /** Which Bestiary a species is in: flyers and sea animals by their kind, the rest by diet (omnivores with herbivores). */
+    private static String volumeOf(com.terrassic.research.GuideSpecies s, com.terrassic.entity.DinosaurEntity dino) {
+        if (dino instanceof com.terrassic.entity.FlyingDinosaur) {
+            return "flyers";
+        }
+        if (dino instanceof com.terrassic.entity.SwimmingDinosaur) {
+            return "marine";
+        }
+        return "carnivore".equals(s.diet()) || "piscivore".equals(s.diet()) ? "carnivores" : "herbivores";
     }
 
     private static int used(List<Element> page) {
@@ -265,7 +331,9 @@ public class PocketGuideScreen extends Screen {
             if (mc.level != null && type.create(mc.level) instanceof com.terrassic.entity.DinosaurEntity d) {
                 dino = d;
             }
-            out.add(new SpeciesEntry(s, dino));
+            if (this.volume.isEmpty() || this.volume.equals(volumeOf(s, dino))) {
+                out.add(new SpeciesEntry(s, dino));
+            }
             if (dino != null) {
                 dino.discard();
             }
@@ -394,7 +462,7 @@ public class PocketGuideScreen extends Screen {
         int target = Math.max(0, Math.min(this.lastSpread(), to));
         if (target != this.spread) {
             this.spread = target;
-            lastSpread = target;
+            LAST_SPREAD.put(this.volume, target);
             if (this.minecraft != null) {
                 this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
             }
