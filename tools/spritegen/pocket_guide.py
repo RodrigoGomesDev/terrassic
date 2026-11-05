@@ -65,27 +65,30 @@ def _arrows(img):
                     img.putpixel((i * 8 + (7 - c if mirror else c), ARROW_Y + r), colour)
 
 
-# the item: a small leather book seen from the front, stitched, an amber drop set in the cover, page edges showing
+# the item (05/11/2026, Rodrigo: a book in the shape of Minecraft's own books, like Tinkers' "Materials and You"):
+# the leather book lying at an angle, the cover on top with bone corners and the amber drop of the Guide, the parchment
+# page edges running down one side to the corner and up the other over the dark back cover
 ITEM = [
     "................",
-    "...DDDDDDDDDD...",
-    "..DLLLLLLLLLLD..",
-    "..DLcLcLcLcLLDp.",
-    "..DLLLLLLLLLLDp.",
-    "..DLLLLaaLLLLDp.",
-    "..DLLLahaALLLDp.",
-    "..DLLLaaaALLLDp.",
-    "..DLLLLAALLLLDp.",
-    "..DLLLLLLLLLLDp.",
-    "..DLcLcLcLcLLDp.",
-    "..DLLLLLLLLLLDp.",
-    "..DDDDDDDDDDDDP.",
-    "...PPPPPPPPPPPP.",
-    "................",
+    "........DDD.....",
+    "......DDlBbD....",
+    "....DDlllLLbD...",
+    "..DDllLLsLLLLD..",
+    "DDBlLLLLaaLLLLD.",
+    "DbLLsLLahaALLLLD",
+    "DDLLLLLaAALLsDDD",
+    "DPDLLLLLALLDDPPD",
+    "DpPDsLLLLDDPPpDD",
+    ".DpPDssLDPPPpD..",
+    "..DpPDDDPPpDD...",
+    "...DpPPPpDD.....",
+    "....DbBDDD......",
+    ".....DDD........",
     "................",
 ]
-ITEM_PAL = {"D": hexc("#3a2512"), "L": hexc("#6b4526"), "c": STITCH, "a": hexc("#e8a33a"), "A": hexc("#b8761f"),
-            "h": hexc("#ffd27a"), "p": hexc("#eadfbf"), "P": hexc("#b9a984")}
+ITEM_PAL = {"D": hexc("#2a1a0c"), "L": hexc("#6b4526"), "l": hexc("#845631"), "s": hexc("#4e311a"),
+            "B": hexc("#e6dcc2"), "b": hexc("#b5a684"), "P": hexc("#eadfbf"), "p": hexc("#cdbf98"),
+            "a": hexc("#e8a33a"), "A": hexc("#a8661a"), "h": hexc("#ffd88a")}
 
 
 def main():

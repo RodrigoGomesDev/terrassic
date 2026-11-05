@@ -153,6 +153,9 @@ public final class PartsShowcase {
         if (phases.contains("feedback")) {
             planFeedback();
         }
+        if (phases.contains("guide")) {
+            planGuide();
+        }
         if (phases.contains("bettercombat")) {
             planBetterCombat();
         }
@@ -695,6 +698,35 @@ public final class PartsShowcase {
             REPORT.add(goals.toString());
             return 5;
         });
+    }
+
+    // ------------------------------------------------------------------ the Pocket Guide, page by page
+
+    /** Opens the Pocket Guide and photographs every spread (guide_00.png, guide_01.png...) until the last one. */
+    private static void planGuide() {
+        int[] last = {-1};
+        STEPS.add(mc -> {
+            mc.options.hideGui = true;
+            com.terrassic.client.PocketGuideScreen.open();
+            return 20;
+        });
+        for (int i = 0; i < 60; i++) {
+            int page = i;
+            STEPS.add(mc -> {
+                if (!(mc.screen instanceof com.terrassic.client.PocketGuideScreen g) || last[0] >= 0) {
+                    return 0;
+                }
+                Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "guide_%02d.png", page), mc.getMainRenderTarget(), msg -> {
+                });
+                int before = g.spreadIndex();
+                g.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT, 0, 0);
+                if (g.spreadIndex() == before) {
+                    last[0] = page;
+                    REPORT.add("guide: " + (page + 1) + " spreads photographed");
+                }
+                return 4;
+            });
+        }
     }
 
     // ------------------------------------------------------------------ Better Combat
