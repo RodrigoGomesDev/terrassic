@@ -86,6 +86,8 @@ def main():
         server.command("gamerule doDaylightCycle false")
         server.command("time set day")
         server.command("scoreboard objectives add dart_metrics dummy")
+        # 1.7: the knockout lasts 20 s by default; these fixtures were made for the old 150 s (saved with the world)
+        server.command("terrassic regra knockout_seconds 300")
         server.command("clear TerraDart terrassic:tranq_dart")
         server.command("item replace entity TerraDart weapon.mainhand with terrassic:blowgun 1")
         for name, x, extra in [("awake", 0, ""), ("protected", 12, ",Invulnerable:1b")]:
@@ -99,13 +101,15 @@ def main():
 
         server.command("item replace entity TerraDart weapon.offhand with terrassic:tranq_dart 3")
         checks.barrier()
+        # 1.7: the fixture's health is the level's (220 now, 110 before), so the wound is measured against it
+        score("unhurt", f"data get entity {selector('dart_awake')} Health 1000")
         blow()
         blow()  # Burst: the second breath must be blocked by the server cooldown.
         checks.expect("real dart collision adds torpor", f"data entity {selector('dart_awake')} Torpor", timeout=5)
         checks.expect("burst consumes only one offhand dart", 'data entity TerraDart {Inventory:[{Slot:-106b,id:"terrassic:tranq_dart",Count:2b}]}')
         checks.expect("burst wears blowgun once", 'data entity TerraDart {Inventory:[{Slot:0b,id:"terrassic:blowgun",tag:{Damage:1}}]}')
         score("wound", f"data get entity {selector('dart_awake')} Health 1000")
-        checks.expect("awake target receives physical wound", "score wound dart_metrics matches 1..109999")
+        checks.expect("awake target receives physical wound", "score wound dart_metrics < unhurt dart_metrics")
 
         server.command("kill @e[type=terrassic:tranq_dart]")
         aim(12)
@@ -143,7 +147,7 @@ def main():
         aim(0)
         server.command("item replace entity TerraDart weapon.offhand with terrassic:tranq_dart 16")
         checks.barrier()
-        for _ in range(10):
+        for _ in range(16):   # 1.7: the Triceratops' torpor gauge doubled with its health
             wait_ticks(20)
             blow()
             time.sleep(0.2)
@@ -157,7 +161,8 @@ def main():
         server.command("tp TerraDart 48 -58 -3 0 0")
         server.command(f"summon terrassic:mosasaurus 48 -58 0 {{Tags:[\"dart_marine\"],UUID:{int_uuid(marine)},"
                        f"CustomName:'\"Aquatic KO\"',Size:1f,BirthSize:1f,Health:180f,Air:0s,"
-                       f"KnockedOut:1b,Torpor:140f,TameProgress:21.5f,TameEffectiveness:90,Tamer:{owner}}}")
+                       # 1.7: a Mosasaurus (360 health, a hunter) takes 4 stacks, 256 bites; one cod left
+                       f"KnockedOut:1b,Torpor:140f,TameProgress:255.5f,TameEffectiveness:90,Tamer:{owner}}}")
         checks.barrier()
         health("marine_before", "dart_marine")
         wait_ticks(40)
@@ -173,7 +178,7 @@ def main():
 
         server.start("dart-reload", timeout=600)
         client = connect(server)
-        checks.expect("aquatic knockout survives restart", state("dart_marine", "{KnockedOut:1b,TameProgress:21.5f,TameEffectiveness:90}"))
+        checks.expect("aquatic knockout survives restart", state("dart_marine", "{KnockedOut:1b,TameProgress:255.5f,TameEffectiveness:90}"))
         checks.expect("aquatic tamer survives restart", state("dart_marine", f"{{Tamer:{owner}}}"))
         client.wait_for(lambda c: str(marine) in c.entities)
         # aimed at the animal, which sinks and is 3 blocks wide: a fixed pitch from inside its reach misses

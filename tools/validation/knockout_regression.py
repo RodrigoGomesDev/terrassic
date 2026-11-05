@@ -112,12 +112,15 @@ def main():
         server.command("gamerule doDaylightCycle false")
         server.command("time set day")
         server.command("scoreboard objectives add ko_metrics dummy")
+        # 1.7: the knockout lasts 20 s by default; these fixtures were made for the old 150 s (saved with the world)
+        server.command("terrassic regra knockout_seconds 300")
 
         fixtures = [("zero", 12, 0, "TameEffectiveness:60,Torpor:20f"),
                     ("rejected", 20, 0, "TameEffectiveness:90,TameProgress:1f,Torpor:20f,Invulnerable:1b"),
                     ("wake", 28, 0, "TameEffectiveness:70,TameProgress:4f,Torpor:0.001f"),
-                    ("partial", 2, 2, "TameEffectiveness:70,TameProgress:1f,Torpor:8f"),
-                    ("finished", -2, 2, "TameEffectiveness:70,TameProgress:2f,Torpor:20f")]
+                    # 1.7: a Leptoceratops (20 health) takes 6 bites (DinosaurEntity.foodGoal), it took 3 before
+                    ("partial", 2, 2, "TameEffectiveness:70,TameProgress:4f,Torpor:8f"),
+                    ("finished", -2, 2, "TameEffectiveness:70,TameProgress:5f,Torpor:20f")]
         for name, x, z, fields in fixtures:
             server.command(f"summon terrassic:leptoceratops {x} -60 {z} {{Tags:[\"ko_{name}\"],"
                            f"UUID:{int_uuid(ids[name])},CustomName:'\"KO {name}\"',Size:1f,BirthSize:1f,"
@@ -152,7 +155,7 @@ def main():
         server.command("item replace entity TerraKO weapon.mainhand with minecraft:wheat 32")
         checks.barrier()
         client.interact_entity(ids["partial"])
-        checks.expect("real wheat interaction advances partial tame", state("ko_partial", "{TameProgress:2f}"), timeout=5)
+        checks.expect("real wheat interaction advances partial tame", state("ko_partial", "{TameProgress:5f}"), timeout=5)
         checks.expect("feeding records the real player's UUID", state("ko_partial", f"{{Tamer:{owner}}}"))
         before = wild_points(server, "ko_finished")
         client.interact_entity(ids["finished"])
@@ -172,7 +175,7 @@ def main():
         server.start("ko-reload", timeout=args.startup_timeout)
         client = connect(server)
         checks.expect("unfed unconscious efficiency survives restart", state("ko_zero", "{KnockedOut:1b,TameEffectiveness:60}"))
-        checks.expect("partial progress and efficiency survive restart", state("ko_partial", "{KnockedOut:1b,TameProgress:2f,TameEffectiveness:70}"))
+        checks.expect("partial progress and efficiency survive restart", state("ko_partial", "{KnockedOut:1b,TameProgress:5f,TameEffectiveness:70}"))
         checks.expect("tamer UUID survives restart", state("ko_partial", f"{{Tamer:{owner}}}"))
         checks.expect("finished tame and owner survive restart", state("ko_finished", f"{{Owner:{owner}}}"))
         server.command(f"execute store result score hp_reload ko_metrics run attribute {selector('ko_finished')} minecraft:generic.max_health get 1000")
