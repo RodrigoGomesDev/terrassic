@@ -55,6 +55,10 @@ Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
 (`entity/parts/DinoPart`, mixins em `mixin/parts`, medidas de `tools/javagen/parts.py` via `gen_species.PARTS_SPECIES`;
 espécie refeita nova entra lá); mordida medida da cabeça (`ai/HeadMeleeAttackGoal`). Regressão: `parts_regression.py`.
 A `mc/1.21.1` tem a 1.7 inteira portada (Fabric + NeoForge compilam; regressões de protocolo só Fabric nessa branch).
+Partes seguem o modelo animado (três layouts: em pé, deitado, cabeça baixa; posição por quadro no cliente,
+`PartFrameMixin`). Validação da 1.7 estável (05/11): tabela em `docs/FEEDBACK_1_7.md`; teste no cliente real com
+`client/dev/PartsShowcase` (`TERRASSIC_PARTS_SHOWCASE=1`, fases `still,flight,moving,feedback,bettercombat,density`);
+Better Combat no cliente de teste com `./gradlew :fabric:runClient -PbetterCombat`.
 A v0.2 rodou no Fabric (runClient) em 23/10/2026 sem crash; o cliente gráfico Forge ainda não foi validado.
 Os servidores dedicados Fabric e Forge foram validados posteriormente pelos roteiros de entidades e Caderno.
 Nome: o projeto se chamava **PrimalEra** e foi renomeado para **Terrassic** em 23/10/2026: mod id `terrassic`,
