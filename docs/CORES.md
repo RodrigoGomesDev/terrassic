@@ -25,6 +25,7 @@ uma cor livre quando for refeita.
 | Parasaurolophus | ruivo de impala (macho) ou pardo-rosado (fêmea), barriga creme, bandeira preta de alarme na cauda, crista escurecendo até a ponta no macho | ruivo/laranja |
 | Ankylosaurus | jade escuro: pele cinza-azulada (petróleo acinzentado) sob placas de chifre escuro, quilhas claras, barriga cinza-esverdeada clara; fêmea com a pele um pouco mais cinza e o chifre mais quente | cinza-petróleo |
 | Mosasaurus | verde-garrafa: dorso verde-garrafa sobre barriga marfim, contrassombreado com linha nítida e ondulada; faixas escuras quebradas sobre o dorso (no macho descem até a linha; na fêmea viram duas fileiras de manchas), listra escura atrás do olho com uma linha clara embaixo, bordas claras nas nadadeiras; o macho com cicatrizes de mordida na cabeça, a fêmea um pouco mais cinza; olho dourado | verde-garrafa |
+| Elasmosaurus | turquesa pintada: dorso turquesa-escuro contrassombreado até a barriga clara, pintas claras soltas no dorso e no pescoço; fêmea um tom mais clara com menos pintas; olho dourado | turquesa |
 | Deinosuchus | carvão-ouro: dorso carvão, placas mais escuras com a cova marcada, faixas douradas quebradas nos flancos e na cauda, barriga dourada; fêmea igual com as faixas apagadas; olho amarelo-esverdeado | carvão/dourado |
 | Styracosaurus | argila rosada: corpo cinza-rosado de couro de hipopótamo, dorso mais escuro, barriga clara, sem listras; gola cor de vinho no macho e marrom-rosado apagado na fêmea, chifre e espinhos cor de osso escurecendo nas pontas | rosa-acinzentado |
 
@@ -68,6 +69,9 @@ uma cor livre quando for refeita.
   10,9 do Tyrannosaurus e 11,0 do Velociraptor (a amostra do estudo dava 14,8; a pele inteira, com a barriga dourada,
   chegou mais perto). Testados no estudo e descartados: lodo (8,0 do Pteranodon), musgo escuro (8,5 do Mosasaurus),
   grafite quente (6,1 do Velociraptor); fêmeas mais quentes ou mais claras ficavam abaixo de 10 do Velociraptor.
+- Elasmosaurus (1.8, 05/11/2026): o mais perto é o Tylosaurus antigo, 11,2 (o estudo previa 13,5); dos refeitos, o
+  Mosasaurus a 14,3. Descartados no estudo: cinza-golfinho (5,0 do Xiphactinus), ardósia-violeta (9,8 do Gallimimus),
+  cobre-marinho (9,0 do Majungasaurus). Quando o Tylosaurus for refeito, não pode usar turquesa.
 - O colourcheck compara só os machos. No Parasaurolophus as duas cores foram medidas também contra as fêmeas dos
   refeitos; vale fazer o mesmo nos próximos (a fêmea do Pachycephalosaurus quase pegou o macho ruivo).
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre
