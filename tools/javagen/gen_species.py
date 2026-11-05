@@ -18,7 +18,7 @@ import parts as hit_parts  # noqa: E402
 # (config/Eras.REMADE), whose models are measured at rest. Add a species here when it is remade.
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
-    "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus",
+    "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus",
 }
 
 # In-game size of each species. 1 block = 1 metre, so the player (1.8 blocks) is a 1.8 m tall person.
@@ -181,8 +181,9 @@ SIZES = {
     # Hesperornis v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "hesperornis":        dict(real=1.8, scale=0.39, w=0.6, h=0.6, baby=0.4,  shadow=0.4),
     # Deinosuchus riograndensis: 10.6 m well measured (Cossette & Brochu 2020), up to 12 m in older estimates (Schwimmer 2002).
-    # Deinosuchus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "deinosuchus":        dict(real=12.0, scale=1.05, w=2.6, h=1.4, baby=0.2,  shadow=2.2),
+    # Deinosuchus v1 (05/11, the 1.8) is hand-made at 20 px/m and shown at 12 m (16 / 20 = 0.8), its own study and rig
+    # (page "Deinossuco: estudo para a 1.8").
+    "deinosuchus":        dict(real=12.0, scale=0.8,  w=2.6, h=1.4, baby=0.2,  shadow=2.2),
     # Baurusuchus salgadoensis: ~3.5 m (Carvalho, Campos & Nobre 2005), a land crocodylomorph on upright legs.
     # Baurusuchus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "baurusuchus":        dict(real=3.5, scale=0.73, w=1.0, h=1.0, baby=0.3,  shadow=0.9),
@@ -726,7 +727,7 @@ SPECIES = [
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.6, 0.6),
       xp=38, step_height=1.0, head=(40, 20),
       prey="e.isInWaterOrBubble() || e.getBbWidth() < 1.6F && !(e instanceof Deinosuchus)", prey_interval=140, fish=True,
-      amphibious=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 1)]),
+      amphibious=True, hit_effects=[("MobEffects.MOVEMENT_SLOWDOWN", 60, 1)], rig="Crocodylian"),
  dict(id="baurusuchus", cls="Baurusuchus", base="PredatorDinosaur",
       doc="Baurusuchus salgadoensis - 3.5 m land crocodylomorph on upright legs with a deep dog-like skull and blade teeth: a fast runner of the hot plains that hunts anything smaller than itself, alone or in pairs. Egg taming only until the knockout (v0.7); a tamed one is a base guard.",
       attrs=dict(MAX_HEALTH=55, MOVEMENT_SPEED=0.3, ATTACK_DAMAGE=9, ARMOR=5, KNOCKBACK_RESISTANCE=0.5, FOLLOW_RANGE=24),
@@ -844,7 +845,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1089,7 +1090,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

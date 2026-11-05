@@ -90,6 +90,10 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   `female_display`), pontinhas do filhote em `young_frill`; raspa o chão antes da investida, exibe a coroa a predadores,
   machos se exibem lado a lado; Manta de Corrida própria (`STYRACOSAURUS_SADDLE`); ninho em monte de talos de junco
   (`tools/spritegen/styr_extras.py`). Fotos do jogo: fase `photo` do `PartsShowcase`.
+- `Crocodylian` (à mão, rig do Deinosuchus, 23 animações, a 20 px/m, `tools/modelgen/handmade/deinosuchus`): segundo
+  refeito da 1.8. Boia como tronco parado na água (`float`), bote da beira d'água no primeiro golpe, giro da morte em
+  alvo na água, toma sol de boca aberta perto da água, o macho berra na água; não é montável. Ninho: cova na areia da
+  praia que a mãe abre perto de chocar (`tools/spritegen/deino_extras.py`).
 - `SwimmingDinosaur` (à mão): répteis marinhos. Nado como golfinho (SmoothSwimming + WaterBoundPathNavigation), respira na água, seca após 60 s encalhado, some longe do jogador como golfinho, por enquanto só selvagem (sem domar, sem cria). Categoria WATER_CREATURE; spawn por `checkSeaSpawnRules`. Em `gen_resources.SPECIES` o 4º campo `None` = espécie sem bloco de ovo.
 - Mixins: `common/src/main/resources/terrassic.mixins.json` (pacote `com.terrassic.mixin`), ligado em `fabric.mod.json` ("mixins") e em `forge/build.gradle` (`loom.forge.mixinConfig`). Hoje só `PlayerMixin`: a Lente de Âmbar conta como luneta (`isScoping`).
 - Configuração: `config/terrassic.json` (`config/SpawnConfig.java`), lida uma vez na inicialização; multiplicador global e por espécie (`enabled`, `weight_multiplier`). Todo spawn em `ModSpawns` passa por ela.

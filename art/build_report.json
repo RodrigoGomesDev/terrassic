@@ -944,37 +944,51 @@
   "render_scale": 0.5
  },
  "deinosuchus": {
-  "bones": 20,
-  "cubes": 160,
+  "bones": 26,
+  "cubes": 147,
   "texture": [
    256,
    256
   ],
   "bounds_px": [
    [
-    -25.660254037844386,
-    -2.5529789980253448e-15,
-    -63.0
+    -27.249651571388096,
+    0.0,
+    -109.02493646091307
    ],
    [
-    25.660254037844386,
-    22.5,
-    119.1369646487103
+    27.249651571388096,
+    33.0524892462895,
+    132.42849728720753
    ]
   ],
   "animations": [
    "animation.deinosuchus.idle",
    "animation.deinosuchus.walk",
    "animation.deinosuchus.run",
-   "animation.deinosuchus.sit",
+   "animation.deinosuchus.swim",
+   "animation.deinosuchus.float",
    "animation.deinosuchus.attack",
+   "animation.deinosuchus.lunge",
+   "animation.deinosuchus.death_roll",
+   "animation.deinosuchus.tail_sweep",
+   "animation.deinosuchus.bask",
+   "animation.deinosuchus.bellow",
+   "animation.deinosuchus.head_slap",
+   "animation.deinosuchus.chirp",
+   "animation.deinosuchus.eat",
+   "animation.deinosuchus.hurt",
+   "animation.deinosuchus.death",
+   "animation.deinosuchus.sit",
+   "animation.deinosuchus.sleep",
+   "animation.deinosuchus.wake_sleep",
    "animation.deinosuchus.knocked_out",
    "animation.deinosuchus.wake",
-   "animation.deinosuchus.eat",
    "animation.deinosuchus.beg",
    "animation.deinosuchus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.8,
+  "handmade": true
  },
  "baurusuchus": {
   "bones": 18,
