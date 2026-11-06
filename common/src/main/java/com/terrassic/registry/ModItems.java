@@ -286,6 +286,18 @@ public final class ModItems {
      *  front, rope foot loops with bone toggles and a rush girth. */
     public static final RegistrySupplier<Item> STYRACOSAURUS_SADDLE = ITEMS.register("styracosaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Quetzalcoatlus' own saddle: the seat between the shoulders on a felt pad, a grab bar, straps round the base
+     *  of the neck so the wings stay free; only it saddles a Quetzalcoatlus. */
+    public static final RegistrySupplier<Item> QUETZALCOATLUS_SADDLE = ITEMS.register("quetzalcoatlus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Dakotaraptor's own light hunting saddle: a short pad over the hips, a low seat with knee rolls and a bone grip
+     *  on the neck base, nothing on the wings; only it saddles a Dakotaraptor. */
+    public static final RegistrySupplier<Item> DAKOTARAPTOR_SADDLE = ITEMS.register("dakotaraptor_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Edmontosaurus' own traveller's saddle: a felt blanket, a deep seat, a hide bedroll behind and water bladders
+     *  at the flanks; only it saddles an Edmontosaurus. */
+    public static final RegistrySupplier<Item> EDMONTOSAURUS_SADDLE = ITEMS.register("edmontosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Therizinosaurus' own saddle: a broad hide pad on a felt blanket with a high cantle (the back slopes), knee
      *  rolls and a bone grab bar; only it saddles a Therizinosaurus. */
     public static final RegistrySupplier<Item> THERIZINOSAURUS_SADDLE = ITEMS.register("therizinosaurus_saddle",

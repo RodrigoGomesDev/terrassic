@@ -109,6 +109,21 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   (`threat`), corte, tesoura (`scissor`) e empurrão de peito (`shove`), machos frente a frente (`rival`), senta sobre o
   quadril. Sela própria (`THERIZINOSAURUS_SADDLE`); ninho de ovos redondos enterrados sob crosta de argila vermelha
   (`tools/spritegen/theri_extras.py`). Teste: arena de mata na `BehaviorTest`.
+- 1.9 (06/11/2026, estudos aprovados na página "1.9: estudos do Quetzalcoatlus, do Edmontossauro e do Dakotaraptor"):
+  `Azhdarchid` (rig do Quetzalcoatlus, a 16 px/m, `tools/modelgen/handmade/quetzalcoatlus`, encanamento de voo do Pteranodon):
+  de pé como girafa sobre as quatro patas, bico-lança, espreita a pé (`stalk`), golpe de bico, engole a presa inteira
+  (`eat`), bebe, o macho exibe a crista ocre; cor "cegonha" (corpo quase branco, asas ardósia); sela própria
+  (`QUETZALCOATLUS_SADDLE`), ovos moles meio enterrados na areia da margem (`tools/spritegen/quetz_extras.py`).
+  `Saurolophine` (rig do Edmontosaurus, a 20 px/m): manada com sentinela (`vigilant`), alarme que faz a manada fugir
+  junta (selvagem nunca investe; domado se defende), sacos do focinho que incham no berro (`sac_l/r`, `bellow`), crista
+  de carne do macho (`adult_comb`), chamado e resposta, pio do filhote, pasta no alto e bebe; Sela de Viagem
+  (`EDMONTOSAURUS_SADDLE`), ovos em espiral sob samambaias (`edmo_extras.py`). `Eudromaeosaur` (rig do Dakotaraptor,
+  a 20 px/m): cabeça funda, asas listradas que dobram no flanco e abrem de três jeitos (FLASH, MANTLE, SUN em
+  `dakotaanims.py`), bote com as foices (`pounce`, golpe x1,5), prende a presa menor (`pin`), cobre a presa morta com
+  as asas (`mantle`), susto de asas (`wing_flash`), toma sol e alisa as penas; Sela de Caça (`DAKOTARAPTOR_SADDLE`),
+  anel de ovos verde-azulados sob tronco caído (`dakota_extras.py`). Teste: arenas na `BehaviorTest`
+  (`TERRASSIC_BEHAVIOR_SPECIES=quetzalcoatlus,edmontosaurus,dakotaraptor`). Correções achadas: ovo de mãe voando
+  (procura o chão embaixo dela, `DinosaurEntity.groundUnder`), exibição e bebedouro dos pterossauros escalados pelo tamanho.
 - Testes da 1.8 (`docs/TESTES_1_8.md`): `client/dev/BehaviorTest` (`TERRASSIC_BEHAVIOR_TEST=1`) monta arenas e registra os
   comportamentos que os bichos fazem sozinhos, doma, sela, montaria, procriação e choco. Achou e corrigiu: Deinossuco
   caçando a própria espécie, alvo morto bloqueando a doma, procriação de bichos grandes (`ai/DinoBreedGoal` em todas as

@@ -3423,7 +3423,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (egg == null) {
             return false;
         }
-        BlockPos pos = findEggSpot(level, this.blockPosition());
+        BlockPos pos = findEggSpot(level, groundUnder(level, this));
         if (pos == null) {
             return false;
         }
@@ -3458,7 +3458,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 other.setHunger(other.getHunger() - 15);
             }
         } else {
-            BlockPos pos = findEggSpot(level, mother.blockPosition());
+            BlockPos pos = findEggSpot(level, groundUnder(level, mother));
             if (pos != null) {
                 level.setBlock(pos, egg.defaultBlockState(), Block.UPDATE_ALL);
                 level.playSound(null, pos, ModSounds.SFX_EGG_LAY.get(), SoundSource.BLOCKS, 0.7F, 0.9F);
@@ -3488,6 +3488,24 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 level.addFreshEntity(new ExperienceOrb(level, this.getX(), this.getY(), this.getZ(), xp));
             }
         }
+    }
+
+    /** Where a mother lays: her own block on the ground, or the ground under her when she mates on the wing or swimming
+     *  (1.9: a Quetzalcoatlus pair mating in the air looked for a nest spot one block round the flying mother, found
+     *  none and dropped the egg as an item from the sky). */
+    private static BlockPos groundUnder(LevelAccessor level, DinosaurEntity mother) {
+        BlockPos at = mother.blockPosition();
+        if (mother.onGround()) {
+            return at;
+        }
+        for (int down = 0; down < 48 && at.getY() > level.getMinBuildHeight(); down++) {
+            BlockPos below = at.below();
+            if (!level.isEmptyBlock(below) || !level.getFluidState(below).isEmpty()) {
+                return at;
+            }
+            at = below;
+        }
+        return mother.blockPosition();
     }
 
     private static BlockPos findEggSpot(LevelAccessor level, BlockPos center) {

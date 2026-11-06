@@ -939,15 +939,36 @@ def majungasaurus():
 
 
 def dakotaraptor():
-    e = theropod("dakotaraptor", {"b": "#6a5444", "c": "#e2d4bc", "d": "#2a2420", "n": "#1a1614",
-                                  "f": "#1e1a18", "F": "#f0ece2"}, jaw="narrow", teeth=(11, 14))
-    for (x, h) in ((11, 3), (13, 5), (15, 6), (17, 5), (19, 3)):
-        e.line([(x, 5 - h + 1), (x + (1 if x < 15 else -1 if x > 16 else 0), 6)], "f", 2)
-    for y in (17, 20, 23):
-        e.line([(4, y), (6, y)], "F", clip=True)
-        e.line([(25, y), (27, y)], "F", clip=True)
+    """Dakotaraptor (06/11, its own model): the deep boxy chestnut head seen from the front with the dark band through
+    the amber eyes, the ash-grey throat and jaw with a row of teeth, short plumes on the crown, and on each side of the
+    egg a folded wing barred dark with pale tips."""
+    e = Egg("dakotaraptor", {
+        "d": "#5a2e24", "D": "#723e30", "k": "#2c1712", "K": "#42211a", "g": "#98948c", "G": "#aeaaa2",
+        "q": "#1a0e0a", "Q": "#3a1e16", "w": "#e8dcc8", "E": "#d89a2a", "p": "#0a0706", "t": "#efe6d0", "m": "#140a08"})
+    e.ell((3, 2, 28, 31), "d")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((6, 4, 18, 16), "D", clip=True)
+    # the folded wings down both sides: bars of dark and darker, pale tips at the bottom
+    for x0, x1 in ((3, 8), (23, 28)):
+        for y in range(10, 27):
+            e.rect((x0, y, x1, y), "q" if (y // 2) % 2 == 0 else "Q", clip=True)
+        e.rect((x0, 27, x1, 28), "w", clip=True)
+    # the deep head: the crown plumes, the dark band through the eyes, the ash jaw and throat with the teeth
+    e.rect((10, 6, 21, 21), "d")
+    e.px([(11, 4), (13, 3), (15, 3), (17, 3), (19, 4)], "k"); e.px([(12, 5), (14, 4), (16, 4), (18, 4), (20, 5)], "K")
+    e.rect((10, 10, 21, 12), "m")
+    e.rect((11, 10, 13, 12), "E"); e.rect((18, 10, 20, 12), "E"); e.px([(12, 11), (19, 11)], "p")
+    e.rect((10, 16, 21, 22), "g"); e.rect((11, 21, 20, 25), "G")
+    e.px([(11, 16), (13, 16), (15, 16), (16, 16), (18, 16), (20, 16)], "t")
+    e.rect((10, 15, 21, 15), "k")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
     return e
-
 
 def troodon():
     e = theropod("troodon", {"b": "#8a6a48", "c": "#e2d0aa", "d": "#4a3624", "n": "#2e2216",
@@ -1158,11 +1179,39 @@ def thescelosaurus():
 
 # ------------------------------------------------------------------ hadrosaurs, ceratopsians, armour
 def edmontosaurus():
-    e = hadrosaur("edmontosaurus", {"b": "#7e7462", "c": "#d8d0b8", "d": "#4a4232", "n": "#2e2a20",
-                                    "e": "#b8442c"})
-    e.poly([(13, 7), (15, 3), (17, 3), (19, 7)], "e")
+    """Edmontosaurus (06/11, the "areia quente" of the new model), seen from the front: the warm sand head with the
+    pale throat, the broad flat dark bill wide across the bottom of the egg, the long face with the dark hollow of the
+    nasal sac on each side, the eyes high, the male's rust comb on top, and soft dark-brown saddles on the neck."""
+    e = Egg("edmontosaurus", {
+        "s": "#b49e7a", "S": "#c8b48e", "d": "#9a8462", "k": "#6e5840", "K": "#84704e", "p": "#e4dabf",
+        "b": "#302a24", "B": "#4a423a", "h": "#7a6448", "E": "#120d0e", "Y": "#a8823e", "c": "#8a4a34", "C": "#a8603e"})
+    e.ell((3, 2, 28, 31), "s")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((6, 4, 16, 14), "S", clip=True)
+    # soft saddles across the neck behind the head
+    for x0 in (4, 22):
+        e.rect((x0, 6, x0 + 5, 11), "K"); e.rect((x0 + 1, 6, x0 + 4, 9), "k")
+    e.rect((4, 14, 9, 17), "K"); e.rect((22, 14, 27, 17), "K")
+    # the long face narrowing down the egg, the eyes high on it, the throat pale
+    e.poly([(10, 6), (21, 6), (20, 20), (11, 20)], "d")
+    e.rect((12, 7, 19, 19), "s")
+    e.px([(11, 9), (20, 9)], "Y"); e.px([(12, 9), (19, 9)], "E")
+    # the hollows of the nasal sacs on each side of the snout
+    e.rect((11, 15, 12, 19), "h"); e.rect((19, 15, 20, 19), "h")
+    # the comb on top
+    e.poly([(13, 6), (14, 3), (17, 3), (18, 6)], "c"); e.px([(15, 3), (16, 4)], "C")
+    # the broad flat bill across the bottom, wider than the face
+    e.rect((8, 21, 23, 25), "b"); e.rect((9, 21, 22, 22), "B")
+    e.rect((10, 26, 21, 27), "b")
+    e.rect((6, 27, 25, 31), "p")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
     return e
-
 
 def corythosaurus():
     e = hadrosaur("corythosaurus", {"b": "#5e7a4c", "c": "#d8d4ac", "d": "#344a2a", "n": "#22321a",
@@ -1396,10 +1445,38 @@ def dreadnoughtus():
 
 # ------------------------------------------------------------------ flyers and birds
 def quetzalcoatlus():
-    return pterosaur("quetzalcoatlus", {"b": "#d8d0bc", "c": "#f0ece2", "d": "#8a8270", "n": "#5a5446",
-                                        "e": "#c4402a", "m": "#d8c08a", "M": "#a88c5a"},
-                     crest=((15, 7), (12, 1)), beak=(13, 15, 18, 31))
-
+    """Quetzalcoatlus (06/11, the "cinza-cegonha" of the new model), seen from the front: the stork-grey coat with a
+    pale throat, the slate wings folded at the sides with their fibres, and down the middle the huge straight beak, pale
+    horn darkening to the tip, the small eye high on each side and the male's low ochre-red crest on top."""
+    e = Egg("quetzalcoatlus", {
+        "g": "#74787a", "G": "#8f9292", "d": "#585c60", "p": "#dbd8cf", "P": "#ebe8e0",
+        "w": "#2c3136", "W": "#4c535a", "k": "#aeab9f", "K": "#c8c5b8", "t": "#4a4640",
+        "c": "#8e4a2c", "C": "#a8623a", "E": "#120c0a", "R": "#b88a3a"})
+    e.ell((3, 2, 28, 31), "g")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((6, 5, 16, 14), "G", clip=True)
+    # the folded wings at the sides, slate, the fibres sloping down
+    for side in (0, 1):
+        for y in range(10, 29):
+            for k in range(4):
+                x = 3 + k if not side else 28 - k
+                if in_egg(x, y):
+                    e.px([(x, y)], "W" if (y + k) % 4 == 0 else "w")
+    # the pale throat and neck down the middle
+    e.rect((12, 9, 19, 30), "p")
+    e.rect((14, 12, 17, 30), "P")
+    # the head at the top, the eyes high on each side, the crest above
+    e.rect((11, 3, 20, 8), "d")
+    e.px([(12, 5), (19, 5)], "R"); e.px([(12, 6), (19, 6)], "E")
+    e.rect((14, 1, 17, 3), "c"); e.px([(15, 1), (16, 2)], "C")
+    # the beak, a long straight spear down the middle of the egg
+    e.poly([(13, 8), (18, 8), (17, 18), (16, 26), (15, 26), (14, 18)], "k")
+    e.line([(15, 9), (15, 22)], "K")
+    e.px([(15, 26), (16, 26), (15, 25), (16, 25)], "t")
+    return e
 
 def hatzegopteryx():
     return pterosaur("hatzegopteryx", {"b": "#7a5e4a", "c": "#d8c8b0", "d": "#3e2e24", "n": "#2a1e16",

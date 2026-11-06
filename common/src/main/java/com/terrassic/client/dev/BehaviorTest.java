@@ -102,6 +102,15 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("quetzalcoatlus")) {
+            planQuetzalcoatlus();
+        }
+        if (only.contains("edmontosaurus")) {
+            planEdmontosaurus();
+        }
+        if (only.contains("dakotaraptor")) {
+            planDakotaraptor();
+        }
         STEPS.add(mc -> {
             REPORT.add("");
             REPORT.add("== One-shot animations each species triggered by itself (times)");
@@ -227,6 +236,155 @@ public final class BehaviorTest {
             return 2400;
         });
         planTameRideBreed(sp, f1, m2, null, ModItems.THERIZINOSAURUS_SADDLE.get(), x0, false);
+    }
+
+    /** A pool in the middle of the arena, its surface at the ground (for drinking, swimming, wading). */
+    private static void pool(Minecraft mc, double x, double z, int r) {
+        command(mc, fill(x - r, Y - 2, z - r, x + r, Y - 1, z + r, "minecraft:water"));
+    }
+
+    private static void planQuetzalcoatlus() {
+        String sp = "quetzalcoatlus";
+        double x0 = 800.5D;
+        UUID m1 = id(), m2 = id(), f1 = id();
+        List<UUID> prey = new ArrayList<>();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Quetzalcoatlus: two males and a female on open ground with a pool; small prey walks among them");
+            clear(mc, x0, 30);
+            pool(mc, x0 + 9, 6.5D, 3);
+            summon(mc, sp, x0, Y, 0.5D, m1, "Female:0b");
+            summon(mc, sp, x0 + 5, Y, -4.5D, m2, "Female:0b");
+            summon(mc, sp, x0 - 4, Y, 3.5D, f1, "Female:1b");
+            watch(mc, new Vec3(x0, Y + 3, 0.0D), 30.0D);
+            return 1600;
+        });
+        STEPS.add(mc -> {
+            REPORT.add("  six small prey (Mesodma, chickens) let loose round them");
+            for (int i = 0; i < 6; i++) {
+                UUID u = id();
+                prey.add(u);
+                if (i % 2 == 0) {
+                    summon(mc, "mesodma", x0 - 8 + i * 3, Y, -8.5D + i, u, "");
+                } else {
+                    command(mc, String.format(Locale.ROOT, "summon minecraft:chicken %.1f %.1f %.1f {UUID:%s}", x0 - 8 + i * 3, Y, 8.5D - i, uuidNbt(u)));
+                }
+            }
+            return 2400;
+        });
+        STEPS.add(mc -> {
+            int alive = 0;
+            for (UUID u : prey) {
+                if (serverAny(mc, u) != null && serverAny(mc, u).isAlive()) {
+                    alive++;
+                }
+            }
+            REPORT.add("  small prey alive after two minutes: " + alive + " of " + prey.size());
+            command(mc, "kill @e[type=minecraft:chicken]");
+            return 20;
+        });
+        planTameRideBreed(sp, f1, m2, null, ModItems.QUETZALCOATLUS_SADDLE.get(), x0, false);
+    }
+
+    private static void planEdmontosaurus() {
+        String sp = "edmontosaurus";
+        double x0 = 1000.5D;
+        UUID m1 = id(), m2 = id(), f1 = id(), f2 = id(), b1 = id(), b2 = id(), rex = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Edmontosaurus: a herd (two males, two females, two calves) on grass with a pool and tall oaks");
+            clear(mc, x0, 30);
+            pool(mc, x0 - 10, -8.5D, 3);
+            for (int[] t : new int[][]{{9, -9}, {-9, 9}, {12, 7}}) {
+                command(mc, fill(x0 + t[0], Y, t[1], x0 + t[0], Y + 5, t[1], "minecraft:oak_log"));
+                command(mc, fill(x0 + t[0] - 2, Y + 4, t[1] - 2, x0 + t[0] + 2, Y + 6, t[1] + 2, "minecraft:oak_leaves[persistent=true]"));
+            }
+            summon(mc, sp, x0, Y, 0.5D, m1, "Female:0b");
+            summon(mc, sp, x0 + 6, Y, 3.5D, m2, "Female:0b");
+            summon(mc, sp, x0 - 5, Y, -3.5D, f1, "Female:1b");
+            summon(mc, sp, x0 + 3, Y, -6.5D, f2, "Female:1b");
+            summon(mc, sp, x0 + 2, Y, 6.5D, b1, "Age:-24000");
+            summon(mc, sp, x0 - 2, Y, 8.5D, b2, "Age:-24000");
+            watch(mc, new Vec3(x0, Y + 3, 0.0D), 30.0D);
+            return 3600;
+        });
+        STEPS.add(mc -> {
+            REPORT.add("  a wild T. rex (held still) 22 blocks away");
+            summon(mc, "tyrannosaurus", x0 + 22, Y, 0.5D, rex, "NoAI:1b");
+            return 30;
+        });
+        for (int i = 0; i < 6; i++) {
+            STEPS.add(mc -> {
+                StringBuilder b = new StringBuilder("    herd: ");
+                for (UUID u : new UUID[]{m1, m2, f1, f2, b1, b2}) {
+                    DinosaurEntity d = server(mc, u);
+                    if (d != null) {
+                        b.append(String.format(Locale.ROOT, "%.0f/%s ", d.getX() - x0, d.getNavigation().isDone() ? "still" : "moving"));
+                    }
+                }
+                REPORT.add(b.toString());
+                return 40;
+            });
+        }
+        STEPS.add(mc -> {
+            command(mc, "tp " + rex + " 0 -400 0");
+            return 1200;
+        });
+        planTameRideBreed(sp, f1, m2, new ItemStack(Items.WHEAT, 64), ModItems.EDMONTOSAURUS_SADDLE.get(), x0, false);
+    }
+
+    private static void planDakotaraptor() {
+        String sp = "dakotaraptor";
+        double x0 = 1200.5D;
+        UUID m1 = id(), m2 = id(), f1 = id();
+        List<UUID> prey = new ArrayList<>();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Dakotaraptor: a pack (two males, a female) on grass with a pool and a fallen log");
+            clear(mc, x0, 30);
+            pool(mc, x0 + 10, -7.5D, 3);
+            command(mc, fill(x0 - 12, Y, 9, x0 - 4, Y, 9, "minecraft:oak_log[axis=x]"));
+            summon(mc, sp, x0, Y, 0.5D, m1, "Female:0b");
+            summon(mc, sp, x0 + 3, Y, -2.5D, m2, "Female:0b");
+            summon(mc, sp, x0 - 3, Y, 2.5D, f1, "Female:1b");
+            watch(mc, new Vec3(x0, Y + 2, 0.0D), 26.0D);
+            return 1600;
+        });
+        STEPS.add(mc -> {
+            REPORT.add("  a player in survival walks up to the first male (6 blocks)");
+            command(mc, "gamemode survival @a");
+            DinosaurEntity d = server(mc, m1);
+            ServerPlayer p = player(mc);
+            if (d != null && p != null) {
+                mc.getSingleplayerServer().execute(() -> p.teleportTo(d.getX() + 5.0D, d.getY() + 0.5D, d.getZ()));
+            }
+            return 100;
+        });
+        STEPS.add(mc -> {
+            command(mc, "gamemode creative @a");
+            mc.player.getAbilities().flying = true;
+            watch(mc, new Vec3(x0, Y + 2, 0.0D), 26.0D);
+            REPORT.add("  prey let loose 12 blocks away: two Leptoceratops, a pig, two sheep");
+            String[][] P = {{"terrassic:leptoceratops", "-12"}, {"terrassic:leptoceratops", "-9"}, {"minecraft:pig", "9"}, {"minecraft:sheep", "12"}, {"minecraft:sheep", "6"}};
+            for (String[] e : P) {
+                UUID u = id();
+                prey.add(u);
+                command(mc, String.format(Locale.ROOT, "summon %s %.1f %.1f %s.5 {UUID:%s}", e[0], x0 + 12, Y, e[1], uuidNbt(u)));
+            }
+            return 2400;
+        });
+        STEPS.add(mc -> {
+            int alive = 0;
+            for (UUID u : prey) {
+                if (serverAny(mc, u) != null && serverAny(mc, u).isAlive()) {
+                    alive++;
+                }
+            }
+            REPORT.add("  prey alive after two minutes: " + alive + " of " + prey.size());
+            command(mc, "kill @e[type=!player,type=!terrassic:dakotaraptor]");
+            return 600;
+        });
+        planTameRideBreed(sp, f1, m2, null, ModItems.DAKOTARAPTOR_SADDLE.get(), x0, false);
     }
 
     private static void planDeinosuchus() {
@@ -457,9 +615,18 @@ public final class BehaviorTest {
             return 1;
         });
         for (int i = 0; i < 60; i++) {
+            int step = i;
             STEPS.add(mc -> {
                 if (eggTicks[0] > 0 || count(mc, sp, true) > babiesBefore[0]) {
                     return 0;
+                }
+                if (step % 10 == 5) {
+                    DinosaurEntity a = server(mc, tameMe), b = server(mc, mate);
+                    if (a != null && b != null) {
+                        REPORT.add(String.format(Locale.ROOT, "    after %d s: in love %s/%s, %.1f apart, on ground %s/%s, navigating %s/%s",
+                                step, a.isInLove(), b.isInLove(), a.distanceTo(b), a.onGround(), b.onGround(),
+                                !a.getNavigation().isDone(), !b.getNavigation().isDone()));
+                    }
                 }
                 BlockPos egg = findEgg(mc, sp, x0);
                 if (egg != null && !freshEgg(mc, egg)) {
@@ -653,7 +820,8 @@ public final class BehaviorTest {
 
     private static BlockPos findEgg(Minecraft mc, String sp, double x0) {
         ServerLevel l = mc.getSingleplayerServer().overworld();
-        for (BlockPos p : BlockPos.betweenClosed((int) x0 - 30, (int) Y - 5, -30, (int) x0 + 30, (int) Y + 10, 30)) {
+        // wide: a pair can wander or flee 30 blocks from the arena centre before it lays
+        for (BlockPos p : BlockPos.betweenClosed((int) x0 - 48, (int) Y - 5, -48, (int) x0 + 48, (int) Y + 10, 48)) {
             if (l.getBlockState(p).getBlock().getDescriptionId().equals("block.terrassic." + sp + "_egg") && !OLD_EGGS.contains(p)) {
                 return p.immutable();
             }
