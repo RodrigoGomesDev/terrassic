@@ -78,10 +78,74 @@ def gait(t, T, stride, duty, lift, bob, lean=0.0, drop=0.0, head=0.0, tail_up=0.
         plant(pose, s, ly, dz - 6, meta, toe, clear)
     return pose
 
-def walk(t): return gait(t, 1.9, 72, 0.62, 9, 1.6)
-def run(t): return gait(t, 0.8, 128, 0.42, 16, 3.0, lean=6, drop=3, head=-4, tail_up=3, sway=0.6, arms=3, roll=1.2)
+# ------------------------------------------------------------------ the weighty gait (06/11/2026)
+# From the study of how the Raxiores T. rex moves (docs/estudos/ANIMACAO_RAXIORES.md): our old gait moved the legs well
+# but kept the trunk and the tail almost still (hip roll 2.4 deg, tail tip 6 deg), so the animal read as light and
+# stiff. What carries the weight of a 9 t biped, measured there and rebuilt here with our own curves:
+#   * the hips ROLL over the stance leg (~8 deg) and YAW with the swinging leg (~5 deg), the drop after each heel strike
+#     is quick and the rise slow (a heavy body lands, then is pushed up);
+#   * the chest counter-rotates: the neck base yaws and rolls against the hips, and the skull cancels what is left, so
+#     the head floats steady while the body works under it;
+#   * the tail is a whip: the swing grows from the base to the tip (x4) and each segment lags the one before
+#     (~0.13 of a cycle), counterbalancing the hips; it also bobs, late, with the body;
+#   * the legs: each thigh cancels the hip roll and yaw (so the foot does not slide sideways) and swings a little out
+#     in the swing phase; the toes curl at push-off;
+#   * the little arms hang and lag, passive.
+def gait2(t, T, stride, duty, lift, bob, lean=0.0, drop=0.0, head=0.0, tail_up=0.0, roll=8.0, yaw=5.0, whip=1.0,
+          arms=6.0, splay=3.0):
+    ph = (t / T) % 1.0; w = 2 * math.pi * ph; pose = {}
+    # the heel strikes at ph 0 (left) and 0.5 (right): the drop comes fast, the rise slow (a saw, rounded)
+    def landing(x):
+        x %= 1.0
+        return -1.0 + 2.0 * smooth(x / 0.28) if x < 0.28 else 1.0 - 2.0 * smooth((x - 0.28) / 0.72)
+    b2 = landing(2 * ph + 0.06)                                   # -1 just after a strike, +1 mid-stance
+    hroll = roll * math.sin(w + 0.25)                             # over the stance leg (left stance first half)
+    hyaw = yaw * math.sin(w - 0.6)                                # the hip follows the swinging leg
+    add(pose, "body", rot=(lean + 1.4 * b2, hyaw, hroll), pos=(0, bob * b2 - 0.6 - drop, 0))
+    # chest and head: counter-rotation, then the skull steadies the gaze (a little late: follow-through)
+    add(pose, "neck", rot=(head - lean * 0.6 - 1.6 * landing(2 * ph - 0.04), -0.85 * hyaw - 2.0 * math.sin(w - 1.4),
+                           -0.75 * hroll))
+    add(pose, "skull", rot=(head * 0.4 - lean * 0.4 + 1.2 * landing(2 * ph - 0.12), -0.15 * hyaw + 1.4 * math.sin(w - 2.0),
+                            -0.25 * hroll + 1.2 * math.sin(w - 1.2)))
+    add(pose, "jaw", rot=(-1.2 - 1.2 * max(0.0, landing(2 * ph - 0.2)), 0, 0))
+    # the tail whip
+    for k in range(1, 5):
+        a = whip * (1.0 + 1.0 * (k - 1))                         # 1, 2, 3, 4 x the base swing
+        lag = 0.82 * k
+        add(pose, f"tail{k}", rot=(tail_up * (0.4 + 0.2 * k) + 0.9 * (0.6 + 0.3 * k) * landing(2 * ph - 0.08 * k),
+                                  -2.6 * a * math.sin(w - 0.6 - lag), 0.5 * a * math.sin(w - 0.4 - lag)))
+    for s, o in SIDES:
+        f = w + o * 2 * math.pi
+        add(pose, f"arm_{s}", rot=(arms * math.sin(f - 2.2) + 2.0 * landing(2 * ph - 0.25), 0, 0))
+        add(pose, f"forearm_{s}", rot=(arms * 1.3 * math.sin(f - 2.9) + 2.5 * landing(2 * ph - 0.35), 0, 0))
+    for s, o in SIDES:
+        sx = 1 if s == "l" else -1
+        u = (ph + o) % 1.0
+        # cancel the hip roll and yaw on the leg, so the planted foot stays where it is
+        swing = 0.0 if u < duty else math.sin(math.pi * (u - duty) / (1 - duty))
+        add(pose, f"thigh_{s}", rot=(0, -hyaw, -hroll + sx * splay * swing))
+        if u < duty:
+            st = u / duty; dz = -stride * duty / 2 + stride * duty * st; ly = 0.0
+            meta = 34 * smooth(max(0, (st - 0.55) / 0.45)); clear = -0.05
+            # the toes come down from where the swing left them (8 deg) and curl again at push-off
+            toe = 8 * (1 - smooth(min(1.0, st / 0.18))) + 10 * smooth(max(0, (st - 0.7) / 0.3))
+        else:
+            sw = (u - duty) / (1 - duty); e = 0.5 - 0.5 * math.cos(math.pi * sw)
+            dz = stride * duty / 2 - stride * duty * e
+            ly = lift * math.sin(math.pi * min(1, sw * 1.15)) ** 1.3
+            meta = 34 * (1 - smooth(sw / 0.5)) - 18 * math.sin(math.pi * sw)
+            toe = -30 * math.sin(math.pi * min(1, sw * 1.1)) + 8 * smooth((sw - 0.7) / 0.3)
+            clear = 1.2 * math.sin(math.pi * sw) ** 0.5
+        plant(pose, s, ly, dz - 6, meta, toe, clear)
+    return pose
+
+
+def walk(t): return gait2(t, 1.9, 72, 0.62, 9, 1.8)
+def run(t): return gait2(t, 0.8, 128, 0.42, 16, 3.0, lean=6, drop=3, head=-4, tail_up=3, roll=4.5, yaw=3.0, whip=0.7,
+                         arms=4.0, splay=2.0)
 def stalk(t):
-    p = gait(t, 2.8, 56, 0.74, 7, 0.7, lean=3, drop=7, head=-9, tail_up=1, sway=0.5, arms=2, roll=1.0)
+    p = gait2(t, 2.8, 56, 0.74, 7, 0.7, lean=3, drop=7, head=-9, tail_up=1, roll=4.0, yaw=2.5, whip=0.5, arms=2.0,
+              splay=1.5)
     add(p, "skull", rot=(0, 6 * math.sin(W(t, 5.6)), 0)); add(p, "jaw", rot=(1, 0, 0))   # scans side to side, mouth shut
     return p
 def swim(t):
@@ -97,7 +161,58 @@ def swim(t):
     return p
 
 # ------------------------------------------------------------------ idle family
-idle = R.idle_pose
+def idle(t):
+    """the base idle with weight (06/11, the study): every few seconds the weight moves from one foot to the other (the
+    hips roll and settle over it, the chest counters), the breath is slow and deep, and the tail moves in a slow S that
+    starts at the base and runs to the tip"""
+    p = R.idle_pose(t)
+    T = R.IDLE_T
+    shift = math.sin(2 * math.pi * t / T) + 0.25 * math.sin(4 * math.pi * t / T + 0.8)
+    hroll = 3.2 * shift
+    add(p, "body", rot=(0, 1.2 * shift, hroll), pos=(0, -0.25 * abs(shift), 0))
+    add(p, "neck", rot=(0, -1.0 * shift, -0.7 * hroll)); add(p, "skull", rot=(0, 0, -0.2 * hroll))
+    for k in range(1, 5):
+        add(p, f"tail{k}", rot=(0, -(1.0 + 1.6 * (k - 1)) * math.sin(2 * math.pi * t / 4.0 - 0.9 * k), 0))
+    for s, _ in SIDES:
+        add(p, f"thigh_{s}", rot=(0, -1.2 * shift, -hroll))
+        plant(p, s)
+    return p
+
+
+# ------------------------------------------------------------------ turning on the spot (06/11, the study)
+# A big biped does not spin on its feet: it steps round. Raxiores plays a stepping loop while the body turns in place;
+# ours: the head and neck lead into the turn, the hips follow, the tail swings out the other way and lags, and the feet
+# step one after the other (each lifted, set down a little out and round), so the feet stop sliding on the ground.
+TURN_T = 1.6
+def turn(t, side):
+    # a + yaw swings the head to the animal's RIGHT in game (GeckoLib turns the "head" bone with +netHeadYaw, which is
+    # looking right), so a turn to the left leads with - yaw
+    d = 1.0 if side == "left" else -1.0
+    ph = (t / TURN_T) % 1.0; w = 2 * math.pi * ph; p = {}
+    lead = -d
+    add(p, "body", rot=(0, lead * (4.0 + 2.0 * math.sin(w)), 3.0 * math.sin(w + 0.3)), pos=(0, -0.8 + 0.6 * math.cos(2 * w), 0))
+    add(p, "neck", rot=(-1.0, lead * (9.0 + 2.0 * math.sin(w - 0.6)), -1.8 * math.sin(w + 0.3)))
+    add(p, "skull", rot=(0, lead * (6.0 + 1.5 * math.sin(w - 1.2)), -0.8 * math.sin(w)))
+    add(p, "jaw", rot=(-1.0, 0, 0))
+    for k in range(1, 5):
+        add(p, f"tail{k}", rot=(0.4 * k * math.sin(2 * w - 0.6 * k), -lead * (3.0 + 2.0 * k) - (1.0 + k) * math.sin(w - 0.8 * k), 0))
+    for s, o in SIDES:
+        add(p, f"arm_{s}", rot=(4 * math.sin(w + o * 2 * math.pi - 2.0), 0, 0))
+        u = (ph + o) % 1.0
+        # each foot steps once per loop: up in [0, 0.4), the rest on the ground
+        if u < 0.4:
+            sw = u / 0.4
+            ly = 7.0 * math.sin(math.pi * sw) ** 1.2
+            dz = -3.0 * math.cos(math.pi * sw)
+            toe = -20 * math.sin(math.pi * sw); meta = 12 * math.sin(math.pi * sw); clear = 1.0 * math.sin(math.pi * sw) ** 0.5
+            add(p, f"thigh_{s}", rot=(0, lead * 6.0 * math.sin(math.pi * sw), 0))
+        else:
+            ly, dz, toe, meta, clear = 0.0, 3.0 - 6.0 * ((u - 0.4) / 0.6), 0.0, 0.0, -0.05
+        add(p, f"thigh_{s}", rot=(0, -lead * 4.0, -3.0 * math.sin(w + 0.3)))
+        plant(p, s, ly, dz, meta, toe, clear)
+    return p
+def turn_left(t): return turn(t, "left")
+def turn_right(t): return turn(t, "right")
 sniff = R.sniff_pose
 def look_back(t):
     p = {}; breathe(p, t)
@@ -331,6 +446,12 @@ def tame(t):
     return stand(p)
 
 # name: (fn, length, loop, category, when it plays)
+import rexflow as FLOW  # noqa: E402  (06/11: the fluid idle, roars, call and bites)
+idle, roar, roar_loud, call, attack, attack_quick = FLOW.idle, FLOW.roar, FLOW.roar_loud, FLOW.call, FLOW.attack, FLOW.attack_quick
+(sniff, look_back, shake, yawn, stretch, threat, stomp, hurt, eat, drink, sit, sleep, knocked_out, beg, tame) = (
+    FLOW.sniff, FLOW.look_back, FLOW.shake, FLOW.yawn, FLOW.stretch, FLOW.threat, FLOW.stomp, FLOW.hurt, FLOW.eat, FLOW.drink,
+    FLOW.sit, FLOW.sleep, FLOW.knocked_out, FLOW.beg, FLOW.tame)
+death, wake, wake_sleep, swim = FLOW.death, FLOW.wake, FLOW.wake_sleep, FLOW.swim
 ANIMS = {
     "idle": (idle, 8.0, True, "Parado", "base, sempre que está parado"),
     "sniff": (sniff, 3.0, False, "Parado", "gesto sorteado parado"),
@@ -338,7 +459,12 @@ ANIMS = {
     "shake": (shake, 2.0, False, "Parado", "gesto sorteado parado; ao sair da água"),
     "yawn": (yawn, 3.0, False, "Parado", "gesto sorteado parado, mais à noite"),
     "stretch": (stretch, 3.6, False, "Parado", "gesto sorteado parado; depois de acordar"),
+    "snort": (FLOW.snort, 1.6, False, "Parado", "gesto sorteado parado: um bufo com a cabeça"),
+    "settle": (FLOW.settle, FLOW.SETTLE_T, False, "Parado", "gesto sorteado parado: troca o peso de pé com um passinho"),
+    "scan": (FLOW.scan, FLOW.SCAN_T, False, "Parado", "gesto sorteado parado: olha o horizonte de um lado ao outro"),
     "walk": (walk, 1.9, True, "Movimento", "andando"),
+    "turn_left": (turn_left, TURN_T, True, "Movimento", "girando no lugar para a esquerda (passos, o corpo vira)"),
+    "turn_right": (turn_right, TURN_T, True, "Movimento", "girando no lugar para a direita"),
     "run": (run, 0.8, True, "Movimento", "correndo, caçando ou fugindo"),
     "stalk": (stalk, 2.8, True, "Movimento", "chegando perto da presa antes do ataque"),
     "swim": (swim, 1.6, True, "Movimento", "dentro da água"),

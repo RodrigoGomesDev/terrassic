@@ -119,8 +119,11 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     @Override
     protected String[] extraActions() {
-        String[] common = {"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink",
-                "sniff", "look_back", "shake", "yawn", "stretch"};
+        String[] common = this.livelyMotion()
+                ? new String[]{"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink",
+                        "sniff", "look_back", "shake", "yawn", "stretch", "snort", "settle", "scan"}
+                : new String[]{"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink",
+                        "sniff", "look_back", "shake", "yawn", "stretch"};
         String[] alpha = Alphas.hasAlpha(this.speciesId()) ? AlphaMoves.actions(this.speciesId()) : new String[0];
         String[] all = java.util.Arrays.copyOf(common, common.length + alpha.length);
         System.arraycopy(alpha, 0, all, common.length, alpha.length);
@@ -210,9 +213,39 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         return false;
     }
 
+    /** The live motion layer and the step-round loops: the T. rex first (06/11/2026, the Raxiores study); the other big
+     *  theropods get them once their rigs have the turn loops. */
+    @Override
+    protected boolean livelyMotion() {
+        return "tyrannosaurus".equals(this.speciesId());
+    }
+
+    private RawAnimation turnLeftAnim;
+    private RawAnimation turnRightAnim;
+
+    /** Standing and turning: it steps round ("turn_left" / "turn_right") instead of spinning on its feet. */
+    private PlayState turnInPlace(AnimationState<DinosaurEntity> state) {
+        LivelyMotion m = this.lively();
+        if (m == null || state.isMoving() || !this.onGround() || this.isSleeping() || this.isInSittingPose() || this.isKnockedOut()
+                || !this.isAlive() || this.isSwimmingDeep() || this.isVehicle() || Math.abs(m.turnRate()) < 1.2F) {
+            return null;
+        }
+        if (this.turnLeftAnim == null) {
+            this.turnLeftAnim = RawAnimation.begin().thenLoop(anim("turn_left"));
+            this.turnRightAnim = RawAnimation.begin().thenLoop(anim("turn_right"));
+        }
+        // a faster turn steps faster (about 25 degrees a loop at 1x)
+        this.cycleSpeed = Mth.clamp(Math.abs(m.turnRate()) / 1.6D, 0.6D, 1.8D);
+        return state.setAndContinue(m.turnRate() < 0.0F ? this.turnLeftAnim : this.turnRightAnim);
+    }
+
     /** Creeping up on prey (aggressive but slow): the stalk cycle. */
     @Override
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
+        PlayState turning = this.turnInPlace(state);
+        if (turning != null) {
+            return turning;
+        }
         AlphaMoves moves = this.alphaMoves();
         if (moves != null && moves.walkAnim() != null && state.isMoving() && !this.isAggressive() && !this.isSleeping()
                 && !this.isInSittingPose() && !this.isSwimmingDeep()
@@ -286,8 +319,13 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     /** The gestures it picks from when it stands idle (a rig may add its own). */
     protected String[] gestures() {
-        return GESTURES;
+        return this.livelyMotion() ? LIVELY_GESTURES : GESTURES;
     }
+
+    /** The T. rex's gestures with the new ones of the fluid set (06/11): a snort, a weight shift with a step, a scan of
+     *  the horizon; the shifting and looking come twice as often as the rest (a standing animal mostly does that). */
+    private static final String[] LIVELY_GESTURES = {"sniff", "look_back", "shake", "yawn", "stretch", "snort", "snort",
+            "settle", "settle", "scan", "scan"};
 
     /** The one-shot of the loud roar, how long it stands for it and whether it shakes the air. */
     protected String loudAnim() {

@@ -80,6 +80,50 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("adult_comb", baby);
         hide("adult_frill", baby);
         hide("young_frill", !baby);
+        com.terrassic.entity.LivelyMotion lively = animatable.lively();
+        if (lively != null) {
+            this.applyLively(lively, animationState.getPartialTick());
+        }
+    }
+
+    /** The live motion layer (entity/LivelyMotion) on top of the baked pose: the tail spring, and the body leaning and
+     *  the neck looking into a curve. */
+    private void applyLively(com.terrassic.entity.LivelyMotion m, float partial) {
+        float d2r = (float) (Math.PI / 180.0D);
+        for (int i = 0; i < 4; i++) {
+            CoreGeoBone b = getAnimationProcessor().getBone("tail" + (i + 1));
+            if (b != null) {
+                b.setRotY(b.getRotY() + m.tail(i, partial) * d2r);
+            }
+        }
+        float bank = m.bank(partial);
+        CoreGeoBone body = getAnimationProcessor().getBone("body");
+        if (body != null) {
+            body.setRotZ(body.getRotZ() + bank * d2r);
+        }
+        CoreGeoBone neck = getAnimationProcessor().getBone("neck");
+        if (neck != null) {
+            // the neck looks into the curve and stays upright against the lean
+            neck.setRotY(neck.getRotY() + bank * 0.9F * d2r);
+            neck.setRotZ(neck.getRotZ() - bank * 0.6F * d2r);
+        }
+        // panting after a run: the chest heaves, the head bobs a beat later and the mouth hangs open with each breath
+        float ex = m.exertion();
+        if (ex > 0.01F) {
+            float ph = m.breath(partial);
+            float br = (float) Math.sin(ph);
+            if (body != null) {
+                body.setRotX(body.getRotX() + 1.4F * ex * br * d2r);
+                body.setPosY(body.getPosY() + 0.6F * ex * br);
+            }
+            if (neck != null) {
+                neck.setRotX(neck.getRotX() - 1.2F * ex * (float) Math.sin(ph - 0.6F) * d2r);
+            }
+            CoreGeoBone jaw = getAnimationProcessor().getBone("jaw");   // open = negative x
+            if (jaw != null) {
+                jaw.setRotX(jaw.getRotX() - (6.0F + 5.0F * Math.max(0.0F, (float) Math.sin(ph - 0.4F))) * ex * d2r);
+            }
+        }
     }
 
     private void hide(String bone, boolean hidden) {

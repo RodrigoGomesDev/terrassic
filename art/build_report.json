@@ -9,8 +9,8 @@
   "bounds_px": [
    [
     -22.0,
-    -5.213722713742324e-15,
-    -93.77273762503262
+    -2.1094237467877974e-15,
+    -93.7727376250326
    ],
    [
     22.0,
@@ -25,7 +25,12 @@
    "animation.tyrannosaurus.shake",
    "animation.tyrannosaurus.yawn",
    "animation.tyrannosaurus.stretch",
+   "animation.tyrannosaurus.snort",
+   "animation.tyrannosaurus.settle",
+   "animation.tyrannosaurus.scan",
    "animation.tyrannosaurus.walk",
+   "animation.tyrannosaurus.turn_left",
+   "animation.tyrannosaurus.turn_right",
    "animation.tyrannosaurus.run",
    "animation.tyrannosaurus.stalk",
    "animation.tyrannosaurus.swim",
