@@ -72,6 +72,12 @@ uma cor livre quando for refeita.
 - Elasmosaurus (1.8, 05/11/2026): o mais perto é o Tylosaurus antigo, 11,2 (o estudo previa 13,5); dos refeitos, o
   Mosasaurus a 14,3. Descartados no estudo: cinza-golfinho (5,0 do Xiphactinus), ardósia-violeta (9,8 do Gallimimus),
   cobre-marinho (9,0 do Majungasaurus). Quando o Tylosaurus for refeito, não pode usar turquesa.
+- Therizinosaurus (06/11/2026): oliva-cáqui com manchas suaves no dorso, gola e capa um tom mais escuro; o mais perto
+  dos refeitos é o Pteranodon, 12,6 (dos antigos, Saltasaurus e Argentinosaurus a 4,4/4,7, que mudam quando forem
+  refeitos). O Rodrigo recusou o ocre com barras pretas ("parecia tigre") e depois as três cores fortes (brasa vinho
+  com gola ferrugem, ardósia índigo com gola branca, areia com rosetas): "destoando demais dos dinos, siga algo mais
+  neutro". Os marrons neutros colidem quase todos (Protoceratops 8,4 a 10,0; Pteranodon 6,9 a 9,8); o oliva-cáqui é o
+  neutro que sobra livre.
 - O colourcheck compara só os machos. No Parasaurolophus as duas cores foram medidas também contra as fêmeas dos
   refeitos; vale fazer o mesmo nos próximos (a fêmea do Pachycephalosaurus quase pegou o macho ruivo).
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre

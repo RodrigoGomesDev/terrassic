@@ -1105,20 +1105,40 @@ def lepisosteus():
 
 
 def therizinosaurus():
-    e = beaked("therizinosaurus", {"b": "#5e4634", "c": "#d8c4a4", "d": "#2e2218", "n": "#2e2218",
-                                   "m": "#c8a878", "M": "#8a6e48", "e": "#c0502a"}, beak=(13, 18, 18, 26))
-    e.ell((9, 21, 22, 34), "e", clip=True)
-    e.ell((11, 24, 20, 35), "c", clip=True)
-    e.poly([(13, 18), (18, 18), (17, 24), (16, 26), (15, 26), (14, 24)], "m")
-    # the long scythe claws at the sides
-    for side in (0, 1):
-        pts = [(3, 22), (1, 26), (2, 29), (3, 27), (4, 24)]
-        if side:
-            pts = [(31 - x, y) for (x, y) in pts]
-        e.poly(pts, "I")
-    e.pal["I"] = "#ece2c4"
+    """Therizinosaurus (06/11, the ochre of the new model): the golden ochre coat with broken black bars across it,
+    the small head with its dark beak and the male's red throat at the top, the cream belly low on the right, and
+    across the front the hand with its three long ivory blades below the barred black-and-white quills of the forearm."""
+    e = Egg("therizinosaurus", {
+        "k": "#120c06", "B": "#21170c", "o": "#bf8a2a", "O": "#d6a33c", "u": "#a06c1e",
+        "w": "#eadbb8", "r": "#9a1e26", "R": "#c0303a", "c": "#cfc3a6", "C": "#efe6ce",
+        "q": "#141010", "Q": "#f2ead6", "i": "#e08a1a"})
+    e.ell((3, 2, 28, 31), "o")
+    for y in range(N):
+        for x in range(N):
+            if not in_egg(x, y):
+                e.set(x, y, "_")
+    e.ell((6, 5, 15, 13), "O", clip=True)
+    e.ell((16, 21, 29, 33), "w", clip=True)
+    # broken black bars, leaning
+    for x0, y0, n in ((5, 11, 6), (8, 9, 7), (20, 7, 7), (24, 10, 6), (12, 12, 4), (17, 12, 5), (26, 16, 4)):
+        for k in range(n):
+            if k % 4 != 3:
+                e.px([(x0 + k // 3, y0 + k)], "B" if k % 5 else "k")
+    # the small head with its beak at the top, the red throat under it
+    e.rect((14, 3, 19, 6), "O"); e.rect((19, 5, 20, 9), "O")
+    e.rect((11, 4, 13, 5), "B"); e.px([(12, 6)], "B")
+    e.px([(16, 4)], "i"); e.px([(17, 4)], "k")
+    e.rect((14, 7, 18, 7), "r"); e.px([(15, 7)], "R")
+    # the forearm and its quill fan
+    e.line([(6, 15), (12, 19)], "u"); e.line([(6, 16), (12, 20)], "u")
+    for k in range(4):
+        e.line([(7 + k * 2, 17 + k), (4 + k * 2, 21 + k)], "q" if k % 2 else "Q")
+    # the three blades from the hand, fanned and curving only at the tip
+    e.rect((11, 19, 14, 21), "u")
+    for k, (x0, x1) in enumerate(((10, 8), (12, 12), (14, 16))):
+        e.line([(x0, 22), (x1, 27)], "C")
+        e.px([(x1 + (1 if k == 2 else -1 if k == 0 else 0), 28)], "c")
     return e
-
 
 def deinocheirus():
     e = beaked("deinocheirus", {"b": "#9a948a", "c": "#e4e0d6", "d": "#5a5650", "n": "#3e3a36",

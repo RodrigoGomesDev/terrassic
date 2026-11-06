@@ -23,7 +23,8 @@ from para_extras import CUSTOM_EGGS as PARA_EGGS  # noqa: E402  (the Parasaurolo
 from anky_extras import CUSTOM_EGGS as ANKY_EGGS  # noqa: E402  (the Ankylosaurus' leathery eggs in a pit of forest loam)
 from styr_extras import CUSTOM_EGGS as STYR_EGGS  # noqa: E402  (the Styracosaurus' long soft eggs on a heap of reed stalks)
 from deino_extras import CUSTOM_EGGS as DEINO_EGGS  # noqa: E402  (the Deinosuchus' white eggs in a hole in the beach sand)
-CUSTOM_EGGS = {**DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+from theri_extras import CUSTOM_EGGS as THERI_EGGS  # noqa: E402  (the Therizinosaurus' round eggs under a red clay crust)
+CUSTOM_EGGS = {**THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -108,6 +109,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # the drover's pack saddle (cangalha) with two woven baskets: the Triceratops carries its cargo in them
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
     # 1.8: the Elasmosaurus' neck saddle: a hide seat behind the neck, a rope loop to hold, two driftwood floats
+    # the Therizinosaurus' saddle: a broad hide pad with a high cantle on the sloping back, a teal felt blanket
+    "therizinosaurus_saddle": ("Therizinosaurus Saddle", "Sela de Terizinossauro", "Silla de Therizinosaurus", "item/generated"),
     "elasmosaurus_saddle": ("Elasmosaurus Neck Saddle", "Sela de Pescoço de Elasmossauro", "Silla de cuello de Elasmosaurio", "item/generated"),
     # 1.8: the Styracosaurus' running pad: a thick hide pad with a grip bar in front, rope foot loops, a rush girth
     "styracosaurus_saddle": ("Styracosaurus Running Pad", "Manta de Corrida de Estiracossauro", "Manta de carrera de Styracosaurus", "item/generated"),
@@ -919,6 +922,9 @@ def main():
     shaped("triceratops_saddle", ["S S", "LHL", "R R"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")
     # the Elasmosaurus' neck saddle: its hide on leather, a rope loop (string), two driftwood floats (logs)
+    # the Therizinosaurus' saddle: a bone grab bar, its hide on leather, cyan wool for the teal felt blanket
+    shaped("therizinosaurus_saddle", ["B  ", "LHL", "WWW"], {"B": "minecraft:bone", "L": "minecraft:leather",
+           "H": "terrassic:therizinosaurus_hide", "W": "minecraft:cyan_wool"}, "terrassic:therizinosaurus_saddle")
     shaped("elasmosaurus_saddle", ["SSS", "LHL", "W W"], {"S": "minecraft:string", "L": "minecraft:leather",
            "H": "terrassic:elasmosaurus_hide", "W": "minecraft:oak_log"}, "terrassic:elasmosaurus_saddle")
     # the Styracosaurus' running pad: the grip bar (a stick), its hide on leather, rush foot loops with a bone toggle

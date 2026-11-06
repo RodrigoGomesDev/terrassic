@@ -19,6 +19,7 @@ import parts as hit_parts  # noqa: E402
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
+    "therizinosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -72,7 +73,10 @@ SIZES = {
     "euoplocephalus":     dict(real=6.0,  scale=0.74, w=2.0, h=1.8, baby=0.3,  shadow=1.6),
     # Therizinosaurus cheloniformis: 9-10 m, ~5 t (Zanno 2010; Paul 2010); stands ~6 blocks tall with the neck up.
     # Therizinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "therizinosaurus":    dict(real=10.0, scale=1.03, w=2.4, h=5.0, baby=0.2,  shadow=2.0),
+    # Therizinosaurus v1 (06/11/2026) is hand-made at 24 px/m and shown at its real 10 m along the spine (16 / 24 =
+    # 0.667), its own study and rig (page "Terizinossauro: estudo e modelo"); the hitbox covers the body (the back at
+    # ~3.8 m), the hit parts the neck and the small head up at ~5.4 m.
+    "therizinosaurus":    dict(real=10.0, scale=0.667, w=2.4, h=3.8, baby=0.2,  shadow=2.0),
     # Deinocheirus mirificus: 11 m, ~6.4 t (Lee et al. 2014); the biggest ornithomimosaur, humped and duck-billed.
     # Deinocheirus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "deinocheirus":       dict(real=11.0, scale=0.99, w=2.4, h=4.8, baby=0.2,  shadow=2.2),
@@ -438,7 +442,8 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=140, MOVEMENT_SPEED=0.2, ATTACK_DAMAGE=14, ATTACK_KNOCKBACK=1.5, ARMOR=5, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
       food="Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.MELON_SLICE",
       sounds=("SNIFFER_IDLE", "SNIFFER_HURT", "SNIFFER_DEATH", 0.55, 2.0, 320), step=("RAVAGER_STEP", 0.8, 0.6),
-      xp=30, step_height=1.2, head=(30, 25), rideable=True, jump=0.5, ride_offset=4.2, ride_forward=0.4, ride_speed=1.0, egg_only=True, forage=True),
+      xp=30, step_height=1.2, head=(30, 25), rideable=True, jump=0.5, ride_offset=5.11, ride_forward=0.97, ride_speed=1.0, egg_only=True, forage=True,
+      saddle="THERIZINOSAURUS_SADDLE", rig="Therizinosaurid"),
  dict(id="deinocheirus", cls="Deinocheirus", base="HerbivoreDinosaur",
       doc="Deinocheirus mirificus - 11 m humped, duck-billed ornithomimosaur of the river margins with 2.4 m arms. Omnivore: scoops fish and weed out of the water (a tame one brings them to you). Territorial: swipes with the arms. Tamed with fish or plants; a tall mount.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=24),
@@ -857,7 +862,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1101,7 +1106,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice
