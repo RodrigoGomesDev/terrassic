@@ -104,6 +104,14 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   refeito da 1.8. Voa debaixo d'água com as quatro nadadeiras, pescoço de sete ossos quase reto, toda mordida é o bote
   de pescoço, sobe para respirar e mergulha, engole pedras no fundo; Sela de Pescoço própria (`ELASMOSAURUS_SADDLE`,
   `tools/spritegen/elas_extras.py`); sem ovo (pare filhotes vivos).
+- `Therizinosaurid` (à mão, rig do Therizinosaurus, 30 animações, a 24 px/m, `tools/modelgen/handmade/therizinosaurus`):
+  refeito depois da 1.8.1 (estudo aprovado em 06/11/2026; cor oliva-cáqui depois de o Rodrigo recusar ocre listrado e
+  cores fortes, `docs/CORES.md`). Corpo em partes com barriga funda, gola e capa de penas, topete, leques listrados nos
+  braços (`adult_l/r`), três garras-lâmina por mão, pés de quatro dedos, penas caindo da coxa. Pasta no alto puxando
+  galhos (o "graze" toca `browse`), exibe braços abertos a predadores (`claw_display`), avisa o jogador que chega perto
+  (`threat`), corte, tesoura (`scissor`) e empurrão de peito (`shove`), machos frente a frente (`rival`), senta sobre o
+  quadril. Sela própria (`THERIZINOSAURUS_SADDLE`); ninho de ovos redondos enterrados sob crosta de argila vermelha
+  (`tools/spritegen/theri_extras.py`). Teste: arena de mata na `BehaviorTest`.
 - Testes da 1.8 (`docs/TESTES_1_8.md`): `client/dev/BehaviorTest` (`TERRASSIC_BEHAVIOR_TEST=1`) monta arenas e registra os
   comportamentos que os bichos fazem sozinhos, doma, sela, montaria, procriação e choco. Achou e corrigiu: Deinossuco
   caçando a própria espécie, alvo morto bloqueando a doma, procriação de bichos grandes (`ai/DinoBreedGoal` em todas as

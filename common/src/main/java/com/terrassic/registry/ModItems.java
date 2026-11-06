@@ -286,6 +286,10 @@ public final class ModItems {
      *  front, rope foot loops with bone toggles and a rush girth. */
     public static final RegistrySupplier<Item> STYRACOSAURUS_SADDLE = ITEMS.register("styracosaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Therizinosaurus' own saddle: a broad hide pad on a felt blanket with a high cantle (the back slopes), knee
+     *  rolls and a bone grab bar; only it saddles a Therizinosaurus. */
+    public static final RegistrySupplier<Item> THERIZINOSAURUS_SADDLE = ITEMS.register("therizinosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Gallimimus' own riding pad: only it saddles a Gallimimus; the rider sits over the hips, holding a bone grip. */
     public static final RegistrySupplier<Item> GALLIMIMUS_SADDLE = ITEMS.register("gallimimus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

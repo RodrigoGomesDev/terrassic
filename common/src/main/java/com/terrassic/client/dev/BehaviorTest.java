@@ -99,6 +99,9 @@ public final class BehaviorTest {
         if (only.contains("elasmosaurus")) {
             planElasmosaurus();
         }
+        if (only.contains("therizinosaurus")) {
+            planTherizinosaurus();
+        }
         STEPS.add(mc -> {
             REPORT.add("");
             REPORT.add("== One-shot animations each species triggered by itself (times)");
@@ -177,6 +180,53 @@ public final class BehaviorTest {
             return 20;
         });
         planTameRideBreed(sp, f1, m2, new ItemStack(Items.FERN, 64), ModItems.STYRACOSAURUS_SADDLE.get(), x0, false);
+    }
+
+    private static void planTherizinosaurus() {
+        String sp = "therizinosaurus";
+        double x0 = 600.5D;
+        UUID m1 = id(), m2 = id(), f1 = id(), b1 = id(), raptor = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Therizinosaurus: two males, a female and a calf in a wood of oaks");
+            clear(mc, x0, 26);
+            command(mc, "gamerule mobGriefing true");
+            for (int[] t : new int[][]{{-8, -6}, {7, -9}, {-4, 9}, {10, 6}, {0, -14}}) {
+                command(mc, fill(x0 + t[0], Y, t[1], x0 + t[0], Y + 4, t[1], "minecraft:oak_log"));
+                command(mc, fill(x0 + t[0] - 2, Y + 4, t[1] - 2, x0 + t[0] + 2, Y + 6, t[1] + 2, "minecraft:oak_leaves[persistent=true]"));
+            }
+            summon(mc, sp, x0, Y, 0.5D, m1, "Female:0b");
+            summon(mc, sp, x0 + 4, Y, 2.5D, m2, "Female:0b");
+            summon(mc, sp, x0 - 3, Y, -3.5D, f1, "Female:1b");
+            summon(mc, sp, x0 + 2, Y, -5.5D, b1, "Age:-24000");
+            watch(mc, new Vec3(x0, Y + 2, 0.0D), 24.0D);
+            return 3000;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, m1);
+            double rx = d == null ? x0 + 11 : d.getX() + 10, rz = d == null ? 0.5D : d.getZ();
+            REPORT.add("  a wild Velociraptor (held still) 10 blocks from the first male");
+            summon(mc, "velociraptor", rx, Y, rz, raptor, "NoAI:1b");
+            return 400;
+        });
+        STEPS.add(mc -> {
+            command(mc, "tp " + raptor + " 0 -400 0");
+            REPORT.add("  a player in survival walks up to the first male");
+            command(mc, "gamemode survival @a");
+            DinosaurEntity d = server(mc, m1);
+            ServerPlayer p = player(mc);
+            if (d != null && p != null) {
+                mc.getSingleplayerServer().execute(() -> p.teleportTo(d.getX() + 6.0D, d.getY() + 0.5D, d.getZ()));
+            }
+            return 120;
+        });
+        STEPS.add(mc -> {
+            command(mc, "gamemode creative @a");
+            mc.player.getAbilities().flying = true;
+            watch(mc, new Vec3(x0, Y + 2, 0.0D), 24.0D);
+            return 2400;
+        });
+        planTameRideBreed(sp, f1, m2, null, ModItems.THERIZINOSAURUS_SADDLE.get(), x0, false);
     }
 
     private static void planDeinosuchus() {
@@ -554,7 +604,10 @@ public final class BehaviorTest {
     /** grass from end to end, the air cleared above it */
     private static void clear(Minecraft mc, double x0, int r) {
         command(mc, "forceload add " + (int) (x0 - r) + " " + (-r) + " " + (int) (x0 + r) + " " + r);
-        command(mc, fill(x0 - r, Y, -r, x0 + r, Y + 12, r, "minecraft:air"));
+        // in slices: a /fill over 32768 blocks fails silently (and left the eggs of earlier runs in the arena)
+        for (int z = -r; z <= r; z += 8) {
+            command(mc, fill(x0 - r, Y, z, x0 + r, Y + 12, Math.min(r, z + 7), "minecraft:air"));
+        }
         command(mc, fill(x0 - r, Y - 1, -r, x0 + r, Y - 1, r, "minecraft:grass_block"));
     }
 

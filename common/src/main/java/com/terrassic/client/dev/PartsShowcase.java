@@ -38,7 +38,7 @@ import java.util.Locale;
 public final class PartsShowcase {
     private static final String[] SPECIES = {"tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor",
             "triceratops", "protoceratops", "ankylosaurus", "pachycephalosaurus", "parasaurolophus", "gallimimus",
-            "pteranodon", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus"};
+            "pteranodon", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus", "therizinosaurus"};
     private static final int[] YAWS = {0, 45};
     private static final double Y = -60.0D;
 
@@ -751,7 +751,11 @@ public final class PartsShowcase {
             command(mc, "weather clear");
             return 5;
         });
-        String[][] variants = "elasmosaurus".equals(species)
+        String[][] variants = "therizinosaurus".equals(species)
+                ? new String[][]{{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
+                        {"saddled", "Female:0b,Saddled:1b"}, {"claw_display", "Female:0b"}, {"browse", "Female:0b"},
+                        {"attack", "Female:0b"}, {"scissor", "Female:0b"}, {"rival", "Female:0b"}}
+                : "elasmosaurus".equals(species)
                 ? new String[][]{{"male", "Female:0b"}, {"female", "Female:1b"}, {"baby", "Female:0b,Age:-24000"},
                         {"saddled", "Female:0b,Saddled:1b"}, {"neck_strike", "Female:0b"}, {"breathe", "Female:0b"},
                         {"gastrolith", "Female:0b"}}
@@ -799,7 +803,8 @@ public final class PartsShowcase {
                         d.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, v[0]);
                     }
                 }
-                return "attack".equals(v[0]) || "lunge".equals(v[0]) ? 9 : "death_roll".equals(v[0]) ? 14 : 32;
+                return "attack".equals(v[0]) || "lunge".equals(v[0]) ? 9 : "death_roll".equals(v[0]) || "scissor".equals(v[0]) ? 12
+                        : "claw_display".equals(v[0]) ? 30 : "browse".equals(v[0]) ? 26 : 32;
             });
             STEPS.add(mc -> {
                 if (dino[0] != null) {

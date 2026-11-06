@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "terrassic:therizinosaurus_saddle"
+      }
+    },
+    "has_bone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:bone"
+            ]
+          }
+        ]
+      }
+    },
+    "has_leather": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:leather"
+            ]
+          }
+        ]
+      }
+    },
+    "has_therizinosaurus_hide": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "terrassic:therizinosaurus_hide"
+            ]
+          }
+        ]
+      }
+    },
+    "has_cyan_wool": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:cyan_wool"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_bone",
+      "has_cyan_wool",
+      "has_leather",
+      "has_the_recipe",
+      "has_therizinosaurus_hide"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "terrassic:therizinosaurus_saddle"
+    ]
+  },
+  "sends_telemetry_event": false
+}

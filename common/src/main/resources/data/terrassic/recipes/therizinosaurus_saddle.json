@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "B  ",
+    "LHL",
+    "WWW"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bone"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "H": {
+      "item": "terrassic:therizinosaurus_hide"
+    },
+    "W": {
+      "item": "minecraft:cyan_wool"
+    }
+  },
+  "result": {
+    "item": "terrassic:therizinosaurus_saddle",
+    "count": 1
+  }
+}

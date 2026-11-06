@@ -2,103 +2,193 @@
   "parent": "block/block",
   "textures": {
     "egg": "terrassic:block/therizinosaurus_egg_0",
-    "particle": "terrassic:block/therizinosaurus_egg_0"
+    "nest": "terrassic:block/therizinosaurus_nest",
+    "particle": "terrassic:block/therizinosaurus_nest"
   },
   "elements": [
     {
       "from": [
-        4,
+        1,
         0,
-        4
+        1
       ],
       "to": [
-        12,
-        9,
-        12
+        15,
+        1.0,
+        15
       ],
       "faces": {
         "north": {
-          "texture": "#egg"
+          "uv": [
+            1,
+            15.0,
+            15,
+            16
+          ],
+          "texture": "#nest"
         },
         "south": {
-          "texture": "#egg"
+          "uv": [
+            1,
+            15.0,
+            15,
+            16
+          ],
+          "texture": "#nest"
         },
         "east": {
-          "texture": "#egg"
+          "uv": [
+            1,
+            15.0,
+            15,
+            16
+          ],
+          "texture": "#nest"
         },
         "west": {
-          "texture": "#egg"
+          "uv": [
+            1,
+            15.0,
+            15,
+            16
+          ],
+          "texture": "#nest"
         },
         "up": {
-          "texture": "#egg"
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#nest"
         },
         "down": {
-          "texture": "#egg",
-          "cullface": "down"
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#nest"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        1.0,
+        3
+      ],
+      "to": [
+        13,
+        1.8,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3,
+            14.2,
+            13,
+            15.0
+          ],
+          "texture": "#nest"
+        },
+        "south": {
+          "uv": [
+            3,
+            14.2,
+            13,
+            15.0
+          ],
+          "texture": "#nest"
+        },
+        "east": {
+          "uv": [
+            3,
+            14.2,
+            13,
+            15.0
+          ],
+          "texture": "#nest"
+        },
+        "west": {
+          "uv": [
+            3,
+            14.2,
+            13,
+            15.0
+          ],
+          "texture": "#nest"
+        },
+        "up": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#nest"
         }
       }
     },
     {
       "from": [
         5,
-        9,
+        1.8,
         5
       ],
       "to": [
         11,
-        12,
+        2.3,
         11
       ],
       "faces": {
         "north": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            13.7,
+            11,
+            14.2
+          ],
+          "texture": "#nest"
         },
         "south": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            13.7,
+            11,
+            14.2
+          ],
+          "texture": "#nest"
         },
         "east": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            13.7,
+            11,
+            14.2
+          ],
+          "texture": "#nest"
         },
         "west": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            13.7,
+            11,
+            14.2
+          ],
+          "texture": "#nest"
         },
         "up": {
-          "texture": "#egg"
-        },
-        "down": {
-          "texture": "#egg"
-        }
-      }
-    },
-    {
-      "from": [
-        6,
-        12,
-        6
-      ],
-      "to": [
-        10,
-        13,
-        10
-      ],
-      "faces": {
-        "north": {
-          "texture": "#egg"
-        },
-        "south": {
-          "texture": "#egg"
-        },
-        "east": {
-          "texture": "#egg"
-        },
-        "west": {
-          "texture": "#egg"
-        },
-        "up": {
-          "texture": "#egg"
-        },
-        "down": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#nest"
         }
       }
     }
@@ -112,13 +202,61 @@
       ],
       "translation": [
         0,
-        0,
+        2.0,
         0
       ],
       "scale": [
-        0.8,
-        0.8,
-        0.8
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "fixed": {
+      "scale": [
+        0.75,
+        0.75,
+        0.75
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.45,
+        0.45,
+        0.45
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
       ]
     }
   }

@@ -1343,39 +1343,58 @@
   "render_scale": 0.5
  },
  "therizinosaurus": {
-  "bones": 28,
-  "cubes": 95,
+  "bones": 29,
+  "cubes": 88,
   "texture": [
    256,
-   512
+   256
   ],
   "bounds_px": [
    [
-    -17.5,
-    -3.815796103028006e-05,
-    -79.06276130319105
+    -20.5,
+    -0.050000000000002695,
+    -120.22248453542778
    ],
    [
-    17.5,
-    91.52042288793326,
-    76.54842443932577
+    20.5,
+    132.23967431332693,
+    103.61576511250033
    ]
   ],
   "animations": [
    "animation.therizinosaurus.idle",
+   "animation.therizinosaurus.sniff",
+   "animation.therizinosaurus.look_back",
+   "animation.therizinosaurus.shake",
+   "animation.therizinosaurus.stretch",
    "animation.therizinosaurus.walk",
    "animation.therizinosaurus.run",
-   "animation.therizinosaurus.roar",
+   "animation.therizinosaurus.swim",
+   "animation.therizinosaurus.call",
+   "animation.therizinosaurus.browse",
+   "animation.therizinosaurus.claw_display",
+   "animation.therizinosaurus.rival",
+   "animation.therizinosaurus.preen",
+   "animation.therizinosaurus.eat",
+   "animation.therizinosaurus.drink",
+   "animation.therizinosaurus.attack",
+   "animation.therizinosaurus.scissor",
+   "animation.therizinosaurus.shove",
+   "animation.therizinosaurus.threat",
+   "animation.therizinosaurus.hurt",
+   "animation.therizinosaurus.death",
    "animation.therizinosaurus.sit",
+   "animation.therizinosaurus.sleep",
+   "animation.therizinosaurus.wake_sleep",
+   "animation.therizinosaurus.brood",
    "animation.therizinosaurus.knocked_out",
    "animation.therizinosaurus.wake",
-   "animation.therizinosaurus.eat",
    "animation.therizinosaurus.beg",
    "animation.therizinosaurus.tame",
-   "animation.therizinosaurus.attack",
-   "animation.therizinosaurus.graze"
+   "animation.therizinosaurus.baby_browse"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.667,
+  "handmade": true
  },
  "deinocheirus": {
   "bones": 28,

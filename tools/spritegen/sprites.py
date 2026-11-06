@@ -982,7 +982,8 @@ def egg_blocks():
     from anky_extras import CUSTOM_EGGS as ANKY_EGGS
     from styr_extras import CUSTOM_EGGS as STYR_EGGS
     from deino_extras import CUSTOM_EGGS as DEINO_EGGS
-    CUSTOM_EGGS = {**DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+    from theri_extras import CUSTOM_EGGS as THERI_EGGS
+    CUSTOM_EGGS = {**THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1526,6 +1527,8 @@ if __name__ == "__main__":
     elas_extras.main()    # the Elasmosaurus' neck saddle (no egg block: live young)
     import deino_extras
     deino_extras.main()   # the Deinosuchus' hard white eggs in a hole dug in the beach sand
+    import theri_extras
+    theri_extras.main()   # the Therizinosaurus' round eggs buried under a crust of red clay, and its saddle
     import styr_extras
     styr_extras.main()    # the Styracosaurus' long soft eggs on a heap of reed stalks, and its running pad
     import mosa_extras
