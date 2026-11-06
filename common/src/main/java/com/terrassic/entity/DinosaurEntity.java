@@ -2987,10 +2987,29 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return this.getVehicle() instanceof Player;
     }
 
+    /** Client: the live motion layer (tail spring, bank, turn rate), for the species that have it (LivelyMotion). */
+    private LivelyMotion lively;
+
+    /** Whether this species gets the live motion layer and the step-round loops (only the T. rex for now). */
+    protected boolean livelyMotion() {
+        return false;
+    }
+
+    /** Client: the live motion layer, or null. */
+    public LivelyMotion lively() {
+        return this.lively;
+    }
+
     @Override
     public void tick() {
         super.tick();
         this.tickParts();
+        if (this.level().isClientSide() && this.livelyMotion()) {
+            if (this.lively == null) {
+                this.lively = new LivelyMotion();
+            }
+            this.lively.tick(this);
+        }
         if (!this.level().isClientSide()) {
             if (!this.levels.isRolled()) {
                 this.ensureLevels();

@@ -102,6 +102,9 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("rexmotion")) {
+            planRexMotion();
+        }
         if (only.contains("quetzalcoatlus")) {
             planQuetzalcoatlus();
         }
@@ -236,6 +239,128 @@ public final class BehaviorTest {
             return 2400;
         });
         planTameRideBreed(sp, f1, m2, null, ModItems.THERIZINOSAURUS_SADDLE.get(), x0, false);
+    }
+
+    /** The entity the burst camera follows (client UUID lookup), or null. */
+    private static UUID followed;
+
+    /** Burst of frames for a GIF: one every 2 ticks for {@code frames} frames, named rexmotion_<tag>_NNN.png. */
+    private static void burst(String tag, int frames, java.util.function.IntConsumer each) {
+        for (int i = 0; i < frames; i++) {
+            int k = i;
+            STEPS.add(mc -> {
+                each.accept(k);
+                if (followed != null && mc.level != null) {
+                    // the camera follows the animal from its side, a little above and behind
+                    Entity e = server(mc, followed);
+                    if (e != null) {
+                        Vec3 at = e.position().add(0.0D, 2.6D, 0.0D);
+                        float yaw = e instanceof net.minecraft.world.entity.LivingEntity l ? l.yBodyRot : e.getYRot();
+                        double a = Math.toRadians(yaw + 125.0D);
+                        look(mc.player, at.add(-Math.sin(a) * 14.0D, 4.5D, Math.cos(a) * 14.0D), at);
+                    }
+                }
+                Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_%s_%03d.png", tag, k), mc.getMainRenderTarget(), msg -> {
+                });
+                return 2;
+            });
+        }
+    }
+
+    /**
+     * The T. rex's live motion (06/11/2026, the Raxiores study): bursts of frames for GIFs of the walk round a circle
+     * (tail spring and bank), turning on the spot (the step-round loops), the run round a circle and the idle.
+     */
+    private static void planRexMotion() {
+        double x0 = 1400.5D;
+        UUID rex = id();
+        double[] ang = {0.0D};
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== T. rex live motion: walk, turn on the spot, run, idle (frames rexmotion_*)");
+            clear(mc, x0, 30);
+            summon(mc, "tyrannosaurus", x0, Y, 0.5D, rex, "Female:0b");
+            followed = rex;
+            watch(mc, new Vec3(x0, Y + 3, 0.0D), 34.0D);
+            shotCooldown = 100000;
+            return 60;
+        });
+        java.util.function.BiConsumer<Minecraft, Double> circle = (mc, speed) -> {
+            DinosaurEntity d = server(mc, rex);
+            if (d != null) {
+                ang[0] += 0.045D * speed;
+                double tx = x0 + 13.0D * Math.cos(ang[0]), tz = 13.0D * Math.sin(ang[0]);
+                mc.getSingleplayerServer().execute(() -> d.getNavigation().moveTo(tx, Y, tz, speed));
+            }
+        };
+        for (int i = 0; i < 40; i++) {
+            STEPS.add(mc -> {
+                circle.accept(mc, 1.0D);
+                return 2;
+            });
+        }
+        burst("walk", 90, k -> circle.accept(Minecraft.getInstance(), 1.0D));
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, rex);
+            if (d != null) {
+                mc.getSingleplayerServer().execute(() -> d.getNavigation().stop());
+            }
+            return 40;
+        });
+        double[] look = {0.0D};
+        burst("turn", 110, k -> {
+            Minecraft mc = Minecraft.getInstance();
+            DinosaurEntity d = server(mc, rex);
+            if (d != null) {
+                look[0] += k < 55 ? 0.065D : -0.065D;
+                double lx = d.getX() + 10.0D * Math.sin(look[0]), lz = d.getZ() + 10.0D * Math.cos(look[0]);
+                mc.getSingleplayerServer().execute(() -> {
+                    d.getNavigation().stop();
+                    d.getLookControl().setLookAt(lx, d.getEyeY(), lz, 30.0F, 30.0F);
+                });
+            }
+        });
+        burst("run", 70, k -> circle.accept(Minecraft.getInstance(), 2.2D));
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, rex);
+            if (d != null) {
+                mc.getSingleplayerServer().execute(() -> d.getNavigation().stop());
+            }
+            return 60;
+        });
+        burst("idle", 90, k -> {
+        });
+        // the one-shots, each triggered on the server and filmed whole
+        String[][] SHOTS = {{"roar", "72"}, {"roar_loud", "92"}, {"attack", "44"}, {"attack_quick", "22"}, {"snort", "36"},
+                {"settle", "56"}, {"scan", "104"}, {"stretch", "76"}, {"shake", "44"}};
+        for (String[] shot : SHOTS) {
+            burst(shot[0], Integer.parseInt(shot[1]), k -> {
+                if (k == 2) {
+                    Minecraft mc = Minecraft.getInstance();
+                    DinosaurEntity d = server(mc, rex);
+                    if (d != null) {
+                        mc.getSingleplayerServer().execute(() -> d.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, shot[0]));
+                    }
+                }
+            });
+            STEPS.add(mc -> 20);
+        }
+        // a hard run, then the stop: the panting layer
+        burst("run2", 60, k -> circle.accept(Minecraft.getInstance(), 2.4D));
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, rex);
+            if (d != null) {
+                mc.getSingleplayerServer().execute(() -> d.getNavigation().stop());
+            }
+            return 1;
+        });
+        burst("pant", 100, k -> {
+        });
+        STEPS.add(mc -> {
+            shotCooldown = 0;
+            command(mc, "kill " + rex);
+            return 20;
+        });
     }
 
     /** A pool in the middle of the arena, its surface at the ground (for drinking, swimming, wading). */
