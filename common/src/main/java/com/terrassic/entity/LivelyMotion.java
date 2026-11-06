@@ -38,6 +38,15 @@ public final class LivelyMotion {
     private float exertion;
     private float breath;
     private float breathO;
+    /** Feet on the ground (06/11, the study of Jurassic Saga's leg IK): blocks of ground under each foot relative to
+     *  where the animal stands (negative = the foot hangs over a step down), followed smoothly. */
+    private float footL;
+    private float footR;
+    private float footLO;
+    private float footRO;
+    /** Half the distance between the feet and the thigh + shin length, in model px (the T. rex rig). */
+    private static final float FOOT_SIDE_PX = 15.0F;
+    public static final float LEG_PX = 50.0F;
 
     public void tick(DinosaurEntity e) {
         float dyaw = Mth.wrapDegrees(e.yBodyRot - e.yBodyRotO);
@@ -74,6 +83,47 @@ public final class LivelyMotion {
         }
         this.breathO = this.breath;
         this.breath += (float) (2.0D * Math.PI / (60.0D - 40.0D * this.exertion));
+        // the ground under each foot
+        this.footLO = this.footL;
+        this.footRO = this.footR;
+        float gl = 0.0F;
+        float gr = 0.0F;
+        if (e.onGround() && e.isAlive() && !e.isKnockedOut() && !e.isInWater() && !e.isSleeping() && !e.isInSittingPose()) {
+            double side = FOOT_SIDE_PX / 16.0D * e.livelyModelScale() * e.getScale();
+            double yaw = Math.toRadians(e.yBodyRot);
+            double cx = Math.cos(yaw) * side;
+            double cz = Math.sin(yaw) * side;
+            gl = ground(e, e.getX() + cx, e.getZ() + cz);
+            gr = ground(e, e.getX() - cx, e.getZ() - cz);
+        }
+        this.footL += (gl - this.footL) * 0.3F;
+        this.footR += (gr - this.footR) * 0.3F;
+    }
+
+    /** The top of the ground under (x, z) relative to the animal's feet, -1.5 .. 1.2 blocks. */
+    private static float ground(DinosaurEntity e, double x, double z) {
+        double y = e.getY();
+        net.minecraft.world.level.Level level = e.level();
+        for (int dy = 1; dy >= -2; dy--) {
+            net.minecraft.core.BlockPos p = net.minecraft.core.BlockPos.containing(x, y + dy, z);
+            net.minecraft.world.phys.shapes.VoxelShape shape = level.getBlockState(p).getCollisionShape(level, p);
+            if (!shape.isEmpty()) {
+                double top = p.getY() + shape.max(net.minecraft.core.Direction.Axis.Y);
+                if (top <= y + 1.2D) {
+                    return (float) Mth.clamp(top - y, -1.5D, 1.2D);
+                }
+            }
+        }
+        return -1.5F;
+    }
+
+    /** Blocks of ground under the left / right foot relative to the stance (smoothed). */
+    public float footLeft(float partial) {
+        return Mth.lerp(partial, this.footLO, this.footL);
+    }
+
+    public float footRight(float partial) {
+        return Mth.lerp(partial, this.footRO, this.footR);
     }
 
     /** Panting amount (0 .. 1), eased. */

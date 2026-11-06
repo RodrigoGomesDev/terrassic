@@ -82,7 +82,27 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("young_frill", !baby);
         com.terrassic.entity.LivelyMotion lively = animatable.lively();
         if (lively != null) {
+            this.scaleOf = animatable.livelyModelScale() * animatable.getScale();
             this.applyLively(lively, animationState.getPartialTick());
+        }
+    }
+
+    /** Model scale times the animal's size, set before applyLively (feet: blocks to model px). */
+    private float scaleOf = 1.0F;
+
+    /** Lifts a foot by {@code lift} model px by bending the leg: the thigh forward, the shin back, the foot level. */
+    private void bendLeg(String side, float lift, float d2r) {
+        if (lift < 0.2F) {
+            return;
+        }
+        float a = (float) Math.toDegrees(Math.asin(Math.min(0.85F, lift / com.terrassic.entity.LivelyMotion.LEG_PX))) * 1.6F;
+        CoreGeoBone thigh = getAnimationProcessor().getBone("thigh_" + side);
+        CoreGeoBone shin = getAnimationProcessor().getBone("shin_" + side);
+        CoreGeoBone foot = getAnimationProcessor().getBone("foot_" + side);
+        if (thigh != null && shin != null && foot != null) {
+            thigh.setRotX(thigh.getRotX() + a * d2r);
+            shin.setRotX(shin.getRotX() - 2.0F * a * d2r);
+            foot.setRotX(foot.getRotX() + a * d2r);
         }
     }
 
@@ -106,6 +126,18 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             // the neck looks into the curve and stays upright against the lean
             neck.setRotY(neck.getRotY() + bank * 0.9F * d2r);
             neck.setRotZ(neck.getRotZ() - bank * 0.6F * d2r);
+        }
+        // the feet on uneven ground: the body drops to the lower foot, the other leg bends to set its foot on the higher
+        // block, the hips tilt toward the low side
+        float l = m.footLeft(partial);
+        float r = m.footRight(partial);
+        if ((Math.abs(l) > 0.02F || Math.abs(r) > 0.02F) && body != null) {
+            float px = 16.0F / Math.max(0.1F, this.scaleOf);
+            float drop = Math.min(0.0F, Math.min(l, r));
+            body.setPosY(body.getPosY() + drop * px);
+            body.setRotZ(body.getRotZ() + (float) Math.toDegrees(Math.atan2(l - r, 2.0F)) * 0.35F * d2r);
+            this.bendLeg("l", (l - drop) * px, d2r);
+            this.bendLeg("r", (r - drop) * px, d2r);
         }
         // panting after a run: the chest heaves, the head bobs a beat later and the mouth hangs open with each breath
         float ex = m.exertion();

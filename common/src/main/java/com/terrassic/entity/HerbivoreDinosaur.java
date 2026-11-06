@@ -45,6 +45,12 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         return this.fightsBack();
     }
 
+    /** A grown herbivore that fights back meets a big predator head on (horns, club, claws): a duel. */
+    @Override
+    public boolean fightsInDuel() {
+        return this.fightsBack() && !this.isBaby();
+    }
+
     /** false = flees instead of fighting back. */
     protected boolean fightsBack() {
         return true;
@@ -129,6 +135,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(7, new TemptGoal(this, 1.1D, food(), false));
         this.goalSelector.addGoal(8, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(8, new MigrateGoal(this));
+        this.goalSelector.addGoal(8, new com.terrassic.entity.ai.WaterholeGoal(this));
         this.goalSelector.addGoal(8, new FollowHerdGoal(this));
         this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, this.strollSpeed()));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10.0F));
@@ -146,7 +153,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         if (this.getTarget() == null && !this.isVehicle() && !this.isInSittingPose() && !this.isSleeping()
                 && this.getNavigation().isDone() && this.random.nextInt(this.isHungry() ? 150 : 700) == 0) {
             triggerAnim(ACTION_CONTROLLER, "graze");
-            if (this.grazeNearby()) {
+            if (this.grazeEat()) {
                 this.feed(8);
             }
         }

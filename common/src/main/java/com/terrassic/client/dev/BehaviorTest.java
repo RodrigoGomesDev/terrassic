@@ -102,6 +102,12 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("eco")) {
+            planEcosystem();
+        }
+        if (only.contains("rexduel")) {
+            planRexDuel();
+        }
         if (only.contains("rexmotion")) {
             planRexMotion();
         }
@@ -267,6 +273,186 @@ public final class BehaviorTest {
         }
     }
 
+    /** The ecosystem (06/11/2026): grazing that crops the grass, a herd migrating in file, a T. rex shadowing it, and
+     *  the evening at the water. */
+    private static void planEcosystem() {
+        double x0 = 1800.5D;
+        UUID rex = id();
+        List<UUID> herd = new ArrayList<>();
+        int[] grass = {0};
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Ecosystem: six Edmontosaurus on tall grass, a pool 30 blocks east, a full T. rex 40 blocks south");
+            clear(mc, x0, 30);
+            command(mc, "gamerule mobGriefing true");
+            command(mc, "fill " + (int) (x0 - 30) + " " + (int) Y + " -30 " + (int) (x0 + 30) + " " + (int) Y + " 30 minecraft:grass replace minecraft:air");
+            pool(mc, x0 + 30, 0.5D, 4);
+            for (int i = 0; i < 6; i++) {
+                UUID u = id();
+                herd.add(u);
+                summon(mc, "edmontosaurus", x0 - 6 + (i % 3) * 5, Y, -4.5D + (i / 3) * 6, u, "Female:" + (i % 2) + "b,Hunger:30");
+            }
+            summon(mc, "tyrannosaurus", x0, Y, -40.5D, rex, "Female:0b,Hunger:100");
+            watch(mc, new Vec3(x0, Y, 0.0D), 40.0D);
+            return 40;
+        });
+        STEPS.add(mc -> {
+            grass[0] = countGrass(mc, x0);
+            REPORT.add("  tall grass plants round them at the start: " + grass[0]);
+            return 2400;
+        });
+        STEPS.add(mc -> {
+            REPORT.add("  after two minutes of grazing: " + countGrass(mc, x0) + " (was " + grass[0] + ")");
+            // the season calls: the first one sets off west, the rest should follow in file
+            DinosaurEntity lead = server(mc, herd.get(0));
+            if (lead != null) {
+                BlockPos to = BlockPos.containing(lead.getX() - 90, Y, lead.getZ());
+                mc.getSingleplayerServer().execute(() -> {
+                    for (UUID u : herd) {
+                        DinosaurEntity d = server(mc, u);
+                        if (d != null) {
+                            d.setMigrationTarget(to);
+                        }
+                    }
+                });
+            }
+            command(mc, "forceload add " + (int) (x0 - 130) + " -40 " + (int) x0 + " 40");
+            return 20;
+        });
+        for (int i = 0; i < 6; i++) {
+            STEPS.add(mc -> {
+                StringBuilder b = new StringBuilder("    migrating (x, z): ");
+                double minZ = 1e9, maxZ = -1e9, minX = 1e9, maxX = -1e9;
+                for (UUID u : herd) {
+                    DinosaurEntity d = server(mc, u);
+                    if (d != null) {
+                        b.append(String.format(Locale.ROOT, "%.0f,%.0f ", d.getX() - x0, d.getZ()));
+                        minZ = Math.min(minZ, d.getZ()); maxZ = Math.max(maxZ, d.getZ()); minX = Math.min(minX, d.getX()); maxX = Math.max(maxX, d.getX());
+                    }
+                }
+                DinosaurEntity r = server(mc, rex);
+                b.append(String.format(Locale.ROOT, "| spread along %.0f across %.0f | T. rex %.0f,%.0f", maxX - minX, maxZ - minZ,
+                        r == null ? 0 : r.getX() - x0, r == null ? 0 : r.getZ()));
+                REPORT.add(b.toString());
+                return 200;
+            });
+        }
+        STEPS.add(mc -> {
+            int path = 0;
+            ServerLevel l = mc.getSingleplayerServer().overworld();
+            for (BlockPos p : BlockPos.betweenClosed((int) x0 - 130, (int) Y - 1, -20, (int) x0, (int) Y - 1, 20)) {
+                if (l.getBlockState(p).is(net.minecraft.world.level.block.Blocks.DIRT_PATH)) {
+                    path++;
+                }
+            }
+            REPORT.add("  trail: dirt path blocks left on the way " + path);
+            // the evening: a fresh herd by the pool's side, the clock at dusk
+            for (UUID u : herd) {
+                command(mc, "tp " + u + " " + (x0 - 4) + " " + Y + " 0.5");
+            }
+            mc.getSingleplayerServer().execute(() -> {
+                for (UUID u : herd) {
+                    DinosaurEntity d = server(mc, u);
+                    if (d != null) {
+                        d.setMigrationTarget(null);
+                    }
+                }
+            });
+            command(mc, "time set 11200");
+            watch(mc, new Vec3(x0 + 12, Y, 0.0D), 40.0D);
+            return 1600;
+        });
+        STEPS.add(mc -> {
+            int near = 0;
+            for (UUID u : herd) {
+                DinosaurEntity d = server(mc, u);
+                if (d != null && Math.abs(d.getX() - (x0 + 30)) < 10 && Math.abs(d.getZ()) < 10) {
+                    near++;
+                }
+            }
+            REPORT.add("  dusk: Edmontosaurus by the pool after 80 s: " + near + " of " + herd.size());
+            command(mc, "time set 6000");
+            command(mc, "kill @e[type=!player]");
+            return 20;
+        });
+    }
+
+    private static int countGrass(Minecraft mc, double x0) {
+        int n = 0;
+        ServerLevel l = mc.getSingleplayerServer().overworld();
+        for (BlockPos p : BlockPos.betweenClosed((int) x0 - 30, (int) Y, -30, (int) x0 + 30, (int) Y, 30)) {
+            if (l.getBlockState(p).is(net.minecraft.world.level.block.Blocks.GRASS)) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    /** Duels (06/11/2026): two grown male T. rex of one size set on each other, then a T. rex against a Triceratops. */
+    private static void planRexDuel() {
+        double x0 = 1600.5D;
+        UUID a = id(), b = id(), trike = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Duels: two male T. rex of one size; then a T. rex against a Triceratops (frames rexmotion_duel*)");
+            clear(mc, x0, 30);
+            summon(mc, "tyrannosaurus", x0 - 7, Y, 0.5D, a, "Female:0b");
+            summon(mc, "tyrannosaurus", x0 + 7, Y, 0.5D, b, "Female:0b");
+            followed = a;
+            return 40;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity da = server(mc, a), db = server(mc, b);
+            if (da != null && db != null) {
+                mc.getSingleplayerServer().execute(() -> {
+                    da.setTarget(db);
+                    db.setTarget(da);
+                });
+            }
+            return 2;
+        });
+        burst("duel", 300, k -> {
+            if (k % 50 == 0) {
+                Minecraft mc = Minecraft.getInstance();
+                DinosaurEntity da = server(mc, a), db = server(mc, b);
+                if (da != null && db != null) {
+                    REPORT.add(String.format(Locale.ROOT, "    t=%ds: A %.0f/%.0f hp dueling %s, B %.0f/%.0f hp dueling %s, %.1f apart",
+                            k / 10, da.getHealth(), da.getMaxHealth(), ((com.terrassic.entity.ApexTheropod) da).isDueling(),
+                            db.getHealth(), db.getMaxHealth(), ((com.terrassic.entity.ApexTheropod) db).isDueling(), da.distanceTo(db)));
+                }
+            }
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity da = server(mc, a), db = server(mc, b);
+            REPORT.add(String.format(Locale.ROOT, "  after 30 s: A %s, B %s", da == null ? "gone" : String.format(Locale.ROOT, "%.0f hp, target %s", da.getHealth(), da.getTarget() == null ? "none" : "the other"),
+                    db == null ? "gone" : String.format(Locale.ROOT, "%.0f hp, target %s", db.getHealth(), db.getTarget() == null ? "none" : "the other")));
+            command(mc, "kill " + b);
+            summon(mc, "triceratops", x0 + 8, Y, 0.5D, trike, "Female:0b");
+            return 20;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity da = server(mc, a), dt = server(mc, trike);
+            if (da != null && dt != null) {
+                mc.getSingleplayerServer().execute(() -> {
+                    da.heal(400.0F);
+                    da.setTarget(dt);
+                    dt.setTarget(da);
+                });
+            }
+            return 2;
+        });
+        burst("duel_trike", 240, k -> {
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity da = server(mc, a), dt = server(mc, trike);
+            REPORT.add(String.format(Locale.ROOT, "  T. rex vs Triceratops after 24 s: rex %s, trike %s", da == null ? "gone" : String.format(Locale.ROOT, "%.0f hp", da.getHealth()),
+                    dt == null ? "dead/gone" : String.format(Locale.ROOT, "%.0f hp", dt.getHealth())));
+            shotCooldown = 0;
+            command(mc, "kill @e[type=!player]");
+            return 20;
+        });
+    }
+
     /**
      * The T. rex's live motion (06/11/2026, the Raxiores study): bursts of frames for GIFs of the walk round a circle
      * (tail spring and bank), turning on the spot (the step-round loops), the run round a circle and the idle.
@@ -290,7 +476,11 @@ public final class BehaviorTest {
             if (d != null) {
                 ang[0] += 0.045D * speed;
                 double tx = x0 + 13.0D * Math.cos(ang[0]), tz = 13.0D * Math.sin(ang[0]);
-                mc.getSingleplayerServer().execute(() -> d.getNavigation().moveTo(tx, Y, tz, speed));
+                // a wanted position straight ahead on the circle (a fresh path every two ticks never got it going)
+                mc.getSingleplayerServer().execute(() -> {
+                    d.getNavigation().stop();
+                    d.getMoveControl().setWantedPosition(tx, Y, tz, speed);
+                });
             }
         };
         for (int i = 0; i < 40; i++) {
@@ -332,7 +522,8 @@ public final class BehaviorTest {
         });
         // the one-shots, each triggered on the server and filmed whole
         String[][] SHOTS = {{"roar", "72"}, {"roar_loud", "92"}, {"attack", "44"}, {"attack_quick", "22"}, {"snort", "36"},
-                {"settle", "56"}, {"scan", "104"}, {"stretch", "76"}, {"shake", "44"}};
+                {"settle", "56"}, {"scan", "104"}, {"stretch", "76"}, {"shake", "44"}, {"bite_low", "26"}, {"bite_side", "28"},
+                {"lie_down", "46"}, {"get_up", "46"}, {"fall_asleep", "74"}};
         for (String[] shot : SHOTS) {
             burst(shot[0], Integer.parseInt(shot[1]), k -> {
                 if (k == 2) {
@@ -346,7 +537,32 @@ public final class BehaviorTest {
             STEPS.add(mc -> 20);
         }
         // a hard run, then the stop: the panting layer
-        burst("run2", 60, k -> circle.accept(Minecraft.getInstance(), 2.4D));
+        // long enough to tire it (the fatigue of the 06/11 states): then the stop shows the spent stand
+        UUID[] preyRun = {id(), id(), id()};
+        STEPS.add(mc -> {
+            for (int i = 0; i < preyRun.length; i++) {
+                command(mc, String.format(Locale.ROOT, "summon terrassic:leptoceratops %.1f %.1f %.1f {UUID:%s}", x0 + 14 + i * 3, Y, -6.5D + i * 6, uuidNbt(preyRun[i])));
+            }
+            return 5;
+        });
+        burst("run2", 170, k -> {
+            Minecraft mc = Minecraft.getInstance();
+            DinosaurEntity hunter = server(mc, rex);
+            if (hunter != null && (hunter.getTarget() == null || !hunter.getTarget().isAlive())) {
+                for (UUID u : preyRun) {
+                    if (serverAny(mc, u) instanceof net.minecraft.world.entity.LivingEntity l && l.isAlive()) {
+                        mc.getSingleplayerServer().execute(() -> hunter.setTarget(l));
+                        break;
+                    }
+                }
+            }
+            if (k % 40 == 0) {
+                DinosaurEntity d = server(mc, rex);
+                if (d instanceof com.terrassic.entity.ApexTheropod at) {
+                    REPORT.add(String.format(Locale.ROOT, "    running: %.3f blocks/tick, fatigue %.2f", Math.sqrt((d.getX() - d.xo) * (d.getX() - d.xo) + (d.getZ() - d.zo) * (d.getZ() - d.zo)), at.fatigue()));
+                }
+            }
+        });
         STEPS.add(mc -> {
             DinosaurEntity d = server(mc, rex);
             if (d != null) {
@@ -354,7 +570,30 @@ public final class BehaviorTest {
             }
             return 1;
         });
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, rex);
+            REPORT.add("  after the long run: tired " + (d instanceof com.terrassic.entity.ApexTheropod at && at.isTired()));
+            return 1;
+        });
         burst("pant", 100, k -> {
+        });
+        // feet on uneven ground: it stands with the left foot on a one-block step
+        STEPS.add(mc -> {
+            command(mc, fill(x0 - 6, Y, -8, x0 + 6, Y, -1, "minecraft:stone"));
+            command(mc, "tp " + rex + " " + x0 + " " + (Y + 1) + " -0.3 90 0");
+            return 60;
+        });
+        burst("step", 30, k -> {
+            Minecraft mc = Minecraft.getInstance();
+            DinosaurEntity d = server(mc, rex);
+            if (d != null) {
+                mc.getSingleplayerServer().execute(() -> {
+                    d.getNavigation().stop();
+                    d.setYRot(90.0F);
+                    d.setYBodyRot(90.0F);
+                    d.setYHeadRot(90.0F);
+                });
+            }
         });
         STEPS.add(mc -> {
             shotCooldown = 0;

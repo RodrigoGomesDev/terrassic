@@ -230,12 +230,19 @@ public abstract class Saurolophine extends HerbivoreDinosaur {
         if (this.tickCount % 10 == 0 && this.alarmCooldown == 0) {
             // any adult that sees a wild predator raises the alarm; the sentinel sees farther
             double range = this.sentinel > 0 ? PREDATOR * 1.4D : PREDATOR;
+            // a herd lets a fed predator be at a distance (it shadows them all day): only one that hunts, or one that
+            // comes close, raises the alarm (06/11: a full T. rex at 30 blocks kept the herd running and broke migrations)
             List<PredatorDinosaur> near = this.level().getEntitiesOfClass(PredatorDinosaur.class, this.getBoundingBox().inflate(range),
-                    p -> p.isAlive() && !p.isTame() && !p.isBaby() && this.hasLineOfSight(p));
+                    p -> p.isAlive() && !p.isTame() && !p.isBaby() && this.hasLineOfSight(p)
+                            && (p.canHunt() || p.getTarget() != null || p.distanceToSqr(this) < 12.0D * 12.0D));
             if (!near.isEmpty()) {
                 this.alarm(near.get(0));
                 return;
             }
+        }
+        if (this.getMigrationTarget() != null) {
+            this.sentinel = 0;      // on the move nobody stands watch
+            return;
         }
         this.watchStep();
         if (this.sentinel > 0 || !this.getNavigation().isDone() || this.random.nextInt(600) != 0) {
