@@ -447,6 +447,8 @@ def tame(t):
 
 # name: (fn, length, loop, category, when it plays)
 import rexflow as FLOW  # noqa: E402  (06/11: the fluid idle, roars, call and bites)
+import rexmore as MORE  # noqa: E402  (06/11: transitions, more bites, tiredness)
+import rexduel as DUEL  # noqa: E402,F401  (06/11: the duel moves; imported by name below, after ANIMS' helpers exist)
 idle, roar, roar_loud, call, attack, attack_quick = FLOW.idle, FLOW.roar, FLOW.roar_loud, FLOW.call, FLOW.attack, FLOW.attack_quick
 (sniff, look_back, shake, yawn, stretch, threat, stomp, hurt, eat, drink, sit, sleep, knocked_out, beg, tame) = (
     FLOW.sniff, FLOW.look_back, FLOW.shake, FLOW.yawn, FLOW.stretch, FLOW.threat, FLOW.stomp, FLOW.hurt, FLOW.eat, FLOW.drink,
@@ -459,6 +461,21 @@ ANIMS = {
     "shake": (shake, 2.0, False, "Parado", "gesto sorteado parado; ao sair da água"),
     "yawn": (yawn, 3.0, False, "Parado", "gesto sorteado parado, mais à noite"),
     "stretch": (stretch, 3.6, False, "Parado", "gesto sorteado parado; depois de acordar"),
+    "lie_down": (MORE.lie_down, MORE.LIE_DOWN_T, False, "Descanso", "deitando (de pé para sentado)"),
+    "get_up": (MORE.get_up, MORE.GET_UP_T, False, "Descanso", "levantando (de sentado para de pé)"),
+    "fall_asleep": (MORE.fall_asleep, MORE.FALL_ASLEEP_T, False, "Descanso", "deitando para dormir: boceja e abaixa a cabeça"),
+    "bite_low": (MORE.bite_low, MORE.BITE_LOW_T, False, "Combate", "mordida baixa, varrendo o chão (golpe em 0,42 s)"),
+    "bite_side": (MORE.bite_side, MORE.BITE_SIDE_T, False, "Combate", "mordida de lado, a cabeça em arco (golpe em 0,45 s)"),
+    "walk_tired": (MORE.walk_tired, MORE.WALK_TIRED_T, True, "Movimento", "andando cansado depois de uma perseguição"),
+    "idle_tired": (MORE.idle_tired, MORE.IDLE_TIRED_T, True, "Parado", "parado cansado, ofegando"),
+    "guard": (DUEL.guard, DUEL.GUARD_T, True, "Duelo", "em guarda diante de um rival grande, parado"),
+    "strafe_left": (DUEL.strafe_left, DUEL.STRAFE_T, True, "Duelo", "andando de lado para a esquerda em volta do rival"),
+    "strafe_right": (DUEL.strafe_right, DUEL.STRAFE_T, True, "Duelo", "andando de lado para a direita em volta do rival"),
+    "feint": (DUEL.feint, DUEL.FEINT_T, False, "Duelo", "finta: avança e morde o ar, recua"),
+    "block": (DUEL.block, DUEL.BLOCK_T, False, "Duelo", "aparou a mordida do rival com o pescoço"),
+    "recoil": (DUEL.recoil, DUEL.RECOIL_T, False, "Duelo", "a mordida foi aparada: a cabeça vai de lado, um passo atrás"),
+    "shove": (DUEL.shove, DUEL.SHOVE_T, False, "Duelo", "empurrão de ombro no rival colado"),
+    "submit": (DUEL.submit, DUEL.SUBMIT_T, False, "Duelo", "perdeu o duelo: abaixa a cabeça e a cauda, vira e foge"),
     "snort": (FLOW.snort, 1.6, False, "Parado", "gesto sorteado parado: um bufo com a cabeça"),
     "settle": (FLOW.settle, FLOW.SETTLE_T, False, "Parado", "gesto sorteado parado: troca o peso de pé com um passinho"),
     "scan": (FLOW.scan, FLOW.SCAN_T, False, "Parado", "gesto sorteado parado: olha o horizonte de um lado ao outro"),

@@ -100,6 +100,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         if (!this.solitary()) {
             this.goalSelector.addGoal(7, new FollowHerdGoal(this));
         }
+        this.goalSelector.addGoal(8, new com.terrassic.entity.ai.ShadowHerdGoal(this));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
@@ -113,7 +114,15 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
                 return PredatorDinosaur.this.huntsPlayers() && PredatorDinosaur.this.canHunt() && super.canUse();
             }
         });
+        // the weak first (06/11/2026, the ecosystem): a calf or a wounded animal of a herd is picked before the others
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Animal.class, preyInterval(), true, false,
+                e -> this.canHunt() && this.isPrey(e) && (e.isBaby() || e.getHealth() < e.getMaxHealth() * 0.6F)) {
+            @Override
+            public boolean canUse() {
+                return PredatorDinosaur.this.canHunt() && super.canUse();
+            }
+        });
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Animal.class, preyInterval(), true, false,
                 e -> this.canHunt() && this.isPrey(e)) {
             @Override
             public boolean canUse() {

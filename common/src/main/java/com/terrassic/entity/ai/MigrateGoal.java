@@ -19,6 +19,11 @@ import java.util.EnumSet;
  * too; the babies follow their parents. The walk is done in waypoints of twelve blocks along the direction
  * (the path finder does not see that far), bending left or right when the way is blocked, and gives up after
  * five blocked tries or three minutes.
+ *
+ * <p>06/11/2026 (the ecosystem): the destination is chosen, not drawn: eight places in the season's half of the
+ * compass are looked at and the one with the most to eat (and water near) wins. The one that chose it leads; the rest
+ * walk in file, each behind the animal ahead of it, so a migrating herd reads as a column from afar. Big animals
+ * beat trails: on grass they leave dirt paths now and then (mobGriefing), so the routes herds keep using show.
  */
 public class MigrateGoal extends Goal {
     private static final double HERD = 24.0D;
@@ -29,6 +34,8 @@ public class MigrateGoal extends Goal {
     private int ticks;
     private int blocked;
     private int repath;
+    /** Whether this one chose the destination (the others follow it in file). */
+    private boolean leads;
 
     public MigrateGoal(DinosaurEntity mob) {
         this.mob = mob;
@@ -43,6 +50,7 @@ public class MigrateGoal extends Goal {
         }
         if (this.mob.getMigrationTarget() != null) {
             this.destination = this.mob.getMigrationTarget();
+            this.leads = false;
             return true;
         }
         // the Migration rule scales how often a herd thinks about it (0 = never, docs/REGRAS.md)
@@ -56,6 +64,7 @@ public class MigrateGoal extends Goal {
             return false;
         }
         this.destination = this.pickDestination();
+        this.leads = true;
         return this.destination != null;
     }
 
@@ -89,6 +98,10 @@ public class MigrateGoal extends Goal {
     @Override
     public void tick() {
         this.ticks++;
+        this.beatTrail();
+        if (!this.leads && this.followAhead()) {
+            return;
+        }
         if (--this.repath > 0 && !this.mob.getNavigation().isDone()) {
             return;
         }
@@ -115,20 +128,100 @@ public class MigrateGoal extends Goal {
         this.blocked++;
     }
 
-    /** 64 to 96 blocks away, in the direction of the season. */
+    /** In file: behind the herd member just ahead of it on the way (nearer the destination), at a spacing. */
+    private boolean followAhead() {
+        Vec3 dest = Vec3.atBottomCenterOf(this.destination);
+        double mine = this.mob.distanceToSqr(dest);
+        DinosaurEntity ahead = null;
+        double best = Double.MAX_VALUE;
+        for (DinosaurEntity other : this.mob.level().getEntitiesOfClass(this.mob.getClass(), this.mob.getBoundingBox().inflate(20.0D),
+                e -> e != this.mob && e.isAlive() && !e.isBaby() && this.destination.equals(e.getMigrationTarget()))) {
+            double theirs = other.distanceToSqr(dest);
+            double gap = this.mob.distanceToSqr(other);
+            if (theirs < mine - 4.0D && gap < best) {
+                ahead = other;
+                best = gap;
+            }
+        }
+        if (ahead == null) {
+            return false;
+        }
+        double spacing = Math.max(3.5D, (this.mob.getBbWidth() + ahead.getBbWidth()) * 0.9D);
+        if (best < spacing * spacing) {
+            this.mob.getNavigation().stop();
+            return true;
+        }
+        if (--this.repath <= 0 || this.mob.getNavigation().isDone()) {
+            this.repath = adjustedTickDelay(20);
+            Vec3 back = ahead.position().subtract(dest).normalize().scale(spacing);
+            Vec3 at = ahead.position().add(back);
+            this.mob.getNavigation().moveTo(at.x, at.y, at.z, 1.0D);
+        }
+        return true;
+    }
+
+    /** Big animals on the move wear the turf into a path now and then (mobGriefing). */
+    private void beatTrail() {
+        if (this.mob.getBbWidth() < 1.4F || this.mob.getRandom().nextInt(50) != 0 || !this.mob.onGround()
+                || !this.mob.level().getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING)) {
+            return;
+        }
+        BlockPos below = this.mob.blockPosition().below();
+        if (this.mob.level().getBlockState(below).is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)
+                && this.mob.level().getBlockState(below.above()).isAir()) {
+            this.mob.level().setBlockAndUpdate(below, net.minecraft.world.level.block.Blocks.DIRT_PATH.defaultBlockState());
+        }
+    }
+
+    /** 64 to 112 blocks away, in the season's half of the compass: of eight places looked at, the one with the most to
+     *  eat around it (and water near) wins. */
     private BlockPos pickDestination() {
         long season = this.mob.level().getDayTime() / (24000L * 6L);
         long seed = season * 31L + this.mob.getType().toString().hashCode();
         seed ^= seed >>> 17;
         seed *= 0x9E3779B97F4A7C15L;
         float angle = (float) ((seed >>> 11) % 3600L) / 3600.0F * Mth.TWO_PI;
-        double dist = 64.0D + this.mob.getRandom().nextInt(33);
-        double x = this.mob.getX() + Mth.cos(angle) * dist;
-        double z = this.mob.getZ() + Mth.sin(angle) * dist;
-        BlockPos pos = BlockPos.containing(x, 0.0D, z);
-        if (!this.mob.level().hasChunkAt(pos)) {
-            return null;
+        BlockPos best = null;
+        int bestScore = -1;
+        for (int i = 0; i < 8; i++) {
+            float a = angle + (this.mob.getRandom().nextFloat() - 0.5F) * 2.1F;
+            double dist = 64.0D + this.mob.getRandom().nextInt(49);
+            BlockPos pos = BlockPos.containing(this.mob.getX() + Mth.cos(a) * dist, 0.0D, this.mob.getZ() + Mth.sin(a) * dist);
+            if (!this.mob.level().hasChunkAt(pos)) {
+                continue;
+            }
+            BlockPos top = this.mob.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos);
+            if (!this.mob.level().getFluidState(top.below()).isEmpty()) {
+                continue;
+            }
+            int score = this.pasture(top);
+            if (score > bestScore) {
+                best = top;
+                bestScore = score;
+            }
         }
-        return this.mob.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos);
+        return best;
+    }
+
+    /** Plants to eat on a 9 x 9 sample round a place, and a bonus for water within 12 blocks. */
+    private int pasture(BlockPos at) {
+        int food = 0;
+        boolean water = false;
+        for (int dx = -12; dx <= 12; dx += 3) {
+            for (int dz = -12; dz <= 12; dz += 3) {
+                BlockPos top = this.mob.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, at.offset(dx, 0, dz));
+                net.minecraft.world.level.block.state.BlockState under = this.mob.level().getBlockState(top.below());
+                net.minecraft.world.level.block.state.BlockState on = this.mob.level().getBlockState(top);
+                if (!this.mob.level().getFluidState(top.below()).isEmpty() || !this.mob.level().getFluidState(top).isEmpty()) {
+                    water = true;
+                } else if (on.is(net.minecraft.world.level.block.Blocks.GRASS) || on.is(net.minecraft.world.level.block.Blocks.TALL_GRASS)
+                        || on.is(net.minecraft.world.level.block.Blocks.FERN) || on.is(net.minecraft.world.level.block.Blocks.LARGE_FERN)) {
+                    food += 2;
+                } else if (under.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)) {
+                    food += 1;
+                }
+            }
+        }
+        return food + (water ? 20 : 0);
     }
 }

@@ -69,6 +69,14 @@ public class ApexBiteGoal extends Goal {
     private int stareLeft;
     private int circleLeft;
     private float circleSide;
+    /** The duel (06/11/2026, a big rival or a horned herbivore that fights): 0 none, 1 squaring up, 2 circling,
+     *  3 going in for a blow; the ticks left of the phase. */
+    private int duel;
+    private int duelLeft;
+    private float duelSide = 1.0F;
+    /** Distance it circles at (blocks for a T. rex of size 1.0). */
+    private static final double RING = 8.0D;
+    private static final ApexTheropod.Strike SHOVE = new ApexTheropod.Strike("shove", 13, 28, false, true);
 
     public ApexBiteGoal(ApexTheropod mob, double speed) {
         this.mob = mob;
@@ -101,6 +109,8 @@ public class ApexBiteGoal extends Goal {
 
     @Override
     public void stop() {
+        this.mob.setDueling(false);
+        this.duel = 0;
         this.mob.setAggressive(false);
         this.mob.getNavigation().stop();
         this.pending = 0;
@@ -143,6 +153,9 @@ public class ApexBiteGoal extends Goal {
                 if (target.isAlive() && dist <= reach && (off < 60.0F || side) && Math.abs(target.getY() - this.mob.getY()) < 5.0D * s) {
                     if (this.mob.doHurtTarget(target)) {
                         this.mob.struck(target, this.strike);
+                        if (this.strike == SHOVE) {
+                            target.knockback(1.1D, this.mob.getX() - target.getX(), this.mob.getZ() - target.getZ());
+                        }
                     }
                 }
                 this.startPause(this.strike == null ? null : this.mob.pauseAfter(this.strike));
@@ -158,6 +171,16 @@ public class ApexBiteGoal extends Goal {
                 this.pauseTick(yawTo, dist, stand);
                 return;
             }
+        }
+        // reeling: its bite was blocked
+        if (this.mob.stagger > 0) {
+            this.mob.stagger--;
+            this.mob.getNavigation().stop();
+            this.mob.getMoveControl().strafe(-0.4F, 0.0F);
+            return;
+        }
+        if (this.mob.duels(target) && this.duelTick(target, dist, yawTo, s)) {
+            return;
         }
         // roaring at it first: stand and face it
         if (this.mob.isRoaring()) {
@@ -269,8 +292,90 @@ public class ApexBiteGoal extends Goal {
         }
     }
 
+    /**
+     * The duel: square up at the ring, then circle it sideways while patience runs out, then go in: against its own
+     * kind a feint or a real bite (and a shoulder shove when they are chest to chest); against horns it waits for the
+     * flank and feints while the horns face it. Returns true while it handles the movement itself.
+     */
+    private boolean duelTick(LivingEntity target, double dist, float yawTo, double s) {
+        double ring = RING * s;
+        if (this.duel == 0) {
+            if (dist > ring * 1.4D) {
+                return false;
+            }
+            this.duel = 1;
+            this.duelLeft = 30;
+            this.duelSide = this.mob.getRandom().nextBoolean() ? 1.0F : -1.0F;
+            this.mob.setDueling(true);
+            if (!this.mob.hasRoaredAt(target)) {
+                this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, "threat");
+            }
+        }
+        boolean rival = target instanceof ApexTheropod;
+        if (this.duel == 1) {
+            this.mob.getNavigation().stop();
+            this.turn(yawTo, TURN);
+            if (--this.duelLeft <= 0) {
+                this.duel = 2;
+                this.duelLeft = this.patience();
+            }
+            return true;
+        }
+        if (this.duel == 2) {
+            this.mob.getNavigation().stop();
+            this.turn(yawTo, TURN);
+            float in = dist > ring + 1.5D * s ? 0.35F : dist < ring - 1.5D * s ? -0.35F : 0.0F;
+            this.mob.getMoveControl().strafe(in, 0.42F * this.duelSide);
+            if (this.mob.getRandom().nextInt(90) == 0 || this.mob.horizontalCollision) {
+                this.duelSide = -this.duelSide;
+            }
+            // chest to chest with its own kind: the shoulder
+            if (rival && dist < 4.6D * s && this.cooldown <= 0) {
+                this.begin(SHOVE);
+                return true;
+            }
+            // the other comes in (a charge, a lunge): no more circling, it fights back
+            if (dist < STAND * s * 1.15D + target.getBbWidth() * 0.5D) {
+                this.duel = 3;
+                return false;
+            }
+            if (--this.duelLeft > 0) {
+                return true;
+            }
+            boolean horns = !rival && this.faces(target, this.mob, 50.0F);
+            float r = this.mob.getRandom().nextFloat();
+            if ((rival && r < 0.3F) || (horns && r < 0.5F)) {
+                this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, "feint");
+                this.duelLeft = this.patience() / 2;
+            } else if (horns && r < 0.8F) {
+                this.duelLeft = 20 + this.mob.getRandom().nextInt(30);   // keep circling for the flank
+            } else {
+                this.duel = 3;
+            }
+            return true;
+        }
+        // 3: in for a blow (the normal approach and bite); back to circling once it has struck
+        return false;
+    }
+
+    private int patience() {
+        return 35 + this.mob.getRandom().nextInt(45);
+    }
+
+    /** Whether {@code who} faces {@code at} within {@code angle} degrees. */
+    private boolean faces(LivingEntity who, LivingEntity at, float angle) {
+        double dx = at.getX() - who.getX();
+        double dz = at.getZ() - who.getZ();
+        float yawTo = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+        return Math.abs(Mth.wrapDegrees(yawTo - who.yBodyRot)) < angle;
+    }
+
     /** Starts a blow: the animation now, the hit when it lands, the next one once it is over. */
     private void begin(ApexTheropod.Strike strike) {
+        if (this.duel == 3 || strike == SHOVE) {
+            this.duel = 2;
+            this.duelLeft = this.patience();
+        }
         this.strike = strike;
         this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, strike.anim());
         this.pending = strike.hit();

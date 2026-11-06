@@ -2990,9 +2990,20 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Client: the live motion layer (tail spring, bank, turn rate), for the species that have it (LivelyMotion). */
     private LivelyMotion lively;
 
+    /** Whether it stands and fights a duel with a big predator (circling, guarding, blocking) instead of being plain
+     *  prey: the T. rex's ApexBiteGoal duels such targets. */
+    public boolean fightsInDuel() {
+        return false;
+    }
+
     /** Whether this species gets the live motion layer and the step-round loops (only the T. rex for now). */
     protected boolean livelyMotion() {
         return false;
+    }
+
+    /** The model's scale (MODEL_SCALE of the species class), for the live layer's feet. */
+    public float livelyModelScale() {
+        return 1.0F;
     }
 
     /** Client: the live motion layer, or null. */
@@ -3141,6 +3152,46 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     public void setMigrationTarget(BlockPos target) {
         this.migrationTarget = target;
+    }
+
+    /**
+     * A real mouthful (06/11/2026, the ecosystem): the plant within reach is eaten, so a herd that stays long in one
+     * place crops it bare and has to move on (MigrateGoal's "scarce"). Short plants go first (grass, ferns); where
+     * none are left, now and then the turf itself is cropped to dirt; vanilla grass spreads back over it in time.
+     * Leaves and saplings are browsed without being destroyed. Only with the mobGriefing game rule.
+     */
+    public boolean grazeEat() {
+        if (!(this.level() instanceof net.minecraft.server.level.ServerLevel level)) {
+            return false;
+        }
+        boolean grief = level.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING);
+        BlockPos centre = this.blockPosition();
+        int r = Math.max(1, Math.round(this.getBbWidth() * 0.6F));
+        BlockPos turf = null;
+        boolean browse = false;
+        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-r, -1, -r), centre.offset(r, 2, r))) {
+            BlockState state = level.getBlockState(pos);
+            if (state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)) {
+                if (grief) {
+                    level.destroyBlock(pos.immutable(), false, this);
+                }
+                return true;
+            }
+            if (state.is(Blocks.GRASS_BLOCK) && turf == null) {
+                turf = pos.immutable();
+            }
+            if (state.is(BlockTags.LEAVES) || state.is(BlockTags.SAPLINGS) || state.is(Blocks.MOSS_BLOCK)) {
+                browse = true;
+            }
+        }
+        if (turf != null) {
+            if (grief && this.random.nextInt(4) == 0) {
+                level.levelEvent(2001, turf, Block.getId(level.getBlockState(turf)));
+                level.setBlockAndUpdate(turf, Blocks.DIRT.defaultBlockState());
+            }
+            return true;
+        }
+        return browse;
     }
 
     /** Grazing animals eat what grows within reach: grass, ferns, leaves, the grass block itself. */

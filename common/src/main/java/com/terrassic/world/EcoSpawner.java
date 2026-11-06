@@ -194,7 +194,7 @@ public final class EcoSpawner {
                 continue;
             }
             int spawned = switch (kind) {
-                case LAND -> spawnLand(level, x, z, rules, random, budget, player.getY());
+                case LAND -> spawnLand(level, x, z, rules, random, budget, player.getY(), player.blockPosition());
                 case FLYER -> spawnFlock(level, x, z, rules, random, budget, player.getY());
                 case SEA -> spawnSea(level, x, z, rules, random, budget, player.getY());
                 default -> 0;
@@ -208,7 +208,18 @@ public final class EcoSpawner {
 
     // ------------------------------------------------------------------ land
 
-    private static int spawnLand(ServerLevel level, int x, int z, Rules rules, RandomSource random, int budget, double playerY) {
+    private static int spawnLand(ServerLevel level, int x, int z, Rules rules, RandomSource random, int budget, double playerY, BlockPos player) {
+        // 06/11/2026 (the ecosystem): one herd of herbivores in six arrives already migrating, its way passing by the
+        // player to the far side, so herds are seen on the move and not only grazing where they were put
+        BlockPos passing = null;
+        if (random.nextInt(6) == 0) {
+            double dx = player.getX() - x;
+            double dz = player.getZ() - z;
+            double len = Math.max(1.0D, Math.sqrt(dx * dx + dz * dz));
+            int tx = Mth.floor(player.getX() + dx / len * 80.0D + (random.nextDouble() - 0.5D) * 24.0D);
+            int tz = Mth.floor(player.getZ() + dz / len * 80.0D + (random.nextDouble() - 0.5D) * 24.0D);
+            passing = new BlockPos(tx, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, tx, tz), tz);
+        }
         BlockPos pos = new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
         if (Math.abs(pos.getY() - playerY) > RADIUS || !level.getFluidState(pos.below()).isEmpty() || !level.getFluidState(pos).isEmpty()) {
             return 0;
@@ -245,6 +256,9 @@ public final class EcoSpawner {
             group = dino.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.NATURAL, group, null);
             if (i > 0) {
                 maybeBaby(dino, rules, random);
+            }
+            if (passing != null && dino instanceof com.terrassic.entity.HerbivoreDinosaur && !dino.isBaby()) {
+                dino.setMigrationTarget(passing);
             }
             if (level.addFreshEntity(dino)) {
                 spawned++;
