@@ -103,7 +103,7 @@ public abstract class Raptor extends PredatorDinosaur {
     @Override
     protected String[] extraActions() {
         return new String[]{"sniff", "look_back", "preen", "ruffle", "stretch", "call", "screech", "display", "kick", "pounce",
-                "leap", "drink"};
+                "leap", "drink", "leap_back"};
     }
 
     /** Packs of one to three: the vanilla spawner would stack its tries up to four in one spot. */

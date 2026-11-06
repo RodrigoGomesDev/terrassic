@@ -35,6 +35,8 @@ public abstract class Spinosaur extends ApexTheropod {
     private static final Strike FISH = new Strike("fish", 42, 76, false);
     private static final Strike SWIPE = new Strike("swipe", 11, 26, false);
     private static final Strike SWIPE_LOW = new Strike("swipe", 11, 26, true);
+    /** The double hook of the thumb claws pulling to the chest (Charig & Milner 1997; spinoflow.py: lands at 0.62 s). */
+    private static final Strike CLAW_SWIPE = new Strike("claw_swipe", 12, 30, false);
 
     private boolean swipeNext;
 
@@ -45,7 +47,8 @@ public abstract class Spinosaur extends ApexTheropod {
     @Override
     protected String[] extraActions() {
         return new String[]{"roar", "attack_quick", "call", "threat", "drink", "sniff", "look_back", "shake", "yawn", "stretch",
-                "fish", "display", "swipe"};
+                "fish", "display", "swipe", "claw_swipe", "sail_display", "shove", "bite_low", "bite_side", "snort", "settle",
+                "scan"};
     }
 
     @Override
@@ -124,6 +127,9 @@ public abstract class Spinosaur extends ApexTheropod {
             return QUICK_BITE;
         }
         this.swipeNext = !this.swipeNext;
+        if (target.getBbWidth() >= this.getBbWidth() * 0.5F && this.getRandom().nextBoolean()) {
+            return CLAW_SWIPE;
+        }
         return this.swipeNext ? BITE : SWIPE;
     }
 }

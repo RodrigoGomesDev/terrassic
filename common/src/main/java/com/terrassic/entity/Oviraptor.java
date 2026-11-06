@@ -30,6 +30,11 @@ public class Oviraptor extends HerbivoreDinosaur {
     public static final float HEIGHT = 1.482F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.688F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.476F;
     private static final Ingredient FOOD = Ingredient.of(Items.EGG, Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.SWEET_BERRIES);
 

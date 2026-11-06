@@ -29,14 +29,16 @@ from sprites import save_png  # noqa: E402
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
-FPS_OF = {"death": 40, "run": 40, "hurt": 40, "eat": 40, "wake": 40, "attack": 40, "lunge": 40, "death_roll": 40, "tail_sweep": 40, "head_slap": 40}
+FPS_OF = {"death": 40, "run": 40, "hurt": 40, "eat": 40, "wake": 40, "attack": 40, "lunge": 40, "death_roll": 40, "tail_sweep": 40, "head_slap": 40, "feint": 40, "recoil": 40}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
-EVERY_FRAME = ("walk", "run", "attack", "lunge", "death_roll", "tail_sweep", "death", "head_slap", "wake", "wake_sleep", "eat", "hurt", "tame", "chirp", "beg", "bellow")
+EVERY_FRAME = ("walk", "run", "attack", "lunge", "death_roll", "tail_sweep", "death", "head_slap", "wake", "wake_sleep", "eat", "hurt", "tame", "chirp", "beg", "bellow", "feint", "recoil", "gape_threat",
+               "guard", "turn_left", "turn_right", "walk_tired")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("idle", "sit", "sleep", "knocked_out")
-LINEAR = ("hurt", "attack", "lunge", "death")
+LINEAR = ("hurt", "attack", "lunge", "death", "feint")
 # poses that stand on all four feet (the off-the-ground check); swim floats by design, the calf hops in butt_play
-STANDING = ("idle", "eat", "beg", "hurt", "attack", "tail_sweep", "head_slap", "chirp")
+STANDING = ("idle", "eat", "beg", "hurt", "attack", "tail_sweep", "head_slap", "chirp", "gape_threat", "guard", "feint", "turn_left",
+            "turn_right", "recoil")
 
 
 def main():

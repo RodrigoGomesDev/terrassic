@@ -40,9 +40,11 @@ from sprites import save_png  # noqa: E402
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
-FPS_OF = {"attack": 30, "hurt": 30, "run": 30, "shake": 30}
+FPS_OF = {"attack": 30, "hurt": 30, "run": 30, "shake": 30, "ram_bite": 30}
 SLOW = ("idle", "sit", "sleep", "knocked_out", "walk")
-LINEAR = ("hurt", "attack", "death")
+LINEAR = ("hurt", "attack", "death", "ram_bite")
+# a keyframe every frame where a tremor or a snap would be smoothed away between keys (the fluid set, mosaflow.py)
+EVERY_FRAME = ("ram_bite", "gape", "spar", "breathe", "turn_left", "turn_right")
 # poses that lie on the ground (on land, or on the sea floor): nothing may go through it
 ON_GROUND = ("stranded", "sleep")
 CUTOUT = ("teeth", "teeth_lo")
@@ -66,7 +68,7 @@ def main():
     for name, (fn, length, loop, _cat, _when) in A.ANIMS.items():
         fps = FPS_OF.get(name, FPS)
         anims[f"animation.mosasaurus.{name}"] = to_geckolib(bake(fn, length, fps), length, fps, loop,
-                                                          every=4 if name in SLOW else 2,
+                                                          every=1 if name in EVERY_FRAME else 4 if name in SLOW else 2,
                                                           lerp="linear" if name in LINEAR else "catmullrom")
     anim_path = os.path.join(ASSETS, "animations", "entity", "mosasaurus.animation.json")
     with open(anim_path, "w") as f:

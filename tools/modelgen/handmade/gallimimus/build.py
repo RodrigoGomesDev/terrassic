@@ -39,14 +39,15 @@ from sprites import save_png  # noqa: E402
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
-FPS_OF = {"death": 40, "run": 40, "jink": 40, "attack": 40, "wake": 40, "wake_sleep": 40}
+FPS_OF = {"death": 40, "run": 40, "jink": 40, "attack": 40, "wake": 40, "wake_sleep": 40, "kick_back": 40, "lie_down": 40, "get_up": 40}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
-EVERY_FRAME = ("walk", "run", "jink", "attack", "death", "wake", "wake_sleep", "graze")
+EVERY_FRAME = ("walk", "run", "jink", "attack", "death", "wake", "wake_sleep", "graze", "turn_left", "turn_right",
+               "walk_tired", "kick_back", "lie_down", "get_up")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("idle", "sit", "sleep", "knocked_out", "brood")
-LINEAR = ("hurt", "attack", "death", "jink", "wake", "wake_sleep")
+LINEAR = ("hurt", "attack", "death", "jink", "wake", "wake_sleep", "kick_back")
 # poses that stand on both feet (the off-the-ground check); swim floats by design; in the kick one foot is up
-STANDING = ("idle", "sentinel", "preen", "wing_display", "eat", "grit", "sift", "browse", "beg", "tame", "hurt")
+STANDING = ("idle", "sentinel", "preen", "wing_display", "eat", "grit", "sift", "browse", "beg", "tame", "hurt", "idle_tired")
 
 
 def main():

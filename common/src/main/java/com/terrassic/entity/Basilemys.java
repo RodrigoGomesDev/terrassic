@@ -27,6 +27,11 @@ public class Basilemys extends HerbivoreDinosaur {
     public static final float HEIGHT = 0.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.392F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.741F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.SWEET_BERRIES, Items.KELP, Items.MELON_SLICE);
 

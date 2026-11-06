@@ -85,7 +85,7 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
 
     @Override
     protected String[] extraActions() {
-        return new String[]{"graze", "club_l", "club_r", "club_warn", "flank_club", "hunker", "snort", "dig", "drink"};
+        return new String[]{"graze", "club_l", "club_r", "club_warn", "flank_club", "hunker", "snort", "dig", "drink", "club_duel"};
     }
 
     @Override
@@ -453,8 +453,10 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
                 rival.setYRot(this.yBodyRot);
                 rival.yBodyRot = this.yBodyRot;
                 this.getLookControl().setLookAt(rival, 30.0F, 30.0F);
-                triggerAnim(ACTION_CONTROLLER, "flank_club");
-                rival.triggerAnim(ACTION_CONTROLLER, "flank_club");
+                // the big wind-up now and then (Zuul crurivastator, Arbour et al. 2022: club against club at the flank)
+                String blow = this.random.nextBoolean() ? "club_duel" : "flank_club";
+                triggerAnim(ACTION_CONTROLLER, blow);
+                rival.triggerAnim(ACTION_CONTROLLER, blow);
                 this.still = 60;
                 rival.still = 60;
                 return;

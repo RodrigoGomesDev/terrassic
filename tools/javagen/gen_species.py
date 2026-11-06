@@ -809,6 +809,7 @@ def gen(s, bounds):
     body.append(f"    public static final float HEIGHT = {size['h']}F;")
     body.append("    /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */")
     body.append(f"    public static final float MODEL_SCALE = {size['scale']}F;")
+    body.append("    @Override\n    public float livelyModelScale() {\n        return MODEL_SCALE;\n    }\n")
     body.append(f"    public static final float SHADOW = {size['shadow']}F;")
     if "food_tag" in s:
         imports.add("net.minecraft.tags.ItemTags")

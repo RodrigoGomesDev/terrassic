@@ -38,6 +38,11 @@ public class Troodon extends PredatorDinosaur {
     public static final float HEIGHT = 1.165F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.582F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.424F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.EGG, Items.COD, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get());
 

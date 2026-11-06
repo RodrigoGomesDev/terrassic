@@ -33,6 +33,11 @@ public class Thescelosaurus extends HerbivoreDinosaur {
     public static final float HEIGHT = 1.694F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.805F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.847F;
     private static final Ingredient FOOD = Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT, Items.FERN);
 

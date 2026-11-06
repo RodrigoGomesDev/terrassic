@@ -42,7 +42,7 @@ public abstract class Therizinosaurid extends HerbivoreDinosaur {
     @Override
     protected String[] extraActions() {
         return new String[]{"graze", "claw_display", "threat", "rival", "preen", "scissor", "shove", "call", "sniff", "shake",
-                "look_back", "stretch"};
+                "look_back", "stretch", "claw_slash"};
     }
 
     /** Its grazing is the high browse (the young: the low one). */
@@ -94,6 +94,8 @@ public abstract class Therizinosaurid extends HerbivoreDinosaur {
                 triggerAnim(ACTION_CONTROLLER, "shove");
             } else if (this.random.nextInt(3) == 0) {
                 triggerAnim(ACTION_CONTROLLER, "scissor");
+            } else if (this.random.nextInt(3) == 0) {
+                triggerAnim(ACTION_CONTROLLER, "claw_slash");    // 06/11: right cut, backhand, scissor (theriflow.py)
             }
         }
         return hit;

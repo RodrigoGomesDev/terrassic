@@ -511,3 +511,9 @@ ANIMS = {
     "beg": (beg, 1.6, True, "Domado", "pede comida: bicadinhas no ar, olha o dono com um olho"),
     "tame": (tame, 2.6, False, "Domado", "abaixa o pescoço, abre as asas uma vez e olha o dono com um olho"),
 }
+
+# 06/11/2026: the fluid set (galliflow.py, docs/estudos/10_LUTA_E_FLUIDEZ_POR_ESPECIE.md): the same names and lengths,
+# the fluid versions bound in their place, the new ones after
+import galliflow as FLOW  # noqa: E402
+ANIMS_BEFORE_FLOW = ANIMS
+ANIMS = FLOW.rebind(ANIMS)

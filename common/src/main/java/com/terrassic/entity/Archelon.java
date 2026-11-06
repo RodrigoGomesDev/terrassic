@@ -30,6 +30,11 @@ public class Archelon extends SwimmingDinosaur {
     public static final float HEIGHT = 1.165F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.069F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 1.694F;
     private static final Ingredient FOOD = Ingredient.of(Items.KELP, Items.SEAGRASS, Items.COD, Items.SALMON, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 

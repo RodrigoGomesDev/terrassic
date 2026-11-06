@@ -42,12 +42,13 @@ REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
 FPS_OF = {"run": 40, "attack": 40, "flank_butt": 40}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
-EVERY_FRAME = ("walk", "run", "attack", "death", "wake", "wake_sleep", "graze", "dome_clash", "hop_play")
+EVERY_FRAME = ("walk", "run", "attack", "death", "wake", "wake_sleep", "graze", "dome_clash", "hop_play",
+               "turn_left", "turn_right", "walk_tired", "strafe_left", "strafe_right", "feint", "block", "recoil")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("idle", "sit", "sleep", "knocked_out")
-LINEAR = ("hurt", "attack", "death", "dome_clash", "flank_butt", "wake", "wake_sleep")
+LINEAR = ("hurt", "attack", "death", "dome_clash", "flank_butt", "wake", "wake_sleep", "block", "recoil")
 # poses that stand on both feet (the off-the-ground check); swim floats by design; the young's hop leaves the ground
-STANDING = ("idle", "dome_display", "eat", "sniff", "pluck", "beg", "tame", "hurt", "flank_butt")
+STANDING = ("idle", "dome_display", "eat", "sniff", "pluck", "beg", "tame", "hurt", "flank_butt", "idle_tired", "guard", "submit")
 AIRBORNE = ("swim", "hop_play")
 
 

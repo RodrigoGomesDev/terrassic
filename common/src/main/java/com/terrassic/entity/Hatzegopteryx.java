@@ -29,6 +29,11 @@ public class Hatzegopteryx extends FlyingDinosaur {
     public static final float HEIGHT = 4.871F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.805F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 2.224F;
     private static final Ingredient FOOD = Ingredient.of(Items.PORKCHOP, Items.MUTTON, Items.BEEF, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get());
 

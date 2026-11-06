@@ -67,10 +67,22 @@ WHEN = {
     "wake": "getting up from a knockout",
     "beg": "tame, owner holds its food",
     "tame": "the moment it is tamed",
+    # 06/11, the fluid set (raptflow.py)
+    "leap_back": "the hop back out of reach after a kick (RaptorStrikeGoal.hopBack): airborne 0.1-0.5 s",
+    "guard": "duel loop: crouched on springy toes, wings half open, head still on the rival",
+    "strafe_left": "duel loop: two-footed side-hops to its left", "strafe_right": "duel loop: side-hops to its right",
+    "turn_left": "turning on the spot to the left (quick steps, the head snaps in first)", "turn_right": "turning to the right",
+    "feint": "a leap that never leaves the ground: wings flared, jaws snapping on air",
+    "block": "parries with the near wing", "recoil": "its blow was turned aside: head knocked away, a hop-step back",
+    "submit": "gives in: low, wings tight, tail down, head turned away",
+    "lie_down": "standing -> sitting, like a bird", "get_up": "sitting -> standing, with a ruffle",
+    "idle_tired": "spent: panting with the wings held off the body", "walk_tired": "walking spent after a chase",
 }
 # keyframe every frame for the fast or jolting ones, linear where a curve would overshoot a hit
-EVERY_FRAME = ("walk", "run", "stalk", "leap", "kick", "attack", "hurt", "death", "wake", "wake_sleep", "beg", "ruffle", "idle")
-LINEAR = ("kick", "hurt", "death", "wake", "wake_sleep")
+EVERY_FRAME = ("walk", "run", "stalk", "leap", "kick", "attack", "hurt", "death", "wake", "wake_sleep", "beg", "ruffle", "idle",
+               "leap_back", "call", "screech", "strafe_left", "strafe_right", "turn_left", "turn_right", "feint", "block",
+               "recoil", "walk_tired", "get_up", "lie_down")
+LINEAR = ("kick", "hurt", "death", "wake", "wake_sleep", "block", "recoil")
 
 
 def main(only=None):

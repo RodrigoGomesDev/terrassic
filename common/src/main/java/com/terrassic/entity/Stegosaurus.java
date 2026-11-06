@@ -28,6 +28,11 @@ public class Stegosaurus extends HerbivoreDinosaur {
     public static final float HEIGHT = 3.388F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.911F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 1.906F;
     private static final Ingredient FOOD = Ingredient.of(Items.FERN, Items.LARGE_FERN, Items.MELON_SLICE, Items.WHEAT);
 

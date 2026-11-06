@@ -39,15 +39,19 @@ ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "ter
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
 # baked at 40 fps: the fast ones swept a foot into the ground between two frames at 20
-FPS_OF = {"run_biped": 40, "death": 40}
+FPS_OF = {"run_biped": 40, "death": 40, "run": 40}     # the trot: 11 frames a stride at 20 fps
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
-EVERY_FRAME = ("run", "run_biped", "attack", "death", "dig", "scrape_rest", "wake")
+EVERY_FRAME = ("run", "run_biped", "attack", "death", "dig", "scrape_rest", "wake",
+               # 06/11, protoflow.py: the stepping loops (short legs, quick steps), the snaps of the fight, the shiver
+               "walk", "turn_left", "turn_right", "strafe_left", "strafe_right", "walk_tired", "guard", "frill_shove", "feint",
+               "block", "recoil", "submit", "lie_down", "get_up", "freeze", "hurt")
 # long slow loops: a key every fourth frame is enough for the breathing
-SLOW = ("idle", "sit", "sleep", "huddle", "knocked_out")
-LINEAR = ("hurt", "attack", "run_biped", "death")
+SLOW = ("sit", "sleep", "huddle", "knocked_out")     # the idle left this list: its sniff is quicker than four frames
+LINEAR = ("hurt", "attack", "run_biped", "death", "frill_shove", "block", "recoil")
 # poses that stand on all four feet (the off-the-ground check); swim floats by design, the baby run is on two
 STANDING = ("idle", "eat", "graze", "beg", "tame", "hurt", "attack", "bite_hold", "shove", "frill_show", "sail_sway",
-            "freeze", "sand_shake")
+            "freeze", "sand_shake", "guard", "strafe_left", "strafe_right", "turn_left", "turn_right", "frill_shove", "feint",
+            "block", "recoil", "submit", "idle_tired", "walk_tired")
 
 
 def main():

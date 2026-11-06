@@ -476,3 +476,11 @@ ANIMS = {
     "beg": (beg, 2.4, True, "Domado", "pede peixe: a cabeça para fora d'água na direção do dono, bate a boca duas vezes"),
     "tame": (tame, 3.0, False, "Domado", "aceita o dono: rola de lado devagar e mostra a barriga clara"),
 }
+
+
+# the fluid set (06/11/2026, mosaflow.py): the existing names rebound to their fluid versions, and the new ones
+import mosaflow as FLOW  # noqa: E402
+for _n, (_fn, _len) in FLOW.REBIND.items():
+    _o = ANIMS[_n]
+    ANIMS[_n] = (_fn, _len) + tuple(_o[2:])
+ANIMS.update(FLOW.NEW)

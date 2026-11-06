@@ -127,6 +127,15 @@ public class CarcassEntity extends Entity implements GeoEntity {
     }
 
     /** The dead animal's scale (a baby's carcass is small). */
+    /** The body lies long (a T. rex is twelve blocks nose to tail) round a hitbox only as wide as the standing animal:
+     *  culled by that box, the whole carcass vanished as soon as its middle left the screen, looking a little up or aside
+     *  (found in play, 06/11). Culled by a box as long as the body in every direction instead. */
+    @Override
+    public net.minecraft.world.phys.AABB getBoundingBoxForCulling() {
+        double reach = Math.max(2.0D, this.getBbWidth() * 2.2D);
+        return this.getBoundingBox().inflate(reach, this.getBbHeight() + 1.0D, reach);
+    }
+
     public float getModelScale() {
         return this.entityData.get(DATA_SCALE);
     }
@@ -344,6 +353,18 @@ public class CarcassEntity extends Entity implements GeoEntity {
             }
             return state.setAndContinue(this.poseAnim);
         }));
+    }
+
+    /** A living animal and a carcass of its species share the model's bones (GeckoLib bakes one model per file), and GeckoLib
+     *  skips the pose of a second draw in the same frame (a shader's shadow pass) and draws whatever the bones hold: a
+     *  carcass drawn after a living T. rex stood up, depending on where the camera looked (found in play, 06/11). Each
+     *  draw gets a time a hair apart (under a ten-thousandth of a tick), so every draw sets its own pose. */
+    private int drawSalt;
+
+    @Override
+    public double getTick(Object entity) {
+        this.drawSalt = (this.drawSalt + 1) & 1023;
+        return this.tickCount + this.drawSalt * 1.0E-7D;
     }
 
     @Override

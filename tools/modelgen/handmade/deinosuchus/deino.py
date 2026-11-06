@@ -326,7 +326,9 @@ def _col(u, w, i):
     return u + i if w > 0 else u - 1 - i
 
 
-EYE = ["dddd", "dYpY", "dGpG", ".dd."]
+# written from the snout end (k = 0 is the front of the east face, which runs back to front): the slit pupil sits in
+# the front half, so the eye looks forward along the snout (06/11: in the back half both eyes looked back and inward)
+EYE = ["dddd", "YpYd", "GpGd", ".dd."]
 
 
 def decals_for(sex):

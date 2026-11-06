@@ -55,7 +55,8 @@ public abstract class Protoceratopsid extends HerbivoreDinosaur {
 
     @Override
     protected String[] extraActions() {
-        return new String[]{"graze", "dig", "bite_hold", "shove", "frill_show", "sail_sway", "freeze", "sand_shake", "scrape_rest"};
+        return new String[]{"graze", "dig", "bite_hold", "shove", "frill_show", "sail_sway", "freeze", "sand_shake", "scrape_rest",
+                "frill_shove"};
     }
 
     @Override
@@ -115,8 +116,13 @@ public abstract class Protoceratopsid extends HerbivoreDinosaur {
     @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
-        if (hit && !this.isBaby() && this.random.nextInt(3) == 0) {
-            triggerAnim(ACTION_CONTROLLER, "bite_hold");
+        if (hit && !this.isBaby()) {
+            int r = this.random.nextInt(3);
+            if (r == 0) {
+                triggerAnim(ACTION_CONTROLLER, "bite_hold");
+            } else if (r == 1) {
+                triggerAnim(ACTION_CONTROLLER, "frill_shove");   // 06/11: the frill driven in (protoflow.py)
+            }
         }
         return hit;
     }

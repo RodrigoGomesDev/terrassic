@@ -31,6 +31,11 @@ public class Compsognathus extends PredatorDinosaur {
     public static final float HEIGHT = 0.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.296F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.265F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.COD, Items.SALMON, ModItems.RAW_DINO_MEAT.get(), ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 

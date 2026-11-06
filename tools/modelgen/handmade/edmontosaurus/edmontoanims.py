@@ -689,3 +689,9 @@ ANIMS = {
     "beg": (beg, 2.4, True, "Domado", "pede comida: cabeça baixa para o dono, uma nota baixa, um empurrão"),
     "tame": (tame, 3.2, False, "Domado", "responde ao dono com um chamado e baixa a cabeça para ele"),
 }
+
+# 06/11/2026: the fluid set (edmoflow.py, docs/estudos/10_LUTA_E_FLUIDEZ_POR_ESPECIE.md): the same names and lengths,
+# the fluid versions bound in their place, the new ones after
+import edmoflow as FLOW  # noqa: E402
+ANIMS_BEFORE_FLOW = ANIMS
+ANIMS = FLOW.rebind(ANIMS)

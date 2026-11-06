@@ -29,6 +29,11 @@ public class Hesperornis extends SwimmingDinosaur {
     public static final float HEIGHT = 0.635F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.413F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.424F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 

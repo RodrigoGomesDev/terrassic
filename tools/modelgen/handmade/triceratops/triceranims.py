@@ -671,3 +671,11 @@ ANIMS = {
     "beg": (beg, 2.4, True, "Domado", "pede comida: empurra o bico para o dono, chega mais perto"),
     "tame": (tame, 2.6, False, "Domado", "solta o ar, abaixa a cabeça e mostra o babado de lado"),
 }
+
+
+# 06/11: the fluid set and the fighting set (trikeflow.py, on the ceratopsians' ceraflow.py): the names above that
+# it remakes are rebound here, the new ones (guard, strafes, turns, feint, block, recoil, submit, lie_down, get_up,
+# idle_tired, walk_tired, horn_lock_start/_break) added; horn_lock becomes a loop
+import trikeflow as FLOW  # noqa: E402
+ANIMS = dict(ANIMS)
+ANIMS.update(FLOW.ANIMS)

@@ -299,6 +299,7 @@ public class RaptorStrikeGoal extends Goal {
             return;
         }
         this.mob.setDeltaMovement(back.x * HOP_SPEED, HOP_SPEED, back.z * HOP_SPEED);
+        this.mob.play("leap_back");     // 06/11: the spring backwards out of reach (raptflow.py), not a plain hop
         this.mob.hasImpulse = true;
     }
 }

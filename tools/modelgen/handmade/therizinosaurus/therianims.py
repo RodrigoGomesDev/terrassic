@@ -362,3 +362,26 @@ ANIMS = {
     "tame": (tame, 2.6, False, "Domado", "abaixa os braços e o pescoço, sacode as penas"),
     "baby_browse": (baby_browse, 2.3, False, "Só dele", "o filhote imita os adultos nos arbustos baixos"),
 }
+
+
+# ------------------------------------------------------------------ the fluid set and its own fighting (06/11/2026, theriflow.py)
+import theriflow as FLOW  # noqa: E402
+for _n in ("idle", "walk", "run", "swim", "browse", "claw_display", "rival", "preen", "eat", "attack", "scissor", "shove", "threat",
+           "hurt", "death", "sit", "sleep", "wake_sleep", "brood", "knocked_out", "wake", "beg", "tame", "baby_browse"):
+    ANIMS[_n] = (getattr(FLOW, _n),) + ANIMS[_n][1:]
+ANIMS.update({
+    "claw_slash": (FLOW.claw_slash, FLOW.SLASH_T, False, "Duelo", "combo: corte da direita (0,55 s), revés da esquerda (1,1 s) e tesoura (1,75 s)"),
+    "guard": (FLOW.guard, FLOW.GUARD_T, True, "Duelo", "em guarda: tronco erguido, pescoço recolhido, os dois braços como foices"),
+    "strafe_left": (FLOW.strafe_left, FLOW.STRAFE_T, True, "Duelo", "passo lateral arrastado para a esquerda (não cruza os pés)"),
+    "strafe_right": (FLOW.strafe_right, FLOW.STRAFE_T, True, "Duelo", "passo lateral arrastado para a direita"),
+    "turn_left": (FLOW.turn_left, FLOW.TURN_T, True, "Movimento", "gira no lugar para a esquerda: pivota no pé de dentro"),
+    "turn_right": (FLOW.turn_right, FLOW.TURN_T, True, "Movimento", "gira no lugar para a direita"),
+    "feint": (FLOW.feint, FLOW.FEINT_T, False, "Duelo", "blefe: os leques se abrem e o peito salta, sem corte, e recua"),
+    "block": (FLOW.block, FLOW.BLOCK_T, False, "Duelo", "escudo: o leque do antebraço cruzado na frente do peito"),
+    "recoil": (FLOW.recoil, FLOW.RECOIL_T, False, "Duelo", "o corte bateu em defesa: o braço volta, os leques tremem, um passo atrás"),
+    "submit": (FLOW.submit, FLOW.SUBMIT_T, False, "Duelo", "desiste: braços dobrados no peito, leques fechados, afunda e vira a cabeça"),
+    "lie_down": (FLOW.lie_down, FLOW.LIE_DOWN_T, False, "Descanso", "senta sobre o quadril (de pé para sentado)"),
+    "get_up": (FLOW.get_up, FLOW.GET_UP_T, False, "Descanso", "levanta de sentado, o pescoço joga o peso para a frente"),
+    "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "cansado: a barriga arfa, bico aberto, braços pendurados"),
+    "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado: passos curtos, o tronco rola mais"),
+})

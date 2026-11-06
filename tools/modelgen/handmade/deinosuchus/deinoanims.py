@@ -440,3 +440,25 @@ ANIMS = {
     "beg": (beg, 2.2, True, "Domado", "pede comida: ergue a cabeça para o dono e abre a boca"),
     "tame": (tame, 2.6, False, "Domado", "deita e encosta a cabeça no chão virada para o dono"),
 }
+
+
+# ------------------------------------------------------------------ the fluid set and its own fighting (06/11/2026, deinoflow.py)
+import deinoflow as FLOW  # noqa: E402
+for _n in ("idle", "walk", "run", "swim", "attack", "death_roll", "tail_sweep", "bellow", "head_slap", "hurt", "sit", "eat", "beg",
+           "tame", "bask", "wake_sleep"):
+    ANIMS[_n] = (getattr(FLOW, _n),) + ANIMS[_n][1:]
+ANIMS["float"] = (FLOW.float_,) + ANIMS["float"][1:]
+ANIMS["lunge"] = (FLOW.lunge, FLOW.LUNGE_T) + ANIMS["lunge"][2:]
+ANIMS.update({
+    "gape_threat": (FLOW.gape_threat, FLOW.GAPE_T, False, "Duelo", "ameaça: sobe nas patas, incha, abre a boca e sibila"),
+    "guard": (FLOW.guard, FLOW.GUARD_T, True, "Duelo", "em guarda: a postura de ameaça mantida, boca entreaberta, cauda armada de lado"),
+    "feint": (FLOW.feint, FLOW.FEINT_T, False, "Duelo", "finta: meio bote, a boca fecha no ar (0,32 s) e recua"),
+    "turn_left": (FLOW.turn_left, FLOW.TURN_T, True, "Movimento", "gira no lugar para a esquerda: o corpo em C, os pés andam em volta"),
+    "turn_right": (FLOW.turn_right, FLOW.TURN_T, True, "Movimento", "gira no lugar para a direita"),
+    "recoil": (FLOW.recoil, FLOW.RECOIL_T, False, "Duelo", "jogado para trás por um golpe: a cabeça vai de lado, a cauda chicoteia"),
+    "submit": (FLOW.submit, FLOW.SUBMIT_T, False, "Duelo", "desiste: ergue o focinho com a boca fechada e deita de barriga"),
+    "lie_down": (FLOW.lie_down, FLOW.LIE_DOWN_T, False, "Descanso", "deita de barriga: as patas abrem e a barriga bate no chão"),
+    "get_up": (FLOW.get_up, FLOW.GET_UP_T, False, "Descanso", "sobe da barriga para o andar alto"),
+    "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "exausto em terra: barriga baixa, boca aberta, a garganta bombeando"),
+    "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado: arrastado de barriga baixa"),
+})

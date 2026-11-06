@@ -518,3 +518,26 @@ ANIMS = {
     "beg": (beg, 1.0, True, "Domado", "pedindo comida ao dono"),
     "tame": (tame, 2.0, False, "Domado", "no momento em que é domesticado"),
 }
+
+# 06/11: the fluid set (raptflow.py, docs/estudos/08 and 10): the same names, made fluid, and the duel and rest sets
+import raptflow as FLOW  # noqa: E402
+for _n in ("idle", "walk", "run", "stalk", "call", "screech", "display", "attack", "kick", "hurt", "pounce",
+           "sniff", "look_back", "preen", "eat", "drink", "tame", "stretch"):
+    ANIMS[_n] = (getattr(FLOW, _n),) + ANIMS[_n][1:]
+ANIMS["kick"] = (FLOW.kick, 0.9, False, "Combate", "chute com a garra em foice: o joelho sobe, a foice desce e rasga (golpe aos 0,5 s)")
+ANIMS.update({
+    "leap_back": (FLOW.leap_back, FLOW.LEAP_BACK_T, False, "Combate", "salto para trás depois do chute, para fora do alcance (no ar de 0,1 a 0,5 s)"),
+    "guard": (FLOW.guard, FLOW.GUARD_T, True, "Duelo", "em guarda: agachado, molas nos dedos, asas meio abertas, cabeça parada no rival"),
+    "strafe_left": (FLOW.strafe_left, FLOW.STRAFE_T, True, "Duelo", "pulinhos de lado para a esquerda, os dois pés juntos"),
+    "strafe_right": (FLOW.strafe_right, FLOW.STRAFE_T, True, "Duelo", "pulinhos de lado para a direita"),
+    "turn_left": (FLOW.turn_left, FLOW.TURN_T, True, "Movimento", "girando no lugar para a esquerda: a cabeça vira primeiro, passinhos"),
+    "turn_right": (FLOW.turn_right, FLOW.TURN_T, True, "Movimento", "girando no lugar para a direita"),
+    "feint": (FLOW.feint, FLOW.FEINT_T, False, "Duelo", "finta: ameaça o salto, abre as asas e morde o ar sem sair do chão"),
+    "block": (FLOW.block, FLOW.BLOCK_T, False, "Duelo", "apara com a asa: o braço sobe na frente, o corpo torce para longe"),
+    "recoil": (FLOW.recoil, FLOW.RECOIL_T, False, "Duelo", "o golpe foi aparado: a cabeça vai de lado, um passo atrás"),
+    "submit": (FLOW.submit, FLOW.SUBMIT_T, False, "Duelo", "perdeu: agacha, asas coladas, cauda baixa, vira a cabeça"),
+    "lie_down": (FLOW.lie_down, FLOW.LIE_DOWN_T, False, "Descanso", "deitando como ave (de pé para sentado)"),
+    "get_up": (FLOW.get_up, FLOW.GET_UP_T, False, "Descanso", "levantando, com uma sacudida das penas"),
+    "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "cansado: ofega de bico aberto, asas afastadas do corpo"),
+    "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado depois de uma perseguição"),
+})
