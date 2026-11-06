@@ -102,6 +102,15 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("carcass")) {
+            planCarcass();
+        }
+        if (only.contains("duels")) {
+            planAllDuels();
+        }
+        if (only.contains("moves")) {
+            planAllMoves();
+        }
         if (only.contains("eco")) {
             planEcosystem();
         }
@@ -249,6 +258,9 @@ public final class BehaviorTest {
 
     /** The entity the burst camera follows (client UUID lookup), or null. */
     private static UUID followed;
+    /** The duel's second fighter (the camera frames both), and the side it films from (kept steady). */
+    private static UUID pairedWith;
+    private static Vec3 camSide;
 
     /** Burst of frames for a GIF: one every 2 ticks for {@code frames} frames, named rexmotion_<tag>_NNN.png. */
     private static void burst(String tag, int frames, java.util.function.IntConsumer each) {
@@ -256,7 +268,22 @@ public final class BehaviorTest {
             int k = i;
             STEPS.add(mc -> {
                 each.accept(k);
-                if (followed != null && mc.level != null) {
+                if (followed != null && pairedWith != null && mc.level != null) {
+                    // a duel: the camera from the side of the line between the two, far enough to frame both
+                    Entity e = server(mc, followed), f = server(mc, pairedWith);
+                    if (e != null && f != null) {
+                        Vec3 mid = e.position().add(f.position()).scale(0.5D);
+                        Vec3 line = f.position().subtract(e.position());
+                        Vec3 side = new Vec3(-line.z, 0.0D, line.x).normalize();
+                        if (camSide == null || camSide.dot(side) < 0.0D) {
+                            side = side.scale(-1.0D);
+                        }
+                        camSide = camSide == null ? side : camSide.scale(0.85D).add(side.scale(0.15D)).normalize();
+                        double back = 6.0D + Math.max(e.getBbWidth(), f.getBbWidth()) * 2.2D + line.length() * 0.6D;
+                        Vec3 at = mid.add(0.0D, Math.max(e.getBbHeight(), f.getBbHeight()) * 0.45D, 0.0D);
+                        look(mc.player, at.add(camSide.scale(back)).add(0.0D, back * 0.3D, 0.0D), at);
+                    }
+                } else if (followed != null && mc.level != null) {
                     // the camera follows the animal from its side, a little above and behind
                     Entity e = server(mc, followed);
                     if (e != null) {
@@ -269,6 +296,194 @@ public final class BehaviorTest {
                 Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_%s_%03d.png", tag, k), mc.getMainRenderTarget(), msg -> {
                 });
                 return 2;
+            });
+        }
+    }
+
+    /** The death seen in play (06/11/2026): a T. rex killed facing 60 degrees, filmed falling, then its carcass shot from
+     *  eight directions near and far (rexmotion_death_*, behavior_carcass_<dist>_<deg>.png). */
+    private static void planCarcass() {
+        double x0 = 2400.5D;
+        UUID u = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Death and carcass");
+            clear(mc, x0, 20);
+            summon(mc, "tyrannosaurus", x0, Y, 0.5D, u, "NoAI:1b,Rotation:[60f,0f]");
+            followed = u;
+            return 40;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, u);
+            if (d != null) {
+                REPORT.add(String.format(Locale.ROOT, "  body yaw at death %.1f", d.yBodyRot));
+                mc.getSingleplayerServer().execute(() -> d.hurt(d.damageSources().generic(), 100000.0F));
+            }
+            return 1;
+        });
+        burst("death", 60, k -> {
+        });
+        STEPS.add(mc -> {
+            followed = null;
+            java.util.List<com.terrassic.entity.CarcassEntity> cs = mc.level.getEntitiesOfClass(com.terrassic.entity.CarcassEntity.class,
+                    new net.minecraft.world.phys.AABB(x0 - 10, Y - 3, -10, x0 + 10, Y + 5, 10));
+            REPORT.add("  carcasses on the client: " + cs.size() + (cs.isEmpty() ? "" : String.format(Locale.ROOT, ", yaw %.1f", cs.get(0).getYRot())));
+            REPORT.add("  dinosaurs left on the client: " + mc.level.getEntitiesOfClass(DinosaurEntity.class,
+                    new net.minecraft.world.phys.AABB(x0 - 10, Y - 3, -10, x0 + 10, Y + 5, 10)).size());
+            return 5;
+        });
+        UUID alive = id();
+        STEPS.add(mc -> {
+            // a living T. rex standing near, as the killers were in play
+            summon(mc, "tyrannosaurus", x0 + 14, Y, 8.5D, alive, "NoAI:1b,Rotation:[200f,0f]");
+            return 30;
+        });
+        // the camera looking past the carcass: up, aside, the carcass at the edge of the screen or just outside it
+        for (int off : new int[]{0, 20, 30, 38, 45, 55}) {
+            for (int kind = 0; kind < 2; kind++) {
+                int oo = off, kk = kind;
+                STEPS.add(mc -> {
+                    Vec3 at = new Vec3(x0, Y + 1.0D, 0.5D);
+                    Vec3 from = at.add(-10.0D, 5.0D, 6.0D);
+                    // aside: the aim slid along the body's side; up: the aim raised
+                    Vec3 aim = kk == 0 ? at.add(oo * 0.25D, 0.0D, oo * 0.25D) : at.add(0.0D, oo * 0.2D, 0.0D);
+                    look(mc.player, from, aim);
+                    return 6;
+                });
+                STEPS.add(mc -> {
+                    Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "behavior_carcass_edge_%s_%02d.png", kk == 0 ? "side" : "up", oo),
+                            mc.getMainRenderTarget(), msg -> {
+                            });
+                    return 2;
+                });
+            }
+        }
+        for (int dist : new int[]{9, 22}) {
+            for (int deg = 0; deg < 360; deg += 45) {
+                int dd = dist, gg = deg;
+                STEPS.add(mc -> {
+                    Vec3 at = new Vec3(x0, Y + 1.0D, 0.5D);
+                    double a = Math.toRadians(gg);
+                    look(mc.player, at.add(-Math.sin(a) * dd, dd * 0.35D, Math.cos(a) * dd), at);
+                    return 6;
+                });
+                STEPS.add(mc -> {
+                    Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "behavior_carcass_%d_%03d.png", dd, gg), mc.getMainRenderTarget(), msg -> {
+                    });
+                    return 2;
+                });
+            }
+        }
+    }
+
+    /** Every species' duel (06/11/2026, the 1.9.0 fluid set): pairs set on each other, filmed (rexmotion_duel_<a>_<b>). */
+    private static void planAllDuels() {
+        String[][] pairs = {{"carnotaurus", "carnotaurus"}, {"giganotosaurus", "giganotosaurus"}, {"spinosaurus", "triceratops"},
+                {"triceratops", "triceratops"}, {"pachycephalosaurus", "pachycephalosaurus"}, {"dakotaraptor", "styracosaurus"},
+                {"therizinosaurus", "protoceratops"}};
+        double x0 = 2000.5D;
+        for (String[] pair : pairs) {
+            UUID a = id(), b = id();
+            STEPS.add(mc -> {
+                REPORT.add("");
+                REPORT.add("== Duel: " + pair[0] + " against " + pair[1]);
+                clear(mc, x0, 24);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..60]");
+                summon(mc, pair[0], x0 - 6, Y, 0.5D, a, "Female:0b,Tags:[\"duelist\"]");
+                summon(mc, pair[1], x0 + 6, Y, 0.5D, b, "Female:0b,Tags:[\"duelist\"]");
+                followed = a;
+                pairedWith = b;
+                camSide = null;
+                return 30;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity da = server(mc, a), db = server(mc, b);
+                if (da != null && db != null) {
+                    mc.getSingleplayerServer().execute(() -> {
+                        da.setTarget(db);
+                        db.setTarget(da);
+                    });
+                }
+                return 2;
+            });
+            double[] m = new double[8];   // last positions a/b (x,z), summed distance, summed motion, samples, clinch frames
+            int[] ev = new int[3];          // dodges, counters armed, clinch starts
+            burst("duel_" + pair[0] + "_" + pair[1], 150, k -> {
+                Minecraft mcm = Minecraft.getInstance();
+                if (k % 10 == 0) {
+                    // the ecosystem keeps peopling the land round the player: strays out of the arena
+                    command(mcm, "kill @e[type=!player,tag=!duelist,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..70]");
+                }
+                DinosaurEntity ma = server(mcm, a), mb = server(mcm, b);
+                if (ma != null && mb != null) {
+                    if (k > 0) {
+                        m[5] += Math.hypot(ma.getX() - m[0], ma.getZ() - m[1]) + Math.hypot(mb.getX() - m[2], mb.getZ() - m[3]);
+                    }
+                    m[0] = ma.getX(); m[1] = ma.getZ(); m[2] = mb.getX(); m[3] = mb.getZ();
+                    m[4] += ma.distanceTo(mb);
+                    m[6]++;
+                    if (ma.clinchLeft > 0) {
+                        m[7]++;
+                    }
+                    if (ma.dodgeLeft > 0 || mb.dodgeLeft > 0) {
+                        ev[0]++;
+                    }
+                    if (ma.counterLeft > 0 || mb.counterLeft > 0) {
+                        ev[1]++;
+                    }
+                }
+                if (k == 149) {
+                    REPORT.add(String.format(Locale.ROOT, "    mean gap %.1f blocks, both moving %.2f blocks/s, frames grappling %.0f, dodging %d, answer armed %d",
+                            m[4] / Math.max(1, m[6]), m[5] / Math.max(1, m[6] - 1) * 10.0D, m[7], ev[0], ev[1]));
+                }
+                if (k % 50 == 49) {
+                    Minecraft mc = Minecraft.getInstance();
+                    DinosaurEntity da = server(mc, a), db = server(mc, b);
+                    if (da != null && db != null) {
+                        REPORT.add(String.format(Locale.ROOT, "    t=%ds: %s %.0f/%.0f dueling %s locked %s | %s %.0f/%.0f dueling %s locked %s | %.1f apart",
+                                (k + 1) / 10, pair[0], da.getHealth(), da.getMaxHealth(), da.isDueling(), da.isLocked(),
+                                pair[1], db.getHealth(), db.getMaxHealth(), db.isDueling(), db.isLocked(), da.distanceTo(db)));
+                    }
+                }
+            });
+            STEPS.add(mc -> {
+                command(mc, "kill " + a);
+                command(mc, "kill " + b);
+                pairedWith = null;
+                return 20;
+            });
+        }
+    }
+
+    /** Every species' new one-shots and loops (06/11/2026), triggered one after another and logged. */
+    private static void planAllMoves() {
+        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops",
+                "styracosaurus", "protoceratops", "pachycephalosaurus", "parasaurolophus", "edmontosaurus", "gallimimus",
+                "ankylosaurus", "therizinosaurus", "deinosuchus", "pteranodon", "quetzalcoatlus"};
+        String[] moves = {"feint", "block", "recoil", "submit", "lie_down", "get_up", "ram", "head_clash", "grab_shake", "claw_swipe",
+                "sail_display", "leap_back", "nose_jab", "frill_shove", "horn_lock_start", "flank_butt", "kick_back", "body_shove",
+                "club_duel", "claw_slash", "gape_threat", "jab", "crest_display"};
+        double x0 = 2200.5D;
+        for (String sp : species) {
+            UUID u = id();
+            STEPS.add(mc -> {
+                clear(mc, x0, 16);
+                summon(mc, sp, x0, Y, 0.5D, u, "NoAI:1b");
+                followed = u;
+                return 30;
+            });
+            for (String mv : moves) {
+                STEPS.add(mc -> {
+                    DinosaurEntity d = server(mc, u);
+                    if (d != null) {
+                        mc.getSingleplayerServer().execute(() -> d.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, mv));
+                    }
+                    return 12;
+                });
+            }
+            STEPS.add(mc -> {
+                command(mc, "kill " + u);
+                return 10;
             });
         }
     }

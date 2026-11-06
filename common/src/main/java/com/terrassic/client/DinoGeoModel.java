@@ -89,13 +89,14 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
 
     /** Model scale times the animal's size, set before applyLively (feet: blocks to model px). */
     private float scaleOf = 1.0F;
+    private float legPx = 50.0F;
 
     /** Lifts a foot by {@code lift} model px by bending the leg: the thigh forward, the shin back, the foot level. */
     private void bendLeg(String side, float lift, float d2r) {
         if (lift < 0.2F) {
             return;
         }
-        float a = (float) Math.toDegrees(Math.asin(Math.min(0.85F, lift / com.terrassic.entity.LivelyMotion.LEG_PX))) * 1.6F;
+        float a = (float) Math.toDegrees(Math.asin(Math.min(0.85F, lift / this.legPx))) * 1.6F;
         CoreGeoBone thigh = getAnimationProcessor().getBone("thigh_" + side);
         CoreGeoBone shin = getAnimationProcessor().getBone("shin_" + side);
         CoreGeoBone foot = getAnimationProcessor().getBone("foot_" + side);
@@ -110,7 +111,18 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
      *  the neck looking into a curve. */
     private void applyLively(com.terrassic.entity.LivelyMotion m, float partial) {
         float d2r = (float) (Math.PI / 180.0D);
-        for (int i = 0; i < 4; i++) {
+        this.legPx = m.legPx();
+        if (!m.hasLegs()) {
+            // the rig's own measures, once: the feet's distance from the middle and the thigh + shin length
+            CoreGeoBone th = getAnimationProcessor().getBone("thigh_l");
+            CoreGeoBone ft = getAnimationProcessor().getBone("foot_l");
+            if (th != null && ft != null) {
+                m.setLegs(Math.abs(th.getPivotX()), Math.abs(th.getPivotY() - ft.getPivotY()));
+            } else {
+                m.setLegs(-1.0F, 50.0F);
+            }
+        }
+        for (int i = 0; i < 6; i++) {
             CoreGeoBone b = getAnimationProcessor().getBone("tail" + (i + 1));
             if (b != null) {
                 b.setRotY(b.getRotY() + m.tail(i, partial) * d2r);

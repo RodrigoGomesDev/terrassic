@@ -593,3 +593,10 @@ ANIMS = {
     "beg": (beg, 2.0, True, "Domado", "pede comida ao dono"),
     "tame": (tame, 2.4, False, "Domado", "baixa os chifres diante do dono ao ser domado"),
 }
+
+# 06/11: the fluid set and the fighting moves (carnoflow.py, from docs/estudos/08 and 10): the names above keep their
+# length and hit times and get their fluid version; the new ones join the list
+import carnoflow as FLOW  # noqa: E402
+for _name, _fn in FLOW.REBIND.items():
+    ANIMS[_name] = (_fn,) + ANIMS[_name][1:]
+ANIMS.update(FLOW.NEW)

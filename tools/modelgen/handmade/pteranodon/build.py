@@ -28,6 +28,7 @@ import proto as P  # noqa: E402
 import ptera  # noqa: E402
 import pteranim as A  # noqa: E402
 import pteranims2 as B  # noqa: E402
+import pteraflow as F  # noqa: E402  (06/11: the fluid set; also rebinds fly/glide inside A and B)
 from anim2 import bake, to_geckolib  # noqa: E402
 from sprites import save_png  # noqa: E402
 
@@ -37,37 +38,44 @@ FPS = 20
 
 # name: (pose function, length s, loop, when the game plays it)
 ANIMS = {
-    "idle": (A.idle_pose, A.IDLE_T, True, "on the ground, standing still (breathes, looks round, clacks the beak)"),
-    "walk": (A.walk_pose, A.WALK_T, True, "on the ground, moving slowly (all fours, wing finger folded)"),
-    "run": (B.run_pose, B.RUN_T, True, "on the ground, moving fast (bounding)"),
-    "fly": (A.fly_pose, A.FLAP_T, True, "in the air while climbing or slow (flapping)"),
-    "glide": (A.glide_pose, A.GLIDE_T, True, "in the air, level or descending (soaring)"),
-    "bank_left": (B.bank_left, B.BANK_T, True, "gliding and turning left (yaw rate above a threshold)"),
-    "bank_right": (B.bank_right, B.BANK_T, True, "gliding and turning right"),
+    "idle": (F.idle, F.IDLE_T, True, "on the ground, standing still (breathes, looks round, clacks the beak)"),
+    "idle_tired": (F.idle_tired, F.IDLE_TIRED_T, True, "on the ground, spent after a chase or a long flight (panting)"),
+    "walk": (F.walk, A.WALK_T, True, "on the ground, moving slowly (all fours, wing finger folded)"),
+    "run": (F.run, B.RUN_T, True, "on the ground, moving fast (bounding)"),
+    "turn_left": (F.turn_left, F.TURN_T, True, "on the ground, turning on the spot to the left (steps, the head leads)"),
+    "turn_right": (F.turn_right, F.TURN_T, True, "on the ground, turning on the spot to the right"),
+    "fly": (F.fly, A.FLAP_T, True, "in the air while climbing or slow (flapping)"),
+    "glide": (F.glide, A.GLIDE_T, True, "in the air, level or descending (soaring)"),
+    "bank_left": (F.bank_left, B.BANK_T, True, "gliding and turning left (yaw rate above a threshold)"),
+    "bank_right": (F.bank_right, B.BANK_T, True, "gliding and turning right"),
     "takeoff": (A.takeoff_pose, A.TAKEOFF_T, False, "leaving the ground (then fly)"),
     "land": (A.land_pose, A.LAND_T, False, "touching down (then idle)"),
     "dive": (B.dive_pose, B.DIVE_T, False, "fishing sortie: the plunge at a fish (from glide)"),
     "scoop": (B.scoop_pose, B.SCOOP_T, False, "fishing sortie: skimming the surface and snapping a fish"),
-    "swim": (B.swim_pose, B.SWIM_T, True, "floating on water (y = 0 of the animation is the water surface)"),
+    "swim": (F.swim, B.SWIM_T, True, "floating on water (y = 0 of the animation is the water surface)"),
     "water_takeoff": (B.water_takeoff_pose, B.WATER_TAKEOFF_T, False, "taking off from the water (then fly)"),
-    "eat": (B.eat_pose, B.EAT_T, False, "eating a fish item / a caught fish"),
-    "attack": (B.attack_pose, B.ATTACK_T, False, "melee jab (damage at ~0.42 s)"),
-    "call": (B.call_pose, B.CALL_T, False, "ambient call at the colony (sync the voice at 0.4 s)"),
-    "display": (B.display_pose, B.DISPLAY_T, False, "males at the colony, breeding season / near a female (crest show)"),
-    "preen": (B.preen_pose, B.PREEN_T, False, "idle extra at the colony"),
-    "sun": (B.sun_pose, B.SUN_T, False, "idle extra in the sun (wings opened to dry, after swimming)"),
-    "shake": (B.shake_pose, B.SHAKE_T, False, "after leaving water"),
-    "beg": (B.beg_pose, B.BEG_T, True, "babies near a parent, or a tame one when the owner holds fish"),
-    "sit": (B.sit_pose, B.SIT_T, True, "sitting order / resting at the colony"),
-    "sleep": (B.sleep_pose, B.SLEEP_T, True, "asleep (night at the colony)"),
+    "eat": (F.eat, B.EAT_T, False, "eating a fish item / a caught fish"),
+    "attack": (F.attack, F.ATTACK_T, False, "melee lunge with a snap (damage at ~0.42 s)"),
+    "jab": (F.jab, F.JAB_T, False, "beak stab, the closed beak driven like a spear (hit at 0.40 s, 1.1 s total)"),
+    "call": (F.call, F.CALL_T, False, "ambient call at the colony (sync the voice at 0.4 s)"),
+    "display": (F.display, F.DISPLAY_T, False, "males at the colony, breeding season / near a female (crest show)"),
+    "crest_display": (F.crest_display, F.CREST_T, False, "a male at a rival or a female: the crest flagged broadside, one side then the other"),
+    "preen": (F.preen, F.PREEN_T, False, "idle extra at the colony"),
+    "sun": (F.sun, B.SUN_T, False, "idle extra in the sun (wings opened to dry, after swimming)"),
+    "shake": (F.shake, B.SHAKE_T, False, "after leaving water"),
+    "beg": (F.beg, B.BEG_T, True, "babies near a parent, or a tame one when the owner holds fish"),
+    "sit": (F.sit, B.SIT_T, True, "sitting order / resting at the colony"),
+    "sleep": (F.sleep, B.SLEEP_T, True, "asleep (night at the colony)"),
     "knocked_out": (B.knocked_out_pose, 3.0, True, "knocked out on the ground"),
     "knocked_out_air": (B.knocked_air_pose, B.KNOCKED_AIR_T, True, "knocked out while airborne, until it lands (limp spiral)"),
     "wake": (B.wake_pose, B.WAKE_T, False, "waking from the knockout (then idle)"),
     "death": (B.death_pose, B.DEATH_T, False, "dying (hold the last frame)"),
 }
 # keyframe every frame for the fast or jolting ones, linear where a curve would overshoot a hit
-EVERY_FRAME = ("run", "attack", "shake", "wake", "death", "takeoff", "water_takeoff", "eat", "beg", "knocked_out_air")
-LINEAR = ("attack", "death", "knocked_out_air")
+# the shivering ones (call, display, crest_display) keep every frame so the tremor is not smoothed away between keys
+EVERY_FRAME = ("run", "attack", "jab", "shake", "wake", "death", "takeoff", "water_takeoff", "eat", "beg", "knocked_out_air",
+               "turn_left", "turn_right", "call", "display", "crest_display")
+LINEAR = ("attack", "jab", "death", "knocked_out_air")
 
 
 def main(only=None):

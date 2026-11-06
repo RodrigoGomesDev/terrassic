@@ -67,7 +67,19 @@ public abstract class Pterosaur extends FlyingDinosaur {
 
     @Override
     protected String[] extraActions() {
-        return new String[]{"dive", "scoop", "call", "display", "preen", "sun", "shake"};
+        return new String[]{"dive", "scoop", "call", "display", "preen", "sun", "shake", "jab", "crest_display"};
+    }
+
+    /** 06/11: on the ground at a target standing tall (a player, a big animal), the stab forward with the closed beak
+     *  (pteraflow / quetzflow "jab") instead of the downward strike. */
+    @Override
+    public boolean doHurtTarget(net.minecraft.world.entity.Entity target) {
+        boolean hit = super.doHurtTarget(target);
+        if (hit && this.onGround() && target instanceof net.minecraft.world.entity.LivingEntity l && l.isAlive()
+                && l.getBbHeight() >= 1.4F && this.random.nextBoolean()) {
+            triggerAnim(ACTION_CONTROLLER, "jab");
+        }
+        return hit;
     }
 
     @Override

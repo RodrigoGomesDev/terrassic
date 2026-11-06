@@ -49,6 +49,10 @@ public abstract class Abelisaur extends ApexTheropod {
     private static final Strike SNAP = new Strike("attack_quick", 4, 19, false);
     private static final Strike BITE_PULL = new Strike("attack", 9, 36, false);
     private static final Strike HOOK = new Strike("hook", 9, 24, false);
+    /** The horned skull (Mazzetta et al. 1998): a short charge and a butt with the horns, and the clash of two heads
+     *  (carnoflow.py: the horns land at 0.75 s / the impact at 0.45 s). */
+    private static final Strike RAM = new Strike("ram", 15, 32, false);
+    private static final Strike HEAD_CLASH = new Strike("head_clash", 9, 44, false);
     /** The feet blow plays "stomp", which this rig maps onto its hook (actionAnimation). */
     private static final Strike HOOK_LOW = new Strike("stomp", 9, 24, true);
     private static final String[] GESTURES = {"sniff", "look_back", "shake", "yawn", "stretch", "horn_rub", "arm_twitch"};
@@ -143,7 +147,7 @@ public abstract class Abelisaur extends ApexTheropod {
     @Override
     protected String[] extraActions() {
         return new String[]{"roar", "attack_quick", "call", "threat", "drink", "sniff", "look_back", "shake", "yawn", "stretch",
-                "stomp", "hook", "lock_on", "shove", "horn_rub", "arm_twitch", "skid_turn", "skid_turn_r", "brake"};
+                "stomp", "hook", "lock_on", "shove", "horn_rub", "arm_twitch", "skid_turn", "skid_turn_r", "brake", "ram", "head_clash"};
     }
 
     @Override
@@ -211,10 +215,18 @@ public abstract class Abelisaur extends ApexTheropod {
     }
 
     /** Asked once per blow, when it starts (ApexBiteGoal): the clip it picks is left to play out. */
+    /** Chest to chest with a rival in a duel: the heads clash. */
+    @Override
+    public Strike closeStrike() {
+        return HEAD_CLASH;
+    }
+
     @Override
     public Strike biteFor(LivingEntity target) {
         float r = this.getRandom().nextFloat();
-        Strike strike = r < 0.55F ? SNAP : (r < 0.85F ? BITE_PULL : HOOK);
+        // a big target: the horns more often than the weak bite
+        Strike strike = target.getBbWidth() >= this.getBbWidth() * 0.6F && r < 0.35F ? RAM
+                : r < 0.55F ? SNAP : (r < 0.85F ? BITE_PULL : HOOK);
         this.busy(strike.total());
         return strike;
     }

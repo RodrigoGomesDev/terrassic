@@ -75,7 +75,10 @@ public class ApexBiteGoal extends Goal {
     private int duelLeft;
     private float duelSide = 1.0F;
     /** Distance it circles at (blocks for a T. rex of size 1.0). */
-    private static final double RING = 8.0D;
+    private static final double RING = 5.0D;
+    /** Blows chained so far without a pause (the combo), and the probe: a quick step in and out while circling. */
+    private int combo;
+    private int probeLeft;
     private static final ApexTheropod.Strike SHOVE = new ApexTheropod.Strike("shove", 13, 28, false, true);
 
     public ApexBiteGoal(ApexTheropod mob, double speed) {
@@ -147,18 +150,47 @@ public class ApexBiteGoal extends Goal {
         if (this.pending > 0) {
             this.mob.getNavigation().stop();
             this.turn(yawTo, TURN * 0.6F);
+            if (this.lungeLeft > 0 && --this.lungeLeft <= 2) {
+                // the last ticks before the jaws close: the body is thrown forward
+                this.mob.lungeAt(target, this.lungePower * 0.5D);
+            }
             if (--this.pending == 0) {
                 double reach = (this.stomping ? 4.0D : REACH + 1.0D) * s + target.getBbWidth() / 2.0D;
                 boolean side = this.strike != null && this.strike.side();
                 if (target.isAlive() && dist <= reach && (off < 60.0F || side) && Math.abs(target.getY() - this.mob.getY()) < 5.0D * s) {
                     if (this.mob.doHurtTarget(target)) {
                         this.mob.struck(target, this.strike);
-                        if (this.strike == SHOVE) {
+                        boolean heavy = this.strike != null && ("shove".equals(this.strike.anim()) || "head_clash".equals(this.strike.anim())
+                                || "ram".equals(this.strike.anim()));
+                        if (heavy) {
                             target.knockback(1.1D, this.mob.getX() - target.getX(), this.mob.getZ() - target.getZ());
+                        }
+                        if (this.duel > 0 && target instanceof DinosaurEntity d) {
+                            d.tookDuelBlow(this.mob, heavy ? 2.2D : 1.0D);
+                            // the exchange: a second, a third blow on the reeling rival before any pause
+                            if (this.combo < 2 && this.mob.getRandom().nextFloat() < (this.combo == 0 ? 0.55F : 0.35F)) {
+                                this.combo++;
+                                this.cooldown = 0;
+                                ApexTheropod.Strike next = this.mob.strikeFor(target);
+                                if (next != null) {
+                                    this.begin(next);
+                                    return;
+                                }
+                            }
                         }
                     }
                 }
-                this.startPause(this.strike == null ? null : this.mob.pauseAfter(this.strike));
+                this.combo = 0;
+                if (this.duel > 0) {
+                    // in a duel the pause is short: the blow plays out, a few steps back, and the circling starts again
+                    this.holdLeft = this.strike == null ? 0 : Math.max(0, this.strike.total() - this.strike.hit());
+                    this.backLeft = 4 + this.mob.getRandom().nextInt(6);
+                    this.stareLeft = 0;
+                    this.circleLeft = 0;
+                    this.pause = null;
+                } else {
+                    this.startPause(this.strike == null ? null : this.mob.pauseAfter(this.strike));
+                }
             }
             return;
         }
@@ -172,12 +204,31 @@ public class ApexBiteGoal extends Goal {
                 return;
             }
         }
-        // reeling: its bite was blocked
+        // grappling chest to chest, sidestepping a blow
+        if (this.mob.clinchLeft > 0 && this.mob.clinchTick()) {
+            return;
+        }
+        if (this.mob.dodgeTick(target)) {
+            return;
+        }
+        // reeling: its bite was blocked, or it took one
         if (this.mob.stagger > 0) {
             this.mob.stagger--;
             this.mob.getNavigation().stop();
+            this.turn(yawTo, TURN * 0.5F);
             this.mob.getMoveControl().strafe(-0.4F, 0.0F);
             return;
+        }
+        // the answer: right after a blow it took, a block or a sidestep, it strikes back if the rival is in reach
+        if (this.mob.counterLeft > 0 && --this.mob.counterLeft == 0 && this.mob.duels(target)
+                && dist <= (REACH + 1.5D) * s + target.getBbWidth() / 2.0D) {
+            ApexTheropod.Strike answer = this.mob.strikeFor(target);
+            if (answer != null) {
+                this.turn(yawTo, TURN * 2.0F);
+                this.cooldown = 0;
+                this.begin(answer);
+                return;
+            }
         }
         if (this.mob.duels(target) && this.duelTick(target, dist, yawTo, s)) {
             return;
@@ -300,15 +351,16 @@ public class ApexBiteGoal extends Goal {
     private boolean duelTick(LivingEntity target, double dist, float yawTo, double s) {
         double ring = RING * s;
         if (this.duel == 0) {
-            if (dist > ring * 1.4D) {
+            // the duel starts where they meet (11 blocks for a T. rex), then closes in to the ring
+            if (dist > 11.0D * s) {
                 return false;
             }
             this.duel = 1;
-            this.duelLeft = 30;
+            this.duelLeft = 12;
             this.duelSide = this.mob.getRandom().nextBoolean() ? 1.0F : -1.0F;
             this.mob.setDueling(true);
             if (!this.mob.hasRoaredAt(target)) {
-                this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, "threat");
+                this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, this.mob.duelOpener());
             }
         }
         boolean rival = target instanceof ApexTheropod;
@@ -324,15 +376,37 @@ public class ApexBiteGoal extends Goal {
         if (this.duel == 2) {
             this.mob.getNavigation().stop();
             this.turn(yawTo, TURN);
-            float in = dist > ring + 1.5D * s ? 0.35F : dist < ring - 1.5D * s ? -0.35F : 0.0F;
-            this.mob.getMoveControl().strafe(in, 0.42F * this.duelSide);
-            if (this.mob.getRandom().nextInt(90) == 0 || this.mob.horizontalCollision) {
+            // never still: the sidestep speeds up and slows like a boxer's, and now and then a quick step in and out
+            float in = dist > ring + 1.0D * s ? 0.45F : dist < ring - 1.0D * s ? -0.4F : 0.0F;
+            if (this.probeLeft > 0) {
+                this.probeLeft--;
+                in = this.probeLeft > 5 ? 0.85F : -0.7F;
+            } else if (this.mob.getRandom().nextInt(28) == 0) {
+                this.probeLeft = 11;
+            }
+            float pace = 0.42F + 0.22F * Mth.sin(this.mob.tickCount * 0.21F + this.mob.getId());
+            this.mob.getMoveControl().strafe(in, pace * this.duelSide);
+            if (this.mob.getRandom().nextInt(45) == 0 || this.mob.horizontalCollision) {
                 this.duelSide = -this.duelSide;
             }
-            // chest to chest with its own kind: the shoulder
-            if (rival && dist < 4.6D * s && this.cooldown <= 0) {
-                this.begin(SHOVE);
+            // chest to chest with its own kind: the grapple (both facing), or the shoulder
+            ApexTheropod.Strike close = this.mob.closeStrike();
+            if (rival && this.cooldown <= 0 && target instanceof DinosaurEntity rd && rd.clinchLeft == 0
+                    && (this.grapple || dist < 4.8D * s && this.faces(target, this.mob, 60.0F) && this.mob.getRandom().nextFloat() < 0.5F)
+                    && dist < (this.mob.getBbWidth() + target.getBbWidth()) * 0.55D + 2.5D * s) {
+                this.grapple = false;
+                this.mob.startClinch(rd, 40 + this.mob.getRandom().nextInt(40));
+                this.cooldown = 20;
                 return true;
+            }
+            if (rival && close != null && dist < 4.6D * s && this.cooldown <= 0) {
+                this.begin(close);
+                return true;
+            }
+            // the rival reels: press it now
+            if (target instanceof DinosaurEntity rd2 && rd2.stagger > 0 && this.cooldown <= 0) {
+                this.duel = 3;
+                return false;
             }
             // the other comes in (a charge, a lunge): no more circling, it fights back
             if (dist < STAND * s * 1.15D + target.getBbWidth() * 0.5D) {
@@ -351,16 +425,37 @@ public class ApexBiteGoal extends Goal {
                 this.duelLeft = 20 + this.mob.getRandom().nextInt(30);   // keep circling for the flank
             } else {
                 this.duel = 3;
+                // going in: now and then not for a blow but to grapple, chest against chest
+                this.grapple = rival && this.mob.getRandom().nextFloat() < 0.4F;
             }
             return true;
+        }
+        // going in to grapple: straight at it, and the grapple starts on contact
+        if (this.grapple && target instanceof DinosaurEntity rg) {
+            if (rg.clinchLeft == 0 && dist < (this.mob.getBbWidth() + target.getBbWidth()) * 0.55D + 2.5D * s) {
+                this.grapple = false;
+                this.mob.startClinch(rg, 40 + this.mob.getRandom().nextInt(40));
+                this.cooldown = 20;
+                return true;
+            }
+            if (dist < DIRECT * s) {
+                this.mob.getNavigation().stop();
+                this.turn(yawTo, TURN);
+                this.mob.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), this.speed * 1.1D);
+                return true;
+            }
         }
         // 3: in for a blow (the normal approach and bite); back to circling once it has struck
         return false;
     }
 
     private int patience() {
-        return 35 + this.mob.getRandom().nextInt(45);
+        return 12 + this.mob.getRandom().nextInt(26);
     }
+
+    private int lungeLeft;
+    private boolean grapple;
+    private double lungePower;
 
     /** Whether {@code who} faces {@code at} within {@code angle} degrees. */
     private boolean faces(LivingEntity who, LivingEntity at, float angle) {
@@ -372,13 +467,24 @@ public class ApexBiteGoal extends Goal {
 
     /** Starts a blow: the animation now, the hit when it lands, the next one once it is over. */
     private void begin(ApexTheropod.Strike strike) {
-        if (this.duel == 3 || strike == SHOVE) {
+        if (this.duel == 3 || "shove".equals(strike.anim()) || "head_clash".equals(strike.anim())) {
             this.duel = 2;
             this.duelLeft = this.patience();
+            this.probeLeft = 0;
         }
         this.strike = strike;
         this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, strike.anim());
         this.pending = strike.hit();
+        LivingEntity t = this.mob.getTarget();
+        if (this.duel > 0 && t instanceof DinosaurEntity rival) {
+            rival.incoming(this.mob, strike.hit());
+            // the blow carries the body in: a lunge timed to land with the jaws
+            double gap = this.mob.distanceTo(t) - (this.mob.getBbWidth() + t.getBbWidth()) * 0.5D;
+            if (gap > 0.5D && !strike.atFeet()) {
+                this.lungeLeft = Math.max(1, strike.hit() - 2);
+                this.lungePower = Math.min(0.55D, 0.08D + gap * 0.05D);
+            }
+        }
         this.cooldown = strike.total();
         this.stomping = strike.atFeet();
         this.mob.getNavigation().stop();

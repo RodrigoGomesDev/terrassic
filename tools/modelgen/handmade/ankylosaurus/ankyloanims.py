@@ -592,3 +592,26 @@ ANIMS = {
     "beg": (beg, 2.4, True, "Domado", "pede comida: cabeça baixa para o dono, bufa, empurra com o bico"),
     "tame": (tame, 3.0, False, "Domado", "aceita o dono: a cauda cai e afrouxa, a cabeça baixa virada para ele"),
 }
+
+
+# ------------------------------------------------------------------ the fluid set and the duel (06/11/2026, ankyflow.py)
+import ankyflow as FLOW  # noqa: E402
+for _n in ("idle", "walk", "run", "swim", "club_l", "club_r", "club_warn", "flank_club", "hunker", "snort", "dig", "drink",
+           "attack", "hurt", "death", "eat", "graze", "sit", "sleep", "wake_sleep", "knocked_out", "wake", "beg", "tame"):
+    ANIMS[_n] = (getattr(FLOW, _n),) + ANIMS[_n][1:]
+ANIMS.update({
+    "club_duel": (FLOW.club_duel, FLOW.DUEL_T, False, "Duelo", "golpe de clava no flanco do rival: grande preparo, golpe em 1,35 s (Zuul)"),
+    "guard": (FLOW.guard, FLOW.GUARD_T, True, "Duelo", "em guarda: o flanco virado para o rival, a cauda armada do outro lado"),
+    "strafe_left": (FLOW.strafe_left, FLOW.STRAFE_T, True, "Duelo", "anda de lado para a esquerda nas quatro patas, flanco para o rival"),
+    "strafe_right": (FLOW.strafe_right, FLOW.STRAFE_T, True, "Duelo", "anda de lado para a direita"),
+    "turn_left": (FLOW.turn_left, FLOW.TURN_T, True, "Movimento", "gira no lugar para a esquerda: a frente pisa para dentro, a traseira para fora"),
+    "turn_right": (FLOW.turn_right, FLOW.TURN_T, True, "Movimento", "gira no lugar para a direita"),
+    "feint": (FLOW.feint, FLOW.FEINT_T, False, "Duelo", "meio golpe: arma a clava, começa o giro e segura"),
+    "block": (FLOW.block, FLOW.BLOCK_T, False, "Duelo", "aguenta a clava do rival no flanco blindado, pernas abertas"),
+    "recoil": (FLOW.recoil, FLOW.RECOIL_T, False, "Duelo", "a clava bateu em armadura: a cauda volta e vibra, um passo para trás"),
+    "submit": (FLOW.submit, FLOW.SUBMIT_T, False, "Duelo", "desiste: clava no chão, barriga baixa, vira as costas blindadas"),
+    "lie_down": (FLOW.lie_down, FLOW.LIE_DOWN_T, False, "Descanso", "deita de barriga (a traseira cede primeiro)"),
+    "get_up": (FLOW.get_up, FLOW.GET_UP_T, False, "Descanso", "levanta nivelado nas quatro patas e balança"),
+    "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "cansado: os flancos arfam, bico aberto, cabeça baixa"),
+    "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado: passos curtos, cabeça pendurada"),
+})

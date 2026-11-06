@@ -48,7 +48,7 @@ public abstract class Centrosaurine extends HerbivoreDinosaur {
     @Override
     protected String[] extraActions() {
         return new String[]{"graze", "horn_hook", "paw_scrape", "crown_display", "rival_display", "horn_rub", "head_shake",
-                "call", "frill_shove"};
+                "call", "frill_shove", "nose_jab"};
     }
 
     @Override
@@ -99,8 +99,13 @@ public abstract class Centrosaurine extends HerbivoreDinosaur {
     @Override
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
-        if (hit && !this.isBaby() && this.random.nextInt(3) == 0) {
-            triggerAnim(ACTION_CONTROLLER, "horn_hook");
+        if (hit && !this.isBaby()) {
+            int r = this.random.nextInt(3);
+            if (r == 0) {
+                triggerAnim(ACTION_CONTROLLER, "horn_hook");
+            } else if (r == 1) {
+                triggerAnim(ACTION_CONTROLLER, "nose_jab");    // 06/11: the short stab of the nose horn (styraflow.py)
+            }
         }
         return hit;
     }

@@ -119,7 +119,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     @Override
     protected String[] extraActions() {
-        String[] common = this.livelyMotion()
+        String[] common = this.hasDuelMoves()
                 ? new String[]{"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink",
                         "sniff", "look_back", "shake", "yawn", "stretch", "snort", "settle", "scan",
                         "feint", "block", "recoil", "shove", "submit", "bite_low", "bite_side", "lie_down", "get_up",
@@ -215,262 +215,12 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         return false;
     }
 
-    /** The live motion layer and the step-round loops: the T. rex first (06/11/2026, the Raxiores study); the other big
-     *  theropods get them once their rigs have the turn loops. */
-    @Override
-    protected boolean livelyMotion() {
-        return "tyrannosaurus".equals(this.speciesId());
-    }
-
-    @Override
-    public float livelyModelScale() {
-        return this.modelScale();
-    }
-
-    private RawAnimation turnLeftAnim;
-    private RawAnimation turnRightAnim;
-    private RawAnimation guardAnim;
-    private RawAnimation strafeLeftAnim;
-    private RawAnimation strafeRightAnim;
-
-    // ------------------------------------------------------------------ the duel (06/11/2026)
-    /** Facing a big rival or a horned herbivore that fights: guard, circling, feints, blocks (ApexBiteGoal). Synced:
-     *  the client plays the guard and the sidesteps while it is set. */
-    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_DUEL =
-            net.minecraft.network.syncher.SynchedEntityData.defineId(ApexTheropod.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
-    /** Ticks it reels after its bite was blocked (no blows meanwhile). */
-    public int stagger;
-    private int blockCooldown;
-    /** A territorial duel (two grown males of a size): the loser gives in at half its health, not a third. */
-    private boolean territorial;
-    private java.util.UUID yieldedTo;
-    private int yieldTicks;
-    private int duelCooldown = 1200;
-
-    // ------------------------------------------------------------------ rest transitions and tiredness (06/11/2026)
-    private boolean wasSitting;
-    private boolean wasSleeping;
-    /** 0 .. 1: grows while it runs, falls while it walks or stands; spent above 0.75 until it is back under 0.3. */
-    private float fatigue;
-    private double lastX;
-    private double lastZ;
-    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_TIRED =
-            net.minecraft.network.syncher.SynchedEntityData.defineId(ApexTheropod.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
-    private static final java.util.UUID TIRED_SLOW = java.util.UUID.fromString("7d1f0c1e-3b6a-4f2e-9c1d-5e8a2b4c6d70");
-    private RawAnimation walkTiredAnim;
-    private RawAnimation idleTiredAnim;
-
-    /** Server: the fatigue, 0 .. 1 (for the dev test). */
-    public float fatigue() {
-        return this.fatigue;
-    }
-
-    public boolean isTired() {
-        return this.entityData.get(DATA_TIRED);
-    }
-
-    /** Server, every tick: the transitions into and out of rest, and the fatigue of a long chase. */
-    private void livelyStateTick() {
-        boolean sitting = this.isInSittingPose() && !this.isVehicle();
-        boolean sleeping = this.isSleeping();
-        if (sleeping && !this.wasSleeping && !this.wasSitting) {
-            triggerAnim(ACTION_CONTROLLER, "fall_asleep");
-        } else if (sitting && !this.wasSitting && !sleeping) {
-            triggerAnim(ACTION_CONTROLLER, "lie_down");
-        } else if (!sitting && this.wasSitting && !sleeping && !this.wasSleeping && this.isAlive()) {
-            triggerAnim(ACTION_CONTROLLER, "get_up");
-        }
-        this.wasSitting = sitting;
-        this.wasSleeping = sleeping;
-        // the distance it really covered since the last tick (the AI runs before this tick's move, so x - xo is 0 here)
-        double mx = this.getX() - this.lastX;
-        double mz = this.getZ() - this.lastZ;
-        this.lastX = this.getX();
-        this.lastZ = this.getZ();
-        double speed = mx * mx + mz * mz;
-        if (speed > this.runThresholdSqr()) {
-            this.fatigue = Math.min(1.0F, this.fatigue + 0.0025F);     // ~20 s of running wears it out
-        } else {
-            this.fatigue = Math.max(0.0F, this.fatigue - (speed < 1.0E-4D ? 0.0035F : 0.0015F));
-        }
-        boolean tired = this.isTired();
-        if (!tired && this.fatigue > 0.75F) {
-            this.setTired(true);
-        } else if (tired && this.fatigue < 0.3F) {
-            this.setTired(false);
-        }
-    }
-
-    private void setTired(boolean tired) {
-        this.entityData.set(DATA_TIRED, tired);
-        net.minecraft.world.entity.ai.attributes.AttributeInstance speed = this.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
-        if (speed != null) {
-            speed.removeModifier(TIRED_SLOW);
-            if (tired) {
-                speed.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(TIRED_SLOW, "tired", -0.25D,
-                        net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
-            }
-        }
-    }
-
-    /** Spent: the tired walk and the panting stand (the run stays the run). */
-    private PlayState tiredStance(AnimationState<DinosaurEntity> state) {
-        if (!this.livelyMotion() || !this.isTired() || this.isSwimmingDeep() || this.isSleeping() || this.isInSittingPose() || !this.isAlive()) {
-            return null;
-        }
-        if (this.walkTiredAnim == null) {
-            this.walkTiredAnim = RawAnimation.begin().thenLoop(anim("walk_tired"));
-            this.idleTiredAnim = RawAnimation.begin().thenLoop(anim("idle_tired"));
-        }
-        if (!state.isMoving()) {
-            return state.setAndContinue(this.idleTiredAnim);
-        }
-        if (this.getDeltaMovement().horizontalDistanceSqr() <= this.runThresholdSqr()) {
-            this.cycleSpeed = this.gaitSpeed(56.0D / 16.0D / 48.0D * this.modelScale());
-            return state.setAndContinue(this.walkTiredAnim);
-        }
-        return null;
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_DUEL, false);
-        this.entityData.define(DATA_TIRED, false);
-    }
-
-    public boolean isDueling() {
-        return this.entityData.get(DATA_DUEL);
-    }
-
-    public void setDueling(boolean dueling) {
-        this.entityData.set(DATA_DUEL, dueling);
-        if (!dueling) {
-            this.territorial = false;
-        }
-    }
-
-    /** Whether its fight goal duels this target (only the T. rex for now, the live-motion species). */
-    public boolean duels(LivingEntity target) {
-        return this.livelyMotion() && !this.isBaby() && target instanceof DinosaurEntity d && d.fightsInDuel()
-                && d.getBbWidth() >= this.getBbWidth() * 0.5F;
-    }
-
-    @Override
-    public boolean fightsInDuel() {
-        return !this.isBaby();
-    }
-
-    @Override
-    public boolean canAttack(LivingEntity target) {
-        // it gave in to this one: it keeps away from it for a while
-        if (this.yieldTicks > 0 && target != null && target.getUUID().equals(this.yieldedTo)) {
-            return false;
-        }
-        return super.canAttack(target);
-    }
-
-    @Override
-    public boolean hurt(net.minecraft.world.damagesource.DamageSource source, float amount) {
-        net.minecraft.world.entity.Entity att = source.getEntity();
-        if (!this.level().isClientSide() && this.isDueling() && att instanceof LivingEntity a && a == this.getTarget()
-                && this.blockCooldown == 0 && !this.isKnockedOut()) {
-            // the bite comes from in front: now and then it takes it on the thick of the neck
-            double dx = a.getX() - this.getX();
-            double dz = a.getZ() - this.getZ();
-            float yawTo = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
-            if (Math.abs(Mth.wrapDegrees(yawTo - this.yBodyRot)) < 55.0F && this.random.nextFloat() < 0.4F) {
-                amount *= 0.25F;
-                this.blockCooldown = 40;
-                triggerAnim(ACTION_CONTROLLER, "block");
-                if (a instanceof ApexTheropod rival) {
-                    rival.triggerAnim(ACTION_CONTROLLER, "recoil");
-                    rival.stagger = 18;
-                }
-            }
-        }
-        boolean hurt = super.hurt(source, amount);
-        if (hurt && !this.level().isClientSide() && !this.isTame() && this.isDueling() && att instanceof ApexTheropod rival
-                && this.isAlive() && this.getHealth() < this.getMaxHealth() * (this.territorial ? 0.5F : 0.3F)) {
-            this.submitTo(rival);
-        }
-        return hurt;
-    }
-
-    /** Beaten: it drops the head and tail, turns away and runs; the winner lets it go and roars. */
-    private void submitTo(ApexTheropod rival) {
-        triggerAnim(ACTION_CONTROLLER, "submit");
-        this.setTarget(null);
-        this.setDueling(false);
-        this.yieldedTo = rival.getUUID();
-        this.yieldTicks = 2400;
-        net.minecraft.world.phys.Vec3 away = net.minecraft.world.entity.ai.util.DefaultRandomPos.getPosAway(this, 24, 7, rival.position());
-        if (away != null) {
-            this.getNavigation().moveTo(away.x, away.y, away.z, 1.3D);
-        }
-        if (rival.getTarget() == this) {
-            rival.setTarget(null);
-            rival.setDueling(false);
-            rival.roarLoud();
-        }
-    }
-
-    /** In a duel: the guard when it stands, the sidesteps when it moves across (forward it walks as usual). */
-    private PlayState duelStance(AnimationState<DinosaurEntity> state) {
-        if (!this.livelyMotion() || !this.isDueling() || this.isSwimmingDeep() || this.isVehicle() || !this.isAlive()) {
-            return null;
-        }
-        if (this.guardAnim == null) {
-            this.guardAnim = RawAnimation.begin().thenLoop(anim("guard"));
-            this.strafeLeftAnim = RawAnimation.begin().thenLoop(anim("strafe_left"));
-            this.strafeRightAnim = RawAnimation.begin().thenLoop(anim("strafe_right"));
-        }
-        double vx = this.getX() - this.xo;
-        double vz = this.getZ() - this.zo;
-        double yaw = Math.toRadians(this.yBodyRot);
-        double forward = -Math.sin(yaw) * vx + Math.cos(yaw) * vz;
-        double right = -Math.cos(yaw) * vx - Math.sin(yaw) * vz;
-        double speed = Math.sqrt(vx * vx + vz * vz);
-        if (speed < 0.012D * this.getScale()) {
-            return state.setAndContinue(this.guardAnim);
-        }
-        if (Math.abs(right) > Math.abs(forward) * 0.8D) {
-            this.cycleSpeed = Mth.clamp(speed / (0.06D * this.getScale()), 0.6D, 1.6D);
-            return state.setAndContinue(right > 0.0D ? this.strafeRightAnim : this.strafeLeftAnim);
-        }
-        return null;
-    }
-
-    /** Standing and turning: it steps round ("turn_left" / "turn_right") instead of spinning on its feet. */
-    private PlayState turnInPlace(AnimationState<DinosaurEntity> state) {
-        LivelyMotion m = this.lively();
-        if (m == null || state.isMoving() || !this.onGround() || this.isSleeping() || this.isInSittingPose() || this.isKnockedOut()
-                || !this.isAlive() || this.isSwimmingDeep() || this.isVehicle() || Math.abs(m.turnRate()) < 1.2F) {
-            return null;
-        }
-        if (this.turnLeftAnim == null) {
-            this.turnLeftAnim = RawAnimation.begin().thenLoop(anim("turn_left"));
-            this.turnRightAnim = RawAnimation.begin().thenLoop(anim("turn_right"));
-        }
-        // a faster turn steps faster (about 25 degrees a loop at 1x)
-        this.cycleSpeed = Mth.clamp(Math.abs(m.turnRate()) / 1.6D, 0.6D, 1.8D);
-        return state.setAndContinue(m.turnRate() < 0.0F ? this.turnLeftAnim : this.turnRightAnim);
-    }
-
     /** Creeping up on prey (aggressive but slow): the stalk cycle. */
     @Override
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
-        PlayState dueling = this.duelStance(state);
-        if (dueling != null) {
-            return dueling;
-        }
-        PlayState turning = this.turnInPlace(state);
-        if (turning != null) {
-            return turning;
-        }
-        PlayState tired = this.tiredStance(state);
-        if (tired != null) {
-            return tired;
+        PlayState lively = this.livelyStances(state);
+        if (lively != null) {
+            return lively;
         }
         AlphaMoves moves = this.alphaMoves();
         if (moves != null && moves.walkAnim() != null && state.isMoving() && !this.isAggressive() && !this.isSleeping()
@@ -533,6 +283,28 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         return this.roarLeft > 0;
     }
 
+    /** A grown big theropod meets a big rival head on. */
+    @Override
+    public boolean fightsInDuel() {
+        return !this.isBaby();
+    }
+
+    /** The blow when chest to chest with a rival in a duel (the T. rex's shoulder; a rig may have its own, or none). */
+    public Strike closeStrike() {
+        return "tyrannosaurus".equals(this.speciesId()) ? new Strike("shove", 13, 28, false, true) : null;
+    }
+
+    /** How it opens a duel (the T. rex threatens; the Spinosaurus turns broadside and shows the sail). */
+    public String duelOpener() {
+        return "spinosaurus".equals(this.speciesId()) ? "sail_display" : "threat";
+    }
+
+    /** The winner of a duel roars loud. */
+    @Override
+    protected void wonDuel() {
+        this.roarLoud();
+    }
+
     /** Whether it roared at this target (then it charges rather than stalks). */
     public boolean hasRoaredAt(LivingEntity target) {
         return target != null && target.getId() == this.roaredAt;
@@ -545,7 +317,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     /** The gestures it picks from when it stands idle (a rig may add its own). */
     protected String[] gestures() {
-        return this.livelyMotion() ? LIVELY_GESTURES : GESTURES;
+        return this.hasDuelMoves() ? LIVELY_GESTURES : GESTURES;
     }
 
     /** The T. rex's gestures with the new ones of the fluid set (06/11): a snort, a weight shift with a step, a scan of
@@ -578,7 +350,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
 
     /** The blow for a target in reach of the head. */
     public Strike biteFor(LivingEntity target) {
-        if (this.livelyMotion()) {
+        if (this.hasDuelMoves()) {
             // 06/11: more blows, sorted, so it never repeats one bite (the study of seven dinosaur mods)
             float r = this.getRandom().nextFloat();
             if (target.getBbHeight() < 1.4F && r < 0.5F) {
@@ -776,21 +548,6 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     protected void customServerAiStep() {
         super.customServerAiStep();
         ServerLevel level = (ServerLevel) this.level();
-        if (this.livelyMotion()) {
-            this.livelyStateTick();
-        }
-        if (this.blockCooldown > 0) {
-            this.blockCooldown--;
-        }
-        if (this.yieldTicks > 0) {
-            this.yieldTicks--;
-        }
-        if (this.duelCooldown > 0) {
-            this.duelCooldown--;
-        }
-        if (this.isDueling() && (this.getTarget() == null || !this.getTarget().isAlive())) {
-            this.setDueling(false);
-        }
         // the rider's bite lands when the jaws close: on the target if it is still in reach, otherwise on whatever is in
         // front of the jaws by then (a small dino darts about; a click on the air can still catch one walking in)
         if (this.riderBite > 0 && --this.riderBite == 0) {
@@ -908,7 +665,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
                 || (this.loudCooldown > 0 && this.roarCooldown > 0)) {
             return;
         }
-        if (this.livelyMotion() && !this.isFemale() && this.duelCooldown <= 0) {
+        if (this.hasDuelMoves() && !this.isFemale() && this.duelCooldown <= 0) {
             for (ApexTheropod other : level.getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(24.0D),
                     e -> e != this && e.isAlive() && !e.isTame() && !e.isBaby() && !e.isFemale() && e.getTarget() == null
                             && Math.abs(e.getAdultSize() - this.getAdultSize()) < 0.03F * this.getAdultSize())) {

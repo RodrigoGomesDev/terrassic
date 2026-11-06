@@ -177,3 +177,24 @@ ANIMS = {
     "sun": (sun, 5.0, False, "Só dele", "toma sol de asas abertas"),
     "preen": (preen, 3.6, False, "Só dele", "passa as penas da asa pela boca"),
 }
+
+# 06/11: the fluid set (dakotaflow.py, docs/estudos/08 and 10): the same names made fluid, and its duel and rest sets
+import dakotaflow as FLOW  # noqa: E402
+for _n in ("idle", "walk", "run", "stalk", "call", "threat", "attack", "bite", "hurt", "pin", "mantle", "wing_flash", "sun",
+           "preen", "sniff", "look_back", "shake", "stretch", "yawn", "eat", "drink", "tame"):
+    ANIMS[_n] = (getattr(FLOW, _n),) + ANIMS[_n][1:]
+ANIMS.update({
+    "guard": (FLOW.guard, FLOW.GUARD_T, True, "Duelo", "em guarda: agachado, asas baixas abertas para a frente, pescoço em S, leque da cauda erguido"),
+    "strafe_left": (FLOW.strafe_left, FLOW.STRAFE_T, True, "Duelo", "desliza de lado para a esquerda, a asa de fora aberta como gavião"),
+    "strafe_right": (FLOW.strafe_right, FLOW.STRAFE_T, True, "Duelo", "desliza de lado para a direita"),
+    "turn_left": (FLOW.turn_left, FLOW.TURN_T, True, "Movimento", "girando no lugar para a esquerda: o pescoço entra na curva primeiro"),
+    "turn_right": (FLOW.turn_right, FLOW.TURN_T, True, "Movimento", "girando no lugar para a direita"),
+    "feint": (FLOW.feint, FLOW.FEINT_T, False, "Duelo", "finta: meio susto de asas, ergue o pé da foice como quem vai dar o bote, e para"),
+    "block": (FLOW.block, FLOW.BLOCK_T, False, "Duelo", "apara com as duas asas jogadas à frente do peito"),
+    "recoil": (FLOW.recoil, FLOW.RECOIL_T, False, "Duelo", "o golpe bateu nas asas: cabeça de lado, duas batidas de asa, passo atrás"),
+    "submit": (FLOW.submit, FLOW.SUBMIT_T, False, "Duelo", "perdeu: agacha, asas coladas, leque fechado e baixo, vira a cabeça"),
+    "lie_down": (FLOW.lie_down, FLOW.LIE_DOWN_T, False, "Descanso", "deitando como ave no ninho"),
+    "get_up": (FLOW.get_up, FLOW.GET_UP_T, False, "Descanso", "levantando com as asas meio abertas, sacode as penas"),
+    "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "cansado: asas soltas para esfriar, boca aberta, garganta vibrando"),
+    "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado depois de uma perseguição"),
+})

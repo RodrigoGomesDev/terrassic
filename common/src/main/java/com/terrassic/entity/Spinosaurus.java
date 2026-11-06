@@ -33,6 +33,11 @@ public class Spinosaurus extends Spinosaur {
     public static final float HEIGHT = 4.871F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.006F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 2.541F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.TROPICAL_FISH, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 
@@ -114,49 +119,49 @@ public class Spinosaurus extends Spinosaur {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{5.974F, 0.0F, 2.237F, 1.814F, 2.823F, 2.563F},
+                    new float[]{5.991F, 0.0F, 2.116F, 1.814F, 2.543F, 2.489F},
                     new float[]{5.999F, 0.0F, 0.161F, 1.848F, 5.473F, 3.358F},
-                    new float[]{5.983F, 0.0F, 0.322F, 1.887F, 3.71F, 4.456F}),
+                    new float[]{5.984F, 0.0F, 0.32F, 1.888F, 3.704F, 4.471F}),
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{4.26F, 0.0F, 2.831F, 1.814F, 1.89F, 2.427F},
+                    new float[]{4.277F, 0.0F, 2.736F, 1.814F, 1.973F, 2.55F},
                     new float[]{4.252F, 0.0F, 0.72F, 1.848F, 6.809F, 3.325F},
-                    new float[]{4.196F, 0.0F, 0.288F, 1.887F, 2.567F, 4.813F}),
+                    new float[]{4.197F, 0.0F, 0.383F, 1.888F, 2.562F, 4.723F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{3.476F, 0.0F, 2.534F, 1.228F, 1.396F, 2.703F},
+                    new float[]{3.5F, 0.0F, 2.478F, 1.244F, 1.612F, 2.798F},
                     new float[]{3.519F, 0.0F, 0.933F, 1.216F, 6.574F, 3.08F},
-                    new float[]{3.578F, 0.0F, 2.21F, 1.252F, 1.595F, 2.827F}),
+                    new float[]{3.578F, 0.0F, 2.208F, 1.253F, 1.596F, 2.836F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{2.348F, 0.0F, 2.607F, 1.228F, 1.387F, 2.414F},
+                    new float[]{2.356F, 0.0F, 2.557F, 1.244F, 1.626F, 2.515F},
                     new float[]{2.403F, 0.0F, 0.919F, 1.216F, 6.194F, 2.902F},
-                    new float[]{2.426F, 0.0F, 1.91F, 1.252F, 1.302F, 2.907F}),
+                    new float[]{2.425F, 0.0F, 1.908F, 1.253F, 1.302F, 2.91F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{1.503F, 0.0F, -0.118F, 2.626F, 2.591F, 6.342F},
+                    new float[]{1.497F, 0.0F, -0.243F, 2.639F, 2.548F, 6.513F},
                     new float[]{1.617F, 0.0F, -0.064F, 2.186F, 8.734F, 5.118F},
                     new float[]{1.855F, 0.0F, -0.054F, 2.371F, 2.489F, 6.102F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{-1.023F, 0.0F, -0.115F, 2.626F, 2.732F, 6.22F},
+                    new float[]{-1.042F, 0.0F, -0.242F, 2.639F, 2.576F, 6.335F},
                     new float[]{-0.469F, 0.0F, -0.064F, 2.186F, 8.569F, 5.057F},
                     new float[]{-0.416F, 0.0F, -0.054F, 2.371F, 2.489F, 6.102F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-7.594F, 0.0F, 1.157F, 1.536F, 1.879F, 3.464F},
+                    new float[]{-7.59F, 0.0F, 1.163F, 1.535F, 2.377F, 3.359F},
                     new float[]{-7.632F, 0.0F, 1.234F, 1.521F, 5.814F, 2.482F},
-                    new float[]{-7.631F, 0.0F, 2.6F, 1.538F, 0.734F, 1.887F}),
+                    new float[]{-7.631F, 0.0F, 2.6F, 1.538F, 0.956F, 1.887F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-6.158F, 0.0F, 1.169F, 1.536F, 1.563F, 3.606F},
+                    new float[]{-6.155F, 0.0F, 1.142F, 1.535F, 1.694F, 3.537F},
                     new float[]{-6.211F, 0.0F, 1.059F, 1.521F, 5.898F, 2.636F},
-                    new float[]{-6.193F, 0.0F, 2.587F, 1.538F, 0.973F, 2.24F}),
+                    new float[]{-6.193F, 0.0F, 2.587F, 1.538F, 1.04F, 2.24F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-4.722F, 0.0F, 1.408F, 1.536F, 1.456F, 3.348F},
+                    new float[]{-4.72F, 0.0F, 1.468F, 1.535F, 1.542F, 3.194F},
                     new float[]{-4.79F, 0.0F, 0.895F, 1.521F, 5.809F, 2.743F},
-                    new float[]{-4.755F, 0.0F, 2.563F, 1.538F, 1.136F, 2.285F}),
+                    new float[]{-4.754F, 0.0F, 2.563F, 1.538F, 1.159F, 2.285F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-3.286F, 0.0F, 1.736F, 1.536F, 1.459F, 3.096F},
+                    new float[]{-3.285F, 0.0F, 1.809F, 1.535F, 1.635F, 2.948F},
                     new float[]{-3.368F, 0.0F, 0.771F, 1.521F, 5.876F, 2.863F},
-                    new float[]{-3.316F, 0.0F, 2.572F, 1.538F, 1.269F, 2.316F}),
+                    new float[]{-3.316F, 0.0F, 2.572F, 1.538F, 1.275F, 2.316F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.85F, 0.0F, 2.182F, 1.536F, 1.426F, 2.614F},
+                    new float[]{-1.85F, 0.0F, 2.237F, 1.535F, 1.59F, 2.5F},
                     new float[]{-1.947F, 0.0F, 0.765F, 1.521F, 5.841F, 2.853F},
-                    new float[]{-1.878F, 0.0F, 2.733F, 1.538F, 1.261F, 2.069F})
+                    new float[]{-1.878F, 0.0F, 2.732F, 1.538F, 1.265F, 2.069F})
     };
 
     @Override

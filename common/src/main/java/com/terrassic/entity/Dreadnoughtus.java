@@ -28,6 +28,11 @@ public class Dreadnoughtus extends HerbivoreDinosaur {
     public static final float HEIGHT = 9.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.006F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 5.294F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 

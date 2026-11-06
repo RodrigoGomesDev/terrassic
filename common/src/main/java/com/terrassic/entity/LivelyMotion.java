@@ -22,14 +22,15 @@ import net.minecraft.util.Mth;
  */
 public final class LivelyMotion {
     /** Share of the body's turn each tail segment keeps in the world (base to tip). */
-    private static final float[] INERTIA = {0.30F, 0.42F, 0.52F, 0.60F};
+    private static final float[] INERTIA = {0.26F, 0.36F, 0.45F, 0.52F, 0.58F, 0.63F};
     private static final float STIFF = 0.16F;
     private static final float DAMP = 0.30F;
     private static final float TAIL_MAX = 30.0F;
 
-    private final float[] tail = new float[4];
-    private final float[] tailO = new float[4];
-    private final float[] vel = new float[4];
+    /** Up to six tail segments (tail1..tail6, as many as the rig has). */
+    private final float[] tail = new float[6];
+    private final float[] tailO = new float[6];
+    private final float[] vel = new float[6];
     private float bank;
     private float bankO;
     private float turnRate;
@@ -44,9 +45,23 @@ public final class LivelyMotion {
     private float footR;
     private float footLO;
     private float footRO;
-    /** Half the distance between the feet and the thigh + shin length, in model px (the T. rex rig). */
-    private static final float FOOT_SIDE_PX = 15.0F;
-    public static final float LEG_PX = 50.0F;
+    /** Half the distance between the feet and the thigh + shin length, in model px: measured from the rig's bones by
+     *  the model on its first frame (setLegs); 0 until then. */
+    private float footSidePx;
+    private float legPx = 50.0F;
+
+    public void setLegs(float sidePx, float legPx) {
+        this.footSidePx = sidePx;
+        this.legPx = Math.max(8.0F, legPx);
+    }
+
+    public boolean hasLegs() {
+        return this.footSidePx != 0.0F;      // measured (negative = a rig without legs: no feet layer)
+    }
+
+    public float legPx() {
+        return this.legPx;
+    }
 
     public void tick(DinosaurEntity e) {
         float dyaw = Mth.wrapDegrees(e.yBodyRot - e.yBodyRotO);
@@ -58,7 +73,7 @@ public final class LivelyMotion {
             dyaw = 0.0F;   // a body that has fallen does not swing its tail
         }
         this.turnRate += (dyaw - this.turnRate) * 0.35F;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             this.tailO[i] = this.tail[i];
             this.tail[i] -= dyaw * INERTIA[i];
             this.vel[i] += -STIFF * this.tail[i] - DAMP * this.vel[i] + (i > 0 ? 0.22F * this.vel[i - 1] : 0.0F);
@@ -88,8 +103,9 @@ public final class LivelyMotion {
         this.footRO = this.footR;
         float gl = 0.0F;
         float gr = 0.0F;
-        if (e.onGround() && e.isAlive() && !e.isKnockedOut() && !e.isInWater() && !e.isSleeping() && !e.isInSittingPose()) {
-            double side = FOOT_SIDE_PX / 16.0D * e.livelyModelScale() * e.getScale();
+        if (this.footSidePx > 0.0F && e.livelyBiped() && e.onGround() && e.isAlive() && !e.isKnockedOut() && !e.isInWater()
+                && !e.isSleeping() && !e.isInSittingPose()) {
+            double side = this.footSidePx / 16.0D * e.livelyModelScale() * e.getScale();
             double yaw = Math.toRadians(e.yBodyRot);
             double cx = Math.cos(yaw) * side;
             double cz = Math.sin(yaw) * side;

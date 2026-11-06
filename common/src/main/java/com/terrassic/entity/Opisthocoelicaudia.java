@@ -33,6 +33,11 @@ public class Opisthocoelicaudia extends HerbivoreDinosaur {
     public static final float HEIGHT = 3.812F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.985F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 2.965F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 

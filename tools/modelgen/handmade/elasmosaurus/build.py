@@ -2,7 +2,7 @@
 Builds the Elasmosaurus into the mod: the third remake of the 1.8 package (its own study, page "Elasmossauro: estudo
 para a 1.8", approved by Rodrigo on 05/11/2026). A hand-made rig drawn at 20 px per metre (game scale 0.8, 10.3 m),
 per-face UV on a 256 x 256 skin in "turquesa pintada" (the female lighter, fewer spots), its own neck saddle (shown
-when saddled) and 21 animations of its own (elasmoanims.py). Writes the geo, the animations, the two skins and its
+when saddled) and 21 animations of its own (elasmoanims.py, made fluid by elasflow.py on 06/11). Writes the geo, the animations, the two skins and its
 row of art/build_report.json; stops (exit 1) when the QA fails. A swimmer: only "stranded" is checked against the
 ground (it lies on land); every other pose floats.
 
@@ -31,7 +31,7 @@ ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "ter
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
 FPS_OF = {"death": 40, "run": 40, "neck_strike": 40, "attack": 40, "hurt": 40}
-EVERY_FRAME = ("swim", "run", "neck_strike", "attack", "stranded", "death", "wake")
+EVERY_FRAME = ("swim", "run", "neck_strike", "attack", "stranded", "death", "wake", "eat", "hurt", "gastrolith")
 SLOW = ("idle", "sit", "sleep", "knocked_out")
 LINEAR = ("hurt", "neck_strike", "attack", "death")
 STANDING = ("stranded",)

@@ -471,3 +471,9 @@ ANIMS = {
     "tame": (tame, 2.6, False, "Domado", "aceita o dono: abaixa a cabeça com a cúpula virada de lado e esfrega nele"),
     "hop_play": (hop_play, 1.6, False, "Só dele", "filhote brincando: agacha, pula de pernas duras com uma torção, pousa"),
 }
+
+# 06/11/2026: the fluid set and the duel (pachyflow.py, docs/estudos/10_LUTA_E_FLUIDEZ_POR_ESPECIE.md): the same names
+# and lengths, the fluid versions bound in their place, the new ones after
+import pachyflow as FLOW  # noqa: E402
+ANIMS_BEFORE_FLOW = ANIMS
+ANIMS = FLOW.rebind(ANIMS)

@@ -28,6 +28,11 @@ public class Saltasaurus extends HerbivoreDinosaur {
     public static final float HEIGHT = 4.024F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.016F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 3.176F;
     private static final Ingredient FOOD = Ingredient.of(ItemTags.LEAVES);
 

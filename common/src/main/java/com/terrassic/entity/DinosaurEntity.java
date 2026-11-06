@@ -360,6 +360,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        this.duelTick();
         // 1.8 (found in the behaviour test): a herd member set on a target by the alarm keeps it after it dies, since no
         // target goal of its own is running to drop it; a dead target blocked hand taming forever (canBeTamedNow)
         LivingEntity target = this.getTarget();
@@ -782,6 +783,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
+        builder.define(DATA_DUEL, false);
+        builder.define(DATA_LOCKED, false);
+        builder.define(DATA_TIRED, false);
         builder.define(DATA_FEMALE, false);
         builder.define(DATA_SADDLED, false);
         builder.define(DATA_CHESTED, false);
@@ -1199,8 +1203,17 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.hasSleepAnim()) {
             action.triggerableAnim("wake_sleep", RawAnimation.begin().thenPlay(anim(this.actionAnimation("wake_sleep"))));
         }
+        java.util.Set<String> registered = new java.util.HashSet<>();
         for (String extra : extraActions()) {
             action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(this.actionAnimation(extra))));
+            registered.add(extra);
+        }
+        if (this.hasLivelySet() || this.hasDuelMoves()) {
+            for (String extra : LIVELY_ACTIONS) {
+                if (registered.add(extra)) {
+                    action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
+                }
+            }
         }
         controllers.add(action);
     }
@@ -1218,6 +1231,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     protected PlayState movementAnimation(AnimationState<DinosaurEntity> state) {
         this.cycleSpeed = 1.0D;
+        PlayState lively = this.livelyStances(state);
+        if (lively != null) {
+            return lively;
+        }
         if (this.isSleeping() && this.hasSleepAnim() && !this.isPerched()) {
             return state.setAndContinue(this.sleepAnim);
         }
@@ -1254,6 +1271,18 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         double dz = this.getZ() - this.zo;
         double speed = Math.sqrt(dx * dx + dz * dz);
         return Mth.clamp(speed / (cycle * this.getScale()), 0.5D, 1.8D);
+    }
+
+    /** A living animal and a carcass of its species share the model's bones (GeckoLib bakes one model per file), and GeckoLib
+     *  skips the pose of a second draw in the same frame (a shader's shadow pass) and draws whatever the bones hold: a
+     *  carcass drawn after a living T. rex stood up, depending on where the camera looked (found in play, 06/11). Each
+     *  draw gets a time a hair apart (under a ten-thousandth of a tick), so every draw sets its own pose. */
+    private int drawSalt;
+
+    @Override
+    public double getTick(Object entity) {
+        this.drawSalt = (this.drawSalt + 1) & 1023;
+        return this.tickCount + this.drawSalt * 1.0E-7D;
     }
 
     @Override
@@ -1512,12 +1541,558 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+
+    // ================================================================== duels, stances, transitions, tiredness
+    // (06/11/2026, from the T. rex: docs/DUELOS.md, docs/estudos/10_LUTA_E_FLUIDEZ_POR_ESPECIE.md). The server side
+    // (duels, blocks, giving in, fatigue) runs for the species in DUEL_SPECIES; the client plays the guard, sidesteps,
+    // step-round turns and tired loops of any species whose animation file has them (hasAnim).
+
+    /** Server, every tick: the duel's counters and the live states (transitions into and out of rest, fatigue). */
+    private void duelTick() {
+        if (this.lockedWith != null || this.isLocked()) {
+            this.lockTick();
+        }
+        if (this.hasLivelySet()) {
+            this.livelyStateTick();
+        }
+        if (this.blockCooldown > 0) {
+            this.blockCooldown--;
+        }
+        if (this.counterLeft > 0 && !this.isDueling()) {
+            this.counterLeft = 0;
+        }
+        if (this.yieldTicks > 0) {
+            this.yieldTicks--;
+        }
+        if (this.duelCooldown > 0) {
+            this.duelCooldown--;
+        }
+        if (this.isDueling() && (this.getTarget() == null || !this.getTarget().isAlive())) {
+            this.setDueling(false);
+        }
+    }
+
+    /** The species whose AI duels (their rigs have guard, sidesteps, feint, block, recoil, submit). */
+    private static final java.util.Set<String> DUEL_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus",
+            "dakotaraptor", "pachycephalosaurus", "therizinosaurus", "triceratops", "styracosaurus", "protoceratops");
+
+    public boolean hasDuelMoves() {
+        return DUEL_SPECIES.contains(this.speciesId());
+    }
+
+    /** The species whose rigs have the common set (lie_down, get_up, fall_asleep, walk_tired, idle_tired): the server
+     *  triggers their rest transitions and tracks their fatigue. */
+    private static final java.util.Set<String> LIVELY_SET_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
+            "spinosaurus", "velociraptor", "dakotaraptor", "pachycephalosaurus", "gallimimus", "parasaurolophus", "edmontosaurus",
+            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops");
+
+    public boolean hasLivelySet() {
+        return LIVELY_SET_SPECIES.contains(this.speciesId());
+    }
+
+    // ------------------------------------------------------------------ horn lock (Farke et al. 2009)
+    /** Species whose grown rivals lock horns and push (horn_lock loop, horn_lock_start, horn_lock_break). */
+    private static final java.util.Set<String> HORN_LOCK_SPECIES = java.util.Set.of("triceratops");
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_LOCKED =
+            net.minecraft.network.syncher.SynchedEntityData.defineId(DinosaurEntity.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
+    private DinosaurEntity lockedWith;
+    private int lockLeft;
+    private RawAnimation hornLockAnim;
+
+    public boolean locksHorns(LivingEntity other) {
+        return HORN_LOCK_SPECIES.contains(this.speciesId()) && other instanceof DinosaurEntity d && d.getType() == this.getType()
+                && !this.isBaby() && !d.isBaby();
+    }
+
+    public boolean isLocked() {
+        return this.entityData.get(DATA_LOCKED);
+    }
+
+    /** Two rivals face to face and close: the horns lock, both push and twist for four to seven seconds. */
+    public void lockHorns(DinosaurEntity other) {
+        if (this.isLocked() || other.isLocked()) {
+            return;
+        }
+        int ticks = 80 + this.random.nextInt(60);
+        for (DinosaurEntity e : new DinosaurEntity[]{this, other}) {
+            e.lockedWith = e == this ? other : this;
+            e.lockLeft = ticks;
+            e.entityData.set(DATA_LOCKED, true);
+            e.getNavigation().stop();
+            e.triggerAnim(ACTION_CONTROLLER, "horn_lock_start");
+        }
+    }
+
+    /** Server, every tick while locked: face each other, push back and forth, a little damage, then let go. */
+    private void lockTick() {
+        DinosaurEntity o = this.lockedWith;
+        if (o == null || !o.isAlive() || !this.isAlive() || --this.lockLeft <= 0 || this.distanceTo(o) > (this.getBbWidth() + o.getBbWidth())) {
+            this.unlock();
+            return;
+        }
+        this.getNavigation().stop();
+        this.getLookControl().setLookAt(o, 30.0F, 30.0F);
+        double dx = o.getX() - this.getX();
+        double dz = o.getZ() - this.getZ();
+        float yaw = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+        this.setYRot(Mth.approachDegrees(this.getYRot(), yaw, 6.0F));
+        this.yBodyRot = this.getYRot();
+        // the shoving: who pushes harder this second wins a little ground
+        if ((this.tickCount + this.getId()) % 20 == 0 && this.getId() < o.getId()) {
+            DinosaurEntity winner = this.random.nextBoolean() ? this : o;
+            DinosaurEntity loser = winner == this ? o : this;
+            loser.knockback(0.35D, winner.getX() - loser.getX(), winner.getZ() - loser.getZ());
+            if (this.isDueling() || o.isDueling()) {
+                // a real fight hurts; rivals sparring for show only push
+                loser.hurt(this.damageSources().mobAttack(winner), 1.0F + this.random.nextFloat());
+            }
+        }
+    }
+
+    private void unlock() {
+        if (this.isLocked()) {
+            this.entityData.set(DATA_LOCKED, false);
+            this.triggerAnim(ACTION_CONTROLLER, "horn_lock_break");
+            this.stagger = 15;
+        }
+        this.lockedWith = null;
+        this.lockLeft = 0;
+    }
+
+    /** The one-shots of the common set, registered for the species that have it. */
+    private static final String[] LIVELY_ACTIONS = {"lie_down", "get_up", "fall_asleep", "feint", "block", "recoil", "submit",
+            "horn_lock_start", "horn_lock_break", "kick_back", "body_shove"};
+
+    /** The winner of a duel: a roar (a rig may give a louder one). */
+    protected void wonDuel() {
+        triggerAnim(ACTION_CONTROLLER, "roar");
+    }
+
+    /** Client: whether this species' animation file has {@code name} (cached per species). */
+    public boolean hasAnim(String name) {
+        return AnimIndex.has(this.speciesId(), name);
+    }
+
+    /** The movement loops of the live layer, before the species' own: the duel guard and sidesteps, the step-round
+     *  turns, the tired loops (each only if the rig has it). */
+    protected PlayState livelyStances(AnimationState<DinosaurEntity> state) {
+        if (!this.livelyMotion()) {
+            return null;
+        }
+        if (this.isLocked() && this.hasAnim("horn_lock")) {
+            if (this.hornLockAnim == null) {
+                this.hornLockAnim = RawAnimation.begin().thenLoop(anim("horn_lock"));
+            }
+            return state.setAndContinue(this.hornLockAnim);
+        }
+        PlayState p = this.duelStance(state);
+        if (p == null) {
+            p = this.turnInPlace(state);
+        }
+        if (p == null) {
+            p = this.tiredStance(state);
+        }
+        return p;
+    }
+
+
+
+
+    private RawAnimation turnLeftAnim;
+    private RawAnimation turnRightAnim;
+    private RawAnimation guardAnim;
+    private RawAnimation strafeLeftAnim;
+    private RawAnimation strafeRightAnim;
+
+    // ------------------------------------------------------------------ the duel (06/11/2026)
+    /** Facing a big rival or a horned herbivore that fights: guard, circling, feints, blocks (ApexBiteGoal). Synced:
+     *  the client plays the guard and the sidesteps while it is set. */
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_DUEL =
+            net.minecraft.network.syncher.SynchedEntityData.defineId(DinosaurEntity.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
+    /** Ticks it reels after its bite was blocked (no blows meanwhile). */
+    public int stagger;
+    private int blockCooldown;
+    /** A territorial duel (two grown males of a size): the loser gives in at half its health, not a third. */
+    protected boolean territorial;
+    private java.util.UUID yieldedTo;
+    private int yieldTicks;
+    protected int duelCooldown = 1200;
+
+    // ------------------------------------------------------------------ rest transitions and tiredness (06/11/2026)
+    private boolean wasSitting;
+    private boolean wasSleeping;
+    /** 0 .. 1: grows while it runs, falls while it walks or stands; spent above 0.75 until it is back under 0.3. */
+    private float fatigue;
+    private double lastX;
+    private double lastZ;
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_TIRED =
+            net.minecraft.network.syncher.SynchedEntityData.defineId(DinosaurEntity.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
+    private static final java.util.UUID TIRED_SLOW = java.util.UUID.fromString("7d1f0c1e-3b6a-4f2e-9c1d-5e8a2b4c6d70");
+    private RawAnimation walkTiredAnim;
+    private RawAnimation idleTiredAnim;
+
+    /** Server: the fatigue, 0 .. 1 (for the dev test). */
+    public float fatigue() {
+        return this.fatigue;
+    }
+
+    public boolean isTired() {
+        return this.entityData.get(DATA_TIRED);
+    }
+
+    /** Server, every tick: the transitions into and out of rest, and the fatigue of a long chase. */
+    protected void livelyStateTick() {
+        boolean sitting = this.isInSittingPose() && !this.isVehicle();
+        boolean sleeping = this.isSleeping();
+        if (sleeping && !this.wasSleeping && !this.wasSitting) {
+            triggerAnim(ACTION_CONTROLLER, "fall_asleep");
+        } else if (sitting && !this.wasSitting && !sleeping) {
+            triggerAnim(ACTION_CONTROLLER, "lie_down");
+        } else if (!sitting && this.wasSitting && !sleeping && !this.wasSleeping && this.isAlive()) {
+            triggerAnim(ACTION_CONTROLLER, "get_up");
+        }
+        this.wasSitting = sitting;
+        this.wasSleeping = sleeping;
+        // the distance it really covered since the last tick (the AI runs before this tick's move, so x - xo is 0 here)
+        double mx = this.getX() - this.lastX;
+        double mz = this.getZ() - this.lastZ;
+        this.lastX = this.getX();
+        this.lastZ = this.getZ();
+        double speed = mx * mx + mz * mz;
+        if (speed > this.runThresholdSqr()) {
+            this.fatigue = Math.min(1.0F, this.fatigue + 0.0025F);     // ~20 s of running wears it out
+        } else {
+            this.fatigue = Math.max(0.0F, this.fatigue - (speed < 1.0E-4D ? 0.0035F : 0.0015F));
+        }
+        boolean tired = this.isTired();
+        if (!tired && this.fatigue > 0.75F) {
+            this.setTired(true);
+        } else if (tired && this.fatigue < 0.3F) {
+            this.setTired(false);
+        }
+    }
+
+    private void setTired(boolean tired) {
+        this.entityData.set(DATA_TIRED, tired);
+        net.minecraft.world.entity.ai.attributes.AttributeInstance speed = this.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        if (speed != null) {
+            speed.removeModifier(TIRED_SLOW);
+            if (tired) {
+                speed.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(TIRED_SLOW, "tired", -0.25D,
+                        net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+            }
+        }
+    }
+
+    /** Spent: the tired walk and the panting stand (the run stays the run). */
+    protected PlayState tiredStance(AnimationState<DinosaurEntity> state) {
+        if (!this.hasAnim("walk_tired") || !this.isTired() || this.isSwimmingDeep() || this.isSleeping() || this.isInSittingPose() || !this.isAlive()) {
+            return null;
+        }
+        if (this.walkTiredAnim == null) {
+            this.walkTiredAnim = RawAnimation.begin().thenLoop(anim("walk_tired"));
+            this.idleTiredAnim = RawAnimation.begin().thenLoop(anim("idle_tired"));
+        }
+        if (!state.isMoving()) {
+            return state.setAndContinue(this.idleTiredAnim);
+        }
+        if (this.getDeltaMovement().horizontalDistanceSqr() <= this.runThresholdSqr()) {
+            this.cycleSpeed = this.gaitSpeed(56.0D / 16.0D / 48.0D * this.livelyModelScale());
+            return state.setAndContinue(this.walkTiredAnim);
+        }
+        return null;
+    }
+
+
+    public boolean isDueling() {
+        return this.entityData.get(DATA_DUEL);
+    }
+
+    public void setDueling(boolean dueling) {
+        this.entityData.set(DATA_DUEL, dueling);
+        if (!dueling) {
+            this.territorial = false;
+        }
+    }
+
+    /** Whether its fight goal duels this target (only the T. rex for now, the live-motion species). */
+    public boolean duels(LivingEntity target) {
+        return this.hasDuelMoves() && !this.isBaby() && target instanceof DinosaurEntity d && d.fightsInDuel()
+                && d.getBbWidth() >= this.getBbWidth() * 0.5F;
+    }
+
+
+
+    // ------------------------------------------------------------------ the exchange (06/11/2026, second pass)
+    // Played, the first duel was "too static, monotonous" (Rodrigo): the two circled eight blocks apart and stood after
+    // every blow. A fight is an exchange: the blow carries the body in, the one hit slides back and now and then answers
+    // at once, a wind-up can be sidestepped, rivals chest to chest grapple and wheel round pushing until one throws the
+    // other. These are the shared pieces; the fight goals (ApexBiteGoal, HeadMeleeAttackGoal) drive them.
+
+    /** Ticks until it answers a blow it took (0: no answer pending), of a sidestep under way, of a grapple. */
+    public int counterLeft;
+    public int dodgeLeft;
+    public float dodgeSide;
+    public int clinchLeft;
+    public DinosaurEntity clinchWith;
+    public float clinchSpin;
+    public boolean clinchLead;
+
+    /** How hard a push moves it: big bodies slide less (by the box width against the other's). */
+    private double heft(LivingEntity other) {
+        return Mth.clamp(other.getBbWidth() / Math.max(0.6F, this.getBbWidth()), 0.35D, 1.6D);
+    }
+
+    /** The blow carries the body in: a step of {@code power} towards the target, in blocks per tick at size 1. */
+    public void lungeAt(LivingEntity target, double power) {
+        Vec3 d = new Vec3(target.getX() - this.getX(), 0.0D, target.getZ() - this.getZ());
+        if (d.lengthSqr() < 1.0E-4D || !this.onGround()) {
+            return;
+        }
+        d = d.normalize().scale(power * Math.min(1.4D, 0.7D + 0.3D * this.getScale()));
+        this.setDeltaMovement(this.getDeltaMovement().add(d.x, 0.02D, d.z));
+        this.hasImpulse = true;
+    }
+
+    /** Pushed by {@code from}: slides away from it by {@code power} (scaled by the two sizes), whatever its knockback
+     *  resistance (the vanilla knockback leaves the big ones standing like posts). */
+    public void pushedBy(LivingEntity from, double power) {
+        Vec3 d = new Vec3(this.getX() - from.getX(), 0.0D, this.getZ() - from.getZ());
+        if (d.lengthSqr() < 1.0E-4D) {
+            return;
+        }
+        d = d.normalize().scale(power * this.heft(from));
+        this.setDeltaMovement(this.getDeltaMovement().add(d.x, 0.04D, d.z));
+        this.hasImpulse = true;
+        this.hurtMarked = true;
+    }
+
+    /** A duel blow landed on it: it slides back, reels (the recoil now and then) and may answer at once. */
+    public void tookDuelBlow(DinosaurEntity attacker, double weight) {
+        if (this.level().isClientSide() || !this.isAlive()) {
+            return;
+        }
+        this.pushedBy(attacker, 0.32D * weight);
+        if (this.isLocked() || this.clinchLeft > 0) {
+            return;
+        }
+        if (this.random.nextFloat() < 0.55F && this.hasAnim("recoil")) {
+            triggerAnim(ACTION_CONTROLLER, "recoil");
+        }
+        this.stagger = Math.max(this.stagger, 6 + this.random.nextInt(5));
+        if (this.random.nextFloat() < 0.45F) {
+            this.counterLeft = this.stagger + 2 + this.random.nextInt(5);   // the answer, right after the reel
+        }
+    }
+
+    /** A rival winds up at it: now and then it sidesteps the blow (and answers out of the step). */
+    public void incoming(DinosaurEntity attacker, int hitIn) {
+        if (this.level().isClientSide() || !this.isDueling() || this.stagger > 0 || this.isLocked() || this.clinchLeft > 0
+                || this.dodgeLeft > 0 || !this.onGround() || this.random.nextFloat() > 0.22F) {
+            return;
+        }
+        this.dodgeSide = this.random.nextBoolean() ? 1.0F : -1.0F;
+        this.dodgeLeft = Math.max(6, Math.min(12, hitIn + 3));
+        double yaw = Math.toRadians(this.getYRot());
+        Vec3 side = new Vec3(Math.cos(yaw), 0.0D, Math.sin(yaw)).scale(this.dodgeSide * 0.42D * Math.min(1.3D, 0.7D + 0.3D * this.getScale()));
+        this.setDeltaMovement(this.getDeltaMovement().add(side.x, 0.05D, side.z));
+        this.hasImpulse = true;
+        this.counterLeft = this.dodgeLeft + 3;
+    }
+
+    /** Chest to chest, facing each other: they grapple, wheel round pushing, trade short blows, and one throws the other. */
+    public void startClinch(DinosaurEntity other, int ticks) {
+        float spin = this.random.nextBoolean() ? 1.0F : -1.0F;
+        this.clinchWith = other;
+        other.clinchWith = this;
+        this.clinchLeft = ticks;
+        other.clinchLeft = ticks;
+        this.clinchSpin = spin;
+        other.clinchSpin = spin;
+        this.clinchLead = true;
+        other.clinchLead = false;
+        this.dodgeLeft = 0;
+        other.dodgeLeft = 0;
+    }
+
+    /** The grapple, every tick of the goal: returns false when it is over (or broken). */
+    public boolean clinchTick() {
+        DinosaurEntity o = this.clinchWith;
+        if (this.clinchLeft <= 0 || o == null || !o.isAlive() || !this.isAlive() || o.clinchWith != this
+                || this.distanceTo(o) > (this.getBbWidth() + o.getBbWidth()) * 1.3D + 3.0D) {
+            this.clinchLeft = 0;
+            this.clinchWith = null;
+            return false;
+        }
+        this.getNavigation().stop();
+        double dx = o.getX() - this.getX();
+        double dz = o.getZ() - this.getZ();
+        float yawTo = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+        float y = Mth.approachDegrees(this.getYRot(), yawTo, 12.0F);
+        this.setYRot(y);
+        this.setYBodyRot(y);
+        this.getLookControl().setLookAt(o, 30.0F, 30.0F);
+        // pressing in and wheeling round the middle: both strafe the same way, so the pair turns like a wheel
+        float surge = 0.35F + 0.2F * Mth.sin(this.clinchLeft * 0.31F + (this.clinchLead ? 0.0F : 1.6F));
+        this.getMoveControl().strafe(surge, 0.55F * this.clinchSpin);
+        int beat = this.clinchLeft + (this.clinchLead ? 0 : 7);
+        if (beat % 14 == 0) {
+            String[] moves = {"shove", "bite_side", "attack_quick", "head_clash", "body_shove", "attack"};
+            for (int i = 0, k = this.random.nextInt(moves.length); i < moves.length; i++, k = (k + 1) % moves.length) {
+                if (this.hasAnim(moves[k])) {
+                    triggerAnim(ACTION_CONTROLLER, moves[k]);
+                    break;
+                }
+            }
+            float dmg = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) * 0.3F;
+            o.hurt(this.damageSources().mobAttack(this), dmg);
+            o.pushedBy(this, 0.22D);
+        }
+        if (--this.clinchLeft == 0 && this.clinchLead) {
+            // the throw: the one with more left in it heaves the other off
+            float mine = this.getHealth() / this.getMaxHealth() + this.random.nextFloat() * 0.5F;
+            float theirs = o.getHealth() / o.getMaxHealth() + this.random.nextFloat() * 0.5F;
+            DinosaurEntity win = mine >= theirs ? this : o;
+            DinosaurEntity lose = win == this ? o : this;
+            win.triggerAnim(ACTION_CONTROLLER, win.hasAnim("shove") ? "shove" : "attack");
+            lose.pushedBy(win, 0.9D);
+            if (lose.hasAnim("recoil")) {
+                lose.triggerAnim(ACTION_CONTROLLER, "recoil");
+            }
+            lose.stagger = 22;
+            lose.hurt(this.damageSources().mobAttack(win), (float) win.getAttributeValue(Attributes.ATTACK_DAMAGE) * 0.6F);
+            o.clinchLeft = 0;
+            o.clinchWith = null;
+            this.clinchWith = null;
+        }
+        return true;
+    }
+
+    /** A sidestep under way, every tick of the goal (true while it moves itself). */
+    public boolean dodgeTick(LivingEntity target) {
+        if (this.dodgeLeft <= 0) {
+            return false;
+        }
+        this.dodgeLeft--;
+        this.getNavigation().stop();
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        float yawTo = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+        float y = Mth.approachDegrees(this.getYRot(), yawTo, 15.0F);
+        this.setYRot(y);
+        this.setYBodyRot(y);
+        this.getMoveControl().strafe(-0.15F, 0.9F * this.dodgeSide);
+        return true;
+    }
+
+    /** The duel's guard (before the wound): a bite from in front of the rival it duels is now and then taken on the
+     *  neck / horns / armour, a quarter of it, and the attacker reels. */
+    protected float duelBlock(net.minecraft.world.damagesource.DamageSource source, float amount) {
+        net.minecraft.world.entity.Entity att = source.getEntity();
+        if (!this.level().isClientSide() && this.isDueling() && att instanceof LivingEntity a && a == this.getTarget()
+                && this.blockCooldown == 0 && !this.isKnockedOut()) {
+            // the bite comes from in front: now and then it takes it on the thick of the neck
+            double dx = a.getX() - this.getX();
+            double dz = a.getZ() - this.getZ();
+            float yawTo = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+            if (Math.abs(Mth.wrapDegrees(yawTo - this.yBodyRot)) < 55.0F && this.random.nextFloat() < 0.3F && this.clinchLeft == 0) {
+                amount *= 0.25F;
+                this.blockCooldown = 40;
+                triggerAnim(ACTION_CONTROLLER, "block");
+                if (a instanceof DinosaurEntity rival) {
+                    rival.triggerAnim(ACTION_CONTROLLER, "recoil");
+                    rival.stagger = 14;
+                    rival.pushedBy(this, 0.3D);
+                    this.counterLeft = 8 + this.random.nextInt(4);   // the riposte, out of the block
+                }
+            }
+        }
+        return amount;
+    }
+
+    /** The duel's end (after the wound): beaten, it gives in and runs. */
+    protected void duelAfter(net.minecraft.world.damagesource.DamageSource source, boolean hurt) {
+        net.minecraft.world.entity.Entity att = source.getEntity();
+        if (hurt && !this.level().isClientSide() && !this.isTame() && this.isDueling() && att instanceof DinosaurEntity rival && rival.hasDuelMoves()
+                && this.isAlive() && this.getHealth() < this.getMaxHealth() * (this.territorial ? 0.5F : 0.3F)) {
+            this.submitTo(rival);
+        }
+    }
+
+    /** Beaten: it drops the head and tail, turns away and runs; the winner lets it go and roars. */
+    private void submitTo(DinosaurEntity rival) {
+        triggerAnim(ACTION_CONTROLLER, "submit");
+        this.setTarget(null);
+        this.setDueling(false);
+        this.yieldedTo = rival.getUUID();
+        this.yieldTicks = 2400;
+        net.minecraft.world.phys.Vec3 away = net.minecraft.world.entity.ai.util.DefaultRandomPos.getPosAway(this, 24, 7, rival.position());
+        if (away != null) {
+            this.getNavigation().moveTo(away.x, away.y, away.z, 1.3D);
+        }
+        if (rival.getTarget() == this) {
+            rival.setTarget(null);
+            rival.setDueling(false);
+            rival.wonDuel();
+        }
+    }
+
+    /** In a duel: the guard when it stands, the sidesteps when it moves across (forward it walks as usual). */
+    protected PlayState duelStance(AnimationState<DinosaurEntity> state) {
+        if (!this.hasAnim("guard") || !this.isDueling() || this.isSwimmingDeep() || this.isVehicle() || !this.isAlive()) {
+            return null;
+        }
+        if (this.guardAnim == null) {
+            this.guardAnim = RawAnimation.begin().thenLoop(anim("guard"));
+            this.strafeLeftAnim = RawAnimation.begin().thenLoop(anim("strafe_left"));
+            this.strafeRightAnim = RawAnimation.begin().thenLoop(anim("strafe_right"));
+        }
+        double vx = this.getX() - this.xo;
+        double vz = this.getZ() - this.zo;
+        double yaw = Math.toRadians(this.yBodyRot);
+        double forward = -Math.sin(yaw) * vx + Math.cos(yaw) * vz;
+        double right = -Math.cos(yaw) * vx - Math.sin(yaw) * vz;
+        double speed = Math.sqrt(vx * vx + vz * vz);
+        if (speed < 0.012D * this.getScale()) {
+            return state.setAndContinue(this.guardAnim);
+        }
+        if (Math.abs(right) > Math.abs(forward) * 0.8D) {
+            this.cycleSpeed = Mth.clamp(speed / (0.06D * this.getScale()), 0.6D, 1.6D);
+            return state.setAndContinue(right > 0.0D ? this.strafeRightAnim : this.strafeLeftAnim);
+        }
+        return null;
+    }
+
+    /** Standing and turning: it steps round ("turn_left" / "turn_right") instead of spinning on its feet. */
+    protected PlayState turnInPlace(AnimationState<DinosaurEntity> state) {
+        LivelyMotion m = this.lively();
+        if (m == null || !this.hasAnim("turn_left") || state.isMoving() || !this.onGround() || this.isSleeping() || this.isInSittingPose() || this.isKnockedOut()
+                || !this.isAlive() || this.isSwimmingDeep() || this.isVehicle() || Math.abs(m.turnRate()) < 1.2F) {
+            return null;
+        }
+        if (this.turnLeftAnim == null) {
+            this.turnLeftAnim = RawAnimation.begin().thenLoop(anim("turn_left"));
+            this.turnRightAnim = RawAnimation.begin().thenLoop(anim("turn_right"));
+        }
+        // a faster turn steps faster (about 25 degrees a loop at 1x)
+        this.cycleSpeed = Mth.clamp(Math.abs(m.turnRate()) / 1.6D, 0.6D, 1.8D);
+        return state.setAndContinue(m.turnRate() < 0.0F ? this.turnLeftAnim : this.turnRightAnim);
+    }
+
+
     // ------------------------------------------------------------------ combat / misc
 
     /** Players who studied the species know its weak spots: +20% damage. The world rules scale the rest
      *  (player and creature damage, creature resistance, wild strength; docs/REGRAS.md). */
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        amount = this.duelBlock(source, amount);
+        boolean hurt = this.hurtInner(source, amount);
+        this.duelAfter(source, hurt);
+        return hurt;
+    }
+
+    private boolean hurtInner(DamageSource source, float amount) {
         if (source.getEntity() instanceof Player player && Research.isStudied(player, this.speciesId())) {
             amount *= 1.2F;
         }
@@ -2707,6 +3282,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.spared(target) || Rules.sparesPlayer(this, target)) {
             return false;
         }
+        // it gave in to this one in a duel: it keeps away from it for a while
+        if (this.yieldTicks > 0 && target != null && target.getUUID().equals(this.yieldedTo)) {
+            return false;
+        }
         if (this.isTame() && (this.stance == DinoStance.PASSIVE || this.isCalmed() || this.sameOwner(target))) {
             return false;
         }
@@ -2999,10 +3578,19 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return false;
     }
 
-    /** Whether this species gets the live motion layer and the step-round loops (only the T. rex for now). */
+    /** Whether this species gets the live motion layer (tail spring, lean into curves, panting; feet on the ground
+     *  for the bipeds): every species remade by hand (Eras.REMADE), 06/11/2026. */
     protected boolean livelyMotion() {
-        return false;
+        return com.terrassic.config.Eras.REMADE.contains(this.speciesId());
     }
+
+    /** Whether it walks on two legs (the live layer puts both feet on the ground under it). */
+    public boolean livelyBiped() {
+        return BIPEDS.contains(this.speciesId());
+    }
+
+    private static final java.util.Set<String> BIPEDS = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
+            "velociraptor", "dakotaraptor", "gallimimus", "pachycephalosaurus", "therizinosaurus");
 
     /** The model's scale (MODEL_SCALE of the species class), for the live layer's feet. */
     public float livelyModelScale() {

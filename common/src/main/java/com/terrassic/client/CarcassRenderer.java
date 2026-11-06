@@ -28,6 +28,14 @@ public class CarcassRenderer extends GeoEntityRenderer<CarcassEntity> {
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 
+    /** GeckoLib turns a non-living entity by 0 (it only reads the body yaw of a LivingEntity), so every carcass faced
+     *  south and the body seemed to jump round when the carcass took its place (found in play, 06/11): it lies at the
+     *  yaw the animal died with. */
+    @Override
+    protected void applyRotations(CarcassEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
+        super.applyRotations(animatable, poseStack, ageInTicks, animatable.getYRot(), partialTick);
+    }
+
     @Override
     public void scaleModelForRender(float widthScale, float heightScale, PoseStack poseStack, CarcassEntity animatable,
                                     BakedGeoModel model, boolean isReRender, float partialTick, int packedLight, int packedOverlay) {

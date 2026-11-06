@@ -50,7 +50,7 @@ public abstract class Triceratopsine extends HerbivoreDinosaur {
 
     @Override
     protected String[] extraActions() {
-        return new String[]{"graze", "horn_sweep", "horn_lock", "stamp", "pivot", "plow", "shear", "wallow", "butt_play"};
+        return new String[]{"graze", "horn_sweep", "stamp", "pivot", "plow", "shear", "wallow", "butt_play"};
     }
 
     @Override
@@ -172,10 +172,8 @@ public abstract class Triceratopsine extends HerbivoreDinosaur {
                 && !other.isVehicle() && this.random.nextBoolean()) {
             this.getLookControl().setLookAt(other, 30.0F, 30.0F);
             other.getLookControl().setLookAt(this, 30.0F, 30.0F);
-            triggerAnim(ACTION_CONTROLLER, "horn_lock");
-            other.triggerAnim(ACTION_CONTROLLER, "horn_lock");
-            this.still = 64;
-            other.still = 64;
+            // the horns lock: in, the pushing loop, the break (DinosaurEntity.lockHorns; trikeflow.py)
+            this.lockHorns(other);
         } else {
             triggerAnim(ACTION_CONTROLLER, this.random.nextBoolean() ? "plow" : "shear");
         }

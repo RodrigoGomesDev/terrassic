@@ -673,3 +673,11 @@ ANIMS = {
     "beg": (beg, 2.2, True, "Domado", "pede comida: ergue a cabeça e mostra a coroa ao dono"),
     "tame": (tame, 2.4, False, "Domado", "abaixa a coroa e empurra a cabeça de leve para o dono"),
 }
+
+
+# 06/11: the fluid set and the fighting set (styraflow.py, on the ceratopsians' triceratops/ceraflow.py): the names
+# above that it remakes are rebound here, the new ones (nose_jab, guard, strafes, turns, feint, block, recoil, submit,
+# lie_down, get_up, idle_tired, walk_tired) added
+import styraflow as FLOW  # noqa: E402
+ANIMS = dict(ANIMS)
+ANIMS.update(FLOW.ANIMS)

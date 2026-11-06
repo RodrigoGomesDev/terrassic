@@ -27,6 +27,11 @@ public class Maiasaura extends HerbivoreDinosaur {
     public static final float HEIGHT = 2.965F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.879F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 1.694F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.SWEET_BERRIES);
 

@@ -37,6 +37,11 @@ public class Mononykus extends PredatorDinosaur {
     public static final float HEIGHT = 0.529F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.254F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.212F;
     private static final Ingredient FOOD = Ingredient.of(Items.SPIDER_EYE, Items.WHEAT_SEEDS, Items.BEETROOT_SEEDS, Items.HONEYCOMB);
 

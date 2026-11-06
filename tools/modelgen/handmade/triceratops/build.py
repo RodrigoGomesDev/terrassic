@@ -41,13 +41,17 @@ REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
 FPS_OF = {"death": 40, "run": 40, "charge": 40, "attack": 40, "horn_sweep": 40, "butt_play": 40}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
-EVERY_FRAME = ("walk", "run", "charge", "attack", "horn_sweep", "death", "stamp", "pivot", "butt_play", "wallow", "wake", "wake_sleep")
+EVERY_FRAME = ("walk", "run", "charge", "attack", "horn_sweep", "death", "stamp", "pivot", "butt_play", "wallow", "wake", "wake_sleep",
+               # 06/11, trikeflow.py: the stepping loops (a foot between two keys sank) and the snaps of the fight
+               "turn_left", "turn_right", "strafe_left", "strafe_right", "walk_tired", "guard", "feint", "block", "recoil",
+               "submit", "horn_lock", "horn_lock_start", "horn_lock_break", "lie_down", "get_up", "hurt")
 # long slow loops: a key every fourth frame is enough for the breathing
-SLOW = ("idle", "sit", "sleep", "knocked_out")
-LINEAR = ("hurt", "attack", "horn_sweep", "death")
+SLOW = ("sit", "sleep", "knocked_out")         # the idle left this list: its frill twitch is shorter than four frames
+LINEAR = ("hurt", "attack", "horn_sweep", "death", "block", "recoil", "horn_lock_start")
 # poses that stand on all four feet (the off-the-ground check); swim floats by design, the calf hops in butt_play
 STANDING = ("idle", "eat", "graze", "beg", "tame", "hurt", "attack", "horn_sweep", "horn_lock", "stamp", "pivot",
-            "plow", "shear")
+            "plow", "shear", "guard", "strafe_left", "strafe_right", "turn_left", "turn_right", "feint", "block", "recoil",
+            "submit", "idle_tired", "walk_tired", "horn_lock_start", "horn_lock_break")
 
 
 def main():

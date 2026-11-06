@@ -28,6 +28,11 @@ public class Dilophosaurus extends PredatorDinosaur {
     public static final float HEIGHT = 2.753F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.101F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 1.059F;
     private static final Ingredient FOOD = Ingredient.of(Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get());
     private int displayCooldown;

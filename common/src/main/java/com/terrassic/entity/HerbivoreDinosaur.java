@@ -150,6 +150,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        this.kickTick();
         if (this.getTarget() == null && !this.isVehicle() && !this.isInSittingPose() && !this.isSleeping()
                 && this.getNavigation().isDone() && this.random.nextInt(this.isHungry() ? 150 : 700) == 0) {
             triggerAnim(ACTION_CONTROLLER, "graze");
@@ -159,10 +160,55 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         }
     }
 
+    // ------------------------------------------------------------------ the runners' kick (06/11/2026)
+    /** Runners that kick what bites them from behind and shove what comes at the flank (DePalma et al. 2013: an
+     *  Edmontosaurus survived a tyrannosaur's bite): the tick each blow lands (kick_back, body_shove). */
+    private static final java.util.Map<String, int[]> KICKS = java.util.Map.of(
+            "gallimimus", new int[]{9, 0}, "parasaurolophus", new int[]{11, 12}, "edmontosaurus", new int[]{13, 13});
+    private LivingEntity kickAt;
+    private int kickIn;
+    private int kickCooldown;
+
+    private void kickBackFor(LivingEntity attacker) {
+        int[] k = KICKS.get(this.speciesId());
+        if (k == null || this.kickCooldown > 0 || this.isBaby() || this.isTame() || this.isVehicle() || this.distanceTo(attacker) > this.getBbWidth() + attacker.getBbWidth() + 2.0F) {
+            return;
+        }
+        double dx = attacker.getX() - this.getX();
+        double dz = attacker.getZ() - this.getZ();
+        float off = Math.abs(net.minecraft.util.Mth.wrapDegrees((float) (net.minecraft.util.Mth.atan2(dz, dx) * net.minecraft.util.Mth.RAD_TO_DEG) - 90.0F - this.yBodyRot));
+        if (off > 120.0F && this.random.nextFloat() < 0.6F) {
+            triggerAnim(ACTION_CONTROLLER, "kick_back");
+            this.kickIn = k[0];
+        } else if (k[1] > 0 && off > 50.0F && off <= 120.0F && this.random.nextFloat() < 0.4F) {
+            triggerAnim(ACTION_CONTROLLER, "body_shove");
+            this.kickIn = k[1];
+        } else {
+            return;
+        }
+        this.kickAt = attacker;
+        this.kickCooldown = 50;
+    }
+
+    private void kickTick() {
+        if (this.kickCooldown > 0) {
+            this.kickCooldown--;
+        }
+        if (this.kickIn > 0 && --this.kickIn == 0 && this.kickAt != null && this.kickAt.isAlive()
+                && this.distanceTo(this.kickAt) < this.getBbWidth() + this.kickAt.getBbWidth() + 2.5F) {
+            this.kickAt.hurt(this.damageSources().mobAttack(this), (float) Math.max(2.0D, this.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE)));
+            this.kickAt.knockback(1.0D, this.getX() - this.kickAt.getX(), this.getZ() - this.kickAt.getZ());
+            this.kickAt = null;
+        }
+    }
+
     /** A runner that is hurt sets the whole herd running: the others take the attacker as the one who hurt them. */
     @Override
     public boolean hurt(DamageSource source, float amount) {
         boolean hurt = super.hurt(source, amount);
+        if (hurt && !this.level().isClientSide() && source.getEntity() instanceof LivingEntity kicker) {
+            this.kickBackFor(kicker);
+        }
         if (hurt && !this.level().isClientSide() && !this.isTame() && !this.fightsBack() && source.getEntity() instanceof LivingEntity attacker) {
             for (HerbivoreDinosaur other : this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(16.0D),
                     e -> e != this && !e.isTame() && e.getLastHurtByMob() == null)) {

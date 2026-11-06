@@ -128,7 +128,29 @@
    "animation.spinosaurus.tame",
    "animation.spinosaurus.fish",
    "animation.spinosaurus.display",
-   "animation.spinosaurus.swipe"
+   "animation.spinosaurus.swipe",
+   "animation.spinosaurus.sail_display",
+   "animation.spinosaurus.claw_swipe",
+   "animation.spinosaurus.guard",
+   "animation.spinosaurus.strafe_left",
+   "animation.spinosaurus.strafe_right",
+   "animation.spinosaurus.turn_left",
+   "animation.spinosaurus.turn_right",
+   "animation.spinosaurus.feint",
+   "animation.spinosaurus.block",
+   "animation.spinosaurus.recoil",
+   "animation.spinosaurus.submit",
+   "animation.spinosaurus.shove",
+   "animation.spinosaurus.bite_low",
+   "animation.spinosaurus.bite_side",
+   "animation.spinosaurus.snort",
+   "animation.spinosaurus.settle",
+   "animation.spinosaurus.scan",
+   "animation.spinosaurus.lie_down",
+   "animation.spinosaurus.get_up",
+   "animation.spinosaurus.fall_asleep",
+   "animation.spinosaurus.idle_tired",
+   "animation.spinosaurus.walk_tired"
   ],
   "render_scale": 0.5,
   "handmade": true
@@ -177,13 +199,13 @@
   "bounds_px": [
    [
     -8.0,
-    0.0,
-    -43.9
+    2.2343238370581275e-15,
+    -43.92209342790108
    ],
    [
     8.0,
-    33.0,
-    56.0
+    33.03753514432832,
+    55.96893871844426
    ]
   ],
   "animations": [
@@ -214,7 +236,21 @@
    "animation.velociraptor.knocked_out",
    "animation.velociraptor.wake",
    "animation.velociraptor.beg",
-   "animation.velociraptor.tame"
+   "animation.velociraptor.tame",
+   "animation.velociraptor.leap_back",
+   "animation.velociraptor.guard",
+   "animation.velociraptor.strafe_left",
+   "animation.velociraptor.strafe_right",
+   "animation.velociraptor.turn_left",
+   "animation.velociraptor.turn_right",
+   "animation.velociraptor.feint",
+   "animation.velociraptor.block",
+   "animation.velociraptor.recoil",
+   "animation.velociraptor.submit",
+   "animation.velociraptor.lie_down",
+   "animation.velociraptor.get_up",
+   "animation.velociraptor.idle_tired",
+   "animation.velociraptor.walk_tired"
   ],
   "handmade": true
  },
@@ -261,13 +297,13 @@
   "bounds_px": [
    [
     -22.80459205743675,
-    -0.05000424785577757,
+    -0.050004247855781225,
     -120.13818699823938
    ],
    [
     22.80459205743675,
     66.74764570770768,
-    98.3139243661144
+    98.31392436611442
    ]
   ],
   "animations": [
@@ -295,7 +331,22 @@
    "animation.triceratops.knocked_out",
    "animation.triceratops.wake",
    "animation.triceratops.beg",
-   "animation.triceratops.tame"
+   "animation.triceratops.tame",
+   "animation.triceratops.horn_lock_start",
+   "animation.triceratops.horn_lock_break",
+   "animation.triceratops.guard",
+   "animation.triceratops.strafe_left",
+   "animation.triceratops.strafe_right",
+   "animation.triceratops.turn_left",
+   "animation.triceratops.turn_right",
+   "animation.triceratops.feint",
+   "animation.triceratops.block",
+   "animation.triceratops.recoil",
+   "animation.triceratops.submit",
+   "animation.triceratops.lie_down",
+   "animation.triceratops.get_up",
+   "animation.triceratops.idle_tired",
+   "animation.triceratops.walk_tired"
   ],
   "render_scale": 0.6667,
   "handmade": true
@@ -343,14 +394,14 @@
   ],
   "bounds_px": [
    [
-    -27.07722518894557,
-    7.771561172376096e-16,
+    -27.077225188945565,
+    -4.711508960753008e-15,
     -86.77808204375528
    ],
    [
-    27.07722518894557,
-    43.144169638564456,
-    84.97174432188433
+    27.077225188945565,
+    43.14416963856445,
+    84.97174432188432
    ]
   ],
   "animations": [
@@ -377,7 +428,21 @@
    "animation.ankylosaurus.knocked_out",
    "animation.ankylosaurus.wake",
    "animation.ankylosaurus.beg",
-   "animation.ankylosaurus.tame"
+   "animation.ankylosaurus.tame",
+   "animation.ankylosaurus.club_duel",
+   "animation.ankylosaurus.guard",
+   "animation.ankylosaurus.strafe_left",
+   "animation.ankylosaurus.strafe_right",
+   "animation.ankylosaurus.turn_left",
+   "animation.ankylosaurus.turn_right",
+   "animation.ankylosaurus.feint",
+   "animation.ankylosaurus.block",
+   "animation.ankylosaurus.recoil",
+   "animation.ankylosaurus.submit",
+   "animation.ankylosaurus.lie_down",
+   "animation.ankylosaurus.get_up",
+   "animation.ankylosaurus.idle_tired",
+   "animation.ankylosaurus.walk_tired"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -426,13 +491,13 @@
   "bounds_px": [
    [
     -14.807620729565052,
-    6.609296443471635e-16,
-    -113.3891707359314
+    1.9918962312903687e-15,
+    -113.38917073593142
    ],
    [
     14.807620729565052,
     70.58498813035112,
-    125.55125252176919
+    125.5512525217692
    ]
   ],
   "animations": [
@@ -459,7 +524,15 @@
    "animation.parasaurolophus.knocked_out",
    "animation.parasaurolophus.wake",
    "animation.parasaurolophus.beg",
-   "animation.parasaurolophus.tame"
+   "animation.parasaurolophus.tame",
+   "animation.parasaurolophus.turn_left",
+   "animation.parasaurolophus.turn_right",
+   "animation.parasaurolophus.lie_down",
+   "animation.parasaurolophus.get_up",
+   "animation.parasaurolophus.idle_tired",
+   "animation.parasaurolophus.walk_tired",
+   "animation.parasaurolophus.kick_back",
+   "animation.parasaurolophus.body_shove"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -473,13 +546,13 @@
   ],
   "bounds_px": [
    [
-    -14.344555005215,
-    -0.049999998148907654,
-    -69.1761166288786
+    -14.344568057725661,
+    -0.04905263121367794,
+    -69.17611662887859
    ],
    [
-    14.344555005215,
-    64.78586081557387,
+    14.344568057725661,
+    64.78586081557386,
     67.78918869039524
    ]
   ],
@@ -506,7 +579,20 @@
    "animation.pachycephalosaurus.wake",
    "animation.pachycephalosaurus.beg",
    "animation.pachycephalosaurus.tame",
-   "animation.pachycephalosaurus.hop_play"
+   "animation.pachycephalosaurus.hop_play",
+   "animation.pachycephalosaurus.turn_left",
+   "animation.pachycephalosaurus.turn_right",
+   "animation.pachycephalosaurus.lie_down",
+   "animation.pachycephalosaurus.get_up",
+   "animation.pachycephalosaurus.idle_tired",
+   "animation.pachycephalosaurus.walk_tired",
+   "animation.pachycephalosaurus.guard",
+   "animation.pachycephalosaurus.strafe_left",
+   "animation.pachycephalosaurus.strafe_right",
+   "animation.pachycephalosaurus.feint",
+   "animation.pachycephalosaurus.block",
+   "animation.pachycephalosaurus.recoil",
+   "animation.pachycephalosaurus.submit"
   ],
   "render_scale": 0.5,
   "handmade": true
@@ -520,14 +606,14 @@
   ],
   "bounds_px": [
    [
-    -11.305126058446351,
-    -0.04939943847776833,
+    -11.30512605844635,
+    -0.04939943847776585,
     -75.71414455522691
    ],
    [
-    11.305126058446351,
-    85.55594120709188,
-    113.80594798810385
+    11.30512605844635,
+    85.55594120709186,
+    113.80594798810384
    ]
   ],
   "animations": [
@@ -554,7 +640,14 @@
    "animation.gallimimus.knocked_out",
    "animation.gallimimus.wake",
    "animation.gallimimus.beg",
-   "animation.gallimimus.tame"
+   "animation.gallimimus.tame",
+   "animation.gallimimus.turn_left",
+   "animation.gallimimus.turn_right",
+   "animation.gallimimus.lie_down",
+   "animation.gallimimus.get_up",
+   "animation.gallimimus.idle_tired",
+   "animation.gallimimus.walk_tired",
+   "animation.gallimimus.kick_back"
   ],
   "render_scale": 0.5,
   "handmade": true
@@ -569,19 +662,22 @@
   "bounds_px": [
    [
     -109.05,
-    -2.612844089861316e-15,
+    -2.0539125955565396e-15,
     -81.94772216766965
    ],
    [
     109.05,
-    54.305494001230045,
+    54.30549400123005,
     20.0
    ]
   ],
   "animations": [
    "animation.pteranodon.idle",
+   "animation.pteranodon.idle_tired",
    "animation.pteranodon.walk",
    "animation.pteranodon.run",
+   "animation.pteranodon.turn_left",
+   "animation.pteranodon.turn_right",
    "animation.pteranodon.fly",
    "animation.pteranodon.glide",
    "animation.pteranodon.bank_left",
@@ -594,8 +690,10 @@
    "animation.pteranodon.water_takeoff",
    "animation.pteranodon.eat",
    "animation.pteranodon.attack",
+   "animation.pteranodon.jab",
    "animation.pteranodon.call",
    "animation.pteranodon.display",
+   "animation.pteranodon.crest_display",
    "animation.pteranodon.preen",
    "animation.pteranodon.sun",
    "animation.pteranodon.shake",
@@ -619,7 +717,7 @@
   "bounds_px": [
    [
     -40.35220748835431,
-    -15.550988565627236,
+    -15.550988565627222,
     -142.0
    ],
    [
@@ -653,7 +751,10 @@
    "animation.mosasaurus.knocked_out",
    "animation.mosasaurus.wake",
    "animation.mosasaurus.beg",
-   "animation.mosasaurus.tame"
+   "animation.mosasaurus.tame",
+   "animation.mosasaurus.ram_bite",
+   "animation.mosasaurus.turn_left",
+   "animation.mosasaurus.turn_right"
   ],
   "render_scale": 0.706,
   "handmade": true
@@ -732,6 +833,10 @@
    "animation.quetzalcoatlus.drink",
    "animation.quetzalcoatlus.call",
    "animation.quetzalcoatlus.display",
+   "animation.quetzalcoatlus.jab",
+   "animation.quetzalcoatlus.turn_left",
+   "animation.quetzalcoatlus.turn_right",
+   "animation.quetzalcoatlus.idle_tired",
    "animation.quetzalcoatlus.preen",
    "animation.quetzalcoatlus.sun",
    "animation.quetzalcoatlus.shake",
@@ -1034,7 +1139,18 @@
    "animation.deinosuchus.knocked_out",
    "animation.deinosuchus.wake",
    "animation.deinosuchus.beg",
-   "animation.deinosuchus.tame"
+   "animation.deinosuchus.tame",
+   "animation.deinosuchus.gape_threat",
+   "animation.deinosuchus.guard",
+   "animation.deinosuchus.feint",
+   "animation.deinosuchus.turn_left",
+   "animation.deinosuchus.turn_right",
+   "animation.deinosuchus.recoil",
+   "animation.deinosuchus.submit",
+   "animation.deinosuchus.lie_down",
+   "animation.deinosuchus.get_up",
+   "animation.deinosuchus.idle_tired",
+   "animation.deinosuchus.walk_tired"
   ],
   "render_scale": 0.8,
   "handmade": true
@@ -1115,7 +1231,15 @@
    "animation.edmontosaurus.knocked_out",
    "animation.edmontosaurus.wake",
    "animation.edmontosaurus.beg",
-   "animation.edmontosaurus.tame"
+   "animation.edmontosaurus.tame",
+   "animation.edmontosaurus.turn_left",
+   "animation.edmontosaurus.turn_right",
+   "animation.edmontosaurus.lie_down",
+   "animation.edmontosaurus.get_up",
+   "animation.edmontosaurus.idle_tired",
+   "animation.edmontosaurus.walk_tired",
+   "animation.edmontosaurus.kick_back",
+   "animation.edmontosaurus.body_shove"
   ],
   "render_scale": 0.8,
   "handmade": true
@@ -1199,7 +1323,21 @@
    "animation.styracosaurus.knocked_out",
    "animation.styracosaurus.wake",
    "animation.styracosaurus.beg",
-   "animation.styracosaurus.tame"
+   "animation.styracosaurus.tame",
+   "animation.styracosaurus.nose_jab",
+   "animation.styracosaurus.guard",
+   "animation.styracosaurus.strafe_left",
+   "animation.styracosaurus.strafe_right",
+   "animation.styracosaurus.turn_left",
+   "animation.styracosaurus.turn_right",
+   "animation.styracosaurus.feint",
+   "animation.styracosaurus.block",
+   "animation.styracosaurus.recoil",
+   "animation.styracosaurus.submit",
+   "animation.styracosaurus.lie_down",
+   "animation.styracosaurus.get_up",
+   "animation.styracosaurus.idle_tired",
+   "animation.styracosaurus.walk_tired"
   ],
   "render_scale": 0.5,
   "handmade": true
@@ -1248,12 +1386,12 @@
   "bounds_px": [
    [
     -11.05,
-    -0.011168682546414385,
-    -50.99174806568987
+    -0.011168682546413067,
+    -50.99174806568988
    ],
    [
     11.05,
-    36.163819424262,
+    36.163819424262016,
     44.01317848670792
    ]
   ],
@@ -1283,7 +1421,21 @@
    "animation.protoceratops.knocked_out",
    "animation.protoceratops.wake",
    "animation.protoceratops.beg",
-   "animation.protoceratops.tame"
+   "animation.protoceratops.tame",
+   "animation.protoceratops.frill_shove",
+   "animation.protoceratops.guard",
+   "animation.protoceratops.strafe_left",
+   "animation.protoceratops.strafe_right",
+   "animation.protoceratops.turn_left",
+   "animation.protoceratops.turn_right",
+   "animation.protoceratops.feint",
+   "animation.protoceratops.block",
+   "animation.protoceratops.recoil",
+   "animation.protoceratops.submit",
+   "animation.protoceratops.lie_down",
+   "animation.protoceratops.get_up",
+   "animation.protoceratops.idle_tired",
+   "animation.protoceratops.walk_tired"
   ],
   "render_scale": 0.3333,
   "handmade": true
@@ -1441,7 +1593,21 @@
    "animation.therizinosaurus.wake",
    "animation.therizinosaurus.beg",
    "animation.therizinosaurus.tame",
-   "animation.therizinosaurus.baby_browse"
+   "animation.therizinosaurus.baby_browse",
+   "animation.therizinosaurus.claw_slash",
+   "animation.therizinosaurus.guard",
+   "animation.therizinosaurus.strafe_left",
+   "animation.therizinosaurus.strafe_right",
+   "animation.therizinosaurus.turn_left",
+   "animation.therizinosaurus.turn_right",
+   "animation.therizinosaurus.feint",
+   "animation.therizinosaurus.block",
+   "animation.therizinosaurus.recoil",
+   "animation.therizinosaurus.submit",
+   "animation.therizinosaurus.lie_down",
+   "animation.therizinosaurus.get_up",
+   "animation.therizinosaurus.idle_tired",
+   "animation.therizinosaurus.walk_tired"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -1663,13 +1829,13 @@
   "bounds_px": [
    [
     -20.595834921789614,
-    -0.08460950808891746,
+    -0.0926940781946343,
     -146.51704970338687
    ],
    [
     20.595834921789614,
     94.33543885679848,
-    153.93918929674962
+    153.9391892967496
    ]
   ],
   "animations": [
@@ -1707,7 +1873,21 @@
    "animation.giganotosaurus.knocked_out",
    "animation.giganotosaurus.wake",
    "animation.giganotosaurus.beg",
-   "animation.giganotosaurus.tame"
+   "animation.giganotosaurus.tame",
+   "animation.giganotosaurus.guard",
+   "animation.giganotosaurus.strafe_left",
+   "animation.giganotosaurus.strafe_right",
+   "animation.giganotosaurus.turn_left",
+   "animation.giganotosaurus.turn_right",
+   "animation.giganotosaurus.feint",
+   "animation.giganotosaurus.block",
+   "animation.giganotosaurus.recoil",
+   "animation.giganotosaurus.submit",
+   "animation.giganotosaurus.lie_down",
+   "animation.giganotosaurus.get_up",
+   "animation.giganotosaurus.idle_tired",
+   "animation.giganotosaurus.walk_tired",
+   "animation.giganotosaurus.grab_shake"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -1755,14 +1935,14 @@
   ],
   "bounds_px": [
    [
-    -17.393961060779965,
-    -0.09399572055405217,
-    -96.67214828516262
+    -17.39396106077996,
+    -0.09399572055404966,
+    -96.6721482851626
    ],
    [
-    17.393961060779965,
-    73.75270053737141,
-    97.9879957780493
+    17.39396106077996,
+    73.75270053737142,
+    97.98799577804927
    ]
   ],
   "animations": [
@@ -1799,7 +1979,22 @@
    "animation.carnotaurus.knocked_out",
    "animation.carnotaurus.wake",
    "animation.carnotaurus.beg",
-   "animation.carnotaurus.tame"
+   "animation.carnotaurus.tame",
+   "animation.carnotaurus.guard",
+   "animation.carnotaurus.strafe_left",
+   "animation.carnotaurus.strafe_right",
+   "animation.carnotaurus.turn_left",
+   "animation.carnotaurus.turn_right",
+   "animation.carnotaurus.feint",
+   "animation.carnotaurus.block",
+   "animation.carnotaurus.recoil",
+   "animation.carnotaurus.submit",
+   "animation.carnotaurus.lie_down",
+   "animation.carnotaurus.get_up",
+   "animation.carnotaurus.idle_tired",
+   "animation.carnotaurus.walk_tired",
+   "animation.carnotaurus.ram",
+   "animation.carnotaurus.head_clash"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -1991,7 +2186,20 @@
    "animation.dakotaraptor.mantle",
    "animation.dakotaraptor.wing_flash",
    "animation.dakotaraptor.sun",
-   "animation.dakotaraptor.preen"
+   "animation.dakotaraptor.preen",
+   "animation.dakotaraptor.guard",
+   "animation.dakotaraptor.strafe_left",
+   "animation.dakotaraptor.strafe_right",
+   "animation.dakotaraptor.turn_left",
+   "animation.dakotaraptor.turn_right",
+   "animation.dakotaraptor.feint",
+   "animation.dakotaraptor.block",
+   "animation.dakotaraptor.recoil",
+   "animation.dakotaraptor.submit",
+   "animation.dakotaraptor.lie_down",
+   "animation.dakotaraptor.get_up",
+   "animation.dakotaraptor.idle_tired",
+   "animation.dakotaraptor.walk_tired"
   ],
   "render_scale": 0.8,
   "handmade": true

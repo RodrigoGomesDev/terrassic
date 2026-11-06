@@ -77,7 +77,7 @@ def swim(t):
     for i, b in enumerate(TAILS):
         add(p, b, rot=(0, -(4 + 3.2 * i) * math.sin(w - 0.7 * (i + 1)), 0))
     for s, o in SIDES:
-        f = w * 0.5 + o * 2 * math.pi
+        f = w + o * 2 * math.pi       # one slow kick per stroke (w * 0.5 left the loop open: the legs jumped at the seam)
         add(p, f"thigh_{s}", rot=(-30 + 12 * math.sin(f), 0, 0)); add(p, f"shin_{s}", rot=(-10 - 10 * math.cos(f), 0, 0))
         add(p, f"foot_{s}", rot=(40 + 10 * math.cos(f + 0.6), 0, 0)); add(p, f"toes_{s}", rot=(-30, 0, 0))
     T.arms(p, -30, 30)
@@ -90,3 +90,41 @@ ANIMS["fish"] = (fish, 3.8, False, "Comer", "pescando na beira do rio ou no raso
 ANIMS["display"] = (display, 3.2, False, "Voz", "mostra a vela a um rival ou a quem chega perto, antes de atacar")
 ANIMS["swipe"] = (swipe, 1.3, False, "Combate", "golpe com a garra do polegar, alternando com a mordida (acerta aos 0,55 s)")
 STANDING = theropod.STANDING + ("fish", "display", "swipe")
+
+# 06/11: the fluid set (spinoflow.py, docs/estudos/08 and 10): the same names made fluid, its sail display and gaff
+# hook, and the duel and rest sets of ApexTheropod (so the Spinosaurus is ready when its duel is switched on). The jaw
+# of every new pose is scaled like the template's (T.jaw: the long thin jaws open less).
+import spinoflow as FLOW  # noqa: E402
+for _n in ("idle", "walk", "run", "stalk", "roar", "call", "threat", "attack", "attack_quick", "hurt", "swipe", "display", "fish",
+           "sniff", "look_back", "shake", "yawn", "stretch", "eat", "drink", "tame"):
+    ANIMS[_n] = (T.scaled(getattr(FLOW, _n)),) + ANIMS[_n][1:]
+ANIMS["swipe"] = (T.scaled(FLOW.swipe), 1.3, False, "Combate", "golpe com a garra do polegar esquerdo, alternando com a mordida (acerta aos 0,55 s)")
+ANIMS["attack"] = (T.scaled(FLOW.attack), 2.0, False, "Combate", "bote de crocodilo: a cabeça vem de lado, fecha aos 0,55 s e sacode")
+ANIMS["attack_quick"] = (T.scaled(FLOW.attack_quick), 0.9, False, "Combate", "bote de garça: o focinho dispara reto e fecha aos 0,3 s")
+for _n, _when, _cat in (
+        ("sail_display", "vira de lado para o rival em dois passos, arqueia o dorso e mostra a vela inteira, e volta", "Voz"),
+        ("claw_swipe", "gancho duplo: ergue os dois braços e crava as garras dos polegares puxando para o peito (acerta aos 0,62 s)", "Combate"),
+        ("guard", "em guarda: de lado para o rival, braços erguidos com as garras armadas, focinho apontado", "Duelo"),
+        ("strafe_left", "passos pesados de lado para a esquerda, a vela virada para o rival", "Duelo"),
+        ("strafe_right", "passos pesados de lado para a direita", "Duelo"),
+        ("turn_left", "girando no lugar para a esquerda: o focinho entra na curva, a vela balança atrasada", "Movimento"),
+        ("turn_right", "girando no lugar para a direita", "Movimento"),
+        ("feint", "finta: ergue a garra e lança o focinho, mas recolhe os dois", "Duelo"),
+        ("block", "apara a mordida com o antebraço na frente do focinho", "Duelo"),
+        ("recoil", "o bote bateu no braço do outro: o focinho vai de lado, um passo atrás", "Duelo"),
+        ("submit", "perdeu: abaixa, vira a vela para longe, focinho no chão, volta para a água", "Duelo"),
+        ("shove", "pancada de flanco: joga o lado e a vela contra o rival", "Duelo"),
+        ("bite_low", "colherada rente ao chão, como quem tira peixe do raso (fecha aos 0,4 s)", "Combate"),
+        ("bite_side", "varrida de lado com as mandíbulas abertas (fecha aos 0,45 s)", "Combate"),
+        ("snort", "gesto sorteado parado: bufa e sacode o focinho", "Parado"),
+        ("settle", "gesto sorteado parado: troca o peso de pé, a vela balança depois", "Parado"),
+        ("scan", "gesto sorteado parado: ergue o focinho e olha a água de lado a lado", "Parado"),
+        ("lie_down", "deitando (de pé para sentado)", "Descanso"),
+        ("get_up", "levantando (de sentado para de pé)", "Descanso"),
+        ("fall_asleep", "deitando para dormir: boceja e abaixa a cabeça", "Descanso"),
+        ("idle_tired", "cansado: boca aberta como crocodilo, peito arfando", "Parado"),
+        ("walk_tired", "andando cansado depois de uma perseguição", "Movimento")):
+    _len = {"snort": 1.4}.get(_n) or getattr(FLOW, _n.upper().replace("_LEFT", "").replace("_RIGHT", "") + "_T")
+    _loop = _n in ("guard", "strafe_left", "strafe_right", "turn_left", "turn_right", "idle_tired", "walk_tired")
+    ANIMS[_n] = (T.scaled(getattr(FLOW, _n)), _len, _loop, _cat, _when)
+STANDING = STANDING + ("guard", "block", "feint", "claw_swipe", "bite_low", "bite_side", "snort", "scan", "idle_tired")

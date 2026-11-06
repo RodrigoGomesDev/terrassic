@@ -29,14 +29,17 @@ from sprites import save_png  # noqa: E402
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
-FPS_OF = {"death": 40, "run": 40, "attack": 40, "scissor": 40, "shove": 40, "wake": 40, "wake_sleep": 40}
+FPS_OF = {"death": 40, "run": 40, "attack": 40, "scissor": 40, "shove": 40, "wake": 40, "wake_sleep": 40,
+          "claw_slash": 40, "feint": 40, "block": 40, "recoil": 40}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
-EVERY_FRAME = ("walk", "run", "attack", "scissor", "shove", "death", "wake", "wake_sleep")
+EVERY_FRAME = ("walk", "run", "attack", "scissor", "shove", "death", "wake", "wake_sleep", "claw_slash", "feint", "block", "recoil",
+               "strafe_left", "strafe_right", "turn_left", "turn_right", "walk_tired")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("idle", "sit", "sleep", "knocked_out", "brood")
-LINEAR = ("hurt", "attack", "scissor", "shove", "death", "wake", "wake_sleep")
+LINEAR = ("hurt", "attack", "scissor", "shove", "death", "wake", "wake_sleep", "claw_slash", "block", "recoil")
 # poses that stand on both feet (the off-the-ground check); swim floats by design; in the kick one foot is up
-STANDING = ("idle", "sniff", "look_back", "shake", "stretch", "call", "browse", "claw_display", "rival", "preen", "eat", "drink", "attack", "scissor", "shove", "threat", "hurt", "beg", "tame", "baby_browse")
+STANDING = ("idle", "sniff", "look_back", "shake", "stretch", "call", "browse", "claw_display", "rival", "preen", "eat", "drink", "attack", "scissor", "shove", "threat", "hurt", "beg", "tame", "baby_browse",
+            "claw_slash", "guard", "feint", "block", "idle_tired", "strafe_left", "strafe_right", "turn_left", "turn_right")
 
 
 def main():

@@ -32,6 +32,11 @@ public class Deinocheirus extends HerbivoreDinosaur {
     public static final float HEIGHT = 5.082F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 1.048F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 2.329F;
     private static final Ingredient FOOD = Ingredient.of(Items.COD, Items.SALMON, Items.KELP, Items.MELON_SLICE, Items.SWEET_BERRIES, ModItems.ENCHODUS.get(), ModItems.LEPISOSTEUS.get());
 

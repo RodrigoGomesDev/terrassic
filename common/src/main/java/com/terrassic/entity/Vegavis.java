@@ -31,6 +31,11 @@ public class Vegavis extends FlyingDinosaur {
     public static final float HEIGHT = 0.424F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
     public static final float MODEL_SCALE = 0.349F;
+    @Override
+    public float livelyModelScale() {
+        return MODEL_SCALE;
+    }
+
     public static final float SHADOW = 0.212F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.SWEET_BERRIES, Items.COD, ModItems.ENCHODUS.get());
 

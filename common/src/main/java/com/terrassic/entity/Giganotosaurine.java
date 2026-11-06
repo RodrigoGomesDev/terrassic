@@ -46,6 +46,8 @@ public abstract class Giganotosaurine extends ApexTheropod {
     private static final Strike SLASH = new Strike("slash", 10, 28, false);
     private static final Strike LUNGE = new Strike("lunge", 12, 32, false);
     private static final Strike RIP = new Strike("rip", 9, 44, false);
+    /** Smaller prey: bitten, lifted and shaken like a shark does (gigaflow.py: the jaws shut at 0.45 s). */
+    private static final Strike GRAB_SHAKE = new Strike("grab_shake", 9, 48, false);
     private static final String[] GESTURES = {"sniff", "look_side", "shake", "yawn", "stretch", "jaw_rub"};
     private static final String[] GESTURES_MALE = {"sniff", "look_side", "shake", "yawn", "stretch", "jaw_rub", "crest_show"};
     private RawAnimation backAnim;
@@ -60,7 +62,7 @@ public abstract class Giganotosaurine extends ApexTheropod {
     @Override
     protected String[] extraActions() {
         String[] own = {"roar", "roar_loud", "attack_quick", "stomp", "call", "threat", "drink", "sniff", "shake", "yawn",
-                "stretch", "look_side", "jaw_rub", "crest_show", "eye_aim", "slash", "lunge", "rip"};
+                "stretch", "look_side", "jaw_rub", "crest_show", "eye_aim", "slash", "lunge", "rip", "grab_shake"};
         if (!Alphas.hasAlpha(this.speciesId())) {
             return own;
         }
@@ -159,7 +161,7 @@ public abstract class Giganotosaurine extends ApexTheropod {
         if (target.getBbWidth() >= BIG) {
             return r < 0.4F ? SLASH : (r < 0.7F ? LUNGE : RIP);
         }
-        return r < 0.75F ? SLASH : LUNGE;
+        return r < 0.3F ? GRAB_SHAKE : r < 0.8F ? SLASH : LUNGE;
     }
 
     /** After the cut: two steps back, a look with one eye, a little circling (1.5 - 2.5 s). After the lunge, a step

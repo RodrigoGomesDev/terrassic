@@ -350,3 +350,13 @@ ANIMS = {
     "beg": (beg, 2.2, True, "Domado", "pede comida: vira a cabeça para o dono e abre a boca"),
     "tame": (tame, 2.6, False, "Domado", "deita o pescoço devagar na direção do dono"),
 }
+
+# 06/11/2026: the fluid set (elasflow.py) takes over every name; the originals above stay as the bases it builds on
+import elasflow as FLOW  # noqa: E402
+
+for _n in list(ANIMS):
+    _fn, _L, _loop, _cat, _when = ANIMS[_n]
+    ANIMS[_n] = (getattr(FLOW, _n), _L, _loop, _cat, _when)
+ANIMS["neck_strike"] = (FLOW.neck_strike, FLOW.STRIKE_T, False, "Só dele",
+                        "o bote de pescoço em três tempos: enrola em S, estica da base à ponta (boca fecha em 0,55 s), passa e assenta")
+ANIMS["attack"] = (FLOW.attack, FLOW.STRIKE_T, False, "Combate", "a mordida é o bote de pescoço (boca fecha em 0,55 s)")

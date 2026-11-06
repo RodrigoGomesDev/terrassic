@@ -40,7 +40,7 @@ public abstract class Crocodylian extends PredatorDinosaur {
 
     @Override
     protected String[] extraActions() {
-        return new String[]{"lunge", "death_roll", "tail_sweep", "bask", "bellow", "head_slap", "chirp"};
+        return new String[]{"lunge", "death_roll", "tail_sweep", "bask", "bellow", "head_slap", "chirp", "gape_threat"};
     }
 
     @Override
