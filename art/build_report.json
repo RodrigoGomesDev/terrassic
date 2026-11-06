@@ -674,22 +674,22 @@
   "render_scale": 0.5
  },
  "quetzalcoatlus": {
-  "bones": 30,
+  "bones": 39,
   "cubes": 103,
   "texture": [
    256,
-   256
+   64
   ],
   "bounds_px": [
    [
-    -120.0,
-    1.2966973432311563e-05,
-    -90.10034456384
+    -87.0,
+    -2.4424906541753444e-15,
+    -91.10224186890649
    ],
    [
-    120.0,
-    138.24481959138498,
-    24.0
+    87.0,
+    79.5575880229942,
+    22.999999999999996
    ]
   ],
   "animations": [
@@ -698,15 +698,32 @@
    "animation.quetzalcoatlus.run",
    "animation.quetzalcoatlus.fly",
    "animation.quetzalcoatlus.glide",
-   "animation.quetzalcoatlus.sit",
-   "animation.quetzalcoatlus.attack",
-   "animation.quetzalcoatlus.knocked_out",
-   "animation.quetzalcoatlus.wake",
+   "animation.quetzalcoatlus.bank_left",
+   "animation.quetzalcoatlus.bank_right",
+   "animation.quetzalcoatlus.takeoff",
+   "animation.quetzalcoatlus.land",
+   "animation.quetzalcoatlus.dive",
+   "animation.quetzalcoatlus.scoop",
+   "animation.quetzalcoatlus.swim",
+   "animation.quetzalcoatlus.water_takeoff",
    "animation.quetzalcoatlus.eat",
+   "animation.quetzalcoatlus.attack",
+   "animation.quetzalcoatlus.stalk",
+   "animation.quetzalcoatlus.drink",
+   "animation.quetzalcoatlus.call",
+   "animation.quetzalcoatlus.display",
+   "animation.quetzalcoatlus.preen",
+   "animation.quetzalcoatlus.sun",
+   "animation.quetzalcoatlus.shake",
    "animation.quetzalcoatlus.beg",
-   "animation.quetzalcoatlus.tame"
+   "animation.quetzalcoatlus.sit",
+   "animation.quetzalcoatlus.sleep",
+   "animation.quetzalcoatlus.knocked_out",
+   "animation.quetzalcoatlus.knocked_out_air",
+   "animation.quetzalcoatlus.wake",
+   "animation.quetzalcoatlus.death"
   ],
-  "render_scale": 0.5
+  "handmade": true
  },
  "hatzegopteryx": {
   "bones": 29,
@@ -1036,39 +1053,52 @@
   "render_scale": 0.5
  },
  "edmontosaurus": {
-  "bones": 29,
-  "cubes": 127,
+  "bones": 34,
+  "cubes": 91,
   "texture": [
    256,
-   512
+   256
   ],
   "bounds_px": [
    [
-    -16.0,
-    -0.07160411771162994,
-    -95.48028906429032
+    -15.881810380445724,
+    1.9918962312903687e-15,
+    -116.75355075281469
    ],
    [
-    16.0,
-    62.83595290340539,
-    121.26047979975856
+    15.881810380445724,
+    65.36772713396913,
+    125.66445142510561
    ]
   ],
   "animations": [
    "animation.edmontosaurus.idle",
    "animation.edmontosaurus.walk",
    "animation.edmontosaurus.run",
-   "animation.edmontosaurus.attack",
-   "animation.edmontosaurus.sit",
-   "animation.edmontosaurus.graze",
+   "animation.edmontosaurus.swim",
    "animation.edmontosaurus.call",
+   "animation.edmontosaurus.answer",
+   "animation.edmontosaurus.alarm",
+   "animation.edmontosaurus.peep",
+   "animation.edmontosaurus.vigilant",
+   "animation.edmontosaurus.bellow",
+   "animation.edmontosaurus.browse_high",
+   "animation.edmontosaurus.drink",
+   "animation.edmontosaurus.eat",
+   "animation.edmontosaurus.graze",
+   "animation.edmontosaurus.attack",
+   "animation.edmontosaurus.hurt",
+   "animation.edmontosaurus.death",
+   "animation.edmontosaurus.sit",
+   "animation.edmontosaurus.sleep",
+   "animation.edmontosaurus.wake_sleep",
    "animation.edmontosaurus.knocked_out",
    "animation.edmontosaurus.wake",
-   "animation.edmontosaurus.eat",
    "animation.edmontosaurus.beg",
    "animation.edmontosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.8,
+  "handmade": true
  },
  "corythosaurus": {
   "bones": 28,
@@ -1892,37 +1922,59 @@
   "render_scale": 1.0
  },
  "dakotaraptor": {
-  "bones": 24,
-  "cubes": 44,
+  "bones": 27,
+  "cubes": 81,
   "texture": [
-   128,
-   128
+   256,
+   64
   ],
   "bounds_px": [
    [
-    -5.5,
-    -0.33734242529942415,
-    -33.040493188727666
+    -10.65,
+    -0.04999999999999982,
+    -65.04237333068197
    ],
    [
-    5.5,
-    29.19948902026209,
-    44.00004408120612
+    10.65,
+    49.50809982019711,
+    62.8992433460513
    ]
   ],
   "animations": [
    "animation.dakotaraptor.idle",
+   "animation.dakotaraptor.sniff",
+   "animation.dakotaraptor.look_back",
+   "animation.dakotaraptor.shake",
+   "animation.dakotaraptor.stretch",
+   "animation.dakotaraptor.yawn",
    "animation.dakotaraptor.walk",
    "animation.dakotaraptor.run",
-   "animation.dakotaraptor.sit",
+   "animation.dakotaraptor.stalk",
+   "animation.dakotaraptor.swim",
+   "animation.dakotaraptor.call",
+   "animation.dakotaraptor.threat",
    "animation.dakotaraptor.attack",
-   "animation.dakotaraptor.knocked_out",
-   "animation.dakotaraptor.wake",
+   "animation.dakotaraptor.bite",
+   "animation.dakotaraptor.hurt",
+   "animation.dakotaraptor.death",
    "animation.dakotaraptor.eat",
+   "animation.dakotaraptor.drink",
+   "animation.dakotaraptor.sit",
+   "animation.dakotaraptor.sleep",
+   "animation.dakotaraptor.wake",
+   "animation.dakotaraptor.wake_sleep",
+   "animation.dakotaraptor.knocked_out",
    "animation.dakotaraptor.beg",
-   "animation.dakotaraptor.tame"
+   "animation.dakotaraptor.tame",
+   "animation.dakotaraptor.pounce",
+   "animation.dakotaraptor.pin",
+   "animation.dakotaraptor.mantle",
+   "animation.dakotaraptor.wing_flash",
+   "animation.dakotaraptor.sun",
+   "animation.dakotaraptor.preen"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.8,
+  "handmade": true
  },
  "troodon": {
   "bones": 23,

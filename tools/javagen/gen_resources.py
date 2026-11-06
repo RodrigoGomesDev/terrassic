@@ -24,7 +24,10 @@ from anky_extras import CUSTOM_EGGS as ANKY_EGGS  # noqa: E402  (the Ankylosauru
 from styr_extras import CUSTOM_EGGS as STYR_EGGS  # noqa: E402  (the Styracosaurus' long soft eggs on a heap of reed stalks)
 from deino_extras import CUSTOM_EGGS as DEINO_EGGS  # noqa: E402  (the Deinosuchus' white eggs in a hole in the beach sand)
 from theri_extras import CUSTOM_EGGS as THERI_EGGS  # noqa: E402  (the Therizinosaurus' round eggs under a red clay crust)
-CUSTOM_EGGS = {**THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+from quetz_extras import CUSTOM_EGGS as QUETZ_EGGS  # noqa: E402  (the Quetzalcoatlus' soft eggs half buried in sand)
+from edmo_extras import CUSTOM_EGGS as EDMO_EGGS  # noqa: E402  (the Edmontosaurus' spiral of eggs under fern fronds)
+from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS  # noqa: E402  (the Dakotaraptor's ring of eggs under a log)
+CUSTOM_EGGS = {**DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -110,6 +113,12 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
     # 1.8: the Elasmosaurus' neck saddle: a hide seat behind the neck, a rope loop to hold, two driftwood floats
     # the Therizinosaurus' saddle: a broad hide pad with a high cantle on the sloping back, a teal felt blanket
+    # the Quetzalcoatlus' saddle: the seat between the shoulders, straps round the base of the neck
+    # the Edmontosaurus' traveller's saddle: a deep seat on felt, a hide bedroll behind, water bladders at the sides
+    # the Dakotaraptor's light hunting saddle: a short pad, a low seat with knee rolls, a bone grip
+    "dakotaraptor_saddle": ("Dakotaraptor Hunting Saddle", "Sela de Caça de Dakotaraptor", "Silla de caza de Dakotaraptor", "item/generated"),
+    "edmontosaurus_saddle": ("Edmontosaurus Traveller's Saddle", "Sela de Viagem de Edmontossauro", "Silla de viaje de Edmontosaurus", "item/generated"),
+    "quetzalcoatlus_saddle": ("Quetzalcoatlus Saddle", "Sela de Quetzalcoatlus", "Silla de Quetzalcoatlus", "item/generated"),
     "therizinosaurus_saddle": ("Therizinosaurus Saddle", "Sela de Terizinossauro", "Silla de Therizinosaurus", "item/generated"),
     "elasmosaurus_saddle": ("Elasmosaurus Neck Saddle", "Sela de Pescoço de Elasmossauro", "Silla de cuello de Elasmosaurio", "item/generated"),
     # 1.8: the Styracosaurus' running pad: a thick hide pad with a grip bar in front, rope foot loops, a rush girth
@@ -923,6 +932,15 @@ def main():
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")
     # the Elasmosaurus' neck saddle: its hide on leather, a rope loop (string), two driftwood floats (logs)
     # the Therizinosaurus' saddle: a bone grab bar, its hide on leather, cyan wool for the teal felt blanket
+    # the Quetzalcoatlus' saddle: a stick for the grab bar, its hide on leather, red wool felt, string for the straps
+    # the Edmontosaurus' traveller's saddle: its hide for the bedroll, leather for the seat, blue wool felt, a bucket for the bladder
+    # the Dakotaraptor's hunting saddle: its hide, leather for the seat, grey wool for the pad, a bone for the grip
+    shaped("dakotaraptor_saddle", [" B ", "LHL", " W "], {"H": "terrassic:dakotaraptor_hide", "L": "minecraft:leather",
+           "W": "minecraft:gray_wool", "B": "minecraft:bone"}, "terrassic:dakotaraptor_saddle")
+    shaped("edmontosaurus_saddle", ["HHH", "LWL", " B "], {"H": "terrassic:edmontosaurus_hide", "L": "minecraft:leather",
+           "W": "minecraft:blue_wool", "B": "minecraft:glass_bottle"}, "terrassic:edmontosaurus_saddle")
+    shaped("quetzalcoatlus_saddle", [" S ", "LHL", "TWT"], {"S": "minecraft:stick", "L": "minecraft:leather",
+           "H": "terrassic:quetzalcoatlus_hide", "W": "minecraft:red_wool", "T": "minecraft:string"}, "terrassic:quetzalcoatlus_saddle")
     shaped("therizinosaurus_saddle", ["B  ", "LHL", "WWW"], {"B": "minecraft:bone", "L": "minecraft:leather",
            "H": "terrassic:therizinosaurus_hide", "W": "minecraft:cyan_wool"}, "terrassic:therizinosaurus_saddle")
     shaped("elasmosaurus_saddle", ["SSS", "LHL", "W W"], {"S": "minecraft:string", "L": "minecraft:leather",

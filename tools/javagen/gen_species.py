@@ -19,7 +19,7 @@ import parts as hit_parts  # noqa: E402
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
-    "therizinosaurus",
+    "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -109,7 +109,9 @@ SIZES = {
     "daspletosaurus":     dict(real=9.0,  scale=1.49, w=2.1, h=3.8, baby=0.28, shadow=2.0),
     "albertosaurus":      dict(real=9.5,  scale=1.43, w=1.9, h=3.6, baby=0.28, shadow=1.8),
     "majungasaurus":      dict(real=7.5,  scale=1.26, w=1.6, h=3.0, baby=0.3,  shadow=1.5),
-    "dakotaraptor":       dict(real=5.5,  scale=1.14, w=1.0, h=2.0, baby=0.4,  shadow=0.8),
+    # Dakotaraptor v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 5.5 m (16 / 20 = 0.8): its own
+    # study and rig (page "1.9: estudos..."); the hitbox covers the body, the hit parts the deep head and the tail.
+    "dakotaraptor":       dict(real=5.5,  scale=0.8,  w=1.2, h=2.1, baby=0.3,  shadow=0.9),
     "troodon":            dict(real=2.4,  scale=0.55, w=0.6, h=1.1, baby=0.5,  shadow=0.4),
     "oviraptor":          dict(real=2.0,  scale=0.65, w=0.7, h=1.4, baby=0.5,  shadow=0.45),
     "citipati":           dict(real=3.0,  scale=0.85, w=0.9, h=2.0, baby=0.4,  shadow=0.6),
@@ -145,7 +147,9 @@ SIZES = {
     "maiasaura":          dict(real=9.0,  scale=0.83, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
     # Edmontosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "edmontosaurus":      dict(real=12.0, scale=0.89, w=2.4, h=3.6, baby=0.2,  shadow=2.0),
+    # Edmontosaurus v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 12 m (16 / 20 = 0.8), its own
+    # study and rig (page "1.9: estudos..."); the hitbox covers the body, the hit parts the long head and the tail.
+    "edmontosaurus":      dict(real=12.0, scale=0.8, w=2.4, h=3.2, baby=0.2,  shadow=2.0),
     # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
     # Corythosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "corythosaurus":      dict(real=9.0,  scale=0.83, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
@@ -156,7 +160,10 @@ SIZES = {
     # Azhdarchids: "real" is the wingspan. Quetzalcoatlus northropi 10-11 m (Witton & Habib 2010; Andres & Langston
     # 2021), standing as tall as a giraffe; Hatzegopteryx thambema 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017).
     # Quetzalcoatlus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "quetzalcoatlus":     dict(real=11.0, scale=0.73, w=2.5, h=5.0, baby=0.25, shadow=2.0),
+    # Quetzalcoatlus v1 (06/11/2026, the 1.9) is hand-made at 16 px/m and shown at its real 10.9 m of wingspan (scale
+    # 1.0), its own study and rig (page "1.9: estudos..."); the hitbox covers the body standing on all fours, the hit
+    # parts the long neck and the head up at ~5 m.
+    "quetzalcoatlus":     dict(real=11.0, scale=1.0, w=2.5, h=3.6, baby=0.25, shadow=2.0),
     # Hatzegopteryx v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "hatzegopteryx":      dict(real=12.0, scale=0.76, w=2.5, h=4.6, baby=0.25, shadow=2.1),
     # Ichthyornis dispar: a tern-sized toothed seabird, wingspan ~60 cm (Clarke 2004; Field et al. 2018). Modelled at 4x.
@@ -548,9 +555,9 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=50, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=0.6, ARMOR=2, FOLLOW_RANGE=28),
       food="Items.CHICKEN, Items.RABBIT, Items.MUTTON, Items.BEEF, Items.PORKCHOP, ModItems.RAW_DINO_MEAT.get()",
       sounds=("FOX_SCREECH", "FOX_HURT", "FOX_DEATH", 1.0, 0.7, 200), step=("WOLF_STEP", 0.5, 0.9),
-      xp=18, step_height=1.1, head=(45, 35), run=0.02, rideable=True, jump=1.0, ride_offset=1.55, ride_speed=1.35,
+      xp=18, step_height=1.1, head=(45, 35), run=0.02, rideable=True, jump=1.0, ride_offset=2.31, ride_forward=0.72, ride_speed=1.35,
       prey="e.getBbWidth() < 1.6F && !(e instanceof Dakotaraptor) && !(e instanceof Velociraptor) && !e.isBaby()",
-      pack=True, leap=True, prey_interval=100),
+      pack=True, prey_interval=100, rig="Eudromaeosaur", saddle="DAKOTARAPTOR_SADDLE"),
  dict(id="troodon", cls="Troodon", base="PredatorDinosaur",
       doc="Troodon formosus - 2.4 m gracile troodontid with the biggest eyes of any dinosaur for its size: a nocturnal hunter of small prey that sleeps through the day and wakes at dusk. Avoids the big predators. Only tameable from a stolen wild egg until the knockout (v0.7); a tame one is the night guard: it attacks hostile mobs around it after dark and its owner nearby sees in the dark while it watches.",
       attrs=dict(MAX_HEALTH=20, MOVEMENT_SPEED=0.33, ATTACK_DAMAGE=4, FOLLOW_RANGE=28),
@@ -650,7 +657,8 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),
       food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.5, 1.8, 280), xp=14,
-      rideable=True, jump=0.5, ride_offset=3.1, ride_forward=0.9, ride_speed=1.0, call=True),
+      rideable=True, jump=0.5, ride_offset=3.91, ride_forward=1.87, ride_speed=1.0, call=True,
+      saddle="EDMONTOSAURUS_SADDLE", rig="Saurolophine"),
  dict(id="corythosaurus", cls="Corythosaurus", base="HerbivoreDinosaur",
       doc="Corythosaurus casuarius - 9 m helmet-crested duckbill of the wooded floodplains. Its deep call calms every herbivore around it (they stop panicking and heal a little). Tamed with plants; rideable.",
       attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
@@ -670,8 +678,9 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.3, FLYING_SPEED=0.7, ATTACK_DAMAGE=9, ARMOR=2, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=32),
       food="Items.CHICKEN, Items.RABBIT, Items.PORKCHOP, Items.MUTTON, Items.BEEF, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("PARROT_AMBIENT", "PARROT_HURT", "PARROT_DEATH", 0.6, 1.8, 300), xp=28, run=0.04,
-      rideable=True, ride_offset=4.5, ride_forward=0.0, ride_speed=0.9, egg_only=True,
-      prey="e.getBbWidth() < 1.0F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=140),
+      rideable=True, ride_offset=2.93, ride_forward=0.27, ride_speed=0.9, egg_only=True,
+      prey="e.getBbWidth() < 1.0F && !(e instanceof FlyingDinosaur) && !e.isBaby()", prey_interval=140,
+      saddle="QUETZALCOATLUS_SADDLE", rig="Azhdarchid"),
  dict(id="hatzegopteryx", cls="Hatzegopteryx", base="FlyingDinosaur",
       doc="Hatzegopteryx thambema - robust azhdarchid from Hateg Island with a very wide skull and a short, massive neck; the island's top predator, taking prey the size of a horse. Egg-tamed for now (knockout taming comes in v0.7); a heavy combat flyer.",
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.28, FLYING_SPEED=0.62, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.0, ARMOR=3, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=32),
@@ -862,7 +871,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1107,7 +1116,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

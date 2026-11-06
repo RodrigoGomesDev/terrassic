@@ -288,7 +288,7 @@ public abstract class Pterosaur extends FlyingDinosaur {
         this.drying = false;
         int roll = this.random.nextInt(6);
         if (roll == 0 && !this.isFemale() && this.level().isDay() && !this.level().getEntitiesOfClass(Pterosaur.class,
-                this.getBoundingBox().inflate(8.0D), e -> e.getType() == this.getType() && e.isFemale() && !e.isBaby()).isEmpty()) {
+                this.getBoundingBox().inflate(Math.max(8.0D, this.getBbWidth() * 5.0D)), e -> e.getType() == this.getType() && e.isFemale() && !e.isBaby()).isEmpty()) {
             triggerAnim(ACTION_CONTROLLER, "display");
         } else if (roll == 1 && sunny) {
             triggerAnim(ACTION_CONTROLLER, "sun");

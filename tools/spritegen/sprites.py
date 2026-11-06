@@ -983,7 +983,10 @@ def egg_blocks():
     from styr_extras import CUSTOM_EGGS as STYR_EGGS
     from deino_extras import CUSTOM_EGGS as DEINO_EGGS
     from theri_extras import CUSTOM_EGGS as THERI_EGGS
-    CUSTOM_EGGS = {**THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+    from quetz_extras import CUSTOM_EGGS as QUETZ_EGGS
+    from edmo_extras import CUSTOM_EGGS as EDMO_EGGS
+    from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS
+    CUSTOM_EGGS = {**DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1529,6 +1532,12 @@ if __name__ == "__main__":
     deino_extras.main()   # the Deinosuchus' hard white eggs in a hole dug in the beach sand
     import theri_extras
     theri_extras.main()   # the Therizinosaurus' round eggs buried under a crust of red clay, and its saddle
+    import quetz_extras
+    quetz_extras.main()   # the Quetzalcoatlus' soft eggs half buried in margin sand, and its saddle
+    import edmo_extras
+    edmo_extras.main()    # the Edmontosaurus' spiral of eggs under a heap of fern fronds, and its traveller's saddle
+    import dakota_extras
+    dakota_extras.main()  # the Dakotaraptor's ring of blue-green elongated eggs under a fallen log, and its saddle
     import styr_extras
     styr_extras.main()    # the Styracosaurus' long soft eggs on a heap of reed stalks, and its running pad
     import mosa_extras

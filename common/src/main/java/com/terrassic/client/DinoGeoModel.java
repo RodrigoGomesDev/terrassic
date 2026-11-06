@@ -76,6 +76,8 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("adult_horns", baby);
         hide("young_horns", !baby);
         // the Styracosaurus' crown: a calf's frill has small points that later grow into the spikes (1.8)
+        // the Edmontosaurus' fleshy comb: the grown male's (under male_display, already hidden on females)
+        hide("adult_comb", baby);
         hide("adult_frill", baby);
         hide("young_frill", !baby);
     }

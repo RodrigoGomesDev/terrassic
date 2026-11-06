@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "HHH",
+    "LWL",
+    " B "
+  ],
+  "key": {
+    "H": {
+      "item": "terrassic:edmontosaurus_hide"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "W": {
+      "item": "minecraft:blue_wool"
+    },
+    "B": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "terrassic:edmontosaurus_saddle",
+    "count": 1
+  }
+}

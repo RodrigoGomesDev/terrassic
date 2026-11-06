@@ -78,6 +78,16 @@ uma cor livre quando for refeita.
   com gola ferrugem, ardósia índigo com gola branca, areia com rosetas): "destoando demais dos dinos, siga algo mais
   neutro". Os marrons neutros colidem quase todos (Protoceratops 8,4 a 10,0; Pteranodon 6,9 a 9,8); o oliva-cáqui é o
   neutro que sobra livre.
+- Quetzalcoatlus (1.9, 06/11/2026): "cegonha" — corpo cinza-claro quase branco, membrana das asas ardósia bem escura,
+  bico claro de ponta escura e, no macho, a crista e a base do bico em ocre-ferrugem apagado. O cinza-cegonha do estudo
+  (corpo cinza-médio, asas ardósia médias) deu 7,7 do Giganotosaurus e 9,5 do Pteranodon depois do modelo pronto;
+  clarear o corpo e escurecer a membrana levou a 10,9 (Pteranodon) e 11,5 (Giganotosaurus). Testados e descartados:
+  cinza-azulado (7,1 do Giganotosaurus), cinza quente (8,5).
+- Edmontosaurus (1.9, 06/11/2026): "areia quente" com selas largas e suaves marrom-escuras no dorso, crista de carne
+  ferrugem no macho; nenhum refeito abaixo de 10 (Therizinosaurus a 10,0).
+- Dakotaraptor (1.9, 06/11/2026): castanho escuro no dorso, flancos mais quentes, garganta e barriga cinza-cinza (não
+  creme: o creme era o do Velociraptor, que ficava a 7,7), penas das asas e da cauda barradas com pontas claras, faixa
+  escura pelo olho no macho; refeito mais perto o Velociraptor a 10,8.
 - O colourcheck compara só os machos. No Parasaurolophus as duas cores foram medidas também contra as fêmeas dos
   refeitos; vale fazer o mesmo nos próximos (a fêmea do Pachycephalosaurus quase pegou o macho ruivo).
 - Uns 45 dos 59 bichos do mod estão na faixa marrom, bege e oliva. Cada um que for refeito escolhe uma cor livre

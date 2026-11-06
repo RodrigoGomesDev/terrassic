@@ -2,104 +2,271 @@
   "parent": "block/block",
   "textures": {
     "egg": "terrassic:block/edmontosaurus_egg_0",
-    "particle": "terrassic:block/edmontosaurus_egg_0"
+    "nest": "terrassic:block/edmontosaurus_nest",
+    "particle": "terrassic:block/edmontosaurus_nest"
   },
   "elements": [
     {
       "from": [
-        4,
+        0.5,
         0,
-        4
+        0.5
+      ],
+      "to": [
+        15.5,
+        0.6,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.5,
+            15.4,
+            15.5,
+            16
+          ],
+          "texture": "#nest"
+        },
+        "south": {
+          "uv": [
+            0.5,
+            15.4,
+            15.5,
+            16
+          ],
+          "texture": "#nest"
+        },
+        "east": {
+          "uv": [
+            0.5,
+            15.4,
+            15.5,
+            16
+          ],
+          "texture": "#nest"
+        },
+        "west": {
+          "uv": [
+            0.5,
+            15.4,
+            15.5,
+            16
+          ],
+          "texture": "#nest"
+        },
+        "up": {
+          "uv": [
+            0.5,
+            0.5,
+            15.5,
+            15.5
+          ],
+          "texture": "#nest"
+        },
+        "down": {
+          "uv": [
+            0.5,
+            0.5,
+            15.5,
+            15.5
+          ],
+          "texture": "#nest"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0.6,
+        3
+      ],
+      "to": [
+        14,
+        2.2,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            13.8,
+            14,
+            15.4
+          ],
+          "texture": "#nest"
+        },
+        "south": {
+          "uv": [
+            2,
+            13.8,
+            14,
+            15.4
+          ],
+          "texture": "#nest"
+        },
+        "east": {
+          "uv": [
+            3,
+            13.8,
+            13,
+            15.4
+          ],
+          "texture": "#nest"
+        },
+        "west": {
+          "uv": [
+            3,
+            13.8,
+            13,
+            15.4
+          ],
+          "texture": "#nest"
+        },
+        "up": {
+          "uv": [
+            2,
+            3,
+            14,
+            13
+          ],
+          "texture": "#nest"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2.2,
+        2
       ],
       "to": [
         12,
-        9,
+        3.4,
         12
       ],
       "faces": {
         "north": {
-          "texture": "#egg"
+          "uv": [
+            4,
+            12.6,
+            13,
+            13.8
+          ],
+          "texture": "#nest"
         },
         "south": {
-          "texture": "#egg"
+          "uv": [
+            3,
+            12.6,
+            12,
+            13.8
+          ],
+          "texture": "#nest"
         },
         "east": {
-          "texture": "#egg"
+          "uv": [
+            4,
+            12.6,
+            14,
+            13.8
+          ],
+          "texture": "#nest"
         },
         "west": {
-          "texture": "#egg"
+          "uv": [
+            2,
+            12.6,
+            12,
+            13.8
+          ],
+          "texture": "#nest"
         },
         "up": {
-          "texture": "#egg"
-        },
-        "down": {
-          "texture": "#egg",
-          "cullface": "down"
+          "uv": [
+            3,
+            2,
+            12,
+            12
+          ],
+          "texture": "#nest"
         }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          1,
+          8
+        ],
+        "axis": "y",
+        "angle": 22.5
       }
     },
     {
       "from": [
         5,
-        9,
+        3.4,
         5
       ],
       "to": [
         11,
-        12,
+        4.4,
         11
       ],
       "faces": {
         "north": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            11.6,
+            11,
+            12.6
+          ],
+          "texture": "#nest"
         },
         "south": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            11.6,
+            11,
+            12.6
+          ],
+          "texture": "#nest"
         },
         "east": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            11.6,
+            11,
+            12.6
+          ],
+          "texture": "#nest"
         },
         "west": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            11.6,
+            11,
+            12.6
+          ],
+          "texture": "#nest"
         },
         "up": {
-          "texture": "#egg"
-        },
-        "down": {
-          "texture": "#egg"
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#nest"
         }
-      }
-    },
-    {
-      "from": [
-        6,
-        12,
-        6
-      ],
-      "to": [
-        10,
-        13,
-        10
-      ],
-      "faces": {
-        "north": {
-          "texture": "#egg"
-        },
-        "south": {
-          "texture": "#egg"
-        },
-        "east": {
-          "texture": "#egg"
-        },
-        "west": {
-          "texture": "#egg"
-        },
-        "up": {
-          "texture": "#egg"
-        },
-        "down": {
-          "texture": "#egg"
-        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          1,
+          8
+        ],
+        "axis": "y",
+        "angle": -22.5
       }
     }
   ],
@@ -112,13 +279,61 @@
       ],
       "translation": [
         0,
-        0,
+        2.0,
         0
       ],
       "scale": [
-        0.8,
-        0.8,
-        0.8
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "fixed": {
+      "scale": [
+        0.75,
+        0.75,
+        0.75
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.45,
+        0.45,
+        0.45
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
       ]
     }
   }
