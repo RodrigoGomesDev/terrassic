@@ -112,6 +112,9 @@ public final class BehaviorTest {
         if (only.contains("territory")) {
             planTerritory();
         }
+        if (only.contains("look")) {
+            planLook();
+        }
         if (only.contains("steps")) {
             planSteps();
         }
@@ -425,6 +428,44 @@ public final class BehaviorTest {
                                 st[2] >= 0 ? String.format(Locale.ROOT, "arrived in %.1f s", st[2] / 20.0D) : "DID NOT ARRIVE in 30 s"));
                     }
                     return 1;
+                });
+            }
+        }
+    }
+
+    /** 1.9.5: the neck shares the look with the head. Each species stands while the player stays at its side; it turns
+     *  its head to look; photographed from the front and from above (behavior_look_<species>_*.png). */
+    private static void planLook() {
+        double x0 = 4400.5D;
+        String[] all = {"tyrannosaurus", "triceratops", "edmontosaurus", "quetzalcoatlus", "therizinosaurus", "deinosuchus",
+                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus"};
+        for (String sp : all) {
+            UUID u = id();
+            STEPS.add(mc -> {
+                clear(mc, x0, 24);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..60]");
+                command(mc, "time set 1000");
+                summon(mc, sp, x0, Y, 0.5D, u, "Rotation:[180f,0f],Attributes:[{Name:\"generic.movement_speed\",Base:0.0d}]");
+                return 20;
+            });
+            for (String v : new String[]{"front", "above"}) {
+                STEPS.add(mc -> {
+                    DinosaurEntity d = server(mc, u);
+                    if (d == null) {
+                        REPORT.add("look " + sp + ": NOT FOUND");
+                        return 1;
+                    }
+                    double r = 3.0D + d.getBbWidth() * 2.0D + d.getBbHeight();
+                    Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.6D, 0.0D);
+                    // the player stands off its left side at head height, so it turns its head to look at the camera
+                    Vec3 from = "front".equals(v) ? c.add(r * 0.7D, 0.5D, -r * 0.7D) : c.add(r * 0.3D, r, -r * 0.3D);
+                    look(mc.player, from, c);
+                    return 60;
+                });
+                STEPS.add(mc -> {
+                    Screenshot.grab(mc.gameDirectory, "behavior_look_" + sp + "_" + v + ".png", mc.getMainRenderTarget(), msg -> {
+                    });
+                    return 2;
                 });
             }
         }
