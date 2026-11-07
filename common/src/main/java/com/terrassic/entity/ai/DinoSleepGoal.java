@@ -23,14 +23,22 @@ public class DinoSleepGoal extends Goal {
                 || this.mob.isPassenger() || this.mob.isInWaterOrBubble() || this.mob.getLastHurtByMob() != null) {
             return false;
         }
-        return this.mob.getRandom().nextInt(reducedTickDelay(120)) == 0;
+        // 1.9.5 (docs/estudos/12): it only lies down where it is safe (a herbivore with no predator near, a predator
+        // that is not starving)
+        return this.mob.getRandom().nextInt(reducedTickDelay(120)) == 0 && (OLD || this.mob.safeToSleep());
     }
 
     @Override
     public boolean canContinueToUse() {
+        if (!OLD && this.mob.tickCount % 10 == 0 && this.mob.wokenByThreat()) {
+            return false;                   // a hunter close by: it wakes
+        }
         return !this.mob.isTame() && this.mob.isSleepTime() && this.mob.getTarget() == null && !this.mob.isVehicle()
                 && !this.mob.isInWaterOrBubble() && this.mob.getLastHurtByMob() == null;
     }
+
+    /** Test only (BehaviorTest "night"): TERRASSIC_OLD_SLEEP=1 brings back the 1.9.1 sleep to compare. */
+    public static final boolean OLD = "1".equals(System.getenv("TERRASSIC_OLD_SLEEP"));
 
     @Override
     public void start() {

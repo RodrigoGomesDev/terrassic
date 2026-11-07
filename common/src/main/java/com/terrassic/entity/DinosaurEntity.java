@@ -467,6 +467,32 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    /** 1.9.5, the night that makes sense (docs/estudos/12_ECOSSISTEMA_ARK.md): whether it may lie down here (the
+     *  herbivores and the predators override), and whether something wakes it. */
+    public boolean safeToSleep() {
+        return true;
+    }
+
+    public boolean wokenByThreat() {
+        return false;
+    }
+
+    /** The nearest wild grown predator within {@code r} blocks that is awake (or any, asleep too), or null. */
+    public DinosaurEntity nearestPredator(double r, boolean awakeOnly) {
+        DinosaurEntity best = null;
+        double bd = r * r;
+        for (DinosaurEntity d : this.level().getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(r),
+                e -> e != this && e instanceof PredatorDinosaur && !e.isTame() && !e.isBaby() && e.isAlive()
+                        && (!awakeOnly || !e.isSleeping()))) {
+            double dd = d.distanceToSqr(this);
+            if (dd < bd) {
+                bd = dd;
+                best = d;
+            }
+        }
+        return best;
+    }
+
     /** The species' resting hours: night for most, day for the nocturnal ones (never in the rain of a thunderstorm). */
     public boolean isSleepTime() {
         if (this.tickCount < 1200) {

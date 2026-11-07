@@ -45,6 +45,20 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         return this.fightsBack();
     }
 
+    /** 1.9.5: a herbivore lies down only with no predator awake within 32 blocks, nor one asleep within 28 (they slept
+     *  side by side, 06/11); otherwise it first moves off (SafeRestGoal). */
+    @Override
+    public boolean safeToSleep() {
+        return this.isTame() || (this.nearestPredator(32.0D, true) == null && this.nearestPredator(28.0D, false) == null);
+    }
+
+    /** Asleep, it wakes when a predator that is awake comes within 12 blocks (16 if it hunts). */
+    @Override
+    public boolean wokenByThreat() {
+        DinosaurEntity p = this.nearestPredator(16.0D, true);
+        return p != null && (p.getTarget() != null || p.distanceTo(this) < 12.0F);
+    }
+
     /** A grown herbivore that fights back meets a big predator head on (horns, club, claws): a duel. */
     @Override
     public boolean fightsInDuel() {
@@ -125,6 +139,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
             }
         });
         this.addDuelGoal(3);
+        this.goalSelector.addGoal(3, new com.terrassic.entity.ai.SafeRestGoal(this));
         this.goalSelector.addGoal(4, new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, 1.4D, true) {
             @Override
             public boolean canUse() {
