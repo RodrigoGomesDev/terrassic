@@ -42,17 +42,20 @@ EVERY_FRAME = ("walk", "run", "stalk", "threat", "beg", "wake", "wake_sleep", "d
                "skid_turn", "skid_turn_r", "brake", "hook", "arm_twitch", "eat",
                # 06/11 (carnoflow.py): the tremors, the skips and the stepping loops would be smoothed away between keys
                "attack", "roar", "call", "shove", "guard", "strafe_left", "strafe_right", "turn_left", "turn_right",
-               "feint", "block", "recoil", "submit", "walk_tired", "ram", "head_clash")
+               "feint", "block", "recoil", "submit", "walk_tired", "ram", "head_clash",
+               # 06/11 (carnofight.py): the duel's committed moves
+               "lunge", "parry", "stagger")
 LINEAR = ("threat", "wake", "wake_sleep", "death", "hurt", "attack_quick", "hook", "arm_twitch", "brake")
 # baked at 40 fps: at 20 the fast ones (the run's lift-off, the brake's plant, the bite's lunge, the rolls) swept a foot
 # up to 1 px into the ground between two keyframes
 FPS_OF = {"run": 40, "death": 40, "wake": 40, "wake_sleep": 40, "brake": 40, "attack": 40, "ram": 40, "head_clash": 40,
-          "strafe_left": 40, "strafe_right": 40, "recoil": 40}
+          "strafe_left": 40, "strafe_right": 40, "recoil": 40,
+          "lunge": 40, "parry": 40, "stagger": 40}
 SADDLE = ("hide", "fur", "strap", "iron")
 # poses that stand on both feet (the off-the-ground check); swim floats by design
 STANDING = ("idle", "sniff", "look_back", "shake", "yawn", "roar", "call", "attack", "attack_quick", "hurt", "eat",
             "drink", "tame", "beg", "lock_on", "arm_twitch", "hook", "horn_rub", "shove", "guard", "feint", "block",
-            "idle_tired", "head_clash")
+            "idle_tired", "head_clash", "lunge", "parry", "stagger")
 
 
 def main():

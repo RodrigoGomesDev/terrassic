@@ -615,3 +615,7 @@ ANIMS.update({
     "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "cansado: os flancos arfam, bico aberto, cabeça baixa"),
     "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado: passos curtos, cabeça pendurada"),
 })
+
+# 06/11/2026: the three moves of the new duel (ankyfight.py): lunge, parry, stagger (fixed lengths for the Java)
+import ankyfight as FIGHT  # noqa: E402
+ANIMS.update(FIGHT.NEW)

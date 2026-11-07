@@ -40,15 +40,18 @@ EVERY_FRAME = ("walk", "run", "stalk", "back_off", "circle", "beg", "wake", "wak
                "attack_quick", "slash", "lunge", "rip", "stomp", "eye_aim",
                # 06/11 (gigaflow.py): the tremors, the shakes and the stepping loops would be smoothed away between keys
                "roar", "roar_loud", "gape", "call", "guard", "strafe_left", "strafe_right", "turn_left", "turn_right",
-               "feint", "block", "recoil", "walk_tired", "grab_shake")
+               "feint", "block", "recoil", "walk_tired", "grab_shake",
+               # 06/11 (gigafight.py): the duel's committed moves
+               "duel_lunge", "parry", "stagger")
 LINEAR = ("wake", "wake_sleep", "death", "hurt", "attack_quick", "slash", "lunge", "stomp")
 # baked at 40 fps: the fast ones swept a foot into the ground between two keyframes at 20
 FPS_OF = {"walk": 40, "run": 40, "death": 40, "wake": 40, "wake_sleep": 40, "slash": 40, "lunge": 40, "stomp": 40, "rip": 40, "grab_shake": 40,
-          "recoil": 40}
+          "recoil": 40, "duel_lunge": 40, "parry": 40, "stagger": 40}
 SADDLE = giga.SADDLE_MATS
 # poses that stand on both feet (the off-the-ground check); swim floats by design
 STANDING = ("idle", "sniff", "look_side", "eye_aim", "shake", "yawn", "roar", "call", "gape", "crest_show",
-            "attack_quick", "hurt", "beg", "tame", "guard", "feint", "block", "idle_tired", "grab_shake")
+            "attack_quick", "hurt", "beg", "tame", "guard", "feint", "block", "idle_tired", "grab_shake",
+            "duel_lunge", "parry", "stagger")
 
 
 def main():

@@ -44,14 +44,16 @@ FPS_OF = {"run_biped": 40, "death": 40, "run": 40}     # the trot: 11 frames a s
 EVERY_FRAME = ("run", "run_biped", "attack", "death", "dig", "scrape_rest", "wake",
                # 06/11, protoflow.py: the stepping loops (short legs, quick steps), the snaps of the fight, the shiver
                "walk", "turn_left", "turn_right", "strafe_left", "strafe_right", "walk_tired", "guard", "frill_shove", "feint",
-               "block", "recoil", "submit", "lie_down", "get_up", "freeze", "hurt")
+               "block", "recoil", "submit", "lie_down", "get_up", "freeze", "hurt",
+               # 06/11, the epic duel (protofight.py): the committed moves, every frame
+               "lunge", "parry", "stagger")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("sit", "sleep", "huddle", "knocked_out")     # the idle left this list: its sniff is quicker than four frames
 LINEAR = ("hurt", "attack", "run_biped", "death", "frill_shove", "block", "recoil")
 # poses that stand on all four feet (the off-the-ground check); swim floats by design, the baby run is on two
 STANDING = ("idle", "eat", "graze", "beg", "tame", "hurt", "attack", "bite_hold", "shove", "frill_show", "sail_sway",
             "freeze", "sand_shake", "guard", "strafe_left", "strafe_right", "turn_left", "turn_right", "frill_shove", "feint",
-            "block", "recoil", "submit", "idle_tired", "walk_tired")
+            "block", "recoil", "submit", "idle_tired", "walk_tired", "lunge", "parry", "stagger")
 
 
 def main():

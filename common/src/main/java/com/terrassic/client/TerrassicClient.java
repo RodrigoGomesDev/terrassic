@@ -159,6 +159,10 @@ public final class TerrassicClient {
         EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();
         ParticleProviderRegistry.register(ModParticles.ROAR_WAVE, RoarWaveParticle.Provider::new);
+        ParticleProviderRegistry.register(ModParticles.IMPACT, (type, level, x, y, z, xd, yd, zd) -> {
+            RoarShake.impact(x, y, z, (float) xd);
+            return null;
+        });
         ParticleProviderRegistry.register(ModParticles.ALPHA_MOTE, AlphaMoteParticle.Provider::new); // v1.6 alpha aura
         RoarShake.init(); // the loud roar's camera shake
         AlphaAura.init(); // the alphas' aura (docs/ALFAS.md)

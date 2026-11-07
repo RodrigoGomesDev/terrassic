@@ -385,3 +385,11 @@ ANIMS.update({
     "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "cansado: a barriga arfa, bico aberto, braços pendurados"),
     "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado: passos curtos, o tronco rola mais"),
 })
+
+# 06/11: the epic duel's three moves (therifight.py; the Java slides the body in the lunge and turns it in the stagger)
+import therifight as FIGHT  # noqa: E402
+for _n, _when in (
+        ("lunge", "bote do duelo: recua no quadril com os braços no alto, passo largo e as duas garras-lâmina cortam em cruz aos 0,50 s, a barriga balança depois, volta à guarda"),
+        ("parry", "apara: o antebraço esquerdo cruza com as garras viradas e desvia o golpe, a cabeça atrás do braço; no giro de volta o braço direito corta aos 0,60 s"),
+        ("stagger", "foi aparado: a barriga rola para a direita, braços abertos buscando equilíbrio, leques tremendo, passo largo de lado e o outro pé arrastado, sacode as penas")):
+    ANIMS[_n] = (getattr(FIGHT, _n), getattr(FIGHT, _n.upper() + "_T"), False, "Duelo", _when)

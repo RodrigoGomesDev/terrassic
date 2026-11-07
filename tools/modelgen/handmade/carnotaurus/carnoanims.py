@@ -600,3 +600,7 @@ import carnoflow as FLOW  # noqa: E402
 for _name, _fn in FLOW.REBIND.items():
     ANIMS[_name] = (_fn,) + ANIMS[_name][1:]
 ANIMS.update(FLOW.NEW)
+
+# 06/11: the epic duel's committed moves (carnofight.py, from docs/estudos/10): lunge, parry, stagger (fixed lengths)
+import carnofight as FIGHT  # noqa: E402
+ANIMS.update(FIGHT.NEW)

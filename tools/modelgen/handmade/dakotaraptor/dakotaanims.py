@@ -198,3 +198,11 @@ ANIMS.update({
     "idle_tired": (FLOW.idle_tired, FLOW.IDLE_TIRED_T, True, "Parado", "cansado: asas soltas para esfriar, boca aberta, garganta vibrando"),
     "walk_tired": (FLOW.walk_tired, FLOW.WALK_TIRED_T, True, "Movimento", "andando cansado depois de uma perseguição"),
 })
+
+# 06/11: the epic duel's three moves (dakotafight.py; the Java slides the body in the lunge and turns it in the stagger)
+import dakotafight as FIGHT  # noqa: E402
+for _n, _when in (
+        ("lunge", "bote do duelo: agacha com a cauda erguida, salto curto de pés à frente com as foices apontadas (0,50 s), asas abertas, aterrissa agachado e volta à guarda"),
+        ("parry", "apara: susto de asas na cara do rival, recua torcendo, arma a foice e chuta aos 0,60 s, uma batida de asa"),
+        ("stagger", "foi aparado: tranco para a direita, asas abertas batendo para não cair, um pé cruza e o outro arrasta, a cauda de leme, sacode as penas")):
+    ANIMS[_n] = (getattr(FIGHT, _n), getattr(FIGHT, _n.upper() + "_T"), False, "Duelo", _when)

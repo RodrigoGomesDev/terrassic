@@ -477,3 +477,7 @@ ANIMS = {
 import pachyflow as FLOW  # noqa: E402
 ANIMS_BEFORE_FLOW = ANIMS
 ANIMS = FLOW.rebind(ANIMS)
+
+# 06/11/2026: the three moves of the new duel (pachyfight.py): lunge, parry, stagger (fixed lengths for the Java)
+import pachyfight as FIGHT  # noqa: E402
+ANIMS.update(FIGHT.NEW)

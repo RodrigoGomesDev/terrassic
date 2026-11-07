@@ -44,14 +44,16 @@ FPS_OF = {"death": 40, "run": 40, "charge": 40, "attack": 40, "horn_sweep": 40, 
 EVERY_FRAME = ("walk", "run", "charge", "attack", "horn_sweep", "death", "stamp", "pivot", "butt_play", "wallow", "wake", "wake_sleep",
                # 06/11, trikeflow.py: the stepping loops (a foot between two keys sank) and the snaps of the fight
                "turn_left", "turn_right", "strafe_left", "strafe_right", "walk_tired", "guard", "feint", "block", "recoil",
-               "submit", "horn_lock", "horn_lock_start", "horn_lock_break", "lie_down", "get_up", "hurt")
+               "submit", "horn_lock", "horn_lock_start", "horn_lock_break", "lie_down", "get_up", "hurt",
+               # 06/11, the epic duel (trikefight.py): the committed moves, every frame
+               "lunge", "parry", "stagger")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("sit", "sleep", "knocked_out")         # the idle left this list: its frill twitch is shorter than four frames
 LINEAR = ("hurt", "attack", "horn_sweep", "death", "block", "recoil", "horn_lock_start")
 # poses that stand on all four feet (the off-the-ground check); swim floats by design, the calf hops in butt_play
 STANDING = ("idle", "eat", "graze", "beg", "tame", "hurt", "attack", "horn_sweep", "horn_lock", "stamp", "pivot",
             "plow", "shear", "guard", "strafe_left", "strafe_right", "turn_left", "turn_right", "feint", "block", "recoil",
-            "submit", "idle_tired", "walk_tired", "horn_lock_start", "horn_lock_break")
+            "submit", "idle_tired", "walk_tired", "horn_lock_start", "horn_lock_break", "lunge", "parry", "stagger")
 
 
 def main():

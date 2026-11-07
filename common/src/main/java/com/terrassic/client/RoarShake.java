@@ -83,6 +83,21 @@ public final class RoarShake {
         amplitude = Math.min(MAX_DEGREES * 1.5F, amplitude + MAX_DEGREES * Math.min(1.0F, strength) * near);
     }
 
+    /** A blow or a fall nearby (ModParticles.IMPACT): a shorter, harder jolt than the roar's, full within 6 blocks and gone
+     *  at 30; not for the rider of the one that struck. */
+    static void impact(double x, double y, double z, float strength) {
+        if (!ClientConfig.flag("roar_shake")) {
+            return;
+        }
+        Entity camera = Minecraft.getInstance().getCameraEntity();
+        if (camera == null) {
+            return;
+        }
+        double d = Math.sqrt(camera.distanceToSqr(x, y, z));
+        float near = (float) Mth.clamp(1.0D - (d - 6.0D) / 24.0D, 0.0D, 1.0D);
+        amplitude = Math.min(MAX_DEGREES * 1.6F, amplitude + MAX_DEGREES * 0.9F * Mth.clamp(strength, 0.0F, 1.5F) * near);
+    }
+
     public static void apply(PoseStack poseStack, float partialTick) {
         if (amplitude <= 0.0F) {
             return;

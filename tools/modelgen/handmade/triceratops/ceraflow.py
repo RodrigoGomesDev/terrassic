@@ -253,6 +253,25 @@ class Quad:
         else:
             self.foot(p, s, kind, 0.0, dz, dx)
 
+    def plan(self, p, t, s, kind, keys=(), base=(0.0, 0.0), meta=0.0, pitch=0.0):
+        """a foot through a list of moves (the fight set, 06/11): keys = (t0, t1, dz, dx, lift), each from where the
+        last one left it to (dz, dx) around base (dz, dx); lift > 0 is a step, lift 0 a drag along the ground; while
+        planted the hind heel takes `meta` (the push of a leg driving the body) and the hand `pitch`"""
+        cz, cx = 0.0, 0.0
+        for t0, t1, dz, dx, lift in keys:
+            if t < t0: break
+            if t < t1:
+                u = (t - t0) / (t1 - t0)
+                if lift > 0:
+                    self.step(p, s, kind, u, dz0=cz, dz1=dz, dx0=cx, dx1=dx, lift=lift, base_dz=base[0], base_dx=base[1])
+                else:
+                    e = smooth(u)
+                    self.foot(p, s, kind, 0.0, base[0] + cz + (dz - cz) * e, base[1] + cx + (dx - cx) * e)
+                return
+            cz, cx = dz, dx
+        if kind == "h": self.foot(p, s, "h", 0.0, base[0] + cz, base[1] + cx, meta=meta)
+        else: self.foot(p, s, "f", 0.0, base[0] + cz, base[1] + cx, pitch=pitch)
+
     # ------------------------------------------------------------ layers
     def alive(self, p, t, k=1.0, period=3.2):
         """the breathing under every standing pose: the barrel swells, the head rides it a beat late (no feet here:
@@ -420,6 +439,19 @@ class Quad:
     def head_low(self, p):
         A = self.A
         return A.low_of(p, set(getattr(A, "LOWHEAD", None) or A.HEADB))
+
+    def lift(self, p, clear=0.3):
+        """the head kept off the ground by a CONTINUOUS lift of the neck (the species' lift_head steps 1.5 deg at a
+        time, which in the fast low moves of the duel jumped up to 9 deg in a frame); 06/11, the fight set"""
+        bones = set(self.A.HEADB)
+        if self.A.low_of(p, bones) >= clear: return p
+        lo, hi = 0.0, 40.0
+        for _ in range(14):
+            m = 0.5 * (lo + hi); q = dict(p); add(q, "neck", rot=(m, 0, 0))
+            if self.A.low_of(q, bones) >= clear: hi = m
+            else: lo = m
+        add(p, "neck", rot=(hi, 0, 0))
+        return p
 
     def keep_head(self, p, before):
         """a layer added on top of a finished pose must not take the head lower into the ground than it was"""

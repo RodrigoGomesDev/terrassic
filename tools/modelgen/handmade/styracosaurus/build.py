@@ -43,14 +43,16 @@ FPS_OF = {"death": 40, "run": 40, "charge": 40, "attack": 40, "horn_hook": 40, "
 EVERY_FRAME = ("walk", "run", "charge", "attack", "horn_hook", "death", "paw_scrape", "rival_display", "frill_shove", "head_shake", "wake", "wake_sleep",
                # 06/11, styraflow.py: the stepping loops, the snaps of the fight, the trembling call, the twitching idle
                "turn_left", "turn_right", "strafe_left", "strafe_right", "walk_tired", "guard", "nose_jab", "feint", "block",
-               "recoil", "submit", "lie_down", "get_up", "call", "idle", "hurt")
+               "recoil", "submit", "lie_down", "get_up", "call", "idle", "hurt",
+               # 06/11, the epic duel (styrafight.py): the committed moves, every frame
+               "lunge", "parry", "stagger")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("sit", "sleep", "knocked_out")         # the idle left this list: its crown twitches are shorter than four frames
 LINEAR = ("hurt", "attack", "horn_hook", "death", "nose_jab", "block", "recoil")
 # poses that stand on all four feet (the off-the-ground check); swim floats by design, the calf hops in butt_play
 STANDING = ("idle", "eat", "graze", "beg", "tame", "hurt", "attack", "horn_hook", "paw_scrape", "crown_display",
             "rival_display", "horn_rub", "head_shake", "call", "guard", "strafe_left", "strafe_right", "turn_left", "turn_right",
-            "nose_jab", "feint", "block", "recoil", "submit", "idle_tired", "walk_tired")
+            "nose_jab", "feint", "block", "recoil", "submit", "idle_tired", "walk_tired", "lunge", "parry", "stagger")
 
 
 def main():

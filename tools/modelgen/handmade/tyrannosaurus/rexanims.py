@@ -504,3 +504,7 @@ ANIMS = {
     "beg": (beg, 2.0, True, "Domado", "pedindo comida ao dono"),
     "tame": (tame, 2.4, False, "Domado", "no momento em que é domesticado"),
 }
+
+# 06/11: the epic duel's committed moves (rexfight.py, from docs/estudos/10): lunge, parry, stagger (fixed lengths)
+import rexfight as FIGHT  # noqa: E402
+ANIMS.update(FIGHT.NEW)

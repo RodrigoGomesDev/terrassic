@@ -43,12 +43,14 @@ FPS = 20
 FPS_OF = {"run": 40, "attack": 40, "flank_butt": 40}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
 EVERY_FRAME = ("walk", "run", "attack", "death", "wake", "wake_sleep", "graze", "dome_clash", "hop_play",
-               "turn_left", "turn_right", "walk_tired", "strafe_left", "strafe_right", "feint", "block", "recoil")
+               "turn_left", "turn_right", "walk_tired", "strafe_left", "strafe_right", "feint", "block", "recoil",
+               "lunge", "parry", "stagger")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("idle", "sit", "sleep", "knocked_out")
-LINEAR = ("hurt", "attack", "death", "dome_clash", "flank_butt", "wake", "wake_sleep", "block", "recoil")
+LINEAR = ("hurt", "attack", "death", "dome_clash", "flank_butt", "wake", "wake_sleep", "block", "recoil", "lunge", "parry", "stagger")
 # poses that stand on both feet (the off-the-ground check); swim floats by design; the young's hop leaves the ground
-STANDING = ("idle", "dome_display", "eat", "sniff", "pluck", "beg", "tame", "hurt", "flank_butt", "idle_tired", "guard", "submit")
+STANDING = ("idle", "dome_display", "eat", "sniff", "pluck", "beg", "tame", "hurt", "flank_butt", "idle_tired", "guard", "submit",
+            "lunge", "parry", "stagger")
 AIRBORNE = ("swim", "hop_play")
 
 
