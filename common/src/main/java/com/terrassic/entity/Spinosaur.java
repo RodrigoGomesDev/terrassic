@@ -44,6 +44,12 @@ public abstract class Spinosaur extends ApexTheropod {
         super(type, level);
     }
 
+    /** At home in the water: floats and dives smoothly, no hops (HOTFIX 1.9.1, DinosaurEntity.smoothWater). */
+    @Override
+    protected boolean smoothWater() {
+        return true;
+    }
+
     @Override
     protected String[] extraActions() {
         return new String[]{"roar", "attack_quick", "call", "threat", "drink", "sniff", "look_back", "shake", "yawn", "stretch",

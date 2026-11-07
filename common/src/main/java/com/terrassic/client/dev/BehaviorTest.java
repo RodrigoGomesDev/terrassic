@@ -102,6 +102,21 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("sleepfish")) {
+            planSleepFish();
+        }
+        if (only.contains("headshot")) {
+            planHeadshot(System.getenv().getOrDefault("TERRASSIC_GAIT_ONLY", "deinosuchus"));
+        }
+        if (only.contains("water")) {
+            planWater();
+        }
+        if (only.contains("jaws")) {
+            planJaws();
+        }
+        if (only.contains("gaits")) {
+            planGaits();
+        }
         if (only.contains("carcass")) {
             planCarcass();
         }
@@ -297,6 +312,331 @@ public final class BehaviorTest {
                 });
                 return 2;
             });
+        }
+    }
+
+    /** HOTFIX 1.9.1: Velociraptors slept as soon as they were spawned by day; the sea hunters killed far too many fish.
+     *  A Velociraptor spawned in the morning (awake?) and at noon (its nap); a Mosasaurus in a pool with twelve fish for
+     *  a minute (how many it kills). */
+    private static void planSleepFish() {
+        double x0 = 3400.5D;
+        UUID r1 = id(), r2 = id(), mosa = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Sleep and fish (HOTFIX 1.9.1)");
+            clear(mc, x0, 30);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+            command(mc, "time set 1000");
+            summon(mc, "velociraptor", x0 - 10, Y, 10.5D, r1, "");
+            return 100;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, r1);
+            REPORT.add("  Velociraptor spawned at 07:00, 5 s later: " + (d == null ? "gone" : d.isSleeping() ? "ASLEEP" : "awake"));
+            return 1300;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, r1);
+            REPORT.add("  the same one a minute later (08:00): " + (d == null ? "gone" : d.isSleeping() ? "ASLEEP" : "awake"));
+            command(mc, "time set 6500");
+            return 300;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, r1);
+            REPORT.add("  at 12:30 (its nap): " + (d == null ? "gone" : d.isSleeping() ? "asleep" : "awake"));
+            summon(mc, "velociraptor", x0 - 14, Y, 10.5D, r2, "");
+            return 100;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, r2);
+            REPORT.add("  one spawned at 12:30, 5 s later: " + (d == null ? "gone" : d.isSleeping() ? "ASLEEP" : "awake"));
+            command(mc, "time set 1000");
+            command(mc, fill(x0 + 4, Y, -14, x0 + 26, Y + 6, 8, "minecraft:glass"));
+            command(mc, fill(x0 + 5, Y, -13, x0 + 25, Y + 6, 7, "minecraft:water"));
+            return 40;
+        });
+        STEPS.add(mc -> {
+            summon(mc, System.getenv().getOrDefault("TERRASSIC_FISH_HUNTER", "xiphactinus"), x0 + 15, Y + 2, -3.0D, mosa, "");
+            for (int i = 0; i < 12; i++) {
+                command(mc, String.format(Locale.ROOT, "summon minecraft:%s %.1f %.1f %.1f {PersistenceRequired:1b,Tags:[\"fish\"]}",
+                        i % 2 == 0 ? "cod" : "salmon", x0 + 7 + (i % 6) * 3.0D, Y + 2.0D + (i % 3), -11.0D + (i / 6) * 14.0D));
+            }
+            return 1200;
+        });
+        STEPS.add(mc -> {
+            int left = mc.getSingleplayerServer().overworld().getEntities((Entity) null,
+                    new net.minecraft.world.phys.AABB(x0 + 4, Y - 1, -14, x0 + 26, Y + 8, 8), e -> e.getTags().contains("fish")).size();
+            DinosaurEntity m = server(mc, mosa);
+            REPORT.add("  " + System.getenv().getOrDefault("TERRASSIC_FISH_HUNTER", "xiphactinus") + " with 12 fish for 60 s: " + (12 - left)
+                    + " killed" + (m == null ? "" : ", sated " + m.isSated() + ", hunger " + m.getHunger()));
+            return 1;
+        });
+    }
+
+    /** Close still shots of a head (06/11/2026, the Deinosuchus' eyes): the animal still, facing north (-z), the camera
+     *  at its left, right, front and above (behavior_head_<species>_<view>.png). */
+    private static void planHeadshot(String species) {
+        double x0 = 3200.5D;
+        for (String sp : species.split(",")) {
+            UUID u = id();
+            STEPS.add(mc -> {
+                clear(mc, x0, 20);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..60]");
+                summon(mc, sp, x0, Y, 0.5D, u, "NoAI:1b,Rotation:[180f,0f]");
+                look(mc.player, new Vec3(x0 + 12.0D, Y + 6.0D, 0.5D), new Vec3(x0, Y, 0.5D));
+                return 60;
+            });
+            String[] views = {"left", "right", "above", "left_back", "right_back"};
+            for (String v : views) {
+                STEPS.add(mc -> {
+                    DinosaurEntity d = null;
+                    for (Entity e : mc.level.entitiesForRendering()) {
+                        if (e instanceof DinosaurEntity dd && u.equals(dd.getUUID())) {
+                            d = dd;
+                        }
+                    }
+                    if (d == null) {
+                        REPORT.add("headshot " + sp + " " + v + ": NOT FOUND");
+                        return 1;
+                    }
+                    net.minecraft.world.phys.AABB head = null;
+                    for (com.terrassic.entity.parts.DinoPart part : d.parts()) {
+                        if (part.kind() == com.terrassic.entity.parts.DinoPart.Kind.HEAD) {
+                            head = head == null ? part.getBoundingBox() : head.minmax(part.getBoundingBox());
+                        }
+                    }
+                    if (head == null) {
+                        REPORT.add("headshot " + sp + ": no head part");
+                        return 1;
+                    }
+                    float yaw = d.yBodyRot * net.minecraft.util.Mth.DEG_TO_RAD;
+                    Vec3 side = new Vec3(-net.minecraft.util.Mth.cos(yaw), 0, -net.minecraft.util.Mth.sin(yaw));
+                    Vec3 fwd = new Vec3(-net.minecraft.util.Mth.sin(yaw), 0, net.minecraft.util.Mth.cos(yaw));
+                    Vec3 c = head.getCenter();
+                    if (v.endsWith("_back")) {
+                        c = c.subtract(fwd.scale(head.getXsize() * 0.5D + head.getZsize() * 0.5D));
+                    }
+                    double r = 1.2D + Math.max(head.getYsize(), Math.max(head.getXsize(), head.getZsize())) * 1.2D;
+                    Vec3 from = switch (v) {
+                        case "left", "left_back" -> c.add(side.scale(r)).add(0, 0.3D, 0);
+                        case "right", "right_back" -> c.subtract(side.scale(r)).add(0, 0.3D, 0);
+                        default -> c.add(0, r, 0).subtract(fwd.scale(0.3D));
+                    };
+                    look(mc.player, from, c);
+                    return 8;
+                });
+                STEPS.add(mc -> {
+                    Screenshot.grab(mc.gameDirectory, "behavior_head_" + sp + "_" + v + ".png", mc.getMainRenderTarget(), msg -> {
+                    });
+                    return 2;
+                });
+            }
+        }
+    }
+
+    /** HOTFIX 1.9.1 (06/11/2026): the water animals bounced in the water ("quicando"), the Deinosuchus worst of all,
+     *  attacking in the water. A walled pool five deep: the Deinosuchus set on a prey in the water, a Mosasaurus, an
+     *  Elasmosaurus and a Spinosaurus in it; every tick each one's height is read and its hops counted (a rise faster
+     *  than 0.15 block/tick). Frames rexmotion_water_NNN. */
+    private static void planWater() {
+        double x0 = 3000.5D;
+        String[] swimmers = {"deinosuchus", "mosasaurus", "elasmosaurus", "spinosaurus"};
+        UUID[] ids = new UUID[swimmers.length];
+        UUID prey = id();
+        for (int i = 0; i < ids.length; i++) {
+            ids[i] = id();
+        }
+        double[][] st = new double[swimmers.length][4];   // last y, min y, max y, hops
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Water: hops in a pool five deep (a hop = rising faster than 0.15 block/tick)");
+            clear(mc, x0, 30);
+            command(mc, fill(x0 - 16, Y, -16, x0 + 16, Y + 5, 16, "minecraft:glass"));
+            command(mc, fill(x0 - 15, Y, -15, x0 + 15, Y + 5, 15, "minecraft:water"));
+            look(mc.player, new Vec3(x0, Y + 14.0D, 24.0D), new Vec3(x0, Y + 3.0D, 0.5D));
+            return 80;
+        });
+        STEPS.add(mc -> {
+            for (int i = 0; i < swimmers.length; i++) {
+                summon(mc, swimmers[i], x0 - 8 + i * 5, Y + 2, -6.0D + (i % 2) * 10.0D, ids[i], "");
+                st[i][1] = Double.MAX_VALUE;
+                st[i][2] = -Double.MAX_VALUE;
+                st[i][0] = Double.NaN;
+            }
+            summon(mc, "edmontosaurus", x0 + 2, Y + 2, 2.0D, prey, "Age:-24000");
+            return 40;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity croc = server(mc, ids[0]);
+            DinosaurEntity p = server(mc, prey);
+            if (croc != null && p != null) {
+                mc.getSingleplayerServer().execute(() -> croc.setTarget(p));
+            }
+            followed = ids[0];
+            pairedWith = null;
+            return 1;
+        });
+        for (int k = 0; k < 200; k++) {
+            int kk = k;
+            STEPS.add(mc -> {
+                for (int i = 0; i < swimmers.length; i++) {
+                    DinosaurEntity d = server(mc, ids[i]);
+                    if (d == null) {
+                        continue;
+                    }
+                    double y = d.getY();
+                    if (!Double.isNaN(st[i][0]) && y - st[i][0] > 0.15D) {
+                        st[i][3]++;
+                    }
+                    st[i][0] = y;
+                    st[i][1] = Math.min(st[i][1], y);
+                    st[i][2] = Math.max(st[i][2], y);
+                }
+                if (kk % 2 == 0) {
+                    Entity e = server(mc, ids[0]);
+                    if (e != null) {
+                        look(mc.player, e.position().add(0.0D, 4.0D, 9.0D), e.position());
+                    }
+                    Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_water_%03d.png", kk / 2), mc.getMainRenderTarget(), msg -> {
+                    });
+                }
+                if (kk == 199) {
+                    for (int i = 0; i < swimmers.length; i++) {
+                        REPORT.add(String.format(Locale.ROOT, "  %s: %.0f hops in 10 s, height from %.2f to %.2f (pool floor %.0f, surface %.0f)",
+                                swimmers[i], st[i][3], st[i][1], st[i][2], Y, Y + 6));
+                    }
+                }
+                return 1;
+            });
+        }
+        STEPS.add(mc -> {
+            followed = null;
+            return 1;
+        });
+    }
+
+    /** HOTFIX 1.9.1 (06/11/2026): jaws and beaks spun round in play. Each species runs hard (it pants), then stands; the
+     *  jaw's rotation is read from the model on the client every frame and the head is filmed close
+     *  (rexmotion_jaw_<species>_NNN). Reports how far the jaw turned while standing. */
+    private static void planJaws() {
+        String[] all = {"edmontosaurus", "pteranodon", "quetzalcoatlus", "parasaurolophus", "triceratops", "tyrannosaurus",
+                "carnotaurus", "giganotosaurus", "spinosaurus", "styracosaurus", "protoceratops", "pachycephalosaurus",
+                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus"};
+        String only = System.getenv("TERRASSIC_GAIT_ONLY");
+        double x0 = 2800.5D;
+        STEPS.add(mc -> {
+            clear(mc, x0, 40);
+            look(mc.player, new Vec3(x0, Y + 12.0D, 20.0D), new Vec3(x0, Y, 0.5D));
+            return 100;
+        });
+        for (String sp : all) {
+            if (only != null && !only.isBlank() && !java.util.Arrays.asList(only.split(",")).contains(sp)) {
+                continue;
+            }
+            UUID u = id();
+            float[] jaw = {Float.NaN, Float.MAX_VALUE, -Float.MAX_VALUE, 0.0F};   // last, min, max, summed change
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+                summon(mc, sp, x0 - 30, Y, 0.5D, u, "Rotation:[-90f,0f]");
+                return 30;
+            });
+            for (int i = 0; i < 130; i++) {
+                int k = i;
+                STEPS.add(mc -> {
+                    DinosaurEntity d = server(mc, u);
+                    if (d != null) {
+                        mc.getSingleplayerServer().execute(() -> {
+                            d.setTarget(null);
+                            if (k < 50) {
+                                d.getNavigation().moveTo(x0 + 40.0D, Y, 0.5D, 2.2D);   // a hard run: it pants after
+                            } else {
+                                d.getNavigation().stop();
+                            }
+                        });
+                        Entity c = mc.level.getEntity(d.getId());
+                        if (c instanceof DinosaurEntity cd && k >= 50) {
+                            if (mc.getEntityRenderDispatcher().getRenderer(cd) instanceof software.bernie.geckolib.renderer.GeoEntityRenderer<?> gr) {
+                                software.bernie.geckolib.core.animatable.model.CoreGeoBone b = gr.getGeoModel().getAnimationProcessor().getBone("jaw");
+                                if (b != null) {
+                                    float x = (float) Math.toDegrees(b.getRotX());
+                                    if (!Float.isNaN(jaw[0])) {
+                                        jaw[3] += Math.abs(x - jaw[0]);
+                                    }
+                                    jaw[0] = x;
+                                    jaw[1] = Math.min(jaw[1], x);
+                                    jaw[2] = Math.max(jaw[2], x);
+                                }
+                            }
+                        }
+                        Entity e = c != null ? c : d;
+                        // close on the head: in front of the body, from the side
+                        double yaw = Math.toRadians(e.getYRot());
+                        Vec3 head = e.position().add(-Math.sin(yaw) * d.getBbWidth() * 0.9D, d.getBbHeight() * 0.75D, Math.cos(yaw) * d.getBbWidth() * 0.9D);
+                        look(mc.player, head.add(0.0D, 0.5D, 2.5D + d.getBbHeight() * 1.2D), head);
+                    }
+                    Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_jaw_%s_%03d.png", sp, k), mc.getMainRenderTarget(), msg -> {
+                    });
+                    if (k == 129) {
+                        REPORT.add(String.format(Locale.ROOT, "  jaw %s: standing after the run, from %.1f to %.1f deg, total turning %.0f deg%s",
+                                sp, jaw[1], jaw[2], jaw[3], Float.isNaN(jaw[0]) ? " (no jaw bone)" : jaw[2] - jaw[1] > 90.0F ? "  <<< SPINS" : ""));
+                    }
+                    return 2;
+                });
+            }
+        }
+    }
+
+    /** Each species walking, then running, on a straight line, filmed side-on and close (06/11/2026: the Triceratops'
+     *  legs looked broken in play). Frames rexmotion_gait_<species>_NNN; TERRASSIC_GAIT_ONLY picks species. */
+    private static void planGaits() {
+        String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
+                "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
+                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus"};
+        String only = System.getenv("TERRASSIC_GAIT_ONLY");
+        double x0 = 2600.5D;
+        STEPS.add(mc -> {
+            clear(mc, x0, 40);
+            look(mc.player, new Vec3(x0, Y + 12.0D, 20.0D), new Vec3(x0, Y, 0.5D));
+            return 100;
+        });
+        for (String sp : all) {
+            if (only != null && !only.isBlank() && !java.util.Arrays.asList(only.split(",")).contains(sp)) {
+                continue;
+            }
+            UUID u = id();
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+                summon(mc, sp, x0 - 30, Y, 0.5D, u, "Rotation:[-90f,0f],Invulnerable:1b,Tags:[\"gaiter\"]");
+                REPORT.add("== Gait: " + sp);
+                return 30;
+            });
+            for (int i = 0; i < 120; i++) {
+                int k = i;
+                STEPS.add(mc -> {
+                    if (k % 10 == 0) {
+                        command(mc, "kill @e[type=!player,tag=!gaiter,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+                    }
+                    DinosaurEntity d = server(mc, u);
+                    if (d == null && k % 20 == 0) {
+                        REPORT.add("  frame " + k + ": the animal is gone");
+                    }
+                    if (d != null) {
+                        double speed = k < 60 ? 1.0D : 2.0D;
+                        mc.getSingleplayerServer().execute(() -> {
+                            d.setTarget(null);
+                            d.getNavigation().moveTo(x0 + 40.0D, Y, 0.5D, speed);
+                        });
+                        Entity c = mc.level.getEntity(d.getId());
+                        Entity e = c != null ? c : d;
+                        double back = 2.5D + d.getBbWidth() * 1.4D + d.getBbHeight() * 0.6D;
+                        Vec3 at = e.position().add(0.0D, d.getBbHeight() * 0.45D, 0.0D);
+                        look(mc.player, at.add(0.0D, d.getBbHeight() * 0.2D, back), at);
+                    }
+                    Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_gait_%s_%03d.png", sp, k), mc.getMainRenderTarget(), msg -> {
+                    });
+                    return 2;
+                });
+            }
         }
     }
 

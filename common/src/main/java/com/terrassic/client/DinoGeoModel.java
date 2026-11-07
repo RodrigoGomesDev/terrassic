@@ -84,8 +84,26 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         if (lively != null) {
             this.scaleOf = animatable.livelyModelScale() * animatable.getScale();
             this.applyLively(lively, animationState.getPartialTick());
+            // HOTFIX 1.9.1: GeckoLib clears the "changed" marks at the end of its own tick, before this; the live layer's
+            // additions marked the bones changed again, so on the next frame a bone the playing animation does not key
+            // (a jaw, a beak, a tail tip, a leg) was not reset to its rest and the addition piled up frame after frame:
+            // jaws and beaks spun round, legs went wrong (found in play, 06/11). The marks are cleared again here, so
+            // GeckoLib resets those bones as it should and the addition stays an addition.
+            for (String name : NO_FIX ? new String[0] : LIVELY_BONES) {
+                CoreGeoBone b = getAnimationProcessor().getBone(name);
+                if (b != null) {
+                    b.resetStateChanges();
+                }
+            }
         }
     }
+
+    /** Test only (BehaviorTest "jaws"): TERRASSIC_NO_LIVELY_FIX=1 brings the 1.9.0 bug back to show it. */
+    private static final boolean NO_FIX = "1".equals(System.getenv("TERRASSIC_NO_LIVELY_FIX"));
+
+    /** Every bone the live layer adds to (tail, body, neck, jaw, legs). */
+    private static final String[] LIVELY_BONES = {"tail1", "tail2", "tail3", "tail4", "tail5", "tail6", "body", "neck", "jaw",
+            "thigh_l", "shin_l", "foot_l", "thigh_r", "shin_r", "foot_r"};
 
     /** Model scale times the animal's size, set before applyLively (feet: blocks to model px). */
     private float scaleOf = 1.0F;
