@@ -338,7 +338,10 @@ def decals_for(sex):
         C = {c["name"]: c for c in m.cubes if c["mirror_of"] is None}
         orb = C["orbit"]
         cmap = {"d": p["lid"], "Y": p["eyeY"], "G": p["eyeG"], "p": p["pupil"]}
-        for f in ("east",):            # the eye only on the outer side of the raised orbit, a slit pupil (05/11: the inner face showed a second eye)
+        # the eye only on the outer side of the raised orbit, a slit pupil. HOTFIX 1.9.1: in the game the paired cube's
+        # "east" face is the INNER one (photographed from above in the client, 06/11: both eyes looked at each other);
+        # the outer face is "west" (whose column 0 is the front, so the pupil stays in the front half)
+        for f in ("west",):
             if f not in orb["uv"]: continue
             u, v, w, h = orb["uv"][f]
             for j, row in enumerate(EYE[:h]):

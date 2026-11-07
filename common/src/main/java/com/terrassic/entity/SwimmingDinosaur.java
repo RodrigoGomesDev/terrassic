@@ -119,7 +119,7 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
         this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 20, true, false,
                 e -> this.huntsPlayers() && this.canHunt() && (e.isInWaterOrBubble() || e.getVehicle() instanceof Boat)));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 80, true, false,
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 240, true, false,
                 e -> this.canHunt() && e.isInWaterOrBubble() && this.isPrey(e)));
     }
 
@@ -153,6 +153,19 @@ public abstract class SwimmingDinosaur extends DinosaurEntity {
     }
 
     /** Only hunts while in the water; tamed ones only defend. */
+    /** HOTFIX 1.9.1: a sea hunter swallows what it kills (it never got to the carcass in the water, stayed hungry and went
+     *  on killing fish after fish): it is fed by the prey's size and full for two to four minutes. */
+    @Override
+    public boolean killedEntity(net.minecraft.server.level.ServerLevel level, LivingEntity victim) {
+        boolean r = super.killedEntity(level, victim);
+        if (this.isPrey(victim) || !(victim instanceof Player)) {
+            this.feed(Math.max(8, Math.round(victim.getBbWidth() * victim.getBbHeight() * 25.0F)));
+            this.setSated(2400 + this.random.nextInt(2400));
+            triggerAnim(ACTION_CONTROLLER, "eat");
+        }
+        return r;
+    }
+
     @Override
     protected boolean canHunt() {
         return super.canHunt() && this.isInWaterOrBubble();

@@ -469,6 +469,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** The species' resting hours: night for most, day for the nocturnal ones (never in the rain of a thunderstorm). */
     public boolean isSleepTime() {
+        if (this.tickCount < 1200) {
+            return false;       // HOTFIX 1.9.1: an animal that just appeared (spawned, hatched, loaded) looks round first
+        }
         boolean day = this.level().isDay();
         return (this.nocturnal() ? day : !day) && !this.level().isThundering();
     }
@@ -1908,6 +1911,75 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.random.nextFloat() < 0.45F) {
             this.counterLeft = this.stagger + 2 + this.random.nextInt(5);   // the answer, right after the reel
         }
+    }
+
+    // ------------------------------------------------------------------ smooth water (HOTFIX 1.9.1)
+
+    /** The ones at home in the water (the Deinosuchus, the Spinosaurus) float and dive smoothly instead of the vanilla
+     *  land-mob swimming: that jumps all the time to stay up and hops off the bottom, and they bounced in the water,
+     *  worst attacking in it (83 hops in 10 s measured, 06/11). */
+    protected boolean smoothWater() {
+        return false;
+    }
+
+    /** The height of the water's surface over it (its feet's column). */
+    private double waterSurface() {
+        net.minecraft.core.BlockPos p = net.minecraft.core.BlockPos.containing(this.getX(), this.getY() + 0.1D, this.getZ());
+        for (int n = 0; n < 32 && this.level().getFluidState(p.above()).is(net.minecraft.tags.FluidTags.WATER); n++) {
+            p = p.above();
+        }
+        return p.getY() + this.level().getFluidState(p).getHeight(this.level(), p);
+    }
+
+    /** A bank in front: a solid block at its feet with open air above it (where it climbs out). */
+    private boolean bankAhead() {
+        double r = Math.toRadians(this.getYRot());
+        double reach = this.getBbWidth() * 0.5D + 0.6D;
+        net.minecraft.core.BlockPos f = net.minecraft.core.BlockPos.containing(this.getX() - Math.sin(r) * reach, this.getY() + 0.2D,
+                this.getZ() + Math.cos(r) * reach);
+        for (int up = 0; up < 2; up++, f = f.above()) {
+            boolean solid = !this.level().getBlockState(f).getCollisionShape(this.level(), f).isEmpty();
+            net.minecraft.core.BlockPos a = f.above();
+            boolean open = this.level().getBlockState(a).getCollisionShape(this.level(), a).isEmpty()
+                    && !this.level().getFluidState(a).is(net.minecraft.tags.FluidTags.WATER);
+            if (solid && open) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** After each move (called at the end of travel). */
+    private void smoothWaterTravel() {
+        if (this.smoothWater() && this.isInWater() && !this.isVehicle()) {
+            Vec3 v = this.getDeltaMovement();
+            if (this.horizontalCollision && this.bankAhead()) {
+                return;                     // climbing out onto the bank: the vanilla lift is kept
+            }
+            // floating like a log, the back at the surface; down after a prey that is deeper
+            double want = this.waterSurface() - this.getBbHeight() * 0.6D;
+            LivingEntity t = this.getTarget();
+            if (t != null && t.isInWater()) {
+                want = Math.min(want, t.getY());
+            }
+            double vy = v.y * 0.8D + Mth.clamp((want - this.getY()) * 0.05D, -0.025D, 0.03D);
+            this.setDeltaMovement(v.x, Mth.clamp(vy, -0.12D, 0.06D), v.z);
+        }
+    }
+
+    @Override
+    protected void jumpInLiquid(net.minecraft.tags.TagKey<net.minecraft.world.level.material.Fluid> fluid) {
+        if (!this.smoothWater()) {
+            super.jumpInLiquid(fluid);
+        }
+    }
+
+    @Override
+    protected void jumpFromGround() {
+        if (this.smoothWater() && this.isInWater() && !this.bankAhead()) {
+            return;                         // no hop off the bottom
+        }
+        super.jumpFromGround();
     }
 
     /** The epic duel's brain (ai/DuelGoal), when its goals have one (the duel species). */
@@ -4024,6 +4096,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
         }
         super.travel(input);
+        this.smoothWaterTravel();
     }
 
     // jumping while ridden (the vanilla horse jump bar)

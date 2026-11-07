@@ -87,6 +87,12 @@ public abstract class Crocodylian extends PredatorDinosaur {
         return super.movementAnimation(state);
     }
 
+    /** At home in the water: floats and dives smoothly, no hops (HOTFIX 1.9.1, DinosaurEntity.smoothWater). */
+    @Override
+    protected boolean smoothWater() {
+        return true;
+    }
+
     @Override
     public boolean doHurtTarget(Entity target) {
         boolean first = target != this.lastTarget;

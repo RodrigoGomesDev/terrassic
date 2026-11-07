@@ -121,7 +121,15 @@ class Quad:
                     o = _yz(world(A.S, {}, b)); c0 = _yz(world(A.S, {}, child))
                     q = {}; add(q, b, rot=(1.0, 0, 0)); c1 = _yz(world(A.S, q, child))
                     self.sx[b] = 1.0 if _wrap(_ang(c1 - o) - _ang(c0 - o)) > 0 else -1.0
-                j0, j1, j2 = (_yz(world(A.S, {}, b)) for b in (up, lo, end))
+                # the side the joint bends to, read off a leg bent on purpose by the engine's own solver (the foot lifted
+                # a few px): at rest these pillar legs are all but straight and the sign of the fold there is a coin toss
+                # (1.9.0 shipped the Triceratops' elbows and knees bent the wrong way, HOTFIX 1.9.1)
+                q = {}
+                if up.startswith("thigh"):
+                    A.plant_h(q, s, dy=4.0)
+                else:
+                    A.plant_f(q, s, dy=4.0)
+                j0, j1, j2 = (_yz(world(A.S, q, b)) for b in (up, lo, end))
                 dlt = _wrap(_ang(j1 - j0) - _ang(j2 - j0))
                 self.bend[up] = 1.0 if dlt > 0 else -1.0
             o = _yz(world(A.S, {}, f"foot_{s}")); c0 = _yz(world(A.S, {}, f"toes_{s}"))
