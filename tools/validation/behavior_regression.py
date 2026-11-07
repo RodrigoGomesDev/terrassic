@@ -93,6 +93,10 @@ check("território: ataca quem fica perto", "the player (charged)" in text, "")
 m = re.search(r"pack (\d+), pack bonus \+(\d+)%", text)
 check("bônus de bando", m is not None and int(m.group(1)) == 2 and int(m.group(2)) == 30, m.group(0) if m else "sem medida")
 
+# paths (1.9.5): every walker gets through the pillars (a straight-line navigation once left three of four stuck)
+for sp, how in re.findall(r"  (\w+): body turned \d+ deg in all, (arrived in [\d.]+ s|DID NOT ARRIVE in 30 s)", text):
+    check(f"caminho {sp}", how.startswith("arrived"), how)
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))

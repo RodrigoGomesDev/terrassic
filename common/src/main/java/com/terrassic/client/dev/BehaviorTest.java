@@ -104,7 +104,10 @@ public final class BehaviorTest {
         }
         if (only.contains("regressao")) {
             // 1.9.5: the whole battery before a version goes out (memory "patches estaveis"; tools/validation/behavior_regression.py)
-            only = only + ",carcass,jaws,gaits,water,steps,night,weak,sleepfish,behave,territory,duels";
+            only = only + ",carcass,jaws,gaits,water,steps,paths,night,weak,sleepfish,behave,territory,duels";
+        }
+        if (only.contains("paths")) {
+            planPaths();
         }
         if (only.contains("territory")) {
             planTerritory();
@@ -371,6 +374,59 @@ public final class BehaviorTest {
                 });
                 return 2;
             });
+        }
+    }
+
+    /** 1.9.5, straight paths (ai/DinoPathNavigation): a field of pillars, each walker crosses 40 blocks; how much its
+     *  body turned on the way and how long it took (TERRASSIC_OLD_PATH=1: the vanilla node-by-node walk). */
+    private static void planPaths() {
+        double x0 = 5000.5D;
+        String[] walkers = {"tyrannosaurus", "edmontosaurus", "velociraptor", "triceratops"};
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Paths" + (com.terrassic.entity.ai.DinoPathNavigation.OLD ? " (OLD vanilla)" : " (1.9.5)") + ": 40 blocks through pillars");
+            clear(mc, x0, 40);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+            java.util.Random rnd = new java.util.Random(3);
+            for (int i = 0; i < 14; i++) {
+                int px = (int) x0 - 12 + rnd.nextInt(24), pz = -8 + rnd.nextInt(16);
+                command(mc, fill(px, Y, pz, px, Y + 3, pz, "minecraft:stone"));
+            }
+            look(mc.player, new Vec3(x0, Y + 40.0D, 8.0D), new Vec3(x0, Y, 0.5D));
+            return 40;
+        });
+        for (String sp : walkers) {
+            UUID u = id();
+            double[] st = {Double.NaN, 0.0D, -1.0D};     // last yaw, total turn, ticks to arrive
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,type=!minecraft:item,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+                summon(mc, sp, x0 - 22, Y, 0.5D, u, "Rotation:[-90f,0f]");
+                return 20;
+            });
+            for (int k = 0; k < 600; k++) {
+                int kk = k;
+                STEPS.add(mc -> {
+                    DinosaurEntity d = server(mc, u);
+                    if (d == null || st[2] >= 0) {
+                        return 1;
+                    }
+                    if (kk % 40 == 0) {
+                        mc.getSingleplayerServer().execute(() -> d.getNavigation().moveTo(x0 + 22.0D, Y, 0.5D, 1.0D));
+                    }
+                    if (!Double.isNaN(st[0])) {
+                        st[1] += Math.abs(net.minecraft.util.Mth.wrapDegrees(d.yBodyRot - (float) st[0]));
+                    }
+                    st[0] = d.yBodyRot;
+                    if (d.getX() > x0 + 20.0D) {
+                        st[2] = kk;
+                    }
+                    if (kk == 599 || st[2] >= 0) {
+                        REPORT.add(String.format(Locale.ROOT, "  %s: body turned %.0f deg in all, %s", sp, st[1],
+                                st[2] >= 0 ? String.format(Locale.ROOT, "arrived in %.1f s", st[2] / 20.0D) : "DID NOT ARRIVE in 30 s"));
+                    }
+                    return 1;
+                });
+            }
         }
     }
 

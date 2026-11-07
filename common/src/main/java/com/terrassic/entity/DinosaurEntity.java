@@ -3900,6 +3900,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     /** Client: the live motion layer, or null. */
+    // 1.9.5: ai/DinoPathNavigation (straight lines through a path) is NOT in use: tested through a field of pillars it
+    // turned the body less (T. rex 697 -> 340 deg) but three of four walkers caught on the pillars and never arrived in
+    // 30 s (vanilla: 15-21 s). Left off until the corner test and the stuck recovery are redone (Fluidez 2).
+
     public LivelyMotion lively() {
         return this.lively;
     }
