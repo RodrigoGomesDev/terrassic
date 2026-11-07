@@ -78,6 +78,16 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         return new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, attackSpeed(), true);
     }
 
+    /** 1.9.5, the food chain (docs/estudos/12): a prey up to 1.25 times its own width (twice for a pack), and never a
+     *  big predator (two top hunters fight over ground, they do not eat each other): the T. rex no longer hunted grown
+     *  sauropods or a Giganotosaurus as a meal. Its own young and the wounded are still taken (weakPrey). */
+    protected boolean sizedForIt(LivingEntity e) {
+        if (e instanceof PredatorDinosaur p && !p.isBaby() && p.getBbWidth() >= this.getBbWidth() * 0.6F) {
+            return false;
+        }
+        return e.getBbWidth() <= this.getBbWidth() * (this.packHunter() ? 2.0F : 1.25F);
+    }
+
     /** The weak first (1.9.5 fix): a wounded prey, or a calf of a herbivore no bigger than itself. Most big predators
      *  leave the young out of isPrey (they hunt grown animals), so the calf was never picked here (docs/estudos/12). */
     protected boolean weakPrey(LivingEntity e) {
@@ -132,7 +142,8 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
             }
         });
         // the weak first (06/11/2026, the ecosystem): a calf or a wounded animal of a herd is picked before the others
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Animal.class, preyInterval(), true, false,
+        // looked for four times as often as the rest, so it is found first (1.9.5)
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Animal.class, Math.max(10, preyInterval() / 4), true, false,
                 e -> this.canHunt() && this.weakPrey(e)) {
             @Override
             public boolean canUse() {
@@ -140,7 +151,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
             }
         });
         this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Animal.class, preyInterval(), true, false,
-                e -> this.canHunt() && this.isPrey(e)) {
+                e -> this.canHunt() && this.isPrey(e) && this.sizedForIt(e)) {
             @Override
             public boolean canUse() {
                 return PredatorDinosaur.this.canHunt() && super.canUse();
