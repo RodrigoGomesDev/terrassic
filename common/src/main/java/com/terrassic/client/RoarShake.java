@@ -41,8 +41,11 @@ public final class RoarShake {
         if (mc.level.getGameTime() % 200 == 0) {
             STRIDE.clear();
         }
+        // 1.9.5: every walker's footfall throws up a little of the ground; the giants' shake the camera too (not only the
+        // alpha's), lighter (docs/estudos/12, Locomoção)
         for (com.terrassic.entity.DinosaurEntity d : mc.level.getEntitiesOfClass(com.terrassic.entity.DinosaurEntity.class,
-                camera.getBoundingBox().inflate(24.0D), e -> e.isAlpha() && !e.isBaby())) {
+                camera.getBoundingBox().inflate(24.0D), e -> !(e instanceof com.terrassic.entity.SwimmingDinosaur)
+                        && !(e instanceof com.terrassic.entity.FlyingDinosaur && !e.onGround()))) {
             double[] s = STRIDE.get(d.getId());
             if (s == null) {
                 STRIDE.put(d.getId(), new double[] {d.getX(), d.getZ(), 0.0D});
@@ -61,12 +64,25 @@ public final class RoarShake {
                 continue;
             }
             s[2] -= stride;
-            if (camera.getVehicle() == d || !ClientConfig.flag("roar_shake")) {
+            if (!d.isInWater() && d.getBbWidth() >= 1.0F) {
+                net.minecraft.core.BlockPos under = d.blockPosition().below();
+                net.minecraft.world.level.block.state.BlockState ground = mc.level.getBlockState(under);
+                if (!ground.isAir()) {
+                    int n = 1 + Math.round(d.getBbWidth());
+                    for (int i = 0; i < n; i++) {
+                        mc.level.addParticle(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK, ground),
+                                d.getX() + (mc.level.random.nextDouble() - 0.5D) * d.getBbWidth(), d.getY() + 0.05D,
+                                d.getZ() + (mc.level.random.nextDouble() - 0.5D) * d.getBbWidth(), 0.0D, 0.04D, 0.0D);
+                    }
+                }
+            }
+            boolean giant = d.isAlpha() && !d.isBaby() || d.getBbWidth() >= 3.5F;
+            if (!giant || camera.getVehicle() == d || !ClientConfig.flag("roar_shake")) {
                 continue;
             }
             double dist = Math.sqrt(camera.distanceToSqr(d));
             float near = (float) Mth.clamp(1.0D - (dist - 6.0D) / 14.0D, 0.0D, 1.0D);
-            amplitude = Math.min(MAX_DEGREES * 1.5F, amplitude + MAX_DEGREES * 0.3F * near);
+            amplitude = Math.min(MAX_DEGREES * 1.5F, amplitude + MAX_DEGREES * (d.isAlpha() ? 0.3F : 0.12F) * near);
         }
     }
 

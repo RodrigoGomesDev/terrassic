@@ -65,6 +65,64 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         return this.fightsBack() && !this.isBaby();
     }
 
+    // ------------------------------------------------------------------ territory (1.9.5, docs/estudos/12, Comportamento)
+    // The big herbivores that fight are short-tempered on their ground, as in ARK: a player that comes within 8 blocks
+    // (6.4 crouching) gets the species' warning display; one still within 5 blocks after 3 s is charged; one that backs
+    // off past 10 blocks is let be.
+
+    private static final java.util.Set<String> TERRITORIAL = java.util.Set.of("triceratops", "styracosaurus", "ankylosaurus",
+            "pachycephalosaurus", "therizinosaurus", "protoceratops", "euoplocephalus", "pachyrhinosaurus");
+    private int warnLeft;
+    private net.minecraft.world.entity.player.Player warned;
+
+    private void territoryTick() {
+        if (!TERRITORIAL.contains(this.speciesId()) || this.isTame() || this.isBaby() || this.isSleeping() || this.isKnockedOut()
+                || this.getTarget() != null || this.isRecovering() || !this.fightsBack()) {
+            this.warnLeft = 0;
+            this.warned = null;
+            return;
+        }
+        if (this.warnLeft > 0) {
+            this.warnLeft--;
+            net.minecraft.world.entity.player.Player p = this.warned;
+            if (p == null || !p.isAlive() || p.distanceTo(this) > 10.0F) {
+                this.warnLeft = 0;
+                this.warned = null;
+                return;
+            }
+            this.getNavigation().stop();
+            this.getLookControl().setLookAt(p, 30.0F, 30.0F);
+            if (this.warnLeft == 0 && p.distanceTo(this) < 5.0F + this.getBbWidth() * 0.5F && this.canAttack(p)) {
+                this.setTarget(p);
+                this.warned = null;
+            }
+            return;
+        }
+        if (this.tickCount % 10 != 0) {
+            return;
+        }
+        for (net.minecraft.world.entity.player.Player p : this.level().getEntitiesOfClass(net.minecraft.world.entity.player.Player.class,
+                this.getBoundingBox().inflate(9.0D), q -> q.isAlive() && !q.isCreative() && !q.isSpectator())) {
+            double range = (8.0D + this.getBbWidth() * 0.5D) * (p.isCrouching() ? 0.8D : 1.0D);
+            if (p.distanceTo(this) < range && this.canAttack(p) && this.hasLineOfSight(p)) {
+                this.warned = p;
+                this.warnLeft = 60;
+                for (String a : new String[]{"crown_display", "claw_display", "threat", "display", "stamp", "paw_scrape", "frill_show"}) {
+                    if (this.hasAnim(a)) {
+                        triggerAnim(ACTION_CONTROLLER, a);
+                        break;
+                    }
+                }
+                this.playAmbientSound();
+                return;
+            }
+        }
+    }
+
+    public boolean isWarning() {
+        return this.warnLeft > 0;
+    }
+
     /** false = flees instead of fighting back. */
     protected boolean fightsBack() {
         return true;
@@ -166,6 +224,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     /** Grazing: now and then, more often when hungry; if something edible grows within reach, it is a real meal. */
     @Override
     protected void customServerAiStep() {
+        this.territoryTick();
         super.customServerAiStep();
         this.kickTick();
         if (this.getTarget() == null && !this.isVehicle() && !this.isInSittingPose() && !this.isSleeping()

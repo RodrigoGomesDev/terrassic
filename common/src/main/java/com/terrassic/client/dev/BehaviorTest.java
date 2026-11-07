@@ -104,7 +104,10 @@ public final class BehaviorTest {
         }
         if (only.contains("regressao")) {
             // 1.9.5: the whole battery before a version goes out (memory "patches estaveis"; tools/validation/behavior_regression.py)
-            only = only + ",carcass,jaws,gaits,water,steps,night,weak,sleepfish,behave,duels";
+            only = only + ",carcass,jaws,gaits,water,steps,night,weak,sleepfish,behave,territory,duels";
+        }
+        if (only.contains("territory")) {
+            planTerritory();
         }
         if (only.contains("steps")) {
             planSteps();
@@ -369,6 +372,67 @@ public final class BehaviorTest {
                 return 2;
             });
         }
+    }
+
+    /** 1.9.5, territory and the pack: a wild Triceratops warns a player who comes near and charges one who stays; a
+     *  pack of three Velociraptors strikes harder together. */
+    private static void planTerritory() {
+        double x0 = 4800.5D;
+        UUID trike = id();
+        UUID[] raps = {id(), id(), id()};
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Territory and pack (1.9.5)");
+            watchAt = null;          // no camera that moves the player about: the player itself is the one warned
+            followed = null;
+            noAutoShots = true;
+            clear(mc, x0, 30);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+            command(mc, "time set 1000");
+            command(mc, "gamemode survival " + mc.player.getGameProfile().getName());
+            command(mc, "effect give " + mc.player.getGameProfile().getName() + " minecraft:resistance 120 4 true");
+            summon(mc, "triceratops", x0, Y, 0.5D, trike, "Rotation:[90f,0f],Attributes:[{Name:\"generic.movement_speed\",Base:0.0d}]");
+            NEW.clear();
+            pendingShot = null;
+            mc.player.getAbilities().flying = false;
+            command(mc, String.format(Locale.ROOT, "tp %s %.1f %.1f %.1f -90 0", mc.player.getGameProfile().getName(), x0 - 10.5D, Y, 0.5D));
+            return 80;
+        });
+        STEPS.add(mc -> {
+            com.terrassic.entity.HerbivoreDinosaur t = server(mc, trike) instanceof com.terrassic.entity.HerbivoreDinosaur h ? h : null;
+            net.minecraft.server.level.ServerPlayer sp = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            REPORT.add("  player 9 blocks off, 4 s: warning " + (t != null && t.isWarning()) + ", target " + (t == null || t.getTarget() == null ? "none" : "PLAYER")
+                    + "  [gamemode " + sp.gameMode.getGameModeForPlayer() + ", may attack " + (t != null && t.canAttack(sp)) + ", distance " + (t == null ? "?" : String.format(Locale.ROOT, "%.1f", t.distanceTo(sp))) + "]");
+            NEW.clear();
+            pendingShot = null;
+            command(mc, String.format(Locale.ROOT, "tp %s %.1f %.1f %.1f -90 0", mc.player.getGameProfile().getName(), x0 - 5.5D, Y, 0.5D));
+            return 100;
+        });
+        STEPS.add(mc -> {
+            com.terrassic.entity.HerbivoreDinosaur t = server(mc, trike) instanceof com.terrassic.entity.HerbivoreDinosaur h ? h : null;
+            net.minecraft.server.level.ServerPlayer sp2 = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+            REPORT.add("  player 5 blocks off, 5 s: target " + (t == null || t.getTarget() == null ? "none" : t.getTarget() instanceof net.minecraft.world.entity.player.Player ? "the player (charged)" : "other")
+                    + (t == null ? "" : String.format(Locale.ROOT, "  [distance %.1f, warning %s, sleeping %s, sees %s, recovering %s, crouching %s]",
+                    t.distanceTo(sp2), t.isWarning(), t.isSleeping(), t.hasLineOfSight(sp2), t.isRecovering(), sp2.isCrouching()))
+                    + (t == null ? "" : String.format(Locale.ROOT, " trike at %.1f %.1f %.1f, player at %.1f %.1f %.1f", t.getX(), t.getY(), t.getZ(), sp2.getX(), sp2.getY(), sp2.getZ())));
+            command(mc, "gamemode creative " + mc.player.getGameProfile().getName());
+            noAutoShots = false;
+            command(mc, "kill " + trike);
+            for (int i = 0; i < 3; i++) {
+                summon(mc, "velociraptor", x0 + 10 + i * 2, Y, 10.5D, raps[i], "");
+            }
+            summon(mc, "velociraptor", x0 - 20, Y, 10.5D, id(), "NoAI:1b");
+            return 60;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity r = server(mc, raps[0]);
+            if (r != null) {
+                var inst = r.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
+                double bonus = inst == null ? 0.0D : inst.getModifiers().stream().filter(m -> "pack".equals(m.getName())).mapToDouble(m -> m.getAmount()).sum();
+                REPORT.add(String.format(Locale.ROOT, "  Velociraptor with 2 of its pack near: pack %d, pack bonus +%.0f%% of its base damage", r.packMembers(), bonus * 100.0D));
+            }
+            return 1;
+        });
     }
 
     /** 1.9.5, fluid steps (docs/estudos/12, Locomoção): a stair of one-block steps; each walker climbs it and the height
@@ -2020,7 +2084,7 @@ public final class BehaviorTest {
             }
             if (shotCooldown > 0) {
                 shotCooldown--;
-            } else if (!NEW.isEmpty() && mc.player != null && mc.player.getVehicle() == null) {
+            } else if (!NEW.isEmpty() && !noAutoShots && mc.player != null && mc.player.getVehicle() == null) {
                 Object[] ev = NEW.poll();
                 Entity e = mc.level.getEntity((Integer) ev[0]);
                 if (e instanceof DinosaurEntity d) {
@@ -2061,6 +2125,8 @@ public final class BehaviorTest {
     private static String pendingShot;
     private static int pendingIn;
     private static Vec3 watchAt;
+    /** The photos of each new animal move the camera, which is the player: off while the player itself is tested. */
+    private static boolean noAutoShots;
     private static double watchSize;
 
     // ------------------------------------------------------------------ helpers
