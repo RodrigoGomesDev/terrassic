@@ -41,7 +41,8 @@ vários commits de um mesmo pacote saem numa versão só.
    mais para lá. Sem o arquivo, o aviso sai só com "A new build is out".
 6. Depois disso, push da `main` e da `mc/1.21.1`: em até 30 minutos o Rexpert vê o `mod_version` novo na `main` e
    posta no #builds (`rexpert/src/lib/builds.js`).
-7. Tags (`vX.Y.Z` e `vX.Y.Z-1.21.1`) quando o Rodrigo quiser o anúncio oficial no #avisos.
+7. Tags anotadas `vX.Y.Z` (na `main`) e `vX.Y.Z-1.21.1` (na `mc/1.21.1`), **sempre**, logo depois do push da versão
+   (Rodrigo, 06/11/2026): o Rexpert anuncia no #avisos.
 
 ## Versões de teste
 
