@@ -35,10 +35,14 @@ vários commits de um mesmo pacote saem numa versão só.
    `terrassic-fabric-1.20.1-X.Y.Z.jar`, `terrassic-forge-1.20.1-X.Y.Z.jar`, `terrassic-fabric-1.21.1-X.Y.Z.jar`,
    `terrassic-neoforge-1.21.1-X.Y.Z.jar`. Notas, quando houver, em `vX.Y.Z/` ao lado.
 4. O Codex publica as builds nas lojas e coloca o changelog.
-5. Depois disso, push da `main` e da `mc/1.21.1`: a mudança de `mod_version` dispara o aviso no #builds
-   (`.github/workflows/discord-build.yml`; para repetir um aviso que falhou, Actions → "Aviso de build no Discord" →
-   Run workflow, com uma conta admin do repositório).
-6. Tags (`vX.Y.Z` e `vX.Y.Z-1.21.1`) quando o Rodrigo quiser o anúncio oficial no #avisos.
+5. **O mesmo changelog entra no repositório como `docs/changelog/X.Y.Z.md`**, com uma seção `## Português` e uma
+   `## English` (o formato dos que já estão lá), **no mesmo push** da versão ou antes dele. Os avisos do Rexpert no #builds e no
+   #avisos publicam a seção `## English`: o servidor do Discord é em inglês, e os commits (em português, na língua da equipe) não vão
+   mais para lá. Sem o arquivo, o aviso sai só com "A new build is out".
+6. Depois disso, push da `main` e da `mc/1.21.1`: em até 30 minutos o Rexpert vê o `mod_version` novo na `main` e
+   posta no #builds (`rexpert/src/lib/builds.js`).
+7. Tags anotadas `vX.Y.Z` (na `main`) e `vX.Y.Z-1.21.1` (na `mc/1.21.1`), **sempre**, logo depois do push da versão
+   (Rodrigo, 06/11/2026): o Rexpert anuncia no #avisos.
 
 ## Versões de teste
 
