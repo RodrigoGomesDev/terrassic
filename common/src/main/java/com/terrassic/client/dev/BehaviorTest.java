@@ -510,6 +510,9 @@ public final class BehaviorTest {
             REPORT.add("");
             REPORT.add("== Behaviour (1.9.5)");
             clear(mc, x0, 60);
+            // the flight goes 24-32 blocks a leg, more than once: the land round is kept loaded wide, or the runner
+            // freezes in an unloaded chunk (it did, at 64 blocks)
+            command(mc, "forceload add " + (int) (x0 - 112) + " -112 " + (int) (x0 + 112) + " 112");
             command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..120]");
             command(mc, "time set 1000");
             summon(mc, "carnotaurus", x0, Y, 0.5D, carno, "Hunger:20");
@@ -544,8 +547,19 @@ public final class BehaviorTest {
                 REPORT.add(String.format(Locale.ROOT, "  Carnotaurus brought to 10%%: 10 s later %.1f blocks from its attacker (was 4), recovering %s, target %s, health %.0f%%",
                         c.distanceTo(b), c.isRecovering(), c.getTarget() == null ? "none" : "SOME", 100.0F * c.getHealth() / c.getMaxHealth()));
             }
-            return 1800;
+            return 300;
         });
+        for (int w = 0; w < 5; w++) {
+            STEPS.add(mc -> {
+                DinosaurEntity c = server(mc, carno);
+                if (c != null) {
+                    REPORT.add(String.format(Locale.ROOT, "    health %.0f%%, last hurt by %s, in water %s, on ground %s, at %.0f %.0f %.0f",
+                            100.0F * c.getHealth() / c.getMaxHealth(), c.getLastDamageSource() == null ? "-" : c.getLastDamageSource().getMsgId(),
+                            c.isInWater(), c.onGround(), c.getX(), c.getY(), c.getZ()));
+                }
+                return 300;
+            });
+        }
         STEPS.add(mc -> {
             DinosaurEntity c = server(mc, carno);
             if (c != null) {
