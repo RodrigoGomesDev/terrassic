@@ -420,6 +420,9 @@ public final class BehaviorTest {
                     }
                     REPORT.add(String.format(Locale.ROOT, "  after 2 min of night: %d of %d alive; herbivores asleep %d of %d, predators asleep %d of %d",
                             alive, ids.size(), herbAsleep, herb, predAsleep, pred));
+                    long edAwake = all.stream().filter(d -> d instanceof com.terrassic.entity.Saurolophine && !d.isSleeping()).count();
+                    long edAll = all.stream().filter(d -> d instanceof com.terrassic.entity.Saurolophine).count();
+                    REPORT.add("  Edmontosaurus awake (the watch): " + edAwake + " of " + edAll);
                     REPORT.add(String.format(Locale.ROOT, "  sleeping herbivores: nearest predator %.1f blocks at the closest, %.1f on average; %d within 16 blocks",
                             herbAsleep == 0 ? 0.0D : minD, herbAsleep == 0 ? 0.0D : sumD / herbAsleep, close));
                 }

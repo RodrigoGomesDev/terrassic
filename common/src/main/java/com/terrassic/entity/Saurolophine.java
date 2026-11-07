@@ -116,6 +116,17 @@ public abstract class Saurolophine extends HerbivoreDinosaur {
         this.getNavigation().moveTo(away.x, away.y, away.z, 1.6D);
     }
 
+    /** 1.9.5: the one on watch stays awake through the herd's night (docs/estudos/12). */
+    @Override
+    public boolean safeToSleep() {
+        return this.sentinel == 0 && super.safeToSleep();
+    }
+
+    @Override
+    public boolean wokenByThreat() {
+        return this.sentinel > 0 || super.wokenByThreat();
+    }
+
     private boolean busy() {
         return this.getTarget() != null || this.isVehicle() || this.isInSittingPose() || this.isSleeping() || this.isKnockedOut();
     }
@@ -261,8 +272,20 @@ public abstract class Saurolophine extends HerbivoreDinosaur {
                 triggerAnim(ACTION_CONTROLLER, "vigilant");
             }
             if (this.sentinel == 0) {
-                triggerAnim(ACTION_CONTROLLER, "graze");
-                this.still = 60;
+                if (this.isSleepTime()) {
+                    // 1.9.5, the night watch: it wakes a sleeping one of the herd to take over before it lies down
+                    for (Saurolophine o : this.herd(HERD * 0.6D)) {
+                        if (o.isSleeping() && !o.isBaby()) {
+                            o.setSleeping(false);
+                            o.sentinel = WATCH_SHIFT + this.random.nextInt(WATCH_SHIFT);
+                            o.triggerAnim(ACTION_CONTROLLER, "vigilant");
+                            break;
+                        }
+                    }
+                } else {
+                    triggerAnim(ACTION_CONTROLLER, "graze");
+                    this.still = 60;
+                }
             }
             return;
         }
