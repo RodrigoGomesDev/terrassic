@@ -90,7 +90,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             // jaws and beaks spun round, legs went wrong (found in play, 06/11). The marks are cleared again here, so
             // GeckoLib resets those bones as it should and the addition stays an addition.
             for (String name : NO_FIX ? new String[0] : LIVELY_BONES) {
-                CoreGeoBone b = getAnimationProcessor().getBone(name);
+                GeoBone b = getAnimationProcessor().getBone(name);
                 if (b != null) {
                     b.resetStateChanges();
                 }

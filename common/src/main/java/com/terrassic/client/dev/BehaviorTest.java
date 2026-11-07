@@ -556,7 +556,7 @@ public final class BehaviorTest {
                         Entity c = mc.level.getEntity(d.getId());
                         if (c instanceof DinosaurEntity cd && k >= 50) {
                             if (mc.getEntityRenderDispatcher().getRenderer(cd) instanceof software.bernie.geckolib.renderer.GeoEntityRenderer<?> gr) {
-                                software.bernie.geckolib.core.animatable.model.CoreGeoBone b = gr.getGeoModel().getAnimationProcessor().getBone("jaw");
+                                software.bernie.geckolib.cache.object.GeoBone b = gr.getGeoModel().getAnimationProcessor().getBone("jaw");
                                 if (b != null) {
                                     float x = (float) Math.toDegrees(b.getRotX());
                                     if (!Float.isNaN(jaw[0])) {

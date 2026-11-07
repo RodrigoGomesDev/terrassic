@@ -1984,7 +1984,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     }
 
     @Override
-    protected void jumpFromGround() {
+    public void jumpFromGround() {
         if (this.smoothWater() && this.isInWater() && !this.bankAhead()) {
             return;                         // no hop off the bottom
         }
