@@ -87,6 +87,12 @@ for sp, box, drawn in re.findall(r"  (\w+): box jumps up to ([\d.]+) blocks in a
         continue        # a small one hops the step: the arc is smooth already
     check(f"degrau {sp}", float(drawn) <= 0.4, f"caixa {box}, modelo {drawn} bloco por tick")
 
+# territory and pack (1.9.5)
+check("território: sem aviso fora do alcance", "player 9 blocks off, 4 s: warning false, target none" in text, "")
+check("território: ataca quem fica perto", "the player (charged)" in text, "")
+m = re.search(r"pack (\d+), pack bonus \+(\d+)%", text)
+check("bônus de bando", m is not None and int(m.group(1)) == 2 and int(m.group(2)) == 30, m.group(0) if m else "sem medida")
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))

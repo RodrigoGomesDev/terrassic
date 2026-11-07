@@ -2304,6 +2304,29 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setTarget(null);
     }
 
+    private static final java.util.UUID PACK_BONUS = java.util.UUID.fromString("3b7a2c40-9d1e-4f6a-8c25-1e7d0b9a4c11");
+    private int packMembers = -1;
+
+    private void packBonus(int n) {
+        if (n == this.packMembers) {
+            return;
+        }
+        this.packMembers = n;
+        net.minecraft.world.entity.ai.attributes.AttributeInstance dmg = this.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (dmg == null) {
+            return;
+        }
+        dmg.removeModifier(PACK_BONUS);
+        if (n > 0) {
+            dmg.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(PACK_BONUS, "pack", 0.15D * n,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_BASE));
+        }
+    }
+
+    public int packMembers() {
+        return Math.max(0, this.packMembers);
+    }
+
     public boolean isRecovering() {
         return this.recovering;
     }
@@ -2319,6 +2342,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             if (this.getTarget() != null) {
                 this.setTarget(null);       // the revenge goal would turn it round
             }
+        }
+        // the pack (1.9.5): a pack hunter strikes 15% harder for each of its kind within 12 blocks, up to four
+        if (this.packHunter() && this.tickCount % 20 == 0) {
+            int n = Math.min(4, this.level().getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(12.0D),
+                    o -> o != this && o.getType() == this.getType() && o.isAlive() && !o.isBaby()).size());
+            this.packBonus(n);
         }
         // a wild animal left in peace for 10 s heals half a percent a second
         if (this.tickCount % 20 == 0 && this.tickCount - this.lastDamagedTick > 200 && this.getHealth() < this.getMaxHealth()) {
