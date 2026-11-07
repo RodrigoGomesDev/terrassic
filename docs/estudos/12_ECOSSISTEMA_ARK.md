@@ -105,3 +105,21 @@ Ordem pensada para cada etapa já mudar o que o jogador vê.
 Fases novas no teste em cliente: "noite" (onde cada um dorme, distâncias predador/presa às 0h), "cadeia" (quem ataca
 quem num vale povoado por 10 minutos), "zonas" (proporção de predadores por habitat em 512x512), "estável" (a mesma
 população depois de ir e voltar).
+
+## 5. Andamento da 1.9.5 (branch `eco/1.9.5`, 07/11/2026)
+
+Medido na `BehaviorTest` (fases `night`, `weak`), cliente Fabric, som zerado:
+
+| Feito | Medida |
+|---|---|
+| Herbívoro só dorme sem predador acordado a 32 blocos nem dormindo a 28; antes se afasta com a manada (`ai/SafeRestGoal`); acorda com predador caçando perto | dormindo a 34,9-38,9 blocos do predador em média (1.9.1: 25,4); o mais perto a 28,2 (1.9.1: 17,7) |
+| Predador com muita fome (abaixo de 40) não dorme, patrulha | — |
+| Sentinela do Edmontossauro à noite, passa o turno acordando outro | 2 de 6 acordados com a manada dormindo |
+| O mais fraco primeiro: filhote de herbívoro do tamanho do predador ou menor | T. rex com fome escolheu o filhote em 3 de 3 |
+| Presa até 1,25x a largura do predador (2x em bando); topo não caça topo | T. rex com fome ignorou o Argentinossauro adulto |
+
+Já existia e foi conferido: predador terrestre come a carcaça e fica saciado de 5 a 7 minutos (`EatCarcassGoal`).
+
+Próximos (na ordem do plano): temperamentos na tabela de espécies e Rivalidade das manadas lutadoras (4.2); spawn por
+zona com metas de proporção, tetos e população estável (4.3, precisa de decisão do Rodrigo sobre os números); território,
+bebedouros e ninhais fixos, rotas salvas (4.4).
