@@ -484,7 +484,7 @@ public final class BehaviorTest {
             DinosaurEntity r = server(mc, raps[0]);
             if (r != null) {
                 var inst = r.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE);
-                double bonus = inst == null ? 0.0D : inst.getModifiers().stream().filter(m -> "pack".equals(m.getName())).mapToDouble(m -> m.getAmount()).sum();
+                double bonus = inst == null ? 0.0D : inst.getModifiers().stream().filter(m -> m.id().getPath().equals("pack_bonus")).mapToDouble(m -> m.amount()).sum();
                 REPORT.add(String.format(Locale.ROOT, "  Velociraptor with 2 of its pack near: pack %d, pack bonus +%.0f%% of its base damage", r.packMembers(), bonus * 100.0D));
             }
             return 1;

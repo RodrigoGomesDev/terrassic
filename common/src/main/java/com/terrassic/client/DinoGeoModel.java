@@ -82,8 +82,8 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("young_frill", !baby);
         // 1.9.5: the neck takes 40% of the look's turn from the head (the head alone turned like a vanilla mob's); the
         // sum is the same, so it still looks where it looks
-        CoreGeoBone headB = getAnimationProcessor().getBone("head");
-        CoreGeoBone neckB = getAnimationProcessor().getBone("neck");
+        GeoBone headB = getAnimationProcessor().getBone("head");
+        GeoBone neckB = getAnimationProcessor().getBone("neck");
         if (headB != null && neckB != null && !animatable.isSleeping() && !animatable.isKnockedOut() && animatable.isAlive()) {
             float yaw = headB.getRotY();
             float share = yaw * 0.4F;

@@ -2313,7 +2313,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setTarget(null);
     }
 
-    private static final java.util.UUID PACK_BONUS = java.util.UUID.fromString("3b7a2c40-9d1e-4f6a-8c25-1e7d0b9a4c11");
+    private static final net.minecraft.resources.ResourceLocation PACK_BONUS = com.terrassic.Terrassic.id("pack_bonus");
     private int packMembers = -1;
 
     private void packBonus(int n) {
@@ -2327,8 +2327,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         dmg.removeModifier(PACK_BONUS);
         if (n > 0) {
-            dmg.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(PACK_BONUS, "pack", 0.15D * n,
-                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_BASE));
+            dmg.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(PACK_BONUS, 0.15D * n,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }
     }
 

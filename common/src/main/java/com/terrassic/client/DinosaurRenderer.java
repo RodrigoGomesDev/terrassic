@@ -54,8 +54,10 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
     /** A flyer that tilts in flight pitches and banks the whole body about its saddle (FlyingDinosaur#flightPitch). The
      *  model is already scaled here and faces -Z, so the pivot is in model units. */
     @Override
-    protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
-        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick);
+    protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        // GeckoLib 4.9 calls this six-argument form (the five-argument one is never called: the flight tilt never
+        // showed in 1.21.1 until 1.9.5)
+        super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
         if (animatable.deathTime <= 0 && !(animatable instanceof FlyingDinosaur && !animatable.onGround())) {
             // 1.9.5: the body follows the ground under it (pitch front to back, roll side to side), about its middle
             float gp = animatable.groundPitch(partialTick);
