@@ -214,7 +214,7 @@ public class MigrateGoal extends Goal {
                 net.minecraft.world.level.block.state.BlockState on = this.mob.level().getBlockState(top);
                 if (!this.mob.level().getFluidState(top.below()).isEmpty() || !this.mob.level().getFluidState(top).isEmpty()) {
                     water = true;
-                } else if (on.is(net.minecraft.world.level.block.Blocks.GRASS) || on.is(net.minecraft.world.level.block.Blocks.TALL_GRASS)
+                } else if (on.is(net.minecraft.world.level.block.Blocks.SHORT_GRASS) || on.is(net.minecraft.world.level.block.Blocks.TALL_GRASS)
                         || on.is(net.minecraft.world.level.block.Blocks.FERN) || on.is(net.minecraft.world.level.block.Blocks.LARGE_FERN)) {
                     food += 2;
                 } else if (under.is(net.minecraft.world.level.block.Blocks.GRASS_BLOCK)) {

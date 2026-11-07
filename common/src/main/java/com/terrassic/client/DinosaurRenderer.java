@@ -113,7 +113,7 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
     /** Red only while hurt: the vanilla red of the whole dying body (deathTime) is left out, the death animation and the
      *  carcass carry the death (found in play, 06/11: the body flashed red as it fell). */
     @Override
-    public int getPackedOverlay(T animatable, float u) {
+    public int getPackedOverlay(T animatable, float u, float partialTick) {
         return net.minecraft.client.renderer.texture.OverlayTexture.pack(net.minecraft.client.renderer.texture.OverlayTexture.u(u),
                 net.minecraft.client.renderer.texture.OverlayTexture.v(animatable.hurtTime > 0 && animatable.deathTime <= 0));
     }

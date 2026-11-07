@@ -32,8 +32,8 @@ public class CarcassRenderer extends GeoEntityRenderer<CarcassEntity> {
      *  south and the body seemed to jump round when the carcass took its place (found in play, 06/11): it lies at the
      *  yaw the animal died with. */
     @Override
-    protected void applyRotations(CarcassEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
-        super.applyRotations(animatable, poseStack, ageInTicks, animatable.getYRot(), partialTick);
+    protected void applyRotations(CarcassEntity animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
+        super.applyRotations(animatable, poseStack, ageInTicks, animatable.getYRot(), partialTick, nativeScale);
     }
 
     @Override

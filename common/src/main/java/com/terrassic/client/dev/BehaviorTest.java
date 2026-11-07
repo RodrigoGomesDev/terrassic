@@ -604,7 +604,7 @@ public final class BehaviorTest {
         int n = 0;
         ServerLevel l = mc.getSingleplayerServer().overworld();
         for (BlockPos p : BlockPos.betweenClosed((int) x0 - 30, (int) Y, -30, (int) x0 + 30, (int) Y, 30)) {
-            if (l.getBlockState(p).is(net.minecraft.world.level.block.Blocks.GRASS)) {
+            if (l.getBlockState(p).is(net.minecraft.world.level.block.Blocks.SHORT_GRASS)) {
                 n++;
             }
         }

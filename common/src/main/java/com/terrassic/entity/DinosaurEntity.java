@@ -1736,7 +1736,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     private double lastZ;
     private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_TIRED =
             net.minecraft.network.syncher.SynchedEntityData.defineId(DinosaurEntity.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
-    private static final java.util.UUID TIRED_SLOW = java.util.UUID.fromString("7d1f0c1e-3b6a-4f2e-9c1d-5e8a2b4c6d70");
+    private static final net.minecraft.resources.ResourceLocation TIRED_SLOW = com.terrassic.Terrassic.id("tired_slow");
     private RawAnimation walkTiredAnim;
     private RawAnimation idleTiredAnim;
 
@@ -1787,8 +1787,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (speed != null) {
             speed.removeModifier(TIRED_SLOW);
             if (tired) {
-                speed.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(TIRED_SLOW, "tired", -0.25D,
-                        net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+                speed.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(TIRED_SLOW, -0.25D,
+                        net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
     }
@@ -3818,7 +3818,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         boolean browse = false;
         for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-r, -1, -r), centre.offset(r, 2, r))) {
             BlockState state = level.getBlockState(pos);
-            if (state.is(Blocks.GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)) {
+            if (state.is(Blocks.SHORT_GRASS) || state.is(Blocks.TALL_GRASS) || state.is(Blocks.FERN) || state.is(Blocks.LARGE_FERN)) {
                 if (grief) {
                     level.destroyBlock(pos.immutable(), false, this);
                 }

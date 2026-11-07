@@ -97,9 +97,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             return;
         }
         float a = (float) Math.toDegrees(Math.asin(Math.min(0.85F, lift / this.legPx))) * 1.6F;
-        CoreGeoBone thigh = getAnimationProcessor().getBone("thigh_" + side);
-        CoreGeoBone shin = getAnimationProcessor().getBone("shin_" + side);
-        CoreGeoBone foot = getAnimationProcessor().getBone("foot_" + side);
+        GeoBone thigh = getAnimationProcessor().getBone("thigh_" + side);
+        GeoBone shin = getAnimationProcessor().getBone("shin_" + side);
+        GeoBone foot = getAnimationProcessor().getBone("foot_" + side);
         if (thigh != null && shin != null && foot != null) {
             thigh.setRotX(thigh.getRotX() + a * d2r);
             shin.setRotX(shin.getRotX() - 2.0F * a * d2r);
@@ -114,8 +114,8 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         this.legPx = m.legPx();
         if (!m.hasLegs()) {
             // the rig's own measures, once: the feet's distance from the middle and the thigh + shin length
-            CoreGeoBone th = getAnimationProcessor().getBone("thigh_l");
-            CoreGeoBone ft = getAnimationProcessor().getBone("foot_l");
+            GeoBone th = getAnimationProcessor().getBone("thigh_l");
+            GeoBone ft = getAnimationProcessor().getBone("foot_l");
             if (th != null && ft != null) {
                 m.setLegs(Math.abs(th.getPivotX()), Math.abs(th.getPivotY() - ft.getPivotY()));
             } else {
@@ -123,17 +123,17 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             }
         }
         for (int i = 0; i < 6; i++) {
-            CoreGeoBone b = getAnimationProcessor().getBone("tail" + (i + 1));
+            GeoBone b = getAnimationProcessor().getBone("tail" + (i + 1));
             if (b != null) {
                 b.setRotY(b.getRotY() + m.tail(i, partial) * d2r);
             }
         }
         float bank = m.bank(partial);
-        CoreGeoBone body = getAnimationProcessor().getBone("body");
+        GeoBone body = getAnimationProcessor().getBone("body");
         if (body != null) {
             body.setRotZ(body.getRotZ() + bank * d2r);
         }
-        CoreGeoBone neck = getAnimationProcessor().getBone("neck");
+        GeoBone neck = getAnimationProcessor().getBone("neck");
         if (neck != null) {
             // the neck looks into the curve and stays upright against the lean
             neck.setRotY(neck.getRotY() + bank * 0.9F * d2r);
@@ -163,7 +163,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             if (neck != null) {
                 neck.setRotX(neck.getRotX() - 1.2F * ex * (float) Math.sin(ph - 0.6F) * d2r);
             }
-            CoreGeoBone jaw = getAnimationProcessor().getBone("jaw");   // open = negative x
+            GeoBone jaw = getAnimationProcessor().getBone("jaw");   // open = negative x
             if (jaw != null) {
                 jaw.setRotX(jaw.getRotX() - (6.0F + 5.0F * Math.max(0.0F, (float) Math.sin(ph - 0.4F))) * ex * d2r);
             }
