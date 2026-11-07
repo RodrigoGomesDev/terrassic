@@ -383,7 +383,12 @@ public final class BehaviorTest {
                 {"dakotaraptor", "styracosaurus"}, {"therizinosaurus", "therizinosaurus"}, {"styracosaurus", "styracosaurus"}, {"protoceratops", "protoceratops"},
                 {"ankylosaurus", "tyrannosaurus"}};
         double x0 = 2000.5D;
+        // TERRASSIC_DUEL_ONLY=tyrannosaurus,carnotaurus: only the pairs whose first fighter is one of these
+        String only = System.getenv("TERRASSIC_DUEL_ONLY");
         for (String[] pair : pairs) {
+            if (only != null && !only.isBlank() && !java.util.Arrays.asList(only.split(",")).contains(pair[0])) {
+                continue;
+            }
             UUID a = id(), b = id();
             STEPS.add(mc -> {
                 REPORT.add("");
