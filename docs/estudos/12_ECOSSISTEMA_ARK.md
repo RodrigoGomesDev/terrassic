@@ -117,9 +117,10 @@ Medido na `BehaviorTest` (fases `night`, `weak`), cliente Fabric, som zerado:
 | Sentinela do Edmontossauro à noite, passa o turno acordando outro | 2 de 6 acordados com a manada dormindo |
 | O mais fraco primeiro: filhote de herbívoro do tamanho do predador ou menor | T. rex com fome escolheu o filhote em 3 de 3 |
 | Presa até 1,25x a largura do predador (2x em bando); topo não caça topo | T. rex com fome ignorou o Argentinossauro adulto |
+| Spawn por zona (margem 15%, planície 25%, mata fechada/pântano/montanha 60% de predadores), grupos até 1,5x longe da Cratera | 300 escolhas seguidas por zona: planície 4% -> 20%, mata fechada 4% -> 19% (falta predador médio na lista desses biomas; os raros ficam no teto de 2 por região) |
 
 Já existia e foi conferido: predador terrestre come a carcaça e fica saciado de 5 a 7 minutos (`EatCarcassGoal`).
 
 Próximos (na ordem do plano): temperamentos na tabela de espécies e Rivalidade das manadas lutadoras (4.2); spawn por
-zona com metas de proporção, tetos e população estável (4.3, precisa de decisão do Rodrigo sobre os números); território,
+população estável (4.3; as metas por zona estão feitas, números aprovados pelo Rodrigo em 07/11); predadores médios nas listas da mata fechada e do pântano para a meta de 60% ser alcançável; território,
 bebedouros e ninhais fixos, rotas salvas (4.4).
