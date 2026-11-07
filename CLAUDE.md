@@ -127,6 +127,16 @@ Mundos salvos com a versão PrimalEra perdem dinossauros, ovos e itens do mod (o
   anel de ovos verde-azulados sob tronco caído (`dakota_extras.py`). Teste: arenas na `BehaviorTest`
   (`TERRASSIC_BEHAVIOR_SPECIES=quetzalcoatlus,edmontosaurus,dakotaraptor`). Correções achadas: ovo de mãe voando
   (procura o chão embaixo dela, `DinosaurEntity.groundUnder`), exibição e bebedouro dos pterossauros escalados pelo tamanho.
+- Animação fluida e luta (1.9, 06/11/2026; estudos `docs/estudos/08` a `11`): cada refeito tem módulo de fluidez
+  (`<x>flow.py`: respiração, cauda e pescoço com atraso, golpes em três tempos) e de luta (`<x>fight.py`: `lunge` 1,8 s
+  com golpe aos 0,50 s, `parry` 1,5 s com contra-golpe aos 0,60 s, `stagger` 1,6 s; tempos FIXOS, o Java é genérico;
+  no Giganotossauro o bote do duelo é `duel_lunge`). Camada viva em tempo real `entity/LivelyMotion` (cauda em mola,
+  inclinação, ofegar, pés no terreno dos bípedes) aplicada em `client/DinoGeoModel` para `Eras.REMADE`. Duelo:
+  `ai/DuelGoal` (guarda de perfil, paciência, bote, leitura do ritmo, parry, bloqueio com guarda que quebra, esquiva,
+  cambaleio) com o jeito de cada espécie em `ai/DuelStyle`; espécies em `DinosaurEntity.DUEL_SPECIES`; agarrão
+  (`startClinch`) e engalfinhar de chifres (`lockHorns`); impacto (`DinosaurEntity.impact`: tremor por peso e poeira).
+  `AnimIndex` diz se o rig tem uma animação (no servidor dedicado lê o JSON do jar). Teste: `BehaviorTest` fases
+  `duels` (estatística de cada duelo + GIFs), `moves`, `carcass`, `eco`.
 - Testes da 1.8 (`docs/TESTES_1_8.md`): `client/dev/BehaviorTest` (`TERRASSIC_BEHAVIOR_TEST=1`) monta arenas e registra os
   comportamentos que os bichos fazem sozinhos, doma, sela, montaria, procriação e choco. Achou e corrigiu: Deinossuco
   caçando a própria espécie, alvo morto bloqueando a doma, procriação de bichos grandes (`ai/DinoBreedGoal` em todas as
