@@ -102,6 +102,9 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("zones")) {
+            planZones();
+        }
         if (only.contains("weak")) {
             double x0 = 3800.5D;
             UUID rex = id(), calf = id();
@@ -354,6 +357,76 @@ public final class BehaviorTest {
                 Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_%s_%03d.png", tag, k), mc.getMainRenderTarget(), msg -> {
                 });
                 return 2;
+            });
+        }
+    }
+
+    /** 1.9.5, the zones (docs/estudos/12): for each zone a place is found with the server's biome locator, the player
+     *  stands there two minutes while the EcoSpawner fills the land, and the hunters' share of the wild within 80 blocks
+     *  is counted (TERRASSIC_OLD_ZONES=1: the 1.9.1 picking). Run in a world with terrain ("densidade"). */
+    private static void planZones() {
+        com.terrassic.world.EcoSpawner.Zone[] zones = com.terrassic.world.EcoSpawner.Zone.values();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Zones" + (com.terrassic.world.EcoSpawner.OLD_ZONES ? " (OLD 1.9.1 picking)" : " (1.9.5)"));
+            command(mc, "gamerule doMobSpawning true");
+            command(mc, "time set 1000");
+            command(mc, "gamerule doDaylightCycle false");
+            return 20;
+        });
+        for (com.terrassic.world.EcoSpawner.Zone z : zones) {
+            BlockPos[] at = new BlockPos[1];
+            STEPS.add(mc -> {
+                net.minecraft.server.level.ServerLevel lvl = mc.getSingleplayerServer().overworld();
+                BlockPos spawn = lvl.getSharedSpawnPos();
+                BlockPos from = z == com.terrassic.world.EcoSpawner.Zone.MARGIN ? spawn : spawn.offset(700, 0, 700);
+                java.util.function.Predicate<net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>> wet =
+                        b -> b.is(net.minecraft.tags.BiomeTags.IS_OCEAN) || b.is(net.minecraft.tags.BiomeTags.IS_DEEP_OCEAN);
+                var found = lvl.findClosestBiome3d(b -> z == com.terrassic.world.EcoSpawner.Zone.MARGIN
+                                ? b.is(net.minecraft.tags.BiomeTags.IS_BEACH) || b.is(net.minecraft.tags.BiomeTags.IS_RIVER)
+                                : !wet.test(b) && com.terrassic.world.EcoSpawner.zoneOf(lvl, from.offset(5000, 0, 5000), b) == z,
+                        from, 3000, 32, 64);
+                if (found == null) {
+                    REPORT.add("  " + z + ": no such biome found");
+                    at[0] = null;
+                    return 1;
+                }
+                at[0] = found.getFirst();
+                BlockPos ground = lvl.getHeightmapPos(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, at[0]);
+                double share = com.terrassic.world.EcoSpawner.simulateShare(lvl, ground, 300);
+                String biome = found.getSecond().unwrapKey().map(k -> k.location().toString()).orElse("?");
+                REPORT.add(String.format(Locale.ROOT, "  %s (%s): 300 picks in a row -> hunters %.0f%% of the animals (target %.0f%%)",
+                        z, biome, 100.0D * share, 100.0D * com.terrassic.world.EcoSpawner.huntersTargetOf(z)));
+                at[0] = null;      // the measure is the simulation; no need to stand there
+                return 1;
+            });
+            STEPS.add(mc -> {
+                if (at[0] != null) {
+                    command(mc, String.format(Locale.ROOT, "spreadplayers %d %d 0 1 false @s", at[0].getX(), at[0].getZ()));
+                }
+                return 2400;
+            });
+            STEPS.add(mc -> {
+                if (at[0] == null) {
+                    return 1;
+                }
+                net.minecraft.server.level.ServerLevel lvl = mc.getSingleplayerServer().overworld();
+                Entity p = mc.getSingleplayerServer().getPlayerList().getPlayers().get(0);
+                int all = 0, hunt = 0;
+                java.util.Map<String, Integer> by = new java.util.TreeMap<>();
+                for (DinosaurEntity d : lvl.getEntitiesOfClass(DinosaurEntity.class, p.getBoundingBox().inflate(80.0D),
+                        e -> e.isAlive() && !e.isTame() && !(e instanceof com.terrassic.entity.SwimmingDinosaur)
+                                && !(e instanceof com.terrassic.entity.FlyingDinosaur))) {
+                    all++;
+                    boolean h = DinosaurEntity.isHunter(d.getType());
+                    hunt += h ? 1 : 0;
+                    by.merge(d.speciesId(), 1, Integer::sum);
+                }
+                String biome = lvl.getBiome(p.blockPosition()).unwrapKey().map(k -> k.location().toString()).orElse("?");
+                REPORT.add(String.format(Locale.ROOT, "  %s (%s): %d wild on land within 80, hunters %d = %.0f%% (target %.0f%%)  %s",
+                        z, biome, all, hunt, all == 0 ? 0.0D : 100.0D * hunt / all,
+                        100.0D * com.terrassic.world.EcoSpawner.huntersTargetOf(z), by));
+                return 1;
             });
         }
     }
