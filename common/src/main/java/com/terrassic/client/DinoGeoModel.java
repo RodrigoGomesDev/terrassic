@@ -80,6 +80,18 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("adult_comb", baby);
         hide("adult_frill", baby);
         hide("young_frill", !baby);
+        // 1.9.5: the neck takes 40% of the look's turn from the head (the head alone turned like a vanilla mob's); the
+        // sum is the same, so it still looks where it looks
+        CoreGeoBone headB = getAnimationProcessor().getBone("head");
+        CoreGeoBone neckB = getAnimationProcessor().getBone("neck");
+        if (headB != null && neckB != null && !animatable.isSleeping() && !animatable.isKnockedOut() && animatable.isAlive()) {
+            float yaw = headB.getRotY();
+            float share = yaw * 0.4F;
+            neckB.setRotY(neckB.getRotY() + share);
+            headB.setRotY(headB.getRotY() - share);
+            neckB.resetStateChanges();
+            headB.resetStateChanges();
+        }
         com.terrassic.entity.LivelyMotion lively = animatable.lively();
         if (lively != null) {
             this.scaleOf = animatable.livelyModelScale() * animatable.getScale();

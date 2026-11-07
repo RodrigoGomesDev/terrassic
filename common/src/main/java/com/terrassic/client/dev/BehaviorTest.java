@@ -102,6 +102,16 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("regressao")) {
+            // 1.9.5: the whole battery before a version goes out (memory "patches estaveis"; tools/validation/behavior_regression.py)
+            only = only + ",carcass,jaws,gaits,water,steps,night,weak,sleepfish,behave,duels";
+        }
+        if (only.contains("steps")) {
+            planSteps();
+        }
+        if (only.contains("behave")) {
+            planBehave();
+        }
         if (only.contains("zones")) {
             planZones();
         }
@@ -359,6 +369,150 @@ public final class BehaviorTest {
                 return 2;
             });
         }
+    }
+
+    /** 1.9.5, fluid steps (docs/estudos/12, Locomoção): a stair of one-block steps; each walker climbs it and the height
+     *  the model is drawn at (box + LivelyMotion step spring) is read on the client every tick: its biggest jump. */
+    private static void planSteps() {
+        double x0 = 4200.5D;
+        String[] walkers = {"tyrannosaurus", "triceratops", "edmontosaurus", "velociraptor"};
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Steps (1.9.5): a stair of 1-block steps, the biggest jump of the drawn height in one tick");
+            clear(mc, x0, 40);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+            for (int i = 0; i < 4; i++) {
+                command(mc, fill(x0 + 4 + i * 6, Y, -10, x0 + 30, Y + i, 10, "minecraft:grass_block"));
+            }
+            return 40;
+        });
+        for (String sp : walkers) {
+            UUID u = id();
+            double[] st = {Double.NaN, 0.0D, Double.NaN, 0.0D};    // last drawn y, max drawn jump, last box y, max box jump
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+                summon(mc, sp, x0 - 2, Y, 0.5D, u, "Rotation:[-90f,0f],Tags:[\"gaiter\"]");
+                return 20;
+            });
+            for (int k = 0; k < 160; k++) {
+                int kk = k;
+                STEPS.add(mc -> {
+                    DinosaurEntity d = server(mc, u);
+                    if (d != null) {
+                        if (kk % 20 == 0) {
+                            mc.getSingleplayerServer().execute(() -> d.getNavigation().moveTo(x0 + 28.0D, Y + 4.0D, 0.5D, 1.0D));
+                        }
+                        Entity c = mc.level.getEntity(d.getId());
+                        if (!(c instanceof DinosaurEntity)) {
+                            // not on the client yet: the camera goes to it first (the client only loads what is near)
+                            look(mc.player, d.position().add(0.0D, 2.0D, 6.0D + d.getBbWidth() * 2.0D), d.position());
+                        }
+                        if (c instanceof DinosaurEntity cd) {
+                            double box = cd.getY();
+                            double drawn = box + (cd.lively() == null ? 0.0D : cd.lively().stepOffset(1.0F));
+                            if (!Double.isNaN(st[0])) {
+                                st[1] = Math.max(st[1], Math.abs(drawn - st[0]));
+                                st[3] = Math.max(st[3], Math.abs(box - st[2]));
+                            }
+                            st[0] = drawn;
+                            st[2] = box;
+                            look(mc.player, c.position().add(0.0D, 2.0D, 6.0D + d.getBbWidth() * 2.0D), c.position().add(0.0D, d.getBbHeight() * 0.5D, 0.0D));
+                        }
+                    }
+                    if (kk % 2 == 0) {
+                        Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_steps_%s_%03d.png", sp, kk / 2), mc.getMainRenderTarget(), msg -> {
+                        });
+                    }
+                    if (kk == 0 || kk == 80) {
+                        DinosaurEntity dd = server(mc, u);
+                        REPORT.add("    " + sp + " tick " + kk + ": " + (dd == null ? "NOT FOUND" : String.format(Locale.ROOT, "at %.1f %.1f %.1f, nav done %s",
+                                dd.getX(), dd.getY(), dd.getZ(), dd.getNavigation().isDone())));
+                    }
+                    if (kk == 159) {
+                        REPORT.add(String.format(Locale.ROOT, "  %s: box jumps up to %.2f blocks in a tick, the model up to %.2f", sp, st[3], st[1]));
+                    }
+                    return 1;
+                });
+            }
+        }
+    }
+
+    /** 1.9.5, behaviour (docs/estudos/12, Comportamento): a wild Carnotaurus brought low runs, heals, comes back; a
+     *  Velociraptor that cannot reach its prey gives the chase up. */
+    private static void planBehave() {
+        double x0 = 4000.5D;
+        UUID carno = id(), bully = id(), rap = id(), perch = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Behaviour (1.9.5)");
+            clear(mc, x0, 60);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..120]");
+            command(mc, "time set 1000");
+            summon(mc, "carnotaurus", x0, Y, 0.5D, carno, "Hunger:20");
+            summon(mc, "leptoceratops", x0 + 4, Y, 0.5D, bully, "NoAI:1b,Invulnerable:1b");
+            return 60;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, carno);
+            Entity b = mc.getSingleplayerServer().overworld().getEntity(bully);
+            if (c != null && b instanceof net.minecraft.world.entity.LivingEntity lb) {
+                mc.getSingleplayerServer().execute(() -> {
+                    c.setHealth(c.getMaxHealth() * 0.2F);
+                    boolean ok = c.hurt(c.damageSources().mobAttack(lb), c.getMaxHealth() * 0.1F);
+                    REPORT.add(String.format(Locale.ROOT, "  right after the blow (hurt %s): health %.0f / %.0f, fleeing %d", ok, c.getHealth(), c.getMaxHealth(), c.fleeLeft));
+                });
+            }
+            return 40;
+        });
+        for (int w = 0; w < 4; w++) {
+            STEPS.add(mc -> {
+                DinosaurEntity c = server(mc, carno);
+                if (c != null) {
+                    REPORT.add(String.format(Locale.ROOT, "    +2 s: health %.0f, fleeing %d, recovering %s", c.getHealth(), c.fleeLeft, c.isRecovering()));
+                }
+                return 40;
+            });
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, carno);
+            Entity b = mc.getSingleplayerServer().overworld().getEntity(bully);
+            if (c != null && b != null) {
+                REPORT.add(String.format(Locale.ROOT, "  Carnotaurus brought to 10%%: 10 s later %.1f blocks from its attacker (was 4), recovering %s, target %s, health %.0f%%",
+                        c.distanceTo(b), c.isRecovering(), c.getTarget() == null ? "none" : "SOME", 100.0F * c.getHealth() / c.getMaxHealth()));
+            }
+            return 1800;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, carno);
+            if (c != null) {
+                REPORT.add(String.format(Locale.ROOT, "  100 s later: health %.0f%%, recovering %s, target %s",
+                        100.0F * c.getHealth() / c.getMaxHealth(), c.isRecovering(), c.getTarget() == null ? "none" : c.getTarget().getType().toShortString()));
+            }
+            command(mc, "kill " + carno);
+            // a prey it cannot reach: on a pillar of stone six high
+            command(mc, fill(x0 + 20, Y, 20, x0 + 20, Y + 5, 20, "minecraft:stone"));
+            summon(mc, "leptoceratops", x0 + 20.5D, Y + 6, 20.5D, perch, "NoAI:1b,Invulnerable:1b");
+            summon(mc, "velociraptor", x0 + 8, Y, 20.5D, rap, "Hunger:10");
+            return 20;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity r = server(mc, rap);
+            Entity p = mc.getSingleplayerServer().overworld().getEntity(perch);
+            if (r != null && p instanceof net.minecraft.world.entity.LivingEntity lp) {
+                mc.getSingleplayerServer().execute(() -> r.setTarget(lp));
+            }
+            return 600;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity r = server(mc, rap);
+            REPORT.add("  Velociraptor after 30 s on a prey it cannot reach: target " + (r == null ? "?" : r.getTarget() == null ? "none (gave up)" : "STILL ON IT"));
+            return 400;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity r = server(mc, rap);
+            REPORT.add("  20 s more: target " + (r == null ? "?" : r.getTarget() == null ? "none (stays given up)" : r.getTarget().getUUID().equals(perch) ? "THE SAME PREY AGAIN" : "another"));
+            return 1;
+        });
     }
 
     /** 1.9.5, the zones (docs/estudos/12): for each zone a place is found with the server's biome locator, the player
@@ -629,7 +783,7 @@ public final class BehaviorTest {
      *  than 0.15 block/tick). Frames rexmotion_water_NNN. */
     private static void planWater() {
         double x0 = 3000.5D;
-        String[] swimmers = {"deinosuchus", "mosasaurus", "elasmosaurus", "spinosaurus"};
+        String[] swimmers = {"deinosuchus", "mosasaurus", "elasmosaurus", "spinosaurus", "edmontosaurus", "triceratops", "tyrannosaurus"};
         UUID[] ids = new UUID[swimmers.length];
         UUID prey = id();
         for (int i = 0; i < ids.length; i++) {
@@ -640,14 +794,14 @@ public final class BehaviorTest {
             REPORT.add("");
             REPORT.add("== Water: hops in a pool five deep (a hop = rising faster than 0.15 block/tick)");
             clear(mc, x0, 30);
-            command(mc, fill(x0 - 16, Y, -16, x0 + 16, Y + 5, 16, "minecraft:glass"));
+            command(mc, fill(x0 - 16, Y, -16, x0 + 16, Y + 7, 16, "minecraft:glass"));   // walls above the water: no bank
             command(mc, fill(x0 - 15, Y, -15, x0 + 15, Y + 5, 15, "minecraft:water"));
             look(mc.player, new Vec3(x0, Y + 14.0D, 24.0D), new Vec3(x0, Y + 3.0D, 0.5D));
             return 80;
         });
         STEPS.add(mc -> {
             for (int i = 0; i < swimmers.length; i++) {
-                summon(mc, swimmers[i], x0 - 8 + i * 5, Y + 2, -6.0D + (i % 2) * 10.0D, ids[i], "");
+                summon(mc, swimmers[i], x0 - 12 + i * 4, Y + 2, -6.0D + (i % 2) * 10.0D, ids[i], "");
                 st[i][1] = Double.MAX_VALUE;
                 st[i][2] = -Double.MAX_VALUE;
                 st[i][0] = Double.NaN;
@@ -777,6 +931,12 @@ public final class BehaviorTest {
 
     /** Each species walking, then running, on a straight line, filmed side-on and close (06/11/2026: the Triceratops'
      *  legs looked broken in play). Frames rexmotion_gait_<species>_NNN; TERRASSIC_GAIT_ONLY picks species. */
+    private static final String[] LEG_BONES = {"thigh_l", "thigh_r", "shin_l", "shin_r", "arm_l", "arm_r", "forearm_l", "forearm_r",
+            "foot_l", "foot_r", "hand_l", "hand_r"};
+    private static final java.util.Map<String, float[]> LEG_LAST = new java.util.HashMap<>();
+    private static final java.util.Map<String, Float> LEG_MAX = new java.util.HashMap<>();
+    private static final java.util.Map<String, String> LEG_WHERE = new java.util.HashMap<>();
+
     private static void planGaits() {
         String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
                 "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
@@ -799,31 +959,59 @@ public final class BehaviorTest {
                 REPORT.add("== Gait: " + sp);
                 return 30;
             });
-            for (int i = 0; i < 120; i++) {
+            for (int i = 0; i < 240; i++) {
                 int k = i;
                 STEPS.add(mc -> {
-                    if (k % 10 == 0) {
+                    if (k % 20 == 0) {
                         command(mc, "kill @e[type=!player,tag=!gaiter,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
                     }
                     DinosaurEntity d = server(mc, u);
-                    if (d == null && k % 20 == 0) {
+                    if (d == null && k % 40 == 0) {
                         REPORT.add("  frame " + k + ": the animal is gone");
                     }
                     if (d != null) {
-                        double speed = k < 60 ? 1.0D : 2.0D;
+                        double speed = k < 120 ? 1.0D : 1.4D;     // a walk, then a chase's pace
                         mc.getSingleplayerServer().execute(() -> {
                             d.setTarget(null);
                             d.getNavigation().moveTo(x0 + 40.0D, Y, 0.5D, speed);
                         });
                         Entity c = mc.level.getEntity(d.getId());
                         Entity e = c != null ? c : d;
+                        if (c instanceof DinosaurEntity cd && mc.getEntityRenderDispatcher().getRenderer(cd)
+                                instanceof software.bernie.geckolib.renderer.GeoEntityRenderer<?> gr) {
+                            // the legs' turn from one frame to the next (a joint flipping shows as a big jump)
+                            for (String bone : LEG_BONES) {
+                                var b = gr.getGeoModel().getAnimationProcessor().getBone(bone);
+                                if (b != null) {
+                                    float[] now = {b.getRotX(), b.getRotY(), b.getRotZ()};
+                                    float[] was = LEG_LAST.put(sp + bone, now);
+                                    if (was != null && k > 1) {
+                                        for (int q = 0; q < 3; q++) {
+                                            float j = (float) Math.toDegrees(Math.abs(now[q] - was[q]));
+                                            if (j > LEG_MAX.getOrDefault(sp, 0.0F)) {
+                                                LEG_MAX.put(sp, j);
+                                                LEG_WHERE.put(sp, String.format(Locale.ROOT, "%s axis %d frame %d: %.0f -> %.0f, anim %s",
+                                                        bone, q, k, Math.toDegrees(was[q]), Math.toDegrees(now[q]), cd.movementDebug()));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         double back = 2.5D + d.getBbWidth() * 1.4D + d.getBbHeight() * 0.6D;
-                        Vec3 at = e.position().add(0.0D, d.getBbHeight() * 0.45D, 0.0D);
+                        // aimed a little ahead by its speed: a small fast runner left the frame (the camera lags a tick)
+                        Vec3 at = e.position().add(e.getDeltaMovement().multiply(3.0D, 0.0D, 3.0D)).add(0.0D, d.getBbHeight() * 0.45D, 0.0D);
                         look(mc.player, at.add(0.0D, d.getBbHeight() * 0.2D, back), at);
                     }
-                    Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_gait_%s_%03d.png", sp, k), mc.getMainRenderTarget(), msg -> {
-                    });
-                    return 2;
+                    if (k % 2 == 0) {
+                        Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_gait_%s_%03d.png", sp, k / 2), mc.getMainRenderTarget(), msg -> {
+                        });
+                    }
+                    if (k == 239) {
+                        REPORT.add(String.format(Locale.ROOT, "  gait %s: legs turn at most %.0f deg between two frames (every tick)  [%s]",
+                                sp, LEG_MAX.getOrDefault(sp, -1.0F), LEG_WHERE.getOrDefault(sp, "")));
+                    }
+                    return 1;
                 });
             }
         }

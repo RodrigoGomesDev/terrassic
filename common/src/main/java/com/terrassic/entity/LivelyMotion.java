@@ -63,7 +63,42 @@ public final class LivelyMotion {
         return this.legPx;
     }
 
+    // 1.9.5, fluid steps (docs/estudos/12, Locomoção): the box climbs a step in one tick; the model now follows a damped
+    // spring, so the body rises onto the block over a few ticks instead of jumping up with the box.
+    private float stepOff;
+    private float stepOffO;
+    private float stepVel;
+    private double lastY = Double.NaN;
+    private boolean lastGround;
+
+    /** How far below the box the model is drawn now (blocks, negative while it climbs). */
+    public float stepOffset(float partial) {
+        return Mth.lerp(partial, this.stepOffO, this.stepOff);
+    }
+
+    private void stepTick(DinosaurEntity e) {
+        this.stepOffO = this.stepOff;
+        double y = e.getY();
+        if (!Double.isNaN(this.lastY) && e.onGround() && this.lastGround && !e.isVehicle()) {
+            double dy = y - this.lastY;
+            if (dy > 0.2D && dy < 2.1D) {
+                this.stepOff -= (float) dy;     // the model stays where it was and catches up
+            }
+        }
+        this.lastY = y;
+        this.lastGround = e.onGround();
+        float k = 0.14F / (float) Math.sqrt(Math.max(1.0F, e.getBbHeight()));
+        this.stepVel += -this.stepOff * k - this.stepVel * 0.5F;
+        this.stepOff += this.stepVel;
+        if (Math.abs(this.stepOff) < 0.002F && Math.abs(this.stepVel) < 0.002F) {
+            this.stepOff = 0.0F;
+            this.stepVel = 0.0F;
+        }
+        this.stepOff = Mth.clamp(this.stepOff, -2.1F, 0.3F);
+    }
+
     public void tick(DinosaurEntity e) {
+        this.stepTick(e);
         float dyaw = Mth.wrapDegrees(e.yBodyRot - e.yBodyRotO);
         if (!this.started) {
             this.started = true;
@@ -117,7 +152,7 @@ public final class LivelyMotion {
     }
 
     /** The top of the ground under (x, z) relative to the animal's feet, -1.5 .. 1.2 blocks. */
-    private static float ground(DinosaurEntity e, double x, double z) {
+    static float ground(DinosaurEntity e, double x, double z) {
         double y = e.getY();
         net.minecraft.world.level.Level level = e.level();
         for (int dy = 1; dy >= -2; dy--) {

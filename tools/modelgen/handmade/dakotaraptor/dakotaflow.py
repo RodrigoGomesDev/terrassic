@@ -101,9 +101,10 @@ def gait2(t, Tc, stride, duty, lift, bob, lean=0.0, drop=0.0, head=0.0, tail_up=
     return p
 
 
-# the game reads walk 1.3 s / 40 px, run 0.56 s / 84 px, stalk 1.911 s (Eudromaeosaur.WALK/RUN/STALK): kept
+# the game reads walk 1.3 s / 40 px, run 0.56 s / 68 px, stalk 1.911 s (Eudromaeosaur.WALK/RUN/STALK). 1.9.5: the run's
+# stride 84 -> 68 px: at 84 the thigh hit its range and the knee flipped for part of the swing (a 96 deg snap of the foot)
 def walk(t): return gait2(t, 1.3, 40, 0.6, 6, 1.0, roll=6.5, yaw=4.0)
-def run(t): return gait2(t, 0.56, 84, 0.38, 11, 2.0, lean=6, drop=3, head=-4, tail_up=3, roll=3.0, yaw=2.5, whip=0.6, wing=0.25,
+def run(t): return gait2(t, 0.56, 68, 0.38, 11, 2.0, lean=6, drop=3, head=-4, tail_up=3, roll=3.0, yaw=2.5, whip=0.6, wing=0.25,
                          splay=1.5, stance_clear=0.2)
 
 

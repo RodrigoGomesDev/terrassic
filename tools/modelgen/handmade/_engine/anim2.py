@@ -83,8 +83,53 @@ def bake(fn, length, fps=20):
     n = int(round(length * fps))
     return [fn(i / fps) for i in range(n + 1)]
 
+import re as _re
+
+# 1.9.5 (stable patches): the legs' joints never turn faster than this. The leg IK of some rigs jumps between its
+# solutions at a foot strike (the Dakotaraptor's run turned a foot 96 deg in 1/40 s, a visible snap in game); the
+# fastest honest stride in the files is about 900 deg/s, so only the snaps are touched (1500: a lower cap let the IK
+# feet lag into the ground, 1.8-2.4 px).
+LEG_RATE = 1500.0
+_LEG = _re.compile(r"^(thigh|shin|foot|toes?|meta\w*|arm|forearm|hand)_[lr]$")
+
+
+def _rate_limit(frames, fps, loop):
+    """the leg bones' rotations held under LEG_RATE deg/s: forward and backward limited passes, averaged (a snap
+    becomes a fast but continuous turn, centred on where it was); a loop is limited across its seam"""
+    cap = LEG_RATE / fps
+    legs = sorted({b for f in frames for b in f if _LEG.match(b)})
+    if not legs:
+        return frames
+    n = len(frames)
+    out = [dict(f) for f in frames]
+    for b in legs:
+        for k in range(3):
+            v = [float(f[b][0][k]) if b in f else 0.0 for f in frames]
+            if all(abs(v[i + 1] - v[i]) <= cap for i in range(n - 1)):
+                continue
+            seq = (v[:-1] * 3 + [v[-1]]) if loop and n > 2 else v
+            fw = list(seq)
+            for i in range(1, len(fw)):
+                fw[i] = fw[i - 1] + max(-cap, min(cap, fw[i] - fw[i - 1]))
+            bw = list(seq)
+            for i in range(len(bw) - 2, -1, -1):
+                bw[i] = bw[i + 1] + max(-cap, min(cap, bw[i] - bw[i + 1]))
+            mid = [(x + y) / 2.0 for x, y in zip(fw, bw)]
+            if loop and n > 2:
+                mid = mid[n - 1:2 * (n - 1) + 1]
+            for i, f in enumerate(out):
+                if b in f:
+                    e = f[b]
+                    rot = list(e[0]); rot[k] = mid[i]
+                    f[b] = (rot,) + tuple(e[1:])
+    return out
+
+
 def to_geckolib(frames, length, fps=20, loop=True, every=2, lerp="catmullrom"):
     """frames: list of pose dicts (B-space deltas). Export keyframes every `every` frames (catmull-rom in GeckoLib)."""
+    if loop:
+        # only the loops (walk, run, turns...): a blow's fast legs stay as drawn, and their IK feet stay planted
+        frames = _rate_limit(frames, fps, loop)
     bones = sorted({b for f in frames for b in f})
     out = {}
     idx = list(range(0, len(frames), every))
