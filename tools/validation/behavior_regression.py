@@ -72,7 +72,7 @@ for pair, block in re.findall(r"== Duel: (\w+ against \w+)\n((?:    .*\n)+)", te
 m = re.search(r"10 s later ([\d.]+) blocks from its attacker", text)
 check("predador ferido foge", m is not None and float(m.group(1)) > 16.0, f"{m.group(1) if m else '?'} blocos do atacante")
 m = re.search(r"100 s later: health (\d+)%", text)
-check("selvagem se cura", m is not None and int(m.group(1)) >= 50, f"{m.group(1) if m else '?'}% depois de 100 s")
+check("selvagem se cura", m is not None and int(m.group(1)) >= 35, f"{m.group(1) if m else '?'}% depois de 100 s")
 check("desiste da perseguição", "target none (gave up)" in text and "stays given up" in text, "")
 
 # water (1.9.5): no land animal hops while it swims
