@@ -228,7 +228,7 @@ public final class EcoSpawner {
         if (data == null || !canStand(level, data.type, pos, random)) {
             return 0;
         }
-        int count = Math.min(budget, groupSize(data, random));
+        int count = Math.min(budget, scaledGroup(level, pos, data, random));
         int spawned = 0;
         SpawnGroupData group = null;
         double spacing = Math.max(4.0D, data.type.getWidth() * 1.75D);
@@ -397,11 +397,45 @@ public final class EcoSpawner {
         List<Double> weights = new ArrayList<>();
         int total = 0;
         double weighed = 0.0D;
-        // 1.7 (player feedback: "the carnivores should be even rarer"): a carnivore's weight times the "Carnivores" rule
+        // 1.7 (player feedback: "the carnivores should be even rarer"): a carnivore's weight times the "Carnivores" rule.
+        // 1.9.5 (docs/estudos/12, after ARK): on land the share of hunters follows the zone instead: up to 15% on the
+        // shore, by the rivers and round the Arrival Crater, 20-30% on the plains, 50-75% in the thick forest, the
+        // swamp and the mountains; the next spawn leans to hunters or to prey as the wild round here are under or over
+        Boolean hunters = kind == Kind.LAND && !OLD_ZONES ? wantHunters(level, pos, biome, random) : null;
+        double fullWeight = 0.0D;     // the whole biome's weight of this kind (the sparse test below reads it, not the class's)
+        boolean marginOnlyHunters = false;
+        if (hunters != null) {
+            boolean anyPrey = false;
+            for (MobSpawnSettings.SpawnerData data : biome.value().getMobSettings().getMobs(category).unwrap()) {
+                if (kindOf(level, data.type) == kind) {
+                    double w = data.getWeight().asInt() * (DinosaurEntity.isHunter(data.type) ? Rules.of(level).get(Rule.PREDATOR_SPAWNS) : 1.0D);
+                    fullWeight += w;
+                    anyPrey |= !DinosaurEntity.isHunter(data.type);
+                }
+            }
+            marginOnlyHunters = !anyPrey && zoneOf(level, pos, biome) == Zone.MARGIN;
+        }
+        if (hunters != null) {
+            // the class the zone asks for, or the other when the biome has none of it
+            boolean any = false;
+            for (MobSpawnSettings.SpawnerData data : biome.value().getMobSettings().getMobs(category).unwrap()) {
+                if (kindOf(level, data.type) == kind && DinosaurEntity.isHunter(data.type) == hunters) {
+                    any = true;
+                    break;
+                }
+            }
+            if (!any) {
+                hunters = !hunters;
+            }
+        }
         double predators = Rules.of(level).get(Rule.PREDATOR_SPAWNS);
         for (MobSpawnSettings.SpawnerData data : biome.value().getMobSettings().getMobs(category).unwrap()) {
             if (kindOf(level, data.type) == kind && !(kind == Kind.FLYER && COLONIAL.contains(data.type))) {
-                double w = data.getWeight().asInt() * (DinosaurEntity.isHunter(data.type) ? predators : 1.0D);
+                boolean hunter = DinosaurEntity.isHunter(data.type);
+                if (hunters != null && hunters != hunter) {
+                    continue;
+                }
+                double w = data.getWeight().asInt() * (hunters == null && hunter ? predators : 1.0D);
                 options.add(data);
                 weights.add(w);
                 total += data.getWeight().asInt();
@@ -414,7 +448,12 @@ public final class EcoSpawner {
         // v1.6 (players: "too many T. rex"): a biome with only a few rare species left in it (the old-model ones are off
         // since 1.5) gets as little life as its weights say, not the full target made of whatever is left. With
         // the T. rex the only species in the jungle, every land spawn there was a rex.
-        if (kind == Kind.LAND && weighed < SPARSE_WEIGHT && random.nextDouble() * SPARSE_WEIGHT >= weighed) {
+        double sparse = hunters != null ? fullWeight : weighed;
+        if (kind == Kind.LAND && sparse < SPARSE_WEIGHT && random.nextDouble() * SPARSE_WEIGHT >= sparse) {
+            return null;
+        }
+        // a safe margin with only hunters in its list (a frozen river): they come only as often as the margin allows
+        if (marginOnlyHunters && random.nextDouble() >= huntersTarget(Zone.MARGIN)) {
             return null;
         }
         double roll = random.nextDouble() * weighed;
@@ -472,6 +511,99 @@ public final class EcoSpawner {
 
     private static int groupSize(MobSpawnSettings.SpawnerData data, RandomSource random) {
         return data.minCount + random.nextInt(Math.max(1, data.maxCount - data.minCount + 1));
+    }
+
+    // ------------------------------------------------------------------ zones (1.9.5)
+
+    /** Test only (BehaviorTest "zones"): TERRASSIC_OLD_ZONES=1 brings back the 1.9.1 picking (carnivores x0.4 anywhere). */
+    public static final boolean OLD_ZONES = "1".equals(System.getenv("TERRASSIC_OLD_ZONES"));
+
+    /** The zones of the land (docs/estudos/12): the safe margin, the open plains, the thick forest / swamp / mountains. */
+    public enum Zone { MARGIN, OPEN, DENSE }
+
+    /** Hunters' share of the wild a zone aims at (times the "Carnivores" rule over its default 0.4). */
+    /** Test only: {@code n} land picks in a row at {@code pos}, each group added to a virtual tally of the wild round it
+     *  (the real picking, rules and rare-crowding included): the share of hunters (animals) it ends with. */
+    public static double simulateShare(ServerLevel level, BlockPos pos, int n) {
+        virtualTally = new int[2];
+        RandomSource random = level.getRandom();
+        try {
+            for (int i = 0; i < n; i++) {
+                MobSpawnSettings.SpawnerData data = pick(level, pos, MobCategory.CREATURE, Kind.LAND, random);
+                if (data == null) {
+                    continue;
+                }
+                int size = groupSize(data, random);
+                virtualTally[0] += size;
+                if (DinosaurEntity.isHunter(data.type)) {
+                    virtualTally[1] += size;
+                }
+            }
+            return virtualTally[0] == 0 ? -1.0D : (double) virtualTally[1] / virtualTally[0];
+        } finally {
+            virtualTally = null;
+        }
+    }
+
+    public static double huntersTargetOf(Zone z) {
+        return huntersTarget(z);
+    }
+
+    static double huntersTarget(Zone z) {
+        return switch (z) {
+            case MARGIN -> 0.15D;
+            case OPEN -> 0.25D;
+            default -> 0.60D;
+        };
+    }
+
+    public static Zone zoneOf(ServerLevel level, BlockPos pos, Holder<Biome> biome) {
+        BlockPos spawn = level.getSharedSpawnPos();
+        if (spawn.distSqr(new BlockPos(pos.getX(), spawn.getY(), pos.getZ())) < 300.0D * 300.0D
+                || biome.is(net.minecraft.tags.BiomeTags.IS_BEACH) || biome.is(net.minecraft.tags.BiomeTags.IS_RIVER)) {
+            return Zone.MARGIN;
+        }
+        String path = biome.unwrapKey().map(k -> k.location().getPath()).orElse("");
+        if (biome.is(net.minecraft.tags.BiomeTags.IS_JUNGLE) || biome.is(net.minecraft.tags.BiomeTags.IS_MOUNTAIN)
+                || path.contains("swamp") || path.contains("marsh") || path.contains("mangrove") || path.contains("jungle")
+                || path.contains("rainforest") || path.contains("peak") || path.contains("mountain") || path.contains("highland")
+                || path.contains("dark_forest") || path.contains("old_growth") || path.contains("fern") || path.contains("bog")) {
+            return Zone.DENSE;
+        }
+        return Zone.OPEN;
+    }
+
+    /** Whether the next land group here should be hunters: the zone's target against the wild land animals within
+     *  80 blocks; the further under the target, the likelier. */
+    /** Test only: a virtual tally of the wild round the spot (BehaviorTest "zones"), null in play. */
+    static int[] virtualTally;
+
+    private static boolean wantHunters(ServerLevel level, BlockPos pos, Holder<Biome> biome, RandomSource random) {
+        double target = Mth.clamp(huntersTarget(zoneOf(level, pos, biome)) * Rules.of(level).get(Rule.PREDATOR_SPAWNS) / 0.4D, 0.0D, 0.95D);
+        if (virtualTally != null) {
+            double share = virtualTally[0] == 0 ? target : (double) virtualTally[1] / virtualTally[0];
+            return random.nextDouble() < Mth.clamp(target + (target - share), 0.0D, 1.0D);
+        }
+        int all = 0, hunt = 0;
+        for (DinosaurEntity d : level.getEntitiesOfClass(DinosaurEntity.class, new AABB(pos).inflate(RADIUS),
+                e -> e.isAlive() && !e.isTame() && !(e instanceof SwimmingDinosaur) && !(e instanceof FlyingDinosaur))) {
+            all++;
+            if (DinosaurEntity.isHunter(d.getType())) {
+                hunt++;
+            }
+        }
+        double share = all == 0 ? target : (double) hunt / all;
+        double p = Mth.clamp(target + (target - share), 0.0D, 1.0D);
+        return random.nextDouble() < p;
+    }
+
+    /** Groups grow away from the Arrival Crater (the world spawn): up to half again at 3000 blocks (ARK's inland). */
+    private static int scaledGroup(ServerLevel level, BlockPos pos, MobSpawnSettings.SpawnerData data, RandomSource random) {
+        int n = groupSize(data, random);
+        BlockPos spawn = level.getSharedSpawnPos();
+        double d = Math.sqrt(spawn.distSqr(new BlockPos(pos.getX(), spawn.getY(), pos.getZ())));
+        double f = 1.0D + 0.5D * Math.min(1.0D, d / 3000.0D);
+        return Math.max(n, (int) Math.round(n * f));
     }
 
     private static DinosaurEntity create(ServerLevel level, EntityType<?> type, BlockPos pos, RandomSource random) {
