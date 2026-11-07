@@ -39,10 +39,11 @@ REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
 EVERY_FRAME = ("walk", "run", "stalk", "threat", "beg", "wake", "wake_sleep", "death", "hurt", "attack_quick", "fish", "swipe",
                "attack", "roar", "call", "claw_swipe", "turn_left", "turn_right", "strafe_left", "strafe_right", "feint",
-               "block", "recoil", "shove", "bite_low", "bite_side", "walk_tired", "sail_display")
+               "block", "recoil", "shove", "bite_low", "bite_side", "walk_tired", "sail_display",
+               "lunge", "parry", "stagger")
 LINEAR = ("threat", "wake", "wake_sleep", "death", "hurt", "attack_quick", "swipe")
 # baked at 40 fps: at 20 the run's foot (lift-off) and the death roll swept up to 0.74 px into the ground between two keyframes
-FPS_OF = {"run": 40, "death": 40}
+FPS_OF = {"run": 40, "death": 40, "lunge": 40}   # lunge: the snap swept the front foot 0.5 px into the ground between two keys
 
 
 def main():

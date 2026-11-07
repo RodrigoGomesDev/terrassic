@@ -19,6 +19,11 @@ public final class ModParticles {
     public static final RegistrySupplier<SimpleParticleType> ALPHA_MOTE = PARTICLES.register("alpha_mote", () -> new SimpleParticleType(false) {
     });
 
+    /** 06/11/2026: a blow, a throw, a body hitting the ground: no picture, only the camera shake near it (RoarShake), the
+     *  strength in the x speed. Sent only to the players near (DinosaurEntity.impact). */
+    public static final RegistrySupplier<SimpleParticleType> IMPACT = PARTICLES.register("impact", () -> new SimpleParticleType(true) {
+    });
+
     private ModParticles() {
     }
 }

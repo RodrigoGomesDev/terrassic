@@ -88,6 +88,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(1, new DinoSleepGoal(this));
         this.goalSelector.addGoal(2, new EatCarcassGoal(this));
+        this.addDuelGoal(2);
         this.goalSelector.addGoal(3, this.createAttackGoal());
         float stop = Math.max(2.0F, this.getBbWidth() * 1.5F);
         this.goalSelector.addGoal(4, this.getNavigation() instanceof GroundPathNavigation

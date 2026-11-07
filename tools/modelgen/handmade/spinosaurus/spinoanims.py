@@ -128,3 +128,12 @@ for _n, _when, _cat in (
     _loop = _n in ("guard", "strafe_left", "strafe_right", "turn_left", "turn_right", "idle_tired", "walk_tired")
     ANIMS[_n] = (T.scaled(getattr(FLOW, _n)), _len, _loop, _cat, _when)
 STANDING = STANDING + ("guard", "block", "feint", "claw_swipe", "bite_low", "bite_side", "snort", "scan", "idle_tired")
+
+# 06/11: the epic duel's three moves (spinofight.py; the Java slides the body in the lunge and turns it in the stagger)
+import spinofight as FIGHT  # noqa: E402
+for _n, _when in (
+        ("lunge", "bote do duelo: focinho armado de lado, empurra com a perna de trás e fecha de lado como crocodilo aos 0,50 s, os ganchos dos polegares vêm junto, sacode e volta à guarda"),
+        ("parry", "apara: a garra do polegar varre o golpe para fora, o focinho recua; aproveita o giro e estala de volta aos 0,60 s"),
+        ("stagger", "foi aparado: tranco para a direita, cabeça jogada, um pé cruza e o outro arrasta, a vela balança duas vezes, sacode o focinho")):
+    ANIMS[_n] = (T.scaled(getattr(FIGHT, _n)), getattr(FIGHT, _n.upper() + "_T"), False, "Duelo", _when)
+STANDING = STANDING + ("lunge", "parry", "stagger")

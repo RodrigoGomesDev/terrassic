@@ -67,6 +67,9 @@
    "animation.tyrannosaurus.knocked_out",
    "animation.tyrannosaurus.beg",
    "animation.tyrannosaurus.tame",
+   "animation.tyrannosaurus.lunge",
+   "animation.tyrannosaurus.parry",
+   "animation.tyrannosaurus.stagger",
    "animation.tyrannosaurus.alpha_walk",
    "animation.tyrannosaurus.alpha_survey",
    "animation.tyrannosaurus.alpha_jaw_rub",
@@ -150,7 +153,10 @@
    "animation.spinosaurus.get_up",
    "animation.spinosaurus.fall_asleep",
    "animation.spinosaurus.idle_tired",
-   "animation.spinosaurus.walk_tired"
+   "animation.spinosaurus.walk_tired",
+   "animation.spinosaurus.lunge",
+   "animation.spinosaurus.parry",
+   "animation.spinosaurus.stagger"
   ],
   "render_scale": 0.5,
   "handmade": true
@@ -346,7 +352,10 @@
    "animation.triceratops.lie_down",
    "animation.triceratops.get_up",
    "animation.triceratops.idle_tired",
-   "animation.triceratops.walk_tired"
+   "animation.triceratops.walk_tired",
+   "animation.triceratops.lunge",
+   "animation.triceratops.parry",
+   "animation.triceratops.stagger"
   ],
   "render_scale": 0.6667,
   "handmade": true
@@ -442,7 +451,10 @@
    "animation.ankylosaurus.lie_down",
    "animation.ankylosaurus.get_up",
    "animation.ankylosaurus.idle_tired",
-   "animation.ankylosaurus.walk_tired"
+   "animation.ankylosaurus.walk_tired",
+   "animation.ankylosaurus.lunge",
+   "animation.ankylosaurus.parry",
+   "animation.ankylosaurus.stagger"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -592,7 +604,10 @@
    "animation.pachycephalosaurus.feint",
    "animation.pachycephalosaurus.block",
    "animation.pachycephalosaurus.recoil",
-   "animation.pachycephalosaurus.submit"
+   "animation.pachycephalosaurus.submit",
+   "animation.pachycephalosaurus.lunge",
+   "animation.pachycephalosaurus.parry",
+   "animation.pachycephalosaurus.stagger"
   ],
   "render_scale": 0.5,
   "handmade": true
@@ -1337,7 +1352,10 @@
    "animation.styracosaurus.lie_down",
    "animation.styracosaurus.get_up",
    "animation.styracosaurus.idle_tired",
-   "animation.styracosaurus.walk_tired"
+   "animation.styracosaurus.walk_tired",
+   "animation.styracosaurus.lunge",
+   "animation.styracosaurus.parry",
+   "animation.styracosaurus.stagger"
   ],
   "render_scale": 0.5,
   "handmade": true
@@ -1435,7 +1453,10 @@
    "animation.protoceratops.lie_down",
    "animation.protoceratops.get_up",
    "animation.protoceratops.idle_tired",
-   "animation.protoceratops.walk_tired"
+   "animation.protoceratops.walk_tired",
+   "animation.protoceratops.lunge",
+   "animation.protoceratops.parry",
+   "animation.protoceratops.stagger"
   ],
   "render_scale": 0.3333,
   "handmade": true
@@ -1607,7 +1628,10 @@
    "animation.therizinosaurus.lie_down",
    "animation.therizinosaurus.get_up",
    "animation.therizinosaurus.idle_tired",
-   "animation.therizinosaurus.walk_tired"
+   "animation.therizinosaurus.walk_tired",
+   "animation.therizinosaurus.lunge",
+   "animation.therizinosaurus.parry",
+   "animation.therizinosaurus.stagger"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -1887,7 +1911,10 @@
    "animation.giganotosaurus.get_up",
    "animation.giganotosaurus.idle_tired",
    "animation.giganotosaurus.walk_tired",
-   "animation.giganotosaurus.grab_shake"
+   "animation.giganotosaurus.grab_shake",
+   "animation.giganotosaurus.duel_lunge",
+   "animation.giganotosaurus.parry",
+   "animation.giganotosaurus.stagger"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -1994,7 +2021,10 @@
    "animation.carnotaurus.idle_tired",
    "animation.carnotaurus.walk_tired",
    "animation.carnotaurus.ram",
-   "animation.carnotaurus.head_clash"
+   "animation.carnotaurus.head_clash",
+   "animation.carnotaurus.lunge",
+   "animation.carnotaurus.parry",
+   "animation.carnotaurus.stagger"
   ],
   "render_scale": 0.667,
   "handmade": true
@@ -2199,7 +2229,10 @@
    "animation.dakotaraptor.lie_down",
    "animation.dakotaraptor.get_up",
    "animation.dakotaraptor.idle_tired",
-   "animation.dakotaraptor.walk_tired"
+   "animation.dakotaraptor.walk_tired",
+   "animation.dakotaraptor.lunge",
+   "animation.dakotaraptor.parry",
+   "animation.dakotaraptor.stagger"
   ],
   "render_scale": 0.8,
   "handmade": true

@@ -1215,6 +1215,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 }
             }
         }
+        if (this.hasDuelMoves()) {
+            // the duel's quick and signature blows (ai/DuelStyle)
+            com.terrassic.entity.ai.DuelStyle st = com.terrassic.entity.ai.DuelStyle.of(this.speciesId());
+            for (String extra : new String[]{st.jab(), st.special()}) {
+                if (extra != null && registered.add(extra)) {
+                    action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
+                }
+            }
+        }
         controllers.add(action);
     }
 
@@ -1574,7 +1583,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** The species whose AI duels (their rigs have guard, sidesteps, feint, block, recoil, submit). */
     private static final java.util.Set<String> DUEL_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus",
-            "dakotaraptor", "pachycephalosaurus", "therizinosaurus", "triceratops", "styracosaurus", "protoceratops");
+            "dakotaraptor", "pachycephalosaurus", "therizinosaurus", "triceratops", "styracosaurus", "protoceratops", "ankylosaurus");
 
     public boolean hasDuelMoves() {
         return DUEL_SPECIES.contains(this.speciesId());
@@ -1661,7 +1670,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** The one-shots of the common set, registered for the species that have it. */
     private static final String[] LIVELY_ACTIONS = {"lie_down", "get_up", "fall_asleep", "feint", "block", "recoil", "submit",
-            "horn_lock_start", "horn_lock_break", "kick_back", "body_shove"};
+            "horn_lock_start", "horn_lock_break", "kick_back", "body_shove", "lunge", "duel_lunge", "parry", "stagger"};
 
     /** The winner of a duel: a roar (a rig may give a louder one). */
     protected void wonDuel() {
@@ -1838,6 +1847,31 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public float clinchSpin;
     public boolean clinchLead;
 
+    /** A blow landing, a throw, a body hitting the ground (06/11, the epic of the fight): the camera of the players near
+     *  jolts by {@code strength} (0.3 a bite, 1 a throw), and with {@code dust} the ground's own block bursts up round
+     *  {@code x, z} as wide as the body. */
+    public void impact(double x, double y, double z, float strength, boolean dust) {
+        if (!(this.level() instanceof net.minecraft.server.level.ServerLevel server)) {
+            return;
+        }
+        for (net.minecraft.server.level.ServerPlayer p : server.players()) {
+            if (p.distanceToSqr(x, y, z) < 48.0D * 48.0D && p.getVehicle() != this) {
+                server.sendParticles(p, com.terrassic.registry.ModParticles.IMPACT.get(), true, x, y, z, 0, strength, 0.0D, 0.0D, 1.0D);
+            }
+        }
+        if (dust) {
+            net.minecraft.core.BlockPos at = net.minecraft.core.BlockPos.containing(x, y - 0.3D, z);
+            net.minecraft.world.level.block.state.BlockState ground = this.level().getBlockState(at);
+            if (!ground.isAir()) {
+                double w = Math.max(0.6D, this.getBbWidth() * 0.45D);
+                server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK, ground),
+                        x, at.getY() + 1.05D, z, 8 + Math.round(22.0F * Math.min(1.5F, strength)), w, 0.15D, w, 0.2D);
+                server.sendParticles(net.minecraft.core.particles.ParticleTypes.POOF, x, at.getY() + 1.2D, z,
+                        2 + Math.round(5.0F * Math.min(1.5F, strength)), w * 0.8D, 0.2D, w * 0.8D, 0.02D);
+            }
+        }
+    }
+
     /** How hard a push moves it: big bodies slide less (by the box width against the other's). */
     private double heft(LivingEntity other) {
         return Mth.clamp(other.getBbWidth() / Math.max(0.6F, this.getBbWidth()), 0.35D, 1.6D);
@@ -1883,6 +1917,28 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.random.nextFloat() < 0.45F) {
             this.counterLeft = this.stagger + 2 + this.random.nextInt(5);   // the answer, right after the reel
         }
+    }
+
+    /** The epic duel's brain (ai/DuelGoal), when its goals have one (the duel species). */
+    private com.terrassic.entity.ai.DuelGoal duelBrain;
+
+    public com.terrassic.entity.ai.DuelGoal duelBrain() {
+        return this.duelBrain;
+    }
+
+    /** Adds the duel goal (the base classes, before their fight goals): it only runs against a rival it duels. */
+    protected void addDuelGoal(int priority) {
+        this.duelBrain = new com.terrassic.entity.ai.DuelGoal(this);
+        this.goalSelector.addGoal(priority, this.duelBrain);
+    }
+
+    /** The duel brain chose to sidestep a blow landing in {@code ticks}: the step out, sideways ({@code dodgeSide}). */
+    public void incomingDodge(int ticks) {
+        this.dodgeLeft = Math.max(6, Math.min(12, ticks + 3));
+        double yaw = Math.toRadians(this.getYRot());
+        Vec3 side = new Vec3(Math.cos(yaw), 0.0D, Math.sin(yaw)).scale(this.dodgeSide * 0.42D * Math.min(1.3D, 0.7D + 0.3D * this.getScale()));
+        this.setDeltaMovement(this.getDeltaMovement().add(side.x, 0.05D, side.z));
+        this.hasImpulse = true;
     }
 
     /** A rival winds up at it: now and then it sidesteps the blow (and answers out of the step). */
@@ -1990,7 +2046,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     protected float duelBlock(net.minecraft.world.damagesource.DamageSource source, float amount) {
         net.minecraft.world.entity.Entity att = source.getEntity();
         if (!this.level().isClientSide() && this.isDueling() && att instanceof LivingEntity a && a == this.getTarget()
-                && this.blockCooldown == 0 && !this.isKnockedOut()) {
+                && this.blockCooldown == 0 && !this.isKnockedOut() && (this.duelBrain == null || !this.duelBrain.isActive())) {
             // the bite comes from in front: now and then it takes it on the thick of the neck
             double dx = a.getX() - this.getX();
             double dz = a.getZ() - this.getZ();
@@ -3575,7 +3631,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Whether it stands and fights a duel with a big predator (circling, guarding, blocking) instead of being plain
      *  prey: the T. rex's ApexBiteGoal duels such targets. */
     public boolean fightsInDuel() {
-        return false;
+        return this.hasDuelMoves() && !this.isBaby();     // every species with the duel set (the Dakotaraptor too)
     }
 
     /** Whether this species gets the live motion layer (tail spring, lean into curves, panting; feet on the ground

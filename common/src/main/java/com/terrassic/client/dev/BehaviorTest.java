@@ -378,9 +378,10 @@ public final class BehaviorTest {
 
     /** Every species' duel (06/11/2026, the 1.9.0 fluid set): pairs set on each other, filmed (rexmotion_duel_<a>_<b>). */
     private static void planAllDuels() {
-        String[][] pairs = {{"carnotaurus", "carnotaurus"}, {"giganotosaurus", "giganotosaurus"}, {"spinosaurus", "triceratops"},
-                {"triceratops", "triceratops"}, {"pachycephalosaurus", "pachycephalosaurus"}, {"dakotaraptor", "styracosaurus"},
-                {"therizinosaurus", "protoceratops"}};
+        String[][] pairs = {{"tyrannosaurus", "tyrannosaurus"}, {"carnotaurus", "carnotaurus"}, {"giganotosaurus", "giganotosaurus"},
+                {"spinosaurus", "triceratops"}, {"triceratops", "triceratops"}, {"pachycephalosaurus", "pachycephalosaurus"},
+                {"dakotaraptor", "styracosaurus"}, {"therizinosaurus", "therizinosaurus"}, {"styracosaurus", "styracosaurus"}, {"protoceratops", "protoceratops"},
+                {"ankylosaurus", "tyrannosaurus"}};
         double x0 = 2000.5D;
         for (String[] pair : pairs) {
             UUID a = id(), b = id();
@@ -408,7 +409,7 @@ public final class BehaviorTest {
             });
             double[] m = new double[8];   // last positions a/b (x,z), summed distance, summed motion, samples, clinch frames
             int[] ev = new int[3];          // dodges, counters armed, clinch starts
-            burst("duel_" + pair[0] + "_" + pair[1], 150, k -> {
+            burst("duel_" + pair[0] + "_" + pair[1], 200, k -> {
                 Minecraft mcm = Minecraft.getInstance();
                 if (k % 10 == 0) {
                     // the ecosystem keeps peopling the land round the player: strays out of the arena
@@ -432,9 +433,16 @@ public final class BehaviorTest {
                         ev[1]++;
                     }
                 }
-                if (k == 149) {
-                    REPORT.add(String.format(Locale.ROOT, "    mean gap %.1f blocks, both moving %.2f blocks/s, frames grappling %.0f, dodging %d, answer armed %d",
-                            m[4] / Math.max(1, m[6]), m[5] / Math.max(1, m[6] - 1) * 10.0D, m[7], ev[0], ev[1]));
+                if (k == 199) {
+                    REPORT.add(String.format(Locale.ROOT, "    mean gap %.1f blocks, both moving %.2f blocks/s, frames grappling %.0f",
+                            m[4] / Math.max(1, m[6]), m[5] / Math.max(1, m[6] - 1) * 10.0D, m[7]));
+                    for (DinosaurEntity f : new DinosaurEntity[]{ma, mb}) {
+                        if (f != null && f.duelBrain() != null) {
+                            int[] st = f.duelBrain().stats;
+                            REPORT.add(String.format(Locale.ROOT, "    %s: lunges %d, jabs %d, signature %d, feints %d | landed %d, missed %d | parried %d, blocked %d, sidestepped %d, staggered %d",
+                                    f.speciesId(), st[0], st[7], st[8], st[9], st[1], st[2], st[3], st[4], st[6], st[5]));
+                        }
+                    }
                 }
                 if (k % 50 == 49) {
                     Minecraft mc = Minecraft.getInstance();

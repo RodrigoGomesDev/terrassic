@@ -39,7 +39,8 @@ FPS = 20
 # the shivering roars and the bites keep every frame (the tremor and the snap would be smoothed away between keys)
 EVERY_FRAME = ("walk", "run", "stalk", "stomp", "threat", "beg", "wake", "wake_sleep", "death", "hurt", "attack_quick", "attack",
                "roar", "roar_loud", "call", "turn_left", "turn_right",
-               "strafe_left", "strafe_right", "feint", "block", "recoil", "shove", "bite_low", "bite_side", "walk_tired")
+               "strafe_left", "strafe_right", "feint", "block", "recoil", "shove", "bite_low", "bite_side", "walk_tired",
+               "lunge", "parry", "stagger")
 LINEAR = ("stomp", "threat", "wake", "wake_sleep", "death", "hurt", "attack_quick")
 # the alpha's own (alphaanims.py), baked as alpha_<name>
 ALPHA_EVERY_FRAME = ("walk", "challenge", "shove", "shove_left")

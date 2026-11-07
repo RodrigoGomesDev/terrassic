@@ -681,3 +681,7 @@ ANIMS = {
 import styraflow as FLOW  # noqa: E402
 ANIMS = dict(ANIMS)
 ANIMS.update(FLOW.ANIMS)
+
+# 06/11: the epic duel's three moves (styrafight.py): lunge (hit 0.50 s), parry (counter 0.60 s), stagger
+import styrafight as FIGHT  # noqa: E402
+ANIMS.update(FIGHT.ANIMS)

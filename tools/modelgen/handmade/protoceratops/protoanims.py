@@ -673,3 +673,7 @@ ANIMS = {
 import protoflow as FLOW  # noqa: E402
 ANIMS = dict(ANIMS)
 ANIMS.update(FLOW.ANIMS)
+
+# 06/11: the epic duel's three moves (protofight.py): lunge (bite 0.50 s), parry (counter bite 0.60 s), stagger
+import protofight as FIGHT  # noqa: E402
+ANIMS.update(FIGHT.ANIMS)

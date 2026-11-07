@@ -41,16 +41,18 @@ ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "ter
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
 FPS_OF = {"death": 24, "run": 40, "attack": 30, "club_l": 30, "club_r": 30, "wake": 24, "wake_sleep": 24,
-          "club_duel": 30, "feint": 30, "block": 30, "recoil": 30}
+          "club_duel": 30, "feint": 30, "block": 30, "recoil": 30, "lunge": 30, "parry": 30}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
 EVERY_FRAME = ("walk", "run", "death", "club_l", "club_r", "club_duel", "feint", "block", "recoil", "strafe_left", "strafe_right",
-               "turn_left", "turn_right", "walk_tired")
+               "turn_left", "turn_right", "walk_tired", "lunge", "parry", "stagger")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("idle", "sit", "sleep", "knocked_out")
-LINEAR = ("hurt", "attack", "death", "wake", "wake_sleep", "club_l", "club_r", "club_duel", "feint", "block", "recoil")
+LINEAR = ("hurt", "attack", "death", "wake", "wake_sleep", "club_l", "club_r", "club_duel", "feint", "block", "recoil", "lunge", "parry",
+          "stagger")
 # poses that stand on both feet (the off-the-ground check); swim floats by design; in the kick one foot is up
 STANDING = ("idle", "club_warn", "snort", "eat", "graze", "drink", "beg", "tame", "hurt", "attack", "club_l", "club_r", "flank_club",
-            "club_duel", "guard", "feint", "block", "recoil", "idle_tired", "strafe_left", "strafe_right", "turn_left", "turn_right")
+            "club_duel", "guard", "feint", "block", "recoil", "idle_tired", "strafe_left", "strafe_right", "turn_left", "turn_right",
+            "lunge", "parry", "stagger")
 
 
 def main():

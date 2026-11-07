@@ -679,3 +679,7 @@ ANIMS = {
 import trikeflow as FLOW  # noqa: E402
 ANIMS = dict(ANIMS)
 ANIMS.update(FLOW.ANIMS)
+
+# 06/11: the epic duel's three moves (trikefight.py): lunge (hit 0.50 s), parry (counter 0.60 s), stagger
+import trikefight as FIGHT  # noqa: E402
+ANIMS.update(FIGHT.ANIMS)

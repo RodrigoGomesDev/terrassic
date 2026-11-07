@@ -28,17 +28,17 @@ from sprites import save_png  # noqa: E402
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
 REPORT = os.path.join(ROOT, "art", "build_report.json")
 FPS = 20
-FPS_OF = {"death": 40, "run": 40, "attack": 40, "bite": 40, "pounce": 40, "wake": 40, "wake_sleep": 40}
+FPS_OF = {"death": 40, "run": 40, "attack": 40, "bite": 40, "pounce": 40, "wake": 40, "wake_sleep": 40, "lunge": 40}
 # every frame (no in-between keys) only where the catmull-rom between two keys swept a foot into the ground
 EVERY_FRAME = ("walk", "run", "stalk", "attack", "bite", "pounce", "pin", "death", "wake", "wake_sleep",
                "threat", "call", "strafe_left", "strafe_right", "turn_left", "turn_right", "feint", "block", "recoil",
-               "walk_tired", "lie_down", "get_up")
+               "walk_tired", "lie_down", "get_up", "lunge", "parry", "stagger")
 # long slow loops: a key every fourth frame is enough for the breathing
 SLOW = ("idle", "sit", "sleep", "knocked_out", "brood")
 LINEAR = ("hurt", "attack", "bite", "pounce", "death", "wake", "wake_sleep", "block", "recoil")
 # poses that stand on both feet (the off-the-ground check); swim floats by design; in the kick one foot is up
 STANDING = ("idle", "sniff", "look_back", "shake", "stretch", "yawn", "call", "eat", "drink", "attack", "bite", "hurt", "beg", "tame", "mantle", "wing_flash", "sun", "preen",
-            "guard", "block", "submit", "idle_tired")
+            "guard", "block", "submit", "idle_tired", "parry", "stagger")
 
 
 def main():
