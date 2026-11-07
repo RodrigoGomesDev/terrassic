@@ -56,6 +56,30 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
     @Override
     protected void applyRotations(T animatable, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
         super.applyRotations(animatable, poseStack, ageInTicks, rotationYaw, partialTick);
+        if (animatable.deathTime <= 0 && !(animatable instanceof FlyingDinosaur && !animatable.onGround())) {
+            // 1.9.5: the body follows the ground under it (pitch front to back, roll side to side), about its middle
+            float gp = animatable.groundPitch(partialTick);
+            float gr = animatable.groundRoll(partialTick);
+            if (Math.abs(gp) > 0.2F || Math.abs(gr) > 0.2F) {
+                float size = animatable.getScale();
+                double up = animatable.getBbHeight() * 0.4D / (this.scaleHeight * size);
+                poseStack.translate(0.0D, up, 0.0D);
+                poseStack.mulPose(Axis.XP.rotationDegrees(gp));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(gr));
+                poseStack.translate(0.0D, -up, 0.0D);
+            }
+        }
+        if (animatable instanceof com.terrassic.entity.SwimmingDinosaur && animatable.deathTime <= 0 && animatable.isInWater()) {
+            // 1.9.5: a swimmer's whole body follows its dive and its climb (only the head did; docs/estudos/12, Locomoção)
+            float pitch = Mth.clamp(-Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot()), -45.0F, 45.0F);
+            if (Math.abs(pitch) > 0.5F) {
+                float size = animatable.getScale();
+                double up = animatable.getBbHeight() * 0.5D / (this.scaleHeight * size);
+                poseStack.translate(0.0D, up, 0.0D);
+                poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+                poseStack.translate(0.0D, -up, 0.0D);
+            }
+        }
         if (animatable instanceof FlyingDinosaur flyer && animatable.deathTime <= 0) {
             float pitch = flyer.flightPitch(partialTick);
             float roll = flyer.flightRoll(partialTick);
@@ -122,6 +146,10 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
     @Override
     public Vec3 getRenderOffset(T entity, float partialTick) {
         Vec3 offset = super.getRenderOffset(entity, partialTick);
+        com.terrassic.entity.LivelyMotion lively = entity.lively();
+        if (lively != null && entity.isAlive()) {
+            offset = offset.add(0.0D, lively.stepOffset(partialTick), 0.0D);    // 1.9.5: the step climbed smoothly
+        }
         if (entity.isPerched() && entity.getVehicle() instanceof Player owner) {
             float yaw = Mth.rotLerp(partialTick, owner.yBodyRotO, owner.yBodyRot) * Mth.DEG_TO_RAD;
             offset = offset.add(Mth.cos(yaw) * SHOULDER_SIDE, -0.05D, Mth.sin(yaw) * SHOULDER_SIDE);

@@ -1286,7 +1286,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return state.setAndContinue(this.swimAnim);
         }
         if (state.isMoving()) {
-            boolean running = this.isAggressive() || this.getDeltaMovement().horizontalDistanceSqr() > runThresholdSqr();
+            // 1.9.5: past 1.3x its walk's own pace it runs, instead of a walk played fast (legs a blur)
+            double walkPace = this.walkCycleSpeed() * this.getScale();
+            double moved = Math.sqrt((this.getX() - this.xo) * (this.getX() - this.xo) + (this.getZ() - this.zo) * (this.getZ() - this.zo));
+            boolean running = this.isAggressive() || this.getDeltaMovement().horizontalDistanceSqr() > runThresholdSqr()
+                    || (walkPace > 0.0D && moved > walkPace * 1.3D);
             this.cycleSpeed = this.gaitSpeed(running ? this.runCycleSpeed() : this.walkCycleSpeed());
             return state.setAndContinue(running ? this.runAnim : this.walkAnim);
         }
@@ -1308,7 +1312,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         double dx = this.getX() - this.xo;
         double dz = this.getZ() - this.zo;
         double speed = Math.sqrt(dx * dx + dz * dz);
-        return Mth.clamp(speed / (cycle * this.getScale()), 0.5D, 1.8D);
+        return Mth.clamp(speed / (cycle * this.getScale()), 0.5D, 1.5D);   // 1.9.5: 1.8 made the legs a blur
     }
 
     /** A living animal and a carcass of its species share the model's bones (GeckoLib bakes one model per file), and GeckoLib
@@ -1590,6 +1594,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.lockedWith != null || this.isLocked()) {
             this.lockTick();
         }
+        this.behaviourTick();
         if (this.hasLivelySet()) {
             this.livelyStateTick();
         }
@@ -1954,7 +1959,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      *  land-mob swimming: that jumps all the time to stay up and hops off the bottom, and they bounced in the water,
      *  worst attacking in it (83 hops in 10 s measured, 06/11). */
     protected boolean smoothWater() {
-        return false;
+        // 1.9.5: every land animal floats and swims smoothly (the vanilla land-mob swim hopped all the time); the sea
+        // swimmers and the fliers keep their own
+        return !(this instanceof SwimmingDinosaur) && !(this instanceof FlyingDinosaur);
     }
 
     /** The height of the water's surface over it (its feet's column). */
@@ -2015,6 +2022,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return;                         // no hop off the bottom
         }
         super.jumpFromGround();
+    }
+
+    /** Test only (BehaviorTest gaits): the movement state on this side (moving, speed). */
+    public String movementDebug() {
+        double v = Math.sqrt((this.getX() - this.xo) * (this.getX() - this.xo) + (this.getZ() - this.zo) * (this.getZ() - this.zo));
+        return String.format(java.util.Locale.ROOT, "speed %.2f%s%s", v, this.isSleeping() ? " sleeping" : "", this.isInSittingPose() ? " sitting" : "");
     }
 
     /** The epic duel's brain (ai/DuelGoal), when its goals have one (the duel species). */
@@ -2243,7 +2256,109 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         amount = this.duelBlock(source, amount);
         boolean hurt = this.hurtInner(source, amount);
         this.duelAfter(source, hurt);
+        if (hurt && !this.level().isClientSide()) {
+            this.lastDamagedTick = this.tickCount;
+            this.fleeCheck(source);
+        }
         return hurt;
+    }
+
+    // ------------------------------------------------------------------ behaviour: flee hurt, recover, give up (1.9.5)
+    // docs/estudos/12 (Comportamento): a wild animal badly hurt runs, keeps away while it heals, and comes back for
+    // more once it has its strength; a hunter that cannot catch or land a blow gives the chase up.
+
+    public int fleeLeft;
+    public LivingEntity fleeFrom;
+    private boolean recovering;
+    private int lastDamagedTick = -10000;
+    private java.util.UUID chaseOf;
+    private Vec3 chaseStart;
+    private int chaseTick;
+    private java.util.UUID gaveUpOn;
+    private int gaveUpUntil;
+
+    /** Below this share of its health a wild one runs (0: never). Herd fighters 35%, hunters 25%, the big ones 15%;
+     *  the skittish already run at the first blow (their own panic), babies too. */
+    protected float fleeBelow() {
+        if (this.isAlpha() || this.isBaby()) {
+            return 0.0F;
+        }
+        if (this instanceof ApexTheropod) {
+            return 0.15F;
+        }
+        if (this instanceof PredatorDinosaur) {
+            return 0.25F;
+        }
+        return this.fightsInDuel() || this instanceof HerbivoreDinosaur ? 0.35F : 0.0F;
+    }
+
+    /** A mother with her young near never runs (she fights for it). */
+    private boolean guardsYoung() {
+        return !this.level().getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(16.0D),
+                e -> e != this && e.isBaby() && e.getType() == this.getType() && e.isAlive()).isEmpty();
+    }
+
+    private void fleeCheck(DamageSource source) {
+        if (this.isTame() || this.isVehicle() || this.isDueling() || this.isKnockedOut() || !this.isAlive()
+                || !(source.getEntity() instanceof LivingEntity attacker) || attacker == this) {
+            return;
+        }
+        float below = this.fleeBelow();
+        if (below <= 0.0F || this.getHealth() >= this.getMaxHealth() * below || this.guardsYoung()) {
+            return;
+        }
+        this.fleeFrom = attacker;
+        this.fleeLeft = 200 + this.random.nextInt(100);
+        this.recovering = true;
+        this.setTarget(null);
+    }
+
+    public boolean isRecovering() {
+        return this.recovering;
+    }
+
+    /** Every tick on the server (wild only): the slow healing, the end of the recovery, the chase given up. */
+    private void behaviourTick() {
+        if (this.isTame() || !this.isAlive()) {
+            this.recovering = false;
+            return;
+        }
+        if (this.fleeLeft > 0) {
+            this.fleeLeft--;
+            if (this.getTarget() != null) {
+                this.setTarget(null);       // the revenge goal would turn it round
+            }
+        }
+        // a wild animal left in peace for 10 s heals half a percent a second
+        if (this.tickCount % 20 == 0 && this.tickCount - this.lastDamagedTick > 200 && this.getHealth() < this.getMaxHealth()) {
+            this.heal(this.getMaxHealth() * 0.005F);
+        }
+        if (this.recovering && this.fleeLeft <= 0 && this.getHealth() >= this.getMaxHealth() * 0.6F) {
+            this.recovering = false;        // strong again: it may come back for more
+        }
+        // the chase: given up 48 blocks from where it began, or after 20 s without landing a blow
+        LivingEntity t = this.getTarget();
+        if (t == null || this.isDueling()) {
+            this.chaseOf = null;
+            return;
+        }
+        if (!t.getUUID().equals(this.chaseOf)) {
+            this.chaseOf = t.getUUID();
+            this.chaseStart = this.position();
+            this.chaseTick = this.tickCount;
+            return;
+        }
+        if (this.tickCount % 20 == 0) {
+            int sinceHit = this.tickCount - Math.max(this.chaseTick, this.getLastHurtMobTimestamp());
+            boolean far = this.chaseStart != null && this.position().distanceToSqr(this.chaseStart) > 48.0D * 48.0D
+                    && !(this.smoothWater() && this.isInWater());
+            if (far || sinceHit > 400) {
+                this.gaveUpOn = t.getUUID();
+                this.gaveUpUntil = this.tickCount + 600;
+                this.setTarget(null);
+                this.chaseOf = null;
+            }
+        }
     }
 
     private boolean hurtInner(DamageSource source, float amount) {
@@ -3436,6 +3551,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.spared(target) || Rules.sparesPlayer(this, target)) {
             return false;
         }
+        // 1.9.5: running and healing, it fights nothing; a chase given up stays given up for 30 s
+        if (!this.isTame() && (this.recovering || this.fleeLeft > 0)) {
+            return false;
+        }
+        if (target != null && target.getUUID().equals(this.gaveUpOn) && this.tickCount < this.gaveUpUntil) {
+            return false;
+        }
         // it gave in to this one in a duel: it keeps away from it for a while
         if (this.yieldTicks > 0 && target != null && target.getUUID().equals(this.yieldedTo)) {
             return false;
@@ -3756,6 +3878,76 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         return this.lively;
     }
 
+    // ------------------------------------------------------------------ the body follows the ground (1.9.5, client)
+    // docs/estudos/12 (Locomoção): every land animal, the old models too, pitches with the ground under its front and
+    // its back and rolls with the ground under its sides (DinosaurRenderer.applyRotations), eased in, so it no longer
+    // stands level on a slope with its feet in the hill.
+    private float groundPitch;
+    private float groundPitchO;
+    private float groundRoll;
+    private float groundRollO;
+
+    public float groundPitch(float partial) {
+        return Mth.lerp(partial, this.groundPitchO, this.groundPitch);
+    }
+
+    public float groundRoll(float partial) {
+        return Mth.lerp(partial, this.groundRollO, this.groundRoll);
+    }
+
+    private void groundTiltTick() {
+        this.groundPitchO = this.groundPitch;
+        this.groundRollO = this.groundRoll;
+        float wantP = 0.0F, wantR = 0.0F;
+        if (this.onGround() && this.isAlive() && !this.isInWater() && !this.isVehicle() && !this.isPassenger() && !this.isKnockedOut()
+                && !(this instanceof SwimmingDinosaur) && !(this instanceof FlyingDinosaur && !this.onGround())) {
+            // the same sample points the renderer turns the model by: model -Z is the front, model +X one side
+            double a = Math.toRadians(180.0F - this.yBodyRot);
+            double fx = -Math.sin(a), fz = -Math.cos(a), sx = Math.cos(a), sz = -Math.sin(a);
+            double d = Math.max(0.6D, this.getBbWidth() * 0.6D);
+            double w = Math.max(0.4D, this.getBbWidth() * 0.35D);
+            float front = LivelyMotion.ground(this, this.getX() + fx * d, this.getZ() + fz * d);
+            float back = LivelyMotion.ground(this, this.getX() - fx * d, this.getZ() - fz * d);
+            float plus = LivelyMotion.ground(this, this.getX() + sx * w, this.getZ() + sz * w);
+            float minus = LivelyMotion.ground(this, this.getX() - sx * w, this.getZ() - sz * w);
+            float maxP = this.getBbWidth() > 4.0F ? 12.0F : 20.0F;
+            wantP = Mth.clamp((float) Math.toDegrees(Math.atan2(front - back, 2.0D * d)), -maxP, maxP);
+            wantR = Mth.clamp((float) Math.toDegrees(Math.atan2(plus - minus, 2.0D * w)), -10.0F, 10.0F);
+        }
+        this.groundPitch += (wantP - this.groundPitch) * 0.2F;
+        this.groundRoll += (wantR - this.groundRoll) * 0.2F;
+    }
+
+    /** 1.9.5: a push between two animals is shared by their weight (width x width x height): a raptor no longer shoves a
+     *  T. rex aside, the T. rex moves the raptor (docs/estudos/12, Locomoção). */
+    @Override
+    public void push(Entity other) {
+        if (this.isPassengerOfSameVehicle(other) || other.noPhysics || this.noPhysics) {
+            return;
+        }
+        double dx = other.getX() - this.getX();
+        double dz = other.getZ() - this.getZ();
+        double m = Mth.absMax(dx, dz);
+        if (m < 0.01D) {
+            return;
+        }
+        m = Math.sqrt(m);
+        dx /= m;
+        dz /= m;
+        double f = Math.min(1.0D, 1.0D / m) * 0.05D;
+        dx *= f;
+        dz *= f;
+        double mine = this.getBbWidth() * this.getBbWidth() * this.getBbHeight();
+        double theirs = other.getBbWidth() * other.getBbWidth() * other.getBbHeight();
+        double share = theirs / (mine + theirs);      // how much of the push I take
+        if (!this.isVehicle() && this.isPushable()) {
+            this.push(-dx * 2.0D * share, 0.0D, -dz * 2.0D * share);
+        }
+        if (!other.isVehicle() && other.isPushable()) {
+            other.push(dx * 2.0D * (1.0D - share), 0.0D, dz * 2.0D * (1.0D - share));
+        }
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -3765,6 +3957,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 this.lively = new LivelyMotion();
             }
             this.lively.tick(this);
+        }
+        if (this.level().isClientSide()) {
+            this.groundTiltTick();
         }
         if (!this.level().isClientSide()) {
             if (!this.levels.isRolled()) {

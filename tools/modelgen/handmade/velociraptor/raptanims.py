@@ -50,6 +50,10 @@ def leg_low(pose, s):
 
 def plant(pose, s, dy=0.0, dz=0.0, meta=0.0, toe=0.0, clear=-0.05):
     b = BALL[s]; target = (b[1] + K * dy, b[2] + K * dz); clear = None if clear is None else (K * clear if clear > 0 else clear)
+    # 1.9.5: the solver starts from the knee already bent the way it bends (shin back): from a straight leg it could
+    # land on the other branch near full reach and flip the knee for a frame (the Dakotaraptor's run, a 96 deg snap)
+    if f"shin_{s}" not in pose:
+        add(pose, f"shin_{s}", rot=(-25.0, 0, 0))
     for _ in range(4):
         solve_leg(S, pose, s, target, REST_META[s] + meta, toe)
         if clear is None: break

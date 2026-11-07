@@ -50,10 +50,10 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Carnotaurus         savanna, plains, badlands       2       1-2
  *  Tarbosaurus         desert*, river, badlands        1       1
  *  Daspletosaurus      forest, river, plains           2       2
- *  Albertosaurus       taiga, forest, plains           2       2-4
+ *  Albertosaurus       taiga, forest, plains, hills    2       2-4
  *  Majungasaurus       jungle, savanna, river          2       1-2
- *  Dakotaraptor        plains, forest, river           3       2-3
- *  Troodon             forest, taiga, plains           5       1-3
+ *  Dakotaraptor        plains, forest, river, swamp, mangrove, jungle 3       2-3
+ *  Troodon             forest, taiga, plains, swamp, mangrove, jungle 5       1-3
  *  Oviraptor           desert*, badlands, savanna      5       2-4
  *  Citipati            desert*, badlands, savanna      3       1-2
  *  Mononykus           desert*, badlands, savanna, plains 6       2-4
@@ -263,16 +263,16 @@ public final class ModSpawns {
             if (forest || river || plains) {
                 add(props, ModEntities.DASPLETOSAURUS.get(), 2, 2, 2);
             }
-            if (taiga || forest || plains) {
+            if (taiga || forest || plains || hill) {
                 add(props, ModEntities.ALBERTOSAURUS.get(), 2, 2, 4);
             }
             if (jungle || savanna || river) {
                 add(props, ModEntities.MAJUNGASAURUS.get(), 2, 1, 2);
             }
-            if (plains || forest || river) {
+            if (plains || forest || river || swamp || jungle) {
                 add(props, ModEntities.DAKOTARAPTOR.get(), 3, 2, 3);
             }
-            if (forest || taiga || plains) {
+            if (forest || taiga || plains || swamp || jungle) {
                 add(props, ModEntities.TROODON.get(), 5, 1, 3);
             }
             if (desert || badlands || savanna) {

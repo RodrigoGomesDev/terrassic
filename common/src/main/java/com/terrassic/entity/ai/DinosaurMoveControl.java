@@ -66,6 +66,13 @@ public class DinosaurMoveControl extends MoveControl {
             return;
         }
         if (walking && this.mob.zza > 0.0F && this.mob.onGround() && !this.mob.isVehicle()) {
+            // 1.9.5: it eases off in a sharp turn instead of cutting the corner at full pace (down to 40% at 90 deg off)
+            float offBy = 0.0F;
+            if (dx * dx + dz * dz > 0.0625D) {
+                float heading = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+                offBy = Math.min(90.0F, Math.abs(Mth.wrapDegrees(heading - this.mob.getYRot())));
+            }
+            this.mob.setSpeed(this.mob.getSpeed() * Mth.lerp(offBy / 90.0F, 1.0F, 0.4F));
             this.walkingSpeed = Mth.lerp(0.25F, this.walkingSpeed, this.mob.getSpeed());
             this.mob.setSpeed(this.walkingSpeed);
         } else {

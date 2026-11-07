@@ -306,10 +306,10 @@ WORLD = {
     "carnotaurus":        dict(biomes=("savanna", "plains", "badlands"), weight=2, group=(1, 2), track=10),  # Patagonian plains
     "tarbosaurus":        dict(biomes=("desert", "river", "badlands"), weight=1, group=(1, 1), track=10),  # the Nemegt river plains and the Gobi
     "daspletosaurus":     dict(biomes=("forest", "river", "plains"), weight=2, group=(2, 2), track=10),  # Alberta's river forests, in pairs
-    "albertosaurus":      dict(biomes=("taiga", "forest", "plains"), weight=2, group=(2, 4), track=10),  # the Dry Island pack
+    "albertosaurus":      dict(biomes=("taiga", "forest", "plains", "hill"), weight=2, group=(2, 4), track=10),  # the Dry Island pack; Horseshoe Canyon uplands (1.9.5)
     "majungasaurus":      dict(biomes=("jungle", "savanna", "river"), weight=2, group=(1, 2), track=10),  # Madagascar's seasonal floodplain
-    "dakotaraptor":       dict(biomes=("plains", "forest", "river"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain, small packs
-    "troodon":            dict(biomes=("forest", "taiga", "plains"), weight=5, group=(1, 3), track=8),   # Judith River woodland, pairs
+    "dakotaraptor":       dict(biomes=("plains", "forest", "river", "swamp", "jungle"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain forests and swamps, small packs (1.9.5: the thick forest's hunters)
+    "troodon":            dict(biomes=("forest", "taiga", "plains", "swamp", "jungle"), weight=5, group=(1, 3), track=8),   # Judith River and Hell Creek wet woodland, pairs (1.9.5)
     "oviraptor":          dict(biomes=("desert", "badlands", "savanna"), weight=5, group=(2, 4), track=8),  # the Djadochta dunes
     "citipati":           dict(biomes=("desert", "badlands", "savanna"), weight=3, group=(1, 2), track=8),  # Ukhaa Tolgod, pairs on the nest
     "mononykus":          dict(biomes=("desert", "badlands", "savanna", "plains"), weight=6, group=(2, 4), track=6),  # Nemegt sands, small groups

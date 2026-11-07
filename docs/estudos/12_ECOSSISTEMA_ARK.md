@@ -124,3 +124,43 @@ Já existia e foi conferido: predador terrestre come a carcaça e fica saciado d
 Próximos (na ordem do plano): temperamentos na tabela de espécies e Rivalidade das manadas lutadoras (4.2); spawn por
 população estável (4.3; as metas por zona estão feitas, números aprovados pelo Rodrigo em 07/11); predadores médios nas listas da mata fechada e do pântano para a meta de 60% ser alcançável; território,
 bebedouros e ninhais fixos, rotas salvas (4.4).
+
+## 6. Comportamento (pedido do Rodrigo, 07/11: "o dino agressivo vem pra cima de mim, mas com pouca vida tenta fugir...")
+
+Do ARK (wiki oficial, notas de patch; o que é relato de jogador está marcado no estudo de apoio): a fuga é um traço por
+espécie, sem limiar publicado; o gatilho mais comum é o torpor, não a vida. Os patches corrigiram bichos que fugiam para
+a água e se afogavam: a fuga precisa escolher a direção. Fogem: Gallimimo (no primeiro tiro), Dodo (com os vizinhos),
+Daeodon (se cura sozinho, 0,5%/s), Carnotauro (de predador maior); nunca fogem: alfas, Giganotossauro, Titanoboa, quem
+defende ovo. Não há número público para o alcance de agressão nem para a desistência da perseguição: os números
+abaixo são nossos. Bandos dão bônus por membro (Compy +30% de dano por membro até 8; líder do Raptor +25%); pegar um
+ovo enfurece os adultos em volta; o rugido do Yutirano dá medo (corre a esmo 20 s) a quem é menor.
+
+| Comportamento | Regra no Terrassic | Estado |
+|---|---|---|
+| Ferido foge | herbívoro de manada abaixo de 35%, predador abaixo de 25%, os grandes abaixo de 15%; nunca o alfa, a mãe com filhote a 16 blocos nem quem está em duelo (o duelo tem a rendição); foge 24-32 blocos pelo melhor de 8 rumos, nunca para água funda nem penhasco (`ai/FleeHurtGoal`) | feito: Carnotauro a 10% fugiu para 68 blocos em 10 s |
+| Recupera e volta | o selvagem cura 0,5% da vida por segundo depois de 10 s sem dano; só volta a atacar acima de 60% | feito: 11% -> 70% em 100 s |
+| Desiste da perseguição | 48 blocos de onde começou ou 20 s sem acertar; o mesmo alvo fica de lado por 30 s (os anfíbios seguem na água) | feito: Velociraptor desistiu da presa inalcançável |
+| Aviso antes de atacar | pavio curto: exibição/rugido de 3 s quando o jogador chega a 8 blocos | próximo |
+| Alcance por temperamento | agressivo 24, territorial 12 (x1,5 perto do ninho), pavio curto 8; agachado -20% | próximo |
+| Chamado de ajuda | manada 16 blocos, bando de predador 24 | parte existe (alertOthers), revisar |
+| Ovo pego e mãe | ovo pego enfurece os adultos a 24 blocos por 60 s; filhote foge de tudo e fica a 6 blocos da mãe | próximo |
+| Bônus de bando | +15% de dano e +5% de resistência por membro, até +4 | próximo |
+| Medo pelo rugido | rugido do apex assusta por 6-10 s quem tem menos da metade do tamanho | próximo |
+
+## 7. Locomoção (pedido do Rodrigo, 07/11: "subir e descer blocos, nadar, parece mod antigo")
+
+Estudo de código de mods modernos com licença conferida (Fossils & Archeology MIT; Ice and Fire LGPL-3.0; Twilight
+Forest LGPL-2.1+; Naturalist MIT; Cobblemon MPL-2.0; Alex's Mobs/Caves e Mowzie's Mobs só como ideia): tudo será
+escrito por nós. O que trava a fluidez hoje no Terrassic:
+1. nadadores sem inclinação do corpo (só a cabeça aponta para baixo);
+2. terrestres pequenos e médios quicam na água (o vanilla `FloatGoal`; a mola de flutuação só existe no Deinossuco e no
+   Espinossauro);
+3. o degrau sobe a caixa inteira num tick e o modelo vai junto, duro;
+4. o corpo copia o rumo de cada nó do caminho (zigue-zague nas quinas); a cabeça de todos gira como a de um vanilla;
+5. navegação e nós do vanilla (deslocados para +X/+Z nos largos, sem atalho em linha reta).
+
+Plano: **Fluidez 1** (cliente, risco baixo): inclinação dos nadadores pelo vetor de velocidade, flutuação suave para
+todos os terrestres, mola visual do degrau (o modelo sobe com atraso amortecido e o corpo inclina um pouco),
+controle do corpo pelo rumo real com giro limitado pelo tamanho. **Fluidez 2**: inclinação do corpo pelo terreno (4
+amostras), navegação própria com atalho por varredura e nós centrados, passos sincronizados com a animação (som,
+poeira, tremor nos gigantes), abrir caminho entre folhas para os grandes.

@@ -41,7 +41,7 @@ public abstract class Eudromaeosaur extends PredatorDinosaur {
     /** The cycles (dakotaanims.py: walk, run, stalk, strides x K = 0.9): pixels of ground each covers and its ticks. */
     private static final double WALK_PX = 36.0D;
     private static final double WALK_TICKS = 26.0D;
-    private static final double RUN_PX = 75.6D;
+    private static final double RUN_PX = 61.2D;     // 68 px a cycle x 0.9 (1.9.5: shorter stride, the knee no longer flips)
     private static final double RUN_TICKS = 11.2D;
     private static final double STALK_PX = 28.08D;
     private static final double STALK_TICKS = 38.2D;

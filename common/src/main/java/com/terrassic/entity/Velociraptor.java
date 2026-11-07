@@ -82,18 +82,6 @@ public class Velociraptor extends Raptor {
         return true;
     }
 
-    /** HOTFIX 1.9.1: asleep the whole day, a Velociraptor spawned in daylight only ever slept ("raptors sleeping by day,
-     *  every one I spawn just sleeps"). Its big eyes still make it a night hunter (Schmitz &amp; Motani 2011), but it is
-     *  about by day too and only naps through the hottest hours, from late morning to early afternoon. */
-    @Override
-    public boolean isSleepTime() {
-        if (this.tickCount < 1200 || this.level().isThundering()) {
-            return false;
-        }
-        long t = this.level().getDayTime() % 24000L;
-        return t > 4500L && t < 8500L;
-    }
-
     @Override
     protected boolean isPrey(LivingEntity e) {
         return e.getBbWidth() < 1.0F && !(e instanceof Velociraptor);

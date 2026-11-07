@@ -60,9 +60,24 @@ class Plan:
     def leg_low(self, pose, s):
         return min(q[:, 1].min() for c, q in geo.cube_points(self.S, pose) if c["bone"] in self.LEG[s])
 
+    def _knee_seed(self, s):
+        """1.9.5: the side the knee bends to in this rig, read once from a leg bent on purpose (the foot raised): the
+        solver then starts from a knee already bent that way, and near full reach it no longer lands on the other
+        branch (the Dakotaraptor's run flipped its knee for a frame, a 96 deg snap of the foot)"""
+        cache = self.__dict__.setdefault("_seed", {})
+        if s not in cache:
+            q = {}
+            b = self.BALL[s]
+            solve_leg(self.S, q, s, (b[1] + self.K * 6.0, b[2]), self.REST_META[s], 0.0)
+            sh = q.get(f"shin_{s}", ([0.0, 0.0, 0.0],))[0][0]
+            cache[s] = 20.0 if sh > 0 else -20.0
+        return cache[s]
+
     def plant(self, pose, s, dy=0.0, dz=0.0, meta=0.0, toe=0.0, clear=-0.05):
         K = self.K; b = self.BALL[s]; target = (b[1] + K * dy, b[2] + K * dz)
         clear = None if clear is None else (K * clear if clear > 0 else clear)
+        if f"shin_{s}" not in pose:
+            add(pose, f"shin_{s}", rot=(self._knee_seed(s), 0, 0))
         for _ in range(4):
             solve_leg(self.S, pose, s, target, self.REST_META[s] + meta, toe)
             if clear is None: break
