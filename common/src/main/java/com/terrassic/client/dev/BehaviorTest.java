@@ -125,6 +125,22 @@ public final class BehaviorTest {
                         + (t == null ? "none" : t.getUUID().equals(calf) ? "THE CALF" : t.getType().toShortString() + (t.isBaby() ? " (baby)" : " (adult)")));
                 return 1;
             });
+            UUID rex2 = id();
+            STEPS.add(mc -> {
+                clear(mc, x0, 40);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+                summon(mc, "tyrannosaurus", x0, Y, 0.5D, rex2, "Hunger:30,Rotation:[0f,0f]");
+                summon(mc, "argentinosaurus", x0, Y, 16.5D, id(), "NoAI:1b");
+                summon(mc, "edmontosaurus", x0, Y, -26.5D, id(), "NoAI:1b");
+                return 300;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity r = server(mc, rex2);
+                net.minecraft.world.entity.LivingEntity t = r == null ? null : r.getTarget();
+                REPORT.add("  hungry T. rex, a grown Argentinosaurus near and an Edmontosaurus far: its target is "
+                        + (t == null ? "none" : t.getType().toShortString()));
+                return 1;
+            });
         }
         if (only.contains("night")) {
             planNight();
