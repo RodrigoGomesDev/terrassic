@@ -78,6 +78,22 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         return new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, attackSpeed(), true);
     }
 
+    /** The weak first (1.9.5 fix): a wounded prey, or a calf of a herbivore no bigger than itself. Most big predators
+     *  leave the young out of isPrey (they hunt grown animals), so the calf was never picked here (docs/estudos/12). */
+    protected boolean weakPrey(LivingEntity e) {
+        if (e.isBaby()) {
+            return e instanceof HerbivoreDinosaur && !e.isInWaterOrBubble() && e.getBbWidth() <= this.getBbWidth() * 1.2F
+                    && !(e instanceof DinosaurEntity d && d.isTame());
+        }
+        return this.isPrey(e) && e.getHealth() < e.getMaxHealth() * 0.6F;
+    }
+
+    /** 1.9.5: a predator sleeps unless it is starving (then it keeps on the prowl through the night). */
+    @Override
+    public boolean safeToSleep() {
+        return this.isTame() || this.isSated() || this.getHunger() >= 40;
+    }
+
     /** Hook for extra goals (leap, avoid...). Called at the end of {@link #registerGoals()}. */
     protected void addExtraGoals() {
     }
@@ -117,7 +133,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         });
         // the weak first (06/11/2026, the ecosystem): a calf or a wounded animal of a herd is picked before the others
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Animal.class, preyInterval(), true, false,
-                e -> this.canHunt() && this.isPrey(e) && (e.isBaby() || e.getHealth() < e.getMaxHealth() * 0.6F)) {
+                e -> this.canHunt() && this.weakPrey(e)) {
             @Override
             public boolean canUse() {
                 return PredatorDinosaur.this.canHunt() && super.canUse();

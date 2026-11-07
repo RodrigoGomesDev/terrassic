@@ -102,6 +102,33 @@ public final class BehaviorTest {
         if (only.contains("therizinosaurus")) {
             planTherizinosaurus();
         }
+        if (only.contains("weak")) {
+            double x0 = 3800.5D;
+            UUID rex = id(), calf = id();
+            STEPS.add(mc -> {
+                REPORT.add("");
+                REPORT.add("== The weak first (1.9.5)");
+                clear(mc, x0, 30);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+                command(mc, "time set 1000");
+                summon(mc, "tyrannosaurus", x0, Y, 0.5D, rex, "Hunger:30,Rotation:[0f,0f]");
+                for (int i = 0; i < 3; i++) {
+                    summon(mc, "edmontosaurus", x0 - 8 + i * 8, Y, 18.5D, id(), "NoAI:1b");
+                }
+                summon(mc, "edmontosaurus", x0 + 4, Y, 18.5D, calf, "NoAI:1b,Age:-24000");
+                return 200;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity r = server(mc, rex);
+                net.minecraft.world.entity.LivingEntity t = r == null ? null : r.getTarget();
+                REPORT.add("  hungry T. rex facing 3 adult Edmontosaurus and a calf: its target is "
+                        + (t == null ? "none" : t.getUUID().equals(calf) ? "THE CALF" : t.getType().toShortString() + (t.isBaby() ? " (baby)" : " (adult)")));
+                return 1;
+            });
+        }
+        if (only.contains("night")) {
+            planNight();
+        }
         if (only.contains("sleepfish")) {
             planSleepFish();
         }
@@ -311,6 +338,76 @@ public final class BehaviorTest {
                 Screenshot.grab(mc.gameDirectory, String.format(Locale.ROOT, "rexmotion_%s_%03d.png", tag, k), mc.getMainRenderTarget(), msg -> {
                 });
                 return 2;
+            });
+        }
+    }
+
+    /** 1.9.5, the night (docs/estudos/12): herds and hunters mixed in a valley at dusk; after two minutes of night, who
+     *  sleeps and how close each sleeping herbivore lies to the nearest predator (TERRASSIC_OLD_SLEEP=1: the 1.9.1 sleep). */
+    private static void planNight() {
+        double x0 = 3600.5D;
+        String[][] cast = {{"edmontosaurus", "6"}, {"triceratops", "3"}, {"parasaurolophus", "2"}, {"tyrannosaurus", "2"},
+                {"carnotaurus", "1"}, {"dakotaraptor", "2"}};
+        java.util.List<UUID> ids = new java.util.ArrayList<>();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Night" + ("1".equals(System.getenv("TERRASSIC_OLD_SLEEP")) ? " (OLD 1.9.1 sleep)" : " (1.9.5)"));
+            clear(mc, x0, 48);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..120]");
+            command(mc, "time set 18000");
+            look(mc.player, new Vec3(x0, Y + 40.0D, 30.0D), new Vec3(x0, Y, 0.5D));
+            java.util.Random rnd = new java.util.Random(7);
+            for (String[] c : cast) {
+                for (int i = 0; i < Integer.parseInt(c[1]); i++) {
+                    UUID u = id();
+                    ids.add(u);
+                    summon(mc, c[0], x0 - 12 + rnd.nextInt(24), Y, -12 + rnd.nextInt(24), u, "Tags:[\"nightcast\"],Sated:30000");
+                }
+            }
+            return 100;
+        });
+        for (int k = 0; k < 24; k++) {
+            int kk = k;
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,tag=!nightcast,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..120]");
+                if (kk == 23) {
+                    int herb = 0, herbAsleep = 0, close = 0, pred = 0, predAsleep = 0, alive = 0;
+                    double minD = Double.MAX_VALUE, sumD = 0;
+                    java.util.List<DinosaurEntity> all = new java.util.ArrayList<>();
+                    for (UUID u : ids) {
+                        DinosaurEntity d = server(mc, u);
+                        if (d != null) {
+                            all.add(d);
+                        }
+                    }
+                    for (DinosaurEntity d : all) {
+                        alive++;
+                        if (d instanceof com.terrassic.entity.PredatorDinosaur) {
+                            pred++;
+                            predAsleep += d.isSleeping() ? 1 : 0;
+                            continue;
+                        }
+                        herb++;
+                        if (!d.isSleeping()) {
+                            continue;
+                        }
+                        herbAsleep++;
+                        double nd = Double.MAX_VALUE;
+                        for (DinosaurEntity o : all) {
+                            if (o instanceof com.terrassic.entity.PredatorDinosaur) {
+                                nd = Math.min(nd, o.distanceTo(d));
+                            }
+                        }
+                        minD = Math.min(minD, nd);
+                        sumD += nd;
+                        close += nd < 16.0D ? 1 : 0;
+                    }
+                    REPORT.add(String.format(Locale.ROOT, "  after 2 min of night: %d of %d alive; herbivores asleep %d of %d, predators asleep %d of %d",
+                            alive, ids.size(), herbAsleep, herb, predAsleep, pred));
+                    REPORT.add(String.format(Locale.ROOT, "  sleeping herbivores: nearest predator %.1f blocks at the closest, %.1f on average; %d within 16 blocks",
+                            herbAsleep == 0 ? 0.0D : minD, herbAsleep == 0 ? 0.0D : sumD / herbAsleep, close));
+                }
+                return 100;
             });
         }
     }
