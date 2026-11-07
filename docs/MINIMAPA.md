@@ -20,5 +20,5 @@ quartos; bicos e focinhos compridos mais de frente e de cima (`VIEW`).
 O que o jogador liga: no Xaero, "Display Icons" em "Always" nas configurações do radar de entidades; no JourneyMap,
 "Mob Display" em "Icons". Espécie nova: rodar o gerador (renomear a classe Java quebra o ícone do VoxelMap).
 
-Ainda não visto num mapa de verdade: rodar os mapas no cliente de teste exige baixar e executar o mod de terceiros, o que
+Ícones aprovados pelo Rodrigo em 07/11/2026 (folha com as 59 espécies). Ainda não vistos num mapa de verdade: rodar os mapas no cliente de teste exige baixar e executar o mod de terceiros, o que
 pede a permissão do Rodrigo.
