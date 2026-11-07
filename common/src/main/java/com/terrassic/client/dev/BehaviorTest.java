@@ -383,6 +383,13 @@ public final class BehaviorTest {
                 {"dakotaraptor", "styracosaurus"}, {"therizinosaurus", "therizinosaurus"}, {"styracosaurus", "styracosaurus"}, {"protoceratops", "protoceratops"},
                 {"ankylosaurus", "tyrannosaurus"}};
         double x0 = 2000.5D;
+        // the arena's chunks loaded and settled before the first pair (on a fresh world the first pair spawned into
+        // terrain still being generated and was thrown about, 06/11)
+        STEPS.add(mc -> {
+            clear(mc, x0, 24);
+            look(mc.player, new Vec3(x0 - 20.0D, Y + 12.0D, 14.0D), new Vec3(x0, Y, 0.5D));
+            return 100;
+        });
         // TERRASSIC_DUEL_ONLY=tyrannosaurus,carnotaurus: only the pairs whose first fighter is one of these
         String only = System.getenv("TERRASSIC_DUEL_ONLY");
         for (String[] pair : pairs) {
