@@ -1764,6 +1764,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** A territorial duel (two grown males of a size): the loser gives in at half its health, not a third. */
     protected boolean territorial;
     private java.util.UUID yieldedTo;
+    /** 1.10.1: the rival it beat in a duel, spared for two minutes */
+    private java.util.UUID sparedBeaten;
+    private int sparedBeatenUntil;
     private int yieldTicks;
     protected int duelCooldown = 1200;
 
@@ -2203,6 +2206,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (away != null) {
             this.getNavigation().moveTo(away.x, away.y, away.z, 1.3D);
         }
+        // 1.10.1: the winner lets it go for good: without this its HurtByTargetGoal put the beaten one back as its
+        // target the next tick and it was killed while it ran (found in the Albertosaurus duel test, 08/11)
+        rival.setLastHurtByMob(null);
+        rival.sparedBeaten = this.getUUID();
+        rival.sparedBeatenUntil = rival.tickCount + 2400;
         if (rival.getTarget() == this) {
             rival.setTarget(null);
             rival.setDueling(false);
@@ -2389,15 +2397,27 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         if (this.tickCount % 20 == 0) {
             int sinceHit = this.tickCount - Math.max(this.chaseTick, this.getLastHurtMobTimestamp());
-            boolean far = this.chaseStart != null && this.position().distanceToSqr(this.chaseStart) > 48.0D * 48.0D
+            double limit = this.chaseLimitBlocks();
+            boolean far = this.chaseStart != null && this.position().distanceToSqr(this.chaseStart) > limit * limit
                     && !(this.smoothWater() && this.isInWater());
-            if (far || sinceHit > 400) {
+            if (far || sinceHit > this.chaseLimitTicks()) {
                 this.gaveUpOn = t.getUUID();
                 this.gaveUpUntil = this.tickCount + 600;
                 this.setTarget(null);
                 this.chaseOf = null;
             }
         }
+    }
+
+    /** 1.10.1: how far from where it began a chase goes before it is given up (a courser like the Albertosaurus
+     *  runs longer and gives up by its own rule). */
+    protected double chaseLimitBlocks() {
+        return 48.0D;
+    }
+
+    /** 1.10.1: how long a chase goes without landing a blow before it is given up. */
+    protected int chaseLimitTicks() {
+        return 400;
     }
 
     // ------------------------------------------------------------------ 1.10.1: fear, rage, help, the young, quirks
@@ -3789,6 +3809,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return false;
         }
         if (target != null && target.getUUID().equals(this.gaveUpOn) && this.tickCount < this.gaveUpUntil) {
+            return false;
+        }
+        // it beat this one in a duel and let it go
+        if (target != null && target.getUUID().equals(this.sparedBeaten) && this.tickCount < this.sparedBeatenUntil) {
             return false;
         }
         // it gave in to this one in a duel: it keeps away from it for a while
