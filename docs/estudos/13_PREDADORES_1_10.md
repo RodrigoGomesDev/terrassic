@@ -439,3 +439,19 @@ Russell 1996; Kellermann, Cuesta & Rauhut 2025; Brusatte & Sereno 2007; Cau & Pa
 Carabajal & Canale 2010; Krause et al. 2007; Sampson & Witmer 2007; Ratsimbaholison et al. 2016; Burch & Carrano 2012;
 Carrano 2007; O'Connor & Claessens 2006; Rogers, Krause & Curry Rogers 2003; Rogers 2005; Rogers et al. 2007; D'Emic et
 al. 2019; D'Emic, Curry Rogers & O'Connor 2016.
+
+---
+
+## Respostas do Rodrigo (07/11/2026)
+
+- **Tamanhos:** topo das estimativas sem o fóssil novo de 2025: Albertossauro 10 m, Majungassauro 8 m,
+  Daspletossauro 9,5 m, Carcarodontossauro 12,5 m (igual ao Giganotossauro).
+- **Grupos:** os dois entram (família do Daspletossauro; bando do Albertossauro com os jovens acuando a presa); o Guia
+  diz que é hipótese.
+- **Mecânicas:** sangramento (mordida que rasga do Carcarodontossauro) e presa segura na boca (Majungassauro) entram
+  como mecânica; o jogador escapa batendo.
+- **Ritmo:** os quatro na 1.10.1.
+- **Cor:** as paletas deste estudo foram medidas contra as espécies antigas também; refazer a checagem só contra os
+  refeitos (decisão do estudo 14), o que libera os tons neutros. A pele segue o padrão novo do estudo 14 (16 texels
+  por bloco, base calma com detalhe desenhado, sem Voronoi carimbado; referência Alex's Mobs e Raxiores).
+- **Dente caído como item:** não perguntado ainda; fica fora até o Rodrigo decidir.
