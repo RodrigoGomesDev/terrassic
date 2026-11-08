@@ -461,7 +461,7 @@ public final class BehaviorTest {
                     + "  [gamemode " + sp.gameMode.getGameModeForPlayer() + ", may attack " + (t != null && t.canAttack(sp)) + ", distance " + (t == null ? "?" : String.format(Locale.ROOT, "%.1f", t.distanceTo(sp))) + "]");
             NEW.clear();
             pendingShot = null;
-            command(mc, String.format(Locale.ROOT, "tp %s %.1f %.1f %.1f -90 0", mc.player.getGameProfile().getName(), x0 - 5.5D, Y, 0.5D));
+            command(mc, String.format(Locale.ROOT, "tp %s %.1f %.1f %.1f -90 0", mc.player.getGameProfile().getName(), x0 - 4.0D, Y, 0.5D));
             return 100;
         });
         STEPS.add(mc -> {
@@ -474,6 +474,7 @@ public final class BehaviorTest {
             command(mc, "gamemode creative " + mc.player.getGameProfile().getName());
             noAutoShots = false;
             command(mc, "kill " + trike);
+            command(mc, "kill @e[type=terrassic:velociraptor,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..200]");
             for (int i = 0; i < 3; i++) {
                 summon(mc, "velociraptor", x0 + 10 + i * 2, Y, 10.5D, raps[i], "");
             }
@@ -2222,6 +2223,8 @@ public final class BehaviorTest {
 
     /** grass from end to end, the air cleared above it */
     private static void clear(Minecraft mc, double x0, int r) {
+        Runtime rt = Runtime.getRuntime();
+        REPORT.add(String.format(Locale.ROOT, "    [memory in use %d MB of %d]", (rt.totalMemory() - rt.freeMemory()) >> 20, rt.maxMemory() >> 20));
         command(mc, "forceload add " + (int) (x0 - r) + " " + (-r) + " " + (int) (x0 + r) + " " + r);
         // in slices: a /fill over 32768 blocks fails silently (and left the eggs of earlier runs in the arena)
         for (int z = -r; z <= r; z += 8) {

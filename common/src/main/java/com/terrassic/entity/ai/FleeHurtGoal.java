@@ -4,7 +4,6 @@ import com.terrassic.entity.DinosaurEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.EnumSet;
 
@@ -43,6 +42,22 @@ public class FleeHurtGoal extends Goal {
         this.mob.getNavigation().stop();
     }
 
+    /** Standing ground in this column near its own height (6 up to 6 down): the surface heightmap sent a hurt animal
+     *  in a cave or a pit nowhere, every heading "a cliff" (found in the 1.21.1 test, 07/11). */
+    private BlockPos groundNear(int x, int y0, int z) {
+        for (int dy = 6; dy >= -6; dy--) {
+            BlockPos at = new BlockPos(x, y0 + dy, z);
+            if (!this.mob.level().getBlockState(at.below()).getCollisionShape(this.mob.level(), at.below()).isEmpty()
+                    && this.mob.level().getBlockState(at).getCollisionShape(this.mob.level(), at).isEmpty()
+                    && (this.mob.level().getFluidState(at).isEmpty() || this.mob.level().getFluidState(at.above()).isEmpty()
+                        || !this.mob.level().getFluidState(at).is(FluidTags.WATER))
+                    && this.mob.level().getBlockState(at.above()).getCollisionShape(this.mob.level(), at.above()).isEmpty()) {
+                return at;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void tick() {
         if (--this.repath > 0 && !this.mob.getNavigation().isDone()) {
@@ -61,9 +76,12 @@ public class FleeHurtGoal extends Goal {
             if (!this.mob.level().hasChunkAt(new BlockPos(x, y0, z))) {
                 continue;
             }
-            BlockPos top = this.mob.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, y0, z));
-            boolean water = this.mob.level().getFluidState(top.below()).is(FluidTags.WATER)
-                    && this.mob.level().getFluidState(top.below(2)).is(FluidTags.WATER);
+            BlockPos top = this.groundNear(x, y0, z);
+            if (top == null) {
+                continue;
+            }
+            // water where it would stand (the ground found may be a lake's bed under it)
+            boolean water = this.mob.level().getFluidState(top).is(FluidTags.WATER);
             if (water && !this.mob.isInWater()) {
                 continue;                       // not into deep water
             }
