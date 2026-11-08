@@ -2301,39 +2301,98 @@
   }
  },
  "majungasaurus": {
-  "bones": 24,
-  "cubes": 70,
+  "bones": 25,
+  "cubes": 89,
   "texture": [
-   128,
-   256
+   256,
+   128
   ],
   "bounds_px": [
    [
-    -8.0,
-    -0.10003627572223284,
-    -38.252244999680514
+    -12.55,
+    -0.011688603552978502,
+    -66.82331986132752
    ],
    [
-    8.0,
-    40.76882325852819,
-    57.055711093558465
+    12.55,
+    45.19896822548365,
+    69.90792605509299
    ]
   ],
   "animations": [
    "animation.majungasaurus.idle",
+   "animation.majungasaurus.sniff",
+   "animation.majungasaurus.look_back",
+   "animation.majungasaurus.shake",
+   "animation.majungasaurus.yawn",
+   "animation.majungasaurus.stretch",
+   "animation.majungasaurus.snort",
+   "animation.majungasaurus.settle",
+   "animation.majungasaurus.scan",
    "animation.majungasaurus.walk",
    "animation.majungasaurus.run",
-   "animation.majungasaurus.attack",
+   "animation.majungasaurus.burst",
+   "animation.majungasaurus.stalk",
+   "animation.majungasaurus.swim",
+   "animation.majungasaurus.turn_left",
+   "animation.majungasaurus.turn_right",
+   "animation.majungasaurus.walk_tired",
+   "animation.majungasaurus.idle_tired",
    "animation.majungasaurus.roar",
+   "animation.majungasaurus.roar_loud",
+   "animation.majungasaurus.call",
+   "animation.majungasaurus.threat",
+   "animation.majungasaurus.dome_display",
+   "animation.majungasaurus.waterhole_threat",
+   "animation.majungasaurus.attack",
+   "animation.majungasaurus.bite_hold",
+   "animation.majungasaurus.hold_shake",
+   "animation.majungasaurus.hold_release",
+   "animation.majungasaurus.attack_quick",
+   "animation.majungasaurus.bite_low",
+   "animation.majungasaurus.bite_side",
+   "animation.majungasaurus.stomp",
+   "animation.majungasaurus.shove",
+   "animation.majungasaurus.hurt",
+   "animation.majungasaurus.death",
+   "animation.majungasaurus.eat",
+   "animation.majungasaurus.drink",
+   "animation.majungasaurus.ambush_crouch",
+   "animation.majungasaurus.carcass_guard",
+   "animation.majungasaurus.tooth_spit",
+   "animation.majungasaurus.ambush_look",
+   "animation.majungasaurus.guard",
+   "animation.majungasaurus.strafe_left",
+   "animation.majungasaurus.strafe_right",
+   "animation.majungasaurus.feint",
+   "animation.majungasaurus.block",
+   "animation.majungasaurus.recoil",
+   "animation.majungasaurus.submit",
+   "animation.majungasaurus.dome_shove",
    "animation.majungasaurus.sit",
+   "animation.majungasaurus.sleep",
+   "animation.majungasaurus.wake_sleep",
+   "animation.majungasaurus.lie_down",
+   "animation.majungasaurus.get_up",
+   "animation.majungasaurus.fall_asleep",
    "animation.majungasaurus.knocked_out",
    "animation.majungasaurus.wake",
-   "animation.majungasaurus.eat",
    "animation.majungasaurus.beg",
    "animation.majungasaurus.tame",
-   "animation.majungasaurus.charge"
+   "animation.majungasaurus.lunge",
+   "animation.majungasaurus.parry",
+   "animation.majungasaurus.stagger",
+   "animation.majungasaurus.knockout",
+   "animation.majungasaurus.hatch"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 16.14,
+  "colours": {
+   "male": 38,
+   "female": 38
+  }
  },
  "dakotaraptor": {
   "bones": 27,
