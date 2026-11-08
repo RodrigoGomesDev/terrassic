@@ -3,6 +3,7 @@ package com.terrassic.entity.ai;
 import com.terrassic.entity.Behaviour;
 import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.PredatorDinosaur;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
@@ -93,6 +94,9 @@ public class BabyStayGoal extends Goal {
     @Override
     public void start() {
         this.repath = 0;
+        if (this.threat != null) {
+            Behaviour.log("baby flee: " + this.mob.speciesId() + " #" + this.mob.getId() + " from " + this.threat.getType().toShortString());
+        }
     }
 
     @Override
@@ -120,7 +124,13 @@ public class BabyStayGoal extends Goal {
                 Vec3 m = this.mother.position();
                 Vec3 off = m.subtract(this.threat.position()).multiply(1.0D, 0.0D, 1.0D);
                 off = off.lengthSqr() < 0.01D ? away : off.normalize();
-                to = m.add(off.scale(this.mother.getBbWidth() * 0.5D + 2.5D));
+                // far enough that the threat is past 8 blocks, still within 6 of her
+                double back = Mth.clamp(10.0D - this.mother.distanceTo(this.threat), this.mother.getBbWidth() * 0.5D + 2.0D, 6.0D);
+                // round her side, the side it is already on, so the way does not run into her body
+                Vec3 side = new Vec3(-off.z, 0.0D, off.x);
+                double on = this.mob.position().subtract(m).dot(side) < 0.0D ? -1.0D : 1.0D;
+                Vec3 dir = off.scale(0.77D).add(side.scale(0.64D * on));
+                to = m.add(dir.scale(back));
                 if (to.distanceToSqr(this.threat.position()) < this.mob.distanceToSqr(this.threat)) {
                     to = this.mob.position().add(away.scale(12.0D));
                 }

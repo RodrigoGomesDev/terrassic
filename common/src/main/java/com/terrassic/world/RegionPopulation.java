@@ -17,8 +17,8 @@ import java.util.Map;
 /**
  * 1.10.1, the stable population (docs/estudos/12, section 4.3): the land is cut in cells of 128 x 128 blocks and each
  * cell remembers how many of its wild land animals died (hunted, killed in a fight, starved). The EcoSpawner fills a
- * cell only up to its share of the target less what it lost, and the loss heals at {@link #REFILL_PER_DAY} animals per
- * in-game day: a valley hunted empty stays empty for a while and comes back over days, not the moment a player walks
+ * cell only up to its share of the target less what it lost, and the loss heals by a third of the share a day
+ * ({@link #REFILL_DAYS}): a valley hunted empty stays empty for a while and comes back over days, not the moment a player walks
  * in. Roamers that despawn when the players leave are not losses: the cell gets the same number back, never more than its
  * share however often the players come and go. Saved per dimension (terrassic_population.dat).
  */
@@ -27,8 +27,8 @@ public final class RegionPopulation extends SavedData {
     public static final int CELL = 128;
     /** Wild land animals in a cell at density 1 (the 18 round a player in 80 blocks, over a cell's area). */
     public static final int CELL_TARGET = 15;
-    /** Animals a day a cell gets back of what it lost. */
-    public static final float REFILL_PER_DAY = 5.0F;
+    /** In-game days a cell hunted empty takes to fill again (a third of its share a day). */
+    public static final float REFILL_DAYS = 3.0F;
     private static final float MAX_LOST = 32.0F;
 
     private static final class Cell {
@@ -53,8 +53,8 @@ public final class RegionPopulation extends SavedData {
         return new AABB(cx, pos.getY() - 96, cz, cx + CELL, pos.getY() + 96, cz + CELL);
     }
 
-    /** What the cell has still lost now, the days since healed. */
-    public float lost(ServerLevel level, BlockPos pos) {
+    /** What the cell has still lost now, the days since healed at a third of its share ({@code cap}) a day. */
+    public float lost(ServerLevel level, BlockPos pos, int cap) {
         Cell c = this.cells.get(key(pos));
         if (c == null) {
             return 0.0F;
@@ -63,9 +63,14 @@ public final class RegionPopulation extends SavedData {
         if (now < c.at) {
             c.at = now;          // the time was set back: no healing for that
         }
-        float healed = REFILL_PER_DAY * (now - c.at) / 24000.0F;
+        float healed = cap / REFILL_DAYS * (now - c.at) / 24000.0F;
         if (healed > 0.0F) {
+            float was = c.lost;
             c.lost = Math.max(0.0F, c.lost - healed);
+            if (Math.ceil(c.lost) < Math.ceil(was)) {
+                com.terrassic.entity.Behaviour.log(String.format(java.util.Locale.ROOT, "region refill: cell %d,%d lost %.1f -> %.1f",
+                        Math.floorDiv(pos.getX(), CELL), Math.floorDiv(pos.getZ(), CELL), was, c.lost));
+            }
             c.at = now;
             this.setDirty();
         }
@@ -75,12 +80,14 @@ public final class RegionPopulation extends SavedData {
         return c.lost;
     }
 
-    public void died(ServerLevel level, BlockPos pos) {
-        this.lost(level, pos);
+    public void died(ServerLevel level, BlockPos pos, int cap) {
+        this.lost(level, pos, cap);
         Cell c = this.cells.computeIfAbsent(key(pos), k -> new Cell());
         c.at = level.getDayTime();
         c.lost = Math.min(MAX_LOST, c.lost + 1.0F);
         this.setDirty();
+        com.terrassic.entity.Behaviour.log(String.format(java.util.Locale.ROOT, "region loss: cell %d,%d lost %.1f",
+                Math.floorDiv(pos.getX(), CELL), Math.floorDiv(pos.getZ(), CELL), c.lost));
     }
 
     /** Test only: the cell has lost {@code n} (BehaviorTest "stable"). */
@@ -99,7 +106,7 @@ public final class RegionPopulation extends SavedData {
 
     /** How many more the spawner may put in the cell of {@code pos} with a share of {@code cap}. */
     public int room(ServerLevel level, BlockPos pos, int cap) {
-        return cap - (int) Math.ceil(this.lost(level, pos)) - count(level, pos);
+        return cap - (int) Math.ceil(this.lost(level, pos, cap)) - count(level, pos);
     }
 
     private static RegionPopulation load(CompoundTag tag) {

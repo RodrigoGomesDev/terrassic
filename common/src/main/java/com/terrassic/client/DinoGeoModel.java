@@ -115,7 +115,8 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
 
     /** Every bone the live layer adds to (tail, body, neck, jaw, legs). */
     private static final String[] LIVELY_BONES = {"tail1", "tail2", "tail3", "tail4", "tail5", "tail6", "body", "neck", "jaw",
-            "thigh_l", "shin_l", "foot_l", "thigh_r", "shin_r", "foot_r"};
+            "thigh_l", "shin_l", "foot_l", "thigh_r", "shin_r", "foot_r",
+            "arm_l", "forearm_l", "hand_l", "arm_r", "forearm_r", "hand_r"};
 
     /** Model scale times the animal's size, set before applyLively (feet: blocks to model px). */
     private float scaleOf = 1.0F;
@@ -151,6 +152,17 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             } else {
                 m.setLegs(-1.0F, 50.0F);
             }
+            CoreGeoBone ar = getAnimationProcessor().getBone("arm_l");
+            CoreGeoBone hd = getAnimationProcessor().getBone("hand_l");
+            if (ar != null && hd != null) {
+                m.setArms(Math.abs(ar.getPivotY() - hd.getPivotY()));
+            }
+        }
+        // 1.10.1: the feet are tracked so the renderer can say where each was drawn (DinosaurRenderer.renderFinal)
+        for (String f : com.terrassic.entity.LivelyMotion.FEET) {
+            if (getAnimationProcessor().getBone(f) instanceof software.bernie.geckolib.cache.object.GeoBone gb && !gb.isTrackingMatrices()) {
+                gb.setTrackingMatrices(true);
+            }
         }
         for (int i = 0; i < 6; i++) {
             GeoBone b = getAnimationProcessor().getBone("tail" + (i + 1));
@@ -173,7 +185,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         // block, the hips tilt toward the low side
         float l = m.footLeft(partial);
         float r = m.footRight(partial);
-        if ((Math.abs(l) > 0.02F || Math.abs(r) > 0.02F) && body != null) {
+        if (!com.terrassic.entity.Behaviour.oldFeet) {
+            this.feet(m, body, partial, d2r);
+        } else if ((Math.abs(l) > 0.02F || Math.abs(r) > 0.02F) && body != null) {
             float px = 16.0F / Math.max(0.1F, this.scaleOf);
             float drop = Math.min(0.0F, Math.min(l, r));
             body.setPosY(body.getPosY() + drop * px);
@@ -197,6 +211,48 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             if (jaw != null) {
                 jaw.setRotX(jaw.getRotX() - (6.0F + 5.0F * Math.max(0.0F, (float) Math.sin(ph - 0.4F))) * ex * d2r);
             }
+        }
+    }
+
+    /** 1.10.1, each foot on its own ground (LivelyMotion.feetTick): the body drops to the lowest foot (half a block at
+     *  most), and every other leg bends to set its foot on its own ground; front legs bend at the elbow. */
+    private void feet(com.terrassic.entity.LivelyMotion m, CoreGeoBone body, float partial, float d2r) {
+        float w = m.feetWeight(partial);
+        if (w < 0.01F || body == null) {
+            return;
+        }
+        float px = 16.0F / Math.max(0.1F, this.scaleOf);
+        float[] g = new float[4];
+        float drop = 0.0F;
+        for (int i = 0; i < 4; i++) {
+            g[i] = m.footGround(i, partial) * w;
+            if (m.footAt(i) != null && getAnimationProcessor().getBone(com.terrassic.entity.LivelyMotion.FEET[i]) != null) {
+                drop = Math.min(drop, g[i]);
+            }
+        }
+        drop = Math.max(drop, -0.5F);
+        if (drop < -0.01F) {
+            body.setPosY(body.getPosY() + drop * px);
+        }
+        this.bendLeg("l", (g[0] - drop) * px, d2r);
+        this.bendLeg("r", (g[1] - drop) * px, d2r);
+        this.bendArm("l", (g[2] - drop) * px, m.armPx(), d2r);
+        this.bendArm("r", (g[3] - drop) * px, m.armPx(), d2r);
+    }
+
+    /** Lifts a front foot by {@code lift} model px: the upper arm back, the forearm forward, the hand level. */
+    private void bendArm(String side, float lift, float armPx, float d2r) {
+        if (lift < 0.2F) {
+            return;
+        }
+        float a = (float) Math.toDegrees(Math.asin(Math.min(0.85F, lift / armPx))) * 1.6F;
+        CoreGeoBone arm = getAnimationProcessor().getBone("arm_" + side);
+        CoreGeoBone fore = getAnimationProcessor().getBone("forearm_" + side);
+        CoreGeoBone hand = getAnimationProcessor().getBone("hand_" + side);
+        if (arm != null && fore != null && hand != null) {
+            arm.setRotX(arm.getRotX() - a * d2r);
+            fore.setRotX(fore.getRotX() + 2.0F * a * d2r);
+            hand.setRotX(hand.getRotX() - a * d2r);
         }
     }
 

@@ -20,6 +20,13 @@ public final class Behaviour {
     public static boolean oldFeet = env("TERRASSIC_OLD_FEET");
     public static boolean oldPopulation = env("TERRASSIC_OLD_POPULATION");
 
+    /** The game log of the systems as they fire, one short line each, all starting "[eco]" (the playtest counts them). */
+    public static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(com.terrassic.Terrassic.MOD_ID);
+
+    public static void log(String line) {
+        LOG.info("[eco] " + line);
+    }
+
     private Behaviour() {
     }
 

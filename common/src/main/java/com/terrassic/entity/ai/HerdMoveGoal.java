@@ -38,7 +38,7 @@ public class HerdMoveGoal extends Goal {
         long bits = this.mob.getUUID().getLeastSignificantBits();
         double angle = (bits & 0xFFFF) / 65536.0D * Math.PI * 2.0D;
         double gap = Math.max(4.0D, (this.mob.getBbWidth() + leader.getBbWidth()) * 0.75D + 1.0D);
-        double dist = gap * (1.0D + ((bits >>> 16) & 3) * 0.5D);
+        double dist = gap * (0.8D + ((bits >>> 16) & 3) * 0.35D);
         return base.add(Math.cos(angle) * dist, 0.0D, Math.sin(angle) * dist);
     }
 

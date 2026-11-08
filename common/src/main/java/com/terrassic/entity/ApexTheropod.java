@@ -500,6 +500,9 @@ public abstract class ApexTheropod extends PredatorDinosaur {
             n++;
         }
         this.lastRoarScared = n;
+        if (n > 0) {
+            Behaviour.log("roar scare: " + n + " fled from " + this.speciesId() + (this.loudRoar ? " (loud)" : ""));
+        }
         return n;
     }
 

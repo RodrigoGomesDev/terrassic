@@ -17,7 +17,14 @@ public class HerdStrollGoal extends WaterAvoidingRandomStrollGoal {
 
     @Override
     public boolean canUse() {
-        return !this.dino.herdFollower() && super.canUse();
+        if (this.dino.herdFollower()) {
+            return false;
+        }
+        // a herd's leader wanders half as often: the whole group goes with it, a restless one drags it about
+        if (!com.terrassic.entity.Behaviour.oldHerd && this.dino.herdSpecies() && !this.dino.isTame() && this.dino.getRandom().nextBoolean()) {
+            return false;
+        }
+        return super.canUse();
     }
 
     @Override
