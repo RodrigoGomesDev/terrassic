@@ -19,7 +19,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 TEX = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures", "entity")
-HANDMADE = ("tyrannosaurus", "velociraptor", "pteranodon", "spinosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus", "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus")
+HANDMADE = ("tyrannosaurus", "velociraptor", "pteranodon", "spinosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus", "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus")
 CLASH = 10.0
 
 
