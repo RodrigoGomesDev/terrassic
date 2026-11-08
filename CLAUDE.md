@@ -51,6 +51,12 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
+**1.9.5 (07/11/2026, `mod_version`)**: ecossistema (`docs/estudos/12_ECOSSISTEMA_ARK.md`, `docs/changelog/1.9.5.md`): noite
+segura (`ai/SafeRestGoal`, sentinela do Edmontossauro), o mais fraco primeiro e presa do tamanho certo, spawn por zona em
+`world/EcoSpawner` (margem 15%, planície 25%, mata fechada 60% de predadores), fuga do ferido (`ai/FleeHurtGoal`), cura,
+desistência, território (`HerbivoreDinosaur.TERRITORIAL`), bônus de bando, locomoção (água suave, mola do degrau, inclinação
+pelo terreno, empurrão por massa). `ai/DinoPathNavigation` existe mas está DESLIGADA (prendia nos pilares). Regressão no
+jogo: `TERRASSIC_BEHAVIOR_SPECIES=regressao` + `tools/validation/behavior_regression.py` (sempre antes de liberar).
 **1.8.0 (05/11/2026, `mod_version`)**: três refeitos com estudo próprio (Estiracossauro, Deinossuco, Elasmossauro; rigs
 `Centrosaurine`, `Crocodylian`, `Plesiosaurid`), Manta de Corrida e Sela de Pescoço, ovos e ninhos novos, e as correções
 do teste de comportamento (`docs/TESTES_1_8.md`: `ai/DinoBreedGoal`, alvo morto, presa do Deinossuco, ovo na margem).
