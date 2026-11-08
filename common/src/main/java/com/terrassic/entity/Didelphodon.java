@@ -186,4 +186,10 @@ public class Didelphodon extends PredatorDinosaur {
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playBodySound(ModSounds.DIDELPHODON_STEP.get(), 0.2F, 1.0F);
     }
+
+    /** 1.10.1: it plays its own idle gestures on a timer; the generic quirks (DinosaurEntity.quirkTick) stay out. */
+    @Override
+    protected boolean ownGestures() {
+        return true;
+    }
 }

@@ -184,4 +184,10 @@ public abstract class Therizinosaurid extends HerbivoreDinosaur {
         }
         return best;
     }
+
+    /** 1.10.1: it plays its own idle gestures on a timer; the generic quirks (DinosaurEntity.quirkTick) stay out. */
+    @Override
+    protected boolean ownGestures() {
+        return true;
+    }
 }
