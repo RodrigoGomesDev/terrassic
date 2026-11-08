@@ -19,7 +19,7 @@ import parts as hit_parts  # noqa: E402
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
-    "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor",
+    "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -106,7 +106,10 @@ SIZES = {
     # Carnotaurus v1 (01/11) is hand-made at 24 px/m and shown at its real 7.8 m (16 / 24 = 0.667), its own study and rig.
     "carnotaurus":        dict(real=7.8,  scale=0.667, w=1.8, h=3.0, baby=0.3,  shadow=1.6),
     "tarbosaurus":        dict(real=12.0, scale=1.79, w=2.5, h=4.3, baby=0.25, shadow=2.3),
-    "daspletosaurus":     dict(real=9.0,  scale=1.49, w=2.1, h=3.8, baby=0.28, shadow=2.0),
+    # Daspletosaurus torosus: 9.5 m, the top of the estimates without the 2025 specimen (Russell 1970; Paul 1988; Carr
+    # et al. 2017; Rodrigo 07/11/2026). Daspletosaurus v1 (07/11, the 1.10.1 pilot) is hand-made at skin2.PX_PER_M
+    # (16.94 px/m: one texel = one pixel of a block) and shown at ~1 (16.3 texels per block, 164 px long).
+    "daspletosaurus":     dict(real=9.5,  scale=0.9265, w=2.1, h=3.4, baby=0.28, shadow=2.0),
     "albertosaurus":      dict(real=9.5,  scale=1.43, w=1.9, h=3.6, baby=0.28, shadow=1.8),
     "majungasaurus":      dict(real=7.5,  scale=1.26, w=1.6, h=3.0, baby=0.3,  shadow=1.5),
     # Dakotaraptor v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 5.5 m (16 / 20 = 0.8): its own
@@ -305,7 +308,7 @@ WORLD = {
     "carcharodontosaurus": dict(biomes=("savanna", "river", "badlands"), weight=1, group=(1, 1), track=10),  # Saharan river plains
     "carnotaurus":        dict(biomes=("savanna", "plains", "badlands"), weight=2, group=(1, 2), track=10),  # Patagonian plains
     "tarbosaurus":        dict(biomes=("desert", "river", "badlands"), weight=1, group=(1, 1), track=10),  # the Nemegt river plains and the Gobi
-    "daspletosaurus":     dict(biomes=("forest", "river", "plains"), weight=2, group=(2, 2), track=10),  # Alberta's river forests, in pairs
+    "daspletosaurus":     dict(biomes=("forest", "river", "plains"), weight=2, group=(2, 3), track=10),  # Alberta's river forests: a pair, the third a juvenile (Tyrannosaurine)
     "albertosaurus":      dict(biomes=("taiga", "forest", "plains", "hill"), weight=2, group=(2, 4), track=10),  # the Dry Island pack; Horseshoe Canyon uplands (1.9.5)
     "majungasaurus":      dict(biomes=("jungle", "savanna", "river"), weight=2, group=(1, 2), track=10),  # Madagascar's seasonal floodplain
     "dakotaraptor":       dict(biomes=("plains", "forest", "river", "swamp", "jungle"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain forests and swamps, small packs (1.9.5: the thick forest's hunters)
@@ -527,13 +530,13 @@ SPECIES = [
       prey="!(e instanceof Tarbosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, prey_interval=200),
  dict(id="daspletosaurus", cls="Daspletosaurus", base="PredatorDinosaur",
-      doc="Daspletosaurus torosus - 9 m tyrannosaur of the river forests, the 'frightful lizard': a massive deep skull for its size with horned bosses behind the eyes and the biggest teeth of the family. Hunts in pairs (the pair shares a target). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
-      attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.3, ARMOR=6, KNOCKBACK_RESISTANCE=0.8, FOLLOW_RANGE=30),
+      doc="Daspletosaurus torosus - 9.5 m tyrannosaur of the river forests, the 'frightful lizard': a deep, narrow, massive skull with a tall horn in front of each eye, the crushing bite, the longest arms of the family. Lives as a pair, sometimes with a juvenile; bites the face of a rival in a duel; hungry, it roars other predators off their kill and guards it. Tamed by knockout or from a stolen wild egg; rideable with its own saddle. Behaviour in Tyrannosaurine.",
+      attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.3, ARMOR=6, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=30),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.8, 1.8, 240), step=("RAVAGER_STEP", 0.8, 0.7),
-      xp=32, step_height=1.3, head=(38, 28), rideable=True, jump=0.5, ride_offset=2.0, ride_speed=1.15,
+      xp=32, step_height=1.3, head=(38, 28), rideable=True, jump=0.45, ride_offset=3.43, ride_forward=1.09, ride_speed=1.05,
       prey="e.getBbWidth() < 3.0F && !(e instanceof Daspletosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
-      roar=True, pack=True, prey_interval=180),
+      roar=True, pack=True, apex=True, rig="Tyrannosaurine", prey_interval=180, saddle="DASPLETOSAURUS_SADDLE"),
  dict(id="albertosaurus", cls="Albertosaurus", base="PredatorDinosaur",
       doc="Albertosaurus sarcophagus - 9.5 m light, long-legged tyrannosaur of the northern forests with a short horn over each eye: the fast one, hunting in packs of two to four that share a target. Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); a fast rideable hunter when tamed.",
       attrs=dict(MAX_HEALTH=95, MOVEMENT_SPEED=0.29, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=30),

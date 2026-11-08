@@ -326,6 +326,9 @@ public final class ModItems {
     /** The Giganotosaurus' own saddle (only it saddles a Giganotosaurus): the Patagonian recado of its model. */
     public static final RegistrySupplier<Item> GIGANOTOSAURUS_SADDLE = ITEMS.register("giganotosaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Daspletosaurus' own saddle (only it saddles a Daspletosaurus): the deep tyrant seat on a hide pad. */
+    public static final RegistrySupplier<Item> DASPLETOSAURUS_SADDLE = ITEMS.register("daspletosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Velociraptor's hunting harness: its "saddle" for the armour it gives; it can never be ridden. */
     public static final RegistrySupplier<Item> VELOCIRAPTOR_HARNESS = ITEMS.register("velociraptor_harness",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
