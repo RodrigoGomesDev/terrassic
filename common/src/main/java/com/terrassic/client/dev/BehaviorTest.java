@@ -124,6 +124,9 @@ public final class BehaviorTest {
         if (only.contains("carcharo")) {
             planCarcharo();
         }
+        if (only.contains("majunga")) {
+            planMajunga();
+        }
         if (only.contains("steps")) {
             planSteps();
         }
@@ -447,7 +450,7 @@ public final class BehaviorTest {
     private static void planLook() {
         double x0 = 4400.5D;
         String[] all = {"tyrannosaurus", "triceratops", "edmontosaurus", "quetzalcoatlus", "therizinosaurus", "deinosuchus",
-                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus", "carcharodontosaurus"};
+                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus"};
         for (String sp : all) {
             UUID u = id();
             STEPS.add(mc -> {
@@ -1153,6 +1156,465 @@ public final class BehaviorTest {
         });
     }
 
+    /** 1.10.1, the Majungasaurus (art/majungasaurus/REFEITO.md): photos in the real client (side, three quarters, the
+     *  front, the head, next to the female and the Carnotaurus), the bite that holds on a small animal (carried with
+     *  the head, how long) and on the player (slowed, bitten; escape by hitting it and the hold that runs out on its
+     *  own), the cannibal (a dead Majungasaurus eaten, a dying neighbour hunted, two hungry ones duelling over a
+     *  carcass), the waterhole (it goes to the water and crouches, warns a big animal off, drives it off when it comes
+     *  on) and the temper (the dome shown to a player at 8 blocks, the attack when the player comes on). */
+    private static void planMajunga() {
+        double x0 = 6800.5D;
+        String strays = "tp @e[type=!player,type=!terrassic:carcass,tag=!mj,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~";
+        UUID male = id(), female = id(), carno = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Majungasaurus (1.10.1)");
+            clear(mc, x0, 48);
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            command(mc, "time set 1000");
+            return 100;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "majungasaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"mj\"]");
+            noAutoShots = true;
+            return 40;
+        });
+        awaitAll(male);
+        String[][] views = {{"side", "0", "0.15", "1"}, {"tq", "0.75", "0.35", "0.75"}, {"front", "-1", "0.25", "0.1"}};
+        for (String[] v : views) {
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, male);
+                if (d == null) {
+                    REPORT.add("  majunga photo: NOT FOUND");
+                    return 1;
+                }
+                double r = 3.0D + d.getBbWidth() * 2.0D + d.getBbHeight() * 1.0D;
+                Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.55D, 0.0D);
+                look(mc.player, c.add(Double.parseDouble(v[1]) * r, Double.parseDouble(v[2]) * r, Double.parseDouble(v[3]) * r), c);
+                return 40;
+            });
+            STEPS.add(mc -> {
+                Screenshot.grab(mc.gameDirectory, "behavior_majunga_" + v[0] + ".png", mc.getMainRenderTarget(), msg -> {
+                });
+                return 2;
+            });
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, male);
+            if (d != null) {
+                double k = d.getBbHeight();
+                Vec3 head = d.position().add(-1.6D * k, 0.75D * k, 0.0D);
+                look(mc.player, head.add(-0.6D * k, 0.15D * k, 1.0D * k), head);
+                REPORT.add(String.format(Locale.ROOT, "  majunga size: hitbox %.2f x %.2f, scale %.3f", d.getBbWidth(), d.getBbHeight(), d.getScale()));
+            }
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_majunga_head.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 2;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "majungasaurus", x0 + 14.0D, Y, 0.5D, female, "NoAI:1b,Female:1b,Rotation:[90f,0f],Tags:[\"mj\"]");
+            summon(mc, "carnotaurus", x0 - 14.0D, Y, 0.5D, carno, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"mj\"]");
+            return 40;
+        });
+        awaitAll(female, carno);
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 - 1.0D, Y + 4.0D, 27.0D), new Vec3(x0 - 1.0D, Y + 2.0D, 0.0D));
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_majunga_with_carno.png", mc.getMainRenderTarget(), msg -> {
+            });
+            noAutoShots = false;
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            return 2;
+        });
+
+        // ---- the hold on a small animal: carried with the head and shaken, how long
+        UUID holder = id(), small = id();
+        double[] hs = {-1, -1, 0, Double.NaN, Double.NaN};      // hold start, hold end (s), frames, prey x, z at the start
+        STEPS.add(mc -> {
+            REPORT.add("  -- the hold on a small animal");
+            summon(mc, "majungasaurus", x0 - 8.0D, Y, -10.5D, holder, "Hunger:10,Female:0b,Rotation:[-90f,0f],Tags:[\"mj\"]");
+            summon(mc, "leptoceratops", x0 - 1.0D, Y, -10.5D, small, "NoAI:1b,Tags:[\"mj\"]");
+            look(mc.player, new Vec3(x0 - 4.0D, Y + 7.0D, 4.0D), new Vec3(x0 - 4.0D, Y + 1.0D, -10.5D));
+            return 20;
+        });
+        awaitAll(holder, small);
+        STEPS.add(mc -> {
+            DinosaurEntity m = server(mc, holder), b = server(mc, small);
+            if (m != null && b != null) {
+                // the Leptoceratops is made sturdy enough to live through a hold (the test measures the hold, not the kill)
+                mc.getSingleplayerServer().execute(() -> {
+                    b.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(200.0D);
+                    b.setHealth(200.0F);
+                    m.setTarget(b);
+                });
+            }
+            followed = holder;
+            return 2;
+        });
+        burst("majunga_hold_small", 120, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, strays);
+            }
+            if (server(mcm, holder) instanceof com.terrassic.entity.Majungasaurine m) {
+                DinosaurEntity b = server(mcm, small);
+                if (m.isHolding()) {
+                    hs[2]++;
+                    if (hs[0] < 0) {
+                        hs[0] = k / 10.0D;
+                        if (b != null) {
+                            hs[3] = b.getX();
+                            hs[4] = b.getZ();
+                        }
+                    }
+                } else if (hs[0] >= 0 && hs[1] < 0) {
+                    hs[1] = k / 10.0D;
+                    REPORT.add(String.format(Locale.ROOT, "    held from %.1f s to %.1f s (%.1f s, %d frames held); prey %s, moved %.1f blocks with the head",
+                            hs[0], hs[1], hs[1] - hs[0], (int) hs[2],
+                            b == null || !b.isAlive() ? "dead" : String.format(Locale.ROOT, "%.0f/%.0f", b.getHealth(), b.getMaxHealth()),
+                            b == null || Double.isNaN(hs[3]) ? -1 : Math.hypot(b.getX() - hs[3], b.getZ() - hs[4])));
+                }
+            }
+            if (k == 119) {
+                if (hs[0] < 0) {
+                    REPORT.add("    no hold in 12 s");
+                } else if (hs[1] < 0) {
+                    REPORT.add("    still holding at 12 s (NOT OK: it must let go)");
+                }
+                followed = null;
+            }
+        });
+
+        // ---- the hold on the player: once beaten off with three blows, once left to run out
+        UUID[] grips = {id(), id()};
+        double[] ph = {-1, -1, -1, -1, 20, 20, 0};   // start, end (escape); start, end (timed); health before, after; slowed frames
+        int[] blows = {0};
+        for (int trial = 0; trial < 2; trial++) {
+            boolean hit = trial == 0;
+            UUID grip = grips[trial];
+            STEPS.add(mc -> {
+                REPORT.add(hit ? "  -- the hold on the player: three blows" : "  -- the hold on the player: left to run out");
+                command(mc, strays);
+                command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+                command(mc, "tp " + holder + " ~ -250 ~");
+                command(mc, "tp " + small + " ~ -250 ~");
+                summon(mc, "majungasaurus", x0 - 8.0D, Y, 10.5D, grip, "Hunger:10,Female:1b,Rotation:[-90f,0f],Tags:[\"mj\"]");
+                noAutoShots = true;
+                ServerPlayer pl = player(mc);
+                if (pl != null) {
+                    mc.getSingleplayerServer().execute(() -> {
+                        pl.teleportTo(x0 - 3.0D, Y, 10.5D);
+                        pl.fallDistance = 0.0F;
+                        pl.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                        // forty points of health: the test measures the hold, not how fast a bite kills (run 2 died)
+                        pl.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.HEALTH_BOOST, 400, 4));
+                        pl.setHealth(40.0F);
+                    });
+                }
+                blows[0] = 0;
+                return 30;
+            });
+            awaitAll(grip);
+            STEPS.add(mc -> {
+                DinosaurEntity m = server(mc, grip);
+                ServerPlayer pl = player(mc);
+                if (m != null && pl != null) {
+                    mc.getSingleplayerServer().execute(() -> m.setTarget(pl));
+                }
+                return 2;
+            });
+            int base = hit ? 0 : 2;
+            burst(hit ? "majunga_hold_player_hits" : "majunga_hold_player_time", 100, k -> {
+                Minecraft mcm = Minecraft.getInstance();
+                if (k % 10 == 0) {
+                    command(mcm, strays);
+                }
+                ServerPlayer pl = player(mcm);
+                if (server(mcm, grip) instanceof com.terrassic.entity.Majungasaurine m && pl != null) {
+                    if (m.isHolding()) {
+                        if (ph[base] < 0) {
+                            ph[base] = k / 10.0D;
+                            ph[4] = pl.getHealth();
+                        }
+                        if (pl.hasEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN)) {
+                            ph[6]++;
+                        }
+                        // the player hits back: a blow every 0.6 s from 0.5 s into the hold (2 damage, a bare fist)
+                        double in = k / 10.0D - ph[base];
+                        if (hit && in >= 0.5D + 0.6D * blows[0] && blows[0] < 4) {
+                            blows[0]++;
+                            mcm.getSingleplayerServer().execute(() -> m.hurt(m.damageSources().playerAttack(pl), 2.0F));
+                        }
+                    } else if (ph[base] >= 0 && ph[base + 1] < 0) {
+                        ph[base + 1] = k / 10.0D;
+                        ph[5] = pl.getHealth();
+                        REPORT.add(String.format(Locale.ROOT, "    held %.1f s (from %.1f to %.1f), %s; player health %.1f -> %.1f, slowed frames %d",
+                                ph[base + 1] - ph[base], ph[base], ph[base + 1], hit ? blows[0] + " blows given" : "no blows",
+                                ph[4], ph[5], (int) ph[6]));
+                        ph[6] = 0;
+                        // out of reach now: the player is taken away (a second hold is the next trial's)
+                        mcm.getSingleplayerServer().execute(() -> {
+                            pl.teleportTo(x0 + 30.0D, Y + 6.0D, 30.0D);
+                            pl.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                            pl.getAbilities().flying = true;
+                            pl.onUpdateAbilities();
+                            m.setTarget(null);
+                        });
+                    }
+                }
+                if (k == 99) {
+                    if (ph[base] < 0) {
+                        REPORT.add("    no hold on the player in 10 s");
+                    } else if (ph[base + 1] < 0) {
+                        REPORT.add("    still holding the player at 10 s (NOT OK)");
+                    }
+                    if (pl != null) {
+                        mcm.getSingleplayerServer().execute(() -> {
+                            pl.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                            pl.setHealth(20.0F);
+                            pl.getAbilities().flying = true;
+                            pl.onUpdateAbilities();
+                        });
+                    }
+                    command(mcm, "tp " + grip + " ~ -250 ~");
+                    noAutoShots = false;
+                }
+            });
+        }
+
+        // ---- the cannibal: a dead Majungasaurus eaten; a dying one hunted by a starving one; a carcass fought over
+        UUID dead = id(), eater = id();
+        STEPS.add(mc -> {
+            REPORT.add("  -- the cannibal");
+            command(mc, strays);
+            summon(mc, "majungasaurus", x0 + 6.0D, Y, -20.5D, dead, "NoAI:1b,Tags:[\"mj\"]");
+            return 20;
+        });
+        awaitAll(dead);
+        STEPS.add(mc -> {
+            command(mc, "kill " + dead);
+            return 20;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "majungasaurus", x0 - 6.0D, Y, -20.5D, eater, "Hunger:30,Tags:[\"mj\"],Rotation:[-90f,0f]");
+            look(mc.player, new Vec3(x0, Y + 9.0D, -6.0D), new Vec3(x0 + 2.0D, Y, -20.5D));
+            return 20;
+        });
+        awaitAll(eater);
+        int[] meat = {-1, -1};
+        burst("majunga_cannibal_eats", 150, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, strays);
+            }
+            DinosaurEntity e = server(mcm, eater);
+            if (e == null) {
+                return;
+            }
+            for (com.terrassic.entity.CarcassEntity c : e.level().getEntitiesOfClass(com.terrassic.entity.CarcassEntity.class,
+                    e.getBoundingBox().inflate(20.0D), c -> "majungasaurus".equals(c.speciesId()))) {
+                if (meat[0] < 0) {
+                    meat[0] = c.getMeat();
+                }
+                meat[1] = c.getMeat();
+            }
+            if (k == 149) {
+                REPORT.add(String.format(Locale.ROOT, "    the carcass of a Majungasaurus: meat %d -> %d, the eater's hunger %d", meat[0],
+                        meat[1], e.getHunger()));
+            }
+        });
+        UUID starving = id(), dying = id();
+        STEPS.add(mc -> {
+            command(mc, "tp " + eater + " ~ -250 ~");
+            command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            summon(mc, "majungasaurus", x0 - 10.0D, Y, -20.5D, starving, "Hunger:10,Tags:[\"mj\"],Rotation:[-90f,0f]");
+            summon(mc, "majungasaurus", x0 + 2.0D, Y, -20.5D, dying, "NoAI:1b,Hunger:90,Tags:[\"mj\"]");
+            return 20;
+        });
+        awaitAll(starving, dying);
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, dying);
+            if (d != null) {
+                mc.getSingleplayerServer().execute(() -> d.setHealth(d.getMaxHealth() * 0.15F));
+            }
+            return 2;
+        });
+        double[] onIt = {-1};
+        burst("majunga_cannibal_hunts", 150, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, strays);
+            }
+            DinosaurEntity s = server(mcm, starving), d = server(mcm, dying);
+            if (onIt[0] < 0 && s != null && s.getTarget() != null && s.getTarget().getUUID().equals(dying)) {
+                onIt[0] = k / 10.0D;
+            }
+            if (k == 149) {
+                REPORT.add(String.format(Locale.ROOT, "    a starving one (hunger 10) and a dying one (15%%): %s; the dying one %s",
+                        onIt[0] < 0 ? "never took it" : String.format(Locale.ROOT, "took it at %.1f s", onIt[0]),
+                        d == null || !d.isAlive() ? "dead" : String.format(Locale.ROOT, "%.0f/%.0f", d.getHealth(), d.getMaxHealth())));
+            }
+        });
+        UUID f1 = id(), f2 = id(), bait = id();
+        STEPS.add(mc -> {
+            command(mc, "tp " + starving + " ~ -250 ~");
+            command(mc, "tp " + dying + " ~ -250 ~");
+            command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            summon(mc, "edmontosaurus", x0, Y, -30.5D, bait, "NoAI:1b,Tags:[\"mj\"]");
+            return 20;
+        });
+        awaitAll(bait);
+        STEPS.add(mc -> {
+            command(mc, "kill " + bait);
+            return 20;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "majungasaurus", x0 - 9.0D, Y, -30.5D, f1, "Hunger:30,Female:0b,Tags:[\"mj\"],Rotation:[-90f,0f]");
+            summon(mc, "majungasaurus", x0 + 9.0D, Y, -30.5D, f2, "Hunger:30,Female:0b,Tags:[\"mj\"],Rotation:[90f,0f]");
+            look(mc.player, new Vec3(x0, Y + 10.0D, -12.0D), new Vec3(x0, Y, -30.5D));
+            return 20;
+        });
+        awaitAll(f1, f2);
+        double[] fight = {-1, -1};
+        burst("majunga_carcass_fight", 250, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, strays);
+            }
+            DinosaurEntity a = server(mcm, f1), b = server(mcm, f2);
+            if (fight[0] < 0 && a != null && b != null && (a.isDueling() || b.isDueling())) {
+                fight[0] = k / 10.0D;
+                followed = f1;
+                pairedWith = f2;
+            }
+            if (fight[0] >= 0 && fight[1] < 0 && a != null && b != null && !a.isDueling() && !b.isDueling()) {
+                fight[1] = k / 10.0D;
+            }
+            if (k == 249) {
+                REPORT.add(String.format(Locale.ROOT, "    two hungry ones at an Edmontosaurus carcass: duel %s; after: #1 %s hunger %s, #2 %s hunger %s",
+                        fight[0] < 0 ? "never" : String.format(Locale.ROOT, "from %.1f s to %s", fight[0], fight[1] < 0 ? "the end" : String.format(Locale.ROOT, "%.1f s", fight[1])),
+                        a == null ? "dead" : String.format(Locale.ROOT, "%.0f/%.0f", a.getHealth(), a.getMaxHealth()), a == null ? "-" : String.valueOf(a.getHunger()),
+                        b == null ? "dead" : String.format(Locale.ROOT, "%.0f/%.0f", b.getHealth(), b.getMaxHealth()), b == null ? "-" : String.valueOf(b.getHunger())));
+                followed = null;
+                pairedWith = null;
+                camSide = null;
+            }
+        });
+
+        // ---- the waterhole: a pool; it goes there and crouches; a Triceratops 7 blocks off is warned, then comes on
+        UUID guard = id(), trike = id();
+        double[] wh = {-1, 0};
+        STEPS.add(mc -> {
+            REPORT.add("  -- the waterhole");
+            command(mc, strays);
+            command(mc, "tp " + f1 + " ~ -250 ~");
+            command(mc, "tp " + f2 + " ~ -250 ~");
+            command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            command(mc, fill(x0 + 10, Y - 3, 20, x0 + 18, Y - 1, 28, "minecraft:water"));
+            command(mc, "time set 7000");
+            summon(mc, "majungasaurus", x0 - 6.0D, Y, 24.5D, guard, "Hunger:95,Female:0b,Tags:[\"mj\"],Rotation:[-90f,0f]");
+            look(mc.player, new Vec3(x0 + 2.0D, Y + 14.0D, 4.0D), new Vec3(x0 + 6.0D, Y, 24.0D));
+            return 20;
+        });
+        awaitAll(guard);
+        STEPS.add(mc -> {
+            if (server(mc, guard) instanceof com.terrassic.entity.Majungasaurine m) {
+                mc.getSingleplayerServer().execute(() -> m.waterholeCooldown = -1);     // sent at once
+            }
+            return 2;
+        });
+        burst("majunga_waterhole", 200, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, "tp @e[type=!player,type=!terrassic:carcass,tag=!mj,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            }
+            if (server(mcm, guard) instanceof com.terrassic.entity.Majungasaurine m) {
+                if (m.mode() == com.terrassic.entity.Majungasaurine.MODE_CROUCH) {
+                    wh[1]++;
+                    if (wh[0] < 0) {
+                        wh[0] = k / 10.0D;
+                        REPORT.add(String.format(Locale.ROOT, "    crouched at the water at %.1f s (%.1f %.1f)", wh[0], m.getX(), m.getZ()));
+                        summon(mcm, "triceratops", m.getX() - 7.0D - m.getBbWidth() * 0.5D, Y, m.getZ(), trike, "NoAI:1b,Tags:[\"mj\"]");
+                    }
+                }
+                if (wh[0] >= 0 && k == (int) (wh[0] * 10) + 50) {
+                    Entity t = serverAny(mcm, trike);
+                    if (t != null) {
+                        mcm.getSingleplayerServer().execute(() -> t.teleportTo(m.getX() - 3.2D - m.getBbWidth() * 0.5D, Y, m.getZ()));
+                    }
+                }
+                if (k == 199) {
+                    DinosaurEntity t = server(mcm, trike);
+                    REPORT.add(String.format(Locale.ROOT, "    crouched frames %d; target at the end %s; the Triceratops %s", (int) wh[1],
+                            m.getTarget() == null ? "none" : m.getTarget().getType().toShortString(),
+                            t == null ? "gone" : String.format(Locale.ROOT, "%.0f/%.0f", t.getHealth(), t.getMaxHealth())));
+                }
+            }
+        });
+
+        // ---- the temper: the player walks up to 7 blocks (warned), then to 3.5 (attacked)
+        UUID temper = id();
+        STEPS.add(mc -> {
+            REPORT.add("  -- the temper");
+            command(mc, "tp " + guard + " ~ -250 ~");
+            command(mc, "tp " + trike + " ~ -250 ~");
+            command(mc, "time set 1000");
+            summon(mc, "majungasaurus", x0, Y, -40.5D, temper, "Hunger:95,Female:0b,Tags:[\"mj\"],Rotation:[-90f,0f]");
+            noAutoShots = true;
+            return 30;
+        });
+        awaitAll(temper);
+        double[] tp = {-1, -1};
+        burst("majunga_temper", 120, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            ServerPlayer pl = player(mcm);
+            DinosaurEntity m = server(mcm, temper);
+            if (pl == null || m == null) {
+                return;
+            }
+            if (k == 0) {
+                mcm.getSingleplayerServer().execute(() -> {
+                    pl.teleportTo(m.getX() - 7.0D - m.getBbWidth() * 0.5D, Y, m.getZ());
+                    pl.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                    pl.setHealth(20.0F);
+                    // it attacks: the player must live through it (run 2 died here and the later phases were lost)
+                    pl.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.DAMAGE_RESISTANCE, 300, 4));
+                });
+            }
+            if (k == 40) {
+                mcm.getSingleplayerServer().execute(() -> pl.teleportTo(m.getX() - 3.5D - m.getBbWidth() * 0.5D, Y, m.getZ()));
+            }
+            // (no camera moves here: the camera is the player, and the test is where the player stands)
+            if (tp[0] < 0 && TRIGGERS.getOrDefault("majungasaurus", new ConcurrentHashMap<>()).getOrDefault("dome_display", 0) > 0) {
+                tp[0] = k / 10.0D;
+            }
+            if (tp[1] < 0 && m.getTarget() == pl) {
+                tp[1] = k / 10.0D;
+            }
+            if (k == 119) {
+                REPORT.add(String.format(Locale.ROOT, "    the player at 7 blocks, then at 3.5 from 4 s: dome shown %s, attacked %s",
+                        tp[0] < 0 ? "never" : String.format(Locale.ROOT, "at %.1f s", tp[0]),
+                        tp[1] < 0 ? "never" : String.format(Locale.ROOT, "at %.1f s", tp[1])));
+                mcm.getSingleplayerServer().execute(() -> {
+                    pl.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                    pl.removeAllEffects();
+                    pl.setHealth(20.0F);
+                    pl.getAbilities().flying = true;
+                    pl.onUpdateAbilities();
+                    m.setTarget(null);
+                });
+                command(mcm, "tp " + temper + " ~ -250 ~");
+                noAutoShots = false;
+            }
+        });
+    }
+
     /** Waits (up to 30 s) until the server has these creatures: a busy server runs the summons late. */
     private static void awaitAll(UUID... ids) {
         int[] tries = {0};
@@ -1738,7 +2200,7 @@ public final class BehaviorTest {
     private static void planJaws() {
         String[] all = {"edmontosaurus", "pteranodon", "quetzalcoatlus", "parasaurolophus", "triceratops", "tyrannosaurus",
                 "carnotaurus", "giganotosaurus", "spinosaurus", "styracosaurus", "protoceratops", "pachycephalosaurus",
-                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus", "carcharodontosaurus"};
+                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2800.5D;
         STEPS.add(mc -> {
@@ -1814,7 +2276,7 @@ public final class BehaviorTest {
     private static void planGaits() {
         String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
                 "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
-                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus", "carcharodontosaurus"};
+                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2600.5D;
         STEPS.add(mc -> {
@@ -1980,7 +2442,8 @@ public final class BehaviorTest {
                 {"spinosaurus", "triceratops"}, {"triceratops", "triceratops"}, {"pachycephalosaurus", "pachycephalosaurus"},
                 {"dakotaraptor", "styracosaurus"}, {"therizinosaurus", "therizinosaurus"}, {"styracosaurus", "styracosaurus"}, {"protoceratops", "protoceratops"},
                 {"ankylosaurus", "tyrannosaurus"}, {"daspletosaurus", "daspletosaurus"}, {"albertosaurus", "albertosaurus"},
-                {"carcharodontosaurus", "carcharodontosaurus"}, {"carcharodontosaurus", "giganotosaurus"}};
+                {"carcharodontosaurus", "carcharodontosaurus"}, {"carcharodontosaurus", "giganotosaurus"},
+                {"majungasaurus", "majungasaurus"}, {"majungasaurus", "carnotaurus"}};
         double x0 = 2000.5D;
         // the arena's chunks loaded and settled before the first pair (on a fresh world the first pair spawned into
         // terrain still being generated and was thrown about, 06/11)
@@ -2076,13 +2539,14 @@ public final class BehaviorTest {
 
     /** Every species' new one-shots and loops (06/11/2026), triggered one after another and logged. */
     private static void planAllMoves() {
-        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
+        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus",
                 "styracosaurus", "protoceratops", "pachycephalosaurus", "parasaurolophus", "edmontosaurus", "gallimimus",
                 "ankylosaurus", "therizinosaurus", "deinosuchus", "pteranodon", "quetzalcoatlus"};
         String[] moves = {"feint", "block", "recoil", "submit", "lie_down", "get_up", "ram", "head_clash", "grab_shake", "claw_swipe",
                 "sail_display", "leap_back", "nose_jab", "frill_shove", "horn_lock_start", "flank_butt", "kick_back", "body_shove",
                 "club_duel", "claw_slash", "gape_threat", "jab", "crest_display", "face_bite", "jaw_test", "steal_roar", "face_rub",
-                "snap_bite", "sidestep", "pass_bite", "call_pack", "answer", "pant", "tear", "brow_butt", "brow_display", "gape_hiss", "ambush_look"};
+                "snap_bite", "sidestep", "pass_bite", "call_pack", "answer", "pant", "tear", "brow_butt", "brow_display", "gape_hiss", "ambush_look",
+                "bite_hold", "hold_release", "dome_shove", "dome_display", "waterhole_threat", "carcass_guard", "tooth_spit"};
         double x0 = 2200.5D;
         for (String sp : species) {
             UUID u = id();
