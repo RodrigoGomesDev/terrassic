@@ -186,3 +186,27 @@ Se o piloto passar, aplicar na ordem:
 2. As 35 espécies antigas ativas, que são o maior volume e o maior impacto. Enquanto não forem refeitas, uma medida de contenção barata vale a pena: **reduzir as texturas antigas para no máximo 32 cores** e corrigir o `MODEL_SCALE` dos extremos (Tarbossauro e Carcarodontossauro a 8,4; Mesodma e Ichthyornis acima de 130) com uma reamostragem do atlas. Isso tira o pior do "ruído fotográfico" sem esperar a reautoria.
 
 Todas as regras da casa continuam valendo: tudo é gerado pelo nosso código, as referências de terceiros foram só medidas e nada foi copiado, os tamanhos seguem `docs/TAMANHOS.md` (o exagero muda proporção interna, não o comprimento) e as cores continuam naturais e calmas (`docs/CORES.md`).
+
+## Padrão v2 (08/11/2026): sem cara de IA, mas sem ficar simplório
+
+O Rodrigo viu o Majungassauro ao lado do Carnotauro: "extremamente simplório", sobretudo a cabeça; reproduzido assim,
+"todos vão ser mais do mesmo". Medido nas texturas (cabeça = ossos head/skull/jaw e filhos; vizinhos que mudam de cor):
+
+| | cabeça: vizinhos que mudam | cabeça: cores |
+|---|---|---|
+| Carnotauro, T. rex, Giganotossauro (refeitos antigos) | 0,24 a 0,38 | 21 a 29 |
+| Daspleto, Alberto, Carcharo, Majunga (padrão v1) | 0,14 a 0,18 | 20 a 24 |
+
+O v1 acertou o pixel do mundo e a pele contínua, mas levou a "base calma" para a cabeça, que é onde o olho do jogador
+vai primeiro. O v2 mantém o v1 no corpo e devolve o detalhe à cabeça, com números:
+
+- **A cabeça é o foco:** vizinhos que mudam na cabeça ≥ 0,24 (o Carnotauro) e pelo menos 1,3x os do corpo;
+  rugosidade, placas e escamas desenhadas no espaço do corpo (contínuas), narina marcada, linha da boca escura.
+- **Dentes à mostra:** de lado, com a boca fechada, uma fileira visível (lábios cobrem a base, não o dente inteiro).
+- **Olho com órbita:** contorno escuro, arcada por cima, íris de cor de 2 texels ou mais e um ponto de brilho.
+- **Um ou dois acentos de cor** (saturação ≥ 0,45) em pele de exibição: base do chifre ou do domo, crista, olho.
+- **Ornamentos nascem do crânio:** domo, chifre e crista com a base na cor da pele e só a ponta em queratina; nada de
+  anel ou prato em volta (o domo do Majungassauro lia como chapéu).
+- **Corpo:** continua calmo e contínuo, mas com a textura de escama do próprio corpo a um passo de tom
+  (vizinhos que mudam 0,20 a 0,30) e as marcas desenhadas da espécie.
+- Checagem: `tools/modelgen/handmade/_engine/headcheck.py` (cabeça x corpo) roda no build dos refeitos novos.
