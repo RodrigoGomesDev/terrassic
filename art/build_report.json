@@ -2152,38 +2152,96 @@
   }
  },
  "albertosaurus": {
-  "bones": 24,
-  "cubes": 52,
+  "bones": 25,
+  "cubes": 96,
   "texture": [
-   128,
-   256
+   256,
+   128
   ],
   "bounds_px": [
    [
-    -8.5,
-    -0.010371449991112058,
-    -48.186064760586426
+    -12.722672763608314,
+    -0.09157995751271175,
+    -86.40355426218599
    ],
    [
-    8.5,
-    42.676398155057726,
-    58.05571109355847
+    12.722672763608314,
+    64.91834905636924,
+    87.90496850370633
    ]
   ],
   "animations": [
    "animation.albertosaurus.idle",
+   "animation.albertosaurus.sniff",
+   "animation.albertosaurus.look_back",
+   "animation.albertosaurus.shake",
+   "animation.albertosaurus.yawn",
+   "animation.albertosaurus.stretch",
+   "animation.albertosaurus.snort",
+   "animation.albertosaurus.settle",
+   "animation.albertosaurus.scan",
    "animation.albertosaurus.walk",
    "animation.albertosaurus.run",
-   "animation.albertosaurus.attack",
+   "animation.albertosaurus.sprint",
+   "animation.albertosaurus.drive",
+   "animation.albertosaurus.stalk",
+   "animation.albertosaurus.swim",
+   "animation.albertosaurus.turn_left",
+   "animation.albertosaurus.turn_right",
+   "animation.albertosaurus.walk_tired",
+   "animation.albertosaurus.idle_tired",
+   "animation.albertosaurus.pant",
    "animation.albertosaurus.roar",
+   "animation.albertosaurus.roar_loud",
+   "animation.albertosaurus.call",
+   "animation.albertosaurus.call_pack",
+   "animation.albertosaurus.answer",
+   "animation.albertosaurus.threat",
+   "animation.albertosaurus.attack",
+   "animation.albertosaurus.attack_quick",
+   "animation.albertosaurus.snap_bite",
+   "animation.albertosaurus.bite_low",
+   "animation.albertosaurus.bite_side",
+   "animation.albertosaurus.stomp",
+   "animation.albertosaurus.shove",
+   "animation.albertosaurus.hurt",
+   "animation.albertosaurus.death",
+   "animation.albertosaurus.eat",
+   "animation.albertosaurus.drink",
+   "animation.albertosaurus.ambush_crouch",
+   "animation.albertosaurus.guard",
+   "animation.albertosaurus.strafe_left",
+   "animation.albertosaurus.strafe_right",
+   "animation.albertosaurus.sidestep",
+   "animation.albertosaurus.feint",
+   "animation.albertosaurus.block",
+   "animation.albertosaurus.recoil",
+   "animation.albertosaurus.submit",
    "animation.albertosaurus.sit",
+   "animation.albertosaurus.sleep",
+   "animation.albertosaurus.wake_sleep",
+   "animation.albertosaurus.lie_down",
+   "animation.albertosaurus.get_up",
+   "animation.albertosaurus.fall_asleep",
    "animation.albertosaurus.knocked_out",
    "animation.albertosaurus.wake",
-   "animation.albertosaurus.eat",
    "animation.albertosaurus.beg",
-   "animation.albertosaurus.tame"
+   "animation.albertosaurus.tame",
+   "animation.albertosaurus.lunge",
+   "animation.albertosaurus.parry",
+   "animation.albertosaurus.stagger",
+   "animation.albertosaurus.pass_bite",
+   "animation.albertosaurus.knockout",
+   "animation.albertosaurus.hatch"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 16.46,
+  "colours": {
+   "male": 36,
+   "female": 36
+  }
  },
  "majungasaurus": {
   "bones": 24,
