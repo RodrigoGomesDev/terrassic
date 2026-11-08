@@ -19,7 +19,7 @@ import parts as hit_parts  # noqa: E402
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
-    "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus",
+    "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -102,7 +102,11 @@ SIZES = {
     # Giganotosaurus v1 (01/11) is hand-made at 24 px/m and shown at its real 12.5 m (0.667), its own study and rig;
     # adults vary up to 13.3 m (the bigger dentary, MUCPv-95).
     "giganotosaurus":     dict(real=12.5, scale=0.667, w=2.4, h=3.9, baby=0.25, shadow=2.3, var=(0.92, 1.06)),
-    "carcharodontosaurus": dict(real=12.5, scale=1.80, w=2.4, h=4.6, baby=0.25, shadow=2.3),
+    # Carcharodontosaurus saharicus: 12.5 m, the neotype SGM-Din 1 (Seebacher 2001; Henderson & Nicholls 2015; Paul 2016;
+    # Rodrigo 07/11/2026: the Giganotosaurus' length, told apart by build). Carcharodontosaurus v1 (08/11, the 1.10.1) is
+    # hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1 (16.3 texels per block, 215 px long): a deeper, heavier
+    # body than the Giganotosaurus', so a wider hitbox.
+    "carcharodontosaurus": dict(real=12.5, scale=0.928, w=2.5, h=3.8, baby=0.25, shadow=2.4),
     # Carnotaurus v1 (01/11) is hand-made at 24 px/m and shown at its real 7.8 m (16 / 24 = 0.667), its own study and rig.
     "carnotaurus":        dict(real=7.8,  scale=0.667, w=1.8, h=3.0, baby=0.3,  shadow=1.6),
     "tarbosaurus":        dict(real=12.0, scale=1.79, w=2.5, h=4.3, baby=0.25, shadow=2.3),
@@ -509,13 +513,13 @@ SPECIES = [
       prey="!(e instanceof Giganotosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
       roar=True, rage=True, pack=True, apex=True, rig="Giganotosaurine", prey_interval=200, saddle="GIGANOTOSAURUS_SADDLE"),
  dict(id="carcharodontosaurus", cls="Carcharodontosaurus", base="PredatorDinosaur",
-      doc="Carcharodontosaurus saharicus - 12.5 m shark-toothed carnosaur of the Saharan river plains, deep boxy skull with brow bosses and a dark mask. Solitary; every kill makes it stronger and faster for a while (trophies, up to five). Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
+      doc="Carcharodontosaurus saharicus - 12.5 m shark-toothed carnosaur of the Cenomanian river shores of North Africa: a tall triangular skull with a sculpted maxilla, a brow shelf and a nuchal crest, a dark mask behind the eye, a thick short neck and a deep heavy body (the body's proportions inferred from its relatives). Solitary; hungry, it lies in ambush at the river's edge and bursts out at what comes close, not chasing far if it misses; its tearing bite leaves the victim bleeding; it drags its kill into the shade and guards it; in a duel it tears from the front and butts with the brow. Every kill makes it stronger and faster for a while (trophies, up to five). Tamed by knockout or from a stolen wild egg; rideable with its own saddle. Behaviour in Carcharodontosaurine.",
       attrs=dict(MAX_HEALTH=150, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=15, ATTACK_KNOCKBACK=1.3, ARMOR=5, KNOCKBACK_RESISTANCE=0.9, FOLLOW_RANGE=32),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.65, 1.9, 240), step=("RAVAGER_STEP", 0.9, 0.6),
-      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=2.2, ride_speed=1.1,
+      xp=40, step_height=1.5, head=(35, 25), rideable=True, jump=0.5, ride_offset=4.28, ride_forward=1.56, ride_speed=1.1,
       prey="!(e instanceof Carcharodontosaurus) && !(e instanceof Compsognathus) && !(e instanceof Brachiosaurus) && !e.isBaby()",
-      roar=True, kills=True, prey_interval=200),
+      roar=True, kills=True, apex=True, rig="Carcharodontosaurine", prey_interval=200, saddle="CARCHARODONTOSAURUS_SADDLE"),
  dict(id="carnotaurus", cls="Carnotaurus", base="PredatorDinosaur",
       doc="Carnotaurus sastrei - 8 m horned abelisaur of the Patagonian plains: bull skull with two horns, stub arms, long legs, the fastest of the big predators. Roars when it locks onto a target and its charge throws whatever it hits. Only tameable from a stolen wild egg until the knockout (v0.7); the fast combat mount.",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.32, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.2, ARMOR=4, KNOCKBACK_RESISTANCE=0.7, FOLLOW_RANGE=28),

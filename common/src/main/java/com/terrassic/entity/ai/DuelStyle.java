@@ -45,6 +45,10 @@ public record DuelStyle(float profile, double reach, double lunge, String jab, i
             // lunge of the long head, and the bite at the rival's neck going past (docs/estudos/13, Albertossauro)
             Map.entry("albertosaurus", new DuelStyle(35.0F, 3.6D, 8.0D, "snap_bite", 5, 14, "pass_bite", 9, 26, false,
                     0.18F, 0.06F, 0.42F, 45, 0.85F)),
+            // the ambusher: patient, blocks a middling amount and hardly dodges, circles little; it tears from the front
+            // (its lunge, with bleeding) and answers with the brow shelf (docs/estudos/13, Carcarodontossauro)
+            Map.entry("carcharodontosaurus", new DuelStyle(25.0F, 4.4D, 6.0D, "attack_quick", 6, 24, "brow_butt", 9, 26, false,
+                    0.25F, 0.30F, 0.05F, 110, 0.30F)),
             // cuts and backs off: slashes from the side, waits, counters
             Map.entry("giganotosaurus", new DuelStyle(45.0F, 4.6D, 7.0D, "slash", 10, 28, "rip", 9, 44, false,
                     0.25F, 0.20F, 0.08F, 90, 0.45F)),

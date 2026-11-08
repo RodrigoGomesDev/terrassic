@@ -73,6 +73,11 @@ public class DuelGoal extends Goal {
     /** For the tests (BehaviorTest): lunges, blows landed, misses, parries made, blocks made, staggers taken, sidesteps,
      *  jabs, signature blows, feints. */
     public final int[] stats = new int[10];
+    /** A rival that gave in to it (DinosaurEntity.submitTo), and until when it is left alone: the winner lets the beaten
+     *  one go (08/11/2026: the Albertosaurus' duel test found the loser dead five seconds after it gave in). */
+    private java.util.UUID spared;
+    private long sparedUntil;
+    private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger("terrassic");
 
     public DuelGoal(DinosaurEntity mob) {
         this.mob = mob;
@@ -88,6 +93,9 @@ public class DuelGoal extends Goal {
     @Override
     public boolean canUse() {
         LivingEntity t = this.mob.getTarget();
+        if (t != null && t.getUUID().equals(this.spared) && this.mob.level().getGameTime() < this.sparedUntil) {
+            return false;
+        }
         return t != null && t.isAlive() && !this.mob.isVehicle() && !this.mob.isKnockedOut() && this.mob.duels(t)
                 && this.mob.distanceTo(t) < this.enter();
     }
@@ -153,6 +161,28 @@ public class DuelGoal extends Goal {
         this.mob.getMoveControl().strafe(0.0F, 0.0F);
     }
 
+    /**
+     * The rival gave in: beaten, it dropped its target and the duel (DinosaurEntity.submitTo). The beaten one's blows
+     * are still on the winner's record, so on the next tick the vanilla HurtByTargetGoal put the winner straight back on
+     * it, the duel went on against a rival that no longer fought back, and the loser died (the Albertosaurus' test,
+     * 38/160 at the surrender, dead five seconds later). Here the winner lets it go and forgets the grudge.
+     */
+    private boolean gaveIn(LivingEntity t) {
+        return this.now > 20 && t instanceof DinosaurEntity d && d.isAlive() && !d.isDueling() && d.getTarget() == null
+                && !d.isTame() && d.getHealth() < d.getMaxHealth() * 0.5F;
+    }
+
+    private void release(LivingEntity t) {
+        this.spared = t.getUUID();
+        this.sparedUntil = this.mob.level().getGameTime() + 2400L;
+        if (this.mob.getLastHurtByMob() == t) {
+            this.mob.setLastHurtByMob(null);
+        }
+        this.mob.setTarget(null);
+        LOG.info("[duel] {} lets the beaten {} go ({}/{})", this.mob.speciesId(),
+                t instanceof DinosaurEntity d ? d.speciesId() : t.getType().toShortString(), Math.round(t.getHealth()), Math.round(t.getMaxHealth()));
+    }
+
     private int freshPatience() {
         return Math.round(this.style.patience() * (0.8F + this.mob.getRandom().nextFloat() * 0.6F));
     }
@@ -166,6 +196,10 @@ public class DuelGoal extends Goal {
             return;
         }
         this.now++;
+        if (this.gaveIn(t)) {
+            this.release(t);
+            return;
+        }
         this.mob.getLookControl().setLookAt(t, 40.0F, 40.0F);
         if (this.brokenLeft > 0) {
             this.brokenLeft--;
@@ -336,6 +370,7 @@ public class DuelGoal extends Goal {
                 anim = this.style.special();
                 com.terrassic.entity.Tyrannosaurine.duelMove(this.mob, anim);
                 com.terrassic.entity.Albertosaurine.duelMove(this.mob, anim);
+                com.terrassic.entity.Carcharodontosaurine.duelMove(this.mob, anim);
                 this.hitTick = this.style.specialHit();
                 this.totalTicks = this.style.specialTotal();
             }
@@ -440,7 +475,9 @@ public class DuelGoal extends Goal {
     }
 
     private void hurt(LivingEntity t, float dmg, Kind k) {
-        t.hurt(this.mob.damageSources().mobAttack(this.mob), dmg);
+        if (t.hurt(this.mob.damageSources().mobAttack(this.mob), dmg)) {
+            com.terrassic.entity.Carcharodontosaurine.duelHit(this.mob, t, k == Kind.LUNGE);   // its lunge tears: bleeding
+        }
         this.mob.setLastHurtMob(t);
         double push = switch (k) {
             case LUNGE -> 0.55D;
@@ -642,6 +679,7 @@ public class DuelGoal extends Goal {
                 this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, "parry");
                 com.terrassic.entity.Tyrannosaurine.duelMove(this.mob, "parry");
                 com.terrassic.entity.Albertosaurine.duelMove(this.mob, "parry");
+                com.terrassic.entity.Carcharodontosaurine.duelMove(this.mob, "parry");
             }
         }
     }

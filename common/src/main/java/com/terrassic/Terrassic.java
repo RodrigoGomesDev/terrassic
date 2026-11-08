@@ -7,6 +7,7 @@ import com.terrassic.leap.Leap;
 import com.terrassic.network.RulesNetwork;
 import com.terrassic.registry.ModBlockEntities;
 import com.terrassic.registry.ModBlocks;
+import com.terrassic.registry.ModEffects;
 import com.terrassic.registry.ModEntities;
 import com.terrassic.registry.ModItems;
 import com.terrassic.registry.ModParticles;
@@ -38,6 +39,7 @@ public final class Terrassic {
         // order matters on Fabric (registered immediately): tabs, entities, blocks, then items
         ModSounds.SOUNDS.register();
         ModParticles.PARTICLES.register();
+        ModEffects.EFFECTS.register(); // 1.10.1: bleeding (the Carcharodontosaurus' tearing bite)
         ModTabs.TABS.register();
         ModEntities.ENTITY_TYPES.register();
         ModBlocks.BLOCKS.register();
