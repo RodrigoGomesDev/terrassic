@@ -2677,8 +2677,9 @@ public final class BehaviorTest {
         for (int round = 0; round < 2; round++) {
             int rr = round;
             UUID[] herd = new UUID[6];
-            double[] acc = new double[6];     // spread sum, spread samples, alignment sum, alignment samples, max spread, travel
+            double[] acc = new double[7];     // spread sum, spread samples, alignment sum, alignment samples, max spread, travel, stuck
             Vec3[] start = new Vec3[1];
+            Map<UUID, Vec3> was = new java.util.HashMap<>();
             STEPS.add(mc -> {
                 if (rr == 0) {
                     REPORT.add("");
@@ -2720,6 +2721,11 @@ public final class BehaviorTest {
                     Vec3 sum = Vec3.ZERO;
                     int moving = 0;
                     for (DinosaurEntity d : l) {
+                        // walking in place: a path under way, and hardly a step since the last second
+                        Vec3 prev = was.put(d.getUUID(), d.position());
+                        if (prev != null && d.getNavigation().isInProgress() && prev.distanceTo(d.position()) < 0.1D) {
+                            acc[6]++;
+                        }
                         spread += d.position().distanceTo(c);
                         Vec3 v = d.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D);
                         if (v.length() > 0.02D) {
@@ -2737,8 +2743,8 @@ public final class BehaviorTest {
                     }
                     if (kk == 89) {
                         acc[5] = start[0] == null ? 0.0D : c.distanceTo(start[0]);
-                        REPORT.add(String.format(Locale.ROOT, "  %s6 edmontosaurus, 90 s: spread %.1f blocks on average (%.1f at most), alignment %.2f over %d samples with 3+ moving, the herd travelled %.1f",
-                                rr == 0 ? "(1.9.5) " : "", acc[0] / acc[1], acc[4], acc[3] == 0 ? 0.0D : acc[2] / acc[3], (int) acc[3], acc[5]));
+                        REPORT.add(String.format(Locale.ROOT, "  %s6 edmontosaurus, 90 s: spread %.1f blocks on average (%.1f at most), alignment %.2f over %d samples with 3+ moving, the herd travelled %.1f, walking in place %d animal-seconds",
+                                rr == 0 ? "(1.9.5) " : "", acc[0] / acc[1], acc[4], acc[3] == 0 ? 0.0D : acc[2] / acc[3], (int) acc[3], acc[5], (int) acc[6]));
                         Screenshot.grab(mc.gameDirectory, "behavior110_herd_" + rr + ".png", mc.getMainRenderTarget(), msg -> {
                         });
                     }

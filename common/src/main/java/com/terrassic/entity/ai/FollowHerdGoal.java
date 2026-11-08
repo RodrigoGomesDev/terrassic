@@ -19,6 +19,10 @@ public class FollowHerdGoal extends Goal {
     private int repathTimer;
     private Vec3 offset;
     private boolean separating;
+    /** 1.10.1 (found in the playtest, 08/11: two Gallimimus walked in place for 11 s against each other): stuck. */
+    private Vec3 lastPos;
+    private int stuckCheck;
+    private int restUntil;
 
     private boolean available() {
         return !this.mob.isTame() && !this.mob.isBaby() && !this.mob.isVehicle() && !this.mob.isPassenger()
@@ -37,7 +41,7 @@ public class FollowHerdGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!this.available()
+        if (!this.available() || this.mob.tickCount < this.restUntil
                 || this.mob.getRandom().nextInt(reducedTickDelay(30)) != 0) {
             return false;
         }
@@ -62,7 +66,8 @@ public class FollowHerdGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (!this.available() || this.neighbour == null || !this.neighbour.isAlive() || this.neighbour.isTame()) {
+        if (!this.available() || this.neighbour == null || !this.neighbour.isAlive() || this.neighbour.isTame()
+                || this.mob.tickCount < this.restUntil) {
             return false;
         }
         double d = this.mob.distanceToSqr(this.neighbour);
@@ -73,6 +78,8 @@ public class FollowHerdGoal extends Goal {
     @Override
     public void start() {
         this.repathTimer = 0;
+        this.lastPos = this.mob.position();
+        this.stuckCheck = 40;
         Vec3 away = this.mob.position().subtract(this.neighbour.position()).multiply(1, 0, 1);
         if (away.lengthSqr() < 0.01D) {
             away = Vec3.directionFromRotation(0, (this.mob.getUUID().getLeastSignificantBits() & 255) * 360.0F / 256);
@@ -88,6 +95,14 @@ public class FollowHerdGoal extends Goal {
 
     @Override
     public void tick() {
+        if (!com.terrassic.entity.Behaviour.oldHerd && --this.stuckCheck <= 0) {
+            this.stuckCheck = 40;
+            if (this.lastPos != null && this.mob.position().distanceToSqr(this.lastPos) < 0.5D * 0.5D) {
+                this.restUntil = this.mob.tickCount + 100;     // pushing in place: let it be for five seconds
+                return;
+            }
+            this.lastPos = this.mob.position();
+        }
         if (--this.repathTimer <= 0) {
             this.repathTimer = adjustedTickDelay(20);
             Vec3 target = this.neighbour.position().add(this.offset);
