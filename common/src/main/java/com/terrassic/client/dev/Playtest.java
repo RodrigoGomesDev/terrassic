@@ -62,6 +62,7 @@ public final class Playtest {
     private static final Map<Integer, Track> TRACK = new ConcurrentHashMap<>();
     private static int wait;
     private static boolean started;
+    private static int titleTicks;
     private static String place = "";
     private static int shots;
     private static int photoNo;
@@ -110,7 +111,9 @@ public final class Playtest {
 
     private static void tick(Minecraft mc) {
         if (!started) {
-            if (mc.screen instanceof TitleScreen) {
+            // only once the resources have loaded (no reload overlay): a world made earlier crashed the client in
+            // ModelManager.requiresRender (08/11)
+            if (mc.screen instanceof TitleScreen && mc.getOverlay() == null && ++titleTicks > 40) {
                 started = true;
                 makeWorld(mc);
             }

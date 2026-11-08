@@ -97,6 +97,11 @@ public class EatCarcassGoal extends Goal {
 
     @Override
     public void tick() {
+        // the goal selector re-checks canContinueToUse only every other tick: after giveUp() the carcass is gone
+        // while tick() still runs once (a server crash in the 1.10.1 regression, 08/11)
+        if (this.carcass == null || !this.carcass.isAlive()) {
+            return;
+        }
         this.mob.getLookControl().setLookAt(this.carcass, 30.0F, 30.0F);
         double reach = this.mob.getBbWidth() * 0.5D + this.carcass.getBbWidth() * 0.5D + 1.5D;
         if (this.mob.distanceToSqr(this.carcass) > reach * reach) {
