@@ -2006,7 +2006,7 @@
   "px_per_m": 16.944,
   "texels_per_block": 16.28,
   "colours": {
-   "male": 37,
+   "male": 40,
    "female": 37
   }
  },
@@ -2122,7 +2122,7 @@
  },
  "daspletosaurus": {
   "bones": 25,
-  "cubes": 98,
+  "cubes": 102,
   "texture": [
    256,
    128
@@ -2135,7 +2135,7 @@
    ],
    [
     14.836676014095312,
-    66.81261466775904,
+    67.27829441767294,
     81.84508703252014
    ]
   ],
@@ -2223,7 +2223,7 @@
    ],
    [
     12.722672763608314,
-    64.91834905636924,
+    66.1784894626432,
     87.90496850370633
    ]
   ],
@@ -2296,13 +2296,13 @@
   "px_per_m": 16.944,
   "texels_per_block": 16.46,
   "colours": {
-   "male": 36,
-   "female": 36
+   "male": 37,
+   "female": 34
   }
  },
  "majungasaurus": {
   "bones": 25,
-  "cubes": 89,
+  "cubes": 91,
   "texture": [
    256,
    128
@@ -2390,8 +2390,8 @@
   "px_per_m": 16.944,
   "texels_per_block": 16.14,
   "colours": {
-   "male": 38,
-   "female": 38
+   "male": 39,
+   "female": 36
   }
  },
  "dakotaraptor": {
