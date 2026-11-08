@@ -73,9 +73,11 @@ public class BabyStayGoal extends Goal {
         return this.threat != null || (this.mother != null && this.mother.distanceToSqr(this.mob) > STAY * STAY);
     }
 
+    // canUse/canContinueToUse run only on the mob's even ticks (Mob.serverAiStep): the stagger counts those
+    // (tickCount / 2), or every animal with an odd id never started (half the calves and herd followers, 08/11)
     @Override
     public boolean canUse() {
-        if ((this.mob.tickCount + this.mob.getId()) % 10 != 0 || !this.free()) {
+        if ((this.mob.tickCount / 2 + this.mob.getId()) % 10 != 0 || !this.free()) {
             return false;
         }
         this.look();
@@ -87,11 +89,11 @@ public class BabyStayGoal extends Goal {
         if (!this.free()) {
             return false;
         }
-        if ((this.mob.tickCount + this.mob.getId()) % 10 == 0) {
+        if ((this.mob.tickCount / 2 + this.mob.getId()) % 10 == 0) {
             this.look();
         }
         if (this.threat != null) {
-            if (this.stuck == 0 && this.sideSign == 0.0D && (this.mob.tickCount + this.mob.getId()) % 10 == 0) {
+            if (this.stuck == 0 && this.sideSign == 0.0D && (this.mob.tickCount / 2 + this.mob.getId()) % 10 == 0) {
                 Behaviour.log("baby flee: " + this.mob.speciesId() + " #" + this.mob.getId() + " from " + this.threat.getType().toShortString());
             }
             return true;
