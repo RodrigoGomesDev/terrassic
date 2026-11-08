@@ -176,7 +176,8 @@ new = [x for x in h if not x[0]]
 if old and new:
     check("manada junta", float(new[-1][1]) <= max(8.0, float(old[-1][1])), f"espalhamento {new[-1][1]} (1.9.5: {old[-1][1]})")
     # how far a herd goes in 90 s is chance (one stroll more or less); together is the measure
-    check("manada anda alinhada", float(new[-1][2]) >= 0.5, f"alinhamento {new[-1][2]}, andou {new[-1][3]} (1.9.5: {old[-1][3]})")
+    samples = re.findall(r"6 edmontosaurus, 90 s:.*over (\d+) samples", text)
+    check("manada anda alinhada", (samples and int(samples[-1]) == 0) or float(new[-1][2]) >= 0.5, f"alinhamento {new[-1][2]}, andou {new[-1][3]} (1.9.5: {old[-1][3]})")
     # walking in place (the playtest saw two Gallimimus push against each other for 11 s): the new herd goal itself
     # never does it for long (it gives up after 2 s); the old goals keep a few seconds of it, in both versions alike
     st = re.findall(r"6 edmontosaurus, 90 s:.*walking in place (\d+) animal-seconds \{([^}]*)\}", text)

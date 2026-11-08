@@ -27,6 +27,7 @@ public class BabyStayGoal extends Goal {
     private double sideSign = 1.0D;
     private Vec3 lastPos;
     private int stuckCheck;
+    private int stuck;
 
     public BabyStayGoal(DinosaurEntity mob) {
         this.mob = mob;
@@ -90,6 +91,9 @@ public class BabyStayGoal extends Goal {
             this.look();
         }
         if (this.threat != null) {
+            if (this.stuck == 0 && this.sideSign == 0.0D && (this.mob.tickCount + this.mob.getId()) % 10 == 0) {
+                Behaviour.log("baby flee: " + this.mob.speciesId() + " #" + this.mob.getId() + " from " + this.threat.getType().toShortString());
+            }
             return true;
         }
         return this.mother != null && this.mother.distanceToSqr(this.mob) > 2.5D * 2.5D;
@@ -101,6 +105,7 @@ public class BabyStayGoal extends Goal {
         this.lastPos = this.mob.position();
         this.stuckCheck = 20;
         this.sideSign = 0.0D;
+        this.stuck = 0;
         if (this.threat != null) {
             Behaviour.log("baby flee: " + this.mob.speciesId() + " #" + this.mob.getId() + " from " + this.threat.getType().toShortString());
         }
@@ -118,6 +123,7 @@ public class BabyStayGoal extends Goal {
             this.stuckCheck = 20;
             if (this.threat != null && this.lastPos != null && this.mob.position().distanceToSqr(this.lastPos) < 0.3D * 0.3D) {
                 this.sideSign = this.sideSign == 0.0D ? -1.0D : -this.sideSign;      // wedged against her: round the other side
+                this.stuck++;
                 this.repath = 0;
             }
             this.lastPos = this.mob.position();
@@ -162,6 +168,13 @@ public class BabyStayGoal extends Goal {
         } else {
             return;
         }
-        this.mob.getNavigation().moveTo(to.x, to.y, to.z, speed);
+        boolean going = this.stuck < 2 && this.mob.getNavigation().moveTo(to.x, to.y, to.z, speed);
+        if (!going && this.threat != null) {
+            // no way round her (or none found twice): straight away from the threat
+            Vec3 away = this.mob.position().subtract(this.threat.position()).multiply(1.0D, 0.0D, 1.0D);
+            away = away.lengthSqr() < 0.01D ? new Vec3(1.0D, 0.0D, 0.0D) : away.normalize();
+            Vec3 run = this.mob.position().add(away.scale(10.0D));
+            this.mob.getNavigation().moveTo(run.x, run.y, run.z, speed);
+        }
     }
 }
