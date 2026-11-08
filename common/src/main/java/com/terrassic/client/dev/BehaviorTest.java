@@ -1109,6 +1109,13 @@ public final class BehaviorTest {
                         mc.getSingleplayerServer().execute(() -> {
                             d.setTarget(null);
                             d.getNavigation().moveTo(x0 + 40.0D, Y, 0.5D, speed);
+                            // any other of the kind near: the model is shared, so a wild one rendered in between gave
+                            // its pose as this one's (a "jump" of 116 deg in a world with real terrain, 1.21.1, 07/11)
+                            for (DinosaurEntity o : d.level().getEntitiesOfClass(DinosaurEntity.class, d.getBoundingBox().inflate(160.0D))) {
+                                if (o != d && o.getType() == d.getType()) {
+                                    o.discard();
+                                }
+                            }
                         });
                         Entity c = mc.level.getEntity(d.getId());
                         Entity e = c != null ? c : d;

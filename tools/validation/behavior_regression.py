@@ -30,10 +30,42 @@ for sp, lo, hi in jaws:
     span = float(hi) - float(lo)
     check(f"mandíbula {sp}", span <= 90.0, f"abre {span:.0f} graus")
 
-# legs: no leg bone may jump more than 110 deg in one tick while walking or at a chase's pace: the exporter holds the
-# legs under 1500 deg/s (75 deg a tick) and a gait plays at most 1.5x, so more than that is a flip, not speed
+# legs, in two parts. The files: no leg bone in a walk or a run may turn faster than the exporter's limiter
+# (anim2.LEG_RATE, 1500 deg/s = 75 a tick); a joint flipping in the keys shows here. In the game: a gait plays at most
+# 1.5x (DinosaurEntity.gaitSpeed), so a fast run legitimately reaches 112 a tick (the Pachycephalosaurus run measured
+# 107-118 on both versions, 07/11); more than 125 is a pose coming from somewhere else, not the cycle.
+import json, os
+LEG = re.compile(r"(thigh|shin|foot|arm|forearm|hand|upper|lower)_?[lr]?$|_(l|r)$")
+anims = "common/src/main/resources/assets/terrassic/animations/entity"
+for sp, _ in re.findall(r"gait (\w+): legs turn at most (-?[\d.]+) deg", text):
+    f = os.path.join(anims, f"{sp}.animation.json")
+    if not os.path.exists(f):
+        continue
+    data = json.load(open(f))["animations"]
+    worst, where = 0.0, ""
+    for g in ("walk", "run"):
+        an = data.get(f"animation.{sp}.{g}")
+        if not an:
+            continue
+        for bone, ch in an.get("bones", {}).items():
+            if not LEG.search(bone) or not isinstance(ch.get("rotation"), dict):
+                continue
+            r = ch["rotation"]
+            ks = sorted(r, key=float)
+            val = lambda k: (r[k].get("post", r[k]) if isinstance(r[k], dict) else r[k])
+            for k0, k1 in zip(ks, ks[1:]):
+                dt = float(k1) - float(k0)
+                if dt <= 0:
+                    continue
+                for q in range(3):
+                    a0, a1 = val(k0)[q], val(k1)[q]
+                    if isinstance(a0, (int, float)) and isinstance(a1, (int, float)):
+                        rate = abs(a1 - a0) / dt
+                        if rate > worst:
+                            worst, where = rate, f"{g} {bone} {k0}s"
+    check(f"pernas {sp} (arquivo)", worst <= 1550.0, f"{worst:.0f} graus/s no máximo ({where})")
 for sp, j in re.findall(r"gait (\w+): legs turn at most (-?[\d.]+) deg", text):
-    check(f"pernas {sp}", 0.0 <= float(j) <= 115.0, f"maior salto {float(j):.0f} graus por tick")
+    check(f"pernas {sp}", 0.0 <= float(j) <= 125.0, f"maior salto {float(j):.0f} graus por tick")
 for sp in re.findall(r"frame \d+: the animal is gone.*", text):
     check("bicho sumiu na caminhada", False, sp)
 
