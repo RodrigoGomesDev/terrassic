@@ -950,7 +950,7 @@ EGG_BLOCK = {
     "euoplocephalus": ("#d4d2b0", "#4a4e3a"),
     "therizinosaurus": ("#c8b898", "#4e4034"),
     "deinocheirus": ("#d8d0bc", "#4a423a"),
-    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#d6cba8", "#5a4628"), "carnotaurus": ("#d0ccb4", "#55503f"), "tarbosaurus": ("#d8d0b8", "#5f5648"), "daspletosaurus": ("#b39c93", "#472a30"), "albertosaurus": ("#8aa392", "#23382f"), "majungasaurus": ("#dcc4a8", "#7a3f2c"), "dakotaraptor": ("#b8ac98", "#3a3640"), "troodon": ("#e4e2cc", "#8a8a70"), "oviraptor": ("#ecdfc4", "#9a6a3c"), "citipati": ("#d6d0c2", "#34343c"), "mononykus": ("#ecdfc0", "#7a5c3a"), "didelphodon": ("#d8c8a8", "#4e3a28"), "parasaurolophus": ("#dfe6d8", "#46584c"),
+    "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#d6cba8", "#5a4628"), "carnotaurus": ("#d0ccb4", "#55503f"), "tarbosaurus": ("#d8d0b8", "#5f5648"), "daspletosaurus": ("#b39c93", "#472a30"), "albertosaurus": ("#8aa392", "#23382f"), "majungasaurus": ("#c9cfd3", "#2b4051"), "dakotaraptor": ("#b8ac98", "#3a3640"), "troodon": ("#e4e2cc", "#8a8a70"), "oviraptor": ("#ecdfc4", "#9a6a3c"), "citipati": ("#d6d0c2", "#34343c"), "mononykus": ("#ecdfc0", "#7a5c3a"), "didelphodon": ("#d8c8a8", "#4e3a28"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "thescelosaurus": ("#d8d0a8", "#5c5a3a"), "gallimimus": ("#f0ece0", "#9c917c"),
     "struthiomimus": ("#f0e6d0", "#8a5a3a"),
     "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),
@@ -1520,6 +1520,8 @@ if __name__ == "__main__":
     alberto_extras.main()   # the Albertosaurus' racing saddle
     import carcharo_extras
     carcharo_extras.main()   # the Carcharodontosaurus' river-plain saddle
+    import majunga_extras
+    majunga_extras.main()   # the Majungasaurus' brawler's saddle
     import spino_extras
     spino_extras.main()   # the Spinosaurus' eggs on a river sandbar (no saddle yet)
     import tri_extras

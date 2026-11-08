@@ -371,6 +371,7 @@ public class DuelGoal extends Goal {
                 com.terrassic.entity.Tyrannosaurine.duelMove(this.mob, anim);
                 com.terrassic.entity.Albertosaurine.duelMove(this.mob, anim);
                 com.terrassic.entity.Carcharodontosaurine.duelMove(this.mob, anim);
+                com.terrassic.entity.Majungasaurine.duelMove(this.mob, anim);
                 this.hitTick = this.style.specialHit();
                 this.totalTicks = this.style.specialTotal();
             }
@@ -477,6 +478,7 @@ public class DuelGoal extends Goal {
     private void hurt(LivingEntity t, float dmg, Kind k) {
         if (t.hurt(this.mob.damageSources().mobAttack(this.mob), dmg)) {
             com.terrassic.entity.Carcharodontosaurine.duelHit(this.mob, t, k == Kind.LUNGE);   // its lunge tears: bleeding
+            com.terrassic.entity.Majungasaurine.duelHit(this.mob, t, k == Kind.LUNGE);         // its lunge bites and holds
         }
         this.mob.setLastHurtMob(t);
         double push = switch (k) {
@@ -638,9 +640,10 @@ public class DuelGoal extends Goal {
         this.stateTick = 0;
         this.stats[5]++;
         float away = Mth.wrapDegrees(this.yawTo(by) - this.mob.getYRot()) > 0.0F ? -1.0F : 1.0F;
-        this.spin = away * (90.0F + this.mob.getRandom().nextFloat() * 60.0F);
+        // the Majungasaurus' low centre of gravity: it barely gives (Majungasaurine.staggerGive)
+        this.spin = away * (90.0F + this.mob.getRandom().nextFloat() * 60.0F) * com.terrassic.entity.Majungasaurine.staggerGive(this.mob);
         this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, this.mob.hasAnim("stagger") ? "stagger" : "recoil");
-        this.mob.pushedBy(by, 0.3D);
+        this.mob.pushedBy(by, 0.3D * com.terrassic.entity.Majungasaurine.staggerGive(this.mob));
         DuelGoal other = by instanceof DinosaurEntity d ? d.duelBrain() : null;
         if (other != null) {
             other.punishFrom = other.now;
@@ -680,6 +683,7 @@ public class DuelGoal extends Goal {
                 com.terrassic.entity.Tyrannosaurine.duelMove(this.mob, "parry");
                 com.terrassic.entity.Albertosaurine.duelMove(this.mob, "parry");
                 com.terrassic.entity.Carcharodontosaurine.duelMove(this.mob, "parry");
+                com.terrassic.entity.Majungasaurine.duelMove(this.mob, "parry");
             }
         }
     }

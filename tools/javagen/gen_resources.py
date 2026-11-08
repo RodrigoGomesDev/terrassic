@@ -112,6 +112,7 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "daspletosaurus_saddle": ("Daspletosaurus Saddle", "Sela de Daspletossauro", "Silla de Daspletosaurio", "item/generated"),
     "albertosaurus_saddle": ("Albertosaurus Saddle", "Sela de Albertossauro", "Silla de Albertosaurio", "item/generated"),
     "carcharodontosaurus_saddle": ("Carcharodontosaurus Saddle", "Sela de Carcarodontossauro", "Silla de Carcarodontosaurio", "item/generated"),
+    "majungasaurus_saddle": ("Majungasaurus Saddle", "Sela de Majungassauro", "Silla de Majungasaurio", "item/generated"),
     # the drover's pack saddle (cangalha) with two woven baskets: the Triceratops carries its cargo in them
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
     # 1.8: the Elasmosaurus' neck saddle: a hide seat behind the neck, a rope loop to hold, two driftwood floats
@@ -948,6 +949,10 @@ def main():
     # the Carcharodontosaurus' river-plain saddle: a woven blanket of wool on its hide, a hide seat, a rope girth, bone
     shaped("carcharodontosaurus_saddle", ["LWL", "HHH", "SBS"], {"L": "minecraft:leather", "W": "minecraft:white_wool",
            "H": "terrassic:carcharodontosaurus_hide", "S": "minecraft:string", "B": "minecraft:bone"}, "terrassic:carcharodontosaurus_saddle")
+    # the Majungasaurus' brawler's saddle: a woven mat of rushes (the raffia of the model) on its hide, a low hide seat,
+    # a grab rope of string, bone
+    shaped("majungasaurus_saddle", ["LRL", "HHH", "SBS"], {"L": "minecraft:leather", "R": "terrassic:rush",
+           "H": "terrassic:majungasaurus_hide", "S": "minecraft:string", "B": "minecraft:bone"}, "terrassic:majungasaurus_saddle")
     # the Triceratops' pack saddle: two wooden heads of the frame, a hide seat on leather, two woven rush baskets
     shaped("triceratops_saddle", ["S S", "LHL", "R R"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")

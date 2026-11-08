@@ -20,6 +20,7 @@ PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
     "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
+    "majungasaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -118,7 +119,11 @@ SIZES = {
     # 07/11/2026). Albertosaurus v1 (08/11, the 1.10.1) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1
     # (16.5 texels per block, 174 px long): slimmer and longer-legged than the Daspletosaurus, so a narrower hitbox.
     "albertosaurus":      dict(real=10.0, scale=0.918, w=1.9, h=3.5, baby=0.28, shadow=1.9),
-    "majungasaurus":      dict(real=7.5,  scale=1.26, w=1.6, h=3.0, baby=0.3,  shadow=1.5),
+    # Majungasaurus crenatissimus: 8 m, the top without the fragments' guesses beyond it (Krause et al. 2007: 5.6-7 m;
+    # Sampson & Witmer 2007: larger individuals passed 8 m; Rodrigo 07/11/2026: 8 m). Majungasaurus v1 (08/11, the
+    # 1.10.1) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1 (16.1 texels per block, 137 px long): short
+    # legs and a low stocky body (the back ~18% lower for its length than the Carnotaurus'), so a low, broad hitbox.
+    "majungasaurus":      dict(real=8.0,  scale=0.936, w=1.7, h=2.4, baby=0.3,  shadow=1.6),
     # Dakotaraptor v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 5.5 m (16 / 20 = 0.8): its own
     # study and rig (page "1.9: estudos..."); the hitbox covers the body, the hit parts the deep head and the tail.
     "dakotaraptor":       dict(real=5.5,  scale=0.8,  w=1.2, h=2.1, baby=0.3,  shadow=0.9),
@@ -553,13 +558,13 @@ SPECIES = [
       prey="e.getBbWidth() < 2.8F && !(e instanceof Albertosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
       roar=True, pack=True, apex=True, rig="Albertosaurine", prey_interval=160, saddle="ALBERTOSAURUS_SADDLE"),  # its run threshold (0.02) lives in Albertosaurine
  dict(id="majungasaurus", cls="Majungasaurus", base="PredatorDinosaur",
-      doc="Majungasaurus crenatissimus - 7.5 m abelisaur of Madagascar: a very short deep snout, a single dome horn on the skull roof, stub arms and strong short legs. An ambusher with a very fast short burst (it breaks into the charge at once) and a bite that throws. Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
-      attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=10, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),
+      doc="Majungasaurus crenatissimus - 8 m abelisaur of Madagascar's dry Maevarano floodplain (Maastrichtian): a short, deep and broad skull with thick rugose nasals and a single dome on the roof over the eyes, a strong short neck, tiny stub arms, short thick legs and a low stocky body. It bites and HOLDS: prey up to 1.2 times its size is held 2 to 3 s and shaken (a small one carried in the jaws), a player held is slowed and bitten lightly until they hit it free; a short low burst at what turns up close, given up at 24 blocks; it eats its own dead and, starving, a dying neighbour of its kind, and two hungry ones fight a duel over a carcass; in the afternoon it guards a waterhole, crouched, warning off with the dome; in a duel it pushes with the dome from below and barely staggers. Tamed by knockout or from a stolen wild egg; a steady rideable brawler with its own saddle. Behaviour in Majungasaurine.",
+      attrs=dict(MAX_HEALTH=85, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=1.0, ARMOR=5, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=24),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, Items.CHICKEN, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.0, 1.5, 220), step=("RAVAGER_STEP", 0.6, 0.85),
-      xp=26, step_height=1.2, head=(40, 30), run=0.012, rideable=True, jump=0.55, ride_offset=1.7, ride_speed=1.3,
-      prey="e.getBbWidth() < 2.2F && !(e instanceof Majungasaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
-      roar=True, prey_interval=140),
+      xp=28, step_height=1.2, head=(40, 30), run=0.012, rideable=True, jump=0.4, ride_offset=2.37, ride_forward=1.09, ride_speed=1.05,
+      prey="e.getBbWidth() < 2.2F && (!(e instanceof Majungasaurus) || Majungasaurine.cannibalPrey(this, e)) && !(e instanceof Compsognathus) && !e.isBaby()",
+      roar=True, apex=True, rig="Majungasaurine", prey_interval=140, saddle="MAJUNGASAURUS_SADDLE"),
  dict(id="dakotaraptor", cls="Dakotaraptor", base="PredatorDinosaur",
       doc="Dakotaraptor steini - 5.5 m dromaeosaur of Hell Creek, nearly three times the Velociraptor: long legs, broad feathered wings, a huge sickle claw. Hunts in small packs (one picks a target, the pack joins), leaps at its prey and runs down anything mid-sized; avoids T. rex like its small cousin. Only tameable from a stolen wild egg until the knockout (v0.7); when tamed it is the agile hunting mount that jumps highest of all.",
       attrs=dict(MAX_HEALTH=50, MOVEMENT_SPEED=0.34, ATTACK_DAMAGE=8, ATTACK_KNOCKBACK=0.6, ARMOR=2, FOLLOW_RANGE=28),

@@ -91,17 +91,23 @@ public class WaterholeGoal extends Goal {
 
     /** The nearest water surface, sampled in rings out to 48 blocks. */
     private BlockPos findWater() {
-        BlockPos at = this.mob.blockPosition();
-        for (int ring = 6; ring <= RANGE; ring += 5) {
+        return findWater(this.mob, RANGE);
+    }
+
+    /** The nearest water surface to the animal, sampled in rings out to range blocks, or null (also the
+     *  Majungasaurus' waterhole, WaterholeGuardGoal). */
+    public static BlockPos findWater(DinosaurEntity mob, int range) {
+        BlockPos at = mob.blockPosition();
+        for (int ring = 6; ring <= range; ring += 5) {
             int n = Math.max(8, ring);          // about one sample every 6 blocks round the ring: a small pool is not missed
             for (int i = 0; i < n; i++) {
-                double a = (i + this.mob.getRandom().nextFloat()) / n * Math.PI * 2.0D;
+                double a = (i + mob.getRandom().nextFloat()) / n * Math.PI * 2.0D;
                 BlockPos col = at.offset((int) (Math.cos(a) * ring), 0, (int) (Math.sin(a) * ring));
-                if (!this.mob.level().hasChunkAt(col)) {
+                if (!mob.level().hasChunkAt(col)) {
                     continue;
                 }
-                BlockPos top = this.mob.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, col);
-                if (this.mob.level().getFluidState(top.below()).is(FluidTags.WATER)) {
+                BlockPos top = mob.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, col);
+                if (mob.level().getFluidState(top.below()).is(FluidTags.WATER)) {
                     return top.below();
                 }
             }
