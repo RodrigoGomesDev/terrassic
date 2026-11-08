@@ -12,7 +12,8 @@ albertofight.py). Writes:
 usage:  python3 -B tools/modelgen/handmade/albertosaurus/build.py [--skin]   (--skin: repaint the skins only)
 
 The build stops (exit 1) when the QA fails: coplanar faces, pixel bugs, a standing pose off the ground, a density
-outside 16 +- 2 texels per block, or a head under the padrão v2 numbers (_engine/headcheck.py); all measured on the
+outside 16 +- 2 texels per block, a head too close to another remade head
+(_engine/uniquecheck.py, padrão v3), or a head under the padrão v2 numbers (_engine/headcheck.py); all measured on the
 exported files the way GeckoLib plays them.
 """
 import json
@@ -27,6 +28,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools", "spritegen"))
 
 import geo  # noqa: E402
 import headcheck  # noqa: E402
+import uniquecheck  # noqa: E402
 import proto as P  # noqa: E402
 import qa  # noqa: E402
 import skin2  # noqa: E402
@@ -66,10 +68,14 @@ def main():
         bugs += [(sex,) + b for b in qa.pixel_bugs(m, tex)]
         colours[sex] = skin2.colour_count(tex)
         p = alberto.pal_for(sex)
-        fails, nums = headcheck.check(m, tex, p["iris"], p["glint"], sex=sex)     # the padrão v2 head
+        irises = [p[k] for k in ("iris", "iris2", "iris3") if k in p]
+        fails, nums = headcheck.check(m, tex, irises, p["glint"], sex=sex)     # the padrão v2/v3 head
         print(headcheck.line("albertosaurus", sex, nums))
         heads += [("head", sex, x) for x in fails]
         save_png(tex, os.path.join(ASSETS, "textures", "entity", f"albertosaurus_{sex}.png"))
+    ufails, urows = uniquecheck.check("albertosaurus")      # padrão v3: its own eye, teeth and face (study 14)
+    print(uniquecheck.table(urows, top=4))
+    heads += [("unique", x) for x in ufails]
 
     if "--skin" in sys.argv:      # repaint only (the skins and the pixel QA), the animations stay
         print("QA: coplanar", left, "| pixel bugs", len(bugs), "| head", len(heads), "| colours", colours)
