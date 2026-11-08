@@ -19,6 +19,13 @@ public class EatCarcassGoal extends Goal {
     private int eatTimer;
     private int bites;
     private int repathTimer;
+    /** 1.10.1 (found playing a real world, 08/11): a Dakotaraptor swam 60 s under a carcass on a bank it could not
+     *  climb. Best distance so far and the ticks since it last got 1 block nearer; at 10 s it gives up that carcass
+     *  for a minute. */
+    private double bestDist;
+    private int noProgress;
+    private int skipId = -1;
+    private long skipUntil;
 
     public EatCarcassGoal(DinosaurEntity mob) {
         this.mob = mob;
@@ -39,6 +46,9 @@ public class EatCarcassGoal extends Goal {
         CarcassEntity best = null;
         double bestDist = Double.MAX_VALUE;
         for (CarcassEntity c : near) {
+            if (c.getId() == this.skipId && this.mob.level().getGameTime() < this.skipUntil) {
+                continue;
+            }
             double d = this.mob.distanceToSqr(c);
             if (d < bestDist) {
                 best = c;
@@ -51,7 +61,7 @@ public class EatCarcassGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.carcass != null && this.carcass.isAlive() && this.carcass.hasMeat() && !this.mob.isSated()
+        return this.carcass != null && this.noProgress < 200 && this.carcass.isAlive() && this.carcass.hasMeat() && !this.mob.isSated()
                 && this.mob.getTarget() == null && !this.mob.isInSittingPose() && !this.mob.isVehicle();
     }
 
@@ -60,11 +70,22 @@ public class EatCarcassGoal extends Goal {
         this.bites = 0;
         this.eatTimer = 10;
         this.repathTimer = 0;
+        this.bestDist = this.mob.distanceTo(this.carcass);
+        this.noProgress = 0;
         this.mob.getNavigation().moveTo(this.carcass, 1.1D);
+    }
+
+    private void giveUp() {
+        this.skipId = this.carcass.getId();
+        this.skipUntil = this.mob.level().getGameTime() + 1200L;
+        this.carcass = null;
     }
 
     @Override
     public void stop() {
+        if (this.carcass != null && this.noProgress >= 200) {
+            this.giveUp();
+        }
         this.carcass = null;
         this.mob.getNavigation().stop();
     }
@@ -79,6 +100,14 @@ public class EatCarcassGoal extends Goal {
         this.mob.getLookControl().setLookAt(this.carcass, 30.0F, 30.0F);
         double reach = this.mob.getBbWidth() * 0.5D + this.carcass.getBbWidth() * 0.5D + 1.5D;
         if (this.mob.distanceToSqr(this.carcass) > reach * reach) {
+            double d = this.mob.distanceTo(this.carcass);
+            if (d < this.bestDist - 1.0D) {
+                this.bestDist = d;
+                this.noProgress = 0;
+            } else if (++this.noProgress >= 200) {
+                this.giveUp();
+                return;
+            }
             if (--this.repathTimer <= 0) {
                 this.repathTimer = 20;
                 this.mob.getNavigation().moveTo(this.carcass, 1.1D);
