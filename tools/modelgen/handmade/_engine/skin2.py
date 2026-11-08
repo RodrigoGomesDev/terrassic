@@ -152,7 +152,9 @@ def stripe(z, y, centres, half, slant=0.0, wander=1.2, seed=0):
 STEP_DN = {"k5": "k4", "k4": "k3", "k3": "k2", "k2": "k1", "k1": "k0", "k0": "k0",
            "b3": "b2", "b2": "b1", "b1": "b0", "b0": "k4"}
 STEP_UP = {v: k for k, v in STEP_DN.items() if k != v}
-STEP_UP.update({"k5": "k5", "b3": "b3"})
+# b0 also steps down to k4, so the inversion sent k4 UP into the belly's grey (stray pale texels over dark skin, found
+# on the padrão v2 faces, 08/11/2026): up from k4 is k5, the belly ramp starts at b0
+STEP_UP.update({"k5": "k5", "b3": "b3", "k4": "k5"})
 
 
 def step(key, d):
