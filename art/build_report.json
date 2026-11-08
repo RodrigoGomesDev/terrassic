@@ -1920,38 +1920,95 @@
   "handmade": true
  },
  "carcharodontosaurus": {
-  "bones": 24,
-  "cubes": 56,
+  "bones": 25,
+  "cubes": 98,
   "texture": [
-   128,
+   256,
    256
   ],
   "bounds_px": [
    [
-    -9.0,
-    -0.10587278931877897,
-    -51.237030251583946
+    -17.163082673256824,
+    -0.090998945847975,
+    -103.57767339567339
    ],
    [
-    9.0,
-    43.62269173356936,
-    60.0511694068692
+    17.163082673256824,
+    75.93234538017117,
+    111.86770574072096
    ]
   ],
   "animations": [
    "animation.carcharodontosaurus.idle",
+   "animation.carcharodontosaurus.sniff",
+   "animation.carcharodontosaurus.look_back",
+   "animation.carcharodontosaurus.shake",
+   "animation.carcharodontosaurus.yawn",
+   "animation.carcharodontosaurus.stretch",
+   "animation.carcharodontosaurus.snort",
+   "animation.carcharodontosaurus.settle",
+   "animation.carcharodontosaurus.scan",
    "animation.carcharodontosaurus.walk",
    "animation.carcharodontosaurus.run",
-   "animation.carcharodontosaurus.attack",
+   "animation.carcharodontosaurus.burst",
+   "animation.carcharodontosaurus.stalk",
+   "animation.carcharodontosaurus.drag",
+   "animation.carcharodontosaurus.swim",
+   "animation.carcharodontosaurus.turn_left",
+   "animation.carcharodontosaurus.turn_right",
+   "animation.carcharodontosaurus.walk_tired",
+   "animation.carcharodontosaurus.idle_tired",
    "animation.carcharodontosaurus.roar",
+   "animation.carcharodontosaurus.roar_loud",
+   "animation.carcharodontosaurus.call",
+   "animation.carcharodontosaurus.threat",
+   "animation.carcharodontosaurus.gape_hiss",
+   "animation.carcharodontosaurus.brow_display",
+   "animation.carcharodontosaurus.attack",
+   "animation.carcharodontosaurus.tear",
+   "animation.carcharodontosaurus.attack_quick",
+   "animation.carcharodontosaurus.bite_low",
+   "animation.carcharodontosaurus.bite_side",
+   "animation.carcharodontosaurus.stomp",
+   "animation.carcharodontosaurus.shove",
+   "animation.carcharodontosaurus.hurt",
+   "animation.carcharodontosaurus.death",
+   "animation.carcharodontosaurus.eat",
+   "animation.carcharodontosaurus.drink",
+   "animation.carcharodontosaurus.ambush_crouch",
+   "animation.carcharodontosaurus.ambush_look",
+   "animation.carcharodontosaurus.guard",
+   "animation.carcharodontosaurus.strafe_left",
+   "animation.carcharodontosaurus.strafe_right",
+   "animation.carcharodontosaurus.feint",
+   "animation.carcharodontosaurus.block",
+   "animation.carcharodontosaurus.recoil",
+   "animation.carcharodontosaurus.submit",
+   "animation.carcharodontosaurus.brow_butt",
    "animation.carcharodontosaurus.sit",
+   "animation.carcharodontosaurus.sleep",
+   "animation.carcharodontosaurus.wake_sleep",
+   "animation.carcharodontosaurus.lie_down",
+   "animation.carcharodontosaurus.get_up",
+   "animation.carcharodontosaurus.fall_asleep",
    "animation.carcharodontosaurus.knocked_out",
    "animation.carcharodontosaurus.wake",
-   "animation.carcharodontosaurus.eat",
    "animation.carcharodontosaurus.beg",
-   "animation.carcharodontosaurus.tame"
+   "animation.carcharodontosaurus.tame",
+   "animation.carcharodontosaurus.lunge",
+   "animation.carcharodontosaurus.parry",
+   "animation.carcharodontosaurus.stagger",
+   "animation.carcharodontosaurus.knockout",
+   "animation.carcharodontosaurus.hatch"
   ],
-  "render_scale": 1.0
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 16.28,
+  "colours": {
+   "male": 37,
+   "female": 37
+  }
  },
  "carnotaurus": {
   "bones": 25,
