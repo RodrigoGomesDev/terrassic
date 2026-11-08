@@ -51,6 +51,13 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
+**1.10.1 (08/11/2026, em fechamento)**: quatro predadores refeitos (`Tyrannosaurine` Daspletossauro, `Albertosaurine`,
+`Carcharodontosaurine`, `Majungasaurine`; `art/<espécie>/REFEITO.md`), sangramento (`effect/BleedingEffect`), padrão de
+modelo v1→v3 do estudo 14 (16 texels por bloco, `_engine/skin2.py`, cabeça detalhada, desenho PRÓPRIO por espécie;
+`_engine/headcheck.py` e `uniquecheck.py` reprovam o build), sistemas (rugido, alcance, ovo, ajuda, filhote, manada com
+líder, manias, pés no chão, `world/RegionPopulation`), ícones de minimapa, rodada de jogo num mundo real
+(`client/dev/Playtest`, `TERRASSIC_PLAYTEST=1`, `tools/validation/playtest_report.py`). Testes de jogo sempre com
+`caffeinate -dimsu` (tela apagada = nada renderiza = medidas vazias).
 **1.9.5 (07/11/2026, `mod_version`)**: ecossistema (`docs/estudos/12_ECOSSISTEMA_ARK.md`, `docs/changelog/1.9.5.md`): noite
 segura (`ai/SafeRestGoal`, sentinela do Edmontossauro), o mais fraco primeiro e presa do tamanho certo, spawn por zona em
 `world/EcoSpawner` (margem 15%, planície 25%, mata fechada 60% de predadores), fuga do ferido (`ai/FleeHurtGoal`), cura,
