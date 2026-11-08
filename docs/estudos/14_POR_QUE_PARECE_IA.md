@@ -210,3 +210,55 @@ vai primeiro. O v2 mantém o v1 no corpo e devolve o detalhe à cabeça, com nú
 - **Corpo:** continua calmo e contínuo, mas com a textura de escama do próprio corpo a um passo de tom
   (vizinhos que mudam 0,20 a 0,30) e as marcas desenhadas da espécie.
 - Checagem: `tools/modelgen/handmade/_engine/headcheck.py` (cabeça x corpo) roda no build dos refeitos novos.
+
+### Resultados do padrão v2 (08/11/2026, branch `pele/v2`)
+
+Os quatro predadores da 1.10.1 refeitos só na cabeça e na escama do corpo; forma, família de cor, tamanho, densidade
+(16,1 a 16,5 tx/bloco), marcas do corpo, animações e comportamento ficaram iguais. Medido pelo
+`_engine/headcheck.py` no build (macho; a fêmea fica a 0,01 dos mesmos números). "Dentes" = texels de dente visíveis
+de lado, com a boca fechada, num lado; "acento" = texels da cabeça com saturação ≥ 0,45, valor ≥ 0,40 e a 20° ou
+mais do matiz do rosto (fora boca, dentes e olho).
+
+| | cabeça: cores | cabeça: vizinhos que mudam | corpo: vizinhos que mudam | cabeça / corpo | dentes | íris | acento |
+|---|---|---|---|---|---|---|---|
+| Majungassauro v1 | 22 | 0,18 | 0,23 | 0,8x | 0,3 | 1 | 110 (o "prato" ocre) |
+| **Majungassauro v2** | 23 | **0,35** | 0,27 | **1,34x** | **5,9** | 3 | 39 |
+| Daspletossauro v1 | 24 | 0,14 | 0,20 | 0,7x | 0 | 1 | 20 |
+| **Daspletossauro v2** | 26 | **0,37** | 0,27 | **1,38x** | **18,5** | 3 | 20 |
+| Albertossauro v1 | 20 | 0,16 | 0,20 | 0,8x | 0,3 | 1 | 19 |
+| **Albertossauro v2** | 24 | **0,35** | 0,27 | **1,33x** | **11,0** | 3 | 22 |
+| Carcarodontossauro v1 | 20 | 0,18 | 0,16 | 1,1x | 1,7 | 1 | 0 |
+| **Carcarodontossauro v2** | 25 | **0,37** | 0,24 | **1,50x** | **16,8** | 3 | 74 |
+| Carnotauro (referência) | 29 | 0,24 | 0,28 | 0,9x | 12,9 | 5 | 3 |
+
+O que mudou em cada um (`tools/modelgen/handmade/<espécie>/`):
+
+- **Comum** (`_engine/head2.py`): escamas pequenas e rugosidade do rosto no espaço do corpo, a um passo de tom
+  (`face_scale`, `rugose`); fileira de dentes de cima pendurada 0,25 px **fora** da mandíbula e dentro do lábio, então
+  aparece de boca fechada e o lábio cobre só a base; linha escura da boca e lábio um tom acima; olho de 3 x 2 por
+  dentro (íris de 3 texels, pupila em fenda, brilho) com contorno escuro sob a arcada; narina com borda clara; escama
+  do corpo em `skin2.scales` só na borda sombreada, a um passo de tom (célula de 6 a 8 texels).
+- **Majungassauro**: o domo deixou de ser chapéu: dois inchaços da própria pele inclinados para a frente sobre o teto
+  do crânio e só a coroa de queratina gasta e clara, sem aba nem anel. O ocre do macho saiu do domo (embaixo dele lia
+  como aba; num primeiro rascunho, em faixa no domo, ainda lia como chapéu na foto do jogo) e foi para a arcada rugosa
+  por cima do olho e uma mancha atrás dele; nasais com nós; íris laranja.
+- **Daspletossauro**: chifre lacrimal com base de pele e ponta de osso queimado; protuberância pós-orbital ferrugem
+  no macho; prateleira da arcada entre os dois; placas do focinho separadas por costuras de pele; cicatrizes do macho;
+  dentes em D de 3 linhas.
+- **Albertossauro**: crista lacrimal triangular em dois degraus (base de pele, pele de exibição ferrugem no macho,
+  ponta de queratina); arcada baixa; faixa escura do olho até a articulação da mandíbula; dentes finos.
+- **Carcarodontossauro**: prateleira da arcada e crista nucal com lados de pele e só a borda de chifre; pele de
+  exibição vermelho-tijolo sobre o olho e na crista nucal do macho; sulcos inclinados do maxilar; máscara; lâminas de
+  3 linhas. O corpo, que estava liso demais (0,16), ganhou a escama (0,24).
+- **Conserto em `skin2.step`**: subir um tom a partir de `k4` caía no cinza da barriga (`b0`) e punha pontos claros
+  soltos na pele escura; agora sobe para `k5`.
+
+Cor (`colourcheck.py --remade`): todos a 10 ou mais de qualquer refeito (mais perto: Majungassauro 12,2 do
+Anquilossauro, Daspletossauro 11,1 do Dakotaraptor, Albertossauro 11,2 do Anquilossauro, Carcarodontossauro 12,6 do
+Protocerátopo). Ícones do mapa regenerados (`tools/spritegen/map_icons.py`).
+
+Imagens: `art/<espécie>/previews/v2_cabeca_antes_depois.png` (v1, v2 e Carnotauro, macho e fêmea, mesmo ângulo),
+`lateral.png` e `tres_quartos.png` atualizadas, e as folhas
+[`padrao_v2_cabecas.png`](../../art/estudos/1.10/padrao_v2_cabecas.png) (as quatro v2 ao lado do Carnotauro e do
+T. rex, 3/4) e [`padrao_v2_cabecas_perfil.png`](../../art/estudos/1.10/padrao_v2_cabecas_perfil.png) (de lado, boca
+fechada).
