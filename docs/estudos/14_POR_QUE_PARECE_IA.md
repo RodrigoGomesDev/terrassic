@@ -422,3 +422,46 @@ Leitura honesta das fotos, as seis cabeças lado a lado ("dá para trocar duas e
 - **Majungassauro**: rosto de osso picotado, olho verde pequeno e fundo, três dentes curtos; continua o mais escuro e
   o de menos detalhe à distância, e de 3/4 o domo ainda lê como degraus de blocos, embora agora com a cor da cabeça.
   É o que pede o olhar do Rodrigo primeiro (como no v2).
+
+### Majungassauro v3.1 (08/11/2026): a cabeça mais fraca das seis, refeita sozinha
+
+Na folha das seis cabeças o Majungassauro era a mais fraca: escura e chapada de longe, olho pequeno demais para ler e,
+de 3/4, o domo em degraus de blocos com uma tampa bege. Só a cabeça mudou (`majungasaurus/majunga.py`, "padrão v3.1");
+família de cor cinza-basalto, 8 m, densidade, marcas do corpo, animações e comportamento ficaram iguais.
+
+- **Valor**: o teto do crânio, o domo, a arcada e os nasais são **osso claro** (três cinzas de osso novos, `bn0..bn2`, da
+  mesma família azul-acinzentada), com os nós um tom acima e os poros escuros; os lados do rosto ficam um a dois tons
+  abaixo (`k3..k5`, seguindo o pescoço); o escuro só nos poros, na linha da boca e sob a arcada; lábio de cima claro e
+  enrugado sobre a linha da boca, lábio de baixo `b3` e mandíbula clara. De longe (folha a 1/4) lê como cabeça pesada e
+  rugosa, clara em cima.
+- **Domo**: quatro camadas finas (2, 2, 2 e 1 px), cada uma meio px para dentro e de 1 a 1,5 px mais curta que a de
+  baixo, todas inclinadas juntas: de lado e de 3/4 o contorno é uma corcova baixa e redonda, não escada. É osso
+  rugoso do próprio crânio, cada camada um pouco mais clara para cima, sem tampa de queratina. No macho, a pele de
+  exibição ocre apagada fica só **no pé do domo**, em manchas quebradas por ruído (não anel, não faixa); saiu da arcada
+  e de trás do olho.
+- **Olho**: 6 x 4 em vez de 5 x 3; íris **verde-amarelada** de 9 texels com um fleck âmbar junto da pupila redonda
+  e baixa, brilho na frente, fundo da órbita escuro embaixo; a arcada ficou pesada (sai 1,5 px do crânio e 1 px à
+  frente), e a sombra dela é a pálpebra de cima.
+- **Dentes**: a fileira corre por baixo do pré-maxilar (9 px): cinco cones curtos desiguais (um de raiz larga, um
+  dente novo mais curto e baço encostado no vizinho, falhas irregulares). Boca como no v3, sem fio vermelho.
+
+| macho | cabeça: cores | cabeça: vizinhos que mudam | corpo | cabeça / corpo | dentes | íris | acento | tx/bloco |
+|---|---|---|---|---|---|---|---|---|
+| Majungassauro v3 | 23 | 0,31 | 0,23 | 1,33x | 7,8 | 4 | 17 | 16,1 |
+| **Majungassauro v3.1** | 28 | 0,33 | 0,23 | **1,45x** | **9,6** | **9** | 29 | 16,1 |
+
+Semelhança (`uniquecheck.py`): o mais perto é 0,65 (Dakotaraptor, Giganotossauro, Velociraptor), Carnotauro 0,57,
+Albertossauro e Carcarodontossauro 0,62, Daspletossauro 0,53 (limite 0,78). Cor (`colourcheck.py --remade`): 12,6 do
+Anquilossauro (fêmea 12,5 do Giganotossauro). QA do motor limpo (coplanares 0, pixel 0, chão 0, 64 animações).
+
+Imagens: `art/majungasaurus/previews/v3_cabeca_v2_v3.png` (agora v2 | v3 | v3.1), `v3_1_cabeca_longe.png` (as cinco
+de 3/4 a 1/4 do tamanho), as folhas `padrao_v3_cabecas*.png` com o v3.1 e o ícone do mapa refeito.
+
+No jogo (08/11/2026, cliente Fabric com som zerado, `TERRASSIC_BEHAVIOR_SPECIES=jaws,majunga`): a fase do Majungassauro
+rodou inteira (fotos, bebedouro, temperamento, bote, mordida que segura) e as **22 mandíbulas passaram** em
+`behavior_regression.py` (24 OK, Majunga 34°; as outras 37 linhas sem medida porque as fases não estavam no lote).
+Foto da cabeça: `art/majungasaurus/previews/jogo/v3_1_cabeca_jogo.png`; ao lado do Carnotauro, a 20 blocos e mais
+(`behavior_majunga_with_carno.png`), a cabeça agora lê clara e rugosa por cima e o olho verde aparece. Leitura honesta:
+ao lado do Carnotauro já tem a mesma força (silhueta própria, o domo corcova, o olho e os dentes lidos) e não se
+confunde com nenhuma das outras cinco; o que ainda pede olhar é a mancha ocre do macho, que de perto lê como uma
+mancha só na frente do domo (o ruído deixou só uma das manchas à mostra de lado) e não como pele em volta da base.
