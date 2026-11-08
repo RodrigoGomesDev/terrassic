@@ -33,26 +33,34 @@ Guia diz isso, e diz a idade: Cenomaniano, 100 a 94 Ma, uns 30 milhões de anos 
 | Pescoço e tronco | pescoço longo, corpo longo e magro | pescoço grosso e curto (16 px de largura no ombro), levado mais baixo; tronco de 33 px de fundo, peito bem abaixo do quadril |
 | Cauda | crista alta de espinhos | lisa, funda na base (o músculo caudofemoral), sem crista |
 | Jeito | inquieto, corta de lado, recua e circula | de tocaia, arranca, rasga de frente e responde com a testa |
-| Cor | ardósia azulada | arenito-malva |
+| Cor | ardósia azulada | areia-ocre do arenito, barras úmbria |
 
-## Cor (arenito-malva)
+## Cor (arenito do Norte da África)
 
-Dorso malva-sombra (`#431f2d` a `#5a3141`), flanco arenito-malva (`#774858` a `#916373`), ventre quase branco levemente
-rosado (`#dbc4c9` a `#ebdcdf`), testa e crista cor de chifre escuro (`#2a2224` a `#5e4f53`), máscara `#231b1f` (macho) e
-`#54474d` (fêmea). A fêmea é meio tom mais clara.
+Corpo areia quente e ocre-castanho do arenito do Kem Kem (`#806b33` a `#a48e5e` no flanco), dorso mais escuro
+(`#69582a`) com as barras verticais quebradas em úmbria (`#4f3b22`), ventre areia-acinzentado claro (`#a39a89` a
+`#c1b8a6`), testa, lacrimal e crista nucal de chifre escuro (`#211c16` a `#4d4337`), máscara `#1f1a15` no macho e
+`#4a443b` na fêmea. A fêmea é meio tom mais clara. As três marcas desenhadas continuam as mesmas.
 
-`colourcheck.py carcharodontosaurus --remade` (só contra os refeitos):
+A primeira versão, o "arenito-malva" do estudo (puxado para o vermelho para passar do Tricerátops), saiu da mesma
+família de cor do Daspletossauro (mogno-vinho): o `colourcheck` dava 15, mas em `os_quatro.png` os dois liam iguais de
+longe. A revisão pediu outra família de matiz (e pelo menos 20 do Daspletossauro). O espaço da areia está cheio (Protocerátops, Terizinossauro,
+Edmontossauro, Paquicefalossauro e Carnotauro moram ali): procurei por conta na pele pintada (luminosidade, croma e
+matiz da rampa do corpo e do ventre) e a única saída acima de 10 de todos ficou numa areia-ocre um pouco mais
+amarelada e oliva que o Protocerátops (que é areia com ferrugem) e mais saturada e escura no dorso que o Edmontossauro e
+o Terizinossauro. É areia/ocre-oliva apagada, natural (saturação até 0,43 nos tons do corpo).
 
-| | 1º | 2º | 3º |
-|---|---|---|---|
-| macho | Tricerátops **10,9** | Estiracossauro 12,1 | Daspletossauro 15,2 |
-| fêmea | Estiracossauro **10,7** | Tricerátops 11,5 | Daspletossauro 16,2 |
+`colourcheck.py carcharodontosaurus --remade` (contra os machos) e a mesma conta contra machos e fêmeas:
 
-A primeira versão (o arenito-malva do estudo, mais cinza) dava 7,0 do Tricerátops e 9,3 do Estiracossauro: o malva
-apagado fica entre o violeta do Tricerátops e o rosado quente do Estiracossauro. Subi o vermelho (a*) dos tons médios e
-escuros e deixei a barriga quase branca, como o estudo pede. Do Giganotossauro fica a 14+. **Atenção:** em
-`previews/os_quatro.png` o Daspletossauro (mogno-vinho) e o Carcarodontossauro (malva) são da mesma família de cor; a
-conta os separa (15), mas de longe os dois puxam para o vinho. Rever com o Rodrigo.
+| | 1º | 2º | 3º | Daspletossauro | Giganotossauro |
+|---|---|---|---|---|---|
+| macho | Paquicefalossauro **12,4** (f) / Protocerátops 12,7 | Terizinossauro 12,9 | Edmontossauro 15,3 | **22,5** | 26,0 |
+| fêmea | Protocerátops **12,1** | Terizinossauro 12,1 | Paquicefalossauro 13,0 | **23,2** | 25,3 |
+
+Carnotauro 19 a 20. Todos acima de 10; o Daspletossauro acima de 20, como pedido. Depois da troca: `build.py` de novo
+(QA zero nas 61 animações), prévias, ícone do mapa e ovo-bloco regerados, e as fases `jaws,gaits` no jogo (mandíbula
+9 graus de giro, pernas no máximo 76 graus por tique; passou). Foto da pele nova no jogo:
+`previews/jogo/pele_areia_no_jogo.png`.
 
 ## Forma
 
@@ -155,14 +163,16 @@ curta demais e o arrasto levava a carcaça para longe da sombra quando ele já e
 - **Fotos** em `previews/jogo/`: vistas (lado, três quartos, frente, cabeça), ao lado da fêmea e do Giganotossauro, a
   tocaia, a arrancada, o rasgo, a cabeçada, a exibição da testa, o sopro e os GIFs `tocaia.gif`, `arrancada.gif`,
   `perde_a_presa.gif`, `rasgo.gif`, `arrasto.gif`, `guarda_da_carcaca.gif`, `duelo.gif` e `duelo_com_giganoto.gif`.
-  A textura sai nítida no jogo, o olho e a máscara aparecem, a testa escura lê de longe.
+  A textura sai nítida no jogo, o olho e a máscara aparecem, a testa escura lê de longe. As fotos do jogo e os GIFs
+  são da pele anterior (arenito-malva); as prévias em `previews/` já são da pele nova.
 - **Regressão**: o `behavior_regression.py` passou em tudo que é do Carcarodontossauro; as falhas que sobram são das
   fases que não rodaram nesta bateria (água, noite, território e as outras), como nos dois anteriores.
 - `./gradlew :fabric:compileJava :forge:compileJava`: compila.
 
 ## Em aberto
 
-- **Cor perto do Daspletossauro de longe** (ver acima).
+- **Cor**: a areia-ocre passa de 10 de todos os refeitos com 12,1 de margem mínima (Protocerátops e Terizinossauro);
+  conferir no jogo, ao lado deles, se a diferença de matiz se lê.
 - **Gancho da rendição** no `DinosaurEntity` (acima).
 - As abas da sela continuam sem aparecer nas prévias (`faces=out("east", ...)`), igual aos dois anteriores: conferir no
   jogo e, se for o caso, corrigir nos três.
