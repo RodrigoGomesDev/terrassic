@@ -105,7 +105,8 @@ public final class BehaviorTest {
         if (only.contains("regressao")) {
             // 1.9.5: the whole battery before a version goes out (memory "patches estaveis"; tools/validation/behavior_regression.py)
             only = only + ",carcass,jaws,gaits,water,steps,paths,night,weak,sleepfish,behave,territory,duels"
-                    + ",roarfear,aggro,eggrage,helpcall,babystay,herdmove,quirks,feet,stable";
+                    + ",roarfear,aggro,eggrage,helpcall,babystay,herdmove,quirks,feet,stable"
+                    + ",daspleto,alberto,carcharo,majunga";   // 1.10.1: the four remade predators
         }
         if (java.util.stream.Stream.of("roarfear", "aggro", "eggrage", "helpcall", "babystay", "herdmove", "quirks", "feet", "stable").anyMatch(only::contains)) {
             planCleanup110();
