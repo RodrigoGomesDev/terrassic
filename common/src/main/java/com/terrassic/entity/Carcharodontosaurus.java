@@ -156,11 +156,11 @@ public class Carcharodontosaurus extends Carcharodontosaurine {
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
                     new float[]{5.889F, 0.0F, 2.104F, 1.074F, 1.646F, 2.342F},
-                    new float[]{5.843F, 0.0F, 0.193F, 1.171F, 5.826F, 2.691F},
+                    new float[]{5.842F, 0.0F, 0.193F, 1.17F, 5.826F, 2.691F},
                     new float[]{5.739F, 0.0F, 0.221F, 1.406F, 0.892F, 4.287F}),
             new DinoPart.Spec(DinoPart.Kind.HEAD,
                     new float[]{4.915F, 0.0F, 2.092F, 1.074F, 1.557F, 2.435F},
-                    new float[]{4.772F, 0.0F, 0.478F, 1.171F, 6.082F, 2.424F},
+                    new float[]{4.772F, 0.0F, 0.478F, 1.17F, 6.082F, 2.424F},
                     new float[]{4.432F, 0.0F, 0.103F, 1.406F, 0.882F, 4.37F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
                     new float[]{4.467F, 0.0F, 2.264F, 1.248F, 1.323F, 2.304F},

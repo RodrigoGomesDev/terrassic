@@ -11,8 +11,10 @@ Writes:
 
 usage:  python3 -B tools/modelgen/handmade/majungasaurus/build.py [--skin]   (--skin: repaint the skins only)
 
-The build stops (exit 1) when the QA fails: coplanar faces, pixel bugs, a standing pose off the ground, or a density
-outside 16 +- 2 texels per block; all measured on the exported files the way GeckoLib plays them.
+The build stops (exit 1) when the QA fails: coplanar faces, pixel bugs, a standing pose off the ground, a density
+outside 16 +- 2 texels per block, or a head under the padrão v2 numbers (_engine/headcheck.py: the head's detail
+against the body's, the teeth showing with the mouth shut, the eye in its socket, the male's accent); all measured on
+the exported files the way GeckoLib plays them.
 """
 import json
 import os
@@ -25,6 +27,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "tools", "spritegen"))
 
 import geo  # noqa: E402
+import headcheck  # noqa: E402
 import proto as P  # noqa: E402
 import qa  # noqa: E402
 import skin2  # noqa: E402
@@ -59,16 +62,22 @@ def main():
     geo_path = os.path.join(ASSETS, "geo", "entity", "majungasaurus.geo.json")
     with open(geo_path, "w") as f:
         json.dump(P.geo_json(m), f, indent=1)
-    bugs, colours = [], {}
+    bugs, colours, heads = [], {}, []
     for sex in ("male", "female"):
         tex = majunga.paint_sex(m, sex)
         bugs += [(sex,) + b for b in qa.pixel_bugs(m, tex)]
         colours[sex] = skin2.colour_count(tex)
+        p = majunga.pal_for(sex)
+        fails, nums = headcheck.check(m, tex, p["iris"], p["glint"], sex=sex)     # the padrão v2 head
+        print(headcheck.line("majungasaurus", sex, nums))
+        heads += [("head", sex, x) for x in fails]
         save_png(tex, os.path.join(ASSETS, "textures", "entity", f"majungasaurus_{sex}.png"))
 
     if "--skin" in sys.argv:      # repaint only (the skins and the pixel QA), the animations stay
-        print("QA: coplanar", left, "| pixel bugs", len(bugs), "| colours", colours, bugs[:8])
-        sys.exit(1 if left or bugs else 0)
+        print("QA: coplanar", left, "| pixel bugs", len(bugs), "| head", len(heads), "| colours", colours, bugs[:8])
+        for b in heads:
+            print("  ", b)
+        sys.exit(1 if left or bugs or heads else 0)
     anims = {}
     for name, (fn, length, loop, _cat, _when) in A.ANIMS.items():
         fps = 40 if name in FAST else FPS
@@ -108,10 +117,11 @@ def main():
         json.dump(report, f, indent=1)
     print("majungasaurus", json.dumps(report["majungasaurus"]["bounds_px"]))
     print(f"density {dens:.2f} tx/block (length {length:.1f} px for {REAL_M} m) | colours {colours}")
-    print("QA: coplanar", left, "| pixel bugs", len(bugs), "| off the ground", len(ground), "| animations", len(anims))
-    for b in bugs + ground:
+    print("QA: coplanar", left, "| pixel bugs", len(bugs), "| off the ground", len(ground), "| head", len(heads),
+          "| animations", len(anims))
+    for b in bugs + ground + heads:
         print("  ", b)
-    if left or bugs or ground or not 14.0 <= dens <= 18.0:
+    if left or bugs or ground or heads or not 14.0 <= dens <= 18.0:
         sys.exit(1)
 
 
