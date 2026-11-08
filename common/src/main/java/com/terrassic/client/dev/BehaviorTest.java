@@ -152,6 +152,9 @@ public final class BehaviorTest {
         if (only.contains("alberto")) {
             planAlberto();
         }
+        if (only.contains("carcharo")) {
+            planCarcharo();
+        }
         if (only.contains("steps")) {
             planSteps();
         }
@@ -475,7 +478,7 @@ public final class BehaviorTest {
     private static void planLook() {
         double x0 = 4400.5D;
         String[] all = {"tyrannosaurus", "triceratops", "edmontosaurus", "quetzalcoatlus", "therizinosaurus", "deinosuchus",
-                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus"};
+                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus", "carcharodontosaurus"};
         for (String sp : all) {
             UUID u = id();
             STEPS.add(mc -> {
@@ -807,6 +810,378 @@ public final class BehaviorTest {
                 }
             });
         }
+    }
+
+    /** 1.10.1, the Carcharodontosaurus (art/carcharodontosaurus/REFEITO.md): photos in the real client (side, three
+     *  quarters, the front, the head, next to the Giganotosaurus), the river-edge ambush (it goes to the water and
+     *  crouches; a prey 25 blocks off is let go, one at 9 blocks brings the burst; a burst that misses gives up by 24
+     *  blocks), the bleeding (an animal and the player, health measured each second), the drag of its kill into the
+     *  shade, and the guard of the carcass (a hiss at a meat eater near, the brow at a smaller one too close). */
+    private static void planCarcharo() {
+        // the strays the ecosystem keeps bringing are sent into the void, not killed: a killed one leaves a carcass,
+        // and a hungry Carcharodontosaurus leaves the ambush for a carcass (the third and fourth runs found it so)
+        double x0 = 6400.5D;
+        UUID male = id(), female = id(), giga = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Carcharodontosaurus (1.10.1)");
+            clear(mc, x0, 48);
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            command(mc, "time set 6000");
+            return 100;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "carcharodontosaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            noAutoShots = true;
+            return 40;
+        });
+        awaitAll(male);
+        String[][] views = {{"side", "0", "0.15", "1"}, {"tq", "0.75", "0.35", "0.75"}, {"front", "-1", "0.25", "0.1"}};
+        for (String[] v : views) {
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, male);
+                if (d == null) {
+                    REPORT.add("  carcharo photo: NOT FOUND");
+                    return 1;
+                }
+                double r = 3.0D + d.getBbWidth() * 2.0D + d.getBbHeight() * 1.0D;
+                Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.55D, 0.0D);
+                look(mc.player, c.add(Double.parseDouble(v[1]) * r, Double.parseDouble(v[2]) * r, Double.parseDouble(v[3]) * r), c);
+                return 40;
+            });
+            STEPS.add(mc -> {
+                Screenshot.grab(mc.gameDirectory, "behavior_carcharo_" + v[0] + ".png", mc.getMainRenderTarget(), msg -> {
+                });
+                return 2;
+            });
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, male);
+            if (d != null) {
+                double k = d.getBbHeight();
+                Vec3 head = d.position().add(-1.05D * k, 0.85D * k, 0.0D);
+                look(mc.player, head.add(-0.5D * k, 0.1D * k, 0.8D * k), head);
+                REPORT.add(String.format(Locale.ROOT, "  carcharo size: hitbox %.2f x %.2f, scale %.3f", d.getBbWidth(), d.getBbHeight(), d.getScale()));
+            }
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_carcharo_head.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 2;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "carcharodontosaurus", x0 + 16.0D, Y, 0.5D, female, "NoAI:1b,Female:1b,Rotation:[90f,0f]");
+            summon(mc, "giganotosaurus", x0 - 16.0D, Y, 0.5D, giga, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            return 40;
+        });
+        awaitAll(female, giga);
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 - 2.0D, Y + 6.0D, 34.0D), new Vec3(x0 - 2.0D, Y + 3.0D, 0.0D));
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_carcharo_with_giga.png", mc.getMainRenderTarget(), msg -> {
+            });
+            noAutoShots = false;
+            return 2;
+        });
+
+        // ---- the ambush at the river's edge: a channel of water along z = 10..15, the hunter hungry at z = -6
+        UUID hunter = id(), far = id(), near = id();
+        int[] seen = new int[4];             // frames crouched, frames bursting, frames with a target before the prey came near
+        STEPS.add(mc -> {
+            REPORT.add("  -- ambush at the river edge");
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            command(mc, fill(x0 - 40, Y - 3, 10, x0 + 40, Y - 1, 15, "minecraft:water"));
+            summon(mc, "carcharodontosaurus", x0, Y, -1.5D, hunter, "Hunger:20,Female:0b,Tags:[\"ambush\"],Rotation:[0f,0f]");
+            look(mc.player, new Vec3(x0 - 26.0D, Y + 18.0D, -14.0D), new Vec3(x0, Y, 6.0D));
+            return 20;
+        });
+        awaitAll(hunter);
+        int[] waitedA = {0};
+        STEPS.add(mc -> {
+            // the strays killed every second while it makes up its mind: a stray it hunts (or a carcass of one) keeps
+            // it off the ambush (the second run found the hunter on a stray instead)
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,tag=!ambush,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            if (server(mc, hunter) instanceof com.terrassic.entity.Carcharodontosaurine c
+                    && c.mode() != com.terrassic.entity.Carcharodontosaurine.MODE_AMBUSH && waitedA[0]++ < 60) {
+                if (c.getTarget() != null) {
+                    REPORT.add("    (it took a stray as target: " + c.getTarget().getType().toShortString() + ")");
+                }
+                return -1;
+            }
+            REPORT.add("    in the ambush after " + waitedA[0] + " s");
+            return 1;
+        });
+        burst("carcharo_ambush_wait", 100, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, "tp @e[type=!player,type=!terrassic:carcass,tag=!ambush,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            }
+            if (server(mcm, hunter) instanceof com.terrassic.entity.Carcharodontosaurine c) {
+                if (c.mode() == com.terrassic.entity.Carcharodontosaurine.MODE_AMBUSH) {
+                    seen[0]++;
+                }
+                if (k % 50 == 49) {
+                    REPORT.add(String.format(Locale.ROOT, "    t=%ds: mode %d at %.1f %.1f, water %s", (k + 1) / 10, c.mode(), c.getX(), c.getZ(),
+                            c.level().getFluidState(c.blockPosition().south(2).below()).isEmpty() ? "not beside" : "beside"));
+                }
+            }
+        });
+        STEPS.add(mc -> {
+            REPORT.add("    crouched frames while waiting: " + seen[0]);
+            DinosaurEntity c = server(mc, hunter);
+            if (c != null) {
+                // a prey well out of its reach, on the bank behind it
+                summon(mc, "leptoceratops", c.getX(), Y, c.getZ() - 25.0D, far, "NoAI:1b,Tags:[\"ambush\"]");
+            }
+            return 2;
+        });
+        // five seconds with the far prey; the strays the ecosystem brings are killed and their carcasses taken away
+        // (a carcass in reach sends a hungry hunter off the ambush to eat: the first run found it so)
+        burst("carcharo_ambush_far", 50, k -> {
+            if (k % 5 == 0) {
+                command(Minecraft.getInstance(), "tp @e[type=!player,type=!terrassic:carcass,tag=!ambush,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            }
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, hunter);
+            REPORT.add("    a prey 25 blocks off for 5 s: target " + (c == null || c.getTarget() == null ? "none (let go)" : c.getTarget().getType().toShortString())
+                    + (c instanceof com.terrassic.entity.Carcharodontosaurine cc ? ", mode " + cc.mode() : ""));
+            command(mc, "tp " + far + " ~ -250 ~");
+            command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            if (c != null) {
+                summon(mc, "leptoceratops", c.getX() + 1.0D, Y, c.getZ() - 9.0D - c.getBbWidth() * 0.5D, near, "Tags:[\"ambush\"]");
+            }
+            return 2;
+        });
+        double[] bit = {-1};
+        burst("carcharo_ambush_burst", 120, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            DinosaurEntity c = server(mcm, hunter), p = server(mcm, near);
+            if (c instanceof com.terrassic.entity.Carcharodontosaurine cc && cc.mode() == com.terrassic.entity.Carcharodontosaurine.MODE_BURST) {
+                seen[1]++;
+            }
+            if (bit[0] < 0 && (p == null || !p.isAlive() || p.getHealth() < p.getMaxHealth())) {
+                bit[0] = k / 10.0D;
+            }
+            if (k == 119) {
+                REPORT.add(String.format(Locale.ROOT, "    a prey at 9 blocks: burst frames %d, first blow at %s, prey %s", seen[1],
+                        bit[0] < 0 ? "never" : String.format(Locale.ROOT, "%.1f s", bit[0]),
+                        p == null || !p.isAlive() ? "killed" : String.format(Locale.ROOT, "%.0f/%.0f", p.getHealth(), p.getMaxHealth())));
+            }
+        });
+        // ---- a burst that misses: the prey kept 14 blocks ahead; it must give up within 24 blocks of where it lay
+        UUID h2 = id(), runner = id();
+        double[] lay = new double[3];
+        double[] gaveUp = {-1};
+        STEPS.add(mc -> {
+            REPORT.add("  -- a missed burst");
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            summon(mc, "carcharodontosaurus", x0 - 20.0D, Y, -1.5D, h2, "Hunger:20,Female:1b,Tags:[\"ambush\"],Rotation:[0f,0f]");
+            return 20;
+        });
+        awaitAll(h2);
+        int[] waited = {0};
+        STEPS.add(mc -> {
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,tag=!ambush,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            if (server(mc, h2) instanceof com.terrassic.entity.Carcharodontosaurine c
+                    && c.mode() != com.terrassic.entity.Carcharodontosaurine.MODE_AMBUSH && waited[0]++ < 45) {
+                return -1;                   // again in a second (up to 45 s)
+            }
+            DinosaurEntity c = server(mc, h2);
+            if (c != null) {
+                lay[0] = c.getX();
+                lay[2] = c.getZ();
+                summon(mc, "leptoceratops", c.getX(), Y, c.getZ() - 10.0D - c.getBbWidth() * 0.5D, runner, "NoAI:1b,Tags:[\"ambush\"]");
+                REPORT.add("    crouched after " + waited[0] + " s");
+            }
+            return 2;
+        });
+        burst("carcharo_missed", 250, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            DinosaurEntity c = server(mcm, h2);
+            Entity r = serverAny(mcm, runner);
+            if (c == null || r == null) {
+                return;
+            }
+            double gone = Math.hypot(c.getX() - lay[0], c.getZ() - lay[2]);
+            if (c.getTarget() != null) {
+                lay[1] = 1;                  // it took the prey: from now on a lost target is the give-up
+                // the prey runs off ahead of it, away from the water (never caught)
+                double dz = c.getZ() - lay[2];
+                double rz = Math.max(-46.0D, c.getZ() - 14.0D);
+                mcm.getSingleplayerServer().execute(() -> r.teleportTo(lay[0], Y, rz));
+            } else if (gaveUp[0] < 0 && lay[1] > 0) {
+                gaveUp[0] = gone;
+                REPORT.add(String.format(Locale.ROOT, "    gave up %.0f blocks from where it lay, at %.1f s", gone, k / 10.0D));
+            }
+            if (k == 249 && gaveUp[0] < 0) {
+                REPORT.add(String.format(Locale.ROOT, "    still chasing at the end, %.0f blocks off", gone));
+            }
+        });
+
+        // ---- the bleeding: an animal and the player, health each second
+        UUID victim = id();
+        float[] hp = new float[12];
+        STEPS.add(mc -> {
+            REPORT.add("  -- bleeding");
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            summon(mc, "edmontosaurus", x0, Y, -20.5D, victim, "NoAI:1b");
+            return 20;
+        });
+        awaitAll(victim);
+        STEPS.add(mc -> {
+            noAutoShots = true;              // the automatic photos move the camera, which is the player: it fell
+            command(mc, "effect give " + victim + " terrassic:bleeding 8 0");
+            ServerPlayer pl = player(mc);
+            if (pl != null) {
+                mc.getSingleplayerServer().execute(() -> {
+                    // on the ground first: out of the flight a survival player falls (the third run measured the fall)
+                    pl.teleportTo(x0 - 6.0D, Y, -20.5D);
+                    pl.fallDistance = 0.0F;
+                    pl.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                    pl.setHealth(20.0F);
+                    pl.addEffect(new net.minecraft.world.effect.MobEffectInstance(com.terrassic.registry.ModEffects.BLEEDING.get(), 100, 0));
+                });
+            }
+            return 1;
+        });
+        for (int s = 0; s <= 10; s++) {
+            int i = s;
+            STEPS.add(mc -> {
+                // the strays away every second: a wild predator on a player in survival spoiled the third run's numbers
+                command(mc, "tp @e[type=!player,type=!terrassic:carcass,type=!terrassic:edmontosaurus,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+                DinosaurEntity v = server(mc, victim);
+                ServerPlayer pl = player(mc);
+                if (i == 0) {
+                    hp[11] = v == null ? -1 : v.getHealth();
+                }
+                REPORT.add(String.format(Locale.ROOT, "    t=%ds: edmontosaurus %.1f (bleeding %b) | player %.1f (bleeding %b)", i,
+                        v == null ? -1 : v.getHealth(), v != null && v.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get()),
+                        pl == null ? -1 : pl.getHealth(), pl != null && pl.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get())));
+                if (i == 10 && pl != null) {
+                    mc.getSingleplayerServer().execute(() -> {
+                        pl.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                        pl.setHealth(20.0F);
+                        pl.getAbilities().flying = true;
+                        pl.onUpdateAbilities();
+                    });
+                    noAutoShots = false;
+                }
+                return 20;
+            });
+        }
+        // the tear itself on a living prey: the bites and the health in between
+        UUID tearer = id(), big = id();
+        STEPS.add(mc -> {
+            REPORT.add("  -- the tear on an Edmontosaurus");
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            summon(mc, "carcharodontosaurus", x0 - 10.0D, Y, -20.5D, tearer, "Hunger:20,Tags:[\"tear\"],Rotation:[-90f,0f]");
+            summon(mc, "edmontosaurus", x0 + 2.0D, Y, -20.5D, big, "NoAI:1b,Tags:[\"tear\"]");
+            return 20;
+        });
+        awaitAll(tearer, big);
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, tearer), b = server(mc, big);
+            if (c != null && b != null) {
+                mc.getSingleplayerServer().execute(() -> c.setTarget(b));
+                followed = big;
+            }
+            return 2;
+        });
+        int[] bleedFrames = {0};
+        burst("carcharo_tear", 200, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, "tp @e[type=!player,type=!terrassic:carcass,tag=!tear,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            }
+            DinosaurEntity b = server(mcm, big);
+            if (b != null && b.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get())) {
+                bleedFrames[0]++;
+            }
+            if (k % 20 == 19) {
+                REPORT.add(String.format(Locale.ROOT, "    t=%ds: prey %s, bleeding %b", (k + 1) / 10,
+                        b == null || !b.isAlive() ? "dead" : String.format(Locale.ROOT, "%.1f/%.0f", b.getHealth(), b.getMaxHealth()),
+                        b != null && b.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get())));
+            }
+            if (k == 199) {
+                REPORT.add("    frames the prey bled: " + bleedFrames[0]);
+                followed = null;
+            }
+        });
+
+        // ---- the drag: a fresh kill hauled into the shade of a canopy of leaves 7 blocks off; then the guard
+        UUID dragger = id(), small = id(), raptor = id(), raptor2 = id();
+        double[] kill = {Double.NaN, 0, 0};
+        STEPS.add(mc -> {
+            REPORT.add("  -- the drag of the kill");
+            command(mc, "tp @e[type=!player,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            command(mc, "kill @e[type=terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            command(mc, fill(x0 - 40, Y - 3, 10, x0 + 40, Y - 1, 15, "minecraft:grass_block"));
+            command(mc, fill(x0 + 4, Y + 5, -34, x0 + 10, Y + 5, -28, "minecraft:oak_leaves[persistent=true]"));
+            summon(mc, "carcharodontosaurus", x0 - 8.0D, Y, -24.5D, dragger, "Hunger:20,Tags:[\"drag\"],Rotation:[-90f,0f]");
+            summon(mc, "leptoceratops", x0 + 1.0D, Y, -24.5D, small, "NoAI:1b,Tags:[\"drag\"]");
+            look(mc.player, new Vec3(x0 - 10.0D, Y + 20.0D, -4.0D), new Vec3(x0 + 2.0D, Y, -26.0D));
+            return 20;
+        });
+        awaitAll(dragger, small);
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, dragger), b = server(mc, small);
+            if (c != null && b != null) {
+                mc.getSingleplayerServer().execute(() -> c.setTarget(b));
+            }
+            return 2;
+        });
+        int[] dragFrames = {0, 0};
+        burst("carcharo_drag", 260, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, "tp @e[type=!player,tag=!drag,type=!terrassic:carcass,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
+            }
+            DinosaurEntity c = server(mcm, dragger);
+            if (c instanceof com.terrassic.entity.Carcharodontosaurine cc && cc.mode() == com.terrassic.entity.Carcharodontosaurine.MODE_DRAG) {
+                dragFrames[0]++;
+            } else if (dragFrames[0] > 0 && dragFrames[1] == 0 && c != null) {
+                dragFrames[1] = 1;               // the drag just ended: where the carcass lies now, and the guard
+                for (Entity e : c.level().getEntitiesOfClass(com.terrassic.entity.CarcassEntity.class, c.getBoundingBox().inflate(20.0D),
+                        cc2 -> cc2.getId() == (int) kill[1])) {
+                    REPORT.add(String.format(Locale.ROOT, "    drag ended at %.1f s: the carcass %.1f blocks from where it fell, %s", k / 10.0D,
+                            Double.isNaN(kill[0]) ? -1 : Math.hypot(e.getX() - kill[0], e.getZ() - kill[2]),
+                            c.level().canSeeSky(e.blockPosition().above(2)) ? "in the open" : "in the shade"));
+                    // fed for now: it guards its kill instead of hunting the raptors
+                    mcm.getSingleplayerServer().execute(() -> c.setSated(2400));
+                    Vec3 toward = e.position().subtract(c.position()).normalize();
+                    Vec3 close = e.position().add(toward.scale(2.5D));
+                    summon(mcm, "dakotaraptor", close.x, Y, close.z, raptor, "NoAI:1b,Tags:[\"drag\"]");
+                    summon(mcm, "dakotaraptor", e.getX(), Y, e.getZ() + 12.0D, raptor2, "NoAI:1b,Tags:[\"drag\"]");
+                }
+            }
+            if (Double.isNaN(kill[0]) && serverAny(mcm, small) == null && c != null) {
+                for (com.terrassic.entity.CarcassEntity e : c.level().getEntitiesOfClass(com.terrassic.entity.CarcassEntity.class,
+                        c.getBoundingBox().inflate(16.0D), cc -> "leptoceratops".equals(cc.speciesId()))) {
+                    kill[0] = e.getX();
+                    kill[2] = e.getZ();
+                    kill[1] = e.getId();
+                    REPORT.add(String.format(Locale.ROOT, "    killed at %.0f s; the carcass at %.1f %.1f", k / 10.0D, e.getX(), e.getZ()));
+                    break;
+                }
+            }
+            if (k == 259) {
+                REPORT.add("    drag frames " + dragFrames[0]);
+            }
+        });
+        burst("carcharo_guard", 150, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k == 149) {
+                DinosaurEntity r1 = server(mcm, raptor), r2 = server(mcm, raptor2);
+                REPORT.add(String.format(Locale.ROOT, "    guard: the close raptor %s, the far one %s",
+                        r1 == null ? "gone" : String.format(Locale.ROOT, "%.0f/%.0f", r1.getHealth(), r1.getMaxHealth()),
+                        r2 == null ? "gone" : String.format(Locale.ROOT, "%.0f/%.0f", r2.getHealth(), r2.getMaxHealth())));
+            }
+        });
     }
 
     /** Waits (up to 30 s) until the server has these creatures: a busy server runs the summons late. */
@@ -1394,7 +1769,7 @@ public final class BehaviorTest {
     private static void planJaws() {
         String[] all = {"edmontosaurus", "pteranodon", "quetzalcoatlus", "parasaurolophus", "triceratops", "tyrannosaurus",
                 "carnotaurus", "giganotosaurus", "spinosaurus", "styracosaurus", "protoceratops", "pachycephalosaurus",
-                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus"};
+                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus", "carcharodontosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2800.5D;
         STEPS.add(mc -> {
@@ -1470,7 +1845,7 @@ public final class BehaviorTest {
     private static void planGaits() {
         String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
                 "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
-                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus"};
+                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus", "carcharodontosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2600.5D;
         STEPS.add(mc -> {
@@ -1635,7 +2010,8 @@ public final class BehaviorTest {
         String[][] pairs = {{"tyrannosaurus", "tyrannosaurus"}, {"carnotaurus", "carnotaurus"}, {"giganotosaurus", "giganotosaurus"},
                 {"spinosaurus", "triceratops"}, {"triceratops", "triceratops"}, {"pachycephalosaurus", "pachycephalosaurus"},
                 {"dakotaraptor", "styracosaurus"}, {"therizinosaurus", "therizinosaurus"}, {"styracosaurus", "styracosaurus"}, {"protoceratops", "protoceratops"},
-                {"ankylosaurus", "tyrannosaurus"}, {"daspletosaurus", "daspletosaurus"}, {"albertosaurus", "albertosaurus"}};
+                {"ankylosaurus", "tyrannosaurus"}, {"daspletosaurus", "daspletosaurus"}, {"albertosaurus", "albertosaurus"},
+                {"carcharodontosaurus", "carcharodontosaurus"}, {"carcharodontosaurus", "giganotosaurus"}};
         double x0 = 2000.5D;
         // the arena's chunks loaded and settled before the first pair (on a fresh world the first pair spawned into
         // terrain still being generated and was thrown about, 06/11)
@@ -1731,13 +2107,13 @@ public final class BehaviorTest {
 
     /** Every species' new one-shots and loops (06/11/2026), triggered one after another and logged. */
     private static void planAllMoves() {
-        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops", "daspletosaurus", "albertosaurus",
+        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
                 "styracosaurus", "protoceratops", "pachycephalosaurus", "parasaurolophus", "edmontosaurus", "gallimimus",
                 "ankylosaurus", "therizinosaurus", "deinosuchus", "pteranodon", "quetzalcoatlus"};
         String[] moves = {"feint", "block", "recoil", "submit", "lie_down", "get_up", "ram", "head_clash", "grab_shake", "claw_swipe",
                 "sail_display", "leap_back", "nose_jab", "frill_shove", "horn_lock_start", "flank_butt", "kick_back", "body_shove",
                 "club_duel", "claw_slash", "gape_threat", "jab", "crest_display", "face_bite", "jaw_test", "steal_roar", "face_rub",
-                "snap_bite", "sidestep", "pass_bite", "call_pack", "answer", "pant"};
+                "snap_bite", "sidestep", "pass_bite", "call_pack", "answer", "pant", "tear", "brow_butt", "brow_display", "gape_hiss", "ambush_look"};
         double x0 = 2200.5D;
         for (String sp : species) {
             UUID u = id();

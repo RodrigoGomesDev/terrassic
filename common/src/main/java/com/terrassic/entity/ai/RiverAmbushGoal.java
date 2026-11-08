@@ -2,6 +2,7 @@ package com.terrassic.entity.ai;
 
 import com.terrassic.entity.Carcharodontosaurine;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -11,14 +12,15 @@ import java.util.EnumSet;
 
 /**
  * The Carcharodontosaurus' ambush at the river's edge (docs/estudos/13, "No jogo" 1; Stevens 2006, a hypothesis): hungry
- * and with nothing in sight, it walks to a dry spot at the edge of the water (else, in the plants where it stands) and
+ * and with nothing in sight, it walks to a dry spot at the edge of the water within 20 blocks (else, now and then, it
+ * waits in the plants or the grass where it stands) and
  * lies in wait there, crouched and dead still ("ambush_crouch"), facing the bank the prey comes down to drink from.
  * While it waits, {@link Carcharodontosaurine#canAttack} lets it take only what comes within its reach; the target goals
  * of the base find the prey, and {@link Carcharodontosaurine#setTarget} turns the moment into the burst. A wait that
  * finds nothing ends after a minute.
  */
 public class RiverAmbushGoal extends Goal {
-    private static final int SEARCH = 14;
+    private static final int SEARCH = 20;
     private static final int MAX_WAIT = 1200;
     private static final int MAX_WALK = 400;
 
@@ -45,10 +47,11 @@ public class RiverAmbushGoal extends Goal {
         this.spot = this.findEdge();
         this.edge = this.spot != null;
         if (this.spot == null) {
-            // no water near: it lies in wait in the plants where it stands (tall grass, ferns), now and then
+            // no water near: now and then it lies in wait where it stands, in the plants or the grass
             Level level = this.mob.level();
             BlockPos at = this.mob.blockPosition();
-            if (level.getBlockState(at).canBeReplaced() && !level.getBlockState(at).isAir() && this.mob.getRandom().nextInt(3) == 0) {
+            boolean plants = level.getBlockState(at).canBeReplaced() && !level.getBlockState(at).isAir();
+            if ((plants || level.getBlockState(at.below()).is(BlockTags.DIRT)) && this.mob.getRandom().nextInt(4) == 0) {
                 this.spot = at;
             }
         }

@@ -54,24 +54,29 @@ public class CarcassDragGoal extends Goal {
         return Math.sqrt(dx * dx + dz * dz);
     }
 
+    /** How far in front of the body the carcass trails: a head's length. */
+    private double hold() {
+        return this.mob.getBbWidth() * 0.5D + this.carcass.getBbWidth() * 0.35D + 1.6D * this.mob.getScale();
+    }
+
     @Override
     public void start() {
         this.ticks = 0;
         this.still = 0;
         this.from = this.mob.position();
-        this.dest = this.mob.dragDestination();
+        this.dest = this.mob.dragDestination(this.carcass, this.hold());
         this.lastD = this.flat(this.from, this.dest);
         this.mob.getNavigation().stop();
         this.mob.dragStarted(this.carcass);
         this.mob.logAct(String.format("drags the %s carcass toward %s, %.0f blocks", this.carcass.speciesId(),
-                this.mob.shadeAt(this.dest) ? "the shade" : "away", this.lastD));
+                this.mob.shadeAt(this.dest.subtract(this.dest.subtract(this.carcass.position()).normalize().scale(this.hold()))) ? "the shade" : "away", this.lastD));
     }
 
     @Override
     public void stop() {
         if (this.carcass != null && this.from != null) {
             this.mob.logAct(String.format("drag ends: the %s carcass hauled %.1f blocks%s", this.carcass.speciesId(),
-                    this.flat(this.from, this.mob.position()), this.mob.shadeAt(this.mob.position()) ? ", in the shade" : ""));
+                    this.flat(this.from, this.mob.position()), this.mob.shadeAt(this.carcass.position()) ? ", now in the shade" : ""));
         }
         this.mob.dragEnded();
         this.mob.getNavigation().stop();
@@ -108,7 +113,7 @@ public class CarcassDragGoal extends Goal {
             this.mob.getJumpControl().jump();
         }
         // the carcass at its jaws: a head's length in front of the body, on the ground under it
-        double hold = this.mob.getBbWidth() * 0.5D + this.carcass.getBbWidth() * 0.35D + 1.6D * this.mob.getScale();
+        double hold = this.hold();
         double r = Math.toRadians(y);
         Vec3 jaws = new Vec3(pos.x - Math.sin(r) * hold, pos.y, pos.z + Math.cos(r) * hold);
         this.carcass.setPos(jaws.x, pos.y, jaws.z);

@@ -1,6 +1,6 @@
 """Previews of the Carcharodontosaurus for the author (art/carcharodontosaurus/previews): side, 3/4, front, head, male vs
-female, next to the Daspletosaurus and the T. rex at the same pixel scale (all at their in-game sizes), and the
-measured numbers.
+female, next to the Giganotosaurus and with the three other big predators of the 1.10.1 at the same pixel scale (all
+at their in-game sizes), and the measured numbers.
 
 usage:  python3 -B tools/modelgen/handmade/carcharodontosaurus/preview.py [out_dir] [--quick] [--gifs]
 """
@@ -48,29 +48,42 @@ def side_by_side(images, gap=24, bg=shots.BG):
     return out
 
 
+def _render_side(name, spec, tex, k):
+    if spec is None:
+        spec = geo.load_geo(os.path.join(ASSETS, "geo", "entity", f"{name}.geo.json"))
+        tex = Image.open(os.path.join(ASSETS, "textures", "entity", f"{name}_male.png"))
+        spec = {**spec, "cubes": [c for c in spec["cubes"] if c.get("bone") != "saddle"]}
+    pts = np.concatenate([q for c, q in geo.cube_points(spec)])
+    L = pts[:, 2].max() - pts[:, 2].min(); Hh = pts[:, 1].max() - pts[:, 1].min()
+    return geo.render(spec, tex, 90, 0, (int(L * k * 1.04) + 8, int(Hh * k * 1.04) + 8), bg=shots.BG, margin=0.02)[0].convert("RGB")
+
+
+def stack(images, gap=24, bg=shots.BG):
+    w = max(i.width for i in images)
+    out = Image.new("RGB", (w, sum(i.height for i in images) + gap * (len(images) - 1)), bg)
+    y = 0
+    for i in images:
+        out.paste(i, (0, y)); y += i.height + gap
+    return out
+
+
 def next_to_kin(spec, tex, out, px=3):
-    """the three rigs rendered side-on at their in-game scale (MODEL_SCALE x METRE), px screen pixels per game pixel:
-    the Carcharodontosaurus, the Daspletosaurus and the T. rex"""
-    shots_ = []
-    sizes = {"tyrannosaurus": 1.02 * skin2.METRE, "daspletosaurus": 0.981, "carcharodontosaurus": SCALE[0]}
-    for name in ("carcharodontosaurus", "daspletosaurus", "tyrannosaurus"):
-        if name == "carcharodontosaurus":
-            sp, tx = spec, tex
-        else:
-            sp = geo.load_geo(os.path.join(ASSETS, "geo", "entity", f"{name}.geo.json"))
-            tx = Image.open(os.path.join(ASSETS, "textures", "entity", f"{name}_male.png"))
-            sp = {**sp, "cubes": [c for c in sp["cubes"] if c.get("bone") != "saddle"]}
-        pts = np.concatenate([q for c, q in geo.cube_points(sp)])
-        L = pts[:, 2].max() - pts[:, 2].min(); Hh = pts[:, 1].max() - pts[:, 1].min()
-        k = sizes[name] * px
-        im = geo.render(sp, tx, 90, 0, (int(L * k * 1.04) + 8, int(Hh * k * 1.04) + 8), bg=shots.BG, margin=0.02)[0].convert("RGB")
-        shots_.append(im)
-    side_by_side(shots_, gap=40).save(os.path.join(out, "ao_lado_do_daspleto_e_trex.png"))
+    """the rigs rendered side-on at their in-game scale (MODEL_SCALE from the generated classes), px screen pixels per
+    game pixel: the key comparison with the Giganotosaurus (one above the other, same length), and the four 1.10.1
+    predators side by side (T. rex, Daspletosaurus, Albertosaurus, Carcharodontosaurus)"""
+    sizes = {"tyrannosaurus": 1.08, "daspletosaurus": 0.981, "albertosaurus": 0.972, "giganotosaurus": 0.706,
+             "carcharodontosaurus": SCALE[0]}
+    me = _render_side("carcharodontosaurus", spec, tex, sizes["carcharodontosaurus"] * px)
+    stack([me, _render_side("giganotosaurus", None, None, sizes["giganotosaurus"] * px)]).save(
+        os.path.join(out, "ao_lado_do_giganoto.png"))
+    four = [_render_side(n, None, None, sizes[n] * 2) for n in ("tyrannosaurus", "daspletosaurus", "albertosaurus")]
+    side_by_side(four + [_render_side("carcharodontosaurus", spec, tex, sizes["carcharodontosaurus"] * 2)], gap=30).save(
+        os.path.join(out, "os_quatro.png"))
 
 
 SCALE = [1.0]
-GIFS = ("walk", "run", "sprint", "drive", "idle", "attack", "snap_bite", "pass_bite", "parry", "sidestep", "lunge",
-        "call_pack", "answer", "ambush_crouch", "pant", "eat")
+GIFS = ("walk", "run", "burst", "drag", "idle", "attack", "tear", "brow_butt", "brow_display", "gape_hiss", "parry",
+        "lunge", "stagger", "ambush_crouch", "ambush_look", "eat")
 
 
 def gifs(out, sex="male"):
