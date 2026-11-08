@@ -329,6 +329,9 @@ public final class ModItems {
     /** The Daspletosaurus' own saddle (only it saddles a Daspletosaurus): the deep tyrant seat on a hide pad. */
     public static final RegistrySupplier<Item> DASPLETOSAURUS_SADDLE = ITEMS.register("daspletosaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Albertosaurus' own saddle (only it saddles an Albertosaurus): the light racing saddle of the runner. */
+    public static final RegistrySupplier<Item> ALBERTOSAURUS_SADDLE = ITEMS.register("albertosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Velociraptor's hunting harness: its "saddle" for the armour it gives; it can never be ridden. */
     public static final RegistrySupplier<Item> VELOCIRAPTOR_HARNESS = ITEMS.register("velociraptor_harness",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

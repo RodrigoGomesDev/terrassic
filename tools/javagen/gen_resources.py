@@ -110,6 +110,7 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "carnotaurus_saddle": ("Carnotaurus Saddle", "Sela de Carnotauro", "Silla de Carnotaurio", "item/generated"),
     "giganotosaurus_saddle": ("Giganotosaurus Saddle", "Sela de Giganotossauro", "Silla de Giganotosaurio", "item/generated"),
     "daspletosaurus_saddle": ("Daspletosaurus Saddle", "Sela de Daspletossauro", "Silla de Daspletosaurio", "item/generated"),
+    "albertosaurus_saddle": ("Albertosaurus Saddle", "Sela de Albertossauro", "Silla de Albertosaurio", "item/generated"),
     # the drover's pack saddle (cangalha) with two woven baskets: the Triceratops carries its cargo in them
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
     # 1.8: the Elasmosaurus' neck saddle: a hide seat behind the neck, a rope loop to hold, two driftwood floats
@@ -931,6 +932,9 @@ def main():
     # the Daspletosaurus' tyrant saddle: its hide pad on leather, a bone toggle on the breast strap, iron stirrups
     shaped("daspletosaurus_saddle", ["LBL", "HHH", "I I"], {"L": "minecraft:leather", "B": "minecraft:bone",
            "H": "terrassic:daspletosaurus_hide", "I": "minecraft:iron_ingot"}, "terrassic:daspletosaurus_saddle")
+    # the Albertosaurus' racing saddle: a felt pad of wool on its hide, a light leather seat, bone stirrups
+    shaped("albertosaurus_saddle", ["LWL", "HHH", "B B"], {"L": "minecraft:leather", "W": "minecraft:green_wool",
+           "H": "terrassic:albertosaurus_hide", "B": "minecraft:bone"}, "terrassic:albertosaurus_saddle")
     # the Triceratops' pack saddle: two wooden heads of the frame, a hide seat on leather, two woven rush baskets
     shaped("triceratops_saddle", ["S S", "LHL", "R R"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")

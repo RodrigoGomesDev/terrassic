@@ -50,7 +50,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Carnotaurus (v0.7) | 7,5-8 m, 1,3-2,1 t (Bonaparte et al. 1990, MACN-CH 894; Mazzetta et al. 2004) | novo | **8,0 x 3,6** | 1,8 x 3,4 | 30% |
 | Tarbosaurus (v0.7) | 10-12 m, 4-5 t (Hurum & Sabath 2003, PIN 551-1; Paul 2010) | novo | **12,0 x 4,5** | 2,5 x 4,3 | 25% |
 | Daspletosaurus (v0.7; refeito na 1.10.1) | 8,5-9,5 m, 2,5-3,8 t (Russell 1970, CMN 8506; Paul 1988; Currie 2003; Carr et al. 2017, quadril ~2,2 m). 9,5 m = topo sem o espécime de 2025 (CMC VP 15826, Warner-Cowgill et al. 2025, ~11 m, fora por decisão do Rodrigo em 07/11/2026) | refeito | **9,5 x 3,9** (164 px a 16,94 px/m, escala 0,981, 16,3 texels por bloco) | 2,1 x 3,4 | 28% |
-| Albertosaurus (v0.7) | 8-10 m, 1,7-2,5 t (Currie 2003; Erickson et al. 2004, Dry Island) | novo | **9,5 x 3,8** | 1,9 x 3,6 | 28% |
+| Albertosaurus (v0.7; refeito na 1.10.1) | 8-10 m, 1,7-3,0 t (Russell 1970; Currie 2003; Holtz 2004; Paul 2016). 10 m = topo: o adulto de Dry Island, ~28 anos (Erickson et al. 2006; decisão do Rodrigo em 07/11/2026) | refeito | **10 x 3,8** (174 px a 16,94 px/m, escala 0,972, 16,5 texels por bloco) | 1,9 x 3,5 | 28% |
 | Majungasaurus (v0.7) | 6-8 m, ~1,1 t (Sampson & Witmer 2007, FMNH PR 2100; Krause et al. 2007) | novo | **7,5 x 3,2** | 1,6 x 3,0 | 30% |
 | Dakotaraptor (v0.7) | ~5,5 m, 220-350 kg (DePalma et al. 2015, PBMNH.P.10.113.T; foice de 24 cm) | novo | **5,5 x 2,1** | 1,0 x 2,0 | 40% |
 | Troodon (v0.7) | ~2,4 m, ~50 kg (Russell 1969; Varricchio 1997, Egg Mountain) | novo | **2,4 x 1,1** | 0,6 x 1,1 | 50% |
