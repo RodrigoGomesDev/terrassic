@@ -28,7 +28,8 @@ jaws = re.findall(r"jaw (\w+): standing after the run, from (-?[\d.]+) to (-?[\d
 check("mandíbulas presentes", len(jaws) >= 15, f"{len(jaws)} espécies medidas")
 for sp, lo, hi in jaws:
     span = float(hi) - float(lo)
-    check(f"mandíbula {sp}", span <= 90.0, f"abre {span:.0f} graus")
+    # no jaw bone found on the client gives +-3.4e38: that is no measure, not a pass
+    check(f"mandíbula {sp}", 0.0 <= span <= 90.0, f"abre {span:.0f} graus")
 
 # legs, in two parts. The files: no leg bone in a walk or a run may turn faster than the exporter's limiter
 # (anim2.LEG_RATE, 1500 deg/s = 75 a tick); a joint flipping in the keys shows here. In the game: a gait plays at most
