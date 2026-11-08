@@ -1,7 +1,7 @@
 """Previews of the Daspletosaurus for the author (art/daspletosaurus/previews): side, 3/4, front, head, male vs
 female, next to the T. rex at the same pixel scale (both at their in-game sizes), and the measured numbers.
 
-usage:  python3 -B tools/modelgen/handmade/daspletosaurus/preview.py [out_dir] [--quick]
+usage:  python3 -B tools/modelgen/handmade/daspletosaurus/preview.py [out_dir] [--quick] [--gifs]
 """
 import json
 import os
@@ -63,6 +63,32 @@ def next_to_rex(spec, tex, out, px=3):
 
 
 SCALE = [1.0]
+GIFS = ("walk", "run", "idle", "attack", "face_bite", "parry", "steal_roar", "carcass_guard", "threat", "jaw_test", "eat",
+        "roar_loud")
+
+
+def gifs(out, sex="male"):
+    """GIFs straight from the exported files (what GeckoLib plays), with a strip of frames of each"""
+    from jsongif import pose_at, load_anims
+    spec = geo.load_geo(os.path.join(ASSETS, "geo", "entity", "daspletosaurus.geo.json"))
+    tex = Image.open(os.path.join(ASSETS, "textures", "entity", f"daspletosaurus_{sex}.png"))
+    A = load_anims(os.path.join(ASSETS, "animations", "entity", "daspletosaurus.animation.json"))
+    hid = [c["name"] for c in spec["cubes"] if c["bone"] == "saddle"]
+    gdir = os.path.join(out, "animacoes"); os.makedirs(gdir, exist_ok=True)
+    for n in GIFS:
+        an = A[f"animation.daspletosaurus.{n}"]; L = an["animation_length"]
+        fps = 12; N = max(2, int(round(L * fps)))
+        poses = [pose_at(an, L * i / N) for i in range(N + (0 if an.get("loop") else 1))]
+        yaw, pitch = (60, 12)
+        fits = [geo.render(spec, tex, yaw, pitch, (64, 48), pose=p, hidden=hid)[1] for p in poses[::max(1, len(poses) // 8)]]
+        fit = (min(f[0] for f in fits), max(f[1] for f in fits), min(f[2] for f in fits), max(f[3] for f in fits))
+        ims = [geo.render(spec, tex, yaw, pitch, (560, 380), pose=p, hidden=hid, fit=fit, bg=shots.BG, margin=0.06)[0].convert("RGB")
+               for p in poses]
+        ims[0].save(os.path.join(gdir, f"{n}.gif"), save_all=True, append_images=ims[1:], duration=int(1000 / fps), loop=0)
+        pick = [ims[int(i * (len(ims) - 1) / 4)] for i in range(5)]
+        strip = side_by_side([i.resize((280, 190), Image.LANCZOS) for i in pick], gap=4)
+        strip.save(os.path.join(gdir, f"{n}_quadros.png"))
+        print("gif", n, len(ims), flush=True)
 
 
 def main():
@@ -96,6 +122,8 @@ def main():
     shots.shot(sspec, stex, 35, 18, (1200, 800)).save(os.path.join(out, "com_sela.png"))
     next_to_rex(spec, tex, out)
     os.remove(os.path.join(out, "_tmp.geo.json"))
+    if "--gifs" in sys.argv:
+        gifs(out)
 
 
 if __name__ == "__main__":
