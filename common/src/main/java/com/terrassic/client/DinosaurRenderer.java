@@ -101,8 +101,8 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
     @Override
     public void renderFinal(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource,
                             com.mojang.blaze3d.vertex.VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay,
-                            float red, float green, float blue, float alpha) {
-        super.renderFinal(poseStack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+                            int colour) {
+        super.renderFinal(poseStack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, colour);
         com.terrassic.entity.LivelyMotion lively = animatable.lively();
         if (lively != null) {
             for (int i = 0; i < 4; i++) {

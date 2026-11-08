@@ -10,9 +10,9 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,7 +186,7 @@ public abstract class Tyrannosaurine extends ApexTheropod {
      *  spawners pass it from one to the next), so ApexTheropod's own juveniles stay out of it. */
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
-                                        SpawnGroupData spawnData, CompoundTag tag) {
+                                        SpawnGroupData spawnData) {
         boolean natural = reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION;
         if (natural && spawnData == null) {
             spawnData = new Family();
@@ -197,7 +197,7 @@ public abstract class Tyrannosaurine extends ApexTheropod {
         } else if (spawnData instanceof Family family) {
             this.logAct("family: " + (family.getGroupSize() == 0 ? "first of the pair" : "its mate"));
         }
-        return super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+        return super.finalizeSpawn(level, difficulty, reason, spawnData);
     }
 
     /** The group data of a natural family (no random babies: only the third is young). */

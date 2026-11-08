@@ -1,5 +1,9 @@
 package com.terrassic.entity;
 
+import net.minecraft.resources.ResourceLocation;
+
+import com.terrassic.Terrassic;
+
 import com.terrassic.entity.ai.CarcassStealGoal;
 import com.terrassic.entity.ai.WaterholeGuardGoal;
 import java.util.UUID;
@@ -22,9 +26,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 /**
  * The Majungasaurus rig (tools/modelgen/handmade/majungasaurus, made for it from its own study,
@@ -88,7 +92,7 @@ public abstract class Majungasaurine extends ApexTheropod {
     private static final int BURST_TICKS_LEFT = 30;
     private static final double BURST_BOOST = 0.6D;
     private static final double BURST_CHASE = 24.0D;
-    private static final UUID BURST_ID = UUID.fromString("6a1f0e52-9b3d-4c7e-8a21-5d4c3b2a1f09");
+    private static final ResourceLocation BURST_ID = Terrassic.id("majungasaurus_burst");
     /** The warning: the dome shown to a player this close; it attacks one who then comes within WARN_ATTACK. */
     private static final double WARN_RANGE = 8.0D;
     private static final double WARN_ATTACK = 4.5D;
@@ -149,9 +153,9 @@ public abstract class Majungasaurine extends ApexTheropod {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_MODE, MODE_NONE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_MODE, MODE_NONE);
     }
 
     public byte mode() {
@@ -486,7 +490,7 @@ public abstract class Majungasaurine extends ApexTheropod {
         AttributeInstance speed = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.removeModifier(BURST_ID);
-            speed.addTransientModifier(new AttributeModifier(BURST_ID, "majungasaurus burst", BURST_BOOST, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            speed.addTransientModifier(new AttributeModifier(BURST_ID, BURST_BOOST, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         this.logAct(String.format("burst: charges the %s, %.1f blocks off", target.getType().toShortString(), this.distanceTo(target)));
     }

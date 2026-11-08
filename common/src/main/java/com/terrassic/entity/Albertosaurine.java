@@ -1,5 +1,9 @@
 package com.terrassic.entity;
 
+import net.minecraft.resources.ResourceLocation;
+
+import com.terrassic.Terrassic;
+
 import com.terrassic.entity.ai.PackAmbushGoal;
 import com.terrassic.entity.ai.PackDriveGoal;
 import net.minecraft.nbt.CompoundTag;
@@ -20,9 +24,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 import java.util.UUID;
 
@@ -74,7 +78,7 @@ public abstract class Albertosaurine extends ApexTheropod {
     private static final int CHASE_TICKS = 600;
     /** Spent after it: ticks it walks tired and does not hunt, and how much slower. */
     private static final int SPENT_TICKS = 500;
-    private static final UUID SPENT_SLOW = UUID.fromString("5a0c7e2b-41d9-4c6f-8e13-2b9d7f60a1c4");
+    private static final ResourceLocation SPENT_SLOW = Terrassic.id("albertosaurus_spent");
     /** The call reaches the pack this far (blocks); the next call after this many ticks. */
     public static final double CALL_REACH = 24.0D;
     private static final int CALL_COOLDOWN = 600;
@@ -139,9 +143,9 @@ public abstract class Albertosaurine extends ApexTheropod {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_MODE, MODE_NONE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_MODE, MODE_NONE);
     }
 
     public byte mode() {
@@ -253,7 +257,7 @@ public abstract class Albertosaurine extends ApexTheropod {
      *  on (the spawners pass it from one to the next), so ApexTheropod's own juveniles stay out of it. */
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
-                                        SpawnGroupData spawnData, CompoundTag tag) {
+                                        SpawnGroupData spawnData) {
         boolean natural = reason == MobSpawnType.NATURAL || reason == MobSpawnType.CHUNK_GENERATION;
         if (natural && spawnData == null) {
             spawnData = new Pack();
@@ -264,7 +268,7 @@ public abstract class Albertosaurine extends ApexTheropod {
         } else if (spawnData instanceof Pack pack) {
             this.logAct("pack: an adult (" + (pack.getGroupSize() + 1) + (pack.getGroupSize() == 0 ? "st" : "nd") + " of the pack)");
         }
-        return super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
+        return super.finalizeSpawn(level, difficulty, reason, spawnData);
     }
 
     /** The group data of a natural pack (no random babies: only the third and the fourth are young). */
@@ -450,7 +454,7 @@ public abstract class Albertosaurine extends ApexTheropod {
         AttributeInstance speed = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.removeModifier(SPENT_SLOW);
-            speed.addTransientModifier(new AttributeModifier(SPENT_SLOW, "spent", -0.35D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            speed.addTransientModifier(new AttributeModifier(SPENT_SLOW, -0.35D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
     }
 
@@ -580,7 +584,7 @@ public abstract class Albertosaurine extends ApexTheropod {
             AttributeInstance speed = this.getAttribute(Attributes.MOVEMENT_SPEED);
             if (speed != null) {
                 speed.removeModifier(SPENT_SLOW);
-                speed.addTransientModifier(new AttributeModifier(SPENT_SLOW, "spent", -0.35D, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                speed.addTransientModifier(new AttributeModifier(SPENT_SLOW, -0.35D, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             }
         }
     }

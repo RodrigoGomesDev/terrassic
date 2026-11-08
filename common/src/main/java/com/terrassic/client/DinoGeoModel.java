@@ -152,8 +152,8 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             } else {
                 m.setLegs(-1.0F, 50.0F);
             }
-            CoreGeoBone ar = getAnimationProcessor().getBone("arm_l");
-            CoreGeoBone hd = getAnimationProcessor().getBone("hand_l");
+            GeoBone ar = getAnimationProcessor().getBone("arm_l");
+            GeoBone hd = getAnimationProcessor().getBone("hand_l");
             if (ar != null && hd != null) {
                 m.setArms(Math.abs(ar.getPivotY() - hd.getPivotY()));
             }
@@ -216,7 +216,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
 
     /** 1.10.1, each foot on its own ground (LivelyMotion.feetTick): the body drops to the lowest foot (half a block at
      *  most), and every other leg bends to set its foot on its own ground; front legs bend at the elbow. */
-    private void feet(com.terrassic.entity.LivelyMotion m, CoreGeoBone body, float partial, float d2r) {
+    private void feet(com.terrassic.entity.LivelyMotion m, GeoBone body, float partial, float d2r) {
         float w = m.feetWeight(partial);
         if (w < 0.01F || body == null) {
             return;
@@ -246,9 +246,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             return;
         }
         float a = (float) Math.toDegrees(Math.asin(Math.min(0.85F, lift / armPx))) * 1.6F;
-        CoreGeoBone arm = getAnimationProcessor().getBone("arm_" + side);
-        CoreGeoBone fore = getAnimationProcessor().getBone("forearm_" + side);
-        CoreGeoBone hand = getAnimationProcessor().getBone("hand_" + side);
+        GeoBone arm = getAnimationProcessor().getBone("arm_" + side);
+        GeoBone fore = getAnimationProcessor().getBone("forearm_" + side);
+        GeoBone hand = getAnimationProcessor().getBone("hand_" + side);
         if (arm != null && fore != null && hand != null) {
             arm.setRotX(arm.getRotX() - a * d2r);
             fore.setRotX(fore.getRotX() + 2.0F * a * d2r);

@@ -29,20 +29,20 @@ public class BleedingEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration % EVERY == 0;
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity.level().isClientSide() || !entity.isAlive()) {
-            return;
+            return true;
         }
         float amount = 1.0F + 0.5F * amplifier;
         if (entity instanceof Player) {
             amount = Math.min(amount, entity.getHealth() - PLAYER_FLOOR);
             if (amount <= 0.0F) {
-                return;
+                return true;
             }
         }
         // the cut bleeds through the hurt cooldown of the last blow, but leaves the next blow its own cooldown
@@ -50,6 +50,7 @@ public class BleedingEffect extends MobEffect {
         entity.invulnerableTime = 0;
         entity.hurt(source(entity), amount);
         entity.invulnerableTime = Math.min(entity.invulnerableTime, cooldown);
+        return true;
     }
 
     public static DamageSource source(LivingEntity entity) {

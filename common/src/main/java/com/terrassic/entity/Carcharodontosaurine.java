@@ -1,5 +1,9 @@
 package com.terrassic.entity;
 
+import net.minecraft.resources.ResourceLocation;
+
+import com.terrassic.Terrassic;
+
 import com.terrassic.entity.ai.CarcassDragGoal;
 import com.terrassic.entity.ai.CarcassStealGoal;
 import com.terrassic.entity.ai.RiverAmbushGoal;
@@ -23,9 +27,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 
 /**
  * The Carcharodontosaurus rig (tools/modelgen/handmade/carcharodontosaurus, made for it from its own study,
@@ -79,7 +83,7 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
     private static final int BURST_TICKS_LEFT = 40;
     private static final double BURST_BOOST = 0.75D;
     private static final double BURST_CHASE = 24.0D;
-    private static final UUID BURST_ID = UUID.fromString("c4c1a3f0-6d2e-4b7a-9e15-3a8f2b6c7d10");
+    private static final ResourceLocation BURST_ID = Terrassic.id("carcharodontosaurus_burst");
     /** Bleeding: seconds of it on a player and on an animal. */
     private static final int BLEED_PLAYER = 100;
     private static final int BLEED_ANIMAL = 160;
@@ -129,9 +133,9 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_MODE, MODE_NONE);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_MODE, MODE_NONE);
     }
 
     public byte mode() {
@@ -234,7 +238,7 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
             return;
         }
         int ticks = target instanceof Player ? BLEED_PLAYER : BLEED_ANIMAL;
-        target.addEffect(new MobEffectInstance(ModEffects.BLEEDING.get(), ticks, 0), this);
+        target.addEffect(new MobEffectInstance(ModEffects.bleeding(), ticks, 0), this);
         this.logAct(how + ": the " + target.getType().toShortString() + " bleeds (" + ticks / 20 + " s, health "
                 + Math.round(target.getHealth()) + ")");
     }
@@ -339,7 +343,7 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
         AttributeInstance speed = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.removeModifier(BURST_ID);
-            speed.addTransientModifier(new AttributeModifier(BURST_ID, "ambush burst", BURST_BOOST, AttributeModifier.Operation.MULTIPLY_TOTAL));
+            speed.addTransientModifier(new AttributeModifier(BURST_ID, BURST_BOOST, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         this.logAct(String.format("ambush: bursts out at the %s, %.1f blocks off", target.getType().toShortString(),
                 Math.sqrt(this.distanceToSqr(target))));

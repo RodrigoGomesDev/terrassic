@@ -1048,7 +1048,7 @@ public final class BehaviorTest {
                     pl.fallDistance = 0.0F;
                     pl.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
                     pl.setHealth(20.0F);
-                    pl.addEffect(new net.minecraft.world.effect.MobEffectInstance(com.terrassic.registry.ModEffects.BLEEDING.get(), 100, 0));
+                    pl.addEffect(new net.minecraft.world.effect.MobEffectInstance(com.terrassic.registry.ModEffects.bleeding(), 100, 0));
                 });
             }
             return 1;
@@ -1064,8 +1064,8 @@ public final class BehaviorTest {
                     hp[11] = v == null ? -1 : v.getHealth();
                 }
                 REPORT.add(String.format(Locale.ROOT, "    t=%ds: edmontosaurus %.1f (bleeding %b) | player %.1f (bleeding %b)", i,
-                        v == null ? -1 : v.getHealth(), v != null && v.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get()),
-                        pl == null ? -1 : pl.getHealth(), pl != null && pl.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get())));
+                        v == null ? -1 : v.getHealth(), v != null && v.hasEffect(com.terrassic.registry.ModEffects.bleeding()),
+                        pl == null ? -1 : pl.getHealth(), pl != null && pl.hasEffect(com.terrassic.registry.ModEffects.bleeding())));
                 if (i == 10 && pl != null) {
                     mc.getSingleplayerServer().execute(() -> {
                         pl.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
@@ -1103,13 +1103,13 @@ public final class BehaviorTest {
                 command(mcm, "tp @e[type=!player,type=!terrassic:carcass,tag=!tear,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100] ~ -250 ~");
             }
             DinosaurEntity b = server(mcm, big);
-            if (b != null && b.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get())) {
+            if (b != null && b.hasEffect(com.terrassic.registry.ModEffects.bleeding())) {
                 bleedFrames[0]++;
             }
             if (k % 20 == 19) {
                 REPORT.add(String.format(Locale.ROOT, "    t=%ds: prey %s, bleeding %b", (k + 1) / 10,
                         b == null || !b.isAlive() ? "dead" : String.format(Locale.ROOT, "%.1f/%.0f", b.getHealth(), b.getMaxHealth()),
-                        b != null && b.hasEffect(com.terrassic.registry.ModEffects.BLEEDING.get())));
+                        b != null && b.hasEffect(com.terrassic.registry.ModEffects.bleeding())));
             }
             if (k == 199) {
                 REPORT.add("    frames the prey bled: " + bleedFrames[0]);
@@ -3892,7 +3892,7 @@ public final class BehaviorTest {
                         Vec3 prev = was.put(d.getUUID(), d.position());
                         if (prev != null && d.getNavigation().isInProgress() && prev.distanceTo(d.position()) < 0.1D) {
                             acc[6]++;
-                            d.goals().getRunningGoals().forEach(g -> stuckBy.merge(g.getGoal().getClass().getName()
+                            d.goals().getAvailableGoals().stream().filter(net.minecraft.world.entity.ai.goal.WrappedGoal::isRunning).forEach(g -> stuckBy.merge(g.getGoal().getClass().getName()
                                     .replaceAll(".*[.$]", ""), 1, Integer::sum));
                         }
                         spread += d.position().distanceTo(c);

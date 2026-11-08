@@ -4,6 +4,8 @@ import com.terrassic.entity.DinosaurEntity;
 import com.terrassic.entity.FlyingDinosaur;
 import com.terrassic.entity.SwimmingDinosaur;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -39,7 +41,7 @@ public final class RegionPopulation extends SavedData {
     private final Map<Long, Cell> cells = new HashMap<>();
 
     public static RegionPopulation of(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(RegionPopulation::load, RegionPopulation::new, NAME);
+        return level.getDataStorage().computeIfAbsent(new Factory<>(RegionPopulation::new, (tag, registries) -> RegionPopulation.load(tag), DataFixTypes.SAVED_DATA_COMMAND_STORAGE), NAME);
     }
 
     public static long key(BlockPos pos) {
@@ -123,7 +125,7 @@ public final class RegionPopulation extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag list = new ListTag();
         for (Map.Entry<Long, Cell> e : this.cells.entrySet()) {
             CompoundTag t = new CompoundTag();

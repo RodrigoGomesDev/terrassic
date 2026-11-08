@@ -91,8 +91,8 @@ public final class Playtest {
             java.lang.reflect.Field f = net.minecraft.world.entity.Mob.class.getDeclaredField("goalSelector");
             f.setAccessible(true);
             StringBuilder b = new StringBuilder();
-            ((net.minecraft.world.entity.ai.goal.GoalSelector) f.get(d)).getRunningGoals()
-                    .forEach(g -> b.append(g.getGoal().getClass().getSimpleName()).append(' '));
+            ((net.minecraft.world.entity.ai.goal.GoalSelector) f.get(d)).getAvailableGoals().stream()
+                    .filter(net.minecraft.world.entity.ai.goal.WrappedGoal::isRunning).forEach(g -> b.append(g.getGoal().getClass().getSimpleName()).append(' '));
             return b.toString().trim();
         } catch (ReflectiveOperationException e) {
             return "?";
@@ -153,9 +153,9 @@ public final class Playtest {
         rules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, null);
         LevelSettings settings = new LevelSettings(name, GameType.SURVIVAL, false, Difficulty.NORMAL, true, rules,
                 WorldDataConfiguration.DEFAULT);
-        ResourceKey<WorldPreset> preset = ResourceKey.create(Registries.WORLD_PRESET, new ResourceLocation("terrassic", "terrassic"));
+        ResourceKey<WorldPreset> preset = ResourceKey.create(Registries.WORLD_PRESET, ResourceLocation.fromNamespaceAndPath("terrassic", "terrassic"));
         mc.createWorldOpenFlows().createFreshLevel(name, settings, new WorldOptions(seed, true, false),
-                access -> access.registryOrThrow(Registries.WORLD_PRESET).getHolderOrThrow(preset).value().createWorldDimensions());
+                access -> access.registryOrThrow(Registries.WORLD_PRESET).getHolderOrThrow(preset).value().createWorldDimensions(), mc.screen);
         REPORT.add("Terrassic playtest: a fresh Terrassic world, seed " + seed + ", a survival player who cannot die");
     }
 
