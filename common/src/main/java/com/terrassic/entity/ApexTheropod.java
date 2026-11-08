@@ -768,8 +768,12 @@ public abstract class ApexTheropod extends PredatorDinosaur {
                 }
                 double a = this.random.nextDouble() * Math.PI * 2.0D;
                 juvenile.setRoamer(this.isRoamer());
-                juvenile.moveTo(this.getX() + Math.cos(a) * 3.0D, this.getY(), this.getZ() + Math.sin(a) * 3.0D,
-                        this.random.nextFloat() * 360.0F, 0.0F);
+                // kept inside the adult's own chunk: while the world is generated only that chunk can be written, and
+                // a juvenile put across its border crashed the world generation (found playing a fresh world, 08/11)
+                double cx = Math.floor(this.getX() / 16.0D) * 16.0D, cz = Math.floor(this.getZ() / 16.0D) * 16.0D;
+                double jx = Math.max(cx + 0.5D, Math.min(cx + 15.5D, this.getX() + Math.cos(a) * 3.0D));
+                double jz = Math.max(cz + 0.5D, Math.min(cz + 15.5D, this.getZ() + Math.sin(a) * 3.0D));
+                juvenile.moveTo(jx, this.getY(), jz, this.random.nextFloat() * 360.0F, 0.0F);
                 if (!level.noCollision(juvenile)) {
                     juvenile.moveTo(this.getX(), this.getY(), this.getZ());
                 }
