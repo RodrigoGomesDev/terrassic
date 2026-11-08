@@ -46,10 +46,9 @@ import java.util.UUID;
  *       hop aside ("sidestep") and its counter and signature blow bite the rival's neck while going past
  *       ("pass_bite"). Its own bite is light: it shuts and lets go ("attack"), and it snaps on the run ("snap_bite").</li>
  * </ul>
- * DinosaurEntity gives a chase up 48 blocks from where it began or after 20 s without a blow (behaviourTick, private).
- * The longer chase is made here with existing overridable methods only: while its own chase is within 72 blocks and
- * 30 s, {@link #getTarget()} reads null for one tick now and then inside the AI step, which restarts the base count,
- * and the run does not wear it out ({@link #runThresholdSqr()} on the server); it gives up by its own rule.
+ * DinosaurEntity gives a chase up 48 blocks from where it began or after 20 s without a blow; here its limits
+ * ({@link #chaseLimitBlocks()}, {@link #chaseLimitTicks()}) sit past this courser's own 72 blocks and 30 s, the run does
+ * not wear it out ({@link #runThresholdSqr()} on the server), and it gives up by its own rule.
  */
 public abstract class Albertosaurine extends ApexTheropod {
     /** One short line when a behaviour of its own fires ("[alberto] ..."), for the playtests in a generated world. */
@@ -105,9 +104,6 @@ public abstract class Albertosaurine extends ApexTheropod {
     private UUID chaseOf;
     private Vec3 chaseStart;
     private int chaseTick;
-    private Vec3 baseStart;
-    private int baseTick;
-    private boolean hideTarget;
     private UUID gaveUpOn;
     private int gaveUpUntil;
     private int spentLeft;
@@ -369,10 +365,16 @@ public abstract class Albertosaurine extends ApexTheropod {
         return 0.02D;
     }
 
-    /** One tick now and then inside the AI step, the target reads null: DinosaurEntity's count starts over. */
+    /** The long chase: the base count only steps in past its own 72 blocks and 30 s (it gives up by its own rule,
+     *  chaseTick, and tires); hooks of DinosaurEntity since 1.10.1, no more blanking the target for a tick. */
     @Override
-    public LivingEntity getTarget() {
-        return this.hideTarget ? null : super.getTarget();
+    protected double chaseLimitBlocks() {
+        return 80.0D;
+    }
+
+    @Override
+    protected int chaseLimitTicks() {
+        return 660;
     }
 
     @Override
@@ -391,12 +393,7 @@ public abstract class Albertosaurine extends ApexTheropod {
 
     @Override
     protected void customServerAiStep() {
-        this.hideTarget = this.hidesTargetNow();
-        try {
-            super.customServerAiStep();
-        } finally {
-            this.hideTarget = false;
-        }
+        super.customServerAiStep();
         if (this.callCooldown > 0) {
             this.callCooldown--;
         }
@@ -412,24 +409,6 @@ public abstract class Albertosaurine extends ApexTheropod {
         this.modeTick();
     }
 
-    /** Whether to blank the target for this tick: its own chase is on, within its 72 blocks and 30 s, and the base
-     *  count is near its own 48 blocks or 20 s. Never on the ticks the base or the pack read the target. */
-    private boolean hidesTargetNow() {
-        LivingEntity t = super.getTarget();
-        if (t == null || this.chaseOf == null || this.isTame() || this.isDueling() || !t.isAlive()
-                || !t.getUUID().equals(this.chaseOf) || this.tickCount % 20 != 7 || (this.tickCount + this.getId()) % 20 == 0) {
-            return false;
-        }
-        boolean baseNear = (this.baseStart != null && this.position().distanceToSqr(this.baseStart) > 34.0D * 34.0D)
-                || this.tickCount - Math.max(this.baseTick, this.getLastHurtMobTimestamp()) > 300;
-        if (baseNear) {
-            this.baseStart = this.position();
-            this.baseTick = this.tickCount;
-            return true;
-        }
-        return false;
-    }
-
     private void chaseTick() {
         LivingEntity t = super.getTarget();
         if (t == null || this.isTame() || this.isDueling() || this.isVehicle() || !t.isAlive()) {
@@ -440,8 +419,6 @@ public abstract class Albertosaurine extends ApexTheropod {
             this.chaseOf = t.getUUID();
             this.chaseStart = this.position();
             this.chaseTick = this.tickCount;
-            this.baseStart = this.position();
-            this.baseTick = this.tickCount;
             this.longChaseLogged = false;
             return;
         }
