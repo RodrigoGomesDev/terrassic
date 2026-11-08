@@ -23,6 +23,10 @@ public class BabyStayGoal extends Goal {
     private LivingEntity threat;
     private DinosaurEntity mother;
     private int repath;
+    /** Which side of its mother it goes round, and a check that it is getting anywhere (else the other side). */
+    private double sideSign = 1.0D;
+    private Vec3 lastPos;
+    private int stuckCheck;
 
     public BabyStayGoal(DinosaurEntity mob) {
         this.mob = mob;
@@ -94,6 +98,9 @@ public class BabyStayGoal extends Goal {
     @Override
     public void start() {
         this.repath = 0;
+        this.lastPos = this.mob.position();
+        this.stuckCheck = 20;
+        this.sideSign = 0.0D;
         if (this.threat != null) {
             Behaviour.log("baby flee: " + this.mob.speciesId() + " #" + this.mob.getId() + " from " + this.threat.getType().toShortString());
         }
@@ -107,6 +114,14 @@ public class BabyStayGoal extends Goal {
 
     @Override
     public void tick() {
+        if (--this.stuckCheck <= 0) {
+            this.stuckCheck = 20;
+            if (this.threat != null && this.lastPos != null && this.mob.position().distanceToSqr(this.lastPos) < 0.3D * 0.3D) {
+                this.sideSign = this.sideSign == 0.0D ? -1.0D : -this.sideSign;      // wedged against her: round the other side
+                this.repath = 0;
+            }
+            this.lastPos = this.mob.position();
+        }
         if (--this.repath > 0) {
             return;
         }
@@ -128,7 +143,10 @@ public class BabyStayGoal extends Goal {
                 double back = Mth.clamp(10.0D - this.mother.distanceTo(this.threat), this.mother.getBbWidth() * 0.5D + 2.0D, 6.0D);
                 // round her side, the side it is already on, so the way does not run into her body
                 Vec3 side = new Vec3(-off.z, 0.0D, off.x);
-                double on = this.mob.position().subtract(m).dot(side) < 0.0D ? -1.0D : 1.0D;
+                if (this.sideSign == 0.0D) {
+                    this.sideSign = this.mob.position().subtract(m).dot(side) < 0.0D ? -1.0D : 1.0D;
+                }
+                double on = this.sideSign;
                 Vec3 dir = off.scale(0.77D).add(side.scale(0.64D * on));
                 to = m.add(dir.scale(back));
                 if (to.distanceToSqr(this.threat.position()) < this.mob.distanceToSqr(this.threat)) {
