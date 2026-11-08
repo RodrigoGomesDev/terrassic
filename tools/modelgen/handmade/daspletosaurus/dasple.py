@@ -175,25 +175,25 @@ def saddle(m, body):
     slowest of the mid tyrannosaurs, a mount you sit in), long flaps, a girth and a breast strap tied with a bone
     toggle. Faces lying on the body are left out (no back-face culling in GeckoLib)."""
     out = lambda *d: [f for f in P.geo.FACES if f not in d]
-    sd = m.bone("saddle", body, (0, 56, -16))
-    m.cube(sd, (-10, 54, -30), (10, 56, -6), name="pad", mat="fur", faces=out("down"))
-    m.pair(sd, sd, (9, 43, -28), (10, 54, -16), name="flap_f", mat="hide", faces=out("east", "up"))
-    m.pair(sd, sd, (9, 46, -16), (10, 54, -8), name="flap_b", mat="hide", faces=out("east", "up", "north"))
-    m.cube(sd, (-6, 56, -25), (6, 58, -10), name="seat", mat="hide", faces=out("down"))
-    m.cube(sd, (-4, 58, -25), (4, 60, -22), name="pommel", mat="hide")
-    m.cube(sd, (-6, 58, -12), (6, 62, -9), name="cantle", mat="hide")
-    m.cube(sd, (-5, 62, -11), (5, 63, -9), name="cantle_lip", mat="hide")
-    m.pair(sd, sd, (10, 40, -23), (11, 54, -22), name="leather", mat="strap", faces=out("east", "up"))
-    m.pair(sd, sd, (10, 37, -24), (13, 40, -23), name="iron_f", mat="iron")
-    m.pair(sd, sd, (10, 37, -22), (13, 40, -21), name="iron_b", mat="iron")
-    m.pair(sd, sd, (10, 36, -24), (13, 37, -21), name="iron_t", mat="iron")
+    sd = m.bone("saddle", body, (0, 55, -16))
+    m.cube(sd, (-9.5, 53, -30), (9.5, 55, -6), name="pad", mat="fur", faces=out("down"))
+    m.pair(sd, sd, (9, 42, -28), (10, 53, -16), name="flap_f", mat="hide", faces=out("east", "up"))
+    m.pair(sd, sd, (9, 45, -16), (10, 53, -8), name="flap_b", mat="hide", faces=out("east", "up", "north"))
+    m.cube(sd, (-6, 55, -25), (6, 57, -10), name="seat", mat="hide", faces=out("down"))
+    m.cube(sd, (-4, 57, -25), (4, 59, -22), name="pommel", mat="hide")
+    m.cube(sd, (-6, 57, -12), (6, 61, -9), name="cantle", mat="hide")
+    m.cube(sd, (-5, 61, -11), (5, 62, -9), name="cantle_lip", mat="hide")
+    m.pair(sd, sd, (10, 39, -23), (11, 53, -22), name="leather", mat="strap", faces=out("east", "up"))
+    m.pair(sd, sd, (10, 36, -24), (13, 39, -23), name="iron_f", mat="iron")
+    m.pair(sd, sd, (10, 36, -22), (13, 39, -21), name="iron_b", mat="iron")
+    m.pair(sd, sd, (10, 35, -24), (13, 36, -21), name="iron_t", mat="iron")
     # the girth, down the flank under the flap and across the belly
-    m.pair(sd, sd, (9, 29, -19), (10, 43, -17), name="girth", mat="strap", faces=out("east", "up"))
-    m.cube(sd, (-9, 22, -19), (9, 23, -17), name="girth_under", mat="strap", faces=out("up"))
-    m.pair(sd, sd, (8, 23, -19), (9, 29, -17), name="girth_low", mat="strap", faces=out("east"))
+    m.pair(sd, sd, (9, 28, -19), (10, 42, -17), name="girth", mat="strap", faces=out("east", "up"))
+    m.cube(sd, (-8, 22, -19), (8, 23, -17), name="girth_under", mat="strap", faces=out("up"))
+    m.pair(sd, sd, (8, 22, -19), (9, 28, -17), name="girth_low", mat="strap", faces=out("east"))
     # the breast strap round the base of the neck, the bone toggle on the left
-    m.pair(sd, sd, (9, 36, -31), (10, 52, -29), name="breast", mat="strap", faces=out("east"))
-    m.cube(sd, (10, 44, -32), (11, 47, -28), name="toggle", mat="bone")
+    m.pair(sd, sd, (9, 35, -31), (10, 51, -29), name="breast", mat="strap", faces=out("east"))
+    m.cube(sd, (10, 43, -32), (11, 46, -28), name="toggle", mat="bone")
 
 
 SADDLE_ART = {   # column 0 at the FRONT, row 0 at the top; a = L1, b = L2, c = L3 (worn by the rider's calf), d = L0

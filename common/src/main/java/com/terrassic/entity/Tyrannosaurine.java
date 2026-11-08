@@ -13,6 +13,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Daspletosaurus rig (tools/modelgen/handmade/daspletosaurus, made for it from its own study,
@@ -36,6 +38,8 @@ import software.bernie.geckolib.core.object.PlayState;
  * the shared lists in DinosaurEntity stay untouched.
  */
 public abstract class Tyrannosaurine extends ApexTheropod {
+    /** One short line when a behaviour of its own fires ("[dasp] ..."), for the playtests in a generated world. */
+    private static final Logger LOG = LoggerFactory.getLogger("terrassic");
     /** The cycles (daspleanims.py WALK, RUN, STALK): pixels of ground per cycle (stride x K = 0.72) and ticks. */
     private static final double WALK_PX = 50.4D;
     private static final double WALK_TICKS = 40.0D;
@@ -64,9 +68,23 @@ public abstract class Tyrannosaurine extends ApexTheropod {
     private boolean atCarcass;
     /** Server: ticks the steal goal or the carcass guard leave the next carcass act alone. */
     private int carcassActCooldown;
+    /** Server: a carcass with meat in sight (looked up every second): it goes for that before it hunts. */
+    private boolean carcassInSight;
 
     protected Tyrannosaurine(EntityType<? extends Tyrannosaurine> type, Level level) {
         super(type, level);
+    }
+
+    /** Logs one behaviour line: "[dasp] what (id, x y z)". */
+    public void logAct(String what) {
+        LOG.info("[dasp] {} (#{} {} {} {})", what, this.getId(), this.getBlockX(), this.getBlockY(), this.getBlockZ());
+    }
+
+    /** ai/DuelGoal: a duel move started; its own ones (the face bite, the parry that ends in one) are logged. */
+    public static void duelMove(DinosaurEntity mob, String anim) {
+        if (mob instanceof Tyrannosaurine t && ("face_bite".equals(anim) || "parry".equals(anim))) {
+            t.logAct("parry".equals(anim) ? "face bite (parry counter)" : "face bite");
+        }
     }
 
     // ------------------------------------------------------------------ the sets it has (its own class: no shared list)
@@ -175,6 +193,9 @@ public abstract class Tyrannosaurine extends ApexTheropod {
         }
         if (spawnData instanceof Family family && family.getGroupSize() >= 2 && !this.isTame() && this.getAge() == 0) {
             this.setAge(JUVENILE_AGE);
+            this.logAct("family: the juvenile of the pair");
+        } else if (spawnData instanceof Family family) {
+            this.logAct("family: " + (family.getGroupSize() == 0 ? "first of the pair" : "its mate"));
         }
         return super.finalizeSpawn(level, difficulty, reason, spawnData, tag);
     }
@@ -204,10 +225,21 @@ public abstract class Tyrannosaurine extends ApexTheropod {
         this.playSound(this.roarSound(), 3.0F, 0.9F * this.getVoicePitch());
     }
 
+    /** A scavenger first (Hone &amp; Tanke 2015): with meat lying in sight it goes for the carcass (to eat it, or to
+     *  take it from whoever holds it) instead of starting a hunt. */
+    @Override
+    protected boolean canHunt() {
+        return super.canHunt() && !this.carcassInSight;
+    }
+
     /** Over a carcass, a growl at a meat eater that comes too near; after eating, the face rubbed on the ground. */
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        if ((this.tickCount + this.getId()) % 20 == 5) {
+            this.carcassInSight = !this.isTame() && !this.isSated() && !this.level().getEntitiesOfClass(CarcassEntity.class,
+                    this.getBoundingBox().inflate(24.0D), CarcassEntity::hasMeat).isEmpty();
+        }
         if (this.carcassActCooldown > 0) {
             this.carcassActCooldown--;
             return;
@@ -225,6 +257,7 @@ public abstract class Tyrannosaurine extends ApexTheropod {
                 e -> e != this && e.isAlive() && !e.isBaby() && !(e instanceof Tyrannosaurine) && CarcassStealGoal.eatsMeat(e))) {
             this.getLookControl().setLookAt(other, 30.0F, 30.0F);
             this.triggerAnim(ACTION_CONTROLLER, "threat");
+            this.logAct("carcass guard: growls at " + other.speciesId());
             this.playSound(this.roarSound(), 1.4F, 0.7F * this.getVoicePitch());
             this.carcassActCooldown = 160 + this.getRandom().nextInt(120);
             return;
@@ -237,6 +270,7 @@ public abstract class Tyrannosaurine extends ApexTheropod {
         if (this.isSated() && this.getRandom().nextInt(2) == 0) {
             this.carcassActCooldown = 70;
             this.triggerAnim(ACTION_CONTROLLER, "face_rub");
+            this.logAct("face rub after eating");
         }
     }
 

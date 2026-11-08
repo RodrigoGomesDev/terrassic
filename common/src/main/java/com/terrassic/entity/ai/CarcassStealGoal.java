@@ -104,6 +104,7 @@ public class CarcassStealGoal extends Goal {
         this.ticks = 0;
         this.repath = 0;
         this.mob.getNavigation().moveTo(this.rival, 1.0D);
+        this.mob.logAct("steal carcass: walks in on a " + this.rival.speciesId());
     }
 
     @Override
@@ -135,6 +136,7 @@ public class CarcassStealGoal extends Goal {
             this.mob.getNavigation().stop();
             this.roarTick = 0;
             this.mob.stealRoar(this.rival);
+            this.mob.logAct("steal carcass: roars at the " + this.rival.speciesId());
             // the one on the carcass looks up at it
             this.rival.getLookControl().setLookAt(this.mob, 30.0F, 30.0F);
             return;
@@ -147,6 +149,7 @@ public class CarcassStealGoal extends Goal {
         }
         if (t == GIVE_UP_AT) {
             if (this.mob.frightens(this.rival)) {
+                this.mob.logAct("steal carcass: the " + this.rival.speciesId() + " gives it up");
                 // it gives the carcass up: put off food for a while, it walks away from the thief
                 this.rival.setSated(SCARED_TICKS);
                 this.rival.getNavigation().stop();
@@ -158,6 +161,7 @@ public class CarcassStealGoal extends Goal {
                 this.rival.getNavigation().moveTo(to.x, to.y, to.z, 1.3D);
             } else {
                 // an equal or a bigger one: it has to be fought for
+                this.mob.logAct("steal carcass: the " + this.rival.speciesId() + " stands, they fight");
                 this.mob.setTarget(this.rival);
                 this.rival.setTarget(this.mob);
             }

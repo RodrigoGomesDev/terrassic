@@ -334,6 +334,7 @@ public class DuelGoal extends Goal {
             }
             case SPECIAL -> {
                 anim = this.style.special();
+                com.terrassic.entity.Tyrannosaurine.duelMove(this.mob, anim);
                 this.hitTick = this.style.specialHit();
                 this.totalTicks = this.style.specialTotal();
             }
@@ -638,6 +639,7 @@ public class DuelGoal extends Goal {
                 this.stateTick = 0;
                 this.parried = false;
                 this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, "parry");
+                com.terrassic.entity.Tyrannosaurine.duelMove(this.mob, "parry");
             }
         }
     }

@@ -534,7 +534,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=110, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=13, ATTACK_KNOCKBACK=1.3, ARMOR=6, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=30),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.8, 1.8, 240), step=("RAVAGER_STEP", 0.8, 0.7),
-      xp=32, step_height=1.3, head=(38, 28), rideable=True, jump=0.45, ride_offset=3.43, ride_forward=1.09, ride_speed=1.05,
+      xp=32, step_height=1.3, head=(38, 28), rideable=True, jump=0.45, ride_offset=3.37, ride_forward=1.09, ride_speed=1.05,
       prey="e.getBbWidth() < 3.0F && !(e instanceof Daspletosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
       roar=True, pack=True, apex=True, rig="Tyrannosaurine", prey_interval=180, saddle="DASPLETOSAURUS_SADDLE"),
  dict(id="albertosaurus", cls="Albertosaurus", base="PredatorDinosaur",

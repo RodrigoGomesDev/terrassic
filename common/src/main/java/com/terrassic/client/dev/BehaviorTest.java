@@ -115,6 +115,9 @@ public final class BehaviorTest {
         if (only.contains("look")) {
             planLook();
         }
+        if (only.contains("daspleto")) {
+            planDaspleto();
+        }
         if (only.contains("steps")) {
             planSteps();
         }
@@ -438,7 +441,7 @@ public final class BehaviorTest {
     private static void planLook() {
         double x0 = 4400.5D;
         String[] all = {"tyrannosaurus", "triceratops", "edmontosaurus", "quetzalcoatlus", "therizinosaurus", "deinosuchus",
-                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus"};
+                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus"};
         for (String sp : all) {
             UUID u = id();
             STEPS.add(mc -> {
@@ -468,6 +471,114 @@ public final class BehaviorTest {
                     return 2;
                 });
             }
+        }
+    }
+
+    /** 1.10.1, the Daspletosaurus pilot (art/daspletosaurus/PILOTO.md): photos in the real client (side, three
+     *  quarters, the head, male and female, next to a T. rex) and its carcass theft: a hungry one walks in on a
+     *  Dakotaraptor at a carcass (under half its size: it must give the carcass up) and on a T. rex (bigger: a fight). */
+    private static void planDaspleto() {
+        double x0 = 5200.5D;
+        UUID male = id(), female = id(), rex = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Daspletosaurus (1.10.1 pilot)");
+            clear(mc, x0, 40);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+            command(mc, "time set 6000");
+            summon(mc, "daspletosaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            return 40;
+        });
+        String[][] views = {{"side", "0", "0.15", "1"}, {"tq", "0.75", "0.35", "0.75"}, {"front", "-1", "0.25", "0.1"}};
+        for (String[] v : views) {
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, male);
+                if (d == null) {
+                    REPORT.add("  daspleto photo: NOT FOUND");
+                    return 1;
+                }
+                double r = 4.0D + d.getBbWidth() * 2.5D + d.getBbHeight() * 1.2D;
+                Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.55D, 0.0D);
+                look(mc.player, c.add(Double.parseDouble(v[1]) * r, Double.parseDouble(v[2]) * r, Double.parseDouble(v[3]) * r), c);
+                return 40;
+            });
+            STEPS.add(mc -> {
+                Screenshot.grab(mc.gameDirectory, "behavior_daspleto_" + v[0] + ".png", mc.getMainRenderTarget(), msg -> {
+                });
+                return 2;
+            });
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, male);
+            if (d != null) {
+                // the head close: from its left, a little in front, at eye height
+                double k = d.getBbHeight();
+                Vec3 head = d.position().add(-0.95D * k, 0.95D * k, 0.0D);
+                look(mc.player, head.add(-0.6D * k, 0.1D * k, 1.0D * k), head);
+                REPORT.add(String.format(Locale.ROOT, "  daspleto size: hitbox %.2f x %.2f, scale %.3f", d.getBbWidth(), d.getBbHeight(), d.getScale()));
+            }
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_daspleto_head.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 2;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "daspletosaurus", x0, Y, 9.5D, female, "NoAI:1b,Female:1b,Rotation:[90f,0f]");
+            summon(mc, "tyrannosaurus", x0, Y, -10.5D, rex, "NoAI:1b,Rotation:[90f,0f]");
+            look(mc.player, new Vec3(x0 + 2.0D, Y + 9.0D, 38.0D), new Vec3(x0, Y + 3.0D, 0.0D));
+            return 60;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_daspleto_with_rex.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 2;
+        });
+        // the carcass thief, twice: a smaller predator on the carcass, then a bigger one
+        for (String holder : new String[]{"dakotaraptor", "tyrannosaurus"}) {
+            UUID thief = id(), owner = id(), prey = id();
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+                summon(mc, "edmontosaurus", x0, Y, 0.5D, prey, "NoAI:1b");
+                return 20;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity p = server(mc, prey);
+                if (p != null) {
+                    mc.getSingleplayerServer().execute(() -> p.hurt(p.damageSources().generic(), 100000.0F));
+                }
+                return 80;
+            });
+            STEPS.add(mc -> {
+                summon(mc, holder, x0 + 5.0D, Y, 0.5D, owner, "Hunger:20");
+                summon(mc, "daspletosaurus", x0 - 22.0D, Y, 0.5D, thief, "Hunger:20,Rotation:[-90f,0f]");
+                look(mc.player, new Vec3(x0 - 8.0D, Y + 16.0D, 26.0D), new Vec3(x0 - 6.0D, Y, 0.5D));
+                return 20;
+            });
+            for (int i = 0; i < 6; i++) {
+                int k = i;
+                STEPS.add(mc -> {
+                    Screenshot.grab(mc.gameDirectory, "behavior_daspleto_steal_" + holder + "_" + k + ".png", mc.getMainRenderTarget(), msg -> {
+                    });
+                    return 60;
+                });
+            }
+            STEPS.add(mc -> {
+                DinosaurEntity t = server(mc, thief), o = server(mc, owner);
+                if (t == null || o == null) {
+                    REPORT.add("  steal from " + holder + ": NOT FOUND");
+                    return 1;
+                }
+                java.util.List<com.terrassic.entity.CarcassEntity> cs = mc.getSingleplayerServer().overworld().getEntitiesOfClass(
+                        com.terrassic.entity.CarcassEntity.class, new net.minecraft.world.phys.AABB(x0 - 12, Y - 3, -12, x0 + 12, Y + 6, 12));
+                double tc = cs.isEmpty() ? -1 : Math.sqrt(t.distanceToSqr(cs.get(0)));
+                double oc = cs.isEmpty() ? -1 : Math.sqrt(o.distanceToSqr(cs.get(0)));
+                REPORT.add(String.format(Locale.ROOT, "  steal from %s: thief %.1f blocks from the carcass, target %s, sated %b; holder %.1f blocks away, sated %b, target %s, alive %b",
+                        holder, tc, t.getTarget() == null ? "none" : t.getTarget().getType().toShortString(), t.isSated(), oc, o.isSated(),
+                        o.getTarget() == null ? "none" : o.getTarget().getType().toShortString(), o.isAlive()));
+                return 1;
+            });
         }
     }
 
@@ -1040,7 +1151,7 @@ public final class BehaviorTest {
     private static void planJaws() {
         String[] all = {"edmontosaurus", "pteranodon", "quetzalcoatlus", "parasaurolophus", "triceratops", "tyrannosaurus",
                 "carnotaurus", "giganotosaurus", "spinosaurus", "styracosaurus", "protoceratops", "pachycephalosaurus",
-                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus"};
+                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2800.5D;
         STEPS.add(mc -> {
@@ -1116,7 +1227,7 @@ public final class BehaviorTest {
     private static void planGaits() {
         String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
                 "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
-                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus"};
+                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2600.5D;
         STEPS.add(mc -> {
@@ -1281,7 +1392,7 @@ public final class BehaviorTest {
         String[][] pairs = {{"tyrannosaurus", "tyrannosaurus"}, {"carnotaurus", "carnotaurus"}, {"giganotosaurus", "giganotosaurus"},
                 {"spinosaurus", "triceratops"}, {"triceratops", "triceratops"}, {"pachycephalosaurus", "pachycephalosaurus"},
                 {"dakotaraptor", "styracosaurus"}, {"therizinosaurus", "therizinosaurus"}, {"styracosaurus", "styracosaurus"}, {"protoceratops", "protoceratops"},
-                {"ankylosaurus", "tyrannosaurus"}};
+                {"ankylosaurus", "tyrannosaurus"}, {"daspletosaurus", "daspletosaurus"}};
         double x0 = 2000.5D;
         // the arena's chunks loaded and settled before the first pair (on a fresh world the first pair spawned into
         // terrain still being generated and was thrown about, 06/11)
@@ -1377,12 +1488,12 @@ public final class BehaviorTest {
 
     /** Every species' new one-shots and loops (06/11/2026), triggered one after another and logged. */
     private static void planAllMoves() {
-        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops",
+        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops", "daspletosaurus",
                 "styracosaurus", "protoceratops", "pachycephalosaurus", "parasaurolophus", "edmontosaurus", "gallimimus",
                 "ankylosaurus", "therizinosaurus", "deinosuchus", "pteranodon", "quetzalcoatlus"};
         String[] moves = {"feint", "block", "recoil", "submit", "lie_down", "get_up", "ram", "head_clash", "grab_shake", "claw_swipe",
                 "sail_display", "leap_back", "nose_jab", "frill_shove", "horn_lock_start", "flank_butt", "kick_back", "body_shove",
-                "club_duel", "claw_slash", "gape_threat", "jab", "crest_display"};
+                "club_duel", "claw_slash", "gape_threat", "jab", "crest_display", "face_bite", "jaw_test", "steal_roar", "face_rub"};
         double x0 = 2200.5D;
         for (String sp : species) {
             UUID u = id();

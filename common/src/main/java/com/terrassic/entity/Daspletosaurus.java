@@ -99,7 +99,7 @@ public class Daspletosaurus extends Tyrannosaurine {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 3.36D * this.getScale();
+        return 3.31D * this.getScale();
     }
 
     @Override
