@@ -43,13 +43,16 @@ SCHEME = {
     "b0": "727b82", "b1": "7f878f", "b2": "8c949c", "b3": "99a2a9",
     "hn0": "1f1b1a", "hn1": "34302c", "hn2": "4c463f",
     "oc0": "8a5a30", "oc1": "a8723c", "oc2": "c4843a", "st": "919aa1", "lip": "737d86",
+    # padrão v3.1: the BONE greys of the rugose roof, nasals, brow and dome (the skull lit from above, lighter than
+    # the face's sides; the same blue-grey family, a little warmer and paler toward the knobs)
+    "bn0": "6c7d8b", "bn1": "8696a2", "bn2": "a6b1b8",
     "female": {"k1": "163143", "k2": "254055", "k3": "365066", "k4": "486175", "k5": "5d7283",
                "b0": "757d84", "b1": "828a91", "b2": "8e979f", "oc0": "4a4440", "oc1": "5c5650",
                "oc2": "6e665c"},
 }
 PAL = {
     "ker0": hx("1e1a18"), "ker1": hx("362e2a"), "ker2": hx("cfc4a8"), "ker3": hx("a09276"),
-    "iris": hx("a9c063"), "iris2": hx("6f8a3c"), "pupil": hx("0f0b0c"), "lid": hx("120f14"), "glint": hx("f2ead2"),
+    "iris": hx("b4c65a"), "iris2": hx("74903c"), "iris3": hx("c09a44"), "pupil": hx("0f0b0c"), "lid": hx("120f14"), "glint": hx("f2ead2"),
     "gum": hx("7a3a3e"), "mouth": hx("3a1b20"), "tongue": hx("9c5250"), "tooth": hx("eee6cf"), "tooth2": hx("c6b796"),
 }
 
@@ -95,15 +98,22 @@ def head(m, parent, hy, hz, rest=(-4, 0, 0)):
     m.pair(sk, sk, *B(5.5, 1, -3, 6.5, 6, 0), name="temporal")           # the jaw muscle bulging behind the eye
     # the rugose brow over the eye: a ridge of the postorbital and lacrimal standing out of the cranium's side, its
     # front jutting past the cranium over the socket
-    m.pair(sk, sk, *B(4.5, 7.5, -7.5, 6.5, 9.5, -2.5), name="brow", mat="brow")
+    # padrão v3.1: a HEAVY overhang, a full px out past the cranium and a px forward of it, so its dark underside
+    # roofs the eye like a hood (the eye sits in its shadow, deep-set)
+    m.pair(sk, sk, *B(5, 7.5, -8, 7, 10.5, -2), name="brow", mat="brow")
     # THE DOME: one rounded knob on the fused frontals, over and just behind the eyes (no brow horns), rising out of
     # the roof in two swellings of skin and a small keratin cap; each starts inside the one under it
     # it leans forward a little (the knob's front slope runs on from the nasal ridge), so it is not a stack of level
     # boxes on a level roof
+    # padrão v3.1: the knob is FOUR thin layers of 1 to 1.5 px, each starting half a px inside the one under it and
+    # half a px to 1.5 px shorter at each end, so the silhouette from the side and in 3/4 is a low rounded hump (a
+    # pixel-art arc: long runs at the foot, short at the crown) and not a stair of boxes; all of it the skull's own
+    # rugose bone, the crown its palest knobs (no keratin lid)
     do = (0, hy + 10, hz - 4)
-    m.cube(sk, *B(-3.5, 9, -9, 3.5, 11, 0), name="dome_base", mat="dome", rot=DOME_ROT, origin=do)
-    m.cube(sk, *B(-2.5, 10.5, -7, 2.5, 12.5, -1), name="dome", mat="dome", rot=DOME_ROT, origin=do)
-    m.cube(sk, *B(-1.5, 12, -6, 1.5, 14, -3), name="dome_cap", mat="horn", rot=DOME_ROT, origin=do)
+    for k, (w, y0, y1, z0, z1) in enumerate(((4.0, 9.0, 11.0, -11.0, 0.0), (3.5, 10.0, 12.0, -9.0, -1.0),
+                                              (3.0, 11.0, 13.0, -8.0, -2.0), (2.0, 12.5, 13.5, -7.0, -3.0))):
+        m.cube(sk, *B(-w, y0, z0, w, y1, z1), name=("dome_base", "dome", "dome_top", "dome_cap")[k], mat="dome",
+               rot=DOME_ROT, origin=do)
     m.cube(sk, *B(-4.5, 0, -14, 4.5, 7, -7), name="maxilla")              # the broad, blunt snout
     m.cube(sk, *B(-3.5, 5, -14, 3.5, 10, -7), name="snout", rot=TOP_ROT, origin=so)
     m.cube(sk, *B(-3.5, 0, -16, 3.5, 6, -14), name="premax")
@@ -119,7 +129,8 @@ def head(m, parent, hy, hz, rest=(-4, 0, 0)):
     # the short, recurved teeth (the "crenatissimus": finely serrated) as alpha planes. The upper row hangs just
     # OUTSIDE the lower jaw (4.25 > 4) under the maxilla's lip (4.5): with the mouth shut the crowns show over the
     # jaw's side and the lips cover only their base; the lower row stays inside the snout
-    m.pair(sk, sk, *B(4.25, -2, -14, 4.25, 0, -7), name="teeth_up", mat="teeth")
+    # (v3.1: the row runs on under the premaxilla, 9 px, so five short cones fit with uneven gaps)
+    m.pair(sk, sk, *B(4.25, -2, -16, 4.25, 0, -7), name="teeth_up", mat="teeth")
     m.pair(jaw, jaw, *B(3, -1, -15, 3, 2, -7), name="teeth_lo", mat="teeth_lo")
     return sk
 
@@ -393,24 +404,38 @@ def _pit_step(base, k, floor="k0"):
     return skin2.step(base, k)
 
 
-def _ochre(t, sex):
-    """the male's display skin, where the study puts it: round the dome and on the rugose brow. Not a bar or a
-    patch: the KNOBS of the dome's swellings, of the brow and of the back of the nasal ridge are ochre-tipped
-    (warts flushed with blood), thinning out forward. The female has none"""
-    if sex != "male":
+# padrão v3.1: the head's own value ladder, from the dark under the brow to the palest bone knob
+HL = ["k0", "k1", "k2", "k3", "k4", "k5", "bn0", "bn1", "bn2"]
+
+
+def hstep(key, d):
+    return HL[max(0, min(len(HL) - 1, HL.index(key) + d))]
+
+
+def _bone(base, k, knob=1, pore=-2):
+    """rugose BONE seen from above: the knobs a step (or `knob` steps) paler, the pits `pore` steps darker, so the
+    roof reads light with dark only in its pits"""
+    return hstep(base, knob if k == 1 else (pore if k == -2 else k))
+
+
+def _ochre(t, sex, rows=2):
+    """the male's display skin, ONLY round the foot of the dome (study 13: a muted ochre-rust skin at its base): on
+    the lowest rows of the dome's foot, broken into patches by a soft noise and its knobs, never a ring or a bar.
+    The female has none"""
+    if sex != "male" or t.face in ("up", "down") or t.j < t.h - rows:
         return None
-    k = bone_pits(t, cell=2.6, seed=62, knobs=2)
-    if k == 1:
-        return "oc2"
-    if k == -1:
-        return "oc0"
-    return None
+    u, v = skin2.surface_uv(t)
+    if skin2.soft(u, v, 1.3, seed=61) < 0.36:
+        return None
+    k = bone_pits(t, cell=2.2, seed=62, knobs=2)
+    return "oc2" if k == 1 else ("oc0" if k == -2 or t.j == t.h - 1 else "oc1")
 
 
 def head_tone(t, sex):
-    """the face: dark crown, middle cheek, pale lips by height, all of it rugose bone (bone_pits) - the deep maxilla
-    pitted with the foramina in rows, the cheek looser; a THICK lip of wrinkled skin (two rows, the lower one
-    pitted) over a plain dark mouth line; the pale neck stripe starts at the jaw corner"""
+    """padrão v3.1: the VALUE structure of a heavy rugose head. The roof, the snout's top and everything facing up are
+    pale rugose bone (bn0..bn2, pits dark), the face's sides a step under them (k4/k5, lighter toward the roof), the
+    dark only in the pits, the mouth line and under the brow; a PALE lip line over the mouth and a pale lower jaw.
+    The pale neck stripe starts at the jaw corner"""
     n = t.cube["name"]; f = t.face
     if f == "down":
         return "b1"
@@ -419,53 +444,51 @@ def head_tone(t, sex):
             return "k4"
         h = t.rel[1]
         if t.j == 0:
-            return "k2"                       # the lower lip, wrinkled, not a hard line
+            return "b3"                       # the pale lower lip, the line the shut mouth reads by
         if n == "jaw_back" and f in ("east", "west") and 0.4 < h < 0.75 and t.rel[2] > 0.5:
             return "st"
-        base = "b1" if h < 0.3 else ("b2" if h < 0.55 else "k4")
-        return _pit_step(base, bone_pits(t, cell=2.4, seed=33, knobs=3), "k2")
-    if f == "up":
-        if n in ("snout", "premax", "maxilla"):
-            return _pit_step("k2", bone_pits(t, cell=2.2, seed=21, knobs=2))
-        return _pit_step("k2", bone_pits(t, cell=2.1, seed=24, knobs=2))
+        base = "b1" if h < 0.35 else "b2"
+        return _pit_step(base, bone_pits(t, cell=2.4, seed=33, knobs=3), "k3")
+    if f == "up":                             # the roof and the snout's top: pale bone, knobbed and pitted
+        k = bone_pits(t, cell=2.1, seed=21 if n in ("snout", "premax", "maxilla") else 24, knobs=2)
+        return _bone("bn0", k)
     if n in ("maxilla", "premax"):
         if t.j == t.h - 1:
             return "k1"                       # the mouth line, soft under the thick lip
         if t.j == t.h - 2:
-            return "k4" if bone_pits(t, cell=2.0, seed=27, knobs=4) >= 0 else "k3"   # the lip's wrinkles
+            return "b2" if bone_pits(t, cell=2.0, seed=27, knobs=4) >= 0 else "lip"   # the pale upper lip, wrinkled
         if t.j == t.h - 3:
-            return "k3"
+            return "k4"
     hv = (t.P[1] - HEAD_Y[0]) / max(1.0, HEAD_Y[1] - HEAD_Y[0])
-    # the bare face a step lighter than the body's slate, so the pits and knobs read on it
-    base = ["k5", "k4", "k3"][skin2.bands(hv, t.P[2] * 2.0, (0.38, 0.70), amp=0.07, seed=31)]
+    # the sides: slate low (on with the neck), a step lighter up the face, so the roof's bone stands over them
+    base = ["k3", "k4", "k5"][skin2.bands(hv, t.P[2] * 2.0, (0.40, 0.76), amp=0.07, seed=31)]
     if n in ("cranium", "temporal") and f in ("east", "west"):
         # the bag of skin under the deep-set eye: a fold that catches the light, its crease under it
         dz = t.P[2] - EYE[0]; dy = t.P[1] - EYE[1]
         if -2.0 < dz < 2.5 and -3.6 < dy < -2.6:
-            return "k5"
+            return "bn0"
         if -1.5 < dz < 3.0 and -4.6 < dy < -3.6:
             return "k3"
-        oc = _ochre(t, sex) if dy > -1.0 and dz > 1.5 else None
-        if oc:
-            return oc
     if n in ("maxilla", "premax", "snout") and f in ("east", "west", "north"):
         k = bone_pits(t, cell=2.0, seed=9, knobs=2)
-        return _pit_step(base, 2 if k == 1 else k)      # the knobs of the snout: big lumps, two steps up
-    return _pit_step(base, bone_pits(t, cell=2.4, seed=32, knobs=2))
+        return _bone(base, k, knob=2)         # the snout's knobs: big lumps, two steps up
+    return _bone(base, bone_pits(t, cell=2.4, seed=32, knobs=2))
 
 
 def teeth_up(t, p):
-    """FEW short conical teeth (a short snout: 7 px of row), uneven: each a cone, two texels wide at the root under
-    the lip and one at the tip, the thin spike of a new tooth among them (it replaced its teeth every two months, study 13),
-    the gaps irregular. Columns from the FRONT"""
+    """FEW short conical teeth on a short snout, but enough to read from the side (padrão v3.1: 9 px of row, five
+    teeth), uneven: cones two texels wide at the root under the lip and one at the tip, single spikes, and the duller
+    thin spike of a new tooth coming in (it replaced its teeth every two months, study 13), the gaps irregular.
+    Columns from the FRONT"""
     if t.face not in ("east", "west"):
         return None
     col = int(math.floor(t.L[2] - t.cube["from"][2])); row = t.j
-    # (first column, root width, rows, tip column offset) of each tooth
-    for c0, wide, rows, tip in ((0, 1, 2, 0), (2, 2, 2, 1), (5, 2, 2, 0)):
+    # (first column, root width, rows, tip column offset, tone) of each tooth
+    for c0, wide, rows, tip, tone in ((0, 1, 2, 0, "tooth"), (2, 2, 2, 1, "tooth"), (5, 1, 2, 0, "tooth"),
+                                      (6, 1, 1, 0, "tooth2"), (8, 1, 2, 0, "tooth")):
         if c0 <= col < c0 + wide and row < rows:
             if wide == 1:
-                return p["tooth2"]                               # the new tooth coming in: a thin, duller spike
+                return p[tone]
             if row == 0:
                 return p["tooth2"] if col == c0 + wide - 1 else p["tooth"]
             return p["tooth"] if col == c0 + tip else None
@@ -510,37 +533,33 @@ def shader_for(sex):
             return saddle_px(t)
         if mat == "claw":
             return p["ker0"] if f != "up" else p["ker1"]
-        if mat == "horn":       # the knob's crown: worn pale keratin on top only, pitted; the cap's sides skin
+        if mat == "dome":       # padrão v3.1: the knob is the skull's own rugose bone, paler layer by layer up
+            k = ("dome_base", "dome", "dome_top", "dome_cap").index(n)     # to the crown (lit from above, round)
+            pits = bone_pits(t, cell=2.0, seed=63 + k, knobs=2)
             if f == "up":
-                return p["ker3"] if bone_pits(t, cell=1.8, seed=5, knobs=2) < 0 else p["ker2"]
-            if t.j == 0:
-                return p["k5"]
-            return p[_pit_step("k4", bone_pits(t, cell=2.0, seed=68, knobs=2))]
-        if mat == "dome":       # the swellings the dome rises out of: the roof's own skin, knobbed and pitted
-            oc = _ochre(t, sex) if n == "dome_base" else None      # the warts flush only at the dome's foot
-            if oc and f in ("east", "west", "north"):
-                return p[oc]
-            # the face's own tones carried up into it (the crown band k3, a step lighter at its foot where it
-            # swells out of the roof), so it reads as the skull grown up, not a box set on it
-            if f == "up":
-                return p[_pit_step("k3", bone_pits(t, cell=2.2, seed=63, knobs=2))]
-            return p[_pit_step("k4" if t.j >= t.h - 1 else "k3", bone_pits(t, cell=2.2, seed=64, knobs=2))]
-        if mat == "brow":       # the heavy rugose brow over the socket: knobs on top, a deep shadow under it
+                return p[_bone(("bn0", "bn1", "bn1", "bn2")[k], pits, pore=-3 if k == 3 else -2)]
+            if k == 0:
+                oc = _ochre(t, sex)
+                if oc:
+                    return p[oc]
+            side = ("k5", "bn0", "bn0", "bn1")[k]
+            if t.j == 0 and k < 3:
+                side = hstep(side, 1)                  # the rim turning into the layer above
+            return p[_bone(side, pits)]
+        if mat == "brow":       # the heavy rugose brow: pale knobbed bone on top, its underside the eye's shadow
             if f == "down":
                 return p["k0"]
-            if f in ("east", "west") and t.j == t.h - 1:
-                return p["k0"]
-            oc = _ochre(t, sex)
-            if oc:
-                return p[oc]
-            return p[_pit_step("k3" if f == "up" else "k2", bone_pits(t, cell=2.0, seed=65, knobs=2))]
-        if mat == "plate":      # the thick fused nasals: a broad ridge, knobbed and pitted, the knobs ochre on the
-            oc = _ochre(t, sex) if t.rel[2] > 0.5 else None             # male toward the dome
-            if oc and f in ("up", "north", "east", "west"):
-                return p[oc]
+            if f in ("east", "west", "north") and t.j == t.h - 1:
+                return p["k1"]
+            if f in ("east", "west", "north") and t.j == 0:
+                return p[_bone("bn1", bone_pits(t, cell=2.0, seed=66, knobs=2))]
+            return p[_bone("bn1" if f == "up" else "bn0", bone_pits(t, cell=2.0, seed=65, knobs=2))]
+        if mat == "plate":      # the thick fused nasals: a broad ridge of pale knobbed bone
             if f in ("up", "north"):
-                return p[_pit_step("k3", bone_pits(t, cell=1.9, seed=67, knobs=2))]
-            return p["k1"] if t.j == t.h - 1 else p[_pit_step("k2", bone_pits(t, cell=2.0, seed=69, knobs=2))]
+                return p[_bone("bn1", bone_pits(t, cell=1.9, seed=67, knobs=2), pore=-3)]
+            if t.j == t.h - 1:
+                return p["k3"]
+            return p[_bone("bn0" if t.j == 0 else "k5", bone_pits(t, cell=2.0, seed=69, knobs=2))]
         if mat == "teeth":
             return teeth_up(t, p)
         if mat == "teeth_lo":
@@ -573,10 +592,11 @@ STRIPE = [0.0, 0.0]       # rest-pose y and z of the jaw corner (the neck stripe
 # THE EYE: small and deep-set under the heavy brow (the brow's own shadow is its top lid, so no rim row on top);
 # a round pupil low in a lichen-green iris, the glint at the FRONT top where the light comes in under the brow;
 # below it the fold and crease of the eye bag are painted by head_tone
-EYE_ART = [
-    "dgiid",
-    "dIpid",
-    ".ddd.",
+EYE_ART = [   # padrão v3.1: bigger (an iris of 3 x 2 and more), a low round pupil, an amber fleck, the socket under it
+    "dgiiid",
+    "diippd",
+    "dIIaId",
+    ".ssss.",
 ]
 NOSTRIL = [      # a big round nostril high on the blunt snout, its rugose rim lit above and a pore behind it
     ".hh.",
@@ -588,7 +608,7 @@ NOSTRIL = [      # a big round nostril high on the blunt snout, its rugose rim l
 def decals_for(sex):
     p = pal_for(sex)
     cm = {"d": p["k0"], "g": p["glint"], "i": p["iris"], "I": p["iris2"], "p": p["pupil"], "n": p["k0"],
-          "h": p["k4"]}
+          "h": p["bn0"], "a": p["iris3"], "s": p["k1"]}
 
     def dec(img, m):
         C = {c["name"]: c for c in m.cubes if c["mirror_of"] is None}
