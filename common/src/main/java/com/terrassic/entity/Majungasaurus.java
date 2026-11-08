@@ -51,7 +51,7 @@ public class Majungasaurus extends Majungasaurine {
                 .add(Attributes.MAX_HEALTH, 170.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.27D)
                 .add(Attributes.ATTACK_DAMAGE, 11.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.4D)
                 .add(Attributes.ARMOR, 5.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.85D)
                 .add(Attributes.FOLLOW_RANGE, 24.0D);

@@ -300,8 +300,8 @@ def body_tone(t, prof, sex):
     base = ["b1", "b0", "k4", "k3", "k2"][b]
     # the pale stripe down the side of the neck: from the jaw corner, slanting down toward the shoulder
     if n in ("neck1", "neck2", "shoulders", "throat") and f in ("east", "west"):
-        yc = STRIPE[0] + (z - STRIPE[1]) * -0.35
-        if abs(y - yc) < 1.0 + 0.25 * skin2.soft(z, 0, 3.0, seed=70) and z < STRIPE[1] + 10:
+        yc = STRIPE[0] + (z - STRIPE[1]) * -0.3
+        if abs(y - yc) < 0.9 + 0.4 * skin2.soft(z, 0, 3.0, seed=70) and z < STRIPE[1] + 16:
             return "st"
     # the broad ragged crossbands from the spine down to their own depth
     for k, (zc, half, low) in enumerate(BANDS):
@@ -486,5 +486,5 @@ def paint_sex(m, sex="male"):
     HEAD_Y[:] = [min(a.min() for a in ys), max(a.max() for a in ys)]
     DOME[0] = float(pts["dome"][:, 2].mean())
     jb = pts["jaw_back"]
-    STRIPE[:] = [float(jb[:, 1].max()) - 2.0, float(jb[:, 2].max())]
+    STRIPE[:] = [float(jb[:, 1].max()) + 3.0, float(jb[:, 2].max())]
     return P.paint(m, shader_for(sex), decals=(decals_for(sex),))

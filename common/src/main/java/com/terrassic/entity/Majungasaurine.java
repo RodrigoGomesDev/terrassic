@@ -92,6 +92,8 @@ public abstract class Majungasaurine extends ApexTheropod {
     /** The warning: the dome shown to a player this close; it attacks one who then comes within WARN_ATTACK. */
     private static final double WARN_RANGE = 8.0D;
     private static final double WARN_ATTACK = 4.5D;
+    /** Below this hunger two of them at one carcass fight for it (a few bites in, the first is still this hungry). */
+    private static final int FIGHT_HUNGER = 70;
     private static final String[] GESTURES = {"sniff", "look_back", "shake", "yawn", "stretch", "snort", "snort",
             "settle", "settle", "scan", "scan"};
     private static final String[] GESTURES_MALE = {"sniff", "look_back", "shake", "yawn", "stretch", "snort", "snort",
@@ -132,8 +134,10 @@ public abstract class Majungasaurine extends ApexTheropod {
     private int warnedUntil;
     public int waterholeCooldown = 600;
     public int threatCooldown;
-    private int carcassFightCooldown = 200;
+    private int carcassFightCooldown;
     private int cannibalLogged = -1;
+    private int loggedRival = -1;
+    private int loggedRivalUntil;
 
     protected Majungasaurine(EntityType<? extends Majungasaurine> type, Level level) {
         super(type, level);
@@ -287,6 +291,9 @@ public abstract class Majungasaurine extends ApexTheropod {
         this.escapeHits = 0;
         this.endBurst();
         this.setMode(MODE_HOLD);
+        // the jaws close and hold: the blow's knockback does not throw it out of them
+        target.setDeltaMovement(Vec3.ZERO);
+        target.hurtMarked = true;
         boolean carry = !(target instanceof Player) && Tyrannosaurine.linearSize(target) <= CARRY_SIZE * Tyrannosaurine.linearSize(this);
         this.logAct(String.format("hold: bites and holds the %s (%s, %.1f s)", target.getType().toShortString(),
                 target instanceof Player ? "a player: slowed, escapes by hitting it" : carry ? "carried in the jaws" : "too big to carry, pinned",
@@ -324,7 +331,7 @@ public abstract class Majungasaurine extends ApexTheropod {
             return;
         }
         double reach = this.getBbWidth() * 0.5D + t.getBbWidth() * 0.5D + 4.0D * this.getScale();
-        if (this.distanceToSqr(t) > reach * reach || this.isVehicle() || this.isKnockedOut() || this.isDueling()) {
+        if ((this.holdAge > 10 && this.distanceToSqr(t) > reach * reach) || this.isVehicle() || this.isKnockedOut() || this.isDueling()) {
             this.release("pulled free");
             return;
         }
@@ -438,7 +445,8 @@ public abstract class Majungasaurine extends ApexTheropod {
         if (burst) {
             this.burstTarget = target.getId();      // before the base hears of it: no roar, it charges
         }
-        boolean cannibal = !this.level().isClientSide() && target instanceof Majungasaurine && target != super.getTarget();
+        boolean cannibal = !this.level().isClientSide() && target instanceof Majungasaurine && target != super.getTarget()
+                && (target.getId() != this.loggedRival || this.tickCount > this.loggedRivalUntil);
         super.setTarget(target);
         if (burst) {
             if (super.getTarget() == target) {
@@ -448,10 +456,12 @@ public abstract class Majungasaurine extends ApexTheropod {
             }
         }
         if (cannibal && super.getTarget() == target) {
-            this.logAct(this.isDueling() || this.duels(target)
-                    ? "takes on the majungasaurus #" + target.getId()
-                    : String.format("cannibal: hunts the wounded majungasaurus #%d (%d/%d, own hunger %d)", target.getId(),
-                    Math.round(target.getHealth()), Math.round(target.getMaxHealth()), this.getHunger()));
+            this.loggedRival = target.getId();
+            this.loggedRivalUntil = this.tickCount + 200;
+            this.logAct(cannibalPrey(this, target)
+                    ? String.format("cannibal: hunts the wounded majungasaurus #%d (%d/%d, own hunger %d)", target.getId(),
+                    Math.round(target.getHealth()), Math.round(target.getMaxHealth()), this.getHunger())
+                    : "goes after the majungasaurus #" + target.getId() + (this.duels(target) ? " (a duel)" : " (it hurt it)"));
         }
     }
 
@@ -536,12 +546,12 @@ public abstract class Majungasaurine extends ApexTheropod {
             this.cannibalLogged = carcass.getId();
             this.logAct("cannibal: eats the carcass of a majungasaurus (Rogers et al. 2003)");
         }
-        if (this.getTarget() != null || this.isSated() || !this.isHungry() || this.carcassFightCooldown > 0) {
+        if (this.getTarget() != null || this.isSated() || this.getHunger() >= FIGHT_HUNGER || this.carcassFightCooldown > 0) {
             return;
         }
         double r = 8.0D * this.getScale();
         for (Majungasaurine rival : this.level().getEntitiesOfClass(Majungasaurine.class, carcass.getBoundingBox().inflate(r),
-                m -> m != this && m.isAlive() && !m.isTame() && !m.isBaby() && m.isHungry() && !m.isDueling()
+                m -> m != this && m.isAlive() && !m.isTame() && !m.isBaby() && m.getHunger() < FIGHT_HUNGER && !m.isDueling()
                         && m.getTarget() == null && m.fightsInDuel())) {
             if (!this.canAttack(rival)) {
                 continue;
