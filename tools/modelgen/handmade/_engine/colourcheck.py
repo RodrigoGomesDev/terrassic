@@ -8,7 +8,7 @@ and raptors sit at 5-8 from each other). check() compares one species with every
 - against the old ones, closer than CLASH is a warning: they are remade one at a time and each gets a free colour
   then (docs/CORES.md).
 
-usage: python3 -B tools/modelgen/handmade/_engine/colourcheck.py protoceratops
+usage: python3 -B tools/modelgen/handmade/_engine/colourcheck.py protoceratops [female] [--remade]
 """
 import os
 import sys
@@ -19,7 +19,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 TEX = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic", "textures", "entity")
-HANDMADE = ("tyrannosaurus", "velociraptor", "pteranodon", "spinosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus", "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor")
+HANDMADE = ("tyrannosaurus", "velociraptor", "pteranodon", "spinosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus", "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus")
 CLASH = 10.0
 
 
@@ -40,7 +40,7 @@ def signature(path):
     return np.concatenate([p.mean(0) for p in parts])
 
 
-def check(species, tex_dir=TEX, sex="male", against=("male", "female")):
+def check(species, tex_dir=TEX, sex="male", against=("male", "female"), remade_only=False):
     """returns (errors, warnings, nearest): lists of (distance, other species). sex picks which of this species' skins
     is measured; against which skins of the others it is measured with (since the Mosasaurus, 02/11/2026: both, the
     females of the remade ones too, as the Parasaurolophus and the Ankylosaurus were measured by hand)"""
@@ -54,14 +54,17 @@ def check(species, tex_dir=TEX, sex="male", against=("male", "female")):
                 d = float(np.linalg.norm(mine - signature(os.path.join(tex_dir, fn))) / np.sqrt(3))
                 if o not in best or d < best[o]:
                     best[o] = d
-    dist = sorted((d, o) for o, d in best.items())
+    dist = sorted((d, o) for o, d in best.items() if not remade_only or o in HANDMADE)
     errors = [d for d in dist if d[0] < CLASH and d[1] in HANDMADE]
     warnings = [d for d in dist if d[0] < CLASH and d[1] not in HANDMADE]
     return errors, warnings, dist[:5]
 
 
 if __name__ == "__main__":
-    e, w, near = check(sys.argv[1], sex=sys.argv[2] if len(sys.argv) > 2 else "male", against=("male",))
+    # --remade: only against the remade species (study 14, 07/11/2026: the old models do not count any more)
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    e, w, near = check(args[0], sex=args[1] if len(args) > 1 else "male", against=("male",),
+                       remade_only="--remade" in sys.argv)
     print("nearest:", ", ".join(f"{o} {d:.1f}" for d, o in near))
     for d, o in w:
         print(f"  warning: {o} {d:.1f} (old model: gets a free colour when it is remade)")
