@@ -186,9 +186,10 @@ def bone_bed(seed):
         t.set(x, 1, 6, "minecraft:bone_block", axis="x")
     for x, z in ((3, 2), (12, 10), (7, 10)):
         t.set(x, 0, z, rng.choice(FOSSIL_SKULLS) + "_skull_fossil", facing=rng.choice(["north", "south", "east"]))
-    # scavengers picking at the bones
-    for x, z in ((6.5, 2.5), (10.5, 9.5), (3.5, 9.5)):
-        t.entity(x, 1, z, {"id": f"{NS}:compsognathus"})
+    # scavengers picking at the bones: Velociraptors until the Compsognathus is remade (1.10.1: species on their old
+    # model do not live in the world, config/Eras.REMADE; the playtest found the structure still placed them)
+    for x, z in ((6.5, 2.5), (10.5, 9.5)):
+        t.entity(x, 1, z, {"id": f"{NS}:{STAND_IN.get('compsognathus', 'compsognathus')}"})
     return t
 
 
@@ -295,6 +296,12 @@ def river_house(seed):
 # Maiasaura nesting colony: mounds of earth with clutches of eggs, the herd around them
 # ---------------------------------------------------------------------------------------------------------------
 
+# 1.10.1: the colony is the Maiasaura's, but while it is on its old model (not in config/Eras.REMADE) the Edmontosaurus,
+# a remade hadrosaur with its own eggs, nests there instead; put "maiasaura" back when it is remade
+STAND_IN = {"compsognathus": "velociraptor", "maiasaura": "edmontosaurus"}
+COLONY = STAND_IN.get("maiasaura", "maiasaura")
+
+
 def nest_colony(seed):
     rng = random.Random(seed)
     t = Template(21, 3, 21)
@@ -322,11 +329,11 @@ def nest_colony(seed):
         rng.shuffle(cells)
         n_eggs = rng.randint(1, 3)
         for x, z in cells[:n_eggs]:
-            t.set(x, 1, z, "maiasaura_egg", extra={"wild": "true"}, hatch="0")  # wild: hatch wild, parents defend
+            t.set(x, 1, z, COLONY + "_egg", extra={"wild": "true"}, hatch="0")  # wild: hatch wild, parents defend
         x, z = cells[n_eggs]
         t.set(x, 1, z, "straw_nest", facing=rng.choice(["north", "south", "east", "west"]))
     for x, z in ((7.5, 13.5), (13.5, 6.5), (3.5, 10.5), (16.5, 15.5)):
-        t.entity(x, 1, z, {"id": f"{NS}:maiasaura"})
+        t.entity(x, 1, z, {"id": f"{NS}:{COLONY}"})
     return t
 
 
