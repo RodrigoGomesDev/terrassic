@@ -229,6 +229,15 @@ public final class EcoSpawner {
             return 0;
         }
         int count = Math.min(budget, scaledGroup(level, pos, data, random));
+        if (!com.terrassic.entity.Behaviour.oldPopulation) {
+            // 1.10.1, the stable population: no more than the cell's share, less what it lost (RegionPopulation)
+            double here = rules.get(Rule.SPAWN_DENSITY) * VanillaShare.ecoFactor(level.getBiome(pos), rules);
+            int room = RegionPopulation.of(level).room(level, pos, cellShare(here, rules));
+            if (room <= 0) {
+                return 0;
+            }
+            count = Math.min(count, room);
+        }
         int spawned = 0;
         SpawnGroupData group = null;
         double spacing = Math.max(4.0D, data.type.getWidth() * 1.75D);
@@ -265,6 +274,48 @@ public final class EcoSpawner {
             }
         }
         return spawned;
+    }
+
+    /** A cell's share of wild land animals (RegionPopulation.CELL_TARGET at density 1, with the "Land" rule). */
+    public static int cellShare(double here, Rules rules) {
+        return Math.max(1, target(RegionPopulation.CELL_TARGET, here, rules.get(Rule.LAND_SPAWNS)));
+    }
+
+    /** A wild land animal died: its cell remembers it (1.10.1). */
+    public static void recordDeath(ServerLevel level, DinosaurEntity dino) {
+        if (com.terrassic.entity.Behaviour.oldPopulation || dino instanceof FlyingDinosaur || dino instanceof SwimmingDinosaur) {
+            return;
+        }
+        RegionPopulation.of(level).died(level, dino.blockPosition());
+    }
+
+    /** Test only (BehaviorTest "stable"): {@code n} land rounds for this player now, whatever the turn and the period;
+     *  returns how many were put in the world. */
+    public static int testLandRounds(ServerLevel level, ServerPlayer player, int n) {
+        Rules rules = Rules.of(level);
+        int before = 0;
+        for (Entity e : level.getAllEntities()) {
+            if (e instanceof DinosaurEntity d && !d.isTame()) {
+                before++;
+            }
+        }
+        WILD.put(level, before);
+        int cap = (int) rules.get(Rule.MAX_CREATURES);
+        double here = rules.get(Rule.SPAWN_DENSITY) * VanillaShare.ecoFactor(level.getBiome(player.blockPosition()), rules);
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            AABB box = new AABB(player.getX() - RADIUS, player.getY() - RADIUS, player.getZ() - RADIUS,
+                    player.getX() + RADIUS, player.getY() + RADIUS, player.getZ() + RADIUS);
+            int land = level.getEntitiesOfClass(DinosaurEntity.class, box, e -> !e.isTame() && !(e instanceof FlyingDinosaur)
+                    && !(e instanceof SwimmingDinosaur)).size();
+            int target = target(LAND_TARGET, here, rules.get(Rule.LAND_SPAWNS));
+            if (land < target) {
+                int was = WILD.get(level);
+                spawnRound(level, player, Kind.LAND, rules, level.getRandom(), SpawnBudget.allowance(target, land, cap, was));
+                total += WILD.get(level) - was;
+            }
+        }
+        return total;
     }
 
     private static boolean canStand(ServerLevel level, EntityType<?> type, BlockPos pos, RandomSource random) {
