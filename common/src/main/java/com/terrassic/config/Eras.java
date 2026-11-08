@@ -22,7 +22,7 @@ public final class Eras {
             "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops",
             "spinosaurus", "velociraptor", "pteranodon", "triceratops", "gallimimus", "pachycephalosaurus",
             "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus", "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor",
-            "daspletosaurus", "albertosaurus");
+            "daspletosaurus", "albertosaurus", "carcharodontosaurus");
     private static final Set<String> OFF_SPECIES = new HashSet<>();
 
     static {

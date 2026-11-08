@@ -111,6 +111,7 @@ ITEMS = {  # id: (en, pt, es, model parent)
     "giganotosaurus_saddle": ("Giganotosaurus Saddle", "Sela de Giganotossauro", "Silla de Giganotosaurio", "item/generated"),
     "daspletosaurus_saddle": ("Daspletosaurus Saddle", "Sela de Daspletossauro", "Silla de Daspletosaurio", "item/generated"),
     "albertosaurus_saddle": ("Albertosaurus Saddle", "Sela de Albertossauro", "Silla de Albertosaurio", "item/generated"),
+    "carcharodontosaurus_saddle": ("Carcharodontosaurus Saddle", "Sela de Carcarodontossauro", "Silla de Carcarodontosaurio", "item/generated"),
     # the drover's pack saddle (cangalha) with two woven baskets: the Triceratops carries its cargo in them
     "triceratops_saddle": ("Triceratops Pack Saddle", "Cangalha de Tricerátops", "Albarda de Triceratops", "item/generated"),
     # 1.8: the Elasmosaurus' neck saddle: a hide seat behind the neck, a rope loop to hold, two driftwood floats
@@ -163,6 +164,9 @@ ITEMS = {  # id: (en, pt, es, model parent)
 LANG_EXTRA = {
     "en_us": {
         "itemGroup.terrassic.main": "Terrassic",
+        "effect.terrassic.bleeding": "Bleeding",
+        "death.attack.terrassic.bleeding": "%1$s bled out",
+        "death.attack.terrassic.bleeding.player": "%1$s bled out whilst fighting %2$s",
         "entity.terrassic.spear": "Spear",
         "entity.terrassic.carcass": "Carcass",
         "entity.terrassic.carcass.of": "%s carcass",
@@ -187,6 +191,9 @@ LANG_EXTRA = {
     },
     "pt_br": {
         "itemGroup.terrassic.main": "Terrassic",
+        "effect.terrassic.bleeding": "Sangramento",
+        "death.attack.terrassic.bleeding": "%1$s sangrou até a morte",
+        "death.attack.terrassic.bleeding.player": "%1$s sangrou até a morte lutando contra %2$s",
         "entity.terrassic.spear": "Lança",
         "entity.terrassic.carcass": "Carcaça",
         "entity.terrassic.carcass.of": "Carcaça de %s",
@@ -211,6 +218,9 @@ LANG_EXTRA = {
     },
     "es_es": {
         "itemGroup.terrassic.main": "Terrassic",
+        "effect.terrassic.bleeding": "Sangrado",
+        "death.attack.terrassic.bleeding": "%1$s se desangró",
+        "death.attack.terrassic.bleeding.player": "%1$s se desangró luchando contra %2$s",
         "entity.terrassic.spear": "Lanza",
         "entity.terrassic.carcass": "Carcasa",
         "entity.terrassic.carcass.of": "Carcasa de %s",
@@ -935,6 +945,9 @@ def main():
     # the Albertosaurus' racing saddle: a felt pad of wool on its hide, a light leather seat, bone stirrups
     shaped("albertosaurus_saddle", ["LWL", "HHH", "B B"], {"L": "minecraft:leather", "W": "minecraft:green_wool",
            "H": "terrassic:albertosaurus_hide", "B": "minecraft:bone"}, "terrassic:albertosaurus_saddle")
+    # the Carcharodontosaurus' river-plain saddle: a woven blanket of wool on its hide, a hide seat, a rope girth, bone
+    shaped("carcharodontosaurus_saddle", ["LWL", "HHH", "SBS"], {"L": "minecraft:leather", "W": "minecraft:white_wool",
+           "H": "terrassic:carcharodontosaurus_hide", "S": "minecraft:string", "B": "minecraft:bone"}, "terrassic:carcharodontosaurus_saddle")
     # the Triceratops' pack saddle: two wooden heads of the frame, a hide seat on leather, two woven rush baskets
     shaped("triceratops_saddle", ["S S", "LHL", "R R"], {"S": "minecraft:stick", "L": "minecraft:leather",
            "H": "terrassic:triceratops_hide", "R": "terrassic:rush"}, "terrassic:triceratops_saddle")
