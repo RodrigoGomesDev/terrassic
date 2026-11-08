@@ -138,7 +138,7 @@ public final class LivelyMotion {
         this.footRO = this.footR;
         float gl = 0.0F;
         float gr = 0.0F;
-        if (this.footSidePx > 0.0F && e.livelyBiped() && e.onGround() && e.isAlive() && !e.isKnockedOut() && !e.isInWater()
+        if (Behaviour.oldFeet && this.footSidePx > 0.0F && e.livelyBiped() && e.onGround() && e.isAlive() && !e.isKnockedOut() && !e.isInWater()
                 && !e.isSleeping() && !e.isInSittingPose()) {
             double side = this.footSidePx / 16.0D * e.livelyModelScale() * e.getScale();
             double yaw = Math.toRadians(e.yBodyRot);
@@ -149,6 +149,94 @@ public final class LivelyMotion {
         }
         this.footL += (gl - this.footL) * 0.3F;
         this.footR += (gr - this.footR) * 0.3F;
+        if (!Behaviour.oldFeet) {
+            this.feetTick(e);
+        }
+    }
+
+    // ------------------------------------------------------------------ 1.10.1: each foot on its own ground
+    // docs/estudos/12 (section 7): the 1.9.5 layer sampled the ground beside the hips, for the bipeds only, and only
+    // standing. Now every foot (the two hind ones, and the two front ones of a quadruped) is looked up where the model
+    // drew it last frame (DinosaurRenderer.renderFinal, the bones' world matrices), so the stride and the rig's own
+    // proportions are in it; the renderer's tilt to the ground (groundPitch / groundRoll) and the step spring are taken
+    // off, so only what is left over is put right: the body drops to the lowest foot and the other legs bend, within
+    // small limits, fading out as the walk quickens.
+
+    /** Feet: 0 hind left, 1 hind right, 2 front left, 3 front right. */
+    public static final String[] FEET = {"foot_l", "foot_r", "hand_l", "hand_r"};
+    private final double[][] footAt = new double[4][];
+    private final float[] footG = new float[4];
+    private final float[] footGO = new float[4];
+    private float feetW;
+    private float feetWO;
+    private float armPx = 30.0F;
+
+    public void setArms(float armPx) {
+        this.armPx = Math.max(6.0F, armPx);
+    }
+
+    public float armPx() {
+        return this.armPx;
+    }
+
+    /** Where the model drew foot {@code i} (its pivot, in the world) on the last frame. */
+    public void setFootAt(int i, double x, double y, double z) {
+        double[] a = this.footAt[i];
+        if (a == null) {
+            this.footAt[i] = new double[]{x, y, z};
+        } else {
+            a[0] = x;
+            a[1] = y;
+            a[2] = z;
+        }
+    }
+
+    public double[] footAt(int i) {
+        return this.footAt[i];
+    }
+
+    /** Blocks the ground under foot {@code i} is above (+) or below (-) where the tilted, sprung model puts it. */
+    public float footGround(int i, float partial) {
+        return Mth.lerp(partial, this.footGO[i], this.footG[i]);
+    }
+
+    /** 1 standing, 0 walking briskly or in the air (how much of the correction is laid on). */
+    public float feetWeight(float partial) {
+        return Mth.lerp(partial, this.feetWO, this.feetW);
+    }
+
+    private void feetTick(DinosaurEntity e) {
+        this.feetWO = this.feetW;
+        // standing (the client's onGround is only what the server last sent: an animal that has not moved may not have it)
+        boolean grounded = e.onGround() || (Math.abs(e.getY() - e.yo) < 1.0E-4D && Math.abs(ground(e, e.getX(), e.getZ())) < 0.05F);
+        boolean on = (e.livelyBiped() || e.livelyQuadruped()) && grounded && e.isAlive() && !e.isKnockedOut() && !e.isInWater()
+                && !e.isSleeping() && !e.isInSittingPose() && !e.isPassenger();
+        double dx = e.getX() - e.xo;
+        double dz = e.getZ() - e.zo;
+        float speed = (float) (Math.sqrt(dx * dx + dz * dz) / Math.max(0.3F, e.getScale()));
+        float want = on ? Mth.clamp(1.0F - (speed - 0.03F) / 0.07F, 0.0F, 1.0F) : 0.0F;
+        this.feetW += (want - this.feetW) * 0.25F;
+        double yaw = Math.toRadians(e.yBodyRot);
+        double fx = -Math.sin(yaw), fz = Math.cos(yaw);       // forward
+        double px = -Math.cos(yaw), pz = -Math.sin(yaw);      // the model's +X side (DinosaurEntity.groundTiltTick)
+        float gp = e.groundPitch(1.0F) * Mth.DEG_TO_RAD;
+        float gr = e.groundRoll(1.0F) * Mth.DEG_TO_RAD;
+        int n = e.livelyQuadruped() ? 4 : 2;
+        for (int i = 0; i < 4; i++) {
+            this.footGO[i] = this.footG[i];
+            float r = 0.0F;
+            double[] at = this.footAt[i];
+            if (on && i < n && at != null) {
+                double ox = at[0] - e.getX(), oz = at[2] - e.getZ();
+                if (ox * ox + oz * oz < (e.getBbWidth() + 2.0D) * (e.getBbWidth() + 2.0D)) {
+                    double fwd = ox * fx + oz * fz;
+                    double plus = ox * px + oz * pz;
+                    float plane = (float) (fwd * Math.sin(gp) + plus * Math.sin(gr)) + this.stepOff;
+                    r = Mth.clamp(ground(e, at[0], at[2]) - plane, -0.75F, 0.75F);
+                }
+            }
+            this.footG[i] += (r - this.footG[i]) * 0.3F;
+        }
     }
 
     /** The top of the ground under (x, z) relative to the animal's feet, -1.5 .. 1.2 blocks. */

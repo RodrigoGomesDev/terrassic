@@ -466,6 +466,9 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         this.roarLeft--;
         if (this.roarAge == (this.loudRoar ? LOUD_SOUND : ROAR_SOUND)) {
             this.playSound(this.roarSound(), this.loudRoar ? 5.0F : 3.0F, (this.loudRoar ? 0.85F : 1.0F) * this.getVoicePitch());
+            if (!Behaviour.oldRoar) {
+                this.roarFear();
+            }
         }
         if (!this.loudRoar || !this.loudShakesAir()) {
             return;
@@ -479,6 +482,32 @@ public abstract class ApexTheropod extends PredatorDinosaur {
             this.dust(level);
         }
     }
+
+    /** 1.10.1 (docs/estudos/12, section 6; ARK's Yutyrannus): the roar scares off every wild land animal within 24 blocks
+     *  (40 for the loud one) narrower than half of it, for 6-10 s, except alphas, its own species and a mother with
+     *  young near. They run from it by FleeHurtGoal's best heading. Returns how many ran (the BehaviorTest reads it). */
+    public int roarFear() {
+        double r = this.loudRoar ? 40.0D : 24.0D;
+        float half = this.getBbWidth() * 0.5F;
+        int n = 0;
+        for (DinosaurEntity d : this.level().getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(r, 12.0D, r),
+                e -> e != this && e.isAlive() && !e.isTame() && !e.isAlpha() && e.getType() != this.getType() && e.getBbWidth() < half
+                        && (e instanceof HerbivoreDinosaur || e instanceof PredatorDinosaur) && e.distanceToSqr(this) < r * r)) {
+            if (d.guardingYoung()) {
+                continue;
+            }
+            d.scare(this, 120 + this.random.nextInt(81));
+            n++;
+        }
+        this.lastRoarScared = n;
+        if (n > 0) {
+            Behaviour.log("roar scare: " + n + " fled from " + this.speciesId() + (this.loudRoar ? " (loud)" : ""));
+        }
+        return n;
+    }
+
+    /** How many the last roar sent running. */
+    public int lastRoarScared;
 
     /** One wave of the loud roar: sent to every player within 96 blocks (it is big; far away it is just a speck). */
     private void airWave(ServerLevel level, float strength) {
@@ -750,5 +779,11 @@ public abstract class ApexTheropod extends PredatorDinosaur {
             }
         }
         return data;
+    }
+
+    /** 1.10.1: it plays its own idle gestures on a timer; the generic quirks (DinosaurEntity.quirkTick) stay out. */
+    @Override
+    protected boolean ownGestures() {
+        return true;
     }
 }

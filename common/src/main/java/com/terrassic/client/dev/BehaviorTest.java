@@ -104,7 +104,38 @@ public final class BehaviorTest {
         }
         if (only.contains("regressao")) {
             // 1.9.5: the whole battery before a version goes out (memory "patches estaveis"; tools/validation/behavior_regression.py)
-            only = only + ",carcass,jaws,gaits,water,steps,paths,night,weak,sleepfish,behave,territory,duels";
+            only = only + ",carcass,jaws,gaits,water,steps,paths,night,weak,sleepfish,behave,territory,duels"
+                    + ",roarfear,aggro,eggrage,helpcall,babystay,herdmove,quirks,feet,stable";
+        }
+        if (java.util.stream.Stream.of("roarfear", "aggro", "eggrage", "helpcall", "babystay", "herdmove", "quirks", "feet", "stable").anyMatch(only::contains)) {
+            planCleanup110();
+        }
+        if (only.contains("roarfear")) {
+            planRoarFear();
+        }
+        if (only.contains("aggro")) {
+            planAggro();
+        }
+        if (only.contains("eggrage")) {
+            planEggRage();
+        }
+        if (only.contains("helpcall")) {
+            planHelpCall();
+        }
+        if (only.contains("babystay")) {
+            planBabyStay();
+        }
+        if (only.contains("herdmove")) {
+            planHerdMove();
+        }
+        if (only.contains("quirks")) {
+            planQuirks();
+        }
+        if (only.contains("feet")) {
+            planFeet();
+        }
+        if (only.contains("stable")) {
+            planStable();
         }
         if (only.contains("paths")) {
             planPaths();
@@ -3411,6 +3442,755 @@ public final class BehaviorTest {
     /** The photos of each new animal move the camera, which is the player: off while the player itself is tested. */
     private static boolean noAutoShots;
     private static double watchSize;
+
+    // ================================================================== 1.10.1: behaviour (docs/estudos/12, sections 6-7)
+    // Each phase measures the 1.9.5 way (com.terrassic.entity.Behaviour.old* = true) and the new one in the same run.
+
+    private static String pname(Minecraft mc) {
+        return mc.player.getGameProfile().getName();
+    }
+
+    private static void survival(Minecraft mc, boolean on) {
+        command(mc, "gamemode " + (on ? "survival " : "creative ") + pname(mc));
+        if (on) {
+            command(mc, "effect give " + pname(mc) + " minecraft:resistance 600 4 true");
+            command(mc, "effect give " + pname(mc) + " minecraft:regeneration 600 4 true");
+        }
+    }
+
+    private static void standAt(Minecraft mc, double x, double y, double z, float yaw) {
+        mc.player.getAbilities().flying = false;
+        command(mc, String.format(Locale.ROOT, "tp %s %.2f %.2f %.2f %.1f 0", pname(mc), x, y, z, yaw));
+    }
+
+    private static final String STILL = "Attributes:[{Name:\"generic.movement_speed\",Base:0.0d}]";
+
+    /** The arenas of the 1.10.1 phases keep what earlier runs left (the animals are summoned persistent): their chunks
+     *  are loaded first and only then emptied (a kill sent with the forceload found nothing, and old calves and rivals
+     *  turned up in the middle of a phase). */
+    private static void planCleanup110() {
+        double[] xs = {5400.5D, 5600.5D, 5800.5D, 6000.5D, 6200.5D, 6400.5D, 6600.5D, 6800.5D, 7104.0D};
+        STEPS.add(mc -> {
+            for (double x : xs) {
+                int z = x == 7104.0D ? 64 : 0;
+                command(mc, "forceload add " + (int) (x - 80) + " " + (z - 80) + " " + (int) (x + 80) + " " + (z + 80));
+            }
+            return 100;
+        });
+        STEPS.add(mc -> {
+            ServerLevel l = mc.getSingleplayerServer().overworld();
+            mc.getSingleplayerServer().execute(() -> {
+                for (double x : xs) {
+                    BlockPos c = BlockPos.containing(x, Y, x == 7104.0D ? 64 : 0);
+                    for (Entity e : l.getEntitiesOfClass(Entity.class, new net.minecraft.world.phys.AABB(c).inflate(80.0D, 96.0D, 80.0D),
+                            e -> !(e instanceof net.minecraft.world.entity.player.Player))) {
+                        e.discard();
+                    }
+                }
+            });
+            command(mc, "forceload remove all");
+            return 20;
+        });
+    }
+
+    /** The arena's chunks loaded and ticking before anything is summoned in it (a summon into a chunk still loading was
+     *  lost when the phase ran first, right after the world opened). */
+    private static void prep(double x0, int r) {
+        STEPS.add(mc -> {
+            clear(mc, x0, r);
+            return 20;
+        });
+        STEPS.add(mc -> {
+            ServerLevel l = mc.getSingleplayerServer().overworld();
+            for (int dx = -r; dx <= r; dx += 16) {
+                for (int dz = -r; dz <= r; dz += 16) {
+                    if (!l.isPositionEntityTicking(BlockPos.containing(x0 + dx, Y, dz))) {
+                        return -1;
+                    }
+                }
+            }
+            return 1;
+        });
+    }
+
+    /** 1. The apex roar scares off the small ones (24 blocks, 40 for the loud one); not the big, not its own kind. */
+    private static void planRoarFear() {
+        double x0 = 5400.5D;
+        prep(x0, 60);
+        UUID[] rexs = {id(), id(), id()};
+        UUID[][] casts = new UUID[3][4];
+        for (UUID[] c : casts) {
+            for (int i = 0; i < 4; i++) {
+                c[i] = id();
+            }
+        }
+        String[] names = {"velociraptor at 10", "gallimimus at 14", "triceratops at 12", "velociraptor at 32"};
+        double[][] at = {{10, 0}, {0, 14}, {-12, 0}, {0, -32}};
+        String[] sp = {"velociraptor", "gallimimus", "triceratops", "velociraptor"};
+        for (int round = 0; round < 3; round++) {
+            int rr = round;       // 0: old roar, 1: new roar, 2: new loud roar
+            UUID rex = rexs[rr];
+            UUID[][] cast = {{casts[rr][0]}, {casts[rr][1]}, {casts[rr][2]}, {casts[rr][3]}};
+            STEPS.add(mc -> {
+                if (rr == 0) {
+                    REPORT.add("");
+                    REPORT.add("== Roar fear (1.10.1)");
+                }
+                com.terrassic.entity.Behaviour.oldRoar = rr == 0;
+                clear(mc, x0, 60);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..120]");
+                command(mc, "time set 1000");
+                summon(mc, "tyrannosaurus", x0, Y, 0.5D, rex, "Hunger:100," + STILL);
+                for (int i = 0; i < 4; i++) {
+                    // held in place: the measure is whether the roar set it running (they wandered off 24 blocks before it)
+                    summon(mc, sp[i], x0 + at[i][0], Y, 0.5D + at[i][1], cast[i][0], "Hunger:100," + STILL);
+                }
+                watch(mc, new Vec3(x0, Y, 0.5D), 50.0D);
+                return 60;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity r = server(mc, rex);
+                if (r instanceof com.terrassic.entity.ApexTheropod a) {
+                    mc.getSingleplayerServer().execute(() -> {
+                        if (rr == 2) {
+                            a.roarLoud();
+                        } else {
+                            a.roar();
+                        }
+                    });
+                }
+                return 100;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity r = server(mc, rex);
+                StringBuilder b = new StringBuilder();
+                for (int i = 0; i < 4; i++) {
+                    DinosaurEntity d = server(mc, cast[i][0]);
+                    b.append(String.format(Locale.ROOT, "%s: %s, now %.1f; ", names[i], d == null ? "?" : d.fleeLeft > 0 && d.fleeFrom == r ? "FLED" : "stayed",
+                            d == null || r == null ? -1.0D : d.distanceTo(r)));
+                }
+                REPORT.add("  " + (rr == 0 ? "roar (1.9.5)" : rr == 1 ? "roar" : "loud roar") + ": " + b);
+                Screenshot.grab(mc.gameDirectory, "behavior110_roar_" + rr + ".png", mc.getMainRenderTarget(), msg -> {
+                });
+                return 1;
+            });
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldRoar = false;
+            return 1;
+        });
+    }
+
+    /** 1. The reach by temperament: a hunter notices a player 24 blocks off (16 a small one), 80% crouching. */
+    private static void planAggro() {
+        double x0 = 5600.5D;
+        prep(x0, 40);
+        Object[][] cases = {
+                {"carnotaurus", 26.0D, false, true}, {"carnotaurus", 26.0D, false, false}, {"carnotaurus", 20.0D, false, false},
+                {"carnotaurus", 20.0D, true, false}, {"velociraptor", 18.0D, false, true}, {"velociraptor", 18.0D, false, false},
+                {"velociraptor", 14.0D, false, false}, {"velociraptor", 14.0D, true, false}};
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Aggro range (1.10.1)");
+            watchAt = null;
+            followed = null;
+            noAutoShots = true;
+            clear(mc, x0, 40);
+            command(mc, "time set 1000");
+            return 20;
+        });
+        for (Object[] c : cases) {
+            UUID u = id();
+            STEPS.add(mc -> {
+                com.terrassic.entity.Behaviour.oldAggro = (Boolean) c[3];
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+                survival(mc, true);
+                mc.options.keyShift.setDown((Boolean) c[2]);
+                standAt(mc, x0 - (Double) c[1], Y, 0.5D, -90.0F);
+                return 30;
+            });
+            STEPS.add(mc -> {
+                summon(mc, (String) c[0], x0, Y, 0.5D, u, "Hunger:20,Rotation:[90f,0f]," + STILL);
+                return 80;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, u);
+                ServerPlayer sp = player(mc);
+                REPORT.add(String.format(Locale.ROOT, "  aggro %s, player %s at %.0f%s: target %s  [distance %.1f, crouching %s]", c[0],
+                        (Boolean) c[2] ? "crouching" : "standing", (Double) c[1], (Boolean) c[3] ? " (1.9.5)" : "",
+                        d == null ? "?" : d.getTarget() instanceof net.minecraft.world.entity.player.Player ? "PLAYER" : "none",
+                        d == null || sp == null ? -1.0D : d.distanceTo(sp), sp != null && sp.isCrouching()));
+                mc.options.keyShift.setDown(false);
+                return 1;
+            });
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldAggro = false;
+            noAutoShots = false;
+            survival(mc, false);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+            return 1;
+        });
+    }
+
+    /** 2a. A wild egg taken: the fighters of its species within 24 blocks go for the thief for 60 s, the runners run. */
+    private static void planEggRage() {
+        double x0 = 5800.5D;
+        prep(x0, 50);
+        for (int round = 0; round < 2; round++) {
+            int rr = round;
+            UUID t1 = id(), t2 = id(), e1 = id();
+            BlockPos egg = BlockPos.containing(x0, Y, 0.5D);
+            BlockPos egg2 = BlockPos.containing(x0 + 1, Y, 0.5D);
+            STEPS.add(mc -> {
+                if (rr == 0) {
+                    REPORT.add("");
+                    REPORT.add("== Egg rage (1.10.1)");
+                }
+                com.terrassic.entity.Behaviour.oldEgg = rr == 0;
+                watchAt = null;
+                followed = null;
+                noAutoShots = true;
+                clear(mc, x0, 50);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+                command(mc, "time set 1000");
+                command(mc, String.format(Locale.ROOT, "setblock %d %d %d terrassic:triceratops_egg[wild=true]", egg.getX(), egg.getY(), egg.getZ()));
+                command(mc, String.format(Locale.ROOT, "setblock %d %d %d terrassic:edmontosaurus_egg[wild=true]", egg2.getX(), egg2.getY(), egg2.getZ()));
+                summon(mc, "triceratops", x0 + 8, Y, 0.5D, t1, STILL);
+                summon(mc, "triceratops", x0 - 22, Y, 0.5D, t2, STILL);
+                summon(mc, "edmontosaurus", x0, Y, 12.5D, e1, "");
+                survival(mc, true);
+                standAt(mc, x0 + 0.5D, Y, -3.5D, 0.0F);
+                return 60;
+            });
+            STEPS.add(mc -> {
+                ServerLevel l = mc.getSingleplayerServer().overworld();
+                ServerPlayer sp = player(mc);
+                mc.getSingleplayerServer().execute(() -> {
+                    for (BlockPos p : new BlockPos[]{egg, egg2}) {
+                        BlockState st = l.getBlockState(p);
+                        st.getBlock().playerWillDestroy(l, p, st, sp);
+                        l.removeBlock(p, false);
+                    }
+                });
+                return 60;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity a = server(mc, t1), b = server(mc, t2), e = server(mc, e1);
+                REPORT.add(String.format(Locale.ROOT, "  %s eggs taken: triceratops at 8 target %s, at 22 target %s; edmontosaurus fled %s",
+                        rr == 0 ? "(1.9.5)" : "", a == null ? "?" : a.getTarget() instanceof net.minecraft.world.entity.player.Player ? "PLAYER" : "none",
+                        b == null ? "?" : b.getTarget() instanceof net.minecraft.world.entity.player.Player ? "PLAYER" : "none",
+                        e == null ? "?" : e.fleeLeft > 0 || e.getLastHurtByMob() != null));
+                if (a != null) {
+                    mc.getSingleplayerServer().execute(() -> a.setTarget(null));
+                }
+                return 100;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity a = server(mc, t1);
+                ServerPlayer sp = player(mc);
+                REPORT.add("    target cleared, 5 s later: " + (a == null ? "?" : a.getTarget() instanceof net.minecraft.world.entity.player.Player ? "PLAYER again" : "none")
+                        + (rr == 1 ? ", enraged " + (a != null && a.isEnraged()) : "")
+                        + (a == null || sp == null ? "" : String.format(Locale.ROOT, "  [may attack %s, fleeing %d, distance %.1f, warning %s]",
+                        a.canAttack(sp), a.fleeLeft, a.distanceTo(sp), a instanceof com.terrassic.entity.HerbivoreDinosaur h && h.isWarning())));
+                return rr == 1 ? 1100 : 1;
+            });
+            if (rr == 1) {
+                STEPS.add(mc -> {
+                    DinosaurEntity a = server(mc, t1);
+                    REPORT.add("    61 s after: enraged " + (a != null && a.isEnraged()));
+                    return 1;
+                });
+            }
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldEgg = false;
+            noAutoShots = false;
+            survival(mc, false);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+            return 1;
+        });
+    }
+
+    /** 2b. The call for help: a hurt herd animal brings its kind within 16 blocks (fighters go for the attacker, runners
+     *  and babies run), a pack hunter within 24. */
+    private static void planHelpCall() {
+        double x0 = 6000.5D;
+        prep(x0, 60);
+        for (int round = 0; round < 2; round++) {
+            int rr = round;
+            UUID[] tri = {id(), id(), id(), id()};
+            UUID[] edm = {id(), id(), id()};
+            UUID[] rap = {id(), id(), id(), id()};
+            double[] triAt = {0, 6, 12, 22};
+            double[] rapAt = {0, 10, 20, 30};
+            STEPS.add(mc -> {
+                if (rr == 0) {
+                    REPORT.add("");
+                    REPORT.add("== Call for help (1.10.1)");
+                }
+                com.terrassic.entity.Behaviour.oldHelp = rr == 0;
+                watchAt = null;
+                followed = null;
+                noAutoShots = true;
+                clear(mc, x0, 60);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..120]");
+                command(mc, "time set 1000");
+                for (int i = 0; i < 4; i++) {
+                    summon(mc, "triceratops", x0 + triAt[i], Y, -30.5D, tri[i], STILL);
+                    summon(mc, "velociraptor", x0 + rapAt[i], Y, 30.5D, rap[i], "Hunger:100," + STILL);
+                }
+                summon(mc, "edmontosaurus", x0, Y, 0.5D, edm[0], "");
+                summon(mc, "edmontosaurus", x0 + 10, Y, 0.5D, edm[1], "");
+                summon(mc, "edmontosaurus", x0 - 8, Y, 0.5D, edm[2], "Age:-24000");
+                survival(mc, true);
+                standAt(mc, x0 - 6, Y, 0.5D, -90.0F);
+                return 60;
+            });
+            STEPS.add(mc -> {
+                ServerPlayer sp = player(mc);
+                mc.getSingleplayerServer().execute(() -> {
+                    for (UUID v : new UUID[]{tri[0], edm[0], rap[0]}) {
+                        DinosaurEntity d = server(mc, v);
+                        if (d != null) {
+                            d.hurt(d.damageSources().playerAttack(sp), 2.0F);
+                        }
+                    }
+                });
+                return 40;
+            });
+            STEPS.add(mc -> {
+                StringBuilder b = new StringBuilder();
+                for (int i = 1; i < 4; i++) {
+                    DinosaurEntity d = server(mc, tri[i]);
+                    b.append(String.format(Locale.ROOT, "triceratops at %.0f %s; ", triAt[i], d == null ? "?" : d.getTarget() instanceof net.minecraft.world.entity.player.Player ? "CHARGES" : "stays"));
+                }
+                for (int i = 1; i < 4; i++) {
+                    DinosaurEntity d = server(mc, rap[i]);
+                    b.append(String.format(Locale.ROOT, "velociraptor at %.0f %s; ", rapAt[i], d == null ? "?" : d.getTarget() instanceof net.minecraft.world.entity.player.Player ? "CHARGES" : "stays"));
+                }
+                DinosaurEntity e1 = server(mc, edm[1]), e2 = server(mc, edm[2]);
+                b.append("edmontosaurus at 10 ").append(e1 == null ? "?" : e1.fleeLeft > 0 || e1.getLastHurtByMob() != null ? "RUNS" : "stays");
+                b.append(", calf at 8 ").append(e2 == null ? "?" : e2.fleeLeft > 0 || e2.getLastHurtByMob() != null ? "RUNS" : "stays");
+                REPORT.add("  " + (rr == 0 ? "(1.9.5) " : "") + b);
+                return 1;
+            });
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldHelp = false;
+            noAutoShots = false;
+            survival(mc, false);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..120]");
+            return 1;
+        });
+    }
+
+    /** 2c. A wild baby keeps within 6 blocks of its mother and runs from a predator that comes within 8. */
+    private static void planBabyStay() {
+        double x0 = 6200.5D;
+        prep(x0, 50);
+        for (int round = 0; round < 2; round++) {
+            int rr = round;
+            UUID mom = id(), calf = id(), rap = id();
+            STEPS.add(mc -> {
+                if (rr == 0) {
+                    REPORT.add("");
+                    REPORT.add("== Babies (1.10.1)");
+                }
+                com.terrassic.entity.Behaviour.oldBaby = rr == 0;
+                clear(mc, x0, 50);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..100]");
+                command(mc, "time set 1000");
+                watch(mc, new Vec3(x0 + 6, Y, 0.5D), 30.0D);
+                return 40;
+            });
+            STEPS.add(mc -> {
+                summon(mc, "triceratops", x0, Y, 0.5D, mom, STILL);
+                summon(mc, "triceratops", x0 + 14, Y, 0.5D, calf, "Age:-24000");
+                watch(mc, new Vec3(x0 + 6, Y, 0.5D), 30.0D);
+                return 200;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity m = server(mc, mom), c = server(mc, calf);
+                REPORT.add(String.format(Locale.ROOT, "  %scalf put 14 blocks from its mother, 10 s later: %.1f blocks from her", rr == 0 ? "(1.9.5) " : "",
+                        m == null || c == null ? -1.0D : c.distanceTo(m)));
+                if (c != null) {
+                    summon(mc, "velociraptor", c.getX() + 4, Y, c.getZ(), rap, "NoAI:1b,Invulnerable:1b");
+                }
+                return 100;
+            });
+            STEPS.add(mc -> {
+                DinosaurEntity m = server(mc, mom), c = server(mc, calf);
+                Entity r = serverAny(mc, rap);
+                REPORT.add(String.format(Locale.ROOT, "  %sa velociraptor 4 blocks from the calf, 5 s later: calf %.1f blocks from it, %.1f from its mother",
+                        rr == 0 ? "(1.9.5) " : "", c == null || r == null ? -1.0D : c.distanceTo(r), c == null || m == null ? -1.0D : c.distanceTo(m)));
+                Screenshot.grab(mc.gameDirectory, "behavior110_baby_" + rr + ".png", mc.getMainRenderTarget(), msg -> {
+                });
+                return 1;
+            });
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldBaby = false;
+            return 1;
+        });
+    }
+
+    /** 3a. The herd moves together: six Edmontosaurus for 90 s; spread round the centre, alignment of the moving ones. */
+    private static void planHerdMove() {
+        double x0 = 6400.5D;
+        prep(x0, 70);
+        for (int round = 0; round < 2; round++) {
+            int rr = round;
+            UUID[] herd = new UUID[6];
+            double[] acc = new double[7];     // spread sum, spread samples, alignment sum, alignment samples, max spread, travel, stuck
+            Vec3[] start = new Vec3[1];
+            Map<UUID, Vec3> was = new java.util.HashMap<>();
+            Map<String, Integer> stuckBy = new java.util.TreeMap<>();
+            STEPS.add(mc -> {
+                if (rr == 0) {
+                    REPORT.add("");
+                    REPORT.add("== Herd moves together (1.10.1)");
+                }
+                com.terrassic.entity.Behaviour.oldHerd = rr == 0;
+                clear(mc, x0, 70);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..140]");
+                command(mc, "time set 1000");
+                for (int i = 0; i < 6; i++) {
+                    herd[i] = id();
+                    summon(mc, "edmontosaurus", x0 + (i % 3) * 6 - 6, Y, 0.5D + (i / 3) * 6 - 3, herd[i], "");
+                }
+                watch(mc, new Vec3(x0, Y, 0.5D), 60.0D);
+                return 40;
+            });
+            for (int k = 0; k < 90; k++) {
+                int kk = k;
+                STEPS.add(mc -> {
+                    List<DinosaurEntity> l = new ArrayList<>();
+                    for (UUID u : herd) {
+                        DinosaurEntity d = server(mc, u);
+                        if (d != null) {
+                            l.add(d);
+                        }
+                    }
+                    if (l.isEmpty()) {
+                        return 20;
+                    }
+                    Vec3 c = Vec3.ZERO;
+                    for (DinosaurEntity d : l) {
+                        c = c.add(d.position());
+                    }
+                    c = c.scale(1.0D / l.size());
+                    if (kk == 0) {
+                        start[0] = c;
+                    }
+                    double spread = 0.0D;
+                    Vec3 sum = Vec3.ZERO;
+                    int moving = 0;
+                    for (DinosaurEntity d : l) {
+                        // walking in place: a path under way, and hardly a step since the last second
+                        Vec3 prev = was.put(d.getUUID(), d.position());
+                        if (prev != null && d.getNavigation().isInProgress() && prev.distanceTo(d.position()) < 0.1D) {
+                            acc[6]++;
+                            d.goals().getRunningGoals().forEach(g -> stuckBy.merge(g.getGoal().getClass().getName()
+                                    .replaceAll(".*[.$]", ""), 1, Integer::sum));
+                        }
+                        spread += d.position().distanceTo(c);
+                        Vec3 v = d.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D);
+                        if (v.length() > 0.02D) {
+                            sum = sum.add(v.normalize());
+                            moving++;
+                        }
+                    }
+                    spread /= l.size();
+                    acc[0] += spread;
+                    acc[1]++;
+                    acc[4] = Math.max(acc[4], spread);
+                    if (moving >= 3) {
+                        acc[2] += sum.length() / moving;
+                        acc[3]++;
+                    }
+                    if (kk == 89) {
+                        acc[5] = start[0] == null ? 0.0D : c.distanceTo(start[0]);
+                        REPORT.add(String.format(Locale.ROOT, "  %s6 edmontosaurus, 90 s: spread %.1f blocks on average (%.1f at most), alignment %.2f over %d samples with 3+ moving, the herd travelled %.1f, walking in place %d animal-seconds %s",
+                                rr == 0 ? "(1.9.5) " : "", acc[0] / acc[1], acc[4], acc[3] == 0 ? 0.0D : acc[2] / acc[3], (int) acc[3], acc[5], (int) acc[6], stuckBy));
+                        Screenshot.grab(mc.gameDirectory, "behavior110_herd_" + rr + ".png", mc.getMainRenderTarget(), msg -> {
+                        });
+                    }
+                    return 20;
+                });
+            }
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldHerd = false;
+            return 1;
+        });
+    }
+
+    /** 3b. Idle quirks: which species get them, and an Ankylosaurus (its rig has "snort") left idle for two minutes. */
+    private static void planQuirks() {
+        double x0 = 6600.5D;
+        prep(x0, 30);
+        int[] before = new int[1];
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Idle quirks (1.10.1)");
+            ServerLevel l = mc.getSingleplayerServer().overworld();
+            StringBuilder b = new StringBuilder();
+            for (String sp : new TreeSet<>(com.terrassic.config.Eras.REMADE)) {
+                var type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(com.terrassic.Terrassic.id(sp));
+                if (type.create(l) instanceof DinosaurEntity d) {
+                    String[] q = d.quirkNames();
+                    if (q.length > 0) {
+                        b.append(sp).append(" ").append(java.util.Arrays.toString(q)).append("; ");
+                    }
+                    d.discard();
+                }
+            }
+            REPORT.add("  species with generic quirks: " + b);
+            clear(mc, x0, 30);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+            command(mc, "time set 1000");
+            for (int i = 0; i < 3; i++) {
+                summon(mc, "ankylosaurus", x0 + i * 8 - 8, Y, 0.5D, id(), "Hunger:100," + STILL);
+            }
+            before[0] = TRIGGERS.getOrDefault("ankylosaurus", Map.of()).getOrDefault("snort", 0);
+            watch(mc, new Vec3(x0, Y, 0.5D), 30.0D);
+            return 2400;
+        });
+        STEPS.add(mc -> {
+            int n = TRIGGERS.getOrDefault("ankylosaurus", Map.of()).getOrDefault("snort", 0) - before[0];
+            REPORT.add("  3 idle ankylosaurus, 120 s: " + n + " quirks played");
+            return 1;
+        });
+    }
+
+    /** 4a. Feet on the ground: a T. rex (biped) and a Triceratops (quadruped) across a one-block step, each foot's
+     *  drawn height against the ground under it (calibrated on flat ground), the 1.9.5 layer and the new one. */
+    private static void planFeet() {
+        double x0 = 6800.5D;
+        prep(x0, 30);
+        String[] sps = {"tyrannosaurus", "triceratops", "triceratops"};
+        String[] how = {"side on the step", "side on the step", "front on the step"};
+        for (int s = 0; s < sps.length; s++) {
+            int ss = s;
+            UUID flat = id(), edge = id();
+            double[][] rest = new double[4][1];
+            double[][] acc = new double[2][3];     // old/new: sum |err|, samples, worst
+            STEPS.add(mc -> {
+                if (ss == 0) {
+                    REPORT.add("");
+                    REPORT.add("== Feet on the ground (1.10.1): each foot's drawn height minus the ground under it, against flat ground");
+                }
+                clear(mc, x0, 30);
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
+                if (ss < 2) {
+                    command(mc, fill(x0 - 10, Y, 1, x0 + 10, Y, 12, "minecraft:grass_block"));       // a step along its left/right
+                } else {
+                    command(mc, fill(x0 + 1, Y, -10, x0 + 12, Y, 10, "minecraft:grass_block"));      // a step under its front
+                }
+                // facing +x (yaw -90): its sides are along z
+                summon(mc, sps[ss], x0 - 0.0D, Y + 1, ss < 2 ? 1.0D : 0.5D, edge, "Hunger:100,Rotation:[-90f,0f]," + STILL);
+                summon(mc, sps[ss], x0, Y, -18.5D, flat, "Hunger:100,Rotation:[-90f,0f]," + STILL);
+                watchAt = null;
+                noAutoShots = true;
+                com.terrassic.entity.Behaviour.oldFeet = true;
+                look(mc.player, new Vec3(x0, Y + 6, -6.0D - 12.0D), new Vec3(x0, Y + 1, -8.0D));
+                serverTp(mc);
+                return 60;
+            });
+            for (int k = 0; k < 120; k++) {
+                int kk = k;
+                STEPS.add(mc -> {
+                    DinosaurEntity f = client(mc, flat), e = client(mc, edge);
+                    for (UUID hold : new UUID[]{flat, edge}) {
+                        DinosaurEntity h = server(mc, hold);
+                        if (h != null) {
+                            mc.getSingleplayerServer().execute(() -> {
+                                h.setYRot(-90.0F);
+                                h.setYBodyRot(-90.0F);
+                                h.setYHeadRot(-90.0F);
+                                h.getNavigation().stop();
+                            });
+                        }
+                    }
+                    boolean newer = kk >= 60;
+                    com.terrassic.entity.Behaviour.oldFeet = !newer;
+                    int phase = kk % 60;
+                    if (f != null && f.lively() != null && phase == 20 && kk < 60) {
+                        for (int i = 0; i < 4; i++) {
+                            double[] a = f.lively().footAt(i);
+                            rest[i][0] = a == null ? Double.NaN : a[1] - groundTop(mc, a[0], a[1], a[2]);
+                        }
+                    }
+                    if (e != null && e.lively() != null && phase >= 30) {
+                        int n = e.livelyQuadruped() ? 4 : 2;
+                        for (int i = 0; i < n; i++) {
+                            double[] a = e.lively().footAt(i);
+                            if (a == null || Double.isNaN(rest[i][0])) {
+                                continue;
+                            }
+                            double err = Math.abs(a[1] - groundTop(mc, a[0], a[1], a[2]) - rest[i][0]);
+                            double[] r = acc[newer ? 1 : 0];
+                            r[0] += err;
+                            r[1]++;
+                            r[2] = Math.max(r[2], err);
+                        }
+                    }
+                    if (phase == 59) {
+                        Screenshot.grab(mc.gameDirectory, "behavior110_feet_" + sps[ss] + "_" + ss + (newer ? "_new" : "_old") + ".png", mc.getMainRenderTarget(), msg -> {
+                        });
+                    }
+                    if (kk == 119) {
+                        REPORT.add(String.format(Locale.ROOT, "  feet %s (%s): 1.9.5 off by %.2f blocks on average (%.2f at most); new %.2f (%.2f at most)",
+                                sps[ss], how[ss], acc[0][1] == 0 ? -1 : acc[0][0] / acc[0][1], acc[0][2], acc[1][1] == 0 ? -1 : acc[1][0] / acc[1][1], acc[1][2]));
+                    }
+                    return 1;
+                });
+            }
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldFeet = false;
+            noAutoShots = false;
+            return 1;
+        });
+    }
+
+    /** Takes the wild ones round {@code at} out of the world without a death (the population record is not told). */
+    private static void discardWild(ServerLevel l, BlockPos at, double r) {
+        for (DinosaurEntity d : l.getEntitiesOfClass(DinosaurEntity.class, new net.minecraft.world.phys.AABB(at).inflate(r, 96.0D, r), e -> !e.isTame())) {
+            d.discard();
+        }
+    }
+
+    private static DinosaurEntity client(Minecraft mc, UUID id) {
+        DinosaurEntity s = server(mc, id);
+        return s == null || mc.level == null ? null : mc.level.getEntity(s.getId()) instanceof DinosaurEntity d ? d : null;
+    }
+
+    /** The top of the ground under (x, z) at or below y + 1. */
+    private static double groundTop(Minecraft mc, double x, double y, double z) {
+        for (int dy = 1; dy >= -4; dy--) {
+            BlockPos p = BlockPos.containing(x, y + dy, z);
+            var shape = mc.level.getBlockState(p).getCollisionShape(mc.level, p);
+            if (!shape.isEmpty()) {
+                return p.getY() + shape.max(net.minecraft.core.Direction.Axis.Y);
+            }
+        }
+        return y - 4;
+    }
+
+    /** 4b. The stable population: a cell of 128 blocks hunted empty does not fill again the moment a player stands in
+     *  it; it fills a third a day; it never holds more than its share however the player comes and goes. */
+    private static void planStable() {
+        int cx = 7040 + 64, cz = 64;        // the middle of a cell
+        BlockPos mid = new BlockPos(cx, (int) Y, cz);
+        int[] share = new int[1];
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Stable population (1.10.1)");
+            // in quarters: one forceload takes at most 256 chunks
+            for (int qx = -1; qx <= 0; qx++) {
+                for (int qz = -1; qz <= 0; qz++) {
+                    command(mc, "forceload add " + (cx + qx * 160) + " " + (cz + qz * 160) + " " + (cx + qx * 160 + 159) + " " + (cz + qz * 160 + 159));
+                }
+            }
+            command(mc, "kill @e[type=!player,x=" + cx + ",y=" + (int) Y + ",z=" + cz + ",distance=..250]");
+            command(mc, "time set 1000");
+            look(mc.player, new Vec3(cx, Y + 30, cz), new Vec3(cx + 10, Y, cz + 10));
+            serverTp(mc);
+            return 60;
+        });
+        UUID[] doomed = new UUID[6];
+        STEPS.add(mc -> {
+            ServerLevel l = mc.getSingleplayerServer().overworld();
+            share[0] = com.terrassic.world.EcoSpawner.cellShareAt(l, mid);
+            // the world keeps the record between runs: start clean
+            mc.getSingleplayerServer().execute(() -> {
+                var pop = com.terrassic.world.RegionPopulation.of(l);
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        pop.setLost(l, mid.offset(dx * 128, 0, dz * 128), 0.0F);
+                    }
+                }
+            });
+            for (int i = 0; i < 6; i++) {
+                doomed[i] = id();
+                summon(mc, "edmontosaurus", cx + i * 4 - 10, Y, cz, doomed[i], "");
+            }
+            return 20;
+        });
+        STEPS.add(mc -> {
+            for (UUID u : doomed) {
+                command(mc, "kill " + u);
+            }
+            return 40;
+        });
+        STEPS.add(mc -> {
+            ServerLevel l = mc.getSingleplayerServer().overworld();
+            mc.getSingleplayerServer().execute(() -> {
+                var pop = com.terrassic.world.RegionPopulation.of(l);
+                REPORT.add(String.format(Locale.ROOT, "  share of a cell here %d; 6 killed in it: the cell has lost %.1f", share[0], pop.lost(l, mid, share[0])));
+                // the whole round hunted out: the cell and its eight neighbours
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        pop.setLost(l, mid.offset(dx * 128, 0, dz * 128), share[0]);
+                    }
+                }
+                discardWild(l, mid, 250);
+            });
+            return 40;
+        });
+        String[] labels = {"(1.9.5) emptied round, player arrives", "emptied round, player arrives", "after 1 day", "after 3 days",
+                "player leaves 600 blocks and comes back", "comes back again"};
+        for (int step = 0; step < labels.length; step++) {
+            int st = step;
+            STEPS.add(mc -> {
+                ServerLevel l = mc.getSingleplayerServer().overworld();
+                mc.getSingleplayerServer().execute(() -> {
+                    ServerPlayer sp = player(mc);
+                    com.terrassic.entity.Behaviour.oldPopulation = st == 0;
+                    if (st == 1) {
+                        // the 1.9.5 round put animals in; out with them (not deaths), the loss is as it was
+                        discardWild(l, mid, 250);
+                    }
+                    if (st == 2) {
+                        l.setDayTime(l.getDayTime() + 24000L);
+                    }
+                    if (st == 3) {
+                        l.setDayTime(l.getDayTime() + 48000L);
+                    }
+                    if (st >= 4) {
+                        // away long enough for the roamers here to despawn (the cell is kept loaded), then back
+                        sp.teleportTo(cx + 600, Y + 30, cz);
+                    }
+                });
+                return st >= 4 ? 400 : 40;
+            });
+            STEPS.add(mc -> {
+                ServerLevel l = mc.getSingleplayerServer().overworld();
+                mc.getSingleplayerServer().execute(() -> {
+                    ServerPlayer sp = player(mc);
+                    if (st >= 4) {
+                        REPORT.add(String.format(Locale.ROOT, "    while away: %d in the cell, %d wild within 80 of its middle", com.terrassic.world.RegionPopulation.count(l, mid),
+                                l.getEntitiesOfClass(DinosaurEntity.class, new net.minecraft.world.phys.AABB(mid).inflate(80.0D, 96.0D, 80.0D), e -> !e.isTame()).size()));
+                        sp.teleportTo(cx, Y + 30, cz);
+                    }
+                    int put = com.terrassic.world.EcoSpawner.testLandRounds(l, mid, 60);
+                    var pop = com.terrassic.world.RegionPopulation.of(l);
+                    REPORT.add(String.format(Locale.ROOT, "  %s: 60 rounds put %d, in its cell %d (share %d, lost %.1f)  [%d wild within 80 of its middle; %s]", labels[st], put,
+                            com.terrassic.world.RegionPopulation.count(l, mid), share[0], pop.lost(l, mid, share[0]),
+                            l.getEntitiesOfClass(DinosaurEntity.class, new net.minecraft.world.phys.AABB(mid).inflate(80.0D, 96.0D, 80.0D), e -> !e.isTame()).size(),
+                            com.terrassic.world.EcoSpawner.lastTestNote));
+                });
+                return 20;
+            });
+        }
+        STEPS.add(mc -> {
+            com.terrassic.entity.Behaviour.oldPopulation = false;
+            command(mc, "kill @e[type=!player,x=" + cx + ",y=" + (int) Y + ",z=" + cz + ",distance=..250]");
+            return 1;
+        });
+    }
 
     // ------------------------------------------------------------------ helpers
 
