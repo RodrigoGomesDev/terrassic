@@ -49,7 +49,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Carcharodontosaurus savanna, river, badlands        1       1
  *  Carnotaurus         savanna, plains, badlands       2       1-2
  *  Tarbosaurus         desert*, river, badlands        1       1
- *  Daspletosaurus      forest, river, plains           2       2
+ *  Daspletosaurus      forest, river, plains           2       2-3
  *  Albertosaurus       taiga, forest, plains, hills    2       2-4
  *  Majungasaurus       jungle, savanna, river          2       1-2
  *  Dakotaraptor        plains, forest, river, swamp, mangrove, jungle 3       2-3
@@ -261,7 +261,7 @@ public final class ModSpawns {
                 add(props, ModEntities.TARBOSAURUS.get(), 1, 1, 1);
             }
             if (forest || river || plains) {
-                add(props, ModEntities.DASPLETOSAURUS.get(), 2, 2, 2);
+                add(props, ModEntities.DASPLETOSAURUS.get(), 2, 2, 3);
             }
             if (taiga || forest || plains || hill) {
                 add(props, ModEntities.ALBERTOSAURUS.get(), 2, 2, 4);

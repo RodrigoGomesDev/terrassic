@@ -147,7 +147,7 @@ TOPICS = [
                   "dueño al jugador más cercano.\n"
                   "Los depredadores solo se doman de crías o por noqueo. Los herbívoros también se doman dándoles de comer."),
     }),
-    ("riding", "terrassic:tyrannosaurus_saddle", ["tyrannosaurus_saddle", "carnotaurus_saddle", "giganotosaurus_saddle", "pteranodon_saddle", "quetzalcoatlus_saddle", "triceratops_saddle", "edmontosaurus_saddle", "dakotaraptor_saddle", "styracosaurus_saddle", "therizinosaurus_saddle", "gallimimus_saddle", "parasaurolophus_saddle", "ankylosaurus_saddle", "mosasaurus_saddle", "elasmosaurus_saddle", "velociraptor_harness"], {
+    ("riding", "terrassic:tyrannosaurus_saddle", ["tyrannosaurus_saddle", "carnotaurus_saddle", "giganotosaurus_saddle", "daspletosaurus_saddle", "pteranodon_saddle", "quetzalcoatlus_saddle", "triceratops_saddle", "edmontosaurus_saddle", "dakotaraptor_saddle", "styracosaurus_saddle", "therizinosaurus_saddle", "gallimimus_saddle", "parasaurolophus_saddle", "ankylosaurus_saddle", "mosasaurus_saddle", "elasmosaurus_saddle", "velociraptor_harness"], {
         "pt_br": ("Montaria",
                   "Ponha a sela num dino montável adulto. O T. rex, o Carnotauro, o Giganotossauro, o Tricerátops, o Edmontossauro, o Estiracossauro, o Terizinossauro, o Galimimo, o Parassaurolofo, o Anquilossauro, o Mossassauro, o Elasmossauro, o Pteranodonte, o Quetzalcoatlus, o Dakotaraptor e o Velociraptor pedem a sela deles; "
                   "os outros usam a sela comum. Clique com a mão vazia para montar e use tesoura para tirar a sela.\n"

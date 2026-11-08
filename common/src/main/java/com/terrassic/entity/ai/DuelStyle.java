@@ -37,6 +37,10 @@ public record DuelStyle(float profile, double reach, double lunge, String jab, i
             // the fastest of the big ones: impatient, rams with the horns, the longest lunge, dodges, rarely blocks
             Map.entry("carnotaurus", new DuelStyle(35.0F, 3.4D, 9.0D, "attack_quick", 4, 19, "ram", 15, 32, false,
                     0.12F, 0.15F, 0.22F, 50, 0.75F)),
+            // the most patient tyrannosaurid: blocks a lot with the heavy skull, parries into a bite at the rival's face,
+            // hardly dodges; a short heavy lunge (docs/estudos/13, Daspletossauro)
+            Map.entry("daspletosaurus", new DuelStyle(40.0F, 3.4D, 5.5D, "attack_quick", 6, 18, "face_bite", 11, 28, false,
+                    0.30F, 0.40F, 0.03F, 100, 0.40F)),
             // cuts and backs off: slashes from the side, waits, counters
             Map.entry("giganotosaurus", new DuelStyle(45.0F, 4.6D, 7.0D, "slash", 10, 28, "rip", 9, 44, false,
                     0.25F, 0.20F, 0.08F, 90, 0.45F)),
