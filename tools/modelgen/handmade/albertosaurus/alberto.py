@@ -18,7 +18,7 @@ parentes"): the silhouette of a greyhound, not a bull.
 - a short TRIANGULAR crest on the lacrimal in front of each eye, rust on the male (a courting crest, Dodson et al.
   1993: a hypothesis), dark on the female;
 - LONG LEGS: the tibia and metatarsus longer than in the tyrannosaurines (Currie 2003; Currie et al. 2003), the hips
-  at ~3.1 m against the Daspletosaurus' 2.6 m on a body only half a metre longer; long narrow feet; the hallux off
+  at ~3.0 m against the Daspletosaurus' 2.6 m on a body only half a metre longer; long narrow feet; the hallux off
   the ground (Holtz 2004);
 - a slim, shallow trunk, minimal arms with two fingers, a long thin tail.
 

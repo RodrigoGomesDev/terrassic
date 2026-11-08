@@ -65,7 +65,7 @@ public class PackDriveGoal extends Goal {
         LivingEntity prey = this.prey();
         return prey != null && prey.isAlive() && this.mob.driveLeader != null && this.mob.driveLeader.isAlive()
                 && this.ticks < TIMEOUT && !this.mob.isKnockedOut() && !this.mob.isVehicle()
-                && this.mob.distanceToSqr(prey) < 56.0D * 56.0D && !this.delivered();
+                && this.mob.distanceToSqr(prey) < 56.0D * 56.0D && !(this.phase == Phase.PRESS && this.delivered());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class PackDriveGoal extends Goal {
 
     @Override
     public void stop() {
-        if (this.delivered()) {
+        if (this.phase == Phase.PRESS && this.delivered()) {
             this.mob.logAct("drive: the " + (this.prey() == null ? "prey" : this.prey().getType().toShortString())
                     + " is with the adults");
         } else {

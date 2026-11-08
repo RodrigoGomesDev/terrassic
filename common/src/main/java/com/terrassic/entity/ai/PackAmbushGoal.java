@@ -14,7 +14,7 @@ import java.util.EnumSet;
  */
 public class PackAmbushGoal extends Goal {
     /** The prey this close (blocks past the two half widths, at size 1): the strike. */
-    private static final double STRIKE = 7.0D;
+    private static final double STRIKE = 9.5D;
     private static final int MAX_WAIT = 300;
 
     private final Albertosaurine mob;
@@ -31,7 +31,7 @@ public class PackAmbushGoal extends Goal {
     public boolean canUse() {
         LivingEntity t = this.mob.getTarget();
         if (t == null || this.mob.isBaby() || this.mob.isTame() || this.mob.isVehicle() || this.mob.isDueling()
-                || this.mob.isSpent() || this.close(t) || !this.driven(t)) {
+                || this.mob.isSpent() || this.close(t) || !(this.mob.driveWait > 0 || this.driven(t))) {
             return false;
         }
         this.prey = t;
@@ -60,7 +60,7 @@ public class PackAmbushGoal extends Goal {
             this.struck = true;
             return false;
         }
-        return this.driven(t) || this.ticks < 40;
+        return this.driven(t) || this.mob.driveWait > 0;
     }
 
     @Override
@@ -75,6 +75,10 @@ public class PackAmbushGoal extends Goal {
     @Override
     public void stop() {
         this.mob.setMode(Albertosaurine.MODE_NONE);
+        if (!this.struck && this.prey != null && this.prey.isAlive()
+                && Math.sqrt(this.mob.distanceToSqr(this.prey)) - this.mob.getBbWidth() * 0.5D - this.prey.getBbWidth() * 0.5D < 14.0D) {
+            this.struck = true;                  // brought in by the young: it comes off the crouch onto it
+        }
         if (this.struck) {
             this.mob.logAct("ambush: the " + (this.prey == null ? "prey" : this.prey.getType().toShortString())
                     + " comes in reach, it strikes (" + this.ticks / 20 + " s)");
