@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
@@ -123,6 +122,17 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         return this.warnLeft > 0;
     }
 
+    /** 1.10.1: provoked (its egg taken, its herd calling), it fights as its temperament says, or runs. */
+    @Override
+    public boolean fightsWhenProvoked() {
+        return this.fightsBack();
+    }
+
+    @Override
+    public boolean herdSpecies() {
+        return true;
+    }
+
     /** false = flees instead of fighting back. */
     protected boolean fightsBack() {
         return true;
@@ -197,6 +207,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
             }
         });
         this.goalSelector.addGoal(1, new com.terrassic.entity.ai.FleeHurtGoal(this));
+        this.goalSelector.addGoal(2, new com.terrassic.entity.ai.BabyStayGoal(this));
         this.addDuelGoal(3);
         this.goalSelector.addGoal(3, new com.terrassic.entity.ai.SafeRestGoal(this));
         this.goalSelector.addGoal(4, new com.terrassic.entity.ai.HeadMeleeAttackGoal(this, 1.4D, true) {
@@ -212,12 +223,20 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(8, new MigrateGoal(this));
         this.goalSelector.addGoal(8, new com.terrassic.entity.ai.WaterholeGoal(this));
         this.goalSelector.addGoal(8, new FollowHerdGoal(this));
-        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, this.strollSpeed()));
+        this.goalSelector.addGoal(9, new com.terrassic.entity.ai.HerdStrollGoal(this, this.strollSpeed()));
+        this.goalSelector.addGoal(9, new com.terrassic.entity.ai.HerdMoveGoal(this));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this) {
+            @Override
+            protected void alertOthers() {
+                if (com.terrassic.entity.Behaviour.oldHelp) {
+                    super.alertOthers();        // 1.10.1: DinosaurEntity.callForHelp does it now (16 blocks, runners run)
+                }
+            }
+        }.setAlertOthers());
         addExtraGoals();
     }
 

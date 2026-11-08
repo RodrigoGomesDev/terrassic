@@ -1237,6 +1237,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(this.actionAnimation(extra))));
             registered.add(extra);
         }
+        for (String extra : this.quirkNames()) {
+            if (registered.add(extra)) {
+                action.triggerableAnim(extra, RawAnimation.begin().thenPlay(anim(extra)));
+            }
+        }
         if (this.hasLivelySet() || this.hasDuelMoves()) {
             for (String extra : LIVELY_ACTIONS) {
                 if (registered.add(extra)) {
@@ -1595,6 +1600,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             this.lockTick();
         }
         this.behaviourTick();
+        this.quirkTick();
         if (this.hasLivelySet()) {
             this.livelyStateTick();
         }
@@ -2259,6 +2265,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (hurt && !this.level().isClientSide()) {
             this.lastDamagedTick = this.tickCount;
             this.fleeCheck(source);
+            if (!Behaviour.oldHelp) {
+                this.callForHelp(source);
+            }
         }
         return hurt;
     }
@@ -2365,6 +2374,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (this.recovering && this.fleeLeft <= 0 && this.getHealth() >= this.getMaxHealth() * 0.6F) {
             this.recovering = false;        // strong again: it may come back for more
         }
+        this.rageTick();
         // the chase: given up 48 blocks from where it began, or after 20 s without landing a blow
         LivingEntity t = this.getTarget();
         if (t == null || this.isDueling()) {
@@ -2388,6 +2398,175 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 this.chaseOf = null;
             }
         }
+    }
+
+    // ------------------------------------------------------------------ 1.10.1: fear, rage, help, the young, quirks
+    // docs/estudos/12 (section 6): the apex roar scares the small ones off; a taken egg enrages the adults round it; a
+    // hurt herd animal or pack hunter calls its kind; the babies keep by their mother; idle quirks. Behaviour.old* = 1.9.5.
+
+    /** Runs from {@code from} for {@code ticks} without being hurt (a roar, an alarm): FleeHurtGoal takes it away from it,
+     *  by the best of eight headings. It does not mark it as recovering, so it may come back once the fright is over. */
+    public void scare(LivingEntity from, int ticks) {
+        if (this.isTame() || this.isVehicle() || this.isDueling() || this.isKnockedOut() || !this.isAlive() || from == null || from == this) {
+            return;
+        }
+        this.setSleeping(false);
+        this.fleeFrom = from;
+        this.fleeLeft = Math.max(this.fleeLeft, ticks);
+        this.setTarget(null);
+    }
+
+    /** Whether a wild one of its species with young near (16 blocks) stands its ground. */
+    public boolean guardingYoung() {
+        return this.guardsYoung();
+    }
+
+    /** Whether provoked it fights (true) or runs (false): predators fight, herbivores as their temperament says. */
+    public boolean fightsWhenProvoked() {
+        return false;
+    }
+
+    /** Whether it lives in a herd or a pack (the call for help, the herd that moves with its leader). */
+    public boolean herdSpecies() {
+        return false;
+    }
+
+    private java.util.UUID enragedAt;
+    private int enragedUntil;
+    private int lastCallTick = -1000;
+
+    /** Its egg was taken (DinoEggBlock): a fighter goes for the thief for {@code ticks}, a runner runs. */
+    public void enrage(Player thief, int ticks) {
+        if (this.isTame() || this.isBaby() || !this.isAlive() || this.isKnockedOut()) {
+            return;
+        }
+        this.setSleeping(false);
+        if (!this.fightsWhenProvoked()) {
+            this.scare(thief, 160 + this.random.nextInt(80));
+            return;
+        }
+        this.enragedAt = thief.getUUID();
+        this.enragedUntil = this.tickCount + ticks;
+        if (this.fleeLeft <= 0 && this.canAttack(thief)) {
+            this.setTarget(thief);
+        }
+    }
+
+    public boolean isEnraged() {
+        return this.enragedAt != null;
+    }
+
+    /** Enraged, it keeps coming back to the thief while the rage lasts (unless it runs, hurt, or the thief is far). */
+    private void rageTick() {
+        if (this.enragedAt == null) {
+            return;
+        }
+        if (this.tickCount > this.enragedUntil) {
+            this.enragedAt = null;
+            return;
+        }
+        if (this.tickCount % 20 != 0 || this.getTarget() != null || this.fleeLeft > 0) {
+            return;
+        }
+        Player p = this.level().getPlayerByUUID(this.enragedAt);
+        if (p != null && p.isAlive() && p.distanceToSqr(this) < 48.0D * 48.0D && this.canAttack(p)) {
+            this.setTarget(p);
+        }
+    }
+
+    /** A hurt wild one of a herd (16 blocks) or a pack (24) brings its kind: the fighters go for the attacker, the
+     *  runners and the babies run from it. The vanilla alarm (HurtByTargetGoal.setAlertOthers) is off with this on. */
+    private void callForHelp(DamageSource source) {
+        if (this.isTame() || this.isDueling() || !this.herdSpecies() || !(source.getEntity() instanceof LivingEntity attacker)
+                || attacker == this || attacker.getType() == this.getType() || this.tickCount - this.lastCallTick < 40
+                || (attacker instanceof Player pl && (pl.isCreative() || pl.isSpectator()))) {
+            return;
+        }
+        this.lastCallTick = this.tickCount;
+        double r = this.packHunter() ? 24.0D : 16.0D;
+        for (DinosaurEntity o : this.level().getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(r, 8.0D, r),
+                e -> e != this && e.getType() == this.getType() && !e.isTame() && e.isAlive() && e.distanceToSqr(this) < r * r)) {
+            if (o.isBaby()) {
+                o.scare(attacker, 120 + this.random.nextInt(80));
+                continue;
+            }
+            if (o.getTarget() != null || o.fleeLeft > 0 || o.isDueling()) {
+                continue;
+            }
+            o.setSleeping(false);
+            if (!o.fightsWhenProvoked()) {
+                o.scare(attacker, 120 + this.random.nextInt(80));
+            } else if (o.canAttack(attacker)) {
+                o.setTarget(attacker);
+            }
+        }
+    }
+
+    // the herd that moves together (3a): one leader per group strolls, the others go where it goes
+
+    private DinosaurEntity herdLeader;
+    private int herdLeaderAt = -1000;
+
+    /** The leader of its group (the lowest entity id among the wild grown ones of its class within 24 blocks), or null
+     *  when it leads itself or is alone. Cached for two seconds. */
+    public DinosaurEntity herdLeader() {
+        if (this.tickCount - this.herdLeaderAt >= 40 || (this.herdLeader != null && (!this.herdLeader.isAlive() || this.herdLeader.isTame()))) {
+            this.herdLeaderAt = this.tickCount;
+            DinosaurEntity best = this;
+            for (DinosaurEntity o : this.level().getEntitiesOfClass(this.getClass(), this.getBoundingBox().inflate(24.0D, 8.0D, 24.0D),
+                    e -> e.isAlive() && !e.isTame() && !e.isBaby())) {
+                if (o.getId() < best.getId()) {
+                    best = o;
+                }
+            }
+            this.herdLeader = best == this ? null : best;
+        }
+        return this.herdLeader;
+    }
+
+    /** A wild grown herd animal that follows a leader: it does not stroll on its own (HerdStrollGoal, HerdMoveGoal). */
+    public boolean herdFollower() {
+        return !Behaviour.oldHerd && this.herdSpecies() && !this.isTame() && !this.isBaby() && this.herdLeader() != null;
+    }
+
+    // idle quirks (3b): a sniff, a shake, a yawn... once every 40-90 s, from what the rig has
+
+    private static final String[] QUIRKS = {"sniff", "shake", "yawn", "stretch", "look_back", "look_side", "scratch", "preen", "snort"};
+    private int quirkIn = 800 + (int) (Math.random() * 1000);
+    private String[] quirkNames;
+
+    /** Whether the class already plays its own idle gestures on a timer (then the generic quirks stay out of it). */
+    protected boolean ownGestures() {
+        return false;
+    }
+
+    /** The quirks this rig has (none when the class runs its own gestures). */
+    public String[] quirkNames() {
+        if (this.quirkNames == null) {
+            java.util.List<String> l = new java.util.ArrayList<>();
+            if (!this.ownGestures() && !(this instanceof SwimmingDinosaur)) {
+                for (String q : QUIRKS) {
+                    if (this.hasAnim(q)) {
+                        l.add(q);
+                    }
+                }
+            }
+            this.quirkNames = l.toArray(new String[0]);
+        }
+        return this.quirkNames;
+    }
+
+    private void quirkTick() {
+        if (Behaviour.oldQuirks || --this.quirkIn > 0) {
+            return;
+        }
+        this.quirkIn = 800 + this.random.nextInt(1001);
+        String[] q = this.quirkNames();
+        if (q.length == 0 || !this.onGround() || this.isInWater() || this.getTarget() != null || this.isSleeping() || this.isKnockedOut()
+                || this.isVehicle() || this.isInSittingPose() || this.isDueling() || this.fleeLeft > 0 || !this.getNavigation().isDone() || !this.isAlive()) {
+            return;
+        }
+        triggerAnim(ACTION_CONTROLLER, q[this.random.nextInt(q.length)]);
     }
 
     private boolean hurtInner(DamageSource source, float amount) {
@@ -2884,6 +3063,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
             Alphas.spoils(this, source);
             Alphas.gone(this, !this.isTame(), true);
+        }
+        if (!this.level().isClientSide() && !this.isTame() && !this.isRemoved() && !this.dead
+                && this.level() instanceof net.minecraft.server.level.ServerLevel sl) {
+            com.terrassic.world.EcoSpawner.recordDeath(sl, this);     // 1.10.1: the region remembers who it lost
         }
         if (!this.level().isClientSide() && this.isTame() && !this.isRemoved() && !this.dead) {
             TamedRegistry.remove(this);

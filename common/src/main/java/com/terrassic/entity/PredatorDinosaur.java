@@ -17,7 +17,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
@@ -68,6 +67,23 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         return true;
     }
 
+    @Override
+    public boolean fightsWhenProvoked() {
+        return true;
+    }
+
+    @Override
+    public boolean herdSpecies() {
+        return !this.solitary();
+    }
+
+    /** 1.10.1, the reach by temperament (docs/estudos/12, section 6): a hunter notices a player 24 blocks off, a small
+     *  one (narrower than a block) 16; crouching, 80% of that (the vanilla visibility of a sneaking player). Only the
+     *  noticing: once on the chase the follow range (and the path range) is the species' own. */
+    public double playerNoticeRange() {
+        return this.getBbWidth() < 1.0F ? 16.0D : 24.0D;
+    }
+
     /** Solitary hunters keep no herd (no FollowHerdGoal). Called during construction: return a constant. */
     protected boolean solitary() {
         return false;
@@ -115,6 +131,7 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
         this.goalSelector.addGoal(1, new DinoSleepGoal(this));
         this.goalSelector.addGoal(2, new EatCarcassGoal(this));
         this.goalSelector.addGoal(1, new com.terrassic.entity.ai.FleeHurtGoal(this));
+        this.goalSelector.addGoal(2, new com.terrassic.entity.ai.BabyStayGoal(this));
         this.addDuelGoal(2);
         this.goalSelector.addGoal(3, this.createAttackGoal());
         float stop = Math.max(2.0F, this.getBbWidth() * 1.5F);
@@ -129,17 +146,35 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
             this.goalSelector.addGoal(7, new FollowHerdGoal(this));
         }
         this.goalSelector.addGoal(8, new com.terrassic.entity.ai.ShadowHerdGoal(this));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(8, new com.terrassic.entity.ai.HerdStrollGoal(this, 0.8D));
+        if (!this.solitary()) {
+            this.goalSelector.addGoal(8, new com.terrassic.entity.ai.HerdMoveGoal(this));
+        }
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this).setAlertOthers());
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this) {
+            @Override
+            protected void alertOthers() {
+                if (com.terrassic.entity.Behaviour.oldHelp) {
+                    super.alertOthers();        // 1.10.1: DinosaurEntity.callForHelp does it now (24 blocks for a pack)
+                }
+            }
+        }.setAlertOthers());
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
                 e -> this.huntsPlayers() && this.canHunt()) {
             @Override
             public boolean canUse() {
                 return PredatorDinosaur.this.huntsPlayers() && PredatorDinosaur.this.canHunt() && super.canUse();
+            }
+
+            @Override
+            protected void findTarget() {
+                // 1.10.1: noticed at the temperament's range (the vanilla one was the whole follow range, 28-32 blocks)
+                this.targetConditions.range(com.terrassic.entity.Behaviour.oldAggro ? this.getFollowDistance()
+                        : Math.min(this.getFollowDistance(), PredatorDinosaur.this.playerNoticeRange()));
+                super.findTarget();
             }
         });
         // the weak first (06/11/2026, the ecosystem): a calf or a wounded animal of a herd is picked before the others
