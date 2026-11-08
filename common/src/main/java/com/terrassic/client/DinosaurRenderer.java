@@ -95,6 +95,24 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
         }
     }
 
+    /** 1.10.1: where each foot was drawn in the world this frame, for the live layer's feet (LivelyMotion.feetTick). */
+    @Override
+    public void renderFinal(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource,
+                            com.mojang.blaze3d.vertex.VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay,
+                            float red, float green, float blue, float alpha) {
+        super.renderFinal(poseStack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        com.terrassic.entity.LivelyMotion lively = animatable.lively();
+        if (lively != null) {
+            for (int i = 0; i < 4; i++) {
+                var bone = model.getBone(com.terrassic.entity.LivelyMotion.FEET[i]).orElse(null);
+                if (bone != null && bone.isTrackingMatrices()) {
+                    org.joml.Vector3d p = bone.getWorldPosition();
+                    lively.setFootAt(i, p.x, p.y, p.z);
+                }
+            }
+        }
+    }
+
     @Override
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);

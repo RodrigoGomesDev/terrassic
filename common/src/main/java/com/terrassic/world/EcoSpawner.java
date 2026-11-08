@@ -151,7 +151,7 @@ public final class EcoSpawner {
                 }
             }
             if (land < target(LAND_TARGET, here, rules.get(Rule.LAND_SPAWNS))) {
-                spawnRound(level, player, Kind.LAND, rules, random,
+                spawnRound(level, player.position(), Kind.LAND, rules, random,
                         SpawnBudget.allowance(target(LAND_TARGET, here, rules.get(Rule.LAND_SPAWNS)), land, cap, WILD.get(level)));
             }
             if (SpawnBudget.isTurn(time, player.getUUID().hashCode(), SpawnBudget.SKY_PERIOD)) {
@@ -163,12 +163,12 @@ public final class EcoSpawner {
                 int regionalFlyers = level.getEntitiesOfClass(FlyingDinosaur.class, sky,
                         e -> e.isAlive() && !e.isTame() && !e.isColonist()).size();
                 int skyTarget = target(SpawnBudget.SKY_TARGET, here, rules.get(Rule.FLYER_SPAWNS));
-                spawnRound(level, player, Kind.FLYER, rules, random,
+                spawnRound(level, player.position(), Kind.FLYER, rules, random,
                         SpawnBudget.allowance(skyTarget, regionalFlyers, cap, WILD.get(level)));
                 PteroColonies.tick(level, player);
             }
             if (sea < target(SEA_TARGET, here, rules.get(Rule.SEA_SPAWNS))) {
-                spawnRound(level, player, Kind.SEA, rules, random,
+                spawnRound(level, player.position(), Kind.SEA, rules, random,
                         SpawnBudget.allowance(target(SEA_TARGET, here, rules.get(Rule.SEA_SPAWNS)), sea, cap, WILD.get(level)));
             }
         }
@@ -178,7 +178,7 @@ public final class EcoSpawner {
         return (int) Math.round(base * density * kind);
     }
 
-    private static void spawnRound(ServerLevel level, ServerPlayer player, Kind kind, Rules rules, RandomSource random, int budget) {
+    private static void spawnRound(ServerLevel level, Vec3 player, Kind kind, Rules rules, RandomSource random, int budget) {
         if (budget <= 0) {
             return;
         }
@@ -187,16 +187,16 @@ public final class EcoSpawner {
             double distance = kind == Kind.FLYER
                     ? SpawnBudget.SKY_MIN_DISTANCE + random.nextDouble() * (SpawnBudget.SKY_MAX_DISTANCE - SpawnBudget.SKY_MIN_DISTANCE)
                     : MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
-            int x = Mth.floor(player.getX() + Math.cos(angle) * distance);
-            int z = Mth.floor(player.getZ() + Math.sin(angle) * distance);
-            BlockPos column = new BlockPos(x, player.getBlockY(), z);
+            int x = Mth.floor(player.x + Math.cos(angle) * distance);
+            int z = Mth.floor(player.z + Math.sin(angle) * distance);
+            BlockPos column = new BlockPos(x, Mth.floor(player.y), z);
             if (!level.isPositionEntityTicking(column) || Rules.inSafeZone(level, column)) {
                 continue;
             }
             int spawned = switch (kind) {
-                case LAND -> spawnLand(level, x, z, rules, random, budget, player.getY(), player.blockPosition());
-                case FLYER -> spawnFlock(level, x, z, rules, random, budget, player.getY());
-                case SEA -> spawnSea(level, x, z, rules, random, budget, player.getY());
+                case LAND -> spawnLand(level, x, z, rules, random, budget, player.y, BlockPos.containing(player));
+                case FLYER -> spawnFlock(level, x, z, rules, random, budget, player.y);
+                case SEA -> spawnSea(level, x, z, rules, random, budget, player.y);
                 default -> 0;
             };
             if (spawned > 0) {
@@ -286,12 +286,23 @@ public final class EcoSpawner {
         if (com.terrassic.entity.Behaviour.oldPopulation || dino instanceof FlyingDinosaur || dino instanceof SwimmingDinosaur) {
             return;
         }
-        RegionPopulation.of(level).died(level, dino.blockPosition());
+        Rules rules = Rules.of(level);
+        double here = rules.get(Rule.SPAWN_DENSITY) * VanillaShare.ecoFactor(level.getBiome(dino.blockPosition()), rules);
+        RegionPopulation.of(level).died(level, dino.blockPosition(), cellShare(here, rules));
     }
+
+    /** The share of the cell of {@code pos} (BehaviorTest "stable"). */
+    public static int cellShareAt(ServerLevel level, BlockPos pos) {
+        Rules rules = Rules.of(level);
+        return cellShare(rules.get(Rule.SPAWN_DENSITY) * VanillaShare.ecoFactor(level.getBiome(pos), rules), rules);
+    }
+
+    /** Test only: what testLandRounds saw. */
+    public static String lastTestNote = "";
 
     /** Test only (BehaviorTest "stable"): {@code n} land rounds for this player now, whatever the turn and the period;
      *  returns how many were put in the world. */
-    public static int testLandRounds(ServerLevel level, ServerPlayer player, int n) {
+    public static int testLandRounds(ServerLevel level, BlockPos at, int n) {
         Rules rules = Rules.of(level);
         int before = 0;
         for (Entity e : level.getAllEntities()) {
@@ -301,17 +312,19 @@ public final class EcoSpawner {
         }
         WILD.put(level, before);
         int cap = (int) rules.get(Rule.MAX_CREATURES);
-        double here = rules.get(Rule.SPAWN_DENSITY) * VanillaShare.ecoFactor(level.getBiome(player.blockPosition()), rules);
+        double here = rules.get(Rule.SPAWN_DENSITY) * VanillaShare.ecoFactor(level.getBiome(at), rules);
+        Vec3 c = Vec3.atBottomCenterOf(at);
         int total = 0;
+        lastTestNote = String.format(java.util.Locale.ROOT, "wild in the level %d of %d, ticking 50 off %s, room %d", before, cap,
+                level.isPositionEntityTicking(at.offset(50, 0, 0)), RegionPopulation.of(level).room(level, at, cellShare(here, rules)));
         for (int i = 0; i < n; i++) {
-            AABB box = new AABB(player.getX() - RADIUS, player.getY() - RADIUS, player.getZ() - RADIUS,
-                    player.getX() + RADIUS, player.getY() + RADIUS, player.getZ() + RADIUS);
+            AABB box = new AABB(c.x - RADIUS, c.y - RADIUS, c.z - RADIUS, c.x + RADIUS, c.y + RADIUS, c.z + RADIUS);
             int land = level.getEntitiesOfClass(DinosaurEntity.class, box, e -> !e.isTame() && !(e instanceof FlyingDinosaur)
                     && !(e instanceof SwimmingDinosaur)).size();
             int target = target(LAND_TARGET, here, rules.get(Rule.LAND_SPAWNS));
             if (land < target) {
                 int was = WILD.get(level);
-                spawnRound(level, player, Kind.LAND, rules, level.getRandom(), SpawnBudget.allowance(target, land, cap, was));
+                spawnRound(level, c, Kind.LAND, rules, level.getRandom(), SpawnBudget.allowance(target, land, cap, was));
                 total += WILD.get(level) - was;
             }
         }

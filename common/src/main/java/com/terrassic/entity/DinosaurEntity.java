@@ -2437,6 +2437,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             return;
         }
         this.enragedAt = thief.getUUID();
+        Behaviour.log("egg rage: " + this.speciesId() + " #" + this.getId() + " goes for " + thief.getName().getString());
         this.enragedUntil = this.tickCount + ticks;
         if (this.fleeLeft <= 0 && this.canAttack(thief)) {
             this.setTarget(thief);
@@ -2475,10 +2476,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         this.lastCallTick = this.tickCount;
         double r = this.packHunter() ? 24.0D : 16.0D;
+        int fight = 0, ran = 0;
         for (DinosaurEntity o : this.level().getEntitiesOfClass(DinosaurEntity.class, this.getBoundingBox().inflate(r, 8.0D, r),
                 e -> e != this && e.getType() == this.getType() && !e.isTame() && e.isAlive() && e.distanceToSqr(this) < r * r)) {
             if (o.isBaby()) {
                 o.scare(attacker, 120 + this.random.nextInt(80));
+                ran++;
                 continue;
             }
             if (o.getTarget() != null || o.fleeLeft > 0 || o.isDueling()) {
@@ -2487,9 +2490,15 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             o.setSleeping(false);
             if (!o.fightsWhenProvoked()) {
                 o.scare(attacker, 120 + this.random.nextInt(80));
+                ran++;
             } else if (o.canAttack(attacker)) {
                 o.setTarget(attacker);
+                fight++;
             }
+        }
+        if (fight + ran > 0) {
+            Behaviour.log("help call: " + this.speciesId() + " hurt by " + attacker.getType().toShortString() + ", " + fight + " came to fight, "
+                    + ran + " ran");
         }
     }
 
@@ -2510,7 +2519,12 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                     best = o;
                 }
             }
+            DinosaurEntity was = this.herdLeader;
             this.herdLeader = best == this ? null : best;
+            if (this.herdLeader != null && this.herdLeader != was && !Behaviour.oldHerd && this.herdSpecies() && !this.isTame() && !this.isBaby()
+                    && !this.level().isClientSide()) {
+                Behaviour.log("herd leader: " + this.speciesId() + " #" + this.getId() + " follows #" + this.herdLeader.getId());
+            }
         }
         return this.herdLeader;
     }
@@ -2557,7 +2571,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 || this.isVehicle() || this.isInSittingPose() || this.isDueling() || this.fleeLeft > 0 || !this.getNavigation().isDone() || !this.isAlive()) {
             return;
         }
-        triggerAnim(ACTION_CONTROLLER, q[this.random.nextInt(q.length)]);
+        String pick = q[this.random.nextInt(q.length)];
+        triggerAnim(ACTION_CONTROLLER, pick);
+        Behaviour.log("quirk: " + this.speciesId() + " " + pick);
     }
 
     private boolean hurtInner(DamageSource source, float amount) {
@@ -4073,6 +4089,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     public boolean livelyBiped() {
         return BIPEDS.contains(this.speciesId());
     }
+
+    /** 1.10.1: whether it stands on four (the live layer sets the front feet on the ground too). */
+    public boolean livelyQuadruped() {
+        return QUADRUPEDS.contains(this.speciesId());
+    }
+
+    private static final java.util.Set<String> QUADRUPEDS = java.util.Set.of("triceratops", "styracosaurus", "ankylosaurus",
+            "protoceratops", "edmontosaurus", "parasaurolophus", "deinosuchus");
 
     private static final java.util.Set<String> BIPEDS = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
             "velociraptor", "dakotaraptor", "gallimimus", "pachycephalosaurus", "therizinosaurus");

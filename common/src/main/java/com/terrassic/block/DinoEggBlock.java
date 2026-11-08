@@ -108,11 +108,17 @@ public class DinoEggBlock extends Block {
         if (!com.terrassic.entity.Behaviour.oldEgg && culprit instanceof Player thief) {
             // 1.10.1 (docs/estudos/12, section 6; ARK): a player taking a wild egg enrages the grown ones of its species
             // within 24 blocks for 60 s: the fighters go for the thief, the runners run
+            int n = 0;
             for (DinosaurEntity parent : level.getEntitiesOfClass(DinosaurEntity.class, new AABB(pos).inflate(24.0D, 12.0D, 24.0D),
                     e -> e.getType() == type && !e.isTame() && !e.isBaby() && e.isAlive())) {
                 if (!parent.isEnraged() || parent.getTarget() == null) {
                     parent.enrage(thief, 1200);
+                    n++;
                 }
+            }
+            if (n > 0) {
+                com.terrassic.entity.Behaviour.log("egg rage: " + n + " " + net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath()
+                        + " roused by " + thief.getName().getString());
             }
             return;
         }

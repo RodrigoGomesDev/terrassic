@@ -175,6 +175,10 @@ public abstract class PredatorDinosaur extends DinosaurEntity {
                 this.targetConditions.range(com.terrassic.entity.Behaviour.oldAggro ? this.getFollowDistance()
                         : Math.min(this.getFollowDistance(), PredatorDinosaur.this.playerNoticeRange()));
                 super.findTarget();
+                if (this.target != null && !com.terrassic.entity.Behaviour.oldAggro) {
+                    com.terrassic.entity.Behaviour.log(String.format(java.util.Locale.ROOT, "aggro: %s noticed %s at %.1f%s", PredatorDinosaur.this.speciesId(),
+                            this.target.getName().getString(), PredatorDinosaur.this.distanceTo(this.target), this.target.isCrouching() ? " (crouching)" : ""));
+                }
             }
         });
         // the weak first (06/11/2026, the ecosystem): a calf or a wounded animal of a herd is picked before the others

@@ -129,6 +129,75 @@ check("bônus de bando", m is not None and int(m.group(1)) == 2 and int(m.group(
 for sp, how in re.findall(r"  (\w+): body turned \d+ deg in all, (arrived in [\d.]+ s|DID NOT ARRIVE in 30 s)", text):
     check(f"caminho {sp}", how.startswith("arrived"), how)
 
+# 1.10.1, behaviour (docs/estudos/12, sections 6-7): each phase ran the 1.9.5 way and the new one side by side
+def line(prefix):
+    m = re.search(r"^  " + re.escape(prefix) + r".*$", text, re.M)
+    return m.group(0) if m else ""
+
+roar, loud, oldroar = line("roar: "), line("loud roar: "), line("roar (1.9.5): ")
+check("rugido: o pequeno foge", "velociraptor at 10: FLED" in roar, roar[:90] or "sem medida")
+check("rugido: o grande fica", "triceratops at 12: stayed" in roar and "triceratops at 12: stayed" in loud, "")
+check("rugido normal não chega a 32", "velociraptor at 32: stayed" in roar, "")
+check("rugido alto chega a 32", "velociraptor at 32: FLED" in loud, "")
+check("rugido 1.9.5 sem medo", oldroar != "" and "FLED" not in oldroar, "")
+
+def aggro(sp, how, d, old=False):
+    m = re.search(r"aggro %s, player %s at %d%s: target (\w+)" % (sp, how, d, re.escape(" (1.9.5)") if old else ""), text)
+    return m.group(1) if m else "?"
+check("alcance: carnotauro nota a 20", aggro("carnotaurus", "standing", 20) == "PLAYER", "")
+check("alcance: carnotauro não nota a 26", aggro("carnotaurus", "standing", 26) == "none", "1.9.5: " + aggro("carnotaurus", "standing", 26, True))
+check("alcance: agachado a 20 passa", aggro("carnotaurus", "crouching", 20) == "none", "")
+check("alcance: raptor (pequeno) nota a 14, não a 18", aggro("velociraptor", "standing", 14) == "PLAYER" and aggro("velociraptor", "standing", 18) == "none", "")
+check("alcance: agachado a 14 passa pelo raptor", aggro("velociraptor", "crouching", 14) == "none", "")
+
+egg = line("eggs taken: ")
+check("ovo: adultos a 22 blocos vêm", "at 22 target PLAYER" in egg, egg[:100] or "sem medida")
+check("ovo: o corredor foge", "edmontosaurus fled true" in egg, "")
+check("ovo: a raiva volta ao alvo", "PLAYER again, enraged true" in text, "")
+check("ovo: a raiva acaba em 60 s", "61 s after: enraged false" in text, "")
+
+helpl = [l for l in re.findall(r"^  triceratops at 6 .*$", text, re.M)]
+newhelp = helpl[-1] if helpl else ""
+check("ajuda: a manada a 16 vem", "triceratops at 6 CHARGES" in newhelp and "triceratops at 12 CHARGES" in newhelp, newhelp[:80] or "sem medida")
+check("ajuda: fora dos 16 fica", "triceratops at 22 stays" in newhelp, "")
+check("ajuda: o bando a 24 vem, a 30 fica", "velociraptor at 20 CHARGES" in newhelp and "velociraptor at 30 stays" in newhelp, "")
+check("ajuda: corredores e filhote correm", "edmontosaurus at 10 RUNS" in newhelp and "calf at 8 RUNS" in newhelp, "")
+
+m = re.search(r"^  calf put 14 blocks from its mother, 10 s later: ([\d.]+)", text, re.M)
+check("filhote volta para perto da mãe", m is not None and float(m.group(1)) <= 6.5, f"{m.group(1) if m else '?'} blocos dela")
+m = re.search(r"^  a velociraptor 4 blocks from the calf, 5 s later: calf ([\d.]+) blocks from it, ([\d.]+) from its mother", text, re.M)
+check("filhote se afasta do predador e fica com a mãe", m is not None and float(m.group(1)) > 5.0 and float(m.group(2)) <= 6.5,
+      m.group(0)[2:] if m else "sem medida")
+
+h = re.findall(r"^  (\(1\.9\.5\) )?6 edmontosaurus, 90 s: spread ([\d.]+) .*?alignment ([\d.]+) .*travelled ([\d.]+)", text, re.M)
+old = [x for x in h if x[0]]
+new = [x for x in h if not x[0]]
+if old and new:
+    check("manada junta", float(new[-1][1]) <= max(8.0, float(old[-1][1])), f"espalhamento {new[-1][1]} (1.9.5: {old[-1][1]})")
+    check("manada anda junta", float(new[-1][3]) >= float(old[-1][3]) and float(new[-1][2]) >= 0.5,
+          f"andou {new[-1][3]} (1.9.5: {old[-1][3]}), alinhamento {new[-1][2]}")
+else:
+    check("manada junta", False, "sem medida")
+
+q = line("species with generic quirks: ")
+check("manias só onde não há gestos próprios", q != "" and not any(sp + " [" in q for sp in ("tyrannosaurus", "velociraptor", "giganotosaurus", "therizinosaurus")), q[2:90])
+m = re.search(r"3 idle ankylosaurus, 120 s: (\d+) quirks played", text)
+check("manias tocam", m is not None and int(m.group(1)) >= 1, f"{m.group(1) if m else '?'} em 120 s")
+
+for sp, how, o, n in re.findall(r"feet (\w+) \(([^)]+)\): 1\.9\.5 off by (-?[\d.]+) .*?; new (-?[\d.]+)", text):
+    # the correction has small limits (the body drops half a block at most): a one-block step is not closed, it is halved
+    check(f"pés {sp} ({how})", 0.0 <= float(n) <= max(0.1, float(o) * 0.7), f"1.9.5 {o}, novo {n} bloco")
+
+m = re.search(r"^  \(1\.9\.5\) emptied round, player arrives: 60 rounds put (\d+)", text, re.M)
+n = re.search(r"^  emptied round, player arrives: 60 rounds put (\d+)", text, re.M)
+check("população: região caçada não volta na hora", n is not None and int(n.group(1)) == 0 and m is not None and int(m.group(1)) > 0,
+      f"novo {n.group(1) if n else '?'}, 1.9.5 {m.group(1) if m else '?'}")
+cells = re.findall(r"^  (after 1 day|after 3 days|player leaves 600 blocks and comes back|comes back again): 60 rounds put (\d+), in its cell (\d+) \(share (\d+)", text, re.M)
+for what, put, cell, share in cells:
+    check(f"população: {what} sem passar da cota", int(cell) <= int(share), f"{cell} na célula, cota {share}")
+m = re.search(r"^  after 1 day: 60 rounds put (\d+)", text, re.M)
+check("população: repõe aos poucos", m is not None and int(m.group(1)) > 0, f"{m.group(1) if m else '?'} em um dia")
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))
