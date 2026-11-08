@@ -49,7 +49,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Carcharodontosaurus (v0.7) | 12-13,3 m, 6-15 t (Sereno et al. 1996, SGM-Din 1; Therrien & Henderson 2007) | novo | **12,5 x 4,9** | 2,4 x 4,6 | 25% |
 | Carnotaurus (v0.7) | 7,5-8 m, 1,3-2,1 t (Bonaparte et al. 1990, MACN-CH 894; Mazzetta et al. 2004) | novo | **8,0 x 3,6** | 1,8 x 3,4 | 30% |
 | Tarbosaurus (v0.7) | 10-12 m, 4-5 t (Hurum & Sabath 2003, PIN 551-1; Paul 2010) | novo | **12,0 x 4,5** | 2,5 x 4,3 | 25% |
-| Daspletosaurus (v0.7) | 8,5-9 m, 2,5-3,8 t (Russell 1970, CMN 8506; Currie 2003) | novo | **9,0 x 3,9** | 2,1 x 3,8 | 28% |
+| Daspletosaurus (v0.7; refeito na 1.10.1) | 8,5-9,5 m, 2,5-3,8 t (Russell 1970, CMN 8506; Paul 1988; Currie 2003; Carr et al. 2017, quadril ~2,2 m). 9,5 m = topo sem o espécime de 2025 (CMC VP 15826, Warner-Cowgill et al. 2025, ~11 m, fora por decisão do Rodrigo em 07/11/2026) | refeito | **9,5 x 3,9** (164 px a 16,94 px/m, escala 0,981, 16,3 texels por bloco) | 2,1 x 3,4 | 28% |
 | Albertosaurus (v0.7) | 8-10 m, 1,7-2,5 t (Currie 2003; Erickson et al. 2004, Dry Island) | novo | **9,5 x 3,8** | 1,9 x 3,6 | 28% |
 | Majungasaurus (v0.7) | 6-8 m, ~1,1 t (Sampson & Witmer 2007, FMNH PR 2100; Krause et al. 2007) | novo | **7,5 x 3,2** | 1,6 x 3,0 | 30% |
 | Dakotaraptor (v0.7) | ~5,5 m, 220-350 kg (DePalma et al. 2015, PBMNH.P.10.113.T; foice de 24 cm) | novo | **5,5 x 2,1** | 1,0 x 2,0 | 40% |
