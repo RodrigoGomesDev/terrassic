@@ -52,12 +52,19 @@ public class HerdMoveGoal extends Goal {
             return false;
         }
         this.spot = this.spot();
-        return this.spot != null && this.mob.position().distanceToSqr(this.spot.x, this.mob.getY(), this.spot.z) > 9.0D;
+        return this.spot != null && this.mob.position().distanceToSqr(this.spot.x, this.mob.getY(), this.spot.z) > 9.0D && !this.taken(this.spot);
+    }
+
+    /** Another of the herd already stands on that place: it is as good as there (pushing into it is walking in place). */
+    private boolean taken(Vec3 at) {
+        double r = Math.max(1.5D, this.mob.getBbWidth() * 0.9D);
+        return !this.mob.level().getEntitiesOfClass(this.mob.getClass(), new net.minecraft.world.phys.AABB(at, at).inflate(r, 3.0D, r),
+                e -> e != this.mob && e.isAlive()).isEmpty();
     }
 
     @Override
     public boolean canContinueToUse() {
-        return this.free() && this.spot != null && this.mob.tickCount >= this.restUntil && this.mob.position().distanceToSqr(this.spot.x, this.mob.getY(), this.spot.z) > 4.0D
+        return this.free() && this.spot != null && this.mob.tickCount >= this.restUntil && !this.taken(this.spot) && this.mob.position().distanceToSqr(this.spot.x, this.mob.getY(), this.spot.z) > 4.0D
                 && !(this.mob.getNavigation().isDone() && this.repath > 0);
     }
 
@@ -65,7 +72,7 @@ public class HerdMoveGoal extends Goal {
     public void start() {
         this.repath = 0;
         this.lastPos = this.mob.position();
-        this.stuckCheck = 40;
+        this.stuckCheck = 20;
     }
 
     @Override
@@ -78,9 +85,9 @@ public class HerdMoveGoal extends Goal {
     public void tick() {
         // walking without getting anywhere (the place is taken, a neighbour in the way): give it up for a while
         if (--this.stuckCheck <= 0) {
-            this.stuckCheck = 40;
-            if (this.lastPos != null && this.mob.position().distanceToSqr(this.lastPos) < 0.5D * 0.5D) {
-                this.restUntil = this.mob.tickCount + 100;
+            this.stuckCheck = 20;
+            if (this.lastPos != null && this.mob.position().distanceToSqr(this.lastPos) < 0.3D * 0.3D) {
+                this.restUntil = this.mob.tickCount + 200;
                 this.spot = null;
                 return;
             }
