@@ -82,6 +82,7 @@ public final class Playtest {
         int huntedPlayerAt = -1;  // distance when it first took the player as its target
         int fled;
         String stuckWhy = "";
+        String sleepWho = "";
         boolean struckPlayer;
     }
 
@@ -341,8 +342,12 @@ public final class Playtest {
                 t.asleep = d.isSleeping();
                 if (d.isSleeping() && d instanceof HerbivoreDinosaur) {
                     for (DinosaurEntity o : near) {
-                        if (o instanceof PredatorDinosaur && !o.isTame()) {
-                            t.sleepNearHunter = Math.min(t.sleepNearHunter, d.distanceTo(o));
+                        if (o instanceof PredatorDinosaur && !o.isTame() && d.distanceTo(o) < t.sleepNearHunter) {
+                            t.sleepNearHunter = d.distanceTo(o);
+                            // who, and was the hunter itself asleep, sated, after something (08/11: one at 12 blocks)
+                            t.sleepWho = String.format(Locale.ROOT, "%s asleep %.0f from a %s (%s%s%s)", d.speciesId(), d.distanceTo(o),
+                                    o.speciesId(), o.isSleeping() ? "asleep" : "awake", o.isSated() ? ", sated" : "",
+                                    o.getTarget() != null ? ", hunting " + o.getTarget().getType().toShortString() : "");
                         }
                     }
                 }
@@ -393,6 +398,9 @@ public final class Playtest {
                 fled++;
             }
             if (t.asleep) {
+                if (t.sleepNearHunter < 24.0D) {
+                    problems.add("asleep near a hunter: " + t.sleepWho);
+                }
                 sleepMin = Math.min(sleepMin, t.sleepNearHunter);
             }
             if (t.huntedPlayerAt >= 0) {
