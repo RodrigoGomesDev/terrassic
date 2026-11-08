@@ -262,3 +262,14 @@ Imagens: `art/<espécie>/previews/v2_cabeca_antes_depois.png` (v1, v2 e Carnotau
 [`padrao_v2_cabecas.png`](../../art/estudos/1.10/padrao_v2_cabecas.png) (as quatro v2 ao lado do Carnotauro e do
 T. rex, 3/4) e [`padrao_v2_cabecas_perfil.png`](../../art/estudos/1.10/padrao_v2_cabecas_perfil.png) (de lado, boca
 fechada).
+
+No jogo (08/11/2026, cliente Fabric com som zerado, `TERRASSIC_BEHAVIOR_SPECIES=jaws,look,daspleto,alberto,carcharo,majunga`
+e depois só `majunga` com a pintura final): as quatro fases rodaram inteiras (roubo de carcaça, bando e perseguição
+longa, emboscada, sangramento e arrasto, mordida que segura, canibal, bebedouro, temperamento) e as 22 mandíbulas
+medidas passaram em `behavior_regression.py` (Daspleto 33°, Alberto 32°, Carcharo 33°, Majunga 53°; nenhuma gira). As
+outras linhas do script falham por falta de medida, porque essas fases não estavam no lote. Fotos da cabeça no jogo:
+`art/<espécie>/previews/jogo/v2_cabeca_jogo.png`. Leitura honesta das fotos: Daspleto, Alberto e Carcharo agora
+mostram o mesmo tipo de detalhe do Carnotauro (fileira de dentes, olho em órbita com íris de cor, rosto com textura,
+acento). O Majungassauro melhorou bastante (o domo virou parte do crânio, dentes e olho aparecem), mas continua o
+mais escuro e o de menos dentes à mostra (focinho curto: 4 dentes de lado), então é o que pede o olhar do Rodrigo
+primeiro.
