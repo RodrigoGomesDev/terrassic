@@ -16,6 +16,10 @@ public class HerdMoveGoal extends Goal {
     private final DinosaurEntity mob;
     private Vec3 spot;
     private int repath;
+    /** Stuck: where it was two seconds ago, and a rest after giving up (it pushed in place against a neighbour). */
+    private Vec3 lastPos;
+    private int stuckCheck;
+    private int restUntil;
 
     public HerdMoveGoal(DinosaurEntity mob) {
         this.mob = mob;
@@ -44,7 +48,7 @@ public class HerdMoveGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if ((this.mob.tickCount + this.mob.getId()) % 20 != 0 || !this.free()) {
+        if ((this.mob.tickCount + this.mob.getId()) % 20 != 0 || this.mob.tickCount < this.restUntil || !this.free()) {
             return false;
         }
         this.spot = this.spot();
@@ -53,13 +57,15 @@ public class HerdMoveGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.free() && this.spot != null && this.mob.position().distanceToSqr(this.spot.x, this.mob.getY(), this.spot.z) > 4.0D
+        return this.free() && this.spot != null && this.mob.tickCount >= this.restUntil && this.mob.position().distanceToSqr(this.spot.x, this.mob.getY(), this.spot.z) > 4.0D
                 && !(this.mob.getNavigation().isDone() && this.repath > 0);
     }
 
     @Override
     public void start() {
         this.repath = 0;
+        this.lastPos = this.mob.position();
+        this.stuckCheck = 40;
     }
 
     @Override
@@ -70,6 +76,16 @@ public class HerdMoveGoal extends Goal {
 
     @Override
     public void tick() {
+        // walking without getting anywhere (the place is taken, a neighbour in the way): give it up for a while
+        if (--this.stuckCheck <= 0) {
+            this.stuckCheck = 40;
+            if (this.lastPos != null && this.mob.position().distanceToSqr(this.lastPos) < 0.5D * 0.5D) {
+                this.restUntil = this.mob.tickCount + 100;
+                this.spot = null;
+                return;
+            }
+            this.lastPos = this.mob.position();
+        }
         if (--this.repath > 0) {
             return;
         }

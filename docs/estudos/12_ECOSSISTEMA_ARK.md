@@ -141,11 +141,11 @@ ovo enfurece os adultos em volta; o rugido do Yutirano dá medo (corre a esmo 20
 | Recupera e volta | o selvagem cura 0,5% da vida por segundo depois de 10 s sem dano; só volta a atacar acima de 60% | feito: 11% -> 70% em 100 s |
 | Desiste da perseguição | 48 blocos de onde começou ou 20 s sem acertar; o mesmo alvo fica de lado por 30 s (os anfíbios seguem na água) | feito: Velociraptor desistiu da presa inalcançável |
 | Aviso antes de atacar | pavio curto: exibição/rugido de 3 s quando o jogador chega a 8 blocos | próximo |
-| Alcance por temperamento | agressivo 24, territorial 12 (x1,5 perto do ninho), pavio curto 8; agachado -20% | próximo |
-| Chamado de ajuda | manada 16 blocos, bando de predador 24 | parte existe (alertOthers), revisar |
-| Ovo pego e mãe | ovo pego enfurece os adultos a 24 blocos por 60 s; filhote foge de tudo e fica a 6 blocos da mãe | próximo |
+| Alcance por temperamento | agressivo 24, caçador pequeno (menos de 1 bloco de largura) 16; agachado -20% (a visibilidade do vanilla); só para notar o jogador, a perseguição segue o alcance da espécie; o território dos herbívoros já tinha o -20% agachado | feito na 1.10.1: Carnotauro nota a 20 e não a 26 (1.9.5: notava a 26), agachado a 20 passa; Velociraptor nota a 14 e não a 18, agachado a 14 passa |
+| Chamado de ajuda | manada 16 blocos, bando de predador 24: os lutadores vão no agressor, os corredores e os filhotes correm dele; substitui o alertOthers do vanilla (que usava o alcance de seguir inteiro) | feito na 1.10.1: Tricerátopo a 6 e 12 investem, a 22 fica (1.9.5: o de 22 também ia); Velociraptor a 10 e 20 vêm, a 30 fica |
+| Ovo pego e mãe | ovo selvagem pego enfurece os adultos da espécie a 24 blocos por 60 s (voltam ao ladrão se perdem o alvo); quem não luta foge; filhote fica a 6 blocos do adulto mais perto da espécie e foge de predador ou jogador a 8 (para o outro lado da mãe; quem segura a comida dele pode chegar) | feito na 1.10.1: Tricerátopo a 22 do ovo vem (1.9.5: só até 20), a raiva acaba aos 60 s; filhote posto a 14 da mãe volta para 1,7 (1.9.5: ficou a 14); Velociraptor a 4: o filhote foi para 8,2 dele e 3,1 da mãe (1.9.5: ficou a 4) |
 | Bônus de bando | +15% de dano e +5% de resistência por membro, até +4 | próximo |
-| Medo pelo rugido | rugido do apex assusta por 6-10 s quem tem menos da metade do tamanho | próximo |
+| Medo pelo rugido | rugido do apex assusta por 6-10 s quem tem menos da metade da largura dele, a 24 blocos (40 no rugido alto); nunca o alfa, a mesma espécie, a mãe com filhote, os domados | feito na 1.10.1: Velociraptor a 10 fugiu, Tricerátopo a 12 ficou, Velociraptor a 32 só fugiu do rugido alto |
 
 ## 7. Locomoção (pedido do Rodrigo, 07/11: "subir e descer blocos, nadar, parece mod antigo")
 
@@ -164,3 +164,23 @@ todos os terrestres, mola visual do degrau (o modelo sobe com atraso amortecido 
 controle do corpo pelo rumo real com giro limitado pelo tamanho. **Fluidez 2**: inclinação do corpo pelo terreno (4
 amostras), navegação própria com atalho por varredura e nós centrados, passos sincronizados com a animação (som,
 poeira, tremor nos gigantes), abrir caminho entre folhas para os grandes.
+
+## 8. Andamento da 1.10.1 (branch `comport/1.10.1`, 08/11/2026)
+
+Os quatro sistemas pedidos, cada um atrás de uma chave (`entity/Behaviour`: `TERRASSIC_OLD_ROAR`, `_AGGRO`, `_EGG`, `_HELP`,
+`_BABY`, `_HERD`, `_QUIRKS`, `_FEET`, `_POPULATION` = 1 traz de volta a 1.9.5). As chaves são lidas também durante o jogo,
+então cada fase da `BehaviorTest` mede a 1.9.5 e a nova na mesma rodada. Cada sistema escreve uma linha `[eco] ...` no log
+do jogo quando dispara (para o playtest em mundo gerado contar): `roar scare`, `aggro`, `egg rage`, `help call`,
+`baby flee`, `herd leader`, `quirk`, `region loss`, `region refill`.
+
+| Sistema | Regra | Medida (cliente Fabric, som zerado) |
+|---|---|---|
+| Medo do rugido e alcance | seção 6 acima | seção 6 acima (fases `roarfear`, `aggro`) |
+| Ovo, ajuda, filhotes | seção 6 acima | seção 6 acima (fases `eggrage`, `helpcall`, `babystay`) |
+| Manada anda junta | um líder por grupo (o menor id entre os adultos selvagens da classe a 24 blocos) passeia, com metade da frequência; os outros não passeiam sozinhos: vão para o destino do líder mais um lugar próprio (ângulo fixo pelo UUID, distância pelo espaçamento) (`ai/HerdStrollGoal`, `ai/HerdMoveGoal`); o `FollowHerdGoal` continua separando | 6 Edmontossauros em 90 s: espalhamento médio 3,8 blocos (1.9.5: 6,5), a manada andou 11 blocos junta (1.9.5: 3) |
+| Manias de repouso | parado no chão, sem alvo, a cada 40-90 s uma de {sniff, shake, yawn, stretch, look_back, look_side, scratch, preen, snort} que o rig tiver; fora das classes que já têm os próprios gestos (os apex, Raptor, Dakotaraptor, Terizinossauro, pterossauros, Paquicefalossauro, Galimimo, Didelfodonte) | hoje só o Anquilossauro ganha (snort): os outros refeitos ou já têm gestos próprios ou não têm essas animações no rig. 3 Anquilossauros parados, 120 s: 9 manias |
+| Pés no chão | cada pé (os dois de trás, e os da frente nos quadrúpedes: Tricerátopo, Estiracossauro, Anquilossauro, Protocerátopo, Edmontossauro, Parassaurolofo, Deinossuco) é procurado onde o modelo o desenhou no quadro anterior (matriz do osso no `DinosaurRenderer.renderFinal`); tira-se a inclinação do corpo e a mola do degrau; o que sobra: o corpo desce até o pé mais baixo (no máximo meio bloco) e as outras pernas dobram; some com a caminhada rápida | diferença entre a altura desenhada de cada pé e o chão debaixo dele, num degrau de 1 bloco: T. rex de lado 1,05 -> 0,29; Tricerátopo de lado 0,98 -> 0,59; Tricerátopo de frente 0,97 -> 0,49. Com os limites pequenos o degrau inteiro não fecha: cai pela metade |
+| População estável | o mundo em células de 128 blocos (`world/RegionPopulation`, salvo em `terrassic_population.dat`); cada morte de bicho de terra selvagem conta como perda da célula; o EcoSpawner só põe na célula até a cota dela (15 na densidade 1, vezes as regras) menos a perda, e a perda cura um terço da cota por dia de jogo; errante que some quando o jogador vai embora não é perda | cota 5 (bioma fora do Cretáceo): região caçada, jogador chega: 0 postos (1.9.5: 6, acima da cota); depois de 1 dia, 1 na célula; depois de 3 dias, 3; jogador vai a 600 blocos e volta duas vezes: 4 na célula, nunca acima da cota |
+
+Não foi feito: os temperamentos na tabela de espécies (4.2), a Rivalidade das manadas, o aviso do pavio curto e os pés
+durante a caminhada normal (só parado e devagar, por segurança contra o giro de ossos da 1.9.1).
