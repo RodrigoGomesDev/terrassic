@@ -273,3 +273,26 @@ mostram o mesmo tipo de detalhe do Carnotauro (fileira de dentes, olho em órbit
 acento). O Majungassauro melhorou bastante (o domo virou parte do crânio, dentes e olho aparecem), mas continua o
 mais escuro e o de menos dentes à mostra (focinho curto: 4 dentes de lado), então é o que pede o olhar do Rodrigo
 primeiro.
+
+## Padrão v3 (08/11/2026): a regra é comum, o desenho é de cada um
+
+O Rodrigo gostou mais das cabeças v2, mas: "essa padronização está tirando o traço único que cada dinossauro tinha...
+parece tudo copia e cola um do outro". Na folha de perfil (`art/estudos/1.10/padrao_v2_cabecas_perfil.png`) os quatro
+têm o mesmo olho (quadrado escuro, íris dourada de 2 px, brilho no mesmo canto), os mesmos dentes (barras creme iguais
+e igualmente espaçadas), o mesmo pontilhado no rosto, a mesma linha de boca e, em três, a mesma barrinha de acento
+sobre o olho. A causa: uma peça pronta compartilhada (`_engine/head2.py`) montou as quatro cabeças.
+
+O v3 separa o que é comum do que é próprio:
+- **Comum (o motor só MEDE, nunca desenha a peça pronta):** 16 texels por bloco; pele contínua no espaço do corpo;
+  cabeça mais detalhada que o corpo; dentes à mostra de boca fechada; olho com órbita, íris e brilho; um acento.
+- **Próprio de cada espécie (desenhado no arquivo da espécie, a partir da anatomia dela):**
+  - o **olho**: formato, tamanho, cor da íris, pálpebra, o que tem em volta (chifre, arcada, máscara);
+  - os **dentes**: quantos, de que tamanho e forma (lâmina serrilhada, banana grossa, cone curto, fileira fina), com
+    falhas e dentes novos no padrão da espécie;
+  - o **motivo da pele** do rosto e do corpo: placas, rugosidade com poros, escama miúda, sulcos e rugas, nunca o mesmo
+    pontilhado com outra cor;
+  - o **lugar do acento** e da marca: cada espécie põe a cor de exibição num ponto diferente da cabeça;
+  - a **boca**: o lábio e a linha da boca de cada uma.
+- **Checagem de semelhança** (`_engine/uniquecheck.py`): compara as cabeças de todos os refeitos par a par (o recorte do
+  olho, a sequência de tamanhos e espaços dos dentes, a textura do rosto) e reprova o build quando duas espécies saem
+  parecidas demais. Os refeitos antigos (Carnotauro, T. rex) entram na comparação como referência do que é "próprio".
