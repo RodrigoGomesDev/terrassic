@@ -19,10 +19,10 @@ hypothesis. What makes it read as itself and NOT as the remade Giganotosaurus (s
 2. a thicker, shorter NECK carried lower and a DEEPER, heavier trunk (5 to 7 t against the lean Giganotosaurus);
 3. a smooth tail deep at the base: no tall ridge of caudal spines;
 4. it waits in ambush and bursts out (the animations; the Java in Carcharodontosaurine);
-5. its own colour, "arenito-malva": the pinkish grey of the Kem Kem sandstone toward a faded mauve, the back darker
-   in short broken vertical bars (mangrove shadows: the first drawn mark), a near-white faintly pink belly, the brow,
-   lacrimal and nuchal crest dark horn (the second) and the dark MASK behind the eye, black on the male, lead grey on
-   the female (the third).
+5. its own colour, a North-African sandstone: a warm sand and ochre-tan body (08/11/2026: the study's "arenito-malva"
+   read as the Daspletosaurus' mauve-wine family from afar), the back darker in short broken vertical umber bars
+   (mangrove shadows: the first drawn mark), a pale sand-grey belly, the brow, lacrimal and nuchal crest dark horn (the
+   second) and the dark MASK behind the eye, black on the male, lead grey on the female (the third).
 """
 import math
 
@@ -35,15 +35,15 @@ TEX_W = 256
 PX_M = skin2.PX_PER_M
 
 # ------------------------------------------------------------------ palette
-# k0..k5 the body ramp (hue-shifted: shadows to a mauve-brown, lights to a sandstone grey), b0..b3 the pale belly,
+# k0..k5 the body ramp (the warm sand and ochre-tan of the Kem Kem sandstone, shadows to umber), b0..b3 the pale belly,
 # hn the dark horn of the brow and crest, mk the mask behind the eye
 SCHEME = {
-    "k0": "2e1520", "k1": "431f2d", "k2": "5a3141", "k3": "774858", "k4": "916373", "k5": "a98089",
-    "b0": "c4a7ae", "b1": "dbc4c9", "b2": "ebdcdf", "b3": "f3e9eb",
-    "hn0": "2a2224", "hn1": "3d3336", "hn2": "5e4f53",
-    "mk": "231b1f", "lip": "b9959f", "scar": "d3c0c3",
-    "female": {"k1": "4a2533", "k2": "613847", "k3": "7e4f5f", "k4": "986a7a", "k5": "b0878f",
-               "b0": "c9adb3", "b1": "dfc9cd", "b2": "eee1e3", "mk": "54474d"},
+    "k0": "30281a", "k1": "4f3b22", "k2": "69582a", "k3": "806b33", "k4": "927c46", "k5": "a48e5e",
+    "b0": "938b7a", "b1": "a39a89", "b2": "b3aa99", "b3": "c1b8a6",
+    "hn0": "211c16", "hn1": "342c24", "hn2": "4d4337",
+    "mk": "1f1a15", "lip": "9a907c", "scar": "d8cfbd",
+    "female": {"k1": "57422a", "k2": "715f31", "k3": "88723a", "k4": "9a844e", "k5": "ac9665",
+               "b0": "9b9282", "b1": "aba291", "b2": "bcb2a1", "mk": "4a443b"},
 }
 PAL = {
     "ker0": hx("1e1a18"), "ker1": hx("362e2a"), "ker2": hx("cfc4a8"), "ker3": hx("a09276"),
