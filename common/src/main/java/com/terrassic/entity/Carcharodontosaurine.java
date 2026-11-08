@@ -374,8 +374,8 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
         double max = this.getBbWidth() * 1.05D;
         for (CarcassEntity c : this.level().getEntitiesOfClass(CarcassEntity.class,
                 new net.minecraft.world.phys.AABB(this.lastKillPos, this.lastKillPos).inflate(4.0D), CarcassEntity::hasMeat)) {
-            if (c.getId() != this.draggedCarcass && c.getBbWidth() <= max) {
-                return c;
+            if (c.getId() != this.draggedCarcass && c.getBbWidth() <= max && !this.shadeAt(c.position())) {
+                return c;                      // (a kill already in the shade is eaten where it lies)
             }
         }
         return null;
@@ -393,17 +393,18 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
         this.carcassActCooldown = Math.max(this.carcassActCooldown, 60);
     }
 
-    /** Where to haul it: the nearest standing spot in shade (leaves overhead) 4 to 10 blocks off, else 6 blocks back
-     *  from the water, else 6 blocks straight back. */
-    public Vec3 dragDestination() {
+    /** Where to walk (backwards) so the carcass ends in the shade: the nearest standing spot under leaves 3 to 10
+     *  blocks from the carcass, and past it by the carcass' trailing distance; else away from the water, else straight
+     *  back, 6 blocks. */
+    public Vec3 dragDestination(CarcassEntity carcass, double hold) {
         Level level = this.level();
-        BlockPos at = this.blockPosition();
+        BlockPos at = carcass.blockPosition();
         BlockPos best = null;
         double bestD = Double.MAX_VALUE;
         for (int dx = -10; dx <= 10; dx++) {
             for (int dz = -10; dz <= 10; dz++) {
                 double d2 = dx * dx + dz * dz;
-                if (d2 < 16.0D || d2 > 100.0D || d2 >= bestD) {
+                if (d2 < 9.0D || d2 > 100.0D || d2 >= bestD) {
                     continue;
                 }
                 for (int dy = -2; dy <= 2; dy++) {
@@ -417,23 +418,28 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
             }
         }
         if (best != null) {
-            return Vec3.atBottomCenterOf(best);
+            Vec3 shade = Vec3.atBottomCenterOf(best);
+            Vec3 dir = shade.subtract(carcass.position()).multiply(1.0D, 0.0D, 1.0D).normalize();
+            return shade.add(dir.scale(hold + 1.0D));      // the carcass a block in under the leaves
         }
+        BlockPos me = this.blockPosition();
         Vec3 away = null;
         for (int dx = -6; dx <= 6 && away == null; dx += 2) {
             for (int dz = -6; dz <= 6; dz += 2) {
-                if (level.getFluidState(at.offset(dx, -1, dz)).is(FluidTags.WATER)) {
+                if (level.getFluidState(me.offset(dx, -1, dz)).is(FluidTags.WATER)) {
                     away = new Vec3(-dx, 0.0D, -dz);
                     break;
                 }
             }
         }
         if (away == null || away.lengthSqr() < 1.0E-3D) {
-            float yaw = this.getYRot() * Mth.DEG_TO_RAD;
-            away = new Vec3(Mth.sin(yaw), 0.0D, -Mth.cos(yaw));         // straight back
+            away = this.position().subtract(carcass.position()).multiply(1.0D, 0.0D, 1.0D);     // straight back
         }
-        Vec3 dir = away.normalize();
-        return this.position().add(dir.scale(6.0D));
+        if (away.lengthSqr() < 1.0E-3D) {
+            float yaw = this.getYRot() * Mth.DEG_TO_RAD;
+            away = new Vec3(Mth.sin(yaw), 0.0D, -Mth.cos(yaw));
+        }
+        return this.position().add(away.normalize().scale(6.0D));
     }
 
     public boolean shadeAt(Vec3 p) {
