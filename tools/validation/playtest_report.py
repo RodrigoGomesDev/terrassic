@@ -51,7 +51,7 @@ check("à noite alguém dormiu", bool(sleepers), f"{len(sleepers)} lugares de no
 check("dorme longe do caçador", all(s >= 24 for s in sleepers), f"mais perto: {min(sleepers) if sleepers else '-'} blocos")
 
 # a wild runner herbivore may take the player as target to run from it, but never strikes
-RUNNERS = {"edmontosaurus", "gallimimus", "parasaurolophus", "quetzalcoatlus"}
+RUNNERS = {"edmontosaurus", "gallimimus", "parasaurolophus"}   # the Quetzalcoatlus hunts: it may strike
 bad = [m for m in re.findall(r"took the player as target: (\w+) from \d+ blocks, and STRUCK", text) if m in RUNNERS]
 check("herbívoro que foge nunca bate", not bad, ", ".join(bad))
 
