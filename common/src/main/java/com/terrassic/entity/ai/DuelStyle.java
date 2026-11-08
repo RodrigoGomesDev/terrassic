@@ -49,6 +49,10 @@ public record DuelStyle(float profile, double reach, double lunge, String jab, i
             // (its lunge, with bleeding) and answers with the brow shelf (docs/estudos/13, Carcarodontossauro)
             Map.entry("carcharodontosaurus", new DuelStyle(25.0F, 4.4D, 6.0D, "attack_quick", 6, 24, "brow_butt", 9, 26, false,
                     0.25F, 0.30F, 0.05F, 110, 0.30F)),
+            // the bulldog: low and face on, blocks a lot, hardly dodges, circles little; a short low lunge that bites and
+            // holds, the dome shove from below as its signature and its counter (docs/estudos/13, Majungassauro)
+            Map.entry("majungasaurus", new DuelStyle(10.0F, 2.6D, 4.5D, "attack_quick", 6, 18, "dome_shove", 9, 26, false,
+                    0.28F, 0.42F, 0.03F, 95, 0.30F)),
             // cuts and backs off: slashes from the side, waits, counters
             Map.entry("giganotosaurus", new DuelStyle(45.0F, 4.6D, 7.0D, "slash", 10, 28, "rip", 9, 44, false,
                     0.25F, 0.20F, 0.08F, 90, 0.45F)),

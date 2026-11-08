@@ -39,7 +39,7 @@ public record GuideSpecies(String id, String era, String diet, float length, boo
             new GuideSpecies("tarbosaurus", "late_cretaceous", "carnivore", 12.0F, true, true, 2, 7.87F),
             new GuideSpecies("daspletosaurus", "late_cretaceous", "carnivore", 9.5F, true, true, 2, 9.94F),
             new GuideSpecies("albertosaurus", "late_cretaceous", "carnivore", 10.0F, true, true, 2, 9.44F),
-            new GuideSpecies("majungasaurus", "late_cretaceous", "carnivore", 7.5F, true, true, 2, 12.58F),
+            new GuideSpecies("majungasaurus", "late_cretaceous", "carnivore", 8.0F, true, true, 2, 11.81F),
             new GuideSpecies("dakotaraptor", "late_cretaceous", "carnivore", 5.5F, true, true, 3, 14.76F),
             new GuideSpecies("troodon", "late_cretaceous", "carnivore", 2.4F, false, true, 4, 39.53F),
             new GuideSpecies("oviraptor", "late_cretaceous", "omnivore", 2.0F, false, false, 4, 47.59F),

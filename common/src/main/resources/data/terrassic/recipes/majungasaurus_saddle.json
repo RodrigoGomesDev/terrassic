@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "LRL",
+    "HHH",
+    "SBS"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "R": {
+      "item": "terrassic:rush"
+    },
+    "H": {
+      "item": "terrassic:majungasaurus_hide"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "B": {
+      "item": "minecraft:bone"
+    }
+  },
+  "result": {
+    "item": "terrassic:majungasaurus_saddle",
+    "count": 1
+  }
+}
