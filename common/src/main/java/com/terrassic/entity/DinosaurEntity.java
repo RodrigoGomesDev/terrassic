@@ -2416,6 +2416,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         this.setTarget(null);
     }
 
+    /** Test only (BehaviorTest "herdmove"): its goals. */
+    public net.minecraft.world.entity.ai.goal.GoalSelector goals() {
+        return this.goalSelector;
+    }
+
     /** Whether a wild one of its species with young near (16 blocks) stands its ground. */
     public boolean guardingYoung() {
         return this.guardsYoung();

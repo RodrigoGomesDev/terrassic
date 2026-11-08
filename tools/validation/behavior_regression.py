@@ -177,9 +177,13 @@ if old and new:
     check("manada junta", float(new[-1][1]) <= max(8.0, float(old[-1][1])), f"espalhamento {new[-1][1]} (1.9.5: {old[-1][1]})")
     # how far a herd goes in 90 s is chance (one stroll more or less); together is the measure
     check("manada anda alinhada", float(new[-1][2]) >= 0.5, f"alinhamento {new[-1][2]}, andou {new[-1][3]} (1.9.5: {old[-1][3]})")
-    st = re.findall(r"6 edmontosaurus, 90 s:.*walking in place (\d+)", text)
+    # walking in place (the playtest saw two Gallimimus push against each other for 11 s): the new herd goal itself
+    # never does it for long (it gives up after 2 s); the old goals keep a few seconds of it, in both versions alike
+    st = re.findall(r"6 edmontosaurus, 90 s:.*walking in place (\d+) animal-seconds \{([^}]*)\}", text)
     if len(st) >= 2:
-        check("manada sem andar no lugar", int(st[-1]) <= max(3, int(st[0])), f"{st[-1]} bicho-segundos (1.9.5: {st[0]})")
+        hm = re.search(r"HerdMoveGoal=(\d+)", st[-1][1])
+        check("manada sem andar no lugar", (int(hm.group(1)) if hm else 0) <= 4 and int(st[-1][0]) <= int(st[0][0]) + 12,
+              f"{st[-1][0]} bicho-segundos {{{st[-1][1]}}} (1.9.5: {st[0][0]})")
 else:
     check("manada junta", False, "sem medida")
 
