@@ -19,7 +19,7 @@ import parts as hit_parts  # noqa: E402
 PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
-    "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus",
+    "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -110,7 +110,10 @@ SIZES = {
     # et al. 2017; Rodrigo 07/11/2026). Daspletosaurus v1 (07/11, the 1.10.1 pilot) is hand-made at skin2.PX_PER_M
     # (16.94 px/m: one texel = one pixel of a block) and shown at ~1 (16.3 texels per block, 164 px long).
     "daspletosaurus":     dict(real=9.5,  scale=0.9265, w=2.1, h=3.4, baby=0.28, shadow=2.0),
-    "albertosaurus":      dict(real=9.5,  scale=1.43, w=1.9, h=3.6, baby=0.28, shadow=1.8),
+    # Albertosaurus sarcophagus: 10 m, the top of the estimates (the Dry Island adult, Erickson et al. 2006; Rodrigo
+    # 07/11/2026). Albertosaurus v1 (08/11, the 1.10.1) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1
+    # (16.5 texels per block, 174 px long): slimmer and longer-legged than the Daspletosaurus, so a narrower hitbox.
+    "albertosaurus":      dict(real=10.0, scale=0.918, w=1.9, h=3.5, baby=0.28, shadow=1.9),
     "majungasaurus":      dict(real=7.5,  scale=1.26, w=1.6, h=3.0, baby=0.3,  shadow=1.5),
     # Dakotaraptor v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 5.5 m (16 / 20 = 0.8): its own
     # study and rig (page "1.9: estudos..."); the hitbox covers the body, the hit parts the deep head and the tail.
@@ -309,7 +312,7 @@ WORLD = {
     "carnotaurus":        dict(biomes=("savanna", "plains", "badlands"), weight=2, group=(1, 2), track=10),  # Patagonian plains
     "tarbosaurus":        dict(biomes=("desert", "river", "badlands"), weight=1, group=(1, 1), track=10),  # the Nemegt river plains and the Gobi
     "daspletosaurus":     dict(biomes=("forest", "river", "plains"), weight=2, group=(2, 3), track=10),  # Alberta's river forests: a pair, the third a juvenile (Tyrannosaurine)
-    "albertosaurus":      dict(biomes=("taiga", "forest", "plains", "hill"), weight=2, group=(2, 4), track=10),  # the Dry Island pack; Horseshoe Canyon uplands (1.9.5)
+    "albertosaurus":      dict(biomes=("taiga", "forest", "plains", "hill"), weight=2, group=(2, 4), track=10),  # the Dry Island pack of mixed ages: two adults, the third and fourth juveniles (Albertosaurine); Horseshoe Canyon uplands (1.9.5)
     "majungasaurus":      dict(biomes=("jungle", "savanna", "river"), weight=2, group=(1, 2), track=10),  # Madagascar's seasonal floodplain
     "dakotaraptor":       dict(biomes=("plains", "forest", "river", "swamp", "jungle"), weight=3, group=(2, 3), track=10),  # Hell Creek floodplain forests and swamps, small packs (1.9.5: the thick forest's hunters)
     "troodon":            dict(biomes=("forest", "taiga", "plains", "swamp", "jungle"), weight=5, group=(1, 3), track=8),   # Judith River and Hell Creek wet woodland, pairs (1.9.5)
@@ -538,13 +541,13 @@ SPECIES = [
       prey="e.getBbWidth() < 3.0F && !(e instanceof Daspletosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
       roar=True, pack=True, apex=True, rig="Tyrannosaurine", prey_interval=180, saddle="DASPLETOSAURUS_SADDLE"),
  dict(id="albertosaurus", cls="Albertosaurus", base="PredatorDinosaur",
-      doc="Albertosaurus sarcophagus - 9.5 m light, long-legged tyrannosaur of the northern forests with a short horn over each eye: the fast one, hunting in packs of two to four that share a target. Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); a fast rideable hunter when tamed.",
-      attrs=dict(MAX_HEALTH=95, MOVEMENT_SPEED=0.29, ATTACK_DAMAGE=12, ATTACK_KNOCKBACK=1.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=30),
+      doc="Albertosaurus sarcophagus - 10 m light, long-legged tyrannosaur of the northern forests: a long low skull with a small triangular crest in front of each eye, long shins and feet, the runner of the family. Lives in packs of two to four of mixed ages: an adult calls, the others answer; the faster juveniles drive the prey round to the adults waiting crouched. Chases longer than the other big predators (72 blocks or 30 s), then is spent for a while; in a duel it dodges most and bites the rival's neck going past. Tamed by knockout or from a stolen wild egg; a fast rideable hunter with its own saddle. Behaviour in Albertosaurine.",
+      attrs=dict(MAX_HEALTH=95, MOVEMENT_SPEED=0.29, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=1.0, ARMOR=4, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=36),
       food="Items.BEEF, Items.PORKCHOP, Items.MUTTON, ModItems.RAW_DINO_MEAT.get(), ModItems.RAW_PRIME_MEAT.get()",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 0.95, 1.7, 220), step=("RAVAGER_STEP", 0.7, 0.75),
-      xp=30, step_height=1.3, head=(40, 28), run=0.02, rideable=True, jump=0.55, ride_offset=2.0, ride_speed=1.25,
+      xp=30, step_height=1.3, head=(40, 28), rideable=True, jump=0.55, ride_offset=3.61, ride_forward=1.44, ride_speed=1.25,
       prey="e.getBbWidth() < 2.8F && !(e instanceof Albertosaurus) && !(e instanceof Compsognathus) && !e.isBaby()",
-      roar=True, pack=True, prey_interval=160),
+      roar=True, pack=True, apex=True, rig="Albertosaurine", prey_interval=160, saddle="ALBERTOSAURUS_SADDLE"),  # its run threshold (0.02) lives in Albertosaurine
  dict(id="majungasaurus", cls="Majungasaurus", base="PredatorDinosaur",
       doc="Majungasaurus crenatissimus - 7.5 m abelisaur of Madagascar: a very short deep snout, a single dome horn on the skull roof, stub arms and strong short legs. An ambusher with a very fast short burst (it breaks into the charge at once) and a bite that throws. Roars when it locks onto a target. Only tameable from a stolen wild egg until the knockout (v0.7); rideable when tamed.",
       attrs=dict(MAX_HEALTH=80, MOVEMENT_SPEED=0.30, ATTACK_DAMAGE=10, ATTACK_KNOCKBACK=1.8, ARMOR=4, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "LWL",
+    "HHH",
+    "B B"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "W": {
+      "item": "minecraft:green_wool"
+    },
+    "H": {
+      "item": "terrassic:albertosaurus_hide"
+    },
+    "B": {
+      "item": "minecraft:bone"
+    }
+  },
+  "result": {
+    "item": "terrassic:albertosaurus_saddle",
+    "count": 1
+  }
+}
