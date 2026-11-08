@@ -46,9 +46,11 @@ public class HerdMoveGoal extends Goal {
         return base.add(Math.cos(angle) * dist, 0.0D, Math.sin(angle) * dist);
     }
 
+    // canUse/canContinueToUse run only on the mob's even ticks (Mob.serverAiStep): the stagger counts those
+    // (tickCount / 2), or every animal with an odd id never started (half the calves and herd followers, 08/11)
     @Override
     public boolean canUse() {
-        if ((this.mob.tickCount + this.mob.getId()) % 20 != 0 || this.mob.tickCount < this.restUntil || !this.free()) {
+        if ((this.mob.tickCount / 2 + this.mob.getId()) % 20 != 0 || this.mob.tickCount < this.restUntil || !this.free()) {
             return false;
         }
         this.spot = this.spot();
