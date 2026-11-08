@@ -43,7 +43,7 @@ SCHEME = {
     "k0": "0f1d17", "k1": "15291f", "k2": "1d3a2c", "k3": "274c3a", "k4": "325d48", "k5": "427058",
     "b0": "587e68", "b1": "6d927c", "b2": "83a691", "b3": "99b9a5",
     "s0": "4f7a61", "s1": "5f8a70",
-    "hr0": "5e3d2a", "hr1": "7d5236", "hr2": "93643f",
+    "hr0": "6e3d24", "hr1": "9a5430", "hr2": "b8683a",
     "lip": "5e816b", "scar": "8fa892",
     "female": {"k1": "182d23", "k2": "213f31", "k3": "2c513f", "k4": "38634d", "k5": "48765e",
                "b0": "60846e", "b1": "759883", "b2": "8aab97", "s0": "56806a", "s1": "669077",
@@ -51,7 +51,7 @@ SCHEME = {
 }
 PAL = {
     "ker0": hx("1c1a16"), "ker1": hx("34302a"), "ker2": hx("cbc2a2"), "ker3": hx("9a9072"),
-    "iris": hx("c9a640"), "pupil": hx("0e0c0b"), "lid": hx("111a16"), "glint": hx("e8e0bc"),
+    "iris": hx("e3c43c"), "iris2": hx("a8862a"), "iris3": hx("f4e27a"), "pupil": hx("0e0c0b"), "lid": hx("0c1410"), "glint": hx("f0ead0"),
     "gum": hx("6e3535"), "mouth": hx("351b1d"), "tongue": hx("94504b"), "tooth": hx("ebe2c8"), "tooth2": hx("c0b28e"),
 }
 
@@ -86,14 +86,16 @@ def head(m, parent, hy, hz, rest=(-6, 0, 0)):
     so = (0, hy + 9, hz - 10)               # the snout hinges at the front of the cranium, at its top
     m.cube(sk, *B(-4.5, 0, -10, 4.5, 11, 0), name="cranium")
     m.cube(sk, *B(-3.5, 3, 0, 3.5, 10, 2), name="occiput")
-    m.pair(sk, sk, *B(4.5, 2, -6, 5.5, 7, -1), name="temporal")          # the jaw muscle, slight (a lighter bite)
+    m.pair(sk, sk, *B(4.5, 2, -4.5, 5.5, 7, -0.5), name="temporal")      # the jaw muscle, slight (a lighter bite)
     m.cube(sk, *B(-3.5, 0, -23, 3.5, 9, -10), name="snout", rot=SNOUT_ROT, origin=so)
     m.cube(sk, *B(-2.5, 0, -25, 2.5, 7, -23), name="premax", rot=SNOUT_ROT, origin=so)
     m.cube(sk, *B(-1.5, 9, -22, 1.5, 10, -11), name="nasal", mat="plate", rot=SNOUT_ROT, origin=so)   # rugose nasals
-    # the short triangular lacrimal crest in front of each eye: a low base and a smaller tip set forward on it
-    m.pair(sk, sk, *B(1.5, 11, -10, 4.5, 12, -5), name="lacrimal", mat="horn")
-    m.pair(sk, sk, *B(2, 12, -9, 4, 13, -7), name="crest_tip", mat="horn")
-    m.pair(sk, sk, *B(4.5, 8, -5, 5.5, 10, -1), name="brow", mat="brow")      # the low brow over the eye
+    # the short TRIANGULAR lacrimal crest in front of each eye, two tiers narrowing to a point (padrão v2: it grows
+    # out of the skull, its base the face's own skin, the display skin above it rust on the male with a keratin
+    # point), and the low brow shelf over the eye socket under it
+    m.pair(sk, sk, *B(1.5, 10.5, -11, 4.5, 12.5, -5), name="lacrimal", mat="crest_base")
+    m.pair(sk, sk, *B(2, 12, -10, 4, 14, -7), name="crest", mat="horn", rot=(-12, 0, 0), origin=(3, hy + 12, hz - 8.5))
+    m.pair(sk, sk, *B(3.5, 8, -10.5, 5.5, 10, -4.5), name="brow", mat="brow")
     jaw = m.bone("jaw", sk, (0, hy + 1, hz - 2))
     m.cube(jaw, *B(-4, -4, -10, 4, 0, 0), name="jaw_back")
     m.cube(jaw, *B(-3, -3, -24, 3, 0, -10), name="jaw_front", rot=(-2, 0, 0), origin=(0, hy, hz - 10))
@@ -101,9 +103,10 @@ def head(m, parent, hy, hz, rest=(-6, 0, 0)):
     m.cube(jaw, *B(-3.5, -1, -7, 3.5, 2, -1), name="cheek", mat="mouth")
     m.cube(jaw, *B(-1.5, -2, -21, 1.5, 1, -6), name="tongue", mat="tongue")
     m.cube(sk, *B(-1, -1, -22, 1, 2, -11), name="palate", mat="mouth")
-    # teeth as alpha planes; LIPS (Cullen et al. 2023): the upper row inside the jaw's sides (2.5 < 3), the lower
-    # one inside the snout: with the mouth shut the teeth hide behind the lips
-    m.pair(sk, sk, *B(2.5, -3, -24, 2.5, 1, -10), name="teeth_up", mat="teeth", rot=SNOUT_ROT, origin=so)
+    # teeth as alpha planes. Padrão v2: the upper row hangs just OUTSIDE the slender jaw (3.25 > 3) under the snout's
+    # lip (3.5): with the mouth shut the many slender crowns show, the lips covering their base; the lower row
+    # inside the snout
+    m.pair(sk, sk, *B(3.25, -2, -23, 3.25, 0, -11), name="teeth_up", mat="teeth", rot=SNOUT_ROT, origin=so)
     m.pair(jaw, jaw, *B(2, -1, -23, 2, 2, -10), name="teeth_lo", mat="teeth_lo")
     return sk
 
@@ -314,8 +317,8 @@ def body_tone(t, prof, sex):
                 return "k1"
     if b >= 2:
         base = skin2.step(base, skin2.mottle(t, cell=10, strength=0.2, seed=3))
-        if skin2.fleck(t, every=21, seed=4):
-            base = skin2.step(base, -1)
+        # padrão v3: the body's own motif, a fine GRANULATION of single grains (the face's beads, calmer)
+        base = skin2.step(base, granules(t, seed=4))
     return base
 
 
@@ -349,37 +352,125 @@ def limb_tone(t):
     return skin2.step(base, skin2.mottle(t, cell=6, strength=0.25, seed=7))
 
 
+# ------------------------------------------------------------------ padrão v3: the Albertosaurus' own head
+# (docs/estudos/14, "Padrão v3": the engine only measures, every part below is drawn for this animal alone)
+#
+# THE MOTIF: fine PEBBLY scales, the small beads of a light, lean tyrannosaurid: tiny cells of 1 to 2 texels in body
+# space, the shaded side of each bead a step darker and now and then a bead catching the light. On the body a finer,
+# calmer GRANULATION: a lattice of single darker grains, staggered row to row, worn smooth in soft patches.
+def pebbles(t, cell=1.8, seed=0):
+    """-1 the shaded side of a bead, +1 a bead catching the light (one in five), 0 elsewhere"""
+    u, v = skin2.surface_uv(t)
+    uc, vc = math.floor(u) + 0.5, math.floor(v) + 0.5
+    d1, d2, (cx, cy, px, py) = skin.voronoi(uc, vc, cell, seed)
+    if d2 - d1 < 0.7 and (uc > px or vc < py):
+        return -1
+    if h32(cx, cy, seed, 8) % 5 == 0 and d1 < 0.8:
+        return 1
+    return 0
+
+
+def granules(t, seed=0):
+    """-1 on a staggered lattice of grains (every sixth texel, every other row, shifted by three), none where a soft
+    field says the skin is worn smooth"""
+    u, v = skin2.surface_uv(t)
+    iu, iv = math.floor(u), math.floor(v)
+    if iv % 2 or (iu + 3 * ((iv // 2) % 2)) % 6:
+        return 0
+    return -1 if skin2.soft(u, v, 6.0, seed) > 0.4 else 0
+
+
 def head_tone(t, sex):
-    """the face: three tones by height (dark crown, middle cheek, light lips) as one shape over the whole head, the
-    dark EYE BAND from the eye back to the jaw joint, the rugose nasal ridge along the top of the snout"""
+    """the face: dark crown, middle cheek, pale jaw by height, fine pebbly scales over all of it; the dark EYE STRIPE
+    from the lacrimal through the eye to the jaw joint, a pale line along its lower edge running back into the body's
+    lateral stripe; a clean pale lip over a thin dark mouth line"""
     n = t.cube["name"]; f = t.face
     if f == "down":
         return "b1"
     if n in ("jaw_back", "jaw_front"):
-        h = t.rel[1] if f != "up" else 1.0
-        return "b1" if h < 0.3 else ("lip" if h < 0.55 else "k4")
-    if f == "up":
-        if n in ("snout", "premax"):
-            u, v = skin2.surface_uv(t)
-            return "k1" if (math.floor(v) % 3 == 0 and math.floor(u) % 2 == 0) else "k2"
-        return "k2" if skin2.mottle(t, cell=4, strength=0.3, seed=24) >= 0 else "k1"
-    v = t.rel[1]
-    if v < 0.10:
-        return "lip"
-    hv = (t.P[1] - HEAD_Y[0]) / max(1.0, HEAD_Y[1] - HEAD_Y[0])
-    base = ["k5", "k4", "k3"][skin2.bands(hv, t.P[2] * 2.0, (0.40, 0.72), amp=0.07, seed=31)]
-    base = skin2.step(base, skin2.mottle(t, cell=5, strength=0.28, seed=32)) if base != "k5" else base
-    # the eye band: from just behind the eye (cranium front) back over the temporal and occiput, mid height
-    if n in ("cranium", "temporal", "occiput") and f in ("east", "west"):
-        zc = t.P[2] - (EYE_Z[0])
-        yb = EYE_Z[1] - 0.22 * zc                          # it slopes down toward the jaw joint
-        if zc > 0.5 and abs(t.P[1] - yb) < 1.1 + 0.05 * zc and t.rel[1] > 0.2:
+        if f == "up":
+            return "k4"
+        h = t.rel[1]
+        if t.j == 0:
             return "k1"
-    if n in ("snout", "premax") and 0.16 < v < 0.5:
-        u, w = skin2.surface_uv(t)
-        if (math.floor(u) * 7 + math.floor(w) * 3) % 13 == 0:
-            base = skin2.step(base, -1)                   # the pits along the maxilla
-    return base
+        if t.j == 1:
+            return "lip"                      # the lower lip, as clean as the upper
+        base = "b1" if h < 0.3 else ("b2" if h < 0.55 else "k4")
+        return skin2.step(base, pebbles(t, 1.9, 33))
+    if f == "up":
+        return skin2.step("k2", pebbles(t, 1.7, 24))
+    if n in ("snout", "premax"):
+        if t.j == t.h - 1:
+            return "k0"                       # the thin mouth line
+        if t.j == t.h - 2:
+            return "lip"                      # the clean pale lip
+    hv = (t.P[1] - HEAD_Y[0]) / max(1.0, HEAD_Y[1] - HEAD_Y[0])
+    # a step lighter than the body's crown, so the dark eye stripe reads as the mark it is
+    base = ["k5", "k4", "k3"][skin2.bands(hv, t.P[2] * 2.0, (0.36, 0.70), amp=0.07, seed=31)]
+    if f in ("east", "west") and n in ("cranium", "temporal", "occiput", "snout"):
+        band = _eye_band(t)
+        if band:
+            return band
+    return skin2.step(base, pebbles(t, 1.8, 32))
+
+
+def _eye_band(t):
+    """the eye stripe: from the back of the snout, level, through the eye, then sloping down behind it to the jaw
+    joint and widening; its lower edge behind the eye a pale line"""
+    zc = t.P[2] - EYE[0]
+    if zc < -9.0:
+        return None
+    yb = EYE[1] - 0.26 * max(0.0, zc)
+    half = 1.2 + 0.4 * min(1.0, max(0.0, zc + 2.0) / 3.0) + 0.06 * max(0.0, zc)
+    if zc < -6.0:
+        half *= (zc + 9.0) / 3.0                       # it tapers to a point on the snout
+    dy = t.P[1] - yb
+    if abs(dy) < half:
+        return "k0" if pebbles(t, 1.8, 34) < 0 else "k1"
+    if zc > 2.0 and -half - 1.0 < dy <= -half:
+        return "s1"                                    # the pale edge under it, behind the eye
+    if -8.0 < zc < -2.5 and half <= dy < half + 1.0:
+        return "s0"                                    # and over it, in front of the eye
+    return None
+
+
+def teeth_up(t, p):
+    """MANY FINE teeth (58 or more, study 13): a long neat comb of small blades, their roots touching under the lip,
+    each blade one texel, lit and shaded in turn, the points on every other column. Columns from the FRONT"""
+    if t.face not in ("east", "west"):
+        return None
+    col = int(math.floor(t.L[2] - t.cube["from"][2])); row = t.j
+    lit = col % 2 == 0
+    if row == 0:
+        return p["tooth"] if lit else p["tooth2"]
+    return p["tooth"] if lit else None
+
+
+def teeth_lo(t, p):
+    """the lower comb inside the snout"""
+    if t.face not in ("east", "west"):
+        return None
+    col = int(math.floor(t.L[2] - t.cube["from"][2])); row = t.j
+    if row == t.h - 1:
+        return p["k1"]          # the jaw's inner lip: it shows at the front of the shut mouth, so skin, not gum
+    if row >= 1 and (col % 2 == 1 or row == t.h - 2):
+        return p["tooth2"] if col % 2 == 0 else p["tooth"]
+    return None
+
+
+def mouth_interior(img, C, p):
+    """the long slender mouth: the palate dark with a pale ridge down its middle, a long thin tongue"""
+    for name in ("snout", "premax", "cranium"):
+        u, v, ww, hh = C[name]["uv"]["down"]
+        for j in range(hh):
+            for i in range(ww):
+                img[v + j, u + i] = (*(p["gum"] if i == ww // 2 else p["mouth"]), 255)
+    for name in ("jaw_front", "jaw_back"):
+        u, v, ww, hh = C[name]["uv"]["up"]
+        for j in range(hh):
+            for i in range(ww):
+                lip = i in (0, ww - 1) or (name == "jaw_front" and j >= hh - 2)   # shows when shut: the lip
+                img[v + j, u + i] = (*(p["lip"] if lip else (p["tongue"] if i in (ww // 2, (ww - 1) // 2) else p["mouth"])), 255)
 
 
 def shader_for(sex):
@@ -391,42 +482,36 @@ def shader_for(sex):
             return saddle_px(t)
         if mat == "claw":
             return p["ker0"] if f != "up" else p["ker1"]
-        if mat == "horn":       # the lacrimal crest: rust on the male, dark on the female, lit on top
-            if f == "up":
-                return p["hr2"]
-            return p["hr0"] if t.j >= t.h - 1 else p["hr1"]
-        if mat == "brow":       # the low brow: the crown's dark, lit along its top
-            return p["k3"] if f == "up" else (p["k2"] if t.j == 0 else p["k1"])
-        if mat == "plate":      # the rugose nasals: a ridge of small bumps
+        if mat == "crest_base":  # the crest's foot: the face's pebbles
+            if f in ("east", "west") and t.j >= t.h - 1:
+                return p["k1"]
+            return p[skin2.step("k3" if f == "up" else "k2", pebbles(t, 1.6, 75))]
+        if mat == "horn":       # the small triangular crest: rust display skin on the male, the crown's dark on the
+            if (f == "up" and t.rel[2] < 0.4) or (f == "north" and t.j == 0):    # female; a keratin point at its
+                return p["ker1"] if f == "north" else p["ker3"]                  # front top
+            if sex == "male":
+                if f == "up":
+                    return p["hr2"]
+                return p["hr0"] if t.j >= t.h - 1 else (p["hr2"] if t.j == 0 else p["hr1"])
+            return p["k3"] if f == "up" else p[skin2.step("k2", pebbles(t, 1.6, 76))]
+        if mat == "brow":       # the low brow over the eye: pebbles, the eye stripe's dark under it
+            if f == "down":
+                return p["k0"]
+            if f in ("east", "west"):
+                return p["k1"] if t.j == t.h - 1 else p[skin2.step("k2", pebbles(t, 1.6, 77))]
+            return p[skin2.step("k3", pebbles(t, 1.6, 77))]
+        if mat == "plate":      # the rugose nasal ridge: a double row of beads
             if f in ("up", "north"):
-                return p["k1"] if math.floor(t.L[2]) % 2 == 0 else p["k3"]
+                return p["k3"] if (t.i + math.floor(t.L[2])) % 2 == 0 else p["k1"]
             return p["k2"]
         if mat == "teeth":
-            if f not in ("east", "west"):
-                return None
-            col = int(math.floor(t.L[2])); row = t.j
-            if row == 0:
-                return p["gum"]
-            if (col + 40) % 2:
-                return None
-            r = h32(col, 11) % 6
-            if r == 5 and h32(col, 14) % 2:
-                return None
-            size = 2 if r < 4 else 3                    # many slender teeth (58 or more, Holtz 2004)
-            return (p["tooth"] if row < size else p["tooth2"]) if row <= size else None
+            return teeth_up(t, p)
         if mat == "teeth_lo":
-            if f not in ("east", "west"):
-                return None
-            col = int(math.floor(t.L[2])); row = t.j
-            if row == t.h - 1:
-                return p["gum"]
-            if (col + 41) % 2 == 0 and row >= (0 if h32(col, 13) % 3 else 1):
-                return p["tooth2"] if row == 0 else p["tooth"]
-            return None
+            return teeth_lo(t, p)
         if mat == "mouth":
             return p["gum"] if f in ("up", "down") else p["mouth"]
-        if mat == "tongue":
-            return p["tongue"] if f == "up" else p["mouth"]
+        if mat == "tongue":     # in shadow: its top shows in the seam of the shut mouth (the v2 "red thread"); the
+            return p["mouth"] if f == "up" else p["k0"]     # pink floor of the open mouth is on the jaw's top
         if mat == "gular":
             return p["b1"] if f != "up" else p["b0"]
         if n in TRUNK or n == "belly":
@@ -441,42 +526,37 @@ def shader_for(sex):
 
 PROF = [None]
 HEAD_Y = [0.0, 1.0]       # the lowest and highest point of the face at rest (the head's countershading)
-EYE_Z = [0.0, 0.0]        # rest-pose z and y of the eye (the eye band starts there)
+EYE = [0.0, 0.0]          # rest-pose z and y of the eye's centre (the eye stripe runs through it)
 
 # ------------------------------------------------------------------ the drawn details of the head
 # east = the animal's left (mirrored onto the right); column 0 at the FRONT, row 0 at the TOP
-EYE = [          # under the crest: the brow shadow, a round orbit, a gold point and a glint
-    "lll",
-    "lpi",
-    "lpg",
+# THE EYE: big for the head and alert (a pursuit hunter), round, set in the dark stripe: a wide round pupil (2 x 2),
+# a bright yellow iris lit at the top, the glint at the FRONT top, and under it a pale lower lid that the stripe's
+# pale edge runs back from
+EYE_ART = [
+    "..rrrr.",
+    ".rgYiir",
+    "rIippir",
+    "rIippir",
+    ".rIiir.",
+    "..hhh..",
 ]
-NOSTRIL = ["n"]
+NOSTRIL = [      # a long low slit of a nostril on the narrow snout tip, lit along its top
+    "hhh",
+    "nnn",
+]
 
 
 def decals_for(sex):
     p = pal_for(sex)
-    cm = {"l": p["lid"], "p": p["pupil"], "i": p["iris"], "g": p["glint"], "n": p["k1"], "s": p["scar"]}
+    cm = {"r": p["k0"], "g": p["glint"], "i": p["iris"], "I": p["iris2"], "Y": p["iris3"], "p": p["pupil"],
+          "n": p["k0"], "h": p["s1"]}
 
     def dec(img, m):
         C = {c["name"]: c for c in m.cubes if c["mirror_of"] is None}
-        P.stamp(img, m, C["cranium"], "east", EYE, cm, at=(1, 3))
-        P.stamp(img, m, C["premax"], "east", NOSTRIL, cm, at=(0, 2))
-        # the row of nerve foramina above the lip line
-        u, v, w, h = C["snout"]["uv"]["east"]
-        for k in range(2, w - 1, 3):
-            img[v + h - 3, u + w - 1 - k] = (*p["k3"], 255)
-        for name, f in (("snout", "down"), ("premax", "down"), ("cranium", "down"), ("jaw_front", "up"), ("jaw_back", "up")):
-            c = C[name]; u, v, ww, hh = c["uv"][f]
-            for j in range(hh):
-                for i in range(ww):
-                    rim = i in (0, ww - 1)
-                    if name in ("snout", "premax"):
-                        col = p["gum"] if rim or i in (1, ww - 2) else p["mouth"]
-                    elif name == "cranium":
-                        col = p["mouth"]
-                    else:
-                        col = p["gum"] if rim else p["tongue"]
-                    img[v + j, u + i] = (*col, 255)
+        P.stamp(img, m, C["cranium"], "east", EYE_ART, cm, at=(1, 3))
+        P.stamp(img, m, C["premax"], "east", NOSTRIL, cm, at=(0, 1))
+        mouth_interior(img, C, p)
     return dec
 
 
@@ -487,6 +567,6 @@ def paint_sex(m, sex="male"):
     ys = [pts[n][:, 1] for n in ("cranium", "snout", "premax")]
     HEAD_Y[:] = [min(a.min() for a in ys), max(a.max() for a in ys)]
     cr = pts["cranium"]
-    # the eye sits at the front top of the cranium (the stamp at column 1, rows 3-5 of 11)
-    EYE_Z[:] = [float(cr[:, 2].min()) + 2.0, float(cr[:, 1].max()) - 4.0]
+    # the eye: EYE_ART at column 1, rows 3-8 of the cranium's 11 (its centre 4.5 px from the front, 6 down)
+    EYE[:] = [float(cr[:, 2].min()) + 4.5, float(cr[:, 1].max()) - 6.0]
     return P.paint(m, shader_for(sex), decals=(decals_for(sex),))

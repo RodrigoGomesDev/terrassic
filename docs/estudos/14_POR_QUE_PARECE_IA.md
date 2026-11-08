@@ -210,3 +210,215 @@ vai primeiro. O v2 mantém o v1 no corpo e devolve o detalhe à cabeça, com nú
 - **Corpo:** continua calmo e contínuo, mas com a textura de escama do próprio corpo a um passo de tom
   (vizinhos que mudam 0,20 a 0,30) e as marcas desenhadas da espécie.
 - Checagem: `tools/modelgen/handmade/_engine/headcheck.py` (cabeça x corpo) roda no build dos refeitos novos.
+
+### Resultados do padrão v2 (08/11/2026, branch `pele/v2`)
+
+Os quatro predadores da 1.10.1 refeitos só na cabeça e na escama do corpo; forma, família de cor, tamanho, densidade
+(16,1 a 16,5 tx/bloco), marcas do corpo, animações e comportamento ficaram iguais. Medido pelo
+`_engine/headcheck.py` no build (macho; a fêmea fica a 0,01 dos mesmos números). "Dentes" = texels de dente visíveis
+de lado, com a boca fechada, num lado; "acento" = texels da cabeça com saturação ≥ 0,45, valor ≥ 0,40 e a 20° ou
+mais do matiz do rosto (fora boca, dentes e olho).
+
+| | cabeça: cores | cabeça: vizinhos que mudam | corpo: vizinhos que mudam | cabeça / corpo | dentes | íris | acento |
+|---|---|---|---|---|---|---|---|
+| Majungassauro v1 | 22 | 0,18 | 0,23 | 0,8x | 0,3 | 1 | 110 (o "prato" ocre) |
+| **Majungassauro v2** | 23 | **0,35** | 0,27 | **1,34x** | **5,9** | 3 | 39 |
+| Daspletossauro v1 | 24 | 0,14 | 0,20 | 0,7x | 0 | 1 | 20 |
+| **Daspletossauro v2** | 26 | **0,37** | 0,27 | **1,38x** | **18,5** | 3 | 20 |
+| Albertossauro v1 | 20 | 0,16 | 0,20 | 0,8x | 0,3 | 1 | 19 |
+| **Albertossauro v2** | 24 | **0,35** | 0,27 | **1,33x** | **11,0** | 3 | 22 |
+| Carcarodontossauro v1 | 20 | 0,18 | 0,16 | 1,1x | 1,7 | 1 | 0 |
+| **Carcarodontossauro v2** | 25 | **0,37** | 0,24 | **1,50x** | **16,8** | 3 | 74 |
+| Carnotauro (referência) | 29 | 0,24 | 0,28 | 0,9x | 12,9 | 5 | 3 |
+
+O que mudou em cada um (`tools/modelgen/handmade/<espécie>/`):
+
+- **Comum** (`_engine/head2.py`): escamas pequenas e rugosidade do rosto no espaço do corpo, a um passo de tom
+  (`face_scale`, `rugose`); fileira de dentes de cima pendurada 0,25 px **fora** da mandíbula e dentro do lábio, então
+  aparece de boca fechada e o lábio cobre só a base; linha escura da boca e lábio um tom acima; olho de 3 x 2 por
+  dentro (íris de 3 texels, pupila em fenda, brilho) com contorno escuro sob a arcada; narina com borda clara; escama
+  do corpo em `skin2.scales` só na borda sombreada, a um passo de tom (célula de 6 a 8 texels).
+- **Majungassauro**: o domo deixou de ser chapéu: dois inchaços da própria pele inclinados para a frente sobre o teto
+  do crânio e só a coroa de queratina gasta e clara, sem aba nem anel. O ocre do macho saiu do domo (embaixo dele lia
+  como aba; num primeiro rascunho, em faixa no domo, ainda lia como chapéu na foto do jogo) e foi para a arcada rugosa
+  por cima do olho e uma mancha atrás dele; nasais com nós; íris laranja.
+- **Daspletossauro**: chifre lacrimal com base de pele e ponta de osso queimado; protuberância pós-orbital ferrugem
+  no macho; prateleira da arcada entre os dois; placas do focinho separadas por costuras de pele; cicatrizes do macho;
+  dentes em D de 3 linhas.
+- **Albertossauro**: crista lacrimal triangular em dois degraus (base de pele, pele de exibição ferrugem no macho,
+  ponta de queratina); arcada baixa; faixa escura do olho até a articulação da mandíbula; dentes finos.
+- **Carcarodontossauro**: prateleira da arcada e crista nucal com lados de pele e só a borda de chifre; pele de
+  exibição vermelho-tijolo sobre o olho e na crista nucal do macho; sulcos inclinados do maxilar; máscara; lâminas de
+  3 linhas. O corpo, que estava liso demais (0,16), ganhou a escama (0,24).
+- **Conserto em `skin2.step`**: subir um tom a partir de `k4` caía no cinza da barriga (`b0`) e punha pontos claros
+  soltos na pele escura; agora sobe para `k5`.
+
+Cor (`colourcheck.py --remade`): todos a 10 ou mais de qualquer refeito (mais perto: Majungassauro 12,2 do
+Anquilossauro, Daspletossauro 11,1 do Dakotaraptor, Albertossauro 11,2 do Anquilossauro, Carcarodontossauro 12,6 do
+Protocerátopo). Ícones do mapa regenerados (`tools/spritegen/map_icons.py`).
+
+Imagens: `art/<espécie>/previews/v2_cabeca_antes_depois.png` (v1, v2 e Carnotauro, macho e fêmea, mesmo ângulo),
+`lateral.png` e `tres_quartos.png` atualizadas, e as folhas
+[`padrao_v2_cabecas.png`](../../art/estudos/1.10/padrao_v2_cabecas.png) (as quatro v2 ao lado do Carnotauro e do
+T. rex, 3/4) e [`padrao_v2_cabecas_perfil.png`](../../art/estudos/1.10/padrao_v2_cabecas_perfil.png) (de lado, boca
+fechada).
+
+No jogo (08/11/2026, cliente Fabric com som zerado, `TERRASSIC_BEHAVIOR_SPECIES=jaws,look,daspleto,alberto,carcharo,majunga`
+e depois só `majunga` com a pintura final): as quatro fases rodaram inteiras (roubo de carcaça, bando e perseguição
+longa, emboscada, sangramento e arrasto, mordida que segura, canibal, bebedouro, temperamento) e as 22 mandíbulas
+medidas passaram em `behavior_regression.py` (Daspleto 33°, Alberto 32°, Carcharo 33°, Majunga 53°; nenhuma gira). As
+outras linhas do script falham por falta de medida, porque essas fases não estavam no lote. Fotos da cabeça no jogo:
+`art/<espécie>/previews/jogo/v2_cabeca_jogo.png`. Leitura honesta das fotos: Daspleto, Alberto e Carcharo agora
+mostram o mesmo tipo de detalhe do Carnotauro (fileira de dentes, olho em órbita com íris de cor, rosto com textura,
+acento). O Majungassauro melhorou bastante (o domo virou parte do crânio, dentes e olho aparecem), mas continua o
+mais escuro e o de menos dentes à mostra (focinho curto: 4 dentes de lado), então é o que pede o olhar do Rodrigo
+primeiro.
+
+## Padrão v3 (08/11/2026): a regra é comum, o desenho é de cada um
+
+O Rodrigo gostou mais das cabeças v2, mas: "essa padronização está tirando o traço único que cada dinossauro tinha...
+parece tudo copia e cola um do outro". Na folha de perfil (`art/estudos/1.10/padrao_v2_cabecas_perfil.png`) os quatro
+têm o mesmo olho (quadrado escuro, íris dourada de 2 px, brilho no mesmo canto), os mesmos dentes (barras creme iguais
+e igualmente espaçadas), o mesmo pontilhado no rosto, a mesma linha de boca e, em três, a mesma barrinha de acento
+sobre o olho. A causa: uma peça pronta compartilhada (`_engine/head2.py`) montou as quatro cabeças.
+
+O v3 separa o que é comum do que é próprio:
+- **Comum (o motor só MEDE, nunca desenha a peça pronta):** 16 texels por bloco; pele contínua no espaço do corpo;
+  cabeça mais detalhada que o corpo; dentes à mostra de boca fechada; olho com órbita, íris e brilho; um acento.
+- **Próprio de cada espécie (desenhado no arquivo da espécie, a partir da anatomia dela):**
+  - o **olho**: formato, tamanho, cor da íris, pálpebra, o que tem em volta (chifre, arcada, máscara);
+  - os **dentes**: quantos, de que tamanho e forma (lâmina serrilhada, banana grossa, cone curto, fileira fina), com
+    falhas e dentes novos no padrão da espécie;
+  - o **motivo da pele** do rosto e do corpo: placas, rugosidade com poros, escama miúda, sulcos e rugas, nunca o mesmo
+    pontilhado com outra cor;
+  - o **lugar do acento** e da marca: cada espécie põe a cor de exibição num ponto diferente da cabeça;
+  - a **boca**: o lábio e a linha da boca de cada uma.
+- **Checagem de semelhança** (`_engine/uniquecheck.py`): compara as cabeças de todos os refeitos par a par (o recorte do
+  olho, a sequência de tamanhos e espaços dos dentes, a textura do rosto) e reprova o build quando duas espécies saem
+  parecidas demais. Os refeitos antigos (Carnotauro, T. rex) entram na comparação como referência do que é "próprio".
+
+### Resultados do padrão v3 (08/11/2026, branch `pele/v2`)
+
+**O motor só mede.** O `_engine/head2.py` (o olho pronto, a fileira de dentes, o pontilhado do rosto, a boca) saiu
+do repositório. Cada espécie desenha no próprio arquivo (`<espécie>/<x>.py`, seção "padrão v3") o olho, os dentes, o
+motivo da pele do rosto e do corpo, o lugar do acento, o lábio, a linha da boca e o interior da boca; o que sobrou de
+comum são os campos de baixo nível que já existiam (`skin2.surface_uv`, `skin2.soft`, `skin.voronoi`), sem peça pronta.
+O `_engine/headcheck.py` continua igual (16 ± 2 tx/bloco, cabeça ≥ 0,24 e ≥ 1,3x o corpo, dentes à mostra de boca
+fechada, olho com órbita, íris e brilho, acento no macho).
+
+**Checagem de semelhança** (`_engine/uniquecheck.py`, chamada pelos quatro `build.py`): lê o `geo.json` e a textura do
+macho que o jogo carrega e compara cada par de cabeças em três partes, de 0 (nada em comum) a 1 (iguais):
+
+- **olho**: o recorte do olho desenhado na textura (brilho, pupila, íris, contorno escuro e pele em volta, um texel
+  além), comparado por sobreposição (Dice) no melhor deslocamento de até 2 texels e espelhado, vezes a distância do
+  matiz da íris;
+- **dentes**: a fileira vista de lado com a boca fechada (renderizada do geo, os dentes marcados), lida como sequência
+  de dentes e falhas: largura, falha, comprimento, o maior sobre a média, variação dos comprimentos e das falhas,
+  dentes por texel de fileira, afinamento;
+- **rosto**: as faces laterais da cabeça (sem olho, dentes e boca): vizinhos que mudam, orientação (ao longo ou
+  através da cabeça), tamanho médio da mancha de um tom, tamanho do passo de tom, parte clara e escura.
+
+A semelhança do par é a média das três. Calibração (`THRESHOLD = 0,78`): os refeitos antigos com dentes (T. rex,
+Carnotauro, Giganotossauro, Espinossauro, Velociraptor, Dakotaraptor, Mosassauro, Deinossuco) chegam no máximo a
+**0,73** entre si (Giganotossauro x Mosassauro); as quatro cabeças v2 ficavam entre **0,82 e 0,91** entre si e
+reprovam:
+
+| v2 (reprovam) | olho | dentes | rosto | total |
+|---|---|---|---|---|
+| Daspleto x Carcharo | 0,99 | 0,94 | 0,80 | **0,91** |
+| Alberto x Carcharo | 1,00 | 0,88 | 0,84 | **0,91** |
+| Daspleto x Alberto | 0,99 | 0,87 | 0,79 | **0,88** |
+| Alberto x Majunga | 0,96 | 0,80 | 0,88 | **0,88** |
+| Carcharo x Majunga | 0,96 | 0,72 | 0,88 | **0,85** |
+| Daspleto x Majunga | 0,97 | 0,71 | 0,79 | **0,82** |
+
+O olho a 0,96-1,00 é o carimbo `EYE_HOODED` igual nos quatro; os dentes a 0,71-0,94, o `teeth_up` igual.
+
+| v3 | olho | dentes | rosto | total |
+|---|---|---|---|---|
+| Carcharo x Majunga | 0,66 | 0,47 | 0,77 | 0,63 |
+| Daspleto x Majunga | 0,56 | 0,44 | 0,79 | 0,60 |
+| Alberto x Majunga | 0,29 | 0,62 | 0,79 | 0,57 |
+| Daspleto x Carcharo | 0,56 | 0,28 | 0,63 | 0,49 |
+| Alberto x Carcharo | 0,30 | 0,34 | 0,82 | 0,49 |
+| Daspleto x Alberto | 0,41 | 0,15 | 0,67 | 0,41 |
+| o mais perto de um antigo | | | | Alberto x Dakotaraptor 0,69; Majunga x Dakotaraptor 0,67; Carcharo x Giganotossauro 0,67; Daspleto x Deinossuco 0,64 |
+
+A tabela inteira sai de `python3 -B tools/modelgen/handmade/_engine/uniquecheck.py`. Achado de passagem: entre os
+herbívoros refeitos antigos o olho também é carimbo repetido (Tricerátopo, Estiracossauro e Protocerátopo têm o mesmo
+`EYE`, olho 1,00; Parassaurolofo, Edmontossauro e Anquilossauro também, 0,95-0,99); eles ficam fora da comparação
+padrão (`--all` mostra) e pedem a mesma passada quando forem mexidos.
+
+**Cada um, desenhado da anatomia (estudo 13):**
+
+- **Majungassauro**: o motivo é **osso rugoso**: poros (um texel dois tons abaixo) e nós (um texel aceso com a sombra
+  embaixo) numa grade sorteada no espaço do corpo, densos e fundos nos nasais, no domo e na arcada, mais soltos na
+  bochecha; no corpo, poros esparsos de um tom, nunca escama. Olho **pequeno e fundo** sob a arcada pesada (a sombra
+  dela é a pálpebra de cima, sem contorno em cima), íris **verde-líquen**, pupila redonda embaixo, brilho na frente,
+  e embaixo a bolsa de pele clara com o vinco. Dentes **poucos, curtos e cônicos**: dois cones de raiz larga e ponta
+  de um texel e a ponta fina de um dente novo nascendo, falhas irregulares. Lábio grosso e enrugado sobre uma linha de
+  boca mole. O domo usa os tons da própria cabeça (só a coroa gasta é queratina); o acento do macho são **as pontas
+  dos nós** da base do domo, da arcada e do fim dos nasais em ocre, como verrugas coradas, sem faixa.
+- **Daspletossauro**: o motivo são **placas chatas grandes** no focinho (Carr et al. 2017), cada uma de um tom só
+  (tirado do centro dela), contorno escuro e a borda de cima acesa, menores no crânio; uma fileira de **escamas
+  labiais quadradas** em cada lábio; no corpo, **fileiras desencontradas** de escamas de base (tijolos), gastas em
+  manchas. Olho de amêndoa inclinada no alto de uma **órbita em fechadura** que afunila para baixo, logo atrás do
+  chifre lacrimal, íris **laranja-sangue** com pupila horizontal e brilho atrás. Dentes **grossos e longos, em D**:
+  dois texels, a frente acesa e o dorso chato sombreado, comprimentos desiguais, uma falha de dente perdido e o toco
+  do que nasce nela. O acento do macho é a **protuberância pós-orbital arredondada** (só a coroa acesa, picotada) e a
+  mancha ferrugem que **desce em pé** atrás do olho; as cicatrizes claras do focinho continuam.
+- **Albertossauro**: o motivo é **escama miúda em contas** (células de 1 a 2 texels, o lado de sombra um tom abaixo,
+  uma conta acesa às vezes); no corpo, uma **granulação** de grãos soltos em treliça. A marca é a **faixa escura do
+  olho**, do fim do focinho, reta, atravessando o olho e descendo até a articulação da mandíbula, com um filete claro
+  por cima na frente e por baixo atrás (que continua na faixa lateral do corpo); o rosto subiu um tom para a faixa
+  aparecer. Olho **grande e alerta**, redondo, pupila larga de 2 x 2, íris **amarela** acesa em cima, brilho na
+  frente, pálpebra de baixo clara. Dentes **muitos e finos**: um pente arrumado de lâminas de um texel com as raízes
+  encostadas sob o lábio, as pontas em colunas alternadas. Lábio claro e limpo sobre uma linha fina. Acento: a crista
+  lacrimal triangular ferrugem do macho (sem barra sobre o olho).
+- **Carcarodontossauro**: o motivo são **sulcos**: corridas curtas e onduladas ao longo do maxilar e da mandíbula,
+  cada uma com a crista acesa por cima e quebrada de tempos em tempos; no corpo, **dobras** de pele baixas e inclinadas
+  pendendo da espinha. Os **dentes de tubarão**: lâminas de três texels de raiz, quatro fileiras de fundo (a peça de
+  dentes desceu 1 px), afinando para trás, o gume da frente aceso e o de trás **serrilhado** (um texel escuro a cada
+  dois); três grandes e uma menor atrás, os maiores dos quatro (29,9 texels à mostra contra 16,5 do Daspleto). Olho
+  **pequeno** sob a prateleira, íris **cinza-pálida e fria** com a pupila na frente, brilho atrás, e a **máscara**
+  escura seguindo direto dele. Acento do macho: um **filete** vermelho-tijolo no alto da máscara e a pele vermelha
+  entre **costelas verticais** de chifre na crista nucal.
+- **Comum aos quatro (achado nas fotos)**: o "fio vermelho do lábio" do v2 era o topo da língua e a linha de gengiva
+  dos dentes de baixo aparecendo na fresta da boca fechada; agora a língua fica na sombra (o rosa da boca aberta está
+  no chão da mandíbula) e a borda da mandíbula que aparece na frente do pré-maxilar é pele, em cada espécie com o seu
+  tom.
+
+| v3 (macho) | cabeça: cores | cabeça: vizinhos que mudam | corpo | cabeça / corpo | dentes | íris | acento | tx/bloco |
+|---|---|---|---|---|---|---|---|---|
+| Majungassauro | 23 | 0,31 | 0,23 | 1,33x | 7,8 | 4 | 17 | 16,1 |
+| Daspletossauro | 26 | 0,36 | 0,25 | 1,40x | 16,5 | 4 | 31 | 16,3 |
+| Albertossauro | 28 | 0,37 | 0,25 | 1,48x | 18,0 | 12 | 22 | 16,5 |
+| Carcarodontossauro | 25 | 0,33 | 0,22 | 1,49x | 29,9 | 3 | 22 | 16,3 |
+
+QA do motor limpo nos quatro (coplanares 0, pixel 0, chão 0, animações iguais); forma, tamanho, família de cor,
+marcas do corpo, animações e comportamento sem mudança. Cor (`colourcheck.py --remade`): Majungassauro 12,4 do
+Anquilossauro, Daspletossauro 10,9 do Dakotaraptor, Albertossauro 11,3 do Anquilossauro, Carcarodontossauro 12,6 do
+Protocerátopo. Ícones do mapa regenerados.
+
+Imagens: [`padrao_v3_cabecas_perfil.png`](../../art/estudos/1.10/padrao_v3_cabecas_perfil.png) e
+[`padrao_v3_cabecas.png`](../../art/estudos/1.10/padrao_v3_cabecas.png) (o mesmo arranjo das folhas v2: as quatro
+novas, o Carnotauro e o T. rex), `art/<espécie>/previews/v3_cabeca_v2_v3.png` (v2 | v3: macho de lado, macho 3/4,
+fêmea 3/4), feitas por `_engine/headsheet.py`.
+
+No jogo (08/11/2026, cliente Fabric com som zerado, `TERRASSIC_BEHAVIOR_SPECIES=jaws,look,daspleto,alberto,carcharo,majunga`;
+depois `daspleto,majunga` e `majunga,daspleto` de novo para as fotos da pintura final dos dois): as fases rodaram inteiras e as **22
+mandíbulas medidas passaram** em `behavior_regression.py` (24 OK; as outras 37 linhas falham por falta de medida,
+porque essas fases não estavam no lote, como no v2). O ângulo anotado é o maior que a amostra pegou na animação que
+tocava (Daspleto 33°, Majunga 34°, Alberto 2°, Carcharo 7°): as animações não mudaram, só a pintura. Fotos da cabeça:
+`art/<espécie>/previews/jogo/v3_cabeca_jogo.png`.
+
+Leitura honesta das fotos, as seis cabeças lado a lado ("dá para trocar duas e ninguém notar?" — não):
+- **Carcarodontossauro** é o que mais ganhou: as lâminas serrilhadas leem como dentes de tubarão de longe, o olho
+  pequeno e pálido some na máscara sob a carranca, os sulcos aparecem.
+- **Albertossauro** ficou o mais legível: a faixa escura do olho e o pente de dentes finos o separam de tudo; o olho
+  grande de pupila quadrada é o ponto mais "desenhado" (de perto, a pupila 2 x 2 lê como um quadrado preto).
+- **Daspletossauro**: dentes grossos desiguais, olho laranja na fechadura e a ferrugem descendo atrás dele são dele;
+  as placas do focinho leem como manchas grandes mais que como placas, e o rosto ainda é o mais carregado dos quatro.
+- **Majungassauro**: rosto de osso picotado, olho verde pequeno e fundo, três dentes curtos; continua o mais escuro e
+  o de menos detalhe à distância, e de 3/4 o domo ainda lê como degraus de blocos, embora agora com a cor da cabeça.
+  É o que pede o olhar do Rodrigo primeiro (como no v2).
