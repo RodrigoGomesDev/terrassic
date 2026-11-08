@@ -3078,7 +3078,8 @@ public final class BehaviorTest {
                 command(mc, "time set 1000");
                 summon(mc, "tyrannosaurus", x0, Y, 0.5D, rex, "Hunger:100," + STILL);
                 for (int i = 0; i < 4; i++) {
-                    summon(mc, sp[i], x0 + at[i][0], Y, 0.5D + at[i][1], cast[i][0], "Hunger:100");
+                    // held in place: the measure is whether the roar set it running (they wandered off 24 blocks before it)
+                    summon(mc, sp[i], x0 + at[i][0], Y, 0.5D + at[i][1], cast[i][0], "Hunger:100," + STILL);
                 }
                 watch(mc, new Vec3(x0, Y, 0.5D), 50.0D);
                 return 60;
