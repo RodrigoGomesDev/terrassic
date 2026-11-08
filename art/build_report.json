@@ -2390,8 +2390,8 @@
   "px_per_m": 16.944,
   "texels_per_block": 16.14,
   "colours": {
-   "male": 39,
-   "female": 36
+   "male": 37,
+   "female": 35
   }
  },
  "dakotaraptor": {

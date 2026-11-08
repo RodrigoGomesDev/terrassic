@@ -20,9 +20,10 @@ What makes it read as itself and NOT as the remade Carnotaurus, its cousin (stud
 4. it bites and HOLDS (the animations and the Java in Majungasaurine), it does not ram;
 5. its own colour, "cinza-basalto": a dusky blue-grey of the dry Maevarano mud (the study's dry sage was green, and the
    T. rex and the Albertosaurus already hold the greens), the back crossed by BROAD ragged dark bands that ring the
-   tail (the first drawn mark), the dome and the nasal ridge dark horn and, on the male, the bare skin round the dome
-   dull ochre-orange (the second), and a pale stripe from the corner of the mouth down the side of the neck (the
-   third). The belly is a pale warm grey.
+   tail (the first drawn mark), on the male the bare skin of the rugose brow and behind the eye dull ochre-orange
+   (the second; padrão v2, 08/11/2026: the dome stays the skull's own skin with a worn pale crown, since ochre round
+   or under it read as a hat), and a pale stripe from the corner of the mouth down the side of the neck (the third).
+   The belly is a pale warm grey.
 """
 import math
 
@@ -363,14 +364,17 @@ def limb_tone(t):
 
 
 def _ochre(t, sex):
-    """the male's bare display skin: dull ochre blotches on the dome's front slope and flanks (a soft field in body
-    space, ragged, never a ring) that grow denser up the knob; the female has none"""
+    """the male's bare display skin: dull ochre over the rugose brow and spilling back and down behind the eye (the
+    postorbital), ragged at the edge (a soft field in body space). The dome itself stays the roof's skin with a worn
+    pale crown: the v1 ochre plate under a dark cap, and the v2 draft's ochre band under it, both read as a hat
+    (Rodrigo, 08/11/2026). The female has none"""
     if sex != "male":
         return None
-    dy = t.P[1] - DOME[1]
-    if dy < 0.5:
+    dz = t.P[2] - EYE[0]; dy = t.P[1] - EYE[1]
+    if not (-1.5 < dz < 6.0 and -3.0 < dy < 3.5):
         return None
-    if skin2.soft(*skin2.surface_uv(t), 1.7, seed=61) > 0.25 + 0.22 * dy:
+    reach = 1.8 + 0.25 * dz - 0.45 * max(0.0, -dy)
+    if abs(dy - 1.2 + 0.25 * dz) > reach * (0.55 + 0.6 * skin2.soft(*skin2.surface_uv(t), 1.8, seed=61)):
         return None
     k = head2.face_scale(t, cell=2.0, seed=62)
     return "oc0" if k < 0 else ("oc2" if k > 0 else "oc1")
@@ -406,6 +410,10 @@ def head_tone(t, sex):
             return "k4"                       # the lip, a step lighter than the cheek
     hv = (t.P[1] - HEAD_Y[0]) / max(1.0, HEAD_Y[1] - HEAD_Y[0])
     base = ["k4", "k3", "k2"][skin2.bands(hv, t.P[2] * 2.0, (0.40, 0.72), amp=0.07, seed=31)]
+    if n in ("cranium", "temporal") and f in ("east", "west"):
+        oc = _ochre(t, sex)
+        if oc:
+            return oc
     if n in ("maxilla", "premax", "snout") and f in ("east", "west", "north") and v > 0.15:
         return skin2.step(base, head2.rugose(t, seed=9))
     return skin2.step(base, head2.face_scale(t, cell=2.2, seed=32, lift=3))
@@ -420,17 +428,13 @@ def shader_for(sex):
             return saddle_px(t)
         if mat == "claw":
             return p["ker0"] if f != "up" else p["ker1"]
-        if mat == "horn":       # the knob's top: keratin only on the crown, the cap's sides still skin
+        if mat == "horn":       # the knob's crown: worn pale keratin on top only, the cap's sides still skin
             if f == "up":
-                return p["ker3"] if h32(t.i, t.j, 5) % 3 else p["hn2"]
+                return p["ker3"] if h32(t.i, t.j, 5) % 3 else p["ker2"]
             if t.j == 0:
-                return p["hn1"]
-            oc = _ochre(t, sex)
-            return p[oc] if oc else p[skin2.step("k2", head2.face_scale(t, cell=2.0, seed=68))]
-        if mat == "dome":       # the swellings the dome rises out of: the roof's own skin, the male's ochre
-            oc = _ochre(t, sex)
-            if oc:
-                return p[oc]
+                return p["k4"]
+            return p[skin2.step("k3", head2.face_scale(t, cell=2.0, seed=68))]
+        if mat == "dome":       # the swellings the dome rises out of: the roof's own skin, rugose
             if f == "up":
                 return p[skin2.step("k2", head2.face_scale(t, cell=2.2, seed=63))]
             return p[skin2.step("k3" if t.j == 0 else "k2", head2.face_scale(t, cell=2.2, seed=64))]
@@ -441,7 +445,11 @@ def shader_for(sex):
                 return p[skin2.step("k3", head2.rugose(t, seed=65))]
             if f == "down":
                 return p["k0"]
-            return p["k1"] if t.j == t.h - 1 else p[skin2.step("k2", head2.rugose(t, seed=66))]
+            if t.j == t.h - 1:
+                return p["k1"]
+            if sex == "male":
+                return p["oc1" if head2.rugose(t, seed=66) >= 0 else "oc0"]
+            return p[skin2.step("k2", head2.rugose(t, seed=66))]
         if mat == "plate":      # the thick rugose nasals: a broad ridge of knobs and grooves
             if f in ("up", "north"):
                 return p[skin2.step("k2", head2.rugose(t, seed=67, every=2))]
@@ -469,7 +477,8 @@ def shader_for(sex):
 PROF = [None]
 BODY_SCALE = 7.0          # the body's scale cell in texels (padrão v2: one tone step, body neighbours change 0.20-0.30)
 HEAD_Y = [0.0, 1.0]       # the lowest and highest point of the face at rest (the head's countershading)
-DOME = [0.0, 0.0]         # rest-pose z and foot height of the dome (the male's ochre spreads from it)
+DOME = [0.0, 0.0]         # rest-pose z and foot height of the dome
+EYE = [0.0, 0.0]          # rest-pose z and y of the eye's centre (the male's ochre runs back from over it)
 STRIPE = [0.0, 0.0]       # rest-pose y and z of the jaw corner (the neck stripe starts there)
 
 # ------------------------------------------------------------------ the drawn details of the head
@@ -504,6 +513,8 @@ def paint_sex(m, sex="male"):
     ys = [pts[n][:, 1] for n in ("cranium", "maxilla", "premax")]
     HEAD_Y[:] = [min(a.min() for a in ys), max(a.max() for a in ys)]
     DOME[:] = [float(pts["dome"][:, 2].mean()), float(pts["cranium"][:, 1].max())]
+    br = pts["brow"]
+    EYE[:] = [float(br[:, 2].mean()), float(br[:, 1].min()) - 2.0]
     jb = pts["jaw_back"]
     STRIPE[:] = [float(jb[:, 1].max()) + 3.0, float(jb[:, 2].max())]
     return P.paint(m, shader_for(sex), decals=(decals_for(sex),))
