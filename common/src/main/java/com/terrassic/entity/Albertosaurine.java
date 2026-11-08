@@ -113,7 +113,7 @@ public abstract class Albertosaurine extends ApexTheropod {
     private int spentLeft;
     private boolean longChaseLogged;
     // server: the pack call and the answer
-    private int callCooldown = 100;
+    private int callCooldown;
     private boolean packCalling;
     private boolean answering;
     private int answerIn;
@@ -123,6 +123,8 @@ public abstract class Albertosaurine extends ApexTheropod {
     public LivingEntity drivePrey;
     public Albertosaurine driveLeader;
     public int driveSince;
+    /** Server, for an adult: ticks it holds back for the juveniles to start the drive (PackAmbushGoal). */
+    public int driveWait;
 
     protected Albertosaurine(EntityType<? extends Albertosaurine> type, Level level) {
         super(type, level);
@@ -294,7 +296,8 @@ public abstract class Albertosaurine extends ApexTheropod {
         LivingEntity previous = this.getTarget();
         boolean call = !this.level().isClientSide() && target != null && previous == null && !this.answering && !this.isTame()
                 && !this.isBaby() && !this.isVehicle() && this.isAlive() && this.callCooldown <= 0
-                && !(target instanceof Albertosaurine) && !this.packAround().isEmpty();
+                && !(target instanceof Albertosaurine) && !this.packAround().isEmpty()
+                && this.packAround().stream().noneMatch(o -> o.getTarget() == target || o.answerTarget == target);
         if (call) {
             this.packCalling = true;
         }
@@ -307,12 +310,23 @@ public abstract class Albertosaurine extends ApexTheropod {
             this.roar();
         }
         int n = 0;
+        boolean drivers = false;
         for (Albertosaurine other : this.packAround()) {
             if (other.getTarget() == null && other.answerIn <= 0) {
                 other.answerTo = this;
                 other.answerTarget = target;
                 other.answerIn = 14 + n * 8 + this.random.nextInt(10);
+                drivers |= other.isDriver();
                 n++;
+            }
+        }
+        if (drivers) {
+            // the young will drive it: the adults hold back from the first moment, and wait for it crouched
+            this.driveWait = 80;
+            for (Albertosaurine other : this.packAround()) {
+                if (!other.isBaby() && other.answerTo == this) {
+                    other.driveWait = 80 + other.answerIn;
+                }
             }
         }
         this.logAct("pack call: " + n + " answer, on a " + target.getType().toShortString());
@@ -337,6 +351,14 @@ public abstract class Albertosaurine extends ApexTheropod {
     }
 
     // ------------------------------------------------------------------ the long chase
+
+    /** A courser: once a chase has gone on a moment it runs the prey down instead of stalking up to it (ApexBiteGoal
+     *  stalks prey it has not roared at). */
+    @Override
+    public boolean hasRoaredAt(LivingEntity target) {
+        return super.hasRoaredAt(target) || (target != null && !this.isTame() && target.getUUID().equals(this.chaseOf)
+                && this.tickCount - this.chaseTick > 30);
+    }
 
     /** While its own chase runs, the run does not wear it out (the base fatigue): it tires by its own rule. */
     @Override
@@ -378,6 +400,9 @@ public abstract class Albertosaurine extends ApexTheropod {
         if (this.callCooldown > 0) {
             this.callCooldown--;
         }
+        if (this.driveWait > 0) {
+            this.driveWait--;
+        }
         if (this.packCalling && !this.isRoaring()) {
             this.packCalling = false;
         }
@@ -400,11 +425,6 @@ public abstract class Albertosaurine extends ApexTheropod {
         if (baseNear) {
             this.baseStart = this.position();
             this.baseTick = this.tickCount;
-            if (!this.longChaseLogged && this.chaseStart != null && this.position().distanceToSqr(this.chaseStart) > 46.0D * 46.0D) {
-                this.longChaseLogged = true;
-                this.logAct(String.format(java.util.Locale.ROOT, "long chase: still on past 48 blocks (%.0f)",
-                        Math.sqrt(this.position().distanceToSqr(this.chaseStart))));
-            }
             return true;
         }
         return false;
@@ -430,6 +450,11 @@ public abstract class Albertosaurine extends ApexTheropod {
         }
         int sinceHit = this.tickCount - Math.max(this.chaseTick, this.getLastHurtMobTimestamp());
         double gone = Math.sqrt(this.position().distanceToSqr(this.chaseStart));
+        if (!this.longChaseLogged && (gone > 48.0D || sinceHit > 400)) {
+            this.longChaseLogged = true;          // where the other big hunters give up (DinosaurEntity)
+            this.logAct(String.format(java.util.Locale.ROOT, "long chase: still on past the others' limit (%.0f blocks, %d s)",
+                    gone, (this.tickCount - this.chaseTick) / 20));
+        }
         if (gone > CHASE_BLOCKS || sinceHit > CHASE_TICKS) {
             this.logAct(String.format(java.util.Locale.ROOT, "long chase: gives up after %.0f blocks, %d s without a blow; spent",
                     gone, sinceHit / 20));

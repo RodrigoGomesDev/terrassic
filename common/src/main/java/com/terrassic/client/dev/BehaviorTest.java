@@ -149,6 +149,9 @@ public final class BehaviorTest {
         if (only.contains("daspleto")) {
             planDaspleto();
         }
+        if (only.contains("alberto")) {
+            planAlberto();
+        }
         if (only.contains("steps")) {
             planSteps();
         }
@@ -472,7 +475,7 @@ public final class BehaviorTest {
     private static void planLook() {
         double x0 = 4400.5D;
         String[] all = {"tyrannosaurus", "triceratops", "edmontosaurus", "quetzalcoatlus", "therizinosaurus", "deinosuchus",
-                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus"};
+                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus"};
         for (String sp : all) {
             UUID u = id();
             STEPS.add(mc -> {
@@ -611,6 +614,215 @@ public final class BehaviorTest {
                 return 1;
             });
         }
+    }
+
+    /** 1.10.1, the Albertosaurus (art/albertosaurus/REFEITO.md): photos in the real client (side, three quarters, the
+     *  front, the head, next to a Daspletosaurus and a T. rex), the pack drive (two adults and two juveniles on a
+     *  Gallimimus: the call, the answers, the juveniles' arc, the adults' crouch) and the long chase (a prey kept
+     *  ahead of it: it must go past 48 blocks and give up by 72 blocks or 30 s; a Daspletosaurus the same way, for
+     *  the base rule). */
+    private static void planAlberto() {
+        double x0 = 5600.5D;
+        UUID male = id(), female = id(), dasp = id(), rex = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Albertosaurus (1.10.1)");
+            clear(mc, x0, 40);
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+            command(mc, "time set 6000");
+            return 100;                      // the arena's chunks loaded before the first summon
+        });
+        STEPS.add(mc -> {
+            summon(mc, "albertosaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            noAutoShots = true;              // no automatic shot moves the camera between a view and its photo
+            return 40;
+        });
+        awaitAll(male);
+        String[][] views = {{"side", "0", "0.15", "1"}, {"tq", "0.75", "0.35", "0.75"}, {"front", "-1", "0.25", "0.1"}};
+        for (String[] v : views) {
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, male);
+                if (d == null) {
+                    REPORT.add("  alberto photo: NOT FOUND");
+                    return 1;
+                }
+                double r = 4.0D + d.getBbWidth() * 2.5D + d.getBbHeight() * 1.2D;
+                Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.55D, 0.0D);
+                look(mc.player, c.add(Double.parseDouble(v[1]) * r, Double.parseDouble(v[2]) * r, Double.parseDouble(v[3]) * r), c);
+                return 40;
+            });
+            STEPS.add(mc -> {
+                Screenshot.grab(mc.gameDirectory, "behavior_alberto_" + v[0] + ".png", mc.getMainRenderTarget(), msg -> {
+                });
+                return 2;
+            });
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, male);
+            if (d != null) {
+                double k = d.getBbHeight();
+                Vec3 head = d.position().add(-1.05D * k, 0.9D * k, 0.0D);
+                look(mc.player, head.add(-0.6D * k, 0.1D * k, 1.0D * k), head);
+                REPORT.add(String.format(Locale.ROOT, "  alberto size: hitbox %.2f x %.2f, scale %.3f", d.getBbWidth(), d.getBbHeight(), d.getScale()));
+            }
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_alberto_head.png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 2;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "albertosaurus", x0, Y, 9.5D, female, "NoAI:1b,Female:1b,Rotation:[90f,0f]");
+            summon(mc, "daspletosaurus", x0, Y, -10.5D, dasp, "NoAI:1b,Rotation:[90f,0f]");
+            summon(mc, "tyrannosaurus", x0, Y, -22.5D, rex, "NoAI:1b,Rotation:[90f,0f]");
+            return 40;
+        });
+        awaitAll(female, dasp, rex);
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 + 2.0D, Y + 6.0D, 34.0D), new Vec3(x0, Y + 3.0D, -6.0D));
+            return 40;
+        });
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_alberto_with_kin.png", mc.getMainRenderTarget(), msg -> {
+            });
+            noAutoShots = false;
+            return 2;
+        });
+        // ---- the pack drive: two adults call, two juveniles drive a Gallimimus round to them
+        UUID a1 = id(), a2 = id(), j1 = id(), j2 = id(), prey = id();
+        STEPS.add(mc -> {
+            REPORT.add("  -- pack drive");
+            followed = null;
+            pairedWith = null;
+            command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+            summon(mc, "albertosaurus", x0 - 18.0D, Y, -3.5D, a1, "Hunger:20,Female:0b,Tags:[\"pack\"],Rotation:[-90f,0f]");
+            summon(mc, "albertosaurus", x0 - 18.0D, Y, 4.5D, a2, "Hunger:20,Female:1b,Tags:[\"pack\"],Rotation:[-90f,0f]");
+            summon(mc, "albertosaurus", x0 - 13.0D, Y, -12.5D, j1, "Hunger:20,Age:-13000,Tags:[\"pack\"],Rotation:[-90f,0f]");
+            summon(mc, "albertosaurus", x0 - 13.0D, Y, 13.5D, j2, "Hunger:20,Age:-14000,Tags:[\"pack\"],Rotation:[-90f,0f]");
+            summon(mc, "gallimimus", x0 + 6.0D, Y, 0.5D, prey, "Tags:[\"pack\"]");
+            look(mc.player, new Vec3(x0 - 6.0D, Y + 30.0D, 30.0D), new Vec3(x0 - 6.0D, Y, 0.5D));
+            return 30;
+        });
+        awaitAll(a1, a2, j1, j2, prey);
+        STEPS.add(mc -> {
+            DinosaurEntity lead = server(mc, a1), p = server(mc, prey);
+            if (lead != null && p != null) {
+                mc.getSingleplayerServer().execute(() -> lead.setTarget(p));
+            }
+            return 2;
+        });
+        int[] seen = new int[6];       // frames: juvenile driving, adult crouched, adult sprinting; prey min gap x10
+        seen[3] = 9999;
+        burst("alberto_drive", 300, k -> {
+            Minecraft mcm = Minecraft.getInstance();
+            if (k % 10 == 0) {
+                command(mcm, "kill @e[type=!player,tag=!pack,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+            }
+            DinosaurEntity p = server(mcm, prey);
+            for (UUID u : new UUID[]{a1, a2, j1, j2}) {
+                if (server(mcm, u) instanceof com.terrassic.entity.Albertosaurine al) {
+                    byte mode = al.mode();
+                    if (mode == com.terrassic.entity.Albertosaurine.MODE_DRIVE) {
+                        seen[0]++;
+                    } else if (mode == com.terrassic.entity.Albertosaurine.MODE_AMBUSH) {
+                        seen[1]++;
+                    } else if (mode == com.terrassic.entity.Albertosaurine.MODE_SPRINT) {
+                        seen[2]++;
+                    }
+                    if (!al.isBaby() && p != null) {
+                        seen[3] = Math.min(seen[3], (int) (10 * al.distanceTo(p)));
+                    }
+                }
+            }
+            if (k % 50 == 49) {
+                DinosaurEntity m1 = server(mcm, a1), mj = server(mcm, j1);
+                REPORT.add(String.format(Locale.ROOT, "    t=%ds: prey %s, adult %s (target %s), juvenile %s",
+                        (k + 1) / 10, p == null ? "gone" : String.format(Locale.ROOT, "%.0f/%.0f", p.getHealth(), p.getMaxHealth()),
+                        m1 == null ? "-" : "mode " + ((com.terrassic.entity.Albertosaurine) m1).mode(),
+                        m1 == null || m1.getTarget() == null ? "none" : m1.getTarget().getType().toShortString(),
+                        mj == null ? "-" : "mode " + ((com.terrassic.entity.Albertosaurine) mj).mode()));
+            }
+            if (k == 299) {
+                REPORT.add(String.format(Locale.ROOT, "    drive frames %d, ambush frames %d, sprint frames %d, closest adult to prey %.1f, prey %s",
+                        seen[0], seen[1], seen[2], seen[3] / 10.0D, p == null || !p.isAlive() ? "killed" : "alive"));
+            }
+        });
+        // ---- the long chase: the prey kept 14 blocks ahead (no blow lands; an invulnerable one cannot be a target)
+        for (String sp : new String[]{"albertosaurus", "daspletosaurus"}) {
+            UUID hunter = id(), runner = id();
+            double[] start = new double[3];
+            double[] gaveUp = {-1, -1};
+            STEPS.add(mc -> {
+                REPORT.add("  -- long chase: " + sp);
+                followed = null;
+                pairedWith = null;
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
+                clear(mc, x0 + 50.0D, 64);
+                return 100;
+            });
+            STEPS.add(mc -> {
+                summon(mc, sp, x0 - 40.0D, Y, 0.5D, hunter, "Hunger:20,Tags:[\"chase\"],Rotation:[-90f,0f]");
+                summon(mc, "leptoceratops", x0 - 26.0D, Y, 0.5D, runner, "NoAI:1b,Tags:[\"chase\"]");
+                return 30;
+            });
+            awaitAll(hunter, runner);
+            STEPS.add(mc -> {
+                DinosaurEntity h = server(mc, hunter), r = server(mc, runner);
+                if (h != null && r != null) {
+                    start[0] = h.getX();
+                    start[2] = h.getZ();
+                    mc.getSingleplayerServer().execute(() -> h.setTarget(r));
+                }
+                return 2;
+            });
+            burst("chase_" + sp, 450, k -> {
+                Minecraft mcm = Minecraft.getInstance();
+                DinosaurEntity h = server(mcm, hunter);
+                Entity r = serverAny(mcm, runner);
+                if (h == null || r == null) {
+                    return;
+                }
+                if (k % 10 == 0) {
+                    command(mcm, "kill @e[type=!player,tag=!chase,x=" + (int) (x0 + 50) + ",y=" + (int) Y + ",z=0,distance=..90]");
+                }
+                double gone = Math.hypot(h.getX() - start[0], h.getZ() - start[2]);
+                if (h.getTarget() != null && gone < 110.0D) {
+                    // the prey runs on ahead of it along the track
+                    double rx = Math.min(x0 + 110.0D, h.getX() + 14.0D);
+                    mcm.getSingleplayerServer().execute(() -> r.teleportTo(rx, Y, 0.5D));
+                } else if (gaveUp[0] < 0) {
+                    gaveUp[0] = gone;
+                    gaveUp[1] = k / 10.0D;
+                }
+                look(mcm.player, new Vec3(h.getX() - 4.0D, Y + 22.0D, 34.0D), new Vec3(h.getX() + 4.0D, Y, 0.5D));
+                if (k % 50 == 49) {
+                    REPORT.add(String.format(Locale.ROOT, "    t=%ds: %.0f blocks from the start, target %s, fatigue %.2f, tired %b%s",
+                            (k + 1) / 10, gone, h.getTarget() == null ? "none" : "on", h.fatigue(), h.isTired(),
+                            h instanceof com.terrassic.entity.Albertosaurine al ? ", mode " + al.mode() + ", spent " + al.isSpent() : ""));
+                }
+                if (k == 449) {
+                    REPORT.add(gaveUp[0] < 0 ? "    still chasing at the end"
+                            : String.format(Locale.ROOT, "    gave up after %.0f blocks, at %.1f s", gaveUp[0], gaveUp[1]));
+                }
+            });
+        }
+    }
+
+    /** Waits (up to 30 s) until the server has these creatures: a busy server runs the summons late. */
+    private static void awaitAll(UUID... ids) {
+        int[] tries = {0};
+        STEPS.add(mc -> {
+            for (UUID u : ids) {
+                if (serverAny(mc, u) == null && tries[0]++ < 30) {
+                    return -1;
+                }
+            }
+            if (tries[0] >= 30) {
+                REPORT.add("  (some creatures never appeared)");
+            }
+            return 1;
+        });
     }
 
     /** 1.9.5, territory and the pack: a wild Triceratops warns a player who comes near and charges one who stays; a
@@ -1182,7 +1394,7 @@ public final class BehaviorTest {
     private static void planJaws() {
         String[] all = {"edmontosaurus", "pteranodon", "quetzalcoatlus", "parasaurolophus", "triceratops", "tyrannosaurus",
                 "carnotaurus", "giganotosaurus", "spinosaurus", "styracosaurus", "protoceratops", "pachycephalosaurus",
-                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus"};
+                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2800.5D;
         STEPS.add(mc -> {
@@ -1258,7 +1470,7 @@ public final class BehaviorTest {
     private static void planGaits() {
         String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
                 "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
-                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus"};
+                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2600.5D;
         STEPS.add(mc -> {
@@ -1423,7 +1635,7 @@ public final class BehaviorTest {
         String[][] pairs = {{"tyrannosaurus", "tyrannosaurus"}, {"carnotaurus", "carnotaurus"}, {"giganotosaurus", "giganotosaurus"},
                 {"spinosaurus", "triceratops"}, {"triceratops", "triceratops"}, {"pachycephalosaurus", "pachycephalosaurus"},
                 {"dakotaraptor", "styracosaurus"}, {"therizinosaurus", "therizinosaurus"}, {"styracosaurus", "styracosaurus"}, {"protoceratops", "protoceratops"},
-                {"ankylosaurus", "tyrannosaurus"}, {"daspletosaurus", "daspletosaurus"}};
+                {"ankylosaurus", "tyrannosaurus"}, {"daspletosaurus", "daspletosaurus"}, {"albertosaurus", "albertosaurus"}};
         double x0 = 2000.5D;
         // the arena's chunks loaded and settled before the first pair (on a fresh world the first pair spawned into
         // terrain still being generated and was thrown about, 06/11)
@@ -1519,12 +1731,13 @@ public final class BehaviorTest {
 
     /** Every species' new one-shots and loops (06/11/2026), triggered one after another and logged. */
     private static void planAllMoves() {
-        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops", "daspletosaurus",
+        String[] species = {"carnotaurus", "giganotosaurus", "spinosaurus", "velociraptor", "dakotaraptor", "triceratops", "daspletosaurus", "albertosaurus",
                 "styracosaurus", "protoceratops", "pachycephalosaurus", "parasaurolophus", "edmontosaurus", "gallimimus",
                 "ankylosaurus", "therizinosaurus", "deinosuchus", "pteranodon", "quetzalcoatlus"};
         String[] moves = {"feint", "block", "recoil", "submit", "lie_down", "get_up", "ram", "head_clash", "grab_shake", "claw_swipe",
                 "sail_display", "leap_back", "nose_jab", "frill_shove", "horn_lock_start", "flank_butt", "kick_back", "body_shove",
-                "club_duel", "claw_slash", "gape_threat", "jab", "crest_display", "face_bite", "jaw_test", "steal_roar", "face_rub"};
+                "club_duel", "claw_slash", "gape_threat", "jab", "crest_display", "face_bite", "jaw_test", "steal_roar", "face_rub",
+                "snap_bite", "sidestep", "pass_bite", "call_pack", "answer", "pant"};
         double x0 = 2200.5D;
         for (String sp : species) {
             UUID u = id();
