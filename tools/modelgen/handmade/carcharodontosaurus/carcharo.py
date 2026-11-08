@@ -26,6 +26,7 @@ hypothesis. What makes it read as itself and NOT as the remade Giganotosaurus (s
 """
 import math
 
+import head2
 import proto as P
 import skin
 import skin2
@@ -41,13 +42,14 @@ SCHEME = {
     "k0": "30281a", "k1": "4f3b22", "k2": "69582a", "k3": "806b33", "k4": "927c46", "k5": "a48e5e",
     "b0": "938b7a", "b1": "a39a89", "b2": "b3aa99", "b3": "c1b8a6",
     "hn0": "211c16", "hn1": "342c24", "hn2": "4d4337",
-    "mk": "1f1a15", "lip": "9a907c", "scar": "d8cfbd",
+    "mk": "1f1a15", "lip": "9a907c", "scar": "d8cfbd", "rd0": "7e3324", "rd1": "a3452c", "rd2": "bd5a36",
     "female": {"k1": "57422a", "k2": "715f31", "k3": "88723a", "k4": "9a844e", "k5": "ac9665",
-               "b0": "9b9282", "b1": "aba291", "b2": "bcb2a1", "mk": "4a443b"},
+               "b0": "9b9282", "b1": "aba291", "b2": "bcb2a1", "mk": "4a443b",
+               "rd0": "6a4a32", "rd1": "7d5a3c", "rd2": "8e6a48"},
 }
 PAL = {
     "ker0": hx("1e1a18"), "ker1": hx("362e2a"), "ker2": hx("cfc4a8"), "ker3": hx("a09276"),
-    "iris": hx("c9a23e"), "pupil": hx("0f0b0c"), "lid": hx("17111a"), "glint": hx("ece2c2"),
+    "iris": hx("e6c25a"), "pupil": hx("0f0b0c"), "lid": hx("130f0c"), "glint": hx("f6efd8"),
     "gum": hx("7a3a3e"), "mouth": hx("3a1b20"), "tongue": hx("9c5250"), "tooth": hx("eee6cf"), "tooth2": hx("c6b796"),
 }
 
@@ -85,12 +87,14 @@ def head(m, parent, hy, hz, rest=(-4, 0, 0)):
     m.cube(sk, *B(-5, 0, -11, 5, 13, 0), name="cranium")
     m.cube(sk, *B(-4.5, 4, 0, 4.5, 12, 2), name="occiput")
     # the nuchal crest: a raised ridge across the back of the skull roof, set back over the occiput
-    m.cube(sk, *B(-3.5, 12, -2, 3.5, 15, 3), name="nuchal", mat="horn")
-    m.pair(sk, sk, *B(5, 1, -7, 6, 8, -1), name="temporal")              # the jaw muscle behind the eye
+    m.cube(sk, *B(-3.5, 12, -2, 3.5, 15, 3), name="nuchal", mat="crest")
+    m.pair(sk, sk, *B(5, 1, -5.5, 6, 8, -0.5), name="temporal")          # the jaw muscle behind the eye
     # the brow SHELF over the orbits: a bar across the roof that juts 2 px forward of the cranium, and its sides that
     # stand out over each eye (the scowl)
-    m.cube(sk, *B(-4, 13, -13, 4, 14, -6), name="brow", mat="horn")
-    m.pair(sk, sk, *B(4, 11, -13, 6, 14, -6), name="brow_side", mat="horn")
+    # (padrão v2: they grow out of the skull, the face's skin on their sides, the male's red display skin over the
+    # eye, dark horn only along the shelf's rim and the crest's top)
+    m.cube(sk, *B(-4, 13, -13, 4, 14, -6), name="brow", mat="crest")
+    m.pair(sk, sk, *B(4, 11, -13, 6, 14, -6), name="brow_side", mat="brow")
     m.cube(sk, *B(-4, 0, -25, 4, 8, -11), name="maxilla")
     m.cube(sk, *B(-3, 5, -23, 3, 12, -11), name="snout", rot=TOP_ROT, origin=so)
     m.cube(sk, *B(-3, 0, -28, 3, 7, -25), name="premax")
@@ -102,9 +106,10 @@ def head(m, parent, hy, hz, rest=(-4, 0, 0)):
     m.cube(jaw, *B(-4, -1, -8, 4, 2, -1), name="cheek", mat="mouth")
     m.cube(jaw, *B(-1.5, -2, -24, 1.5, 1, -7), name="tongue", mat="tongue")
     m.cube(sk, *B(-1, -1, -26, 1, 2, -12), name="palate", mat="mouth")
-    # the blade teeth (14 a side, Sereno et al. 1996) as alpha planes; the upper row inside the jaw's sides (3 < 3.5),
-    # the lower one inside the maxilla (2.5 < 4): with the mouth shut the lips hide them (Cullen et al. 2023)
-    m.pair(sk, sk, *B(3, -3, -27, 3, 1, -11), name="teeth_up", mat="teeth")
+    # the blade teeth (14 a side, Sereno et al. 1996: "shark-toothed") as alpha planes. Padrão v2: the upper row
+    # hangs just OUTSIDE the jaw (3.75 > 3.5) under the maxilla's lip (4): with the mouth shut the long blades show
+    # over the jaw, the lips covering only their base; the lower one inside the maxilla
+    m.pair(sk, sk, *B(3.75, -3, -25, 3.75, 0, -11), name="teeth_up", mat="teeth")
     m.pair(jaw, jaw, *B(2.5, -1, -26, 2.5, 2, -11), name="teeth_lo", mat="teeth_lo")
     return sk
 
@@ -312,8 +317,8 @@ def body_tone(t, prof, sex):
                 return "k1" if b >= 3 else "k2"
     if b >= 2:
         base = skin2.step(base, skin2.mottle(t, cell=11, strength=0.2, seed=3))
-        if skin2.fleck(t, every=23, seed=4):
-            base = skin2.step(base, -1)
+        # padrão v2: the body's own scales at one tone step, in body space (calm, but not a plain flank)
+        base = skin2.step(base, head2.body_scales(t, cell=BODY_SCALE, seed=4))
     return base
 
 
@@ -348,38 +353,43 @@ def limb_tone(t):
 
 
 def head_tone(t, sex):
-    """the face: three tones by height (dark crown, middle cheek, light lips) as one shape over the whole head, the
-    dark MASK behind the eye, the sculpted GROOVES on the deep maxilla"""
+    """the face (padrão v2): three tones by height (dark crown, middle cheek, light jaw) as one shape over the head,
+    small scales at one tone step (head2.face_scale, body space), the dark MASK behind the eye, the sculpted GROOVES
+    slanting over the deep maxilla, the lip a step lighter and the dark mouth line over the blade teeth"""
     n = t.cube["name"]; f = t.face
     if f == "down":
         return "b1"
     if n in ("jaw_back", "jaw_front"):
-        h = t.rel[1] if f != "up" else 1.0
-        return "b1" if h < 0.3 else ("lip" if h < 0.55 else "k4")
+        if f == "up":
+            return "k4"
+        h = t.rel[1]
+        if t.j == 0:
+            return "k1"                       # the lower lip's dark edge under the teeth
+        base = "b1" if h < 0.3 else ("b2" if h < 0.55 else "k4")
+        return skin2.step(base, min(0, head2.face_scale(t, cell=2.4, seed=33)))
     if f == "up":
         if n in ("snout", "premax", "maxilla"):
-            u, v = skin2.surface_uv(t)
-            return "k1" if (math.floor(v) % 3 == 0 and math.floor(u) % 2 == 0) else "k2"
-        return "k2" if skin2.mottle(t, cell=4, strength=0.3, seed=24) >= 0 else "k1"
+            return skin2.step("k2", head2.rugose(t, seed=21))
+        return skin2.step("k2", head2.face_scale(t, cell=2.2, seed=24, lift=3))
     v = t.rel[1]
-    if v < 0.10 and n in ("maxilla", "premax"):
-        return "lip"
+    if n in ("maxilla", "premax"):
+        if t.j == t.h - 1:
+            return "k0"                       # the dark mouth line
+        if t.j == t.h - 2:
+            return "k5"                       # the lip, a step lighter than the cheek
     hv = (t.P[1] - HEAD_Y[0]) / max(1.0, HEAD_Y[1] - HEAD_Y[0])
     base = ["k5", "k4", "k3"][skin2.bands(hv, t.P[2] * 2.0, (0.36, 0.70), amp=0.07, seed=31)]
-    base = skin2.step(base, skin2.mottle(t, cell=5, strength=0.28, seed=32)) if base != "k5" and n not in ("maxilla", "premax") else base
-    # the mask: from just behind the eye back over the temporal and the cranium's rear to the jaw joint
     if n in ("cranium", "temporal", "occiput") and f in ("east", "west"):
         zc = t.P[2] - EYE_Z[0]
         yb = EYE_Z[1] - 0.30 * zc                          # it slopes down toward the jaw joint
         if zc > 4.0 and abs(t.P[1] - yb) < 1.4 + 0.12 * zc and t.rel[1] > 0.15:
-            return "mk"
-    # the sculpted maxilla (the genus' own trait): grooves running up and back across the deep side
+            return "mk" if head2.face_scale(t, cell=2.2, seed=35) <= 0 else "k1"
     if n in ("maxilla", "premax") and f in ("east", "west") and 0.12 < v < 0.9:
         u, w = skin2.surface_uv(t)
-        g = (math.floor(u + 0.6 * w)) % 4
-        if g == 0:
+        if (math.floor(u + 0.6 * w)) % 3 == 0:            # the slanting grooves of the sculpted maxilla
             return skin2.step(base, -1)
-    return base
+        return skin2.step(base, 1 if h32(math.floor(u), math.floor(w), 36) % 5 == 0 else 0)
+    return skin2.step(base, head2.face_scale(t, cell=2.2, seed=32, lift=3))
 
 
 def shader_for(sex):
@@ -391,33 +401,32 @@ def shader_for(sex):
             return saddle_px(t)
         if mat == "claw":
             return p["ker0"] if f != "up" else p["ker1"]
-        if mat == "horn":       # the brow shelf and the nuchal crest: dark rugose horn, lit along the top
+        if mat == "crest":      # the brow shelf's top and the nuchal crest: skin sides, a rim of dark horn on top
             if f == "up":
                 return p["hn2"] if h32(t.i, t.j, 5) % 3 else p["hn1"]
-            return p["hn0"] if t.j >= t.h - 1 else (p["hn1"] if (t.i + t.j) % 3 else p["hn2"])
+            if t.j == 0:
+                return p["hn1"]
+            if sex == "male" and t.cube["name"] == "nuchal":
+                return p["rd1"] if (t.i + t.j) % 3 else p["rd0"]
+            return p[skin2.step("k3", head2.face_scale(t, cell=2.0, seed=79))]
+        if mat == "brow":       # the shelf's sides over each eye: the scowl, red display skin on the male
+            if f == "up":
+                return p["hn2"] if h32(t.i, t.j, 6) % 3 else p["hn1"]
+            if f == "down":
+                return p["k0"]
+            if t.j == t.h - 1:
+                return p["k1"]
+            if sex == "male":
+                return p["rd2"] if t.j == 0 else p["rd1" if head2.face_scale(t, cell=2.0, seed=80) >= 0 else "rd0"]
+            return p[skin2.step("k3", head2.face_scale(t, cell=2.0, seed=80))]
         if mat == "plate":      # the rugose nasals: a ridge of small bumps
             if f in ("up", "north"):
-                return p["k1"] if math.floor(t.L[2]) % 2 == 0 else p["k3"]
+                return p[skin2.step("k2", head2.rugose(t, seed=78, every=2))]
             return p["k2"]
-        if mat == "teeth":      # blade teeth, longer than the tyrannosaurs', every second column
-            if f not in ("east", "west"):
-                return None
-            col = int(math.floor(t.L[2])); row = t.j
-            if row == 0:
-                return p["gum"]
-            if (col + 40) % 2:
-                return None
-            size = 3 if h32(col, 11) % 4 else 4
-            return (p["tooth"] if row < size else p["tooth2"]) if row <= size else None
+        if mat == "teeth":      # blade teeth, longer than the tyrannosaurs': three rows, a long one now and then
+            return head2.teeth_up(t, p, every=2, long_every=2, seed=11)
         if mat == "teeth_lo":
-            if f not in ("east", "west"):
-                return None
-            col = int(math.floor(t.L[2])); row = t.j
-            if row == t.h - 1:
-                return p["gum"]
-            if (col + 41) % 2 == 0 and row >= (0 if h32(col, 13) % 3 else 1):
-                return p["tooth2"] if row == 0 else p["tooth"]
-            return None
+            return head2.teeth_lo(t, p)
         if mat == "mouth":
             return p["gum"] if f in ("up", "down") else p["mouth"]
         if mat == "tongue":
@@ -435,43 +444,32 @@ def shader_for(sex):
 
 
 PROF = [None]
+BODY_SCALE = 6.0          # the body's scale cell in texels (padrão v2: one tone step, body neighbours change 0.20-0.30)
 HEAD_Y = [0.0, 1.0]       # the lowest and highest point of the face at rest (the head's countershading)
 EYE_Z = [0.0, 0.0]        # rest-pose z and y of the eye (the mask starts there)
 
 # ------------------------------------------------------------------ the drawn details of the head
 # east = the animal's left (mirrored onto the right); column 0 at the FRONT, row 0 at the TOP
-EYE = [          # under the brow shelf: its shadow, an oval orbit, a gold point and a glint
-    "lll",
-    "lpi",
-    "lpg",
+NOSTRIL = [      # the nostril on the snout tip, a lit rim over it
+    "hh",
+    "nn",
 ]
-NOSTRIL = ["n"]
 
 
 def decals_for(sex):
     p = pal_for(sex)
-    cm = {"l": p["k2"], "p": p["pupil"], "i": p["iris"], "g": p["glint"], "n": p["k1"], "s": p["scar"]}
+    cm = head2.eye_cmap(p, soft="mk")
+    cm.update({"n": p["k0"], "h": p["k5"], "s": p["scar"]})
 
     def dec(img, m):
         C = {c["name"]: c for c in m.cubes if c["mirror_of"] is None}
-        P.stamp(img, m, C["cranium"], "east", EYE, cm, at=(1, 3))
-        P.stamp(img, m, C["premax"], "east", NOSTRIL, cm, at=(0, 2))
+        P.stamp(img, m, C["cranium"], "east", head2.EYE_HOODED, cm, at=(0, 3))
+        P.stamp(img, m, C["premax"], "east", NOSTRIL, cm, at=(0, 1))
         # the row of nerve foramina above the lip line
         u, v, w, h = C["maxilla"]["uv"]["east"]
         for k in range(2, w - 1, 3):
-            img[v + h - 2, u + w - 1 - k] = (*p["k3"], 255)
-        for name, f in (("maxilla", "down"), ("premax", "down"), ("cranium", "down"), ("jaw_front", "up"), ("jaw_back", "up")):
-            c = C[name]; u, v, ww, hh = c["uv"][f]
-            for j in range(hh):
-                for i in range(ww):
-                    rim = i in (0, ww - 1)
-                    if name in ("maxilla", "premax"):
-                        col = p["gum"] if rim or i in (1, ww - 2) else p["mouth"]
-                    elif name == "cranium":
-                        col = p["mouth"]
-                    else:
-                        col = p["gum"] if rim else p["tongue"]
-                    img[v + j, u + i] = (*col, 255)
+            img[v + h - 3, u + w - 1 - k] = (*p["k2"], 255)
+        head2.mouth_interior(img, C, p, ("maxilla", "premax", "cranium"), ("jaw_front", "jaw_back"))
     return dec
 
 
@@ -483,5 +481,5 @@ def paint_sex(m, sex="male"):
     HEAD_Y[:] = [min(a.min() for a in ys), max(a.max() for a in ys)]
     cr = pts["cranium"]
     # the eye sits at the front top of the cranium, under the shelf (the stamp at column 1, rows 2-4 of 13)
-    EYE_Z[:] = [float(cr[:, 2].min()) + 2.0, float(cr[:, 1].max()) - 3.0]
+    EYE_Z[:] = [float(cr[:, 2].min()) + 2.0, float(cr[:, 1].max()) - 4.5]
     return P.paint(m, shader_for(sex), decals=(decals_for(sex),))
