@@ -63,6 +63,8 @@ public final class Playtest {
     private static int wait;
     private static boolean started;
     private static int titleTicks;
+    private static int done;
+    private static int notReady;
     private static String place = "";
     private static int shots;
     private static int photoNo;
@@ -131,14 +133,24 @@ public final class Playtest {
         int w;
         try {
             w = s.run(mc);
-        } catch (RuntimeException e) {
+        } catch (Throwable e) {
             REPORT.add("  STEP FAILED: " + e);
+            org.slf4j.LoggerFactory.getLogger("terrassic").error("[playtest] step failed", e);
             w = 1;
         }
         if (w < 0) {
-            return;     // not ready yet: run it again next tick
+            // not ready yet: run it again next tick (logged every 10 s so a step that never gets ready shows in the log)
+            if (++notReady % 200 == 0) {
+                org.slf4j.LoggerFactory.getLogger("terrassic").info("[playtest] waiting on step {} ({} left)", done, STEPS.size());
+            }
+            return;
         }
+        notReady = 0;
         STEPS.poll();
+        done++;
+        if (done % 20 == 0) {
+            org.slf4j.LoggerFactory.getLogger("terrassic").info("[playtest] step {} done, {} left", done, STEPS.size());
+        }
         wait = w;
     }
 
