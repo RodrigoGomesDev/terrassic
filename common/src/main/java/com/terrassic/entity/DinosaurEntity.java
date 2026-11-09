@@ -2022,9 +2022,21 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     protected void jumpInLiquid(net.minecraft.tags.TagKey<net.minecraft.world.level.material.Fluid> fluid) {
         // no bobbing in open water; but against a bank it can climb, the swim-up is how a mob gets out of the water:
         // without it a calf floating low by the shore never got out (an Ankylosaurus calf 107 s, playtest of 09/11)
-        if (!this.smoothWater() || (this.horizontalCollision && this.bankAhead())) {
+        if (!this.smoothWater() || (this.horizontalCollision && this.bankAhead() && this.headingAshore())) {
             super.jumpInLiquid(fluid);
         }
+    }
+
+    /** It is on its way out of the water: its path ends on ground above the water it floats in, and it is not after
+     *  something in the water (a Deinosuchus fighting by a pool wall hopped again when any bank let it jump, 09/11). */
+    private boolean headingAshore() {
+        LivingEntity t = this.getTarget();
+        if (t != null && t.isInWater()) {
+            return false;
+        }
+        net.minecraft.core.BlockPos to = this.getNavigation().isInProgress() ? this.getNavigation().getTargetPos() : null;
+        return to != null && to.getY() >= this.waterSurface() - 0.2D
+                && this.level().getFluidState(to).isEmpty();
     }
 
     @Override
