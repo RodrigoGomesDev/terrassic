@@ -213,6 +213,10 @@ for what, put, cell, share in cells:
 m = re.search(r"^  after 1 day: 60 rounds put (\d+)", text, re.M)
 check("população: repõe aos poucos", m is not None and int(m.group(1)) > 0, f"{m.group(1) if m else '?'} em um dia")
 
+# 1.10.1: out of a pond over a one-block bank (a calf stuck 107 s in the playtest of 09/11)
+for sp, how in re.findall(r"  bank (\w+(?: calf)?): (out in [\d.]+ s|STILL IN THE WATER after 30 s)", text):
+    check(f"sai da água: {sp}", how.startswith("out"), how)
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))
