@@ -58,7 +58,10 @@ check("herbívoro que foge nunca bate", not bad, ", ".join(bad))
 try:
     lines = open(log, encoding="utf-8", errors="replace").read().splitlines()
     fired = Counter(re.search(r"\[(\w+)\] ([a-z ]+)", l).group(0)[:40] for l in lines if re.search(r"\[(eco|dasp|alberto|carcharo|majunga)\] ", l))
-    crashes = [l for l in lines if "Exception" in l and "terrassic" in l.lower()]
+    # an exception the mod logs as an error or a crash; the known INFO notice "era filter not active
+    # (FileNotFoundException ...)" is not one
+    crashes = [l for l in lines if "Exception" in l and "terrassic" in l.lower()
+               and ("ERROR" in l or "Caused by" in l or "crash" in l.lower()) and "era filter not active" not in l]
     check("sem exceção do mod no log", not crashes, " | ".join(c[:120] for c in crashes[:3]))
     for k, n in sorted(fired.items()):
         results.append((f"disparou {k}", True, str(n)))
