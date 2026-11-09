@@ -156,7 +156,7 @@ public class MigrateGoal extends Goal {
             this.repath = adjustedTickDelay(20);
             Vec3 back = ahead.position().subtract(dest).normalize().scale(spacing);
             Vec3 at = ahead.position().add(back);
-            if (!Reach.walkOr(this.mob, at, ahead.position(), 1.0D)) {
+            if (!Reach.walkOr(this.mob, at, null, 1.0D)) {
                 return false;     // no way in file from here: the waypoints take over
             }
         }

@@ -107,8 +107,9 @@ public class HerdMoveGoal extends Goal {
         DinosaurEntity leader = this.mob.herdLeader();
         double far = this.mob.position().distanceTo(s);
         double speed = leader != null && leader.getNavigation().isInProgress() ? (far > 12.0D ? 1.15D : 0.95D) : 0.8D;
-        // its own place set on the ground; when no path gets there (a bank, a drop), beside the leader; else rest
-        if (!Reach.walkOr(this.mob, s, leader == null ? null : leader.position(), speed)) {
+        // its own place set on the ground; when no path gets there (a bank, a drop) it rests and picks again later
+        // (walking to the leader's own spot instead had it push the leader in place, 25 s in the playtest of 09/11)
+        if (!Reach.walkOr(this.mob, s, null, speed)) {
             this.restUntil = this.mob.tickCount + 200;
             this.spot = null;
         }

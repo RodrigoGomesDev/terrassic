@@ -108,7 +108,7 @@ public class FollowHerdGoal extends Goal {
             Vec3 target = this.neighbour.position().add(this.offset);
             if (com.terrassic.entity.Behaviour.oldHerd) {
                 this.mob.getNavigation().moveTo(target.x, target.y, target.z, 0.85D);
-            } else if (!Reach.walkOr(this.mob, target, this.neighbour.position(), 0.85D)) {
+            } else if (!Reach.walkOr(this.mob, target, null, 0.85D)) {
                 this.restUntil = this.mob.tickCount + 100;     // no way to it from here: let it be for five seconds
             }
         }
