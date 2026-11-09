@@ -106,7 +106,7 @@ public final class BehaviorTest {
             // 1.9.5: the whole battery before a version goes out (memory "patches estaveis"; tools/validation/behavior_regression.py)
             only = only + ",carcass,jaws,gaits,water,steps,paths,night,weak,sleepfish,behave,territory,duels"
                     + ",roarfear,aggro,eggrage,helpcall,babystay,herdmove,quirks,feet,stable"
-                    + ",daspleto,alberto,carcharo,majunga";   // 1.10.1: the four remade predators
+                    + ",daspleto,alberto,carcharo,majunga,bankexit";   // 1.10.1: the four remade predators
         }
         if (java.util.stream.Stream.of("roarfear", "aggro", "eggrage", "helpcall", "babystay", "herdmove", "quirks", "feet", "stable").anyMatch(only::contains)) {
             planCleanup110();
@@ -137,6 +137,9 @@ public final class BehaviorTest {
         }
         if (only.contains("stable")) {
             planStable();
+        }
+        if (only.contains("bankexit")) {
+            planBankExit();
         }
         if (only.contains("paths")) {
             planPaths();
@@ -2152,6 +2155,53 @@ public final class BehaviorTest {
      *  attacking in the water. A walled pool five deep: the Deinosuchus set on a prey in the water, a Mosasaurus, an
      *  Elasmosaurus and a Spinosaurus in it; every tick each one's height is read and its hops counted (a rise faster
      *  than 0.15 block/tick). Frames rexmotion_water_NNN. */
+    /** 1.10.1: out of a pond over a one-block bank (the water's surface one block below the ground round it). A calf
+     *  floats low and got stuck for 107 s in the playtest of 09/11 once the smooth water had taken the swim-up away;
+     *  a calf and an adult each go to its herd on land: when each one stands on the ground again. */
+    private static void planBankExit() {
+        double x0 = 6200.5D;
+        String[][] who = {{"ankylosaurus", "Age:-24000"}, {"triceratops", ""}};
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Out of the water over a one-block bank (1.10.1)");
+            clear(mc, x0, 24);
+            command(mc, fill(x0 - 5, Y - 1, -5, x0 + 5, Y - 1, 5, "minecraft:air"));
+            command(mc, fill(x0 - 5, Y - 5, -5, x0 + 5, Y - 2, 5, "minecraft:water"));
+            look(mc.player, new Vec3(x0, Y + 12.0D, 16.0D), new Vec3(x0, Y - 1.0D, 0.5D));
+            return 40;
+        });
+        for (String[] w : who) {
+            UUID u = id(), mom = id();
+            int[] out = {-1};
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..40]");
+                summon(mc, w[0], x0, Y - 2, 0.5D, u, w[1]);
+                summon(mc, w[0], x0 + 12, Y, 0.5D, mom, "NoAI:1b");
+                return 20;
+            });
+            for (int k = 0; k < 600; k++) {
+                int kk = k;
+                STEPS.add(mc -> {
+                    DinosaurEntity d = server(mc, u);
+                    if (d == null || out[0] >= 0) {
+                        return 1;
+                    }
+                    if (kk % 40 == 0) {
+                        mc.getSingleplayerServer().execute(() -> d.getNavigation().moveTo(x0 + 9.0D, Y, 0.5D, 1.0D));
+                    }
+                    if (!d.isInWater() && d.onGround() && d.getY() >= Y - 0.1D) {
+                        out[0] = kk;
+                    }
+                    if (kk == 599 || out[0] >= 0) {
+                        REPORT.add(String.format(Locale.ROOT, "  bank %s%s: %s", w[0], w[1].isEmpty() ? "" : " calf",
+                                out[0] >= 0 ? String.format(Locale.ROOT, "out in %.1f s", out[0] / 20.0D) : "STILL IN THE WATER after 30 s"));
+                    }
+                    return 1;
+                });
+            }
+        }
+    }
+
     private static void planWater() {
         double x0 = 3000.5D;
         String[] swimmers = {"deinosuchus", "mosasaurus", "elasmosaurus", "spinosaurus", "edmontosaurus", "triceratops", "tyrannosaurus"};
