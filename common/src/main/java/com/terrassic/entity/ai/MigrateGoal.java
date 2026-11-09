@@ -33,6 +33,7 @@ public class MigrateGoal extends Goal {
     private BlockPos destination;
     private int ticks;
     private int blocked;
+    private net.minecraft.world.phys.Vec3 lastPos;
     private int repath;
     /** Whether this one chose the destination (the others follow it in file). */
     private boolean leads;
@@ -79,6 +80,7 @@ public class MigrateGoal extends Goal {
     public void start() {
         this.ticks = 0;
         this.blocked = 0;
+        this.lastPos = null;
         this.repath = 0;
         this.mob.setMigrationTarget(this.destination);
         // the herd sets off together
@@ -99,6 +101,17 @@ public class MigrateGoal extends Goal {
     public void tick() {
         this.ticks++;
         this.beatTrail();
+        // a path that the body does not fit through (a wide animal among trunks): standing still 2 s on its way counts
+        // as a blocked try and it bends aside; five and it gives the trip up (an Edmontosaurus pushed 27 s, 09/11)
+        if (this.ticks % 40 == 0) {
+            if (this.lastPos != null && this.mob.getNavigation().isInProgress()
+                    && this.mob.position().distanceToSqr(this.lastPos) < 0.5D * 0.5D) {
+                this.blocked++;
+                this.repath = 0;
+                this.mob.getNavigation().stop();
+            }
+            this.lastPos = this.mob.position();
+        }
         if (!this.leads && this.followAhead()) {
             return;
         }
@@ -113,7 +126,8 @@ public class MigrateGoal extends Goal {
             return;
         }
         // a waypoint a dozen blocks ahead, bending aside when the straight way has no path
-        for (int attempt = 0; attempt < 3; attempt++) {
+        for (int a = 0; a < 3; a++) {
+            int attempt = (a + this.blocked) % 3;     // after a blocked try it starts with a bend
             double bend = attempt == 0 ? 0.0D : (attempt == 1 ? 0.7D : -0.7D);
             double cos = Math.cos(bend);
             double sin = Math.sin(bend);
