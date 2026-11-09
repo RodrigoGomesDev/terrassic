@@ -489,7 +489,7 @@ public final class BehaviorTest {
                 clear(mc, x0, 24);
                 command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..60]");
                 command(mc, "time set 1000");
-                summon(mc, sp, x0, Y, 0.5D, u, "Rotation:[180f,0f],Attributes:[{Name:\"generic.movement_speed\",Base:0.0d}]");
+                summon(mc, sp, x0, Y, 0.5D, u, "Rotation:[180f,0f],attributes:[{id:\"minecraft:generic.movement_speed\",base:0.0d}]");
                 return 20;
             });
             for (String v : new String[]{"front", "above"}) {
@@ -527,6 +527,9 @@ public final class BehaviorTest {
             clear(mc, x0, 40);
             command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..90]");
             command(mc, "time set 6000");
+            return 100;                      // the arena's chunks loaded before the first summon (a fresh world generates them)
+        });
+        STEPS.add(mc -> {
             summon(mc, "daspletosaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
             return 40;
         });
@@ -1680,7 +1683,7 @@ public final class BehaviorTest {
             command(mc, "time set 1000");
             command(mc, "gamemode survival " + mc.player.getGameProfile().getName());
             command(mc, "effect give " + mc.player.getGameProfile().getName() + " minecraft:resistance 120 4 true");
-            summon(mc, "triceratops", x0, Y, 0.5D, trike, "Rotation:[90f,0f],Attributes:[{Name:\"generic.movement_speed\",Base:0.0d}]");
+            summon(mc, "triceratops", x0, Y, 0.5D, trike, "Rotation:[90f,0f],attributes:[{id:\"minecraft:generic.movement_speed\",base:0.0d}]");
             NEW.clear();
             pendingShot = null;
             mc.player.getAbilities().flying = false;
@@ -3464,7 +3467,7 @@ public final class BehaviorTest {
         command(mc, String.format(Locale.ROOT, "tp %s %.2f %.2f %.2f %.1f 0", pname(mc), x, y, z, yaw));
     }
 
-    private static final String STILL = "Attributes:[{Name:\"generic.movement_speed\",Base:0.0d}]";
+    private static final String STILL = "attributes:[{id:\"minecraft:generic.movement_speed\",base:0.0d}]";
 
     /** The arenas of the 1.10.1 phases keep what earlier runs left (the animals are summoned persistent): their chunks
      *  are loaded first and only then emptied (a kill sent with the forceload found nothing, and old calves and rivals
@@ -4084,7 +4087,9 @@ public final class BehaviorTest {
      *  it; it fills a third a day; it never holds more than its share however the player comes and goes. */
     private static void planStable() {
         int cx = 7040 + 64, cz = 64;        // the middle of a cell
-        BlockPos mid = new BlockPos(cx, (int) Y, cz);
+        // the middle at the ground: in a world with real terrain the arena's Y is deep underground, and the spawner
+        // only fills ground within 80 blocks of the player's height
+        BlockPos[] M = {new BlockPos(cx, (int) Y, cz)};
         int[] share = new int[1];
         STEPS.add(mc -> {
             REPORT.add("");
@@ -4104,6 +4109,8 @@ public final class BehaviorTest {
         UUID[] doomed = new UUID[6];
         STEPS.add(mc -> {
             ServerLevel l = mc.getSingleplayerServer().overworld();
+            M[0] = new BlockPos(cx, l.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz), cz);
+            BlockPos mid = M[0];
             share[0] = com.terrassic.world.EcoSpawner.cellShareAt(l, mid);
             // the world keeps the record between runs: start clean
             mc.getSingleplayerServer().execute(() -> {
@@ -4116,7 +4123,7 @@ public final class BehaviorTest {
             });
             for (int i = 0; i < 6; i++) {
                 doomed[i] = id();
-                summon(mc, "edmontosaurus", cx + i * 4 - 10, Y, cz, doomed[i], "");
+                summon(mc, "edmontosaurus", cx + i * 4 - 10, mid.getY(), cz, doomed[i], "");
             }
             return 20;
         });
@@ -4128,6 +4135,7 @@ public final class BehaviorTest {
         });
         STEPS.add(mc -> {
             ServerLevel l = mc.getSingleplayerServer().overworld();
+            BlockPos mid = M[0];
             mc.getSingleplayerServer().execute(() -> {
                 var pop = com.terrassic.world.RegionPopulation.of(l);
                 REPORT.add(String.format(Locale.ROOT, "  share of a cell here %d; 6 killed in it: the cell has lost %.1f", share[0], pop.lost(l, mid, share[0])));
@@ -4147,6 +4155,7 @@ public final class BehaviorTest {
             int st = step;
             STEPS.add(mc -> {
                 ServerLevel l = mc.getSingleplayerServer().overworld();
+                BlockPos mid = M[0];
                 mc.getSingleplayerServer().execute(() -> {
                     ServerPlayer sp = player(mc);
                     com.terrassic.entity.Behaviour.oldPopulation = st == 0;
@@ -4162,19 +4171,20 @@ public final class BehaviorTest {
                     }
                     if (st >= 4) {
                         // away long enough for the roamers here to despawn (the cell is kept loaded), then back
-                        sp.teleportTo(cx + 600, Y + 30, cz);
+                        sp.teleportTo(cx + 600, mid.getY() + 30, cz);
                     }
                 });
                 return st >= 4 ? 400 : 40;
             });
             STEPS.add(mc -> {
                 ServerLevel l = mc.getSingleplayerServer().overworld();
+                BlockPos mid = M[0];
                 mc.getSingleplayerServer().execute(() -> {
                     ServerPlayer sp = player(mc);
                     if (st >= 4) {
                         REPORT.add(String.format(Locale.ROOT, "    while away: %d in the cell, %d wild within 80 of its middle", com.terrassic.world.RegionPopulation.count(l, mid),
                                 l.getEntitiesOfClass(DinosaurEntity.class, new net.minecraft.world.phys.AABB(mid).inflate(80.0D, 96.0D, 80.0D), e -> !e.isTame()).size()));
-                        sp.teleportTo(cx, Y + 30, cz);
+                        sp.teleportTo(cx, mid.getY() + 30, cz);
                     }
                     int put = com.terrassic.world.EcoSpawner.testLandRounds(l, mid, 60);
                     var pop = com.terrassic.world.RegionPopulation.of(l);
