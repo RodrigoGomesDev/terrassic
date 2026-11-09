@@ -54,10 +54,11 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     /** Asleep, it wakes when a predator that is awake comes within 12 blocks (16 if it hunts). */
     @Override
     public boolean wokenByThreat() {
-        // a hunter on the move wakes it from 28 blocks, whatever it hunts (it went to sleep only with none awake within
+        // a hunter on the move wakes it from 32 blocks, whatever it hunts (it went to sleep only with none awake within
         // 32; at 16 a herd slept on while an Albertosaurus chased the player through it, the playtest of 09/11);
         // any awake hunter that wanders up wakes it from 18 (a Parasaurolophus slept on at 14 from an idle Dakotaraptor)
-        DinosaurEntity p = this.nearestPredator(28.0D, true);
+        // 32, the same as for falling asleep: a fast hunter (a Velociraptor) ran from 28 to 24 between two checks
+        DinosaurEntity p = this.nearestPredator(32.0D, true);
         return p != null && (p.getTarget() != null || p.distanceTo(this) < 18.0F);
     }
 
