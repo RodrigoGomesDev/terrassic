@@ -121,7 +121,8 @@ public class MigrateGoal extends Goal {
             double wx = this.mob.getX() + (dx * cos - dz * sin) / dist * step;
             double wz = this.mob.getZ() + (dx * sin + dz * cos) / dist * step;
             BlockPos wp = this.mob.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.containing(wx, 0.0D, wz));
-            if (this.mob.getNavigation().moveTo(wp.getX() + 0.5D, wp.getY(), wp.getZ() + 0.5D, 1.0D)) {
+            // only a path that gets there (moveTo also takes one that stops short, and the herd pushed in place)
+            if (Reach.walk(this.mob, new Vec3(wp.getX() + 0.5D, wp.getY(), wp.getZ() + 0.5D), 1.0D)) {
                 return;
             }
         }
@@ -155,7 +156,9 @@ public class MigrateGoal extends Goal {
             this.repath = adjustedTickDelay(20);
             Vec3 back = ahead.position().subtract(dest).normalize().scale(spacing);
             Vec3 at = ahead.position().add(back);
-            this.mob.getNavigation().moveTo(at.x, at.y, at.z, 1.0D);
+            if (!Reach.walkOr(this.mob, at, ahead.position(), 1.0D)) {
+                return false;     // no way in file from here: the waypoints take over
+            }
         }
         return true;
     }

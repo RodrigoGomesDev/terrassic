@@ -410,7 +410,9 @@ public final class Playtest {
                 fled++;
             }
             if (t.asleep) {
-                if (t.sleepNearHunter < 24.0D) {
+                // the rule (HerbivoreDinosaur.wokenByThreat): a hunter on the move wakes it from 28, an idle one from 18;
+                // a check every half second leaves a few blocks of margin
+                if (t.sleepNearHunter < (t.sleepWho.contains("hunting") ? 24.0D : 16.0D)) {
                     problems.add("asleep near a hunter: " + t.sleepWho);
                 }
                 sleepMin = Math.min(sleepMin, t.sleepNearHunter);

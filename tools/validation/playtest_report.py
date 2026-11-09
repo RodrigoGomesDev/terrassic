@@ -48,7 +48,8 @@ check("ninguém quicando na água", hops == 0, f"{hops}")
 
 sleepers = [int(x) for x in re.findall(r"closest sleeper to a hunter (\d+)", text)]
 check("à noite alguém dormiu", bool(sleepers), f"{len(sleepers)} lugares de noite com dorminhoco")
-check("dorme longe do caçador", all(s >= 24 for s in sleepers), f"mais perto: {min(sleepers) if sleepers else '-'} blocos")
+near = re.findall(r"PROBLEM asleep near a hunter: ([^\n]+)", text)
+check("dorme longe do caçador", not near, (" | ".join(near[:3])) or f"mais perto: {min(sleepers) if sleepers else '-'} blocos (24 de caçador em ação, 16 de caçador parado)")
 
 # a wild runner herbivore may take the player as target to run from it, but never strikes
 RUNNERS = {"edmontosaurus", "gallimimus", "parasaurolophus"}   # the Quetzalcoatlus hunts: it may strike

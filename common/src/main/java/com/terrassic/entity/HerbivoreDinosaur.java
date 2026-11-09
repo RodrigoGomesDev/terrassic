@@ -56,9 +56,9 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     public boolean wokenByThreat() {
         // a hunter on the move wakes it from 28 blocks, whatever it hunts (it went to sleep only with none awake within
         // 32; at 16 a herd slept on while an Albertosaurus chased the player through it, the playtest of 09/11);
-        // any awake hunter wakes it from 12
+        // any awake hunter that wanders up wakes it from 18 (a Parasaurolophus slept on at 14 from an idle Dakotaraptor)
         DinosaurEntity p = this.nearestPredator(28.0D, true);
-        return p != null && (p.getTarget() != null || p.distanceTo(this) < 12.0F);
+        return p != null && (p.getTarget() != null || p.distanceTo(this) < 18.0F);
     }
 
     /** A grown herbivore that fights back meets a big predator head on (horns, club, claws): a duel. */
