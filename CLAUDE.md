@@ -51,7 +51,7 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
-**1.10.1 (08/11/2026, em fechamento)**: quatro predadores refeitos (`Tyrannosaurine` Daspletossauro, `Albertosaurine`,
+**1.10.0 (10/11/2026, `mod_version`; chamada de 1.10.1 durante o trabalho)**: quatro predadores refeitos (`Tyrannosaurine` Daspletossauro, `Albertosaurine`,
 `Carcharodontosaurine`, `Majungasaurine`; `art/<espécie>/REFEITO.md`), sangramento (`effect/BleedingEffect`), padrão de
 modelo v1→v3 do estudo 14 (16 texels por bloco, `_engine/skin2.py`, cabeça detalhada, desenho PRÓPRIO por espécie;
 `_engine/headcheck.py` e `uniquecheck.py` reprovam o build), sistemas (rugido, alcance, ovo, ajuda, filhote, manada com
