@@ -106,7 +106,8 @@ public final class BehaviorTest {
             // 1.9.5: the whole battery before a version goes out (memory "patches estaveis"; tools/validation/behavior_regression.py)
             only = only + ",carcass,jaws,gaits,water,steps,paths,night,weak,sleepfish,behave,territory,duels"
                     + ",roarfear,aggro,eggrage,helpcall,babystay,herdmove,quirks,feet,stable"
-                    + ",daspleto,alberto,carcharo,majunga,bankexit";   // 1.10.1: the four remade predators
+                    + ",daspleto,alberto,carcharo,majunga,bankexit"   // 1.10.1: the four remade predators
+                    + ",nests";   // 1.11: their own eggs and nests
         }
         if (java.util.stream.Stream.of("roarfear", "aggro", "eggrage", "helpcall", "babystay", "herdmove", "quirks", "feet", "stable").anyMatch(only::contains)) {
             planCleanup110();
@@ -140,6 +141,9 @@ public final class BehaviorTest {
         }
         if (only.contains("bankexit")) {
             planBankExit();
+        }
+        if (only.contains("nests")) {
+            planNests();
         }
         if (only.contains("paths")) {
             planPaths();
@@ -3682,6 +3686,68 @@ public final class BehaviorTest {
             command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..80]");
             return 1;
         });
+    }
+
+    /** 1.11: the own eggs and nests of the four predators remade in 1.10. Each nest is set down in its three stages and
+     *  photographed (behavior_nest_<species>.png, then a close look at stage 2), then taken away; then a tamed pair is
+     *  bred: the egg block the mother lays and its hatching (planTameRideBreed). */
+    private static void planNests() {
+        String[] species = {"daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus"};
+        for (int i = 0; i < species.length; i++) {
+            String sp = species[i];
+            double x0 = 7600.5D + i * 120.0D;
+            UUID female = id(), male = id();
+            prep(x0, 30);
+            BlockPos[] eggs = {BlockPos.containing(x0 - 2, Y, -8.5D), BlockPos.containing(x0, Y, -8.5D), BlockPos.containing(x0 + 2, Y, -8.5D)};
+            STEPS.add(mc -> {
+                REPORT.add("");
+                REPORT.add("== Nest of the " + sp + " (1.11)");
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..60]");
+                command(mc, "gamemode creative @a");
+                command(mc, "gamerule randomTickSpeed 0");
+                for (int st = 0; st < 3; st++) {
+                    command(mc, String.format(Locale.ROOT, "setblock %d %d %d terrassic:%s_egg[hatch=%d]", eggs[st].getX(), eggs[st].getY(),
+                            eggs[st].getZ(), sp, st));
+                }
+                watchAt = null;
+                noAutoShots = true;
+                look(mc.player, new Vec3(x0 + 0.5D, Y + 2.6D, -12.4D), new Vec3(x0 + 0.5D, Y + 0.2D, -8.0D));
+                return 60;
+            });
+            STEPS.add(mc -> {
+                ServerLevel l = mc.getSingleplayerServer().overworld();
+                StringBuilder sb = new StringBuilder("  nest set down, stages:");
+                for (BlockPos e : eggs) {
+                    BlockState st = l.getBlockState(e);
+                    sb.append(' ').append(st.getBlock().getDescriptionId().endsWith(sp + "_egg") ? "hatch=" + st.getValue(com.terrassic.block.DinoEggBlock.HATCH) : "MISSING");
+                }
+                REPORT.add(sb.toString());
+                Screenshot.grab(mc.gameDirectory, "behavior_nest_" + sp + ".png", mc.getMainRenderTarget(), msg -> {
+                });
+                look(mc.player, new Vec3(x0 + 2.5D, Y + 1.6D, -10.6D), new Vec3(x0 + 2.5D, Y + 0.2D, -8.0D));
+                return 20;
+            });
+            STEPS.add(mc -> {
+                Screenshot.grab(mc.gameDirectory, "behavior_nest_" + sp + "_close.png", mc.getMainRenderTarget(), msg -> {
+                });
+                return 10;
+            });
+            STEPS.add(mc -> {
+                for (BlockPos e : eggs) {
+                    command(mc, String.format(Locale.ROOT, "setblock %d %d %d minecraft:air", e.getX(), e.getY(), e.getZ()));
+                }
+                command(mc, "gamerule randomTickSpeed 3");
+                noAutoShots = false;
+                summon(mc, sp, x0, Y, 0.5D, female, "Female:1b");
+                summon(mc, sp, x0 + 4, Y, 0.5D, male, "Female:0b");
+                return 60;
+            });
+            planTameRideBreed(sp, female, male, null, null, x0, false);
+            STEPS.add(mc -> {
+                command(mc, "kill @e[type=!player,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..60]");
+                return 20;
+            });
+        }
     }
 
     /** 2a. A wild egg taken: the fighters of its species within 24 blocks go for the thief for 60 s, the runners run. */

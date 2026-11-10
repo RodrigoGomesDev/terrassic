@@ -58,6 +58,12 @@ modelo v1→v3 do estudo 14 (16 texels por bloco, `_engine/skin2.py`, cabeça de
 líder, manias, pés no chão, `world/RegionPopulation`), ícones de minimapa, rodada de jogo num mundo real
 (`client/dev/Playtest`, `TERRASSIC_PLAYTEST=1`, `tools/validation/playtest_report.py`). Testes de jogo sempre com
 `caffeinate -dimsu` (tela apagada = nada renderiza = medidas vazias).
+**1.11 (em andamento, branch `extras/1.11`)**: ovos, ninhos e vozes próprios dos quatro predadores da 1.10
+(`tools/spritegen/{dasple,alberto,carcharo,majunga}_extras.py` com `nestkit.py`; prévia fora do jogo
+`nest_preview.py` → `art/<espécie>/previews/ovo_ninho.png`; vozes em `arkstyle.P`/`arkstyle.EXTRA`, sons dos
+comportamentos tocados pelas bases, `ApexTheropod.roarVoice`; para ouvir: `art/<espécie>/vozes/`, feito por
+`tools/soundgen/voice_sheet.py`). Teste: fase `nests` da `BehaviorTest` (também na `regressao`). `build.py` aceita nomes
+de conjuntos e usa o `oggenc` quando o ffmpeg não tem libvorbis.
 **1.9.5 (07/11/2026, `mod_version`)**: ecossistema (`docs/estudos/12_ECOSSISTEMA_ARK.md`, `docs/changelog/1.9.5.md`): noite
 segura (`ai/SafeRestGoal`, sentinela do Edmontossauro), o mais fraco primeiro e presa do tamanho certo, spawn por zona em
 `world/EcoSpawner` (margem 15%, planície 25%, mata fechada 60% de predadores), fuga do ferido (`ai/FleeHurtGoal`), cura,

@@ -217,6 +217,17 @@ check("população: repõe aos poucos", m is not None and int(m.group(1)) > 0, f
 for sp, how in re.findall(r"  bank (\w+(?: calf)?): (out in [\d.]+ s|STILL IN THE WATER after 30 s)", text):
     check(f"sai da água: {sp}", how.startswith("out"), how)
 
+# 1.11: the own eggs and nests of the four predators remade in 1.10 (phase "nests"): the three stages stand, a tamed
+# pair lays an egg block, and it hatches (look at behavior_nest_<species>.png and _close.png too)
+for sp in ("daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus"):
+    block = re.search(r"== Nest of the %s \(1\.11\)\n(.*?)(?=\n== |\Z)" % sp, text, re.S)
+    body = block.group(1) if block else ""
+    check(f"ninho {sp}: três estágios", "stages: hatch=0 hatch=1 hatch=2" in body, "sem a fase nests" if not block else "")
+    laid = re.search(r"breeding: an egg block laid at .*", body)
+    check(f"ninho {sp}: a fêmea põe o ovo", laid is not None, laid.group(0) if laid else "")
+    hatched = re.search(r"hatching: .*", body)
+    check(f"ninho {sp}: o ovo choca", hatched is not None and "HATCHED" in hatched.group(0), hatched.group(0) if hatched else "")
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))
