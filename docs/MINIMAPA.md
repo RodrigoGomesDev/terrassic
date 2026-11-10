@@ -1,4 +1,4 @@
-# Ícones nos minimapas e mapas (1.10.1)
+# Ícones nos minimapas e mapas (1.10.0)
 
 Cada espécie aparece nos mods de mapa com o **próprio rosto**, desenhado a partir do modelo dela (não é o ovo do
 inventário). Os quatro mapas que mostram mobs leem o ícone dos recursos do jogo: são só arquivos no nosso jar, sem
