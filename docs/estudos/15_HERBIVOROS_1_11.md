@@ -549,3 +549,20 @@ Horner & Currie 1994; Sternberg 1950; Currie, Langston & Tanke 2008; Fiorillo & 
 et al. 2016; Norell et al. 2020; Gilmore 1913; Galton 1974, 1995, 1999, 2008; Erickson 2003; Morris 1976; Brown et
 al. 2011; Button 2023; Button & Zanno 2023; Boyd et al. 2009, 2014; Hudgins et al. 2021; Senter & Mackey 2023; Fisher et
 al. 2000; Rowe et al. 2001; Cleland et al. 2011; Varricchio et al. 2007; Horner et al. 2011; Lyson 2011; Stein 2021.
+
+---
+
+## Respostas do Rodrigo (10/11/2026)
+
+- **Tamanhos:** ficam como estão (topo das estimativas): Maiassauro 9 m, Coritossauro 9 m, Paquirrinossauro 8 m,
+  Tescelossauro 4 m; só as fontes em `docs/TAMANHOS.md` mudam.
+- **Mecânicas, as quatro entram:** Maiassauro boa mãe (a Colônia de Ninhos volta a ser dele, folhas sobre os ovos,
+  filhote no ninho que cresce alimentado e começa a ser domado por quem o alimenta, a colônia defende); roda de defesa
+  do Paquirrinossauro com os filhotes no meio e duelo de bossa (o almíscar atual sai); chamado grave do Coritossauro a
+  64 blocos e cochilos em turnos; toca do Tescelossauro (o Guia diz que é hipótese).
+- **Tescelossauro:** domável, não montável.
+- **Cores:** aprovadas como estão; `colourcheck.py --remade` de novo na pele pronta.
+- **Paquirrinossauro:** *P. canadensis* (Alberta).
+- Decidido sem pergunta (o Rodrigo deixou seguir): elmo do Coritossauro maior no macho, como no resto dos refeitos com
+  dimorfismo; o modelo segue o padrão v3 de cabeça e, no pescoço e na cauda, peças que afinam e se sobrepõem, sem gomos
+  (item 4 do estudo 14, o mesmo do piloto do T. rex).
