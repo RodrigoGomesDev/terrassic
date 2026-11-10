@@ -27,7 +27,11 @@ from theri_extras import CUSTOM_EGGS as THERI_EGGS  # noqa: E402  (the Therizino
 from quetz_extras import CUSTOM_EGGS as QUETZ_EGGS  # noqa: E402  (the Quetzalcoatlus' soft eggs half buried in sand)
 from edmo_extras import CUSTOM_EGGS as EDMO_EGGS  # noqa: E402  (the Edmontosaurus' spiral of eggs under fern fronds)
 from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS  # noqa: E402  (the Dakotaraptor's ring of eggs under a log)
-CUSTOM_EGGS = {**DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+from dasple_extras import CUSTOM_EGGS as DASPLE_EGGS  # noqa: E402  (the Daspletosaurus' dark ridged pairs in a pit in a forest river bank)
+from alberto_extras import CUSTOM_EGGS as ALBERTO_EGGS  # noqa: E402  (the Albertosaurus' fan of speckled eggs in a crescent of conifer needles)
+from carcharo_extras import CUSTOM_EGGS as CARCHARO_EGGS  # noqa: E402  (the Carcharodontosaurus' round eggs in a mangrove sand mound)
+from majunga_extras import CUSTOM_EGGS as MAJUNGA_EGGS  # noqa: E402  (the Majungasaurus' rows of scrawled eggs under dry grass)
+CUSTOM_EGGS = {**DASPLE_EGGS, **ALBERTO_EGGS, **CARCHARO_EGGS, **MAJUNGA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
