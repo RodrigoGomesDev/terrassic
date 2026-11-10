@@ -233,16 +233,35 @@ P = {
     # grandes terópodes: o T. rex é a versão E aprovada; os outros são primos dela
     "tyrannosaurus": (prof(**BIG, scream=[g(ELK, 0.42)], growl=[g(GRIZ, 0.9)]), "Rexsound"),
     "tarbosaurus": (prof(**{**BIG, "k": 1.08}, scream=[g(ELK2, 0.42)], growl=[g(GRIZ2, 0.9)]), "Rexsound"),
-    "daspletosaurus": (prof(**BIG, scream=[g(ELK, 0.45)], growl=[g(GW_LO, 0.95), g(GRIZ, 0.9)]), "Yutyrannussound"),
-    "albertosaurus": (prof(**{**BIG, "k": 1.15, "body": 3.0}, scream=[g(CRANE, 0.7), g(ELK, 0.45)], growl=[g(BEAR1, 0.7)]), "S_allosaurus_startled"),
     "giganotosaurus": (prof(**{**BIG, "k": 0.92, "rasp": 0.85, "hi": 3.0}, scream=[g(ELK2, 0.42), g(PEL, 0.35)], growl=[g(GRIZ2, 0.85)]), "Gigasound"),
-    "carcharodontosaurus": (prof(**{**BIG, "k": 0.95}, scream=[g(ELK, 0.4)], growl=[g(GW_LO2, 0.9), g(GRIZ, 0.85)]), "Carchasound"),
+    # 1.11: os quatro predadores refeitos na 1.10 têm perfis próprios, longe do T. rex, do Giganotossauro, do
+    # Carnotauro e uns dos outros (antes eram primos deles: alce + urso do rex, pelicano + urso do Carnotauro).
+    # Daspletossauro: o tirano que RANGE: sem o grito de alce; bramido de bisão desacelerado no lugar do grito,
+    # rosnado de aviso de urso e bisão, aspereza lenta (22/s) e saturação alta. Grave, curto, de boca quase fechada.
+    "daspletosaurus": (prof(k=1.0, scream=[g(BISA, 0.55)], growl=[g(GW_LO, 0.85), g(BISB2, 0.75)], low=[g(ALLI_B, 0.8)],
+                            bark=g(BISB2, 0.7), rasp=0.9, rate=22, body=3.2, drv=3.4, room=(1.9, 0.2), lp=7500,
+                            g=dict(scream=0.5, growl=1.0, low=0.7, bark=0.6, air=1.1, rumble=0.8)), "proprio: rangido"),
+    # Albertossauro: o corredor que PIA: grou e alce menos desacelerados (mais agudos que os do rex), quase sem grave,
+    # aspereza fina e rápida, sala grande (chama o bando de longe).
+    "albertosaurus": (prof(k=1.18, scream=[g(CRANE2, 0.62), g(ELK2, 0.58)], growl=[g(BEAR1, 0.8)], low=[g(ALLI2, 0.95)],
+                           bark=None, rasp=0.45, rate=46, body=2.4, drv=2.4, room=(2.0, 0.24), lp=10000, hi=2.0,
+                           g=dict(scream=0.9, growl=0.6, low=0.45, air=0.8, rumble=0.45)), "proprio: pio"),
+    # Carcarodontossauro: o gigante que RESPIRA: quase sem grito, muito ar de garganta e chiado de jacaré, aspereza
+    # bem lenta (16/s, um rascar que se conta), o grave mais fundo das quatro e corpo longo.
+    "carcharodontosaurus": (prof(k=0.88, scream=[g(ELK2, 0.34)], growl=[g(GRIZ2, 0.78), g(ALLI2, 0.72)],
+                                 low=[g(ALLI, 0.75)], bark=None, rasp=0.95, rate=16, body=4.4, drv=2.6,
+                                 room=(2.4, 0.25), lp=6500, hi=2.5,
+                                 g=dict(scream=0.3, growl=0.9, low=0.8, air=1.6, rumble=1.0, hiss=0.95)), "proprio: rascar"),
+    # Majungassauro: o pavio curto que BUFA: latido de bisão e rosnado alto de urso em aviso, garça desacelerada
+    # como um grito nasal curto, corpo curto (frases em rajada).
+    "majungasaurus": (prof(k=1.12, scream=[g(HERON2, 0.55)], growl=[g(GW_HI, 0.8)], low=[g(BISA, 0.85)],
+                           bark=g(BISB2, 0.95), rasp=0.7, rate=30, body=1.7, drv=3.2, room=(1.3, 0.16), lp=8500,
+                           g=dict(scream=0.35, growl=0.9, low=0.7, bark=0.8, air=1.0, rumble=0.3, hiss=0.25)),
+                      "proprio: bufo"),
     "spinosaurus": (prof(**{**BIG, "low": [g(ALLI2, 0.8)], "g": dict(BIG["g"], hiss=0.25)}, scream=[g(ELK2, 0.45)], growl=[g(ALLI_B, 0.85)]), "Spinosound"),
     # terópodes médios
     "carnotaurus": (prof(scream=[g(PEL, 0.45)], growl=[g(BEAR1, 0.6)], low=[g(ALLI, 0.9)], bark=g(BISB, 0.8), body=2.4,
                          g=dict(rumble=0.4)), "Carnosound"),
-    "majungasaurus": (prof(k=1.08, scream=[g(PEL, 0.45)], growl=[g(BEAR2, 0.6)], low=[g(ALLI_B, 0.9)], bark=g(BISB, 0.8), body=2.2,
-                           g=dict(rumble=0.3)), "Carnosound"),
     "dilophosaurus": (prof(scream=[g(HERON, 0.75), g(PEL, 0.8)], growl=[g(BEAR2, 1.0)], body=1.6, rate=50, room=(1.4, 0.18),
                            g=dict(hiss=0.5)), "Dilosound"),
     # raptores
@@ -339,14 +358,14 @@ P = {
 KNOBS = {
     "tyrannosaurus": dict(km=0.94, sm=1.4, am=1.5, gm=0.4),
     "tarbosaurus": dict(km=0.94, sm=0.6, am=1.5, gm=0.4),
-    "daspletosaurus": dict(km=1.07, sm=0.6, am=1.0, gm=0.4),
-    "albertosaurus": dict(km=0.94, sm=1.4, am=1.5, gm=0.8),
+    "daspletosaurus": dict(km=1.0, sm=1.0, am=1.0, gm=1.0),   # 1.11: perfil próprio, sem ajuste
+    "albertosaurus": dict(km=1.0, sm=1.0, am=1.0, gm=1.0),   # 1.11: perfil próprio, sem ajuste
     "carnotaurus": dict(km=1.07, sm=0.6, am=1.5, gm=0.4),
     "giganotosaurus": dict(km=1.07, sm=1.4, am=1.5, gm=0.4),
     "spinosaurus": dict(km=0.94, sm=0.6, am=1.5, gm=0.8),
-    "carcharodontosaurus": dict(km=1.07, sm=0.6, am=1.5, gm=0.4),
+    "carcharodontosaurus": dict(km=1.0, sm=1.0, am=1.0, gm=1.0),   # 1.11: perfil próprio, sem ajuste
     "dilophosaurus": dict(km=1.0, sm=1.4, am=0.6, gm=0.4),
-    "majungasaurus": dict(km=1.07, sm=0.6, am=0.6, gm=0.4),
+    "majungasaurus": dict(km=1.0, sm=1.0, am=1.0, gm=1.0),   # 1.11: perfil próprio, sem ajuste
     "dakotaraptor": dict(km=0.94, sm=0.6, am=1.5, gm=0.4),
     "velociraptor": dict(km=1.0, sm=0.6, am=1.5, gm=0.4),
     "compsognathus": dict(km=0.94, sm=1.4, am=1.0, gm=0.4),
@@ -542,6 +561,95 @@ STEP = {"tyrannosaurus": ("theropod", 1.0), "tarbosaurus": ("theropod", 0.9), "d
 FLAP = {"pteranodon": 0.8, "quetzalcoatlus": 1.5, "hatzegopteryx": 1.4, "ichthyornis": 0.3}
 
 
+# ---------------------------------------------------------------- sons próprios dos comportamentos (1.11)
+# Tocados pelas bases dos quatro predadores refeitos (entity/Tyrannosaurine, Albertosaurine, Carcharodontosaurine,
+# Majungasaurine); feitos dos mesmos ingredientes do perfil da espécie.
+
+def steal_roar(p, v=0):
+    """Daspletossauro tomando a carcaça: a ameaça dele, maior, mais longa e mais forte"""
+    import copy
+    q = copy.deepcopy(p); q["body"] *= 1.3; q["g"]["scream"] *= 1.5; q["g"]["bark"] *= 1.3; q["drv"] *= 1.15
+    q["room"] = (q["room"][0] * 1.2, q["room"][1] * 1.2)
+    return threat(q, v + 2)
+
+
+def carcass_growl(p, v=0):
+    """Daspletossauro sobre a carcaça: rosnado longo e baixo de boca fechada, sem grito, e o estalo da mandíbula"""
+    from synth import clack
+    rng = np.random.default_rng(500 + v); k = p["k"]; d = 2.4
+    parts = [(0.0, take(s[:2], d, s[2] * k * 0.85, start=0.2 + 0.25 * v, fi=0.3, fo=0.6), 1.0 / (1 + 0.6 * i))
+             for i, s in enumerate(p["growl"] + p["low"])]
+    parts.append((d - 0.15, clack(freq=450.0, q=300.0, seed=510 + v), 0.25))
+    return _mix(p, parts, int((d + 0.2) * SR), rng, 0.7, 1.0, 3200, 2.4, (1.2, 0.15))
+
+
+def _hoots(p, v, speeds, dur, gap, seed):
+    rng = np.random.default_rng(seed + v); k = p["k"]; parts = []
+    for i, sp in enumerate(speeds):
+        for j, s in enumerate(p["scream"][:2]):
+            parts.append((i * gap, take(s[:2], dur, sp * k * (1.0 if j == 0 else 0.92), start=0.15 + 0.2 * i + 0.1 * v,
+                                        fi=0.04, fo=0.5 * dur), 1.0 if j == 0 else 0.5))
+    n = int((gap * (len(speeds) - 1) + dur + 0.2) * SR)
+    return _mix(p, parts, n, rng, 0.5, 0.0, p["lp"], 2.0, (p["room"][0] * 1.15, p["room"][1] * 1.15))
+
+
+def call_pack(p, v=0):
+    """Albertossauro chamando o bando: três pios que sobem"""
+    return _hoots(p, v, (0.5, 0.56, 0.63) if v == 0 else (0.52, 0.59, 0.67), 0.5, 0.62, 600)
+
+
+def answer(p, v=0):
+    """Albertossauro respondendo: dois pios curtos que descem"""
+    return _hoots(p, v, (0.64, 0.56) if v == 0 else (0.66, 0.6), 0.36, 0.42, 620)
+
+
+def pant(p, v=0):
+    """Albertossauro depois da perseguição: sai e entra ar, ~2,3 vezes por segundo, um fio de voz na saída"""
+    rng = np.random.default_rng(640 + v); k = p["k"]; per = 0.44 if v == 0 else 0.5; n_br = 5 if v == 0 else 4
+    parts = []
+    for i in range(n_br):
+        m = int(0.22 * SR)
+        out = spectral_filter(noise(m, rng, 0.3), ((600 * k, 500, 0), (1600 * k, 900, -6)), floor=0.01, hp=200, lp=3400)
+        parts.append((i * per, norm(out * envelope(m, 0.02, 0.12, 1.2), 1.0), 0.9))
+        m2 = int(0.16 * SR)
+        inn = spectral_filter(noise(m2, rng, 0.2), ((1800 * k, 1400, 0), (3600 * k, 1800, -6)), floor=0.01, hp=700)
+        parts.append((i * per + 0.24, norm(inn * envelope(m2, 0.03, 0.08, 1.2), 1.0), 0.45))
+        if p["growl"]:
+            parts.append((i * per, take(p["growl"][0][:2], 0.2, p["growl"][0][2] * k * 1.1, start=0.3, fi=0.02, fo=0.12), 0.18))
+    return _mix(p, parts, int((per * n_br + 0.2) * SR), rng, 0.0, 0.0, 6000, 1.2, (0.8, 0.12))
+
+
+def tear_hiss(p, v=0):
+    """Carcarodontossauro rasgando: silvo pelos dentes de lâmina, a carne e um rascar curto"""
+    from synth import wet
+    rng = np.random.default_rng(660 + v); k = p["k"]
+    parts = [(0.0, take(("hiss", 0), 0.55, 1.15, start=0.2 + 0.3 * v, fi=0.02, fo=0.25), 0.9),
+             (0.05, wet(dur=0.55, low=400.0, tear=1.0, bubbles=2 + v, seed=670 + v), 0.6)]
+    if p["growl"]:
+        parts.append((0.2, take(p["growl"][0][:2], 0.6, p["growl"][0][2] * k, start=0.4, fi=0.05, fo=0.3), 0.5))
+    return _mix(p, parts, int(0.95 * SR), rng, 0.6, 0.2, p["lp"], 1.6, (1.0, 0.14))
+
+
+def temper(p, v=0):
+    """Majungassauro mostrando o domo: rufar de grunhidos de garganta que acelera e cresce, e um bufo no fim"""
+    rng = np.random.default_rng(680 + v); k = p["k"]
+    times = (0, 0.42, 0.74, 0.98, 1.16, 1.3, 1.42) if v == 0 else (0, 0.36, 0.64, 0.86, 1.04, 1.18)
+    beat = p["bark"] or p["low"][0]
+    parts = [(t, take(beat[:2], 0.18, beat[2] * k * (0.9 + 0.03 * i), start=0.05 + 0.04 * i, fi=0.005, fo=0.1),
+              0.45 + 0.08 * i) for i, t in enumerate(times)]
+    if p["growl"]:
+        parts.append((times[-1] + 0.2, take(p["growl"][0][:2], 0.35, p["growl"][0][2] * k * 1.1, start=0.1, fi=0.005,
+                                            fo=0.2), 1.0))
+    return _mix(p, parts, int((times[-1] + 0.7) * SR), rng, 0.8, 0.4, p["lp"], p["drv"] * 0.8, (1.3, 0.17))
+
+
+EXTRA = {"daspletosaurus": {"steal_roar": steal_roar, "carcass_growl": carcass_growl},
+         "albertosaurus": {"call_pack": call_pack, "answer": answer, "pant": pant},
+         "carcharodontosaurus": {"tear_hiss": tear_hiss},
+         "majungasaurus": {"temper": temper}}
+EXTRA_COUNT = 2
+
+
 EVENT_FN = {"ambient": ambient, "threat": threat, "hurt": hurt, "death": death}
 
 
@@ -554,4 +662,5 @@ def render(sid, event, v=0):
     if sid == "tyrannosaurus" and event == "threat" and v == 0:
         return rex_e()
     p, _ = P[sid]
-    return EVENT_FN[event](variant(p, **KNOBS[sid]), v)
+    fn = EXTRA.get(sid, {}).get(event) or EVENT_FN[event]
+    return fn(variant(p, **KNOBS[sid]), v)
