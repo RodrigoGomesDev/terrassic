@@ -75,9 +75,10 @@ Fases `daspleto,look,jaws,gaits,duels` e depois `tools/validation/behavior_regre
 - O `gen_species.py` ainda não falha quando um refeito sai da faixa de densidade. Por enquanto só o `build.py` do
   Daspletossauro falha.
 - A mordida que quebra armadura (opcional no estudo) não entrou.
-- O ovo e o ninho continuam com o desenho gerado antigo (verde). O ninho em cova de margem de rio ainda não foi
-  feito.
-- As vozes são as antigas (sintetizadas); não foram ouvidas no jogo.
+- Ovo e ninho próprios na 1.11 (`tools/spritegen/dasple_extras.py`, prévia em `previews/ovo_ninho.png`): cova no
+  barranco de rio com estratos, dois pares de ovos chocolate com linhas de nós, folhas largas por cima. Conferir no jogo.
+- Vozes próprias na 1.11 (o tirano que range; `steal_roar` e `carcass_growl` próprios): `vozes/VOZES.md`, com os
+  `.ogg` e os espectrogramas. Ainda não ouvidas pelo Rodrigo.
 - A sela continua com cara de prancha em alguns ângulos (almofada larga e plana): rever com o Rodrigo.
 - No roubo de presa pequena, o ladrão às vezes caça o dono da carcaça em vez de só tomá-la (o Dakotaraptor é presa).
   Há duas saídas: poupar quem fugiu por um tempo, ou deixar assim, porque também é plausível.

@@ -120,3 +120,12 @@ Os sons temáticos que ainda vinham do Minecraft viraram 24 efeitos sintetizados
 
 Continuam vanilla de propósito, porque o jogador já os reconhece: pegar item, respingo, virar página,
 luneta, pincel, fogueira e mesa de cartografia.
+
+## Vozes próprias dos predadores da 1.10 (1.11)
+Daspletossauro, Albertossauro, Carcarodontossauro e Majungassauro deixaram de ser primos do T. rex e do Carnotauro:
+cada um tem um perfil próprio em `arkstyle.P` (o rangido, o pio, o rascar e o bufo) e sons dos comportamentos em
+`arkstyle.EXTRA` (`steal_roar`, `carcass_growl`, `call_pack`, `answer`, `pant`, `tear_hiss`, `temper`), tocados pelas
+bases `Tyrannosaurine`, `Albertosaurine`, `Carcharodontosaurine` e `Majungasaurine`. Para ouvir fora do jogo:
+`art/<espécie>/vozes/` (`.ogg`, espectrogramas e `VOZES.md`, feitos por `tools/soundgen/voice_sheet.py`).
+`build.py` aceita nomes de conjuntos (`python3 tools/soundgen/build.py daspletosaurus`) e, num ffmpeg sem libvorbis
+(o do Homebrew), codifica pelo `oggenc`; como o codificador muda, refaça só os conjuntos alterados.

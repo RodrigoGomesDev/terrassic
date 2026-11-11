@@ -176,9 +176,10 @@ curta demais e o arrasto levava a carcaça para longe da sombra quando ele já e
 - **Gancho da rendição** no `DinosaurEntity` (acima).
 - As abas da sela continuam sem aparecer nas prévias (`faces=out("east", ...)`), igual aos dois anteriores: conferir no
   jogo e, se for o caso, corrigir nos três.
-- **Vozes antigas**, não ouvidas no jogo; o sopro (`gape_hiss`) usa a voz de ameaça.
-- **Ovo e ninho**: o ovo-bloco só trocou a cor para a do bicho; o monte de areia e restos de mangue na margem
-  (especulativo no estudo) não foi feito.
+- **Vozes próprias na 1.11** (o gigante que respira; a ameaça é o sopro do `gape_hiss`, `tear_hiss` no golpe que
+  sangra, calado na tocaia): `vozes/VOZES.md`. Ainda não ouvidas.
+- **Ovo e ninho próprios na 1.11** (`carcharo_extras.py`, `previews/ovo_ninho.png`): monte de areia de mangue com
+  raízes-respiradouro e propágulos, ovos quase redondos rosa-camurça. Conferir no jogo.
 - **Dente caído como item**: fora, até o Rodrigo decidir (estudo 13).
 - **Jovens**: a mesma pele do adulto.
 - A tocaia em mundo gerado (beira de rio de verdade, presas que vêm beber) só se vê num mundo gerado; o teste usa um

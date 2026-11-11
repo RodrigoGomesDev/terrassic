@@ -141,15 +141,15 @@
     "sounds": [
       {
         "name": "terrassic:voice/daspletosaurus/ambient_1",
-        "attenuation_distance": 48
+        "attenuation_distance": 40
       },
       {
         "name": "terrassic:voice/daspletosaurus/ambient_2",
-        "attenuation_distance": 48
+        "attenuation_distance": 40
       },
       {
         "name": "terrassic:voice/daspletosaurus/ambient_3",
-        "attenuation_distance": 48
+        "attenuation_distance": 40
       }
     ],
     "subtitle": "subtitles.terrassic.voice.daspletosaurus.ambient"
@@ -158,14 +158,40 @@
     "sounds": [
       {
         "name": "terrassic:voice/daspletosaurus/threat_1",
-        "attenuation_distance": 64
+        "attenuation_distance": 56
       },
       {
         "name": "terrassic:voice/daspletosaurus/threat_2",
-        "attenuation_distance": 64
+        "attenuation_distance": 56
       }
     ],
     "subtitle": "subtitles.terrassic.voice.daspletosaurus.threat"
+  },
+  "voice.daspletosaurus.steal_roar": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/daspletosaurus/steal_roar_1",
+        "attenuation_distance": 96
+      },
+      {
+        "name": "terrassic:voice/daspletosaurus/steal_roar_2",
+        "attenuation_distance": 96
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.daspletosaurus.steal_roar"
+  },
+  "voice.daspletosaurus.carcass_growl": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/daspletosaurus/carcass_growl_1",
+        "attenuation_distance": 28
+      },
+      {
+        "name": "terrassic:voice/daspletosaurus/carcass_growl_2",
+        "attenuation_distance": 28
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.daspletosaurus.carcass_growl"
   },
   "voice.daspletosaurus.hurt": {
     "sounds": [
@@ -210,15 +236,15 @@
     "sounds": [
       {
         "name": "terrassic:voice/albertosaurus/ambient_1",
-        "attenuation_distance": 48
+        "attenuation_distance": 40
       },
       {
         "name": "terrassic:voice/albertosaurus/ambient_2",
-        "attenuation_distance": 48
+        "attenuation_distance": 40
       },
       {
         "name": "terrassic:voice/albertosaurus/ambient_3",
-        "attenuation_distance": 48
+        "attenuation_distance": 40
       }
     ],
     "subtitle": "subtitles.terrassic.voice.albertosaurus.ambient"
@@ -227,24 +253,63 @@
     "sounds": [
       {
         "name": "terrassic:voice/albertosaurus/threat_1",
-        "attenuation_distance": 64
+        "attenuation_distance": 48
       },
       {
         "name": "terrassic:voice/albertosaurus/threat_2",
-        "attenuation_distance": 64
+        "attenuation_distance": 48
       }
     ],
     "subtitle": "subtitles.terrassic.voice.albertosaurus.threat"
+  },
+  "voice.albertosaurus.call_pack": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/albertosaurus/call_pack_1",
+        "attenuation_distance": 96
+      },
+      {
+        "name": "terrassic:voice/albertosaurus/call_pack_2",
+        "attenuation_distance": 96
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.albertosaurus.call_pack"
+  },
+  "voice.albertosaurus.answer": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/albertosaurus/answer_1",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "terrassic:voice/albertosaurus/answer_2",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.albertosaurus.answer"
+  },
+  "voice.albertosaurus.pant": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/albertosaurus/pant_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "terrassic:voice/albertosaurus/pant_2",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.albertosaurus.pant"
   },
   "voice.albertosaurus.hurt": {
     "sounds": [
       {
         "name": "terrassic:voice/albertosaurus/hurt_1",
-        "attenuation_distance": 32
+        "attenuation_distance": 24
       },
       {
         "name": "terrassic:voice/albertosaurus/hurt_2",
-        "attenuation_distance": 32
+        "attenuation_distance": 24
       }
     ],
     "subtitle": "subtitles.terrassic.voice.albertosaurus.hurt"
@@ -253,7 +318,7 @@
     "sounds": [
       {
         "name": "terrassic:voice/albertosaurus/death_1",
-        "attenuation_distance": 48
+        "attenuation_distance": 32
       }
     ],
     "subtitle": "subtitles.terrassic.voice.albertosaurus.death"
@@ -262,15 +327,15 @@
     "sounds": [
       {
         "name": "terrassic:voice/albertosaurus/step_1",
-        "attenuation_distance": 24
+        "attenuation_distance": 16
       },
       {
         "name": "terrassic:voice/albertosaurus/step_2",
-        "attenuation_distance": 24
+        "attenuation_distance": 16
       },
       {
         "name": "terrassic:voice/albertosaurus/step_3",
-        "attenuation_distance": 24
+        "attenuation_distance": 16
       }
     ],
     "subtitle": "subtitles.terrassic.voice.albertosaurus.step"
@@ -348,15 +413,15 @@
     "sounds": [
       {
         "name": "terrassic:voice/carcharodontosaurus/ambient_1",
-        "attenuation_distance": 48
+        "attenuation_distance": 44
       },
       {
         "name": "terrassic:voice/carcharodontosaurus/ambient_2",
-        "attenuation_distance": 48
+        "attenuation_distance": 44
       },
       {
         "name": "terrassic:voice/carcharodontosaurus/ambient_3",
-        "attenuation_distance": 48
+        "attenuation_distance": 44
       }
     ],
     "subtitle": "subtitles.terrassic.voice.carcharodontosaurus.ambient"
@@ -365,14 +430,27 @@
     "sounds": [
       {
         "name": "terrassic:voice/carcharodontosaurus/threat_1",
-        "attenuation_distance": 64
+        "attenuation_distance": 56
       },
       {
         "name": "terrassic:voice/carcharodontosaurus/threat_2",
-        "attenuation_distance": 64
+        "attenuation_distance": 56
       }
     ],
     "subtitle": "subtitles.terrassic.voice.carcharodontosaurus.threat"
+  },
+  "voice.carcharodontosaurus.tear_hiss": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/carcharodontosaurus/tear_hiss_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "terrassic:voice/carcharodontosaurus/tear_hiss_2",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.carcharodontosaurus.tear_hiss"
   },
   "voice.carcharodontosaurus.hurt": {
     "sounds": [
@@ -580,6 +658,19 @@
       }
     ],
     "subtitle": "subtitles.terrassic.voice.majungasaurus.threat"
+  },
+  "voice.majungasaurus.temper": {
+    "sounds": [
+      {
+        "name": "terrassic:voice/majungasaurus/temper_1",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "terrassic:voice/majungasaurus/temper_2",
+        "attenuation_distance": 40
+      }
+    ],
+    "subtitle": "subtitles.terrassic.voice.majungasaurus.temper"
   },
   "voice.majungasaurus.hurt": {
     "sounds": [

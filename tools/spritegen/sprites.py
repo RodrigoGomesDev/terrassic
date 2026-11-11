@@ -988,7 +988,11 @@ def egg_blocks():
     from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS
     from maia_extras import CUSTOM_EGGS as MAIA_EGGS
     from cory_extras import CUSTOM_EGGS as CORY_EGGS
-    CUSTOM_EGGS = {**CORY_EGGS, **MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+    from dasple_extras import CUSTOM_EGGS as DASPLE_EGGS
+    from alberto_extras import CUSTOM_EGGS as ALBERTO_EGGS
+    from carcharo_extras import CUSTOM_EGGS as CARCHARO_EGGS
+    from majunga_extras import CUSTOM_EGGS as MAJUNGA_EGGS
+    CUSTOM_EGGS = {**CORY_EGGS, **MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS, **DASPLE_EGGS, **ALBERTO_EGGS, **CARCHARO_EGGS, **MAJUNGA_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1517,13 +1521,13 @@ if __name__ == "__main__":
     import giga_extras
     giga_extras.main()   # the Giganotosaurus' round eggs in a cracked mud pit and its recado
     import dasple_extras
-    dasple_extras.main()   # the Daspletosaurus' tyrant saddle
+    dasple_extras.main()   # the Daspletosaurus' tyrant saddle, its dark ridged eggs in a river-bank pit
     import alberto_extras
-    alberto_extras.main()   # the Albertosaurus' racing saddle
+    alberto_extras.main()   # the Albertosaurus' racing saddle, its fan of eggs in a crescent of needles
     import carcharo_extras
-    carcharo_extras.main()   # the Carcharodontosaurus' river-plain saddle
+    carcharo_extras.main()   # the Carcharodontosaurus' river-plain saddle, its round eggs in a mangrove mound
     import majunga_extras
-    majunga_extras.main()   # the Majungasaurus' brawler's saddle
+    majunga_extras.main()   # the Majungasaurus' brawler's saddle, its rows of eggs under dry grass
     import spino_extras
     spino_extras.main()   # the Spinosaurus' eggs on a river sandbar (no saddle yet)
     import tri_extras
