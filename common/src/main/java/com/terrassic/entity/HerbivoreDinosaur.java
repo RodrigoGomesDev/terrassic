@@ -263,7 +263,7 @@ public abstract class HerbivoreDinosaur extends DinosaurEntity {
     /** Runners that kick what bites them from behind and shove what comes at the flank (DePalma et al. 2013: an
      *  Edmontosaurus survived a tyrannosaur's bite): the tick each blow lands (kick_back, body_shove). */
     private static final java.util.Map<String, int[]> KICKS = java.util.Map.of(
-            "gallimimus", new int[]{9, 0}, "parasaurolophus", new int[]{11, 12}, "edmontosaurus", new int[]{13, 13});
+            "gallimimus", new int[]{9, 0}, "parasaurolophus", new int[]{11, 12}, "edmontosaurus", new int[]{13, 13}, "maiasaura", new int[]{13, 13});
     private LivingEntity kickAt;
     private int kickIn;
     private int kickCooldown;

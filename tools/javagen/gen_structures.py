@@ -296,9 +296,9 @@ def river_house(seed):
 # Maiasaura nesting colony: mounds of earth with clutches of eggs, the herd around them
 # ---------------------------------------------------------------------------------------------------------------
 
-# 1.10.1: the colony is the Maiasaura's, but while it is on its old model (not in config/Eras.REMADE) the Edmontosaurus,
-# a remade hadrosaur with its own eggs, nests there instead; put "maiasaura" back when it is remade
-STAND_IN = {"compsognathus": "velociraptor", "maiasaura": "edmontosaurus"}
+# 1.10.1: while the Maiasaura was on its old model the Edmontosaurus nested here instead; 1.11.0: the colony is the
+# Maiasaura's again (study 15): nests 7 blocks apart (Palmer 1999), each a mound of mud with a crater, the clutch in it
+STAND_IN = {"compsognathus": "velociraptor"}
 COLONY = STAND_IN.get("maiasaura", "maiasaura")
 
 
@@ -312,27 +312,28 @@ def nest_colony(seed):
                 t.set(x, 0, z, "cracked_mud" if rng.random() < 0.3 else "packed_earth_floor")
                 t.clear(x, 1, z, x, 2, z)
     nests = []
-    for gx in (4, 10, 16):
-        for gz in (4, 10, 16):
-            if (gx, gz) == (10, 10) and rng.random() < 0.5:
-                continue
+    for gx in (3, 10, 17):
+        for gz in (3, 10, 17):
             cx, cz = gx + rng.randint(-1, 1), gz + rng.randint(-1, 1)
             if math.hypot(cx - 10, cz - 10) > 8.5:
                 continue
             nests.append((cx, cz))
     for cx, cz in nests:
+        # the mound: packed mud round the crater
         for dx in (-1, 0, 1):
             for dz in (-1, 0, 1):
-                if dx or dz:
-                    t.set(cx + dx, 0, cz + dz, "minecraft:coarse_dirt")
-        cells = [(cx, cz), (cx + 1, cz), (cx, cz + 1), (cx - 1, cz), (cx, cz - 1)]
+                t.set(cx + dx, 0, cz + dz, "cracked_mud" if dx or dz else "minecraft:mud")
+        cells = [(cx + dx, cz + dz) for dx, dz in ((0, 0), (1, 0), (0, 1), (-1, 0), (0, -1))]
         rng.shuffle(cells)
-        n_eggs = rng.randint(1, 3)
+        n_eggs = rng.randint(2, 3)
+        covered = rng.random() < 0.5
         for x, z in cells[:n_eggs]:
-            t.set(x, 1, z, COLONY + "_egg", extra={"wild": "true"}, hatch="0")  # wild: hatch wild, parents defend
-        x, z = cells[n_eggs]
-        t.set(x, 1, z, "straw_nest", facing=rng.choice(["north", "south", "east", "west"]))
-    for x, z in ((7.5, 13.5), (13.5, 6.5), (3.5, 10.5), (16.5, 15.5)):
+            # wild: hatch wild, the colony defends; half the nests already covered with leaves by their mother
+            t.set(x, 1, z, COLONY + "_egg", extra={"wild": "true", "covered": "true" if covered else "false"}, hatch="0")
+    # a mother by each of the first nests (she takes it as her home, Maiasaurine.claimHome), the others round them
+    for k, (cx, cz) in enumerate(nests[:4]):
+        t.entity(cx + 1.5, 1, cz + 1.5, {"id": f"{NS}:{COLONY}", "Female": True})
+    for x, z in ((10.5, 6.5), (6.5, 13.5)):
         t.entity(x, 1, z, {"id": f"{NS}:{COLONY}"})
     return t
 

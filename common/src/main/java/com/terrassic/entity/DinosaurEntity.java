@@ -395,6 +395,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Species id, used for asset and animation names. */
     public abstract String speciesId();
 
+    /** 1.11.0: just out of an egg at {@code pos} ({@code wild}: a wild clutch). The Maiasaura's calf stays in its nest. */
+    public void hatchedFrom(net.minecraft.core.BlockPos pos, boolean wild) {
+    }
+
+    /** 1.11.0, client: the head of a baby drawn this much bigger (the Maiasaura calf's big head and short snout,
+     *  Horner & Makela 1979); 1 for the others. */
+    public float babyHeadScale() {
+        return 1.0F;
+    }
+
     /** Extra one-shot animations besides "attack". */
     protected String[] extraActions() {
         return new String[0];
@@ -1624,7 +1634,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      *  triggers their rest transitions and tracks their fatigue. */
     private static final java.util.Set<String> LIVELY_SET_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
             "spinosaurus", "velociraptor", "dakotaraptor", "pachycephalosaurus", "gallimimus", "parasaurolophus", "edmontosaurus",
-            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops");
+            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura");
 
     public boolean hasLivelySet() {
         return LIVELY_SET_SPECIES.contains(this.speciesId());

@@ -67,7 +67,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
  *  Gallimimus          savanna, plains, desert*        6       3-6
  *  Struthiomimus       plains, savanna, forest         6       3-6
- *  Maiasaura           plains, savanna                 4       3-6
+ *  Maiasaura           plains, savanna                 4       6-12
  *  Edmontosaurus       plains, forest, savanna         6       4-8
  *  Corythosaurus       forest, plains                  5       3-6
  *  Pteranodon          beach, stony shore              8       2-4
@@ -315,7 +315,7 @@ public final class ModSpawns {
                 add(props, ModEntities.STRUTHIOMIMUS.get(), 6, 3, 6);
             }
             if (plains || savanna) {
-                add(props, ModEntities.MAIASAURA.get(), 4, 3, 6);
+                add(props, ModEntities.MAIASAURA.get(), 4, 6, 12);
             }
             if (plains || forest || savanna) {
                 add(props, ModEntities.EDMONTOSAURUS.get(), 6, 4, 8);

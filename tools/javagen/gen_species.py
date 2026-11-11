@@ -20,7 +20,7 @@ PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
     "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
-    "majungasaurus",
+    "majungasaurus", "maiasaura",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -158,8 +158,11 @@ SIZES = {
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
     # Struthiomimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "struthiomimus":      dict(real=4.3,  scale=0.81, w=1.0, h=2.4, baby=0.35, shadow=0.8),
-    # Maiasaura v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "maiasaura":          dict(real=9.0,  scale=0.83, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
+    # Maiasaura peeblesorum: 9 m, the top (up to ~9 m and ~4 t, Wosik et al. 2020; Rodrigo 10/11/2026: as it is).
+    # Maiasaura v1 (10/11, the 1.11.0, study 15) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1 (16.8
+    # texels per block, 160 px long); the calf is small (a hatchling of ~41 cm grew to ~1.5 m in its first year,
+    # Bert et al. 2025; 0.15 of the adult keeps it visible) and walks on two legs.
+    "maiasaura":          dict(real=9.0,  scale=0.955, w=2.0, h=2.6, baby=0.15, shadow=1.6),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
     # Edmontosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     # Edmontosaurus v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 12 m (16 / 20 = 0.8), its own
@@ -338,7 +341,7 @@ WORLD = {
     "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
     "struthiomimus":      dict(biomes=("plains", "savanna", "forest"), weight=6, group=(3, 6), track=10),   # flocks on the floodplain
-    "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
+    "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(6, 12), track=10),  # big herds of the open uplands; colonies (gen_structures)
     "edmontosaurus":      dict(biomes=("plains", "forest", "savanna"), weight=6, group=(4, 8), track=10),  # big herds
     "corythosaurus":      dict(biomes=("forest", "plains"), weight=5, group=(3, 6), track=10),            # wooded floodplains
     "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
@@ -662,11 +665,12 @@ SPECIES = [
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.7, 1.1, 200), xp=8, run=0.03,
       fights=False, rideable=True, jump=0.9, ride_offset=1.85, ride_forward=0.2, ride_speed=1.45),
  dict(id="maiasaura", cls="Maiasaura", base="HerbivoreDinosaur",
-      doc="Maiasaura peeblesorum - the \"good mother\" hadrosaur. Lives in nesting colonies; babies of any species near an adult grow twice as fast. Rideable when tamed.",
-      attrs=dict(MAX_HEALTH=65, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ARMOR=3, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=20),
+      doc="Maiasaura peeblesorum - the \"good mother\" hadrosaur of the Two Medicine uplands (Campanian), 9 m: a short deep head with a broad drooping bill and a solid hump of bone in front of the eyes, a heavy quadruped when grown, the young on two legs. Nests in colonies: a mother keeps her nest as her home, covers the eggs with leaves (covered eggs hatch faster), feeds the calf that stays in the nest and grows only when fed (feeding it starts taming it); the whole colony defends eggs and young, and draws egg thieves at night. Out of a colony, a big herd that runs in a block at the alarm. Rideable with its own nesting-ground saddle. Behaviour in Maiasaurine.",
+      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.5, FOLLOW_RANGE=22),
       food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
-      rideable=True, jump=0.6, ride_offset=2.55, ride_forward=0.8, ride_speed=1.05, call=True, nurse=True),
+      rideable=True, jump=0.5, ride_offset=2.6, ride_forward=1.15, ride_speed=1.05,
+      saddle="MAIASAURA_SADDLE", rig="Maiasaurine"),
  dict(id="edmontosaurus", cls="Edmontosaurus", base="HerbivoreDinosaur",
       doc="Edmontosaurus annectens - 12 m flat-headed duckbill, the biggest of the hadrosaurs, grazing in large herds on the plains. Tamed with plants; a steady riding and pack mount (the cargo inventory arrives with the v0.6 systems).",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),
@@ -887,7 +891,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1132,7 +1136,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

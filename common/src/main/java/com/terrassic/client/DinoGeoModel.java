@@ -32,6 +32,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
     /** The alpha's own coats (docs/ALFAS.md), for the species in entity/Alphas.SPECIES; null for the others. */
     private final ResourceLocation alphaMaleTexture;
     private final ResourceLocation alphaFemaleTexture;
+    /** 1.11.0: the calf's own coat (the Maiasaura's, paler and smooth); null for the species whose young share the adult's. */
+    private final ResourceLocation babyTexture;
+    private static final java.util.Set<String> BABY_SKINS = java.util.Set.of("maiasaura");
 
     public DinoGeoModel(String speciesId) {
         super(Terrassic.id(speciesId), "head");
@@ -40,12 +43,16 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         boolean alpha = com.terrassic.entity.Alphas.hasAlpha(speciesId);
         this.alphaMaleTexture = alpha ? Terrassic.id("textures/entity/" + speciesId + "_alpha_male.png") : null;
         this.alphaFemaleTexture = alpha ? Terrassic.id("textures/entity/" + speciesId + "_alpha_female.png") : null;
+        this.babyTexture = BABY_SKINS.contains(speciesId) ? Terrassic.id("textures/entity/" + speciesId + "_baby.png") : null;
     }
 
     @Override
     public ResourceLocation getTextureResource(T animatable) {
         if (this.alphaMaleTexture != null && animatable.isAlpha()) {
             return animatable.isFemale() ? this.alphaFemaleTexture : this.alphaMaleTexture;
+        }
+        if (this.babyTexture != null && animatable.isBaby()) {
+            return this.babyTexture;
         }
         return animatable.isFemale() ? this.femaleTexture : this.maleTexture;
     }
@@ -80,6 +87,16 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("adult_comb", baby);
         hide("adult_frill", baby);
         hide("young_frill", !baby);
+        // 1.11.0: the Maiasaura's solid hump between the eyes is the grown one's; the calf has a big head and a flat brow
+        hide("adult_bump", baby);
+        CoreGeoBone headScaled = getAnimationProcessor().getBone("head");
+        float hs = baby ? animatable.babyHeadScale() : 1.0F;
+        if (headScaled != null && hs != 1.0F) {
+            headScaled.setScaleX(headScaled.getScaleX() * hs);
+            headScaled.setScaleY(headScaled.getScaleY() * hs);
+            headScaled.setScaleZ(headScaled.getScaleZ() * hs);
+            headScaled.resetStateChanges();
+        }
         // 1.9.5: the neck takes 40% of the look's turn from the head (the head alone turned like a vanilla mob's); the
         // sum is the same, so it still looks where it looks
         CoreGeoBone headB = getAnimationProcessor().getBone("head");

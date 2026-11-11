@@ -217,6 +217,35 @@ check("população: repõe aos poucos", m is not None and int(m.group(1)) > 0, f
 for sp, how in re.findall(r"  bank (\w+(?: calf)?): (out in [\d.]+ s|STILL IN THE WATER after 30 s)", text):
     check(f"sai da água: {sp}", how.startswith("out"), how)
 
+# 1.11.0, the Maiasaura's colony (docs/estudos/15; BehaviorTest phase "maia")
+if "== Maiasaura (1.11.0)" in text:
+    m = re.search(r"maia calf: scale [\d.]+, on two legs (\w+)", text)
+    check("maia: filhote em duas patas", m is not None and m.group(1) == "true", m.group(0) if m else "sem medida")
+    m = re.search(r"maia home: (.*?); nest covered by its mother after ([\d.]+) s: (\d+) of (\d+) eggs; the nest without a mother: (\d+) covered", text)
+    check("maia: a mãe toma o ninho", m is not None and "(nest A)" in m.group(1), m.group(1) if m else "sem medida")
+    check("maia: a mãe cobre os ovos", m is not None and int(m.group(3)) > 0 and int(m.group(5)) == 0,
+          f"{m.group(3)} de {m.group(4)} cobertos em {m.group(2)} s, ninho sem mãe {m.group(5)}" if m else "sem medida")
+    m = re.search(r"maia hatching: covered clutch out after (NEVER|\d+) random ticks, open clutch after (NEVER|\d+)", text)
+    sec = lambda v: 1e9 if v == "NEVER" else float(v)
+    check("maia: ovo coberto choca mais rápido", m is not None and sec(m.group(1)) < sec(m.group(2)),
+          f"coberto {m.group(1)}, aberto {m.group(2)}" if m else "sem medida")
+    m = re.search(r"maia nest calf after 30 s: ([\d.]+) blocks from the nest, grew (-?\d+) ticks, fed (\w+), still in the nest (\w+)", text)
+    check("maia: filhote fica no ninho", m is not None and float(m.group(1)) <= 3.5 and m.group(4) == "true", m.group(0)[:110] if m else "sem medida")
+    check("maia: a mãe alimenta o filhote", m is not None and m.group(3) == "true", "")
+    m = re.search(r"maia calf alone in a nest, 20 s unfed: grew (-?\d+) ticks", text)
+    check("maia: filhote sem comida não cresce", m is not None and int(m.group(1)) <= 40, f"{m.group(1) if m else '?'} tiques")
+    m = re.search(r"maia calf fed by the player, 20 s later: grew (-?\d+) ticks, taming progress ([\d.]+)", text)
+    check("maia: alimentado cresce e começa a doma", m is not None and int(m.group(1)) >= 300 and float(m.group(2)) > 0.0,
+          f"cresceu {m.group(1)}, doma {m.group(2)}" if m else "sem medida")
+    m = re.search(r"maia egg taken in the colony: (\d+) of (\d+) grown ones go for the player, (\d+) of them beyond 24 blocks", text)
+    check("maia: a colônia toda defende o ovo", m is not None and int(m.group(1)) >= 3 and int(m.group(3)) >= 1,
+          m.group(0)[24:] if m else "sem medida")
+    m = re.search(r"maia calf hit by a velociraptor: (\d+) of (\d+)", text)
+    check("maia: a colônia defende o filhote", m is not None and int(m.group(1)) >= 2, m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"maia night: egg thief (\w+), the colony goes for it (\w+)", text)
+    check("maia: ladrão de ovo à noite", m is not None and m.group(1) == "CAME", m.group(0) if m else "sem medida")
+    check("maia: a colônia expulsa o ladrão", m is not None and m.group(2) == "YES", "")
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "RRR",
+    "SHS",
+    "TLT"
+  ],
+  "key": {
+    "R": {
+      "item": "terrassic:rush"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "H": {
+      "item": "terrassic:maiasaura_hide"
+    },
+    "T": {
+      "item": "minecraft:string"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "terrassic:maiasaura_saddle",
+    "count": 1
+  }
+}

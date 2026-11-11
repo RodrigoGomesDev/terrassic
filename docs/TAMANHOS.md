@@ -64,7 +64,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Basilemys (v0.7, 2x) | casco de 1-1,3 m, ~1,7 m com cabeça e cauda (Brinkman 1998; Mallon & Brinkman 2011) | novo | **1,7 x 0,49** | 0,9 x 0,5 | 40% |
 | Enchodus (v0.7, 5x) | a maioria das espécies 0,5-1 m, E. petrosus 1,5 m (Goody 1976; Everhart 2005) | novo | **0,8 x 0,25** | 0,4 x 0,3 | 40% |
 | Lepisosteus (v0.7, 5x) | gares de Hell Creek ~1-1,2 m (Grande 2010; Brinkman et al. 2014) | novo | **1,0 x 0,23** | 0,4 x 0,3 | 40% |
-| Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
+| Maiasaura (v0.3; refeito na 1.11.0) | até ~9 m e ~4 t (Wosik et al. 2020); dois grupos de tamanho, um ~45% maior, lidos como dimorfismo sexual (Saitta et al. 2020; só no Guia, a variação individual fica 0,94-1,06). 9 m = o topo (resposta do Rodrigo em 10/11/2026); filhote de ~41 cm ao sair do ovo, ~147 cm com um ano (Bert et al. 2025) | refeito | **9,0 x 2,8** (160 px a 16,94 px/m, escala 0,955, 16,8 texels por bloco) | 2,0 x 2,6 | 15% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |
 | Ichthyornis (v0.4) | envergadura ~60 cm, corpo ~25 cm (Clarke 2004; Field et al. 2018), ave do tamanho de um trinta-réis | novo | **0,66 de envergadura** x 0,3 | 0,4 x 0,4 | 50% |

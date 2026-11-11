@@ -27,7 +27,8 @@ from theri_extras import CUSTOM_EGGS as THERI_EGGS  # noqa: E402  (the Therizino
 from quetz_extras import CUSTOM_EGGS as QUETZ_EGGS  # noqa: E402  (the Quetzalcoatlus' soft eggs half buried in sand)
 from edmo_extras import CUSTOM_EGGS as EDMO_EGGS  # noqa: E402  (the Edmontosaurus' spiral of eggs under fern fronds)
 from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS  # noqa: E402  (the Dakotaraptor's ring of eggs under a log)
-CUSTOM_EGGS = {**DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+from maia_extras import CUSTOM_EGGS as MAIA_EGGS, COVERED_EGGS  # noqa: E402  (the Maiasaura's ring in a mud mound, covered with litter or not)
+CUSTOM_EGGS = {**MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -121,6 +122,8 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # the Edmontosaurus' traveller's saddle: a deep seat on felt, a hide bedroll behind, water bladders at the sides
     # the Dakotaraptor's light hunting saddle: a short pad, a low seat with knee rolls, a bone grip
     "dakotaraptor_saddle": ("Dakotaraptor Hunting Saddle", "Sela de Caça de Dakotaraptor", "Silla de caza de Dakotaraptor", "item/generated"),
+    # 1.11.0: the Maiasaura's nesting-ground saddle: a broad reed mat, a low seat and deep saddlebags of bark fibre
+    "maiasaura_saddle": ("Maiasaura Nesting Saddle", "Sela de Ninhal de Maiassaura", "Silla de nidal de Maiasaura", "item/generated"),
     "edmontosaurus_saddle": ("Edmontosaurus Traveller's Saddle", "Sela de Viagem de Edmontossauro", "Silla de viaje de Edmontosaurus", "item/generated"),
     "quetzalcoatlus_saddle": ("Quetzalcoatlus Saddle", "Sela de Quetzalcoatlus", "Silla de Quetzalcoatlus", "item/generated"),
     "therizinosaurus_saddle": ("Therizinosaurus Saddle", "Sela de Terizinossauro", "Silla de Therizinosaurus", "item/generated"),
@@ -849,7 +852,15 @@ def main():
         # egg block: 3 hatch stages
         for st in range(3):
             write(f"{A}/models/block/{sid}_egg_{st}.json", egg_model(sid, st, large))
-        write(f"{A}/blockstates/{sid}_egg.json", {"variants": {f"hatch={st}": {"model": f"terrassic:block/{sid}_egg_{st}"} for st in range(3)}})
+        if sid in COVERED_EGGS:
+            # 1.11.0: a nest the mother covers with leaves (DinoEggBlock.COVERED): its own model for each stage
+            for st in range(3):
+                write(f"{A}/models/block/{sid}_egg_{st}_covered.json", COVERED_EGGS[sid](sid, st))
+            write(f"{A}/blockstates/{sid}_egg.json", {"variants": {
+                f"covered={str(c).lower()},hatch={st}": {"model": f"terrassic:block/{sid}_egg_{st}" + ("_covered" if c else "")}
+                for c in (False, True) for st in range(3)}})
+        else:
+            write(f"{A}/blockstates/{sid}_egg.json", {"variants": {f"hatch={st}": {"model": f"terrassic:block/{sid}_egg_{st}"} for st in range(3)}})
         write(f"{A}/models/item/{sid}_egg.json", {"parent": f"terrassic:block/{sid}_egg_0"})
         write(f"{D}/loot_tables/blocks/{sid}_egg.json", {"type": "minecraft:block", "pools": [{
             "rolls": 1, "entries": [{"type": "minecraft:item", "name": f"terrassic:{sid}_egg"}],
@@ -963,6 +974,9 @@ def main():
     # the Dakotaraptor's hunting saddle: its hide, leather for the seat, grey wool for the pad, a bone for the grip
     shaped("dakotaraptor_saddle", [" B ", "LHL", " W "], {"H": "terrassic:dakotaraptor_hide", "L": "minecraft:leather",
            "W": "minecraft:gray_wool", "B": "minecraft:bone"}, "terrassic:dakotaraptor_saddle")
+    # the Maiasaura's nesting-ground saddle: a mat of woven rushes, its hide over a wooden frame, saddlebags of string
+    shaped("maiasaura_saddle", ["RRR", "SHS", "TLT"], {"R": "terrassic:rush", "S": "minecraft:stick",
+           "H": "terrassic:maiasaura_hide", "T": "minecraft:string", "L": "minecraft:leather"}, "terrassic:maiasaura_saddle")
     shaped("edmontosaurus_saddle", ["HHH", "LWL", " B "], {"H": "terrassic:edmontosaurus_hide", "L": "minecraft:leather",
            "W": "minecraft:blue_wool", "B": "minecraft:glass_bottle"}, "terrassic:edmontosaurus_saddle")
     shaped("quetzalcoatlus_saddle", [" S ", "LHL", "TWT"], {"S": "minecraft:stick", "L": "minecraft:leather",

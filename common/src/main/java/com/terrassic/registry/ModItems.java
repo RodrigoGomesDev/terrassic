@@ -340,6 +340,10 @@ public final class ModItems {
      *  grab rope on a woven mat. */
     public static final RegistrySupplier<Item> MAJUNGASAURUS_SADDLE = ITEMS.register("majungasaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Maiasaura's own saddle (only it saddles a Maiasaura): the nesting-ground saddle, a broad reed mat, a low seat
+     *  and deep saddlebags of bark fibre. */
+    public static final RegistrySupplier<Item> MAIASAURA_SADDLE = ITEMS.register("maiasaura_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Velociraptor's hunting harness: its "saddle" for the armour it gives; it can never be ridden. */
     public static final RegistrySupplier<Item> VELOCIRAPTOR_HARNESS = ITEMS.register("velociraptor_harness",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
