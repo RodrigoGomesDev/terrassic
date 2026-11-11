@@ -107,7 +107,8 @@ public final class BehaviorTest {
             only = only + ",carcass,jaws,gaits,water,steps,paths,night,weak,sleepfish,behave,territory,duels"
                     + ",roarfear,aggro,eggrage,helpcall,babystay,herdmove,quirks,feet,stable"
                     + ",daspleto,alberto,carcharo,majunga,bankexit"   // 1.10.1: the four remade predators
-                    + ",maia";                                           // 1.11.0: the Maiasaura's colony
+                    + ",maia"                                            // 1.11.0: the Maiasaura's colony
+                    + ",cory";                                           // 1.11.0: the Corythosaurus' voice and ear
         }
         if (java.util.stream.Stream.of("roarfear", "aggro", "eggrage", "helpcall", "babystay", "herdmove", "quirks", "feet", "stable").anyMatch(only::contains)) {
             planCleanup110();
@@ -165,6 +166,9 @@ public final class BehaviorTest {
         }
         if (only.contains("maia")) {
             planMaia();
+        }
+        if (only.contains("cory")) {
+            planCory();
         }
         if (only.contains("steps")) {
             planSteps();
@@ -489,7 +493,7 @@ public final class BehaviorTest {
     private static void planLook() {
         double x0 = 4400.5D;
         String[] all = {"tyrannosaurus", "triceratops", "edmontosaurus", "quetzalcoatlus", "therizinosaurus", "deinosuchus",
-                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura"};
+                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus"};
         for (String sp : all) {
             UUID u = id();
             STEPS.add(mc -> {
@@ -1563,6 +1567,392 @@ public final class BehaviorTest {
             com.terrassic.entity.Maiasaurine.raidChance = 0.5F;
             maiaClear(mc, x0);
             return 20;
+        });
+    }
+
+    // ------------------------------------------------------------------ 1.11.0: the Corythosaurus (study 15)
+    private static void coryShot(String name) {
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_cory_" + name + ".png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 2;
+        });
+    }
+
+    private static List<com.terrassic.entity.Corythosaurine> coryAll(Minecraft mc, UUID... ids) {
+        List<com.terrassic.entity.Corythosaurine> out = new java.util.ArrayList<>();
+        for (UUID u : ids) {
+            if (server(mc, u) instanceof com.terrassic.entity.Corythosaurine c) {
+                out.add(c);
+            }
+        }
+        return out;
+    }
+
+    /** 1.11.0, the Corythosaurus (docs/estudos/15): photos (side, 3/4, front, head, male and female, the calf, next to the
+     *  Parasaurolophus, the Edmontosaurus and the Maiasaura), then its voice and its ear: catemeral naps in shifts with one
+     *  always awake (by day and by night), a predator heard behind a wall (no line of sight), the alarm call heard by a
+     *  herd 50 blocks off (woken from its nap), the call that brings a lost one back and calms a herbivore, the berries
+     *  plucked from a bush, and two males showing the helmet in profile until one walks off. */
+    private static void planCory() {
+        double x0 = 7800.5D;
+        com.terrassic.entity.Corythosaurine.napMin = 200;
+        com.terrassic.entity.Corythosaurine.napMax = 400;
+        com.terrassic.entity.Corythosaurine.awakeDay = 160;
+        com.terrassic.entity.Corythosaurine.awakeNight = 100;
+        UUID male = id(), female = id(), calf = id(), para = id(), edmo = id(), maia = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Corythosaurus (1.11.0)");
+            clear(mc, x0, 72);
+            return 40;
+        });
+        STEPS.add(mc -> {
+            maiaClear(mc, x0);
+            command(mc, "time set 1000");
+            command(mc, "gamerule doDaylightCycle false");
+            return 20;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "corythosaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"cory\"]");
+            noAutoShots = true;
+            return 40;
+        });
+        awaitAll(male);
+        String[][] views = {{"side", "0", "0.15", "1"}, {"tq", "0.75", "0.35", "0.75"}, {"front", "-1", "0.25", "0.1"}};
+        for (String[] v : views) {
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, male);
+                if (d == null) {
+                    REPORT.add("  cory photo: NOT FOUND");
+                    return 1;
+                }
+                double r = 3.0D + d.getBbWidth() * 2.0D + d.getBbHeight() * 1.0D;
+                Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.55D, 0.0D);
+                look(mc.player, c.add(Double.parseDouble(v[1]) * r, Double.parseDouble(v[2]) * r, Double.parseDouble(v[3]) * r), c);
+                return 40;
+            });
+            coryShot(v[0]);
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, male);
+            if (d != null) {
+                double k = d.getBbHeight();
+                Vec3 head = d.position().add(-0.95D * k, 1.05D * k, 0.0D);
+                look(mc.player, head.add(-0.4D * k, 0.1D * k, 0.9D * k), head);
+                REPORT.add(String.format(Locale.ROOT, "  cory size: hitbox %.2f x %.2f, scale %.3f", d.getBbWidth(), d.getBbHeight(), d.getScale()));
+            }
+            return 40;
+        });
+        coryShot("head");
+        STEPS.add(mc -> {
+            summon(mc, "corythosaurus", x0 + 14.0D, Y, 0.5D, female, "NoAI:1b,Female:1b,Rotation:[90f,0f],Tags:[\"cory\"]");
+            summon(mc, "corythosaurus", x0 + 6.0D, Y, -14.5D, calf, "NoAI:1b,Age:-24000,Rotation:[90f,0f],Tags:[\"cory\"]");
+            summon(mc, "parasaurolophus", x0 - 18.0D, Y, 0.5D, para, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"cory\"]");
+            summon(mc, "edmontosaurus", x0 - 36.0D, Y, 0.5D, edmo, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"cory\"]");
+            summon(mc, "maiasaura", x0 - 56.0D, Y, 0.5D, maia, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"cory\"]");
+            return 40;
+        });
+        awaitAll(female, calf, para, edmo, maia);
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, calf);
+            if (c != null) {
+                Vec3 p = c.position().add(0.0D, c.getBbHeight() * 0.6D, 0.0D);
+                look(mc.player, p.add(-1.2D, 0.8D, -3.0D), p);
+                REPORT.add(String.format(Locale.ROOT, "  cory calf: scale %.3f, hitbox %.2f x %.2f", c.getScale(), c.getBbWidth(), c.getBbHeight()));
+            }
+            return 40;
+        });
+        coryShot("calf");
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 + 7.0D, Y + 4.0D, 24.0D), new Vec3(x0 + 7.0D, Y + 3.0D, 0.0D));
+            return 40;
+        });
+        coryShot("male_female");
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 - 24.0D, Y + 6.0D, 44.0D), new Vec3(x0 - 24.0D, Y + 2.5D, 0.0D));
+            return 40;
+        });
+        coryShot("with_hadrosaurs");
+        STEPS.add(mc -> {
+            noAutoShots = false;
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- catemeral: four adults, all drowsy, by day and by night; one is always awake
+        UUID[] herd = {id(), id(), id(), id()};
+        STEPS.add(mc -> {
+            REPORT.add("  -- the naps");
+            for (int i = 0; i < herd.length; i++) {
+                summon(mc, "corythosaurus", x0 + (i % 2) * 7 - 3, Y, 20.5D + (i / 2) * 7, herd[i], "Female:" + (i % 2) + "b,Tags:[\"cory\"]");
+            }
+            look(mc.player, new Vec3(x0, Y + 12.0D, 4.0D), new Vec3(x0, Y, 24.0D));
+            return 20;
+        });
+        awaitAll(herd);
+        for (String when : new String[]{"day", "night"}) {
+            int[] st = {0, 0, 99, 0};     // samples, max napping at once, min awake while any naps, distinct nappers bits
+            STEPS.add(mc -> {
+                command(mc, when.equals("day") ? "time set 1000" : "time set 15000");
+                mc.getSingleplayerServer().execute(() -> coryAll(mc, herd).forEach(c -> {
+                    c.testDrowsy(true);
+                    c.testNoDisplay();
+                    c.testCallCooldown(1_000_000);
+                }));
+                return 260;
+            });
+            STEPS.add(mc -> {
+                List<com.terrassic.entity.Corythosaurine> cs = coryAll(mc, herd);
+                int napping = 0;
+                for (int i = 0; i < cs.size(); i++) {
+                    if (cs.get(i).isSleeping()) {
+                        napping++;
+                        st[3] |= 1 << i;
+                    }
+                }
+                st[0]++;
+                st[1] = Math.max(st[1], napping);
+                if (napping > 0) {
+                    st[2] = Math.min(st[2], cs.size() - napping);
+                }
+                if (st[0] == 30) {
+                    coryShotNow(mc, "naps_" + when);
+                }
+                if (st[0] < 60) {
+                    return -20;       // again in 1 s
+                }
+                REPORT.add(String.format(Locale.ROOT, "  cory naps %s: max %d of %d napping at once, awake while napping at least %s, %d napped in 60 s",
+                        when, st[1], cs.size(), st[2] == 99 ? "-" : String.valueOf(st[2]), Integer.bitCount(st[3])));
+                return 1;
+            });
+        }
+        STEPS.add(mc -> {
+            command(mc, "time set 1000");
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the ear and the call: a herd behind a wall hears a raptor it cannot see; a herd 50 blocks off, napping,
+        //      hears the alarm call
+        UUID[] near = {id(), id(), id()}, farHerd = {id(), id(), id()};
+        UUID rap = id(), pig = id();
+        STEPS.add(mc -> {
+            REPORT.add("  -- the ear and the call");
+            command(mc, fill(x0 + 10.0D, Y, -20.0D, x0 + 10.0D, Y + 10.0D, 60.0D, "minecraft:stone"));
+            for (int i = 0; i < 3; i++) {
+                summon(mc, "corythosaurus", x0 - 2.0D, Y, 14.5D + i * 7, near[i], "Tags:[\"cory\"]");
+                summon(mc, "corythosaurus", x0 - 52.0D, Y, 14.5D + i * 7, farHerd[i], "Tags:[\"cory\"]");
+            }
+            look(mc.player, new Vec3(x0 - 20.0D, Y + 30.0D, -10.0D), new Vec3(x0 - 20.0D, Y, 22.0D));
+            return 20;
+        });
+        awaitAll(near);
+        awaitAll(farHerd);
+        STEPS.add(mc -> {
+            mc.getSingleplayerServer().execute(() -> {
+                for (com.terrassic.entity.Corythosaurine c : coryAll(mc, near)) {
+                    c.testDrowsy(false);
+                    c.testNoDisplay();
+                    c.heardBlind = false;
+                }
+                for (com.terrassic.entity.Corythosaurine c : coryAll(mc, farHerd)) {
+                    c.testDrowsy(false);
+                    c.testNoDisplay();
+                    c.testNap(2400);
+                }
+            });
+            return 80;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "pig", x0 + 15.0D, Y, 21.5D, pig, "");
+            summon(mc, "velociraptor", x0 + 20.0D, Y, 21.5D, rap, "");
+            return 20;
+        });
+        awaitAll(rap, pig);
+        int[] ear = {0};
+        java.util.Set<UUID> nearRan = new java.util.HashSet<>(), farRan = new java.util.HashSet<>();
+        STEPS.add(mc -> {
+            DinosaurEntity r = server(mc, rap);
+            Entity p = mc.getSingleplayerServer().overworld().getEntity(pig);
+            if (r != null && p instanceof net.minecraft.world.entity.LivingEntity lp && lp.isAlive() && r.getTarget() == null) {
+                mc.getSingleplayerServer().execute(() -> r.setTarget(lp));
+            }
+            List<com.terrassic.entity.Corythosaurine> a = coryAll(mc, near);
+            List<com.terrassic.entity.Corythosaurine> b = coryAll(mc, farHerd);
+            boolean heard = a.stream().anyMatch(c -> c.heardBlind);
+            // latched each second: a flight lasts 5 s
+            a.stream().filter(com.terrassic.entity.Corythosaurine::isFleeing).forEach(c -> nearRan.add(c.getUUID()));
+            b.stream().filter(com.terrassic.entity.Corythosaurine::isFleeing).forEach(c -> farRan.add(c.getUUID()));
+            long ran = nearRan.size();
+            if (ear[0]++ < 30 && (ran < a.size() || farRan.size() < b.size())) {
+                return -20;
+            }
+            long farAwake = b.stream().filter(c -> !c.isSleeping()).count();
+            long farRanN = farRan.size();
+            boolean seen = r != null && a.stream().anyMatch(c -> c.hasLineOfSight(r));
+            REPORT.add(String.format(Locale.ROOT, "  cory ear: heard without sight %s (%d of %d heard blind, raptor visible %s), herd ran %d of %d after %d s",
+                    heard ? "YES" : "NO", a.stream().filter(c -> c.heardBlind).count(), a.size(), seen ? "yes" : "no", ran, a.size(), ear[0]));
+            REPORT.add(String.format(Locale.ROOT, "  cory call at 50 blocks: the napping herd ran %d of %d, awake %d of %d",
+                    farRanN, b.size(), farAwake, b.size()));
+            return 40;
+        });
+        coryShot("alarm");
+        STEPS.add(mc -> {
+            command(mc, fill(x0 + 10.0D, Y, -20.0D, x0 + 10.0D, Y + 10.0D, 60.0D, "minecraft:air"));
+            command(mc, "kill @e[type=terrassic:velociraptor,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..150]");
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the call at rest: a lost one comes back; a frightened herbivore calms down
+        UUID[] three = {id(), id(), id()};
+        UUID lost = id(), calm = id(), pig2 = id();
+        double[] lostAt = {0.0D};
+        STEPS.add(mc -> {
+            REPORT.add("  -- the call at rest");
+            for (int i = 0; i < 3; i++) {
+                summon(mc, "corythosaurus", x0 + i * 6.0D, Y, 20.5D, three[i], "Tags:[\"cory\"]");
+            }
+            summon(mc, "corythosaurus", x0 - 44.0D, Y, 20.5D, lost, "Tags:[\"cory\"]");
+            summon(mc, "edmontosaurus", x0 + 6.0D, Y, 30.5D, calm, "Tags:[\"cory\"]");
+            summon(mc, "pig", x0 + 10.0D, Y, 34.5D, pig2, "");
+            look(mc.player, new Vec3(x0 - 20.0D, Y + 30.0D, -6.0D), new Vec3(x0 - 20.0D, Y, 22.0D));
+            return 20;
+        });
+        awaitAll(three);
+        awaitAll(lost, calm);
+        boolean[] calmed = {false, false};
+        STEPS.add(mc -> {
+            List<com.terrassic.entity.Corythosaurine> all = coryAll(mc, three[0], three[1], three[2], lost);
+            DinosaurEntity e = server(mc, calm);
+            Entity p = mc.getSingleplayerServer().overworld().getEntity(pig2);
+            mc.getSingleplayerServer().execute(() -> {
+                all.forEach(c -> {
+                    c.testDrowsy(false);
+                    c.testNoDisplay();
+                });
+                if (e != null && p instanceof net.minecraft.world.entity.LivingEntity lp) {
+                    e.setLastHurtByMob(lp);
+                }
+                DinosaurEntity caller = server(mc, three[0]);
+                DinosaurEntity l = server(mc, lost);
+                if (caller instanceof com.terrassic.entity.Corythosaurine c && l != null) {
+                    lostAt[0] = l.distanceTo(c);
+                    c.deepCall();
+                }
+                if (e != null) {
+                    calmed[0] = e.getLastHurtByMob() == null;
+                    calmed[1] = e.hasEffect(net.minecraft.world.effect.MobEffects.REGENERATION);
+                }
+            });
+            return 300;
+        });
+        STEPS.add(mc -> {
+            DinosaurEntity caller = server(mc, three[0]);
+            DinosaurEntity l = server(mc, lost);
+            REPORT.add(String.format(Locale.ROOT, "  cory regroup: the lost one from %.0f to %.0f blocks of the caller in 15 s",
+                    lostAt[0], caller != null && l != null ? l.distanceTo(caller) : -1.0F));
+            REPORT.add(String.format(Locale.ROOT, "  cory calm: the frightened herbivore calmed %s, regeneration %s",
+                    calmed[0] ? "YES" : "no", calmed[1] ? "YES" : "no"));
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- fruit: berries plucked from a ripe bush
+        UUID eater = id();
+        BlockPos bush = BlockPos.containing(x0 + 5.0D, Y, 40.5D);
+        int[] fruit = {0};
+        STEPS.add(mc -> {
+            REPORT.add("  -- fruit");
+            command(mc, String.format(Locale.ROOT, "setblock %d %d %d minecraft:sweet_berry_bush[age=3]", bush.getX(), bush.getY(), bush.getZ()));
+            summon(mc, "corythosaurus", x0 - 2.0D, Y, 40.5D, eater, "Tags:[\"cory\"]");
+            look(mc.player, new Vec3(x0 + 2.0D, Y + 5.0D, 30.0D), new Vec3(x0 + 2.0D, Y + 1.0D, 40.5D));
+            return 20;
+        });
+        awaitAll(eater);
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, eater);
+            if (d instanceof com.terrassic.entity.Corythosaurine c && fruit[0] == 0) {
+                mc.getSingleplayerServer().execute(() -> {
+                    c.testDrowsy(false);
+                    c.testNoDisplay();
+                    c.setHunger(10);
+                });
+            }
+            BlockState st = mc.getSingleplayerServer().overworld().getBlockState(bush);
+            boolean picked = st.is(net.minecraft.world.level.block.Blocks.SWEET_BERRY_BUSH)
+                    && st.getValue(net.minecraft.world.level.block.SweetBerryBushBlock.AGE) == 1;
+            if (!picked && fruit[0]++ < 40) {
+                return -20;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  cory fruit: ripe bush plucked %s after %d s", picked ? "YES" : "NO", fruit[0]));
+            return 30;
+        });
+        coryShot("pluck");
+        STEPS.add(mc -> {
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- two males show the helmet in profile, then one walks off
+        UUID ma = id(), mb = id();
+        double[] gap = {0.0D};
+        int[] disp = {0, 0};
+        STEPS.add(mc -> {
+            REPORT.add("  -- the helmet");
+            summon(mc, "corythosaurus", x0, Y, 60.5D, ma, "Female:0b,Tags:[\"cory\"]");
+            summon(mc, "corythosaurus", x0 + 6.0D, Y, 60.5D, mb, "Female:0b,Tags:[\"cory\"]");
+            look(mc.player, new Vec3(x0 + 3.0D, Y + 6.0D, 44.0D), new Vec3(x0 + 3.0D, Y + 2.5D, 60.5D));
+            return 20;
+        });
+        awaitAll(ma, mb);
+        STEPS.add(mc -> {
+            List<com.terrassic.entity.Corythosaurine> two = coryAll(mc, ma, mb);
+            if (disp[0] == 0) {
+                mc.getSingleplayerServer().execute(() -> two.forEach(c -> {
+                    c.testDrowsy(false);
+                    c.testCallCooldown(1_000_000);
+                    c.testDisplayReady();
+                }));
+            }
+            boolean both = two.size() == 2 && two.stream().allMatch(com.terrassic.entity.Corythosaurine::isDisplaying);
+            if (!both && disp[0]++ < 30) {
+                return -20;
+            }
+            disp[1] = both ? 1 : 0;
+            gap[0] = two.size() == 2 ? two.get(0).distanceTo(two.get(1)) : -1.0D;
+            return 40;
+        });
+        coryShot("helmet_display");
+        int[] after = {0, 0};
+        STEPS.add(mc -> {
+            List<com.terrassic.entity.Corythosaurine> two = coryAll(mc, ma, mb);
+            boolean still = two.stream().anyMatch(com.terrassic.entity.Corythosaurine::isDisplaying);
+            if (still && after[0]++ < 40) {
+                return -20;
+            }
+            if (after[1]++ < 10) {
+                return -20;       // ten seconds after the display ends: the one that lowered its head has walked off
+            }
+            double g = two.size() == 2 ? two.get(0).distanceTo(two.get(1)) : -1.0D;
+            REPORT.add(String.format(Locale.ROOT, "  cory display: both in profile %s after %d s; then one walks off: %.1f to %.1f blocks apart",
+                    disp[1] == 1 ? "YES" : "NO", disp[0], gap[0], g));
+            return 1;
+        });
+        STEPS.add(mc -> {
+            com.terrassic.entity.Corythosaurine.napMin = 1200;
+            com.terrassic.entity.Corythosaurine.napMax = 3600;
+            com.terrassic.entity.Corythosaurine.awakeDay = 3600;
+            com.terrassic.entity.Corythosaurine.awakeNight = 1200;
+            command(mc, "time set 1000");
+            maiaClear(mc, x0);
+            return 20;
+        });
+    }
+
+    private static void coryShotNow(Minecraft mc, String name) {
+        Screenshot.grab(mc.gameDirectory, "behavior_cory_" + name + ".png", mc.getMainRenderTarget(), msg -> {
         });
     }
 
@@ -2660,7 +3050,7 @@ public final class BehaviorTest {
     private static void planJaws() {
         String[] all = {"edmontosaurus", "pteranodon", "quetzalcoatlus", "parasaurolophus", "triceratops", "tyrannosaurus",
                 "carnotaurus", "giganotosaurus", "spinosaurus", "styracosaurus", "protoceratops", "pachycephalosaurus",
-                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura"};
+                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2800.5D;
         STEPS.add(mc -> {
@@ -2736,7 +3126,7 @@ public final class BehaviorTest {
     private static void planGaits() {
         String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
                 "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
-                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura"};
+                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2600.5D;
         STEPS.add(mc -> {

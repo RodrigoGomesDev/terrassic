@@ -31,7 +31,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Deinosuchus (v0.5) | 10,6 m bem medidos (Cossette & Brochu 2020), até 12 m em estimativas antigas (Schwimmer 2002) | novo | **12,0 x 1,6** | 2,6 x 1,4 | 20% |
 | Baurusuchus (v0.5) | ~3,5 m (Carvalho, Campos & Nobre 2005), crocodilomorfo terrestre de pernas eretas | novo | **3,5 x 1,0** | 1,0 x 1,0 | 30% |
 | Edmontosaurus (v0.6) | 12 m, ~4 t (E. annectens; Campione & Evans 2011; espécimes maiores reivindicados) | novo | **12,0 x 3,6** | 2,4 x 3,6 | 20% |
-| Corythosaurus (v0.6) | 9 m, 3-4 t (Evans et al. 2009), crista em elmo | novo | **9,0 x 3,3** | 2,0 x 3,3 | 20% |
+| Corythosaurus (v0.6; refeito na 1.11.0) | ~9 m em média (Benson et al. 2012); AMNH 5240 com 8,1 m e 3,1 t (Seebacher 2001); 8 m e 2,8 t para *C. casuarius* (Paul 2016). 9 m = o topo (resposta do Rodrigo em 10/11/2026); elmo em meia-lua um pouco maior no macho (decisão do estudo 15) | refeito | **9,0 x 4,2** com o elmo (165 px a 16,94 px/m, escala 0,925, 17,3 texels por bloco) | 1,9 x 3,4 | 18% |
 | Styracosaurus (v0.6) | 5-5,5 m, ~2,7 t (Ryan et al. 2007), chifre nasal 57 cm | novo | **5,5 x 2,9** (com espinhos) | 1,6 x 2,9 | 30% |
 | Euoplocephalus (v0.6) | 5,5-6 m, ~2,5 t (Arbour & Currie 2013; Paul 2010), 2 m de largura | novo | **6,0 x 1,7** | 2,0 x 1,8 | 30% |
 | Protoceratops (v0.6) | 1,8-2,5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011) | novo | **2,0 x 0,8** | 0,7 x 0,8 | 50% |

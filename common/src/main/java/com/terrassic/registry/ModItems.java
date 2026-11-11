@@ -344,6 +344,10 @@ public final class ModItems {
      *  and deep saddlebags of bark fibre. */
     public static final RegistrySupplier<Item> MAIASAURA_SADDLE = ITEMS.register("maiasaura_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Corythosaurus' own saddle (only it saddles a Corythosaurus): the forest saddle, low and narrow for riding
+     *  under branches, a pad of beaten bark cloth and a bone grip. */
+    public static final RegistrySupplier<Item> CORYTHOSAURUS_SADDLE = ITEMS.register("corythosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Velociraptor's hunting harness: its "saddle" for the armour it gives; it can never be ridden. */
     public static final RegistrySupplier<Item> VELOCIRAPTOR_HARNESS = ITEMS.register("velociraptor_harness",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

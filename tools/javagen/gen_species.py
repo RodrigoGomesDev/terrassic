@@ -20,7 +20,7 @@ PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
     "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
-    "majungasaurus", "maiasaura",
+    "majungasaurus", "maiasaura", "corythosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -168,9 +168,10 @@ SIZES = {
     # Edmontosaurus v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 12 m (16 / 20 = 0.8), its own
     # study and rig (page "1.9: estudos..."); the hitbox covers the body, the hit parts the long head and the tail.
     "edmontosaurus":      dict(real=12.0, scale=0.8, w=2.4, h=3.2, baby=0.2,  shadow=2.0),
-    # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
-    # Corythosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "corythosaurus":      dict(real=9.0,  scale=0.83, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
+    # Corythosaurus casuarius: ~9 m on average (Benson et al. 2012; Rodrigo 10/11/2026: as it is, the top).
+    # Corythosaurus v1 (11/11, the 1.11.0, study 15) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1
+    # (17.3 texels per block, 165 px long); high at the withers with the neck carried up, the helmet over the herd.
+    "corythosaurus":      dict(real=9.0,  scale=0.925, w=1.9, h=3.4, baby=0.18, shadow=1.5),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). GAME EXCEPTION (Rodrigo 2026-10-24, so the rider
     # fits): drawn 1.5x real, ~10.8 m wingspan and 3 m standing, still below the azhdarchids (11 and 12 m).
     # v3 is modelled at 2x (16 px = 1 m) like the T. rex.
@@ -343,7 +344,7 @@ WORLD = {
     "struthiomimus":      dict(biomes=("plains", "savanna", "forest"), weight=6, group=(3, 6), track=10),   # flocks on the floodplain
     "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(6, 12), track=10),  # big herds of the open uplands; colonies (gen_structures)
     "edmontosaurus":      dict(biomes=("plains", "forest", "savanna"), weight=6, group=(4, 8), track=10),  # big herds
-    "corythosaurus":      dict(biomes=("forest", "plains"), weight=5, group=(3, 6), track=10),            # wooded floodplains
+    "corythosaurus":      dict(biomes=("forest", "swamp"), weight=5, group=(4, 8), track=10),             # the forest and the swamp edge, rarely the open plain
     "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
     "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
@@ -679,11 +680,12 @@ SPECIES = [
       rideable=True, jump=0.5, ride_offset=3.91, ride_forward=1.87, ride_speed=1.0, call=True,
       saddle="EDMONTOSAURUS_SADDLE", rig="Saurolophine"),
  dict(id="corythosaurus", cls="Corythosaurus", base="HerbivoreDinosaur",
-      doc="Corythosaurus casuarius - 9 m helmet-crested duckbill of the wooded floodplains. Its deep call calms every herbivore around it (they stop panicking and heal a little). Tamed with plants; rideable.",
-      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
-      food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
+      doc="Corythosaurus casuarius - the helmet-crested lambeosaurine of the Dinosaur Park forests (Campanian), 9 m: a tall half-moon helmet over a short narrow beak, a big eye, high at the withers with the neck carried up. The voice and the ear of the forest: its deep call through the helmet is heard by its kind at 64 blocks (the lost come back, the alarm sends every herd near running, the herbivores near calm down and heal a little); it hears a predator on the move at 24 blocks without seeing it; catemeral, it naps in short shifts by day and by night with one of the herd always awake; it plucks berries and rears to fruit; two males show the helmet in profile, never fighting. Wary, it strikes back only cornered. Fruit tames it faster than wheat. The fastest hadrosaur to ride, with its own forest saddle. Behaviour in Corythosaurine.",
+      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=24),
+      food="Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.FERN, Items.WHEAT",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
-      fights=False, rideable=True, jump=0.6, ride_offset=2.55, ride_forward=0.8, ride_speed=1.1, call=True, calm=True),
+      rideable=True, jump=0.6, ride_offset=3.05, ride_forward=0.9, ride_speed=1.25,
+      saddle="CORYTHOSAURUS_SADDLE", rig="Corythosaurine"),
  # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
       doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",
@@ -891,7 +893,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1136,7 +1138,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

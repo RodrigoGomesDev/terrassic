@@ -1634,7 +1634,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      *  triggers their rest transitions and tracks their fatigue. */
     private static final java.util.Set<String> LIVELY_SET_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
             "spinosaurus", "velociraptor", "dakotaraptor", "pachycephalosaurus", "gallimimus", "parasaurolophus", "edmontosaurus",
-            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura");
+            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura", "corythosaurus");
 
     public boolean hasLivelySet() {
         return LIVELY_SET_SPECIES.contains(this.speciesId());

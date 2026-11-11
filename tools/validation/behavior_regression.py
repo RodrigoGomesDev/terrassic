@@ -246,6 +246,32 @@ if "== Maiasaura (1.11.0)" in text:
     check("maia: ladrão de ovo à noite", m is not None and m.group(1) == "CAME", m.group(0) if m else "sem medida")
     check("maia: a colônia expulsa o ladrão", m is not None and m.group(2) == "YES", "")
 
+# 1.11.0, the Corythosaurus' voice and ear (docs/estudos/15; BehaviorTest phase "cory")
+if "== Corythosaurus (1.11.0)" in text:
+    for when in ("day", "night"):
+        m = re.search(rf"cory naps {when}: max (\d+) of (\d+) napping at once, awake while napping at least (\S+), (\d+) napped in 60 s", text)
+        check(f"cory: cochila em turnos ({when})", m is not None and int(m.group(4)) >= 2 and int(m.group(1)) >= 1,
+              m.group(0)[2:] if m else "sem medida")
+        check(f"cory: sempre um acordado ({when})", m is not None and m.group(3) != "-" and int(m.group(3)) >= 1,
+              f"acordados no mínimo {m.group(3)}" if m else "sem medida")
+    m = re.search(r"cory ear: heard without sight (\w+) \((\d+) of (\d+) heard blind, raptor visible (\w+)\), herd ran (\d+) of (\d+)", text)
+    check("cory: ouve o predador sem linha de visão", m is not None and m.group(1) == "YES" and m.group(4) == "no",
+          m.group(0)[2:] if m else "sem medida")
+    check("cory: a manada foge junta", m is not None and int(m.group(5)) == int(m.group(6)), "")
+    m = re.search(r"cory call at 50 blocks: the napping herd ran (\d+) of (\d+), awake (\d+) of (\d+)", text)
+    check("cory: o chamado chega a 50 blocos e acorda", m is not None and int(m.group(1)) == int(m.group(2)) and int(m.group(3)) == int(m.group(4)),
+          m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory regroup: the lost one from (\d+) to (-?\d+) blocks", text)
+    check("cory: o perdido volta ao chamado", m is not None and int(m.group(2)) >= 0 and int(m.group(2)) <= int(m.group(1)) - 15,
+          m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory calm: the frightened herbivore calmed (\w+), regeneration (\w+)", text)
+    check("cory: o chamado acalma", m is not None and m.group(1) == "YES" and m.group(2) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory fruit: ripe bush plucked (\w+) after (\d+) s", text)
+    check("cory: colhe bagas do arbusto", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory display: both in profile (\w+) after (\d+) s; then one walks off: ([\d.-]+) to ([\d.-]+) blocks apart", text)
+    check("cory: dois machos mostram o elmo", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+    check("cory: um baixa a cabeça e sai", m is not None and float(m.group(4)) >= float(m.group(3)) + 5.0, "")
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))

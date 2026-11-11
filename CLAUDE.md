@@ -56,7 +56,13 @@ Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
 filhote em duas patas com pele própria (`_baby.png`, `DinoGeoModel.BABY_SKINS`, `babyHeadScale`), Colônia de Ninhos de
 volta a ele, ninho coberto (`DinoEggBlock.COVERED`, modelo `_covered` só dele), filhote que fica no ninho e só cresce
 alimentado, colônia que defende (40 blocos), ladrão de ovo à noite (`ai/NestRaidGoal`), fase `maia` da `BehaviorTest`
-(na `regressao`), log `[maia]`. Faltam Coritossauro, Paquirrinossauro e Tescelossauro.
+(na `regressao`), log `[maia]`. Coritossauro refeito (`entity/Corythosaurine`, `tools/modelgen/handmade/corythosaurus`,
+`art/corythosaurus/REFEITO.md`): elmo em meia-lua (`adult_crest`, borda maior no macho em `male_display`), pescoço alto,
+azul-fumaça listrado, chamado grave a 64 blocos (reagrupa, alarme às manadas vizinhas, acalma os herbívoros: o antigo
+`calm`), ouve predador sem linha de visão a 24 blocos (`listen`), cochilos catemerais em turnos com um sempre acordado
+(`nap` em pé de dia), colhe bagas (`pluck`) e frutos altos, dois machos mostram o elmo de perfil; Sela de Mata; ninho
+entre raízes (`cory_extras.py`); fase `cory` da `BehaviorTest` (na `regressao`), log `[cory]`. Faltam
+Paquirrinossauro e Tescelossauro.
 **1.10.0 (10/11/2026, `mod_version`; chamada de 1.10.1 durante o trabalho)**: quatro predadores refeitos (`Tyrannosaurine` Daspletossauro, `Albertosaurine`,
 `Carcharodontosaurine`, `Majungasaurine`; `art/<espécie>/REFEITO.md`), sangramento (`effect/BleedingEffect`), padrão de
 modelo v1→v3 do estudo 14 (16 texels por bloco, `_engine/skin2.py`, cabeça detalhada, desenho PRÓPRIO por espécie;
