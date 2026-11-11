@@ -953,7 +953,7 @@ EGG_BLOCK = {
     "brachiosaurus": ("#e2e2d6", "#7f8984"), "alamosaurus": ("#d8c8a8", "#6e4e3a"), "saltasaurus": ("#c8bc9c", "#5e6450"), "argentinosaurus": ("#c8bca4", "#5a5248"), "opisthocoelicaudia": ("#e4d8b8", "#a88a5a"), "dreadnoughtus": ("#d0d0c4", "#4e5660"), "giganotosaurus": ("#d4c4a0", "#6b4a34"), "carcharodontosaurus": ("#d6cba8", "#5a4628"), "carnotaurus": ("#d0ccb4", "#55503f"), "tarbosaurus": ("#d8d0b8", "#5f5648"), "daspletosaurus": ("#b39c93", "#472a30"), "albertosaurus": ("#8aa392", "#23382f"), "majungasaurus": ("#c9cfd3", "#2b4051"), "dakotaraptor": ("#b8ac98", "#3a3640"), "troodon": ("#e4e2cc", "#8a8a70"), "oviraptor": ("#ecdfc4", "#9a6a3c"), "citipati": ("#d6d0c2", "#34343c"), "mononykus": ("#ecdfc0", "#7a5c3a"), "didelphodon": ("#d8c8a8", "#4e3a28"), "parasaurolophus": ("#dfe6d8", "#46584c"),
     "pachycephalosaurus": ("#e8dcc4", "#8a7458"), "thescelosaurus": ("#d8d0a8", "#5c5a3a"), "gallimimus": ("#f0ece0", "#9c917c"),
     "struthiomimus": ("#f0e6d0", "#8a5a3a"),
-    "maiasaura": ("#e4dac0", "#7a6244"), "archelon": ("#e8e2c8", "#7a6a4c"),
+    "maiasaura": ("#cfd0b4", "#5e6436"), "archelon": ("#e8e2c8", "#7a6a4c"),
     "hesperornis": ("#9aa49c", "#4a5048"), "deinosuchus": ("#d8d4b0", "#3a4a2c"),
     "baurusuchus": ("#e6dcc0", "#8a6a3c"), "edmontosaurus": ("#e0d8c4", "#6a6050"),
     "corythosaurus": ("#dcdcb4", "#3c5038"), "styracosaurus": ("#e2d4b4", "#9a4e2e"),
@@ -986,7 +986,8 @@ def egg_blocks():
     from quetz_extras import CUSTOM_EGGS as QUETZ_EGGS
     from edmo_extras import CUSTOM_EGGS as EDMO_EGGS
     from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS
-    CUSTOM_EGGS = {**DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+    from maia_extras import CUSTOM_EGGS as MAIA_EGGS
+    CUSTOM_EGGS = {**MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1542,6 +1543,8 @@ if __name__ == "__main__":
     theri_extras.main()   # the Therizinosaurus' round eggs buried under a crust of red clay, and its saddle
     import quetz_extras
     quetz_extras.main()   # the Quetzalcoatlus' soft eggs half buried in margin sand, and its saddle
+    import maia_extras
+    maia_extras.main()    # the Maiasaura's ring of eggs in a mud mound (covered with litter or open) and its nesting saddle
     import edmo_extras
     edmo_extras.main()    # the Edmontosaurus' spiral of eggs under a heap of fern fronds, and its traveller's saddle
     import dakota_extras

@@ -775,39 +775,77 @@
   "handmade": true
  },
  "maiasaura": {
-  "bones": 28,
+  "bones": 29,
   "cubes": 67,
   "texture": [
    256,
-   256
+   128
   ],
   "bounds_px": [
    [
-    -15.0,
-    -0.07037776599369788,
-    -73.79448256938159
+    -11.158327668332353,
+    2.095545958979983e-15,
+    -77.65607780727252
    ],
    [
-    15.0,
-    55.699703827016535,
-    99.35249538655133
+    11.158327668332353,
+    49.546019101040756,
+    81.98066457641502
    ]
   ],
   "animations": [
    "animation.maiasaura.idle",
    "animation.maiasaura.walk",
    "animation.maiasaura.run",
-   "animation.maiasaura.attack",
-   "animation.maiasaura.sit",
-   "animation.maiasaura.graze",
+   "animation.maiasaura.biped_walk",
+   "animation.maiasaura.biped_run",
+   "animation.maiasaura.swim",
+   "animation.maiasaura.turn_left",
+   "animation.maiasaura.turn_right",
+   "animation.maiasaura.walk_tired",
+   "animation.maiasaura.idle_tired",
+   "animation.maiasaura.colony_call",
    "animation.maiasaura.call",
+   "animation.maiasaura.answer",
+   "animation.maiasaura.alarm",
+   "animation.maiasaura.cover_nest",
+   "animation.maiasaura.feed_young",
+   "animation.maiasaura.nest_guard",
+   "animation.maiasaura.nest_dig",
+   "animation.maiasaura.nuzzle",
+   "animation.maiasaura.adopt",
+   "animation.maiasaura.rear_browse",
+   "animation.maiasaura.nest_beg",
+   "animation.maiasaura.nest_sleep",
+   "animation.maiasaura.hatch",
+   "animation.maiasaura.eat",
+   "animation.maiasaura.graze",
+   "animation.maiasaura.drink",
+   "animation.maiasaura.attack",
+   "animation.maiasaura.kick_back",
+   "animation.maiasaura.body_shove",
+   "animation.maiasaura.hurt",
+   "animation.maiasaura.death",
+   "animation.maiasaura.knockout",
    "animation.maiasaura.knocked_out",
    "animation.maiasaura.wake",
-   "animation.maiasaura.eat",
+   "animation.maiasaura.sit",
+   "animation.maiasaura.sleep",
+   "animation.maiasaura.wake_sleep",
+   "animation.maiasaura.lie_down",
+   "animation.maiasaura.get_up",
    "animation.maiasaura.beg",
    "animation.maiasaura.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 16.75,
+  "colours": {
+   "male": 44,
+   "female": 42,
+   "baby": 42
+  }
  },
  "quetzalcoatlus": {
   "bones": 39,
