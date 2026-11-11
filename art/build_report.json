@@ -1298,39 +1298,72 @@
   "handmade": true
  },
  "corythosaurus": {
-  "bones": 28,
-  "cubes": 102,
+  "bones": 31,
+  "cubes": 74,
   "texture": [
-   128,
-   512
+   256,
+   128
   ],
   "bounds_px": [
    [
-    -15.0,
-    -0.07737015435298994,
-    -74.07009247448559
+    -10.425103069878135,
+    3.6290415117434804e-15,
+    -80.93218320131344
    ],
    [
-    15.0,
-    61.43669070767981,
-    99.24773047592682
+    10.425103069878135,
+    73.23797236370541,
+    83.9387998492264
    ]
   ],
   "animations": [
    "animation.corythosaurus.idle",
    "animation.corythosaurus.walk",
    "animation.corythosaurus.run",
-   "animation.corythosaurus.attack",
-   "animation.corythosaurus.sit",
-   "animation.corythosaurus.graze",
+   "animation.corythosaurus.swim",
+   "animation.corythosaurus.wade",
+   "animation.corythosaurus.turn_left",
+   "animation.corythosaurus.turn_right",
+   "animation.corythosaurus.walk_tired",
+   "animation.corythosaurus.idle_tired",
+   "animation.corythosaurus.deep_call",
    "animation.corythosaurus.call",
+   "animation.corythosaurus.answer",
+   "animation.corythosaurus.alarm",
+   "animation.corythosaurus.listen",
+   "animation.corythosaurus.nap",
+   "animation.corythosaurus.fruit_pick",
+   "animation.corythosaurus.pluck",
+   "animation.corythosaurus.helmet_display",
+   "animation.corythosaurus.hatch",
+   "animation.corythosaurus.eat",
+   "animation.corythosaurus.graze",
+   "animation.corythosaurus.drink",
+   "animation.corythosaurus.attack",
+   "animation.corythosaurus.kick_back",
+   "animation.corythosaurus.body_shove",
+   "animation.corythosaurus.hurt",
+   "animation.corythosaurus.death",
+   "animation.corythosaurus.knockout",
    "animation.corythosaurus.knocked_out",
    "animation.corythosaurus.wake",
-   "animation.corythosaurus.eat",
+   "animation.corythosaurus.sit",
+   "animation.corythosaurus.sleep",
+   "animation.corythosaurus.wake_sleep",
+   "animation.corythosaurus.lie_down",
+   "animation.corythosaurus.get_up",
    "animation.corythosaurus.beg",
    "animation.corythosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 17.3,
+  "colours": {
+   "male": 45,
+   "female": 46,
+   "baby": 40
+  }
  },
  "styracosaurus": {
   "bones": 48,

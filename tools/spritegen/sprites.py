@@ -956,7 +956,7 @@ EGG_BLOCK = {
     "maiasaura": ("#cfd0b4", "#5e6436"), "archelon": ("#e8e2c8", "#7a6a4c"),
     "hesperornis": ("#9aa49c", "#4a5048"), "deinosuchus": ("#d8d4b0", "#3a4a2c"),
     "baurusuchus": ("#e6dcc0", "#8a6a3c"), "edmontosaurus": ("#e0d8c4", "#6a6050"),
-    "corythosaurus": ("#dcdcb4", "#3c5038"), "styracosaurus": ("#e2d4b4", "#9a4e2e"),
+    "corythosaurus": ("#bac2c8", "#3e5068"), "styracosaurus": ("#e2d4b4", "#9a4e2e"),
     "protoceratops": ("#e8dcc0", "#a06a3c"),
     "leptoceratops": ("#e0d6ac", "#6e6838"),
     "pachyrhinosaurus": ("#c8c4b8", "#3c4044"),
@@ -987,7 +987,8 @@ def egg_blocks():
     from edmo_extras import CUSTOM_EGGS as EDMO_EGGS
     from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS
     from maia_extras import CUSTOM_EGGS as MAIA_EGGS
-    CUSTOM_EGGS = {**MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+    from cory_extras import CUSTOM_EGGS as CORY_EGGS
+    CUSTOM_EGGS = {**CORY_EGGS, **MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1545,6 +1546,8 @@ if __name__ == "__main__":
     quetz_extras.main()   # the Quetzalcoatlus' soft eggs half buried in margin sand, and its saddle
     import maia_extras
     maia_extras.main()    # the Maiasaura's ring of eggs in a mud mound (covered with litter or open) and its nesting saddle
+    import cory_extras
+    cory_extras.main()    # the Corythosaurus' round eggs between roots under conifer needles, and its forest saddle
     import edmo_extras
     edmo_extras.main()    # the Edmontosaurus' spiral of eggs under a heap of fern fronds, and its traveller's saddle
     import dakota_extras

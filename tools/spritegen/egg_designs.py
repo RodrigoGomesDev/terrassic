@@ -1214,8 +1214,8 @@ def edmontosaurus():
     return e
 
 def corythosaurus():
-    e = hadrosaur("corythosaurus", {"b": "#5e7a4c", "c": "#d8d4ac", "d": "#344a2a", "n": "#22321a",
-                                    "e": "#c03c28", "y": "#f0b450"})
+    e = hadrosaur("corythosaurus", {"b": "#5a7290", "c": "#c8ccd4", "d": "#283446", "n": "#1f2836",
+                                    "e": "#b5543a", "y": "#c8704f"})
     e.ell((9, 0, 22, 12), "e")
     e.line([(10, 5), (21, 5)], "y")
     for y in range(7, 13):
