@@ -48,7 +48,7 @@ EVERY_FRAME = ("walk", "run", "biped_walk", "biped_run", "attack", "death", "wak
                "walk_tired", "kick_back", "body_shove", "knockout", "nest_dig", "wake_sleep", "get_up", "lie_down")
 SLOW = ("idle", "sit", "sleep", "knocked_out", "nest_sleep")
 LINEAR = ("hurt", "attack", "death", "wake", "wake_sleep", "kick_back", "body_shove", "knockout")
-STANDING = ("idle", "call", "answer", "colony_call", "eat", "graze", "drink", "beg", "tame", "hurt", "idle_tired",
+STANDING = ("idle", "ridden_idle", "call", "answer", "colony_call", "eat", "graze", "drink", "beg", "tame", "hurt", "idle_tired",
             "body_shove", "cover_nest", "feed_young", "nest_guard", "nuzzle", "adopt")
 FLOATS = ("swim",)
 # the uniqueness check also against the remade hadrosaurs it must not look like (study 15)

@@ -1030,6 +1030,21 @@ def get_up(t):
 
 
 # ------------------------------------------------------------------ with its owner
+RIDDEN_T = 6.0
+
+
+def ridden_idle(t):
+    """standing still with a rider: level on all four (posture 1), so the saddle is not tipped 34 degrees; breathing,
+    looking round, the tail swaying"""
+    p = {}
+    br = breathe(p, t, RIDDEN_T / 2, 0.8)
+    lp, ly = LOOK(t * 8.0 / RIDDEN_T)
+    head(p, 0.5 * lp, 0.7 * ly)
+    for i, (b, k) in enumerate(zip(TAILS, STIFF)):
+        add(p, b, rot=(0, k * 2.5 * wave(t, RIDDEN_T, -1.0 - 0.3 * i), 0))
+    return stand(p, 1.0)
+
+
 def beg(t):
     p = {}; breathe(p, t, 2.4)
     nudge = sum(window(t, c, c + 0.18, 0.07) for c in (0.5, 1.5))
@@ -1094,6 +1109,7 @@ ANIMS = {
     "wake_sleep": (wake_sleep, 2.4, False, "Descanso", "acorda: traz a cabeça, levanta o quadril e volta ao tripé"),
     "lie_down": (lie_down, LIE_DOWN_T, False, "Descanso", "deita: desce do tripé, o quadril assenta, depois o peito"),
     "get_up": (get_up, GET_UP_T, False, "Descanso", "levanta pelo quadril e empina de volta ao tripé"),
+    "ridden_idle": (ridden_idle, RIDDEN_T, True, "Domado", "parado com cavaleiro: nivelado em quatro patas, a sela reta"),
     "beg": (beg, 2.4, True, "Domado", "pede comida: inclina-se para o dono, um empurrão"),
     "tame": (tame, 3.2, False, "Domado", "responde ao dono com um chamado e baixa a cabeça para ele"),
 }

@@ -22,6 +22,13 @@ ninho coberto, fase `maia`) e os nomes das 42 animações e dos ossos não mudar
   do crânio passando pelo olho, lábios e garganta claros; sobrancelha grossa saliente sobre o olho; bico largo caído de
   queratina cinza-oliva com a borda serrilhada. Escama miúda só como um passo de tom, esparsa, por baixo do desenho.
 
+- **Segunda passada (16/11):** calombo como um domo só (base larga e duas camadas encaixadas, 2 px para dentro e
+  2 px para cima, cor correndo pela altura); bico de pato em três peças que se alargam e afinam em perfil (raiz 5 px,
+  bico 4 px, ponta caída 3 px) com borda clara e serrilhada; sem a placa clara solta do pescoço; o desenho continua
+  nos membros (barras inclinadas na coxa, no braço, na canela e no antebraço, escama esparsa), mãos e pés mais
+  escuros. Montada e parada, toca `ridden_idle` (nivelada em quatro patas, a sela reta; `Maiasaurine`).
+  `art/maiasaura/maiasaura.bbmodel` agora sai de `_engine/bbexport.py`, a partir dos arquivos do jogo.
+
 ## v1 (10/11/2026, substituída)
 
 Estudo aprovado: `docs/estudos/15_HERBIVOROS_1_11.md` (seção Maiassaura e "Respostas do Rodrigo", 10/11/2026). Primeiro

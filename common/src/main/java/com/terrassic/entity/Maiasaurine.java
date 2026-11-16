@@ -97,6 +97,8 @@ public abstract class Maiasaurine extends HerbivoreDinosaur {
     private static final RawAnimation BIPED_WALK = RawAnimation.begin().thenLoop("animation.maiasaura.biped_walk");
     private static final RawAnimation BIPED_RUN = RawAnimation.begin().thenLoop("animation.maiasaura.biped_run");
     private static final RawAnimation NEST_SLEEP = RawAnimation.begin().thenLoop("animation.maiasaura.nest_sleep");
+    /** v4: at rest it stands half-reared on the tripod; with a rider it stands level on all four (the saddle flat). */
+    private static final RawAnimation RIDDEN_IDLE = RawAnimation.begin().thenLoop("animation.maiasaura.ridden_idle");
 
     /** A mother's nest. */
     private BlockPos home;
@@ -193,6 +195,10 @@ public abstract class Maiasaurine extends HerbivoreDinosaur {
         if (this.isBaby() && this.isSleeping() && !this.isSwimmingDeep()) {
             this.cycleSpeed = 1.0D;
             return state.setAndContinue(NEST_SLEEP);
+        }
+        if (this.isVehicle() && !state.isMoving() && !this.isSwimmingDeep() && !this.isBaby() && !this.isKnockedOut()) {
+            this.cycleSpeed = 1.0D;
+            return state.setAndContinue(RIDDEN_IDLE);
         }
         if (this.onTwoLegs() && state.isMoving() && !this.isSwimmingDeep() && !this.isInSittingPose()) {
             double pace = this.walkCycleSpeed() * this.getScale();

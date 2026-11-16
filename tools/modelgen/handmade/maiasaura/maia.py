@@ -39,7 +39,7 @@ SCHEME = {
     "b0": "bfb894", "b1": "d0caa8", "b2": "e0dbc0", "b3": "ece8d4",
     "sc0": "aba57a", "sc1": "c0bb92", "sc2": "d2cda8",
     "oc0": "7a4420", "oc1": "a0602c", "oc2": "c08048",
-    "bk0": "34302a", "bk1": "57513f", "bk2": "7a735a", "lip": "8a8460",
+    "bk0": "3a3428", "bk1": "5e5640", "bk2": "847a5a", "bk3": "a39878", "lip": "8a8460",
     "female": {"k2": "5a6038", "k3": "868a52", "k4": "a2a46c", "k5": "b8ba86",
                "oc0": "8c8656", "oc1": "a09a68", "oc2": "b3ad7e"},
 }
@@ -99,21 +99,23 @@ def head(m, parent, y, z):
         return (x0, y + y0, z + z0), (x1, y + y1, z + z1)
     m.cube(sk, *B(-7, -7, -10, 7, 6, 1), name="cranium")
     m.cube(sk, *B(-5, 6, -9, 5, 8, 0), name="crown")
-    m.cube(sk, *B(-6, -8, -18, 6, 4, -9), name="face", faces=OUT("south"))
-    m.cube(sk, *B(-5, -8, -23, 5, 1, -17), name="snout", faces=OUT("south"), rot=(-8, 0, 0), origin=(0, y + 1, z - 17))
-    # THE BILL: broad, wider than the face, its tip drooping
-    m.cube(sk, *B(-8, -9, -28, 8, -4, -21), name="bill", mat="beak", faces=OUT("south"))
-    m.cube(sk, *B(-7, -11, -31, 7, -6, -26), name="bill_tip", mat="beak", faces=OUT("south"),
-           rot=(14, 0, 0), origin=(0, y - 6, z - 26))
+    m.cube(sk, *B(-6, -8, -18, 6, 3, -9), name="face", faces=OUT("south"))
+    m.cube(sk, *B(-5, -8, -23, 5, 0, -17), name="snout", faces=OUT("south"))
+    # THE BILL: a duck's bill that widens and droops: a narrow root out of the snout, the broad flat bill, and the
+    # rim of the tip turned down; thinner at each step in profile (5, 4, 3 px)
+    m.cube(sk, *B(-6, -8, -25, 6, -3, -21), name="bill_root", mat="beak", faces=OUT("south"))
+    m.cube(sk, *B(-8, -9, -30, 8, -5, -24), name="bill", mat="beak", faces=OUT("south"))
+    m.cube(sk, *B(-8, -10, -33, 8, -7, -29), name="bill_tip", mat="beak", faces=OUT("south"),
+           rot=(-18, 0, 0), origin=(0, y - 7, z - 29))
     # the THICK BROW over the eye: a shelf of bone and skin jutting out of each side of the skull
     m.pair(sk, sk, *B(7, 1, -9, 9, 4, -2), name="brow", faces=OUT("west"))
     # THE HUMP: the solid crest of the nasals and frontals in front of and over the eyes, three layers each starting
     # inside the one under it (a rounded hump, not a stair); the grown one's (adult_bump: the calf has a flat brow)
+    # ONE solid rounded dome: a broad base and two layers nested inside it, each 2 px in and 2 px up (no bricks)
     ab = m.bone("adult_bump", sk, (0, y + 4, z - 9))
-    for k, (w, y0, y1, z0, z1) in enumerate(((5.0, 3.0, 8.0, -19.0, -5.0), (4.0, 7.0, 11.0, -17.0, -7.0),
-                                              (3.0, 10.0, 13.0, -15.0, -9.0))):
-        m.cube(ab, *B(-w, y0, z0, w, y1, z1), name=("bump_base", "bump", "bump_top")[k], mat="bump",
-               rot=(-10, 0, 0), origin=(0, y + 4, z - 9))
+    for k, (w, y0, y1, z0, z1) in enumerate(((5.0, 2.0, 6.0, -19.0, -6.0), (4.0, 5.0, 9.0, -17.0, -8.0),
+                                              (2.0, 8.0, 11.0, -15.0, -10.0))):
+        m.cube(ab, *B(-w, y0, z0, w, y1, z1), name=("bump_base", "bump", "bump_top")[k], mat="bump")
     # the cheeks over the dental batteries (they flex out as it chews)
     for side, sx in (("l", 1), ("r", -1)):
         m.bone(f"cheek_{side}", sk, (6 * sx, y - 2, z - 12))
@@ -121,11 +123,11 @@ def head(m, parent, y, z):
     # the lower jaw: a deep dentary and the predentary under the bill
     jaw = m.bone("jaw", sk, (0, y - 6, z - 4))
     m.cube(jaw, *B(-5, -13, -20, 5, -7, -3), name="dentary")
-    m.cube(jaw, *B(-6, -13, -29, 6, -9, -19), name="predentary", mat="beak", faces=OUT("south"))
+    m.cube(jaw, *B(-6, -13, -30, 6, -9, -19), name="predentary", mat="beak", faces=OUT("south"))
     m.cube(jaw, *B(-4, -8.9, -27, 4, -7.9, -4), name="mouth", mat="mouth", faces=["up"])
-    m.cube(jaw, *B(-4, -15, -16, 4, -12, -5), name="throat_fold")
+    m.cube(jaw, *B(-4, -16, -17, 4, -12, -2), name="throat_fold")
     # the beak's serrated EDGE: a plane of pale denticles hung just outside the lower bill
-    m.pair(sk, sk, *B(7.25, -11, -28, 7.25, -9, -20), name="denticles", mat="teeth")
+    m.pair(sk, sk, *B(7.25, -11, -30, 7.25, -9, -22), name="denticles", mat="teeth")
     return sk
 
 
@@ -134,10 +136,8 @@ def neck(m, body):
     the nest; the dewlap of the throat pale under it"""
     n1 = m.bone("neck1", body, (0, 50, -52), (REST["neck1"], 0, 0))
     m.cube(n1, (-8, 40, -67), (8, 60, -48), name="neck1")
-    m.cube(n1, (-6, 37, -64), (6, 41, -50), name="throat", mat="belly", faces=OUT("up"))
     n2 = m.bone("neck2", n1, (0, 50, -64), (REST["neck2"], 0, 0))
-    m.cube(n2, (-7, 42, -77), (7, 59, -61), name="neck2")
-    m.cube(n2, (-5, 39, -75), (5, 43, -63), name="throat2", mat="belly", faces=OUT("up"))
+    m.cube(n2, (-7, 39, -78), (7, 59, -61), name="neck2")
     hd = m.bone("head", n2, (0, 50, -76))
     head(m, hd, 51, -76)
 
@@ -275,7 +275,7 @@ def preview_faces(m):
 
 # ------------------------------------------------------------------ the skin, drawn on the unrolled body
 TRUNK = {"trunk", "back", "hips", "sacrum", "chest", "neck1", "neck2", "tail1", "tail2", "tail3", "tail4", "tail_ridge"}
-UNDER = {"belly", "belly_low", "throat", "throat2", "tail_muscle"}
+UNDER = {"belly", "belly_low", "tail_muscle"}
 LEG = {"shin", "meta", "pes", "forearm", "hand", "mitten"}
 LIMB = {"thigh", "knee", "arm"}
 HEAD = {"cranium", "crown", "face", "snout", "cheek", "dentary", "brow", "throat_fold"}
@@ -372,6 +372,8 @@ def body_tone(t, U, calf=False):
         base = "k2"
     else:
         base = "k1"
+    if n in ("neck1", "neck2") and base in ("b1", "k4"):
+        base = "k3"                                   # the neck's ends carry the flank colour (no pale plate)
     ch = chevron(t, U, calf)
     if calf:
         if ch == "dark":
@@ -388,31 +390,35 @@ def body_tone(t, U, calf=False):
 
 
 def limb_tone(t, calf=False):
-    """legs: the outer thigh and upper arm carry the flank's colour with a dark bar (the chevron's echo) across the
-    thigh; shins and forearms a step darker, scutes across the front of the feet"""
+    """the pattern runs on down the limbs: the chevrons' slanted bars across the outer thigh and the upper arm, one
+    across the shin and the forearm, the same sparse pebble scale; the hands and feet darker, scuted on the front"""
     n = t.cube["name"]; f = t.face
-    if n in ("thigh", "knee", "arm"):
-        base = "k3"
-        if f in ("south", "down"):
-            base = "k2"
-        elif f == "up":
-            base = "k2"
-        if n == "thigh" and f in ("east", "west") and not calf:
-            # two dark bars down the outer thigh, slanting forward like the chevrons on the hips
-            v = t.rel[1]
-            zz = t.rel[2] * 21 - v * 6
-            if 4 <= zz < 6.5 or 11 <= zz < 13.5:
+    side = f in ("east", "west")
+    if n in ("meta", "pes", "mitten", "hand"):
+        base = "k2" if f in ("north", "up", "east", "west") else "k1"
+        if f in ("north", "up"):
+            k = math.floor(t.L[1] if f != "up" else t.L[2]) % 2
+            if k == 0 and (t.i % 3) != 1:
                 return "k1"
+        if skin2.scales(t, cell=3.0, seed=17, flat=0.5) == "edge":
+            return "k1"
         return base
-    base = "k2" if f in ("south", "down", "west") else "k3"
-    if n in ("meta", "pes", "mitten", "hand") and f in ("north", "up"):
-        k = math.floor(t.L[1] if f != "up" else t.L[2]) % 2
-        if k == 0 and (t.i % 3) != 1:
-            return skin2.step(base, -1)
-    if n in ("meta", "pes", "hand", "mitten") and skin2.scales(t, cell=3.0, seed=17, flat=0.5) == "edge":
+    if n in ("thigh", "knee", "arm"):
+        base = "k2" if f in ("up", "south", "down") or (side and t.rel[1] > 0.8) else "k3"
+    else:
+        base = "k3" if f in ("north", "east", "west") else "k2"
+        if side and t.rel[2] > 0.7:
+            base = "k2"
+    if side and not calf:
+        v = t.rel[1]
+        L = t.cube["to"][2] - t.cube["from"][2]
+        zz = t.rel[2] * L - (1 - v) * 0.6 * L     # bars slanting forward and down, like the chevrons' arms
+        bars = {"thigh": (4, 11), "arm": (2, 8), "shin": (3,), "forearm": (3,)}.get(n, ())
+        for b0 in bars:
+            if b0 <= zz % (L + 1) < b0 + 2.5:
+                return "k1" if base == "k3" else "k0"
+    if skin2.scales(t, cell=4.0, seed=16, flat=0.45) == "edge":
         return skin2.step(base, -1)
-    if n in ("shin", "forearm") and f in ("east", "west") and t.rel[2] > 0.7:
-        return skin2.step(base, -1)              # the back of the shin and the forearm a step darker
     return base
 
 
@@ -491,30 +497,22 @@ def head_tone(t, sex):
 
 
 def bump_px(t, p, sex):
+    """the hump painted as ONE dome: the colour runs by height over the three layers (the step faces take the tone of
+    their height, so the layers read as one rounded mass), the worn crown pale; a few flat plates on top only"""
     n = t.cube["name"]; f = t.face
     k = ("bump_base", "bump", "bump_top").index(n)
-    plate = skin2.scales(t, cell=3.4, seed=70 + k, flat=0.9)
-    if k == 0:
-        key = "sc0" if f == "up" else "k5"
-        if sex == "male" and f != "up" and t.j <= 1:
-            key = "oc1"
-        if plate == "edge":
-            key = hstep(key, -2) if key != "oc1" else "oc0"
-        return p[key]
+    hgt = (t.L[1] - HEAD_O[0] - 2.0) / 9.0             # 0 at the foot of the dome .. 1 at its crown
     if sex == "male":
-        ramp = ("oc0", "oc1", "oc2")
-        if f == "up":
-            key = ("sc2" if (t.i + 2 * t.j) % 4 else "sc1") if k == 2 else ramp[2] if (t.i + t.j) % 3 else "sc1"
-        elif k == 2 and t.j == 0:
-            key = "sc1"
-        else:
-            key = ramp[1] if k > 0 or t.j < t.h - 1 else ramp[0]
-        if plate == "edge" and f != "up":
-            key = {"oc2": "oc1", "oc1": "oc0", "oc0": "k2", "sc1": "oc2", "sc2": "sc1"}[key]
-        return p[key]
-    key = ("sc0", "sc1", "sc2")[k] if f == "up" else ("k5", "sc0", "sc1")[k]
-    if plate == "edge":
-        key = hstep(key, -2)
+        ramp = ("oc0", "oc1", "oc1", "oc2", "oc2", "sc1", "sc2")
+    else:
+        ramp = ("k4", "k5", "k5", "sc0", "sc0", "sc1", "sc2")
+    key = ramp[max(0, min(len(ramp) - 1, int(hgt * len(ramp))))]
+    if f == "up":
+        key = ramp[min(len(ramp) - 1, 3 + 2 * k)] if k < 2 else ("sc2" if (t.i + 2 * t.j) % 5 else "sc1")
+        if k < 2 and skin2.scales(t, cell=3.4, seed=70 + k, flat=0.6) == "edge":
+            key = ramp[min(len(ramp) - 1, 2 + 2 * k)]
+    elif f in ("east", "west", "north") and k == 0 and t.j == t.h - 1:
+        key = ramp[0] if sex == "male" else "k3"         # the foot of the dome a step darker where it meets the face
     return p[key]
 
 
@@ -529,16 +527,22 @@ def denticles(t, p):
 
 
 def beak_px(t, p):
+    """horn keratin: a pale worn rim along the lower edge, fine ridges along the top running to the tip, the drooping
+    tip darker"""
     n = t.cube["name"]; f = t.face
     if f == "up":
-        return p["bk2"] if (t.i * 2 + t.j) % 5 else p["bk1"]
+        if n == "bill_tip":
+            return p["bk1"] if t.j else p["bk2"]
+        return p["bk3"] if t.i % 4 == 1 else p["bk2"]
     if f == "down":
         return p["bk0"]
-    if n in ("bill", "bill_tip") and t.j == t.h - 1:
+    if n in ("bill", "bill_tip", "bill_root") and t.j == t.h - 1:
         return p["tooth2"]
     if n == "predentary" and t.j == 0:
         return p["bk2"]
-    return p["bk1"] if t.j > 0 else p["bk2"]
+    if n == "bill_tip":
+        return p["bk1"] if t.j else p["bk2"]
+    return p["bk2"] if t.j == 0 else p["bk1"]
 
 
 def shader_for(sex, U):

@@ -99,7 +99,7 @@ public class Maiasaura extends Maiasaurine {
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 6.07D * this.getScale());
+        return Math.max(super.riderReach(), 6.11D * this.getScale());
     }
 
     @Override
@@ -122,25 +122,25 @@ public class Maiasaura extends Maiasaurine {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{5.262F, 0.0F, 1.364F, 1.465F, 1.864F, 4.264F},
-                    new float[]{5.228F, 0.0F, 0.845F, 2.366F, 2.766F, 2.791F},
-                    new float[]{4.915F, 0.0F, 0.541F, 1.144F, 1.647F, 5.217F}),
+                    new float[]{5.243F, 0.0F, 1.332F, 1.487F, 1.911F, 4.284F},
+                    new float[]{5.248F, 0.0F, 0.837F, 2.394F, 2.894F, 2.712F},
+                    new float[]{4.833F, 0.0F, 0.43F, 1.191F, 1.691F, 5.255F}),
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{3.898F, 0.0F, 1.866F, 1.465F, 1.799F, 3.952F},
-                    new float[]{2.962F, 0.0F, 0.721F, 2.366F, 4.574F, 2.197F},
-                    new float[]{3.871F, 0.0F, 0.442F, 1.144F, 1.498F, 5.276F}),
+                    new float[]{3.856F, 0.0F, 1.849F, 1.487F, 1.874F, 3.936F},
+                    new float[]{2.953F, 0.0F, 0.689F, 2.394F, 4.476F, 2.229F},
+                    new float[]{3.742F, 0.0F, 0.411F, 1.191F, 1.399F, 5.306F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{4.144F, 0.0F, 2.182F, 1.116F, 1.446F, 3.437F},
-                    new float[]{4.34F, 0.0F, 0.858F, 0.82F, 2.347F, 2.53F},
-                    new float[]{4.237F, 0.0F, 1.939F, 1.131F, 1.229F, 3.474F}),
+                    new float[]{4.209F, 0.0F, 2.23F, 1.142F, 1.446F, 3.508F},
+                    new float[]{4.416F, 0.0F, 0.858F, 0.85F, 2.355F, 2.565F},
+                    new float[]{4.331F, 0.0F, 1.817F, 1.169F, 1.252F, 3.582F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{3.128F, 0.0F, 2.073F, 1.116F, 1.49F, 3.786F},
-                    new float[]{3.62F, 0.0F, 0.853F, 0.82F, 2.947F, 2.498F},
-                    new float[]{3.206F, 0.0F, 2.103F, 1.131F, 1.129F, 3.687F}),
+                    new float[]{3.167F, 0.0F, 2.22F, 1.142F, 1.549F, 3.637F},
+                    new float[]{3.665F, 0.0F, 0.853F, 0.85F, 3.127F, 2.498F},
+                    new float[]{3.262F, 0.0F, 2.125F, 1.169F, 1.145F, 3.671F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{2.112F, 0.0F, 3.615F, 1.116F, 1.296F, 2.206F},
-                    new float[]{2.9F, 0.0F, 0.848F, 0.82F, 2.667F, 2.31F},
-                    new float[]{2.174F, 0.0F, 3.602F, 1.131F, 1.053F, 2.19F}),
+                    new float[]{2.125F, 0.0F, 3.518F, 1.142F, 1.296F, 2.303F},
+                    new float[]{2.915F, 0.0F, 0.848F, 0.85F, 2.847F, 2.327F},
+                    new float[]{2.193F, 0.0F, 3.476F, 1.169F, 1.053F, 2.316F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
                     new float[]{3.227F, 0.0F, -0.028F, 3.212F, 2.668F, 5.255F},
                     new float[]{2.918F, 0.0F, -0.168F, 2.583F, 5.398F, 3.425F},

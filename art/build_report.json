@@ -776,7 +776,7 @@
  },
  "maiasaura": {
   "bones": 29,
-  "cubes": 75,
+  "cubes": 74,
   "texture": [
    256,
    256
@@ -785,11 +785,11 @@
    [
     -21.818697647093938,
     -1.609823385706477e-15,
-    -85.20403407335894
+    -85.72381647241144
    ],
    [
     21.818697647093938,
-    96.89300067759794,
+    96.92790017430043,
     83.65803483936108
    ]
   ],
@@ -834,17 +834,18 @@
    "animation.maiasaura.wake_sleep",
    "animation.maiasaura.lie_down",
    "animation.maiasaura.get_up",
+   "animation.maiasaura.ridden_idle",
    "animation.maiasaura.beg",
    "animation.maiasaura.tame"
   ],
   "render_scale": 0.9443,
   "handmade": true,
   "px_per_m": 16.944,
-  "texels_per_block": 17.72,
+  "texels_per_block": 17.77,
   "colours": {
-   "male": 46,
-   "female": 43,
-   "baby": 43
+   "male": 47,
+   "female": 44,
+   "baby": 44
   }
  },
  "quetzalcoatlus": {
