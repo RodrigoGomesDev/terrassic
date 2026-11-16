@@ -162,7 +162,9 @@ SIZES = {
     # Maiasaura v1 (10/11, the 1.11.0, study 15) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1 (16.8
     # texels per block, 160 px long); the calf is small (a hatchling of ~41 cm grew to ~1.5 m in its first year,
     # Bert et al. 2025; 0.15 of the adult keeps it visible) and walks on two legs.
-    "maiasaura":          dict(real=9.0,  scale=0.955, w=2.0, h=2.6, baby=0.15, shadow=1.6),
+    # Maiasaura v4 (16/11, silhueta C "a mãe empinada"): at rest half-reared on the hind legs and the tail, 169 px from
+    # the bill to the tail tip at rest (9 m at 0.90, 17.7 texels per block), 5 m tall; on all four when it walks.
+    "maiasaura":          dict(real=9.0,  scale=0.90,  w=2.0, h=3.2, baby=0.15, shadow=1.7),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
     # Edmontosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     # Edmontosaurus v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 12 m (16 / 20 = 0.8), its own

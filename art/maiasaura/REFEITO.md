@@ -1,5 +1,29 @@
 # Maiassaura refeito (1.11.0)
 
+## v4, "a mãe empinada" (16/11/2026, silhueta C)
+
+O Rodrigo recusou a v1 ("os modelos tão muito padrão, não sinto que são únicos"): os bicos-de-pato saíam todos com o
+mesmo corpo horizontal, cauda reta e pernas finas. A v4 foi feita pelo método "silhueta primeiro" a partir da blocagem
+C escolhida por ele (`tools/modelgen/handmade/_silhuetas/maiasaura.py`). O comportamento (`Maiasaurine`, `NestRaidGoal`,
+ninho coberto, fase `maia`) e os nomes das 42 animações e dos ossos não mudaram.
+
+- **Postura:** em repouso fica **meio empinada** sobre as patas de trás e a cauda grossa (tripé): corpo 34 graus para
+  cima (`REST["body"]`), **barriga enorme e clara à mostra**, braços grossos pendurados, cabeça baixa no S do pescoço
+  olhando o ninho. Ao andar **cai para quatro patas** (`maiaanims.posture`: 0 = tripé, 1 = nivelado com as mãos no
+  chão). Corre em duas patas; o filhote anda empinado em duas patas como a mãe.
+- **Medidas:** 169 px do bico à ponta da cauda em repouso, escala 0,90 (9 m, 17,7 texels por bloco), 5,1 m de altura;
+  hitbox 2,0 x 3,2.
+- **Silhueta** (`maiasaura/silcheck.py`): semelhança 0,91 com a blocagem C; 0,49 Edmontossauro, 0,50 Parassaurolofo,
+  0,53 Tricerátops, 0,57 Estiracossauro.
+- **Pele desenhada, não ruído:** contrassombreamento forte no corpo "desenrolado" (espaço dos cubos, acompanha o corpo
+  quando empina ou nivela): dorso escuro, flanco palha-verde, borda recortada em ondas, barriga creme com dobras;
+  **sela de chevrons** escuros apontando para a frente, dos ombros ao meio da cauda, cada um com a borda de trás clara
+  e descendo pelo flanco em barras inclinadas; duas barras escuras na coxa; **máscara facial** escura do focinho ao fim
+  do crânio passando pelo olho, lábios e garganta claros; sobrancelha grossa saliente sobre o olho; bico largo caído de
+  queratina cinza-oliva com a borda serrilhada. Escama miúda só como um passo de tom, esparsa, por baixo do desenho.
+
+## v1 (10/11/2026, substituída)
+
 Estudo aprovado: `docs/estudos/15_HERBIVOROS_1_11.md` (seção Maiassaura e "Respostas do Rodrigo", 10/11/2026). Primeiro
 dos quatro herbívoros da 1.11.0 e primeiro herbívoro no padrão da 1.10 (estudo 14: 16 texels por bloco, pele `skin2`,
 cabeça do padrão v3 desenhada a partir da anatomia dele, pescoço e cauda em peças que afinam e se sobrepõem).

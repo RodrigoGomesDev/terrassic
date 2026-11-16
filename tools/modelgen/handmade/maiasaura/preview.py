@@ -61,14 +61,33 @@ def _render_side(name, spec, tex, k):
     return geo.render(spec, tex, 90, 0, (int(L * k * 1.04) + 8, int(Hh * k * 1.04) + 8), bg=shots.BG, margin=0.02)[0].convert("RGB")
 
 
+KIN = ("maiasaura", "edmontosaurus", "parasaurolophus", "corythosaurus")
+
+
 def next_to_kin(spec, tex, out, px=3):
-    """side-on at their in-game scale (MODEL_SCALE of the generated classes): the Maiasaura, the Edmontosaurus and the
-    Parasaurolophus"""
-    sizes = {"maiasaura": 0.955, "edmontosaurus": 0.847, "parasaurolophus": 0.706}
-    ims = [_render_side("maiasaura", spec, tex, sizes["maiasaura"] * px),
-           _render_side("edmontosaurus", None, None, sizes["edmontosaurus"] * px),
-           _render_side("parasaurolophus", None, None, sizes["parasaurolophus"] * px)]
+    """side-on at their in-game scale (MODEL_SCALE of gen_species), the Maiasaura and the other duck-bills: in colour
+    and as black silhouettes (the "silhueta primeiro" test of the 1.11)"""
+    sys.path.insert(0, os.path.join(HERE, "..", "_silhuetas"))
+    import sil
+    from PIL import ImageDraw
+    sc = {n: sil.game_scale(n) / sil.METRE for n in KIN}
+    ims = [_render_side("maiasaura", spec, tex, sc["maiasaura"] * px)]
+    ims += [_render_side(n, None, None, sc[n] * px) for n in KIN[1:]]
     side_by_side(ims, gap=40).save(os.path.join(out, "ao_lado_dos_hadrossauros.png"))
+    blacks = []
+    for n in KIN:
+        s = spec if n == "maiasaura" else sil.load_game(n)
+        if n == "maiasaura":
+            k = sil.game_scale(n) * 16.0 / sil.PX
+            s = {**s, "bones": [dict(b, origin=[v * k for v in b["origin"]]) for b in s["bones"]],
+                 "cubes": [dict(c, **{"from": [v * k for v in c["from"]], "to": [v * k for v in c["to"]],
+                                      "origin": [v * k for v in c["origin"]]}) for c in s["cubes"] if c["bone"] != "saddle"]}
+        x0, x1, y0, y1 = sil.extent(s, sil.SIDE)
+        ppm = 60
+        im = Image.new("RGB", (int((x1 - x0) * ppm) + 10, int((y1 - y0) * ppm) + 10), (236, 233, 224))
+        sil.draw(im, s, sil.SIDE, ppm, (5, im.height - 5))
+        blacks.append(im)
+    side_by_side(blacks, gap=40, bg=(236, 233, 224)).save(os.path.join(out, "ao_lado_dos_hadrossauros_preto.png"))
 
 
 GIFS = ("walk", "run", "biped_walk", "biped_run", "idle", "colony_call", "alarm", "cover_nest", "feed_young", "nest_guard",
@@ -83,7 +102,8 @@ def gifs(out, sex="male"):
     A = load_anims(os.path.join(ASSETS, "animations", "entity", "maiasaura.animation.json"))
     hid = ("saddle",)
     gdir = os.path.join(out, "animacoes"); os.makedirs(gdir, exist_ok=True)
-    for n in GIFS:
+    only = [a.split("=", 1)[1].split(",") for a in sys.argv if a.startswith("--only=")]
+    for n in (only[0] if only else GIFS):
         young = n in ("biped_walk", "biped_run", "nest_beg", "nest_sleep", "hatch")
         sp = {**spec, "cubes": [c for c in spec["cubes"] if c["bone"] != "adult_bump"]} if young else spec
         tx = btex if young else tex
