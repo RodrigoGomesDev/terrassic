@@ -4164,6 +4164,20 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     // turned the body less (T. rex 697 -> 340 deg) but three of four walkers caught on the pillars and never arrived in
     // 30 s (vanilla: 15-21 s). Left off until the corner test and the stuck recovery are redone (Fluidez 2).
 
+    /** Vanilla's ground navigation, with the path search remembered for a second (1.11, ai/MemoPathFinder: the same
+     *  search asked again from the same block gets the same answer without searching). Flyers and swimmers keep theirs. */
+    @Override
+    protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(Level level) {
+        return new net.minecraft.world.entity.ai.navigation.GroundPathNavigation(this, level) {
+            @Override
+            protected net.minecraft.world.level.pathfinder.PathFinder createPathFinder(int maxVisitedNodes) {
+                this.nodeEvaluator = new net.minecraft.world.level.pathfinder.WalkNodeEvaluator();
+                this.nodeEvaluator.setCanPassDoors(true);
+                return new com.terrassic.entity.ai.MemoPathFinder(this.nodeEvaluator, maxVisitedNodes);
+            }
+        };
+    }
+
     public LivelyMotion lively() {
         return this.lively;
     }

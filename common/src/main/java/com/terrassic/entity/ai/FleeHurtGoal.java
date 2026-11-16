@@ -60,7 +60,9 @@ public class FleeHurtGoal extends Goal {
 
     @Override
     public void tick() {
-        if (--this.repath > 0 && !this.mob.getNavigation().isDone()) {
+        // a new heading every 2 s, or sooner once the run is over; but not sooner than half a second after the last
+        // one (1.11: a run that stopped short was re-planned every tick, eight searches 24-32 blocks out each time)
+        if (--this.repath > 0 && (!this.mob.getNavigation().isDone() || this.repath > 35)) {
             return;
         }
         this.repath = 40;
