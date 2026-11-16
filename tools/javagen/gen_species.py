@@ -169,8 +169,10 @@ SIZES = {
     # study and rig (page "1.9: estudos..."); the hitbox covers the body, the hit parts the long head and the tail.
     "edmontosaurus":      dict(real=12.0, scale=0.8, w=2.4, h=3.2, baby=0.2,  shadow=2.0),
     # Corythosaurus casuarius: ~9 m on average (Benson et al. 2012; Rodrigo 10/11/2026: as it is, the top).
-    # Corythosaurus v1 (11/11, the 1.11.0, study 15) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1
-    # (17.3 texels per block, 165 px long); high at the withers with the neck carried up, the helmet over the herd.
+    # Corythosaurus v4 (16/11, the 1.11.0, the silhouette Rodrigo chose: B "leque alto") is hand-made at
+    # skin2.PX_PER_M (16.94 px/m) and shown at ~1 (17.1 texels per block, 163 px long, 9.4 m tall to the fan's tip):
+    # the trunk pitched up on long forelegs, the neck almost upright, the fan over the forest. The hitbox is kept
+    # (it walks under branches; the hit parts cover the neck and the head).
     "corythosaurus":      dict(real=9.0,  scale=0.925, w=1.9, h=3.4, baby=0.18, shadow=1.5),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). GAME EXCEPTION (Rodrigo 2026-10-24, so the rider
     # fits): drawn 1.5x real, ~10.8 m wingspan and 3 m standing, still below the azhdarchids (11 and 12 m).
@@ -680,11 +682,11 @@ SPECIES = [
       rideable=True, jump=0.5, ride_offset=3.91, ride_forward=1.87, ride_speed=1.0, call=True,
       saddle="EDMONTOSAURUS_SADDLE", rig="Saurolophine"),
  dict(id="corythosaurus", cls="Corythosaurus", base="HerbivoreDinosaur",
-      doc="Corythosaurus casuarius - the helmet-crested lambeosaurine of the Dinosaur Park forests (Campanian), 9 m: a tall half-moon helmet over a short narrow beak, a big eye, high at the withers with the neck carried up. The voice and the ear of the forest: its deep call through the helmet is heard by its kind at 64 blocks (the lost come back, the alarm sends every herd near running, the herbivores near calm down and heal a little); it hears a predator on the move at 24 blocks without seeing it; catemeral, it naps in short shifts by day and by night with one of the herd always awake; it plucks berries and rears to fruit; two males show the helmet in profile, never fighting. Wary, it strikes back only cornered. Fruit tames it faster than wheat. The fastest hadrosaur to ride, with its own forest saddle. Behaviour in Corythosaurine.",
+      doc="Corythosaurus casuarius - the helmet-crested lambeosaurine of the Dinosaur Park forests (Campanian), 9 m, the peacock of the forest: a fan-shaped helmet swept back like a cockatoo's crest over a short narrow beak, a big eye, the trunk pitched up on long forelegs, the neck almost upright and a sail of tall spines on the back. The voice and the ear of the forest: its deep call through the helmet is heard by its kind at 64 blocks (the lost come back, the alarm sends every herd near running, the herbivores near calm down and heal a little); it hears a predator on the move at 24 blocks without seeing it; catemeral, it naps in short shifts by day and by night with one of the herd always awake; it plucks berries and rears to fruit; two males show the helmet in profile, never fighting. Wary, it strikes back only cornered. Fruit tames it faster than wheat. The fastest hadrosaur to ride, with its own forest saddle. Behaviour in Corythosaurine.",
       attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=24),
       food="Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.FERN, Items.WHEAT",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
-      rideable=True, jump=0.6, ride_offset=3.05, ride_forward=0.9, ride_speed=1.25,
+      rideable=True, jump=0.6, ride_offset=5.23, ride_forward=1.55, ride_speed=1.25,
       saddle="CORYTHOSAURUS_SADDLE", rig="Corythosaurine"),
  # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
