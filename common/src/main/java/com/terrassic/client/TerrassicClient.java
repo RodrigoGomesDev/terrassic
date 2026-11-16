@@ -157,6 +157,7 @@ public final class TerrassicClient {
         com.terrassic.client.dev.PartsShowcase.init(); // off unless TERRASSIC_PARTS_SHOWCASE=1 (docs/PLANO_PARTES.md)
         com.terrassic.client.dev.BehaviorTest.init(); // off unless TERRASSIC_BEHAVIOR_TEST=1
         com.terrassic.client.dev.Playtest.init(); // off unless TERRASSIC_PLAYTEST=1 (a real world, played)
+        com.terrassic.client.dev.PerfTest.init(); // off unless TERRASSIC_PERF=1 (docs/DESEMPENHO_1_11.md)
         EntityRendererRegistry.register(ModEntities.CARCASS, CarcassRenderer::new);
         ClientHooks.init();
         ParticleProviderRegistry.register(ModParticles.ROAR_WAVE, RoarWaveParticle.Provider::new);
