@@ -1,5 +1,10 @@
 """Corythosaurus animations, from its own study (docs/estudos/15_HERBIVOROS_1_11.md).
 
+v4 (16/11/2026, the "leque alto" silhouette): the same 37 names on the new posture (the trunk pitched up 18 degrees on
+long forelegs, the neck almost upright in three pieces). The neck comes all the way down to graze and drink
+(reach_down; it drinks with the forelegs splayed like a giraffe), it gallops on four instead of running on two, and the
+FAN of blades moves in almost everything (fan(): open, raise, lay back, shiver); helmet_display springs it open.
+
 The hadrosaur plumbing (the forelimb IK, the plant helpers, walking on four, rising onto the hind legs, lying down hind
 end first) follows the Maiasaura's (maiaanims.py; the same body plan, here on longer legs and with the neck carried
 up). What the Corythosaurus does that the others do not is its own (the voice and the ear of the forest):
@@ -62,10 +67,12 @@ WRIST = {s: world(S, {}, f"hand_{s}") for s in SIDES}
 REST_HAND = {s: chain_angle(S, {}, [f"hand_{s}"]) for s in SIDES}
 HIND = {s: {f"{b}_{s}" for b in ("thigh", "shin", "foot", "toes")} for s in SIDES}
 FORE = {s: {f"{b}_{s}" for b in ("arm", "forearm", "hand")} for s in SIDES}
-HEADB = {"head", "skull", "jaw", "cheek_l", "cheek_r", "adult_crest", "male_display", "young_crest"}
+FANS = tuple(n for n, *_ in TC.FAN)
+FANS_M = tuple(n for n, *_ in TC.FAN_MALE)
+HEADB = {"head", "skull", "jaw", "cheek_l", "cheek_r", "adult_crest", "male_display", "young_crest"} | set(FANS) | set(FANS_M)
 SKIP = {"saddle"}
-STAND_DROP = 0.5
-HIND_LEN, FORE_LEN = 27.0, 21.0
+STAND_DROP = 1.5
+HIND_LEN, FORE_LEN = 55.0, 62.0
 
 
 def low_of(p, bones=None, skip=SKIP):
@@ -145,6 +152,21 @@ def head(p, pitch=0.0, yaw=0.0, roll=0.0, k=(0.35, 0.35, 0.3)):
 
 
 def jaw(p, a): add(p, "jaw", rot=(a, 0, 0))
+
+
+# where each blade sits in the fan, front (0) to back (4); the male's two long blades lie between 1-2 and 3-4
+FAN_AT = {**{n: k for k, n in enumerate(FANS)}, FANS_M[0]: 1.5, FANS_M[1]: 3.5}
+
+
+def fan(p, spread=0.0, lift=0.0, fold=0.0, quiver=0.0, t=0.0):
+    """the fan of blades (the helmet of v4): `spread` opens it (degrees between neighbouring blades, the front ones
+    forward and the back ones back, around the middle blade), `lift` raises the whole crest forward and up, `fold`
+    lays it back flat (the front blades fall onto the back one), `quiver` rattles the blades (a cockatoo's shiver)"""
+    if lift:
+        add(p, "adult_crest", rot=(-lift, 0, 0))
+    for n, k in FAN_AT.items():
+        q = quiver * math.sin(2 * math.pi * 7.0 * t + 1.3 * k) if quiver else 0.0
+        add(p, n, rot=(spread * (k - 2.0) + fold * (4.0 - k) / 4.0 + q, 0, 0))
 
 
 def cheeks(p, k):
@@ -260,8 +282,9 @@ def foot_cycle(p, ph, feet, stride, duty, lift, flift, fstride=None):
             plant_f(p, s, ly, dz, pitch, clear)
 
 
-WALK = (1.5, 35, 0.66, 4.5, 0.5)      # cycle s, stride px, duty, lift px, bob px (longer legs than the Maiasaura's)
-RUNP = (0.58, 86, 0.36, 10.5, 1.8)    # the fastest of the three hadrosaurs
+WALK = (1.6, 44, 0.66, 5.5, 0.6)      # cycle s, stride px, duty, lift px, bob px (the long legs of v4)
+RUNP = (0.62, 92, 0.34, 12.0, 2.2)    # the gallop of the long legs: cycle s, stride px, duty, lift px, bob px
+
 
 
 def walk(t, Tc=None, stride=None, lift=None, bob=None, roll=3.4, yaw=2.2, head_p=-2.0, tail_amp=5.0):
@@ -288,6 +311,7 @@ def walk_tired(t):
     p = walk(t, Tc=WALK_TIRED_T, stride=22, lift=2.8, bob=0.8, roll=4.4, yaw=2.6, head_p=-12, tail_amp=6.0)
     pant = max(0.0, wave(t, WALK_TIRED_T / 3))
     add(p, "jaw", rot=(-4 - 3 * pant, 0, 0))
+    add(p, "root", pos=(0, 0.25, 0))       # the slow cycle's curves dip between keys: a hair of clearance
     return p
 
 
@@ -321,13 +345,27 @@ def _biped(t, cyc, rise, headp, arms=1.0, settle_it=True):
     return settle(p) if settle_it else p
 
 
+GALLOP = {"lh": 0.0, "rh": 0.12, "lf": 0.48, "rf": 0.6}
+
+
 def run(t):
-    """runs on TWO legs like every hadrosaur: the front lifted, the arms folded, the neck stretched forward with the
-    helmet level (the head kept higher than the Maiasaura's), the tail a level beam that flicks after the hips"""
-    p = _biped(t, RUNP, 10, -20)
-    Tc = RUNP[0]
-    beam(p, t, lambda u: -2.5 * math.sin(2 * math.pi * u / Tc - 1.0), delay=0.04, loop=Tc)
-    return p
+    """it gallops on its four long legs like a giraffe (the forelegs are longer than the hind legs: it never rises
+    onto two): the hind pair push off together, the front pair reach far ahead, the long neck pumps forward and back
+    with the stride, the fan laid back in the wind, the tail a high stiff beam"""
+    Tc, stride, duty, lift, bob = RUNP
+    ph = (t / Tc) % 1.0; w = 2 * math.pi * ph; p = {}
+    pump = math.sin(w - 0.6)
+    add(p, "body", rot=(-3 + 2.5 * math.sin(w + 0.4), 0.8 * math.sin(w), 1.2 * math.sin(w + 0.3)),
+        pos=(0, -STAND_DROP - 1.0 - bob * (0.5 + 0.5 * math.cos(w + 0.4)), 0))
+    add(p, "neck1", rot=(-14 - 7 * pump, 0, 0)); add(p, "neck2", rot=(-4 - 3 * pump, 0, 0))
+    add(p, "neck3", rot=(8 + 5 * pump, 0, 0)); add(p, "skull", rot=(10 + 4 * pump, 0, 0))
+    fan(p, fold=16 + 3 * math.sin(2 * w))
+    tail(p, pitch=-4)
+    beam(p, t, lambda u: -2.5 * math.sin(2 * math.pi * u / Tc - 1.0), axis=0, delay=0.04, loop=Tc)
+    tail_sway(p, t, Tc, 2.0, 0.0)
+    lift_head(p, 1.0)
+    foot_cycle(p, ph, GALLOP, stride, duty, lift, lift * 1.1, fstride=stride * 1.05)
+    return settle(p)
 
 
 def swim(t):
@@ -435,6 +473,7 @@ def hurt(t):
     e = math.exp(-t / 0.17) * smooth(t / 0.05)
     add(p, "body", rot=(3 * e, -5 * e, -3 * e), pos=(0, -STAND_DROP - 0.4 * e, 1.0 * e))
     head(p, 10 * e, 14 * e, 6 * e)
+    fan(p, fold=14 * e)
     beam(p, t, lambda u: 9 * math.exp(-u / 0.22) * smooth(u / 0.05), delay=0.06)
     beam(p, t, lambda u: -4 * math.exp(-u / 0.22) * smooth(u / 0.05), axis=0, delay=0.06)
     alive_upper(p, t, k=0.5)
@@ -451,6 +490,7 @@ def attack(t):
     rear(p, 6 * back - 3 * lunge)
     add(p, "body", rot=(0, 5 * lunge, -3 * lunge), pos=(-0.6 * lunge, -STAND_DROP - 0.4 * lunge, 2 * back - 4 * lunge))
     head(p, 10 * back - 22 * lunge, 14 * back - 18 * lunge, -10 * back + 14 * lunge)
+    fan(p, spread=5 * back, lift=12 * back + 6 * lunge)
     tail(p, yaw=-6 * lunge, pitch=-3 * back)
     beam(p, t, lambda u: -5 * f(tr((0, 0), (0.4, 0), (0.52, 1, ease_in), (0.7, 0.8), (1.2, 0, smooth)), u), delay=0.06)
     lift_head(p)
@@ -508,47 +548,72 @@ def body_shove(t):
     return stand(p)
 
 
+def reach_down(p, k, low=1.0):
+    """the tall neck brought down: the base swings forward and down from the withers, the middle stays straight, the
+    top bends back so the head arrives bill-first; the front of the body dips (the withers lower). low = 1 reaches the
+    ground, 0.5 a bush"""
+    add(p, "neck1", rot=(-88 * k * low, 0, 0))
+    add(p, "neck2", rot=(-16 * k * low, 0, 0))
+    add(p, "neck3", rot=(18 * k * low, 0, 0))
+    add(p, "skull", rot=(14 * k * low, 0, 0))
+    rear(p, -14 * k * low)
+
+
 def eat(t):
-    """takes a mouthful from the hand: the head down, a clip with the broad bill, the chew with the cheeks flexing"""
+    """takes a mouthful from the hand: the neck comes down to the hand, a clip with the narrow bill, the chew with the
+    cheeks flexing back up high"""
     p = {}
-    dn = f(tr((0, 0), (0.45, 1, smooth), (0.8, 1), (1.0, 0.3, ease_out), (2.4, 0.3), (2.8, 0, smooth)), t)
+    dn = f(tr((0, 0), (0.45, 1, smooth), (0.8, 1), (1.1, 0.25, ease_out), (2.4, 0.25), (2.8, 0, smooth)), t)
     breathe(p, t, 2.8, 0.5)
-    head(p, -22 * dn)
+    reach_down(p, dn, 0.45)
     jaw(p, f(tr((0, 0), (0.5, -10, ease_out), (0.7, -1, ease_in), (2.8, 0)), t))
     chew(p, t, 1.0, 2.5, 0.45)
+    fan(p, fold=6 * dn)
     tail_sway(p, t, 2.8, 2.0)
     alive_upper(p, t, k=0.3)
     return stand(p, fore=(-1.0 * dn, -1.0 * dn))
 
 
 def graze(t):
-    """crops low plants, ferns and dry stems: the head down, short side-to-side clips, then lifts and chews"""
+    """crops low ferns: the long neck swings down to the ground, short side-to-side clips with the narrow bill, then
+    the neck comes back up and it chews, looking round"""
     p = {}
-    dn = f(tr((0, 0), (0.6, 1, smooth), (2.2, 1), (2.6, 0.25, smooth), (3.4, 0, smooth)), t)
+    dn = f(tr((0, 0), (0.7, 1, smooth), (2.2, 1), (2.7, 0.15, smooth), (3.4, 0, smooth)), t)
     breathe(p, t, 3.4, 0.5)
-    rear(p, -3 * dn)
-    sweep = math.sin(W(t - 0.6, 0.9)) * window(t, 0.6, 2.2, 0.15)
-    head(p, -40 * dn, 10 * sweep, -3 * sweep)
-    clip = sum(window(t, c - 0.12, c, 0.05) for c in (0.85, 1.3, 1.75, 2.1))
+    reach_down(p, dn, 0.95)
+    sweep = math.sin(W(t - 0.7, 0.9)) * window(t, 0.7, 2.2, 0.15)
+    head(p, 0, 12 * sweep, -4 * sweep)
+    clip = sum(window(t, c - 0.12, c, 0.05) for c in (0.95, 1.4, 1.85, 2.15))
     jaw(p, -9 * clip)
     chew(p, t, 2.6, 3.4, 0.4)
+    fan(p, fold=10 * dn)
+    tail(p, pitch=-4 * dn)
     tail_sway(p, t, 3.4, 2.0)
     alive_upper(p, t, k=0.3)
-    return stand(p, fore=(-1.5 * dn, -1.5 * dn), clear=0.2)
+    return stand(p, fore=(-2.0 * dn, -2.0 * dn), clear=0.2)
 
 
 def drink(t):
+    """drinks like a giraffe: the forelegs splay wide, the front of the body sinks between them, the neck comes all the
+    way down and the bill skims the water; it comes up quickly between sips, the fan laid back"""
     p = {}
-    dn = f(tr((0, 0), (0.7, 1, smooth), (2.6, 1), (3.0, 0.2, smooth), (3.6, 0, smooth)), t)
+    dn = f(tr((0, 0), (0.8, 1, smooth), (2.7, 1), (3.1, 0.2, smooth), (3.6, 0, smooth)), t)
+    sp = f(tr((0, 0), (0.6, 1, ease_out), (3.0, 1), (3.6, 0, smooth)), t)
     breathe(p, t, 3.6, 0.4)
-    rear(p, -4 * dn)
-    lap = window(t, 0.9, 2.5, 0.15) * math.sin(W(t, 0.36))
-    head(p, -48 * dn + 2 * lap)
+    reach_down(p, dn, 1.0)
+    rear(p, -4 * sp)
+    add(p, "body", pos=(0, -5 * sp, 0))
+    lap = window(t, 1.0, 2.6, 0.15) * math.sin(W(t, 0.36))
+    head(p, 2 * lap)
     jaw(p, -4 * max(0, lap))
-    head(p, 10 * window(t, 2.8, 3.3, 0.1))
-    for s, sx in (("l", 1), ("r", -1)): add(p, f"arm_{s}", rot=(0, 0, 6 * sx * dn))
-    tail(p, pitch=-2 * dn)
-    return stand(p, fore=(-2.0 * dn, -2.0 * dn), clear=0.0)
+    fan(p, fold=12 * dn)
+    for s, sx in (("l", 1), ("r", -1)):
+        add(p, f"arm_{s}", rot=(0, 0, 20 * sx * sp))
+        add(p, f"forearm_{s}", rot=(0, 0, -6 * sx * sp))
+    tail(p, pitch=-6 * dn)
+    stand(p, fore=(-3.0 * sp, -3.0 * sp), clear=0.0)
+    add(p, "root", pos=(0, 0.25, 0))       # the splayed forefeet: a hair of clearance between keys
+    return p
 
 
 def fruit_pick(t):
@@ -577,17 +642,19 @@ def fruit_pick(t):
 
 
 def pluck(t):
-    """berries from a bush: the head down to the bush and turned on its side, three short tugs back with the beak, the
-    berries chewed with the head up"""
+    """berries from a bush: the neck down to bush height and the head turned on its side, three short tugs back with
+    the beak, the berries chewed with the head up"""
     p = {}
     dn = f(tr((0, 0), (0.5, 1, smooth), (2.0, 1), (2.4, 0.2, smooth), (3.2, 0, smooth)), t)
     tug = sum(math.exp(-((t - c) / 0.06) ** 2) for c in (0.85, 1.3, 1.75))
     breathe(p, t, 3.2, 0.4)
-    head(p, -26 * dn + 5 * tug, 14 * dn, 0)
+    reach_down(p, dn, 0.6)
+    head(p, 5 * tug, 14 * dn, 0)
     add(p, "skull", rot=(0, 0, 22 * dn))
     add(p, "body", pos=(0, 0, 0.6 * tug))
     jaw(p, -6 * window(t, 0.6, 1.9, 0.1) * (1 - tug))
     chew(p, t, 2.3, 3.1, 0.4)
+    fan(p, fold=6 * dn, quiver=0.8 * tug, t=t)
     tail_sway(p, t, 3.2, 2.0)
     alive_upper(p, t, k=0.3)
     return stand(p, fore=(-1.0 * dn, -1.0 * dn), clear=0.0)
@@ -601,6 +668,7 @@ def _resonate_pose(p, k, beat, rise=1.0, shut=True):
     add(p, "body", rot=(1.5 * k + 0.8 * beat, 0, 0), pos=(0, 0.3 * beat, 0))
     add(p, "neck1", rot=(-1.6 * beat, 0, 0)); add(p, "neck2", rot=(1.2 * beat, 0, 0))
     jaw(p, (-0.5 if shut else -3.0) * k * (0.5 + 0.5 * beat))
+    fan(p, spread=2.5 * k + 1.5 * beat, lift=6 * k * rise + 2 * beat)
 
 
 def deep_call(t):
@@ -648,6 +716,7 @@ def alarm(t):
     rear(p, 14 * up)
     add(p, "body", pos=(0, -STAND_DROP, 0))
     _resonate_pose(p, k, 1.3 * beat, rise=1.1, shut=False)
+    fan(p, spread=6 * up, lift=10 * up, quiver=1.2 * beat, t=t)
     fold_arms(p, 0.5 * up)
     tail(p, pitch=-12 * k)
     lift_head(p)
@@ -669,6 +738,7 @@ def listen(t):
     add(p, "body", rot=(1.5 * k, 0, 0), pos=(0, -STAND_DROP, 0))
     head(p, 20 * k, 26 * turn_ * k, 0, k=(0.45, 0.35, 0.2))
     add(p, "skull", rot=(0, 0, -10 * turn_ * k))
+    fan(p, lift=8 * k, spread=1.5 * k)
     tail(p, pitch=-4 * k)
     for i, (b, w) in enumerate(zip(TAILS, STIFF)):
         add(p, b, rot=(0, 1.0 * w * wave(t, LISTEN_T, -0.5 - 0.3 * i), 0))
@@ -687,6 +757,7 @@ def nap(t):
     add(p, "body", rot=(-1.5 + 0.5 * br, 0, -1.2), pos=(0, -STAND_DROP - 0.8 - 0.3 * br, 0.4))
     head(p, -30 + 1.5 * br + 7 * jerk, 4, 3, k=(0.5, 0.3, 0.2))
     add(p, "skull", rot=(-6, 0, 0))
+    fan(p, fold=22 + 2 * br)
     tail(p, pitch=4)
     for i, (b, w) in enumerate(zip(TAILS, STIFF)):
         add(p, b, rot=(0.4 * w * br, 0.8 * w * wave(t, NAP_T, -0.5 - 0.3 * i), 0))
@@ -702,17 +773,23 @@ DISPLAY_T = 4.8
 
 
 def helmet_display(t):
-    """broadside to the rival (the Java turns the body side-on): the head raised high and swung slowly up and down so
-    the whole helmet shows in profile, the body still, the tail stiff; no blow"""
+    """broadside to the rival (the Java turns the body side-on): it draws itself up, the neck stretched tall, and the
+    FAN springs open like a cockatoo's crest (0.5 to 0.9 s): the front blades swing forward, the back ones back,
+    the whole crest raised; held open, the blades shivering, the head bowed slowly forward and up so the open fan
+    sweeps across the rival's view; then the fan snaps shut and it settles. Never a blow."""
     p = {}
-    k = f(tr((0, 0), (0.6, 1, ease_out), (4.2, 1), (4.8, 0, smooth)), t)
-    sway = math.sin(W(t - 0.6, 1.8)) * window(t, 0.6, 4.2, 0.3)
-    add(p, "body", rot=(2.0 * k + 0.6 * sway, 0, 0), pos=(0, -STAND_DROP, 0))
-    head(p, (18 + 10 * sway) * k, -6 * k, -4 * sway * k, k=(0.5, 0.3, 0.2))
-    add(p, "skull", rot=(-6 * sway * k, 0, 0))
-    tail(p, pitch=-6 * k)
+    k = f(tr((0, 0), (0.5, 1, ease_out), (4.2, 1), (4.8, 0, smooth)), t)
+    op = f(tr((0, 0), (0.45, 0), (0.85, 1, back_out), (3.7, 1), (4.15, 0, ease_in), (4.8, 0)), t)
+    bow = math.sin(W(t - 1.0, 2.6)) * window(t, 1.0, 3.7, 0.35)
+    rear(p, 5 * k + 1.5 * bow)
+    add(p, "body", pos=(0, -STAND_DROP, 0))
+    head(p, (14 - 12 * bow) * k, -4 * k, -3 * bow * k, k=(0.45, 0.35, 0.2))
+    add(p, "neck3", rot=(-6 * bow * k, 0, 0))
+    add(p, "skull", rot=(-8 * bow * k, 0, 0))
+    fan(p, spread=11 * op, lift=14 * op, quiver=1.6 * op * window(t, 1.0, 3.6, 0.2), t=t)
+    tail(p, pitch=-8 * k)
     for i, (b, w) in enumerate(zip(TAILS, STIFF)):
-        add(p, b, rot=(0, 1.5 * w * sway, 0))
+        add(p, b, rot=(0, 1.5 * w * bow, 0))
     return stand(p, fore=(0.6 * k, 0.6 * k))
 
 
@@ -748,6 +825,7 @@ def lie(p, k=1.0, kh=None):
     if up > 0: add(p, "body", rot=(-12 * up, 0, 0))
     tail(p, pitch=-2 * k)
     head(p, 22 * k, 0, 0)
+    fan(p, fold=18 * k)
     wf = smooth((k - 0.3) / 0.7)
     for s in SIDES:
         plant_h(p, s, 0.0, 3.5 * kh, meta=-40 * kh, toe=0.0, clear=0.0)
@@ -867,7 +945,9 @@ def hatch(t):
     head(p, -30 * (1 - up) + 18 * up * k, 12 * sh * math.sin(W(t, 0.16)), 8 * sh * math.sin(W(t, 0.16)))
     head_back(p, 1.0 - up)
     jaw(p, -6 * window(t, 1.2, 1.5, 0.08))
-    return settle(lift_tail(lift_head(p, 0.0)))
+    p = settle(lift_tail(lift_head(p, 0.0)))
+    add(p, "root", pos=(0, 0.25, 0))       # the calf's curl dips between keys: a hair of clearance
+    return p
 
 
 LIE_DOWN_T, GET_UP_T = 2.9, 2.7
@@ -927,8 +1007,8 @@ def tame(t):
 
 ANIMS = {
     "idle": (idle, IDLE_T, True, "Parado", "em quatro patas, pescoço alto, respira, vira a cabeça com o elmo para olhar, rumina"),
-    "walk": (walk, WALK[0], True, "Movimento", "anda em quatro patas, pernas longas, o elmo alto, a cauda dura balança inteira"),
-    "run": (run, RUNP[0], True, "Movimento", "corre em duas patas, o mais rápido dos hadrossauros: pescoço esticado, elmo nivelado"),
+    "walk": (walk, WALK[0], True, "Movimento", "anda em quatro patas longas, o leque alto, a cauda dura balança inteira"),
+    "run": (run, RUNP[0], True, "Movimento", "galopa nas quatro patas longas como a girafa, o pescoço bombeando, o leque deitado"),
     "swim": (swim, 1.6, True, "Movimento", "nada com a cabeça fora d'água, a cauda funda rema pela raiz"),
     "wade": (wade, 1.8, True, "Só dele", "anda na água rasa de cabeça alta, levantando bem os pés"),
     "turn_left": (turn_left, TURN_T, True, "Movimento", "gira no lugar para a esquerda"),
@@ -943,11 +1023,11 @@ ANIMS = {
     "nap": (nap, NAP_T, True, "Só dele", "o cochilo catemeral em pé: a cabeça desce com o elmo, uma pata de trás descansa"),
     "fruit_pick": (fruit_pick, 4.2, False, "Só dele", "empina nas patas de trás e arranca o fruto alto com a cabeça de lado"),
     "pluck": (pluck, 3.2, False, "Só dele", "arranca bagas do arbusto com o bico estreito, a cabeça de lado, puxando"),
-    "helmet_display": (helmet_display, DISPLAY_T, False, "Só dele", "de perfil para o rival: ergue a cabeça e a balança devagar, mostrando o elmo inteiro"),
+    "helmet_display": (helmet_display, DISPLAY_T, False, "Só dele", "de perfil para o rival: o leque abre num estalo e fica aberto tremendo, a cabeça em reverência"),
     "hatch": (hatch, 2.4, False, "Domado", "sai do ovo: a cabeça empurra para cima, sacode, olha e levanta"),
     "eat": (eat, 2.8, False, "Comer", "pega da mão e mastiga, as bochechas abrindo"),
     "graze": (graze, 3.4, False, "Comer", "come baixo com o bico estreito, cortes curtos"),
-    "drink": (drink, 3.6, False, "Comer", "bebe: patas da frente abertas, o bico raspa a água"),
+    "drink": (drink, 3.6, False, "Comer", "bebe como a girafa: patas da frente bem abertas, o pescoço desce até a água"),
     "attack": (attack, 1.2, False, "Combate", "encurralado: puxa a cabeça de lado e bate com o elmo e o ombro (golpe em 0,5 s)"),
     "kick_back": (kick_back, KICK_BACK_T, False, "Combate", "encurralado: olha para trás e chuta com a pata de trás (golpe em 0,64 s)"),
     "body_shove": (body_shove, BODY_SHOVE_T, False, "Combate", "a quadrilada: joga a anca e a base da cauda de lado (golpe em 0,66 s)"),

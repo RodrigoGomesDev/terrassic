@@ -56,10 +56,10 @@ import software.bernie.geckolib.core.object.PlayState;
  */
 public abstract class Corythosaurine extends HerbivoreDinosaur {
     /** The cycles (coryanims.py WALK, RUNP): pixels of ground each covers at 16.94 px/m and its length in ticks. */
-    private static final double WALK_PX = 35.0D;
-    private static final double WALK_TICKS = 30.0D;
-    private static final double RUN_PX = 86.0D;
-    private static final double RUN_TICKS = 11.6D;
+    private static final double WALK_PX = 44.0D;
+    private static final double WALK_TICKS = 32.0D;
+    private static final double RUN_PX = 92.0D;
+    private static final double RUN_TICKS = 12.4D;
     /** How far its kind hears the deep call. */
     public static final double CALL_RANGE = 64.0D;
     /** How far the call calms the herbivores. */

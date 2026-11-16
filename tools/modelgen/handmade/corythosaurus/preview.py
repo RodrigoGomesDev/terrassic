@@ -24,7 +24,10 @@ import cory  # noqa: E402
 
 SCALE = [1.0]
 ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
-HEAD = ("head", "skull", "jaw", "adult_crest", "male_display", "young_crest", "cheek_l", "cheek_r")
+FAN = tuple(n for n, *_ in cory.FAN)
+FAN_M = tuple(n for n, *_ in cory.FAN_MALE)
+CREST = ("adult_crest",) + FAN + ("male_display",) + FAN_M
+HEAD = ("head", "skull", "jaw", "young_crest", "cheek_l", "cheek_r") + CREST
 
 
 def model(saddle_on):
@@ -38,9 +41,9 @@ def spec_tex(m, sex, out, calf=False):
     cory.preview_faces(m)
     tex = cory.paint_sex(m, sex)
     if calf:      # the calf: no helmet (adult_crest hidden), only the high brow (young_crest)
-        m.cubes = [c for c in m.cubes if c["bone"] not in ("adult_crest", "male_display")]
+        m.cubes = [c for c in m.cubes if c["bone"] not in CREST]
     else:         # the grown one: no calf's brow; the female without the male's upper rim
-        m.cubes = [c for c in m.cubes if c["bone"] != "young_crest" and (sex == "male" or c["bone"] != "male_display")]
+        m.cubes = [c for c in m.cubes if c["bone"] != "young_crest" and (sex == "male" or c["bone"] not in ("male_display",) + FAN_M)]
     json.dump(P.geo_json(m), open(gp, "w"))
     return geo.load_geo(gp), tex
 
@@ -90,7 +93,7 @@ def gifs(out, sex="male"):
     gdir = os.path.join(out, "animacoes"); os.makedirs(gdir, exist_ok=True)
     for n in GIFS:
         young = n in ("hatch",)
-        drop = ("adult_crest", "male_display") if young else ("young_crest",)
+        drop = CREST if young else ("young_crest",)
         sp = {**spec, "cubes": [c for c in spec["cubes"] if c["bone"] not in drop]}
         tx = btex if young else tex
         an = A[f"animation.corythosaurus.{n}"]; L = an["animation_length"]
