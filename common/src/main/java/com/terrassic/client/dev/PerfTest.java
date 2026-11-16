@@ -287,6 +287,9 @@ public final class PerfTest {
             return false;
         }
         String type = f.getMethod().getType().getName();
+        if (type.startsWith("com.terrassic.client.dev.")) {
+            return false;   // this measurement itself (the recording is stopped and read in a step of PerfTest)
+        }
         // mixin handlers are merged into the vanilla class with the mod id in their name
         return type.startsWith("com.terrassic.") || f.getMethod().getName().contains("$terrassic$");
     }
@@ -311,7 +314,7 @@ public final class PerfTest {
             String type = e.getEventType().getName();
             if ("jdk.GarbageCollection".equals(type)) {
                 gcs++;
-                gcMs += e.getDuration().toNanos() / 1.0E6D;
+                gcMs += e.getDuration("sumOfPauses").toNanos() / 1.0E6D;
                 continue;
             }
             if ("jdk.ObjectAllocationSample".equals(type)) {
@@ -382,7 +385,7 @@ public final class PerfTest {
         double fps = FPS.stream().mapToInt(Integer::intValue).average().orElse(0);
         REPORT.add(String.format(Locale.ROOT, "server: mean tick %.2f ms over %d windows of 100 ticks %s", mspt, MSPT.size(), fmt(MSPT)));
         REPORT.add(String.format(Locale.ROOT, "client: mean %.0f fps (%s)", fps, FPS));
-        REPORT.add(String.format(Locale.ROOT, "GC: %d collections, %.0f ms", gcs, gcMs));
+        REPORT.add(String.format(Locale.ROOT, "GC: %d collections, %.0f ms of pauses", gcs, gcMs));
         for (String key : threads) {
             int[] tot = totals.getOrDefault(key, new int[3]);
             double share = tot[0] == 0 ? 0 : 100.0D * tot[1] / tot[0];
