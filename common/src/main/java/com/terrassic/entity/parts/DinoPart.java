@@ -100,7 +100,8 @@ public class DinoPart extends Entity implements OwnableEntity {
         this.xo = this.getX();
         this.yo = this.getY();
         this.zo = this.getZ();
-        this.setPos(x, y - halfY, z);
+        // the position without vanilla's own box from the dimensions (replaced at once below; 1.11, one box less a part)
+        this.setPosRaw(x, y - halfY, z);
         this.setBoundingBox(new AABB(x - halfX, y - halfY, z - halfZ, x + halfX, y + halfY, z + halfZ));
     }
 

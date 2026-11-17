@@ -1468,7 +1468,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         // the head's axes in the body's frame (forward, side, up): turned by the look, tilted by the pitch
         double cl = Mth.cos(look), sl = Mth.sin(look), cp = Mth.cos(pitch), sp = Mth.sin(pitch);
         double[][] head = {{cp * cl, cp * sl, -sp}, {-sl, cl, 0.0D}, {sp * cl, sp * sl, cp}};
-        double[][] flat = {{1.0D, 0.0D, 0.0D}, {0.0D, 1.0D, 0.0D}, {0.0D, 0.0D, 1.0D}};
+        double[][] flat = FLAT_AXES;
         // a flyer's tilt about its saddle (DinosaurRenderer): roll about forward, then pitch about the side
         double tf = 0.0D, tu = 0.0D, ct = 1.0D, st = 0.0D, cr = 1.0D, sr = 0.0D;
         if (flyer != null && this.deathTime <= 0) {
@@ -1483,7 +1483,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         double pivotF = this.partPivot() * scale, pivotU = this.partPivotUp() * scale;
         double minX = px, minY = py, minZ = pz, maxX = px, maxY = py, maxZ = pz;
         double[] c = new double[3];
-        double[][] axes = new double[3][];
+        // 1.11: the same three axes and half sizes reused for every part (this runs every tick and, near the camera,
+        // every frame for every creature; it allocated six small arrays per part)
+        double[][] axes = new double[3][3];
+        double[] half = new double[3];
         for (DinoPart part : this.parts) {
             DinoPart.Kind kind = part.kind();
             float[] l = part.spec.layout(layout);
@@ -1504,7 +1507,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 c[2] = up;
             }
             for (int k = 0; k < 3; k++) {
-                axes[k] = a[k].clone();
+                axes[k][0] = a[k][0];
+                axes[k][1] = a[k][1];
+                axes[k][2] = a[k][2];
             }
             if (st != 0.0D || sr != 0.0D) {
                 tilt(c, tf, tu, ct, st, cr, sr, true);
@@ -1514,7 +1519,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
             // to the world: x = forward*fX + side*sX, y = up, z = forward*fZ + side*sZ
             double x = px + c[0] * fX + c[1] * sX, y = py + c[2], z = pz + c[0] * fZ + c[1] * sZ;
-            double[] half = {half0, half1, half2};
+            half[0] = half0;
+            half[1] = half1;
+            half[2] = half2;
             double hx = 0.0D, hy = 0.0D, hz = 0.0D;
             for (int k = 0; k < 3; k++) {
                 hx += Math.abs(axes[k][0] * fX + axes[k][1] * sX) * half[k];
@@ -1535,6 +1542,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         this.partsBounds = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
+
+    private static final double[][] FLAT_AXES = {{1.0D, 0.0D, 0.0D}, {0.0D, 1.0D, 0.0D}, {0.0D, 0.0D, 1.0D}};
 
     /** A flyer's tilt on a vector of the body's frame (forward, side, up), about (pivotF, 0, pivotU) for a point: roll
      *  first (the model's +x side up), then pitch (the nose up), as DinosaurRenderer#applyRotations turns the model. */
@@ -4165,13 +4174,14 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     // 30 s (vanilla: 15-21 s). Left off until the corner test and the stuck recovery are redone (Fluidez 2).
 
     /** Vanilla's ground navigation, with the path search remembered for a second (1.11, ai/MemoPathFinder: the same
-     *  search asked again from the same block gets the same answer without searching). Flyers and swimmers keep theirs. */
+     *  search asked again from the same block gets the same answer without searching) and each block's type read once
+     *  per search (ai/MemoWalkNodeEvaluator). Flyers and swimmers keep theirs. */
     @Override
     protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(Level level) {
         return new net.minecraft.world.entity.ai.navigation.GroundPathNavigation(this, level) {
             @Override
             protected net.minecraft.world.level.pathfinder.PathFinder createPathFinder(int maxVisitedNodes) {
-                this.nodeEvaluator = new net.minecraft.world.level.pathfinder.WalkNodeEvaluator();
+                this.nodeEvaluator = new com.terrassic.entity.ai.MemoWalkNodeEvaluator();
                 this.nodeEvaluator.setCanPassDoors(true);
                 return new com.terrassic.entity.ai.MemoPathFinder(this.nodeEvaluator, maxVisitedNodes);
             }
