@@ -70,6 +70,18 @@ public final class PerfTest {
     private static boolean measuring;
     private static int measuredTicks;
     private static Recording recording;
+    private static long[] cpuStart;
+    private static long[] cpuEnd;
+    private static int tickStart;
+    private static int ticks;
+
+    /** CPU time (ns) of the server thread and of the render thread: what the samples are a share of. */
+    private static long[] cpu(Minecraft mc) {
+        java.lang.management.ThreadMXBean mx = java.lang.management.ManagementFactory.getThreadMXBean();
+        Thread server = mc.getSingleplayerServer().getRunningThread();
+        Thread render = Thread.currentThread();
+        return new long[]{mx.getThreadCpuTime(server.getId()), mx.getThreadCpuTime(render.getId())};
+    }
     private static int cx;
     private static int cz;
     private static int gy;
@@ -170,7 +182,9 @@ public final class PerfTest {
     private static void plan() {
         int count = Integer.parseInt(env("TERRASSIC_PERF_COUNT", "2"));
         int seconds = Integer.parseInt(env("TERRASSIC_PERF_SECONDS", "60"));
-        int warmup = Integer.parseInt(env("TERRASSIC_PERF_WARMUP", "40"));
+        int warmup = Integer.parseInt(env("TERRASSIC_PERF_WARMUP", "20"));
+        // the fresh world's chunks around the player are generated first, so world generation is not in the numbers
+        int settle = Integer.parseInt(env("TERRASSIC_PERF_SETTLE", "60"));
         cx = Integer.parseInt(env("TERRASSIC_PERF_X", "260"));
         cz = Integer.parseInt(env("TERRASSIC_PERF_Z", "0"));
         STEPS.add(mc -> mc.level == null || mc.player == null || mc.getSingleplayerServer() == null ? -1 : 200);
@@ -197,7 +211,7 @@ public final class PerfTest {
             BlockPos at = new BlockPos(cx, gy, cz + 20);
             REPORT.add(String.format(Locale.ROOT, "place %d %d %d (%s)", cx, gy, cz + 20,
                     lv.getBiome(at).unwrapKey().map(k -> k.location().getPath()).orElse("?")));
-            return 40;
+            return settle * 20;
         });
         STEPS.add(mc -> {
             List<String> land = new ArrayList<>();
@@ -242,12 +256,16 @@ public final class PerfTest {
             recording.enable("jdk.GarbageCollection");
             recording.enable("jdk.ObjectAllocationSample").with("throttle", "1000/s");
             recording.start();
+            cpuStart = cpu(mc);
+            tickStart = mc.getSingleplayerServer().getTickCount();
             measuring = true;
             return seconds * 20;
         });
         STEPS.add(mc -> {
             measuring = false;
             recording.stop();
+            cpuEnd = cpu(mc);
+            ticks = mc.getSingleplayerServer().getTickCount() - tickStart;
             REPORT.add("at the end of the recording: " + census(mc));
             try {
                 Path dir = new File(mc.gameDirectory, "perf").toPath();
@@ -392,9 +410,15 @@ public final class PerfTest {
             REPORT.add("");
             REPORT.add(String.format(Locale.ROOT, "== %s: %d samples, %d with a Terrassic frame = %.2f%% (%d truncated stacks)",
                     key, tot[0], tot[1], share, tot[2]));
-            if ("Server thread".equals(key)) {
-                REPORT.add(String.format(Locale.ROOT, "   mod time per tick ~ %.3f ms = %.2f%% of the 50 ms tick budget",
-                        mspt * share / 100.0D, mspt * share / 100.0D / 50.0D * 100.0D));
+            int which = "Server thread".equals(key) ? 0 : 1;
+            double cpuMs = cpuStart == null ? 0 : (cpuEnd[which] - cpuStart[which]) / 1.0E6D;
+            if (which == 0) {
+                double perTick = cpuMs / Math.max(1, ticks);
+                REPORT.add(String.format(Locale.ROOT, "   server thread CPU %.0f ms over %d ticks = %.2f ms/tick; mod ~ %.3f ms/tick = %.2f%% of the 50 ms budget",
+                        cpuMs, ticks, perTick, perTick * share / 100.0D, perTick * share / 100.0D / 50.0D * 100.0D));
+            } else {
+                REPORT.add(String.format(Locale.ROOT, "   render thread CPU %.0f ms; mod ~ %.0f ms = %.1f ms per second",
+                        cpuMs, cpuMs * share / 100.0D, cpuMs * share / 100.0D / Double.parseDouble(env("TERRASSIC_PERF_SECONDS", "60"))));
             }
             top(key, "innermost Terrassic frame", inner.get(key), tot[0]);
             top(key, "outermost Terrassic frame", outer.get(key), tot[0]);
