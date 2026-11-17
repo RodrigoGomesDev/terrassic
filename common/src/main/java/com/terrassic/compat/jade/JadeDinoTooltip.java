@@ -20,6 +20,17 @@ import java.util.UUID;
 enum JadeDinoTooltip implements IEntityComponentProvider {
     INSTANCE;
 
+    /** Jade's own owner line for tamable animals (snownee.jade.api.Identifiers.MC_ANIMAL_OWNER). */
+    private static final ResourceLocation OWNER_LINE = new ResourceLocation("minecraft", "animal_owner");
+
+    /** A hit part under the crosshair stands for its creature (its head, neck or tail is the animal for Jade too). */
+    static snownee.jade.api.Accessor<?> owner(snownee.jade.api.IWailaClientRegistration registration, snownee.jade.api.Accessor<?> accessor) {
+        if (accessor instanceof EntityAccessor e && e.getEntity() instanceof com.terrassic.entity.parts.DinoPart part) {
+            return registration.entityAccessor().from(e).entity(part.owner).build();
+        }
+        return accessor;
+    }
+
     @Override
     public ResourceLocation getUid() {
         return TerrassicJadePlugin.UID;
@@ -32,17 +43,22 @@ enum JadeDinoTooltip implements IEntityComponentProvider {
         }
         CompoundTag server = accessor.getServerData().getCompound("Terrassic");
         boolean hasServer = !server.isEmpty();
-        // species · sex · calf/adult · level (the title is the custom name when it has one)
-        MutableComponent line = d.speciesName().copy()
-                .append(" · ").append(Component.translatable(d.isFemale() ? "sex.terrassic.female" : "sex.terrassic.male"))
-                .append(" · ").append(Component.translatable(d.isBaby() ? "jade.terrassic.baby" : "jade.terrassic.adult"))
-                .append(" · ").append(Component.translatable("hud.terrassic.level", Math.max(1, d.getLevel())));
+        // sex · calf/adult (Jade's title already says the species and the level, "Tiranossauro · Nv 11"); with a custom
+        // name in the title, the species goes first
+        MutableComponent line = Component.empty();
+        if (d.hasCustomName()) {
+            line.append(d.speciesName()).append(" · ");
+        }
+        line.append(Component.translatable(d.isFemale() ? "sex.terrassic.female" : "sex.terrassic.male"))
+                .append(" · ").append(Component.translatable(d.isBaby() ? "jade.terrassic.baby" : "jade.terrassic.adult"));
         tooltip.add(line.withStyle(ChatFormatting.GRAY));
         if (d.isAlpha()) {
             tooltip.add(Component.translatable("jade.terrassic.alpha").withStyle(ChatFormatting.GOLD));
         }
+        // tame or wild; the owner's name only when Jade's own owner line is off (it shows "Dono: ..." by default)
         if (d.isTame()) {
-            String owner = hasServer && server.contains("Owner") ? server.getString("Owner") : ownerOnClient(d.getOwnerUUID());
+            String owner = config.get(OWNER_LINE) ? null
+                    : hasServer && server.contains("Owner") ? server.getString("Owner") : ownerOnClient(d.getOwnerUUID());
             tooltip.add(owner == null ? Component.translatable("jade.terrassic.tame").withStyle(ChatFormatting.GREEN)
                     : Component.translatable("jade.terrassic.owner", owner).withStyle(ChatFormatting.GREEN));
         } else {

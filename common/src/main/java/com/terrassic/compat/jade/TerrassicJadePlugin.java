@@ -32,6 +32,8 @@ public final class TerrassicJadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         registration.registerEntityComponent(JadeDinoTooltip.INSTANCE, DinosaurEntity.class);
+        // the crosshair on a head, neck or tail (a hit part, entity/parts) shows its creature
+        registration.addRayTraceCallback((hit, accessor, original) -> JadeDinoTooltip.owner(registration, accessor));
     }
 
     /** The server side: what only the server knows (works on a dedicated server, no client class touched). */
