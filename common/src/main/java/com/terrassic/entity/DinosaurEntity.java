@@ -1624,7 +1624,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** The species whose AI duels (their rigs have guard, sidesteps, feint, block, recoil, submit). */
     private static final java.util.Set<String> DUEL_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus",
-            "dakotaraptor", "pachycephalosaurus", "therizinosaurus", "triceratops", "styracosaurus", "protoceratops", "ankylosaurus");
+            "dakotaraptor", "pachycephalosaurus", "therizinosaurus", "triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "pachyrhinosaurus");
 
     public boolean hasDuelMoves() {
         return DUEL_SPECIES.contains(this.speciesId());
@@ -1634,7 +1634,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      *  triggers their rest transitions and tracks their fatigue. */
     private static final java.util.Set<String> LIVELY_SET_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
             "spinosaurus", "velociraptor", "dakotaraptor", "pachycephalosaurus", "gallimimus", "parasaurolophus", "edmontosaurus",
-            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura", "corythosaurus");
+            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura", "corythosaurus", "pachyrhinosaurus");
 
     public boolean hasLivelySet() {
         return LIVELY_SET_SPECIES.contains(this.speciesId());
@@ -1642,7 +1642,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     // ------------------------------------------------------------------ horn lock (Farke et al. 2009)
     /** Species whose grown rivals lock horns and push (horn_lock loop, horn_lock_start, horn_lock_break). */
-    private static final java.util.Set<String> HORN_LOCK_SPECIES = java.util.Set.of("triceratops");
+    private static final java.util.Set<String> HORN_LOCK_SPECIES = java.util.Set.of("triceratops", "pachyrhinosaurus");   // the Pachyrhinosaurus' lock is its boss push
     private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_LOCKED =
             net.minecraft.network.syncher.SynchedEntityData.defineId(DinosaurEntity.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
     private DinosaurEntity lockedWith;

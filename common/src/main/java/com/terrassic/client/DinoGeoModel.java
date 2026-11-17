@@ -34,7 +34,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
     private final ResourceLocation alphaFemaleTexture;
     /** 1.11.0: the calf's own coat (the Maiasaura's, paler and smooth); null for the species whose young share the adult's. */
     private final ResourceLocation babyTexture;
-    private static final java.util.Set<String> BABY_SKINS = java.util.Set.of("maiasaura", "corythosaurus");
+    private static final java.util.Set<String> BABY_SKINS = java.util.Set.of("maiasaura", "corythosaurus", "pachyrhinosaurus");
 
     public DinoGeoModel(String speciesId) {
         super(Terrassic.id(speciesId), "head");
@@ -89,6 +89,11 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("young_frill", !baby);
         // 1.11.0: the Maiasaura's solid hump between the eyes is the grown one's; the calf has a big head and a flat brow
         hide("adult_bump", baby);
+        // 1.11.0: the Pachyrhinosaurus' boss and the two hooks of its frill are the grown one's (the boss appears with
+        // sexual maturity, Erickson & Druckenmiller 2011); the calf has a smooth brow
+        hide("adult_boss", baby);
+        hide("adult_hooks", baby);
+        hide("young_brow", !baby);
         CoreGeoBone headScaled = getAnimationProcessor().getBone("head");
         float hs = baby ? animatable.babyHeadScale() : 1.0F;
         if (headScaled != null && hs != 1.0F) {

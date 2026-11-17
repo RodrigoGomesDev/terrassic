@@ -20,7 +20,7 @@ PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
     "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
-    "majungasaurus", "maiasaura", "corythosaurus",
+    "majungasaurus", "maiasaura", "corythosaurus", "pachyrhinosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -55,9 +55,10 @@ SIZES = {
     # study and rig (page "Estiracossauro: estudo para a 1.8"); the hitbox covers the body (the hips at 1.9 m), the hit
     # parts the crown.
     "styracosaurus":      dict(real=5.5,  scale=0.5,  w=1.6, h=2.0, baby=0.3,  shadow=1.4),
-    # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
-    # Pachyrhinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "pachyrhinosaurus":   dict(real=8.0,  scale=1.0,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
+    # Pachyrhinosaurus canadensis: 6-8 m, 3-4 t (Holtz 2011; Brusatte 2013; Paul 2016); 8 m = the top (Rodrigo,
+    # 10/11/2026). v4 (1.11.0, study 15, the "bisão" silhouette) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown
+    # at ~1: a huge hump over the shoulders, the back stepping down to a short tail, the ram's head hanging low.
+    "pachyrhinosaurus":   dict(real=8.0,  scale=1.0,  w=2.6, h=3.9, baby=0.2,  shadow=2.0),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
     # Protoceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     # Protoceratops v1 (01/11) is hand-made at 48 px/m and shown at its real 1.9 m (16 / 48 = 1/3), its own study and rig.
@@ -310,7 +311,7 @@ WORLD = {
     "compsognathus":      dict(biomes=("forest", "jungle"), weight=8, group=(3, 6), track=8),
     "triceratops":        dict(biomes=("savanna", "plains"), weight=6, group=(2, 4), track=10),
     "styracosaurus":      dict(biomes=("savanna", "plains", "forest"), weight=5, group=(2, 5), track=10),  # herds at the forest edge
-    "pachyrhinosaurus":   dict(biomes=("taiga", "hill", "forest"), weight=4, group=(2, 5), track=10),     # cold country herds
+    "pachyrhinosaurus":   dict(biomes=("taiga", "hill", "forest"), weight=4, group=(4, 8), track=10),     # cold country herds with calves (the ring)
     "protoceratops":      dict(biomes=("desert", "badlands", "savanna"), weight=7, group=(2, 5), track=8),    # dunes and dry scrub
     "leptoceratops":      dict(biomes=("plains", "forest", "savanna"), weight=9, group=(3, 5), track=8),     # the "pig" of the undergrowth, small herds
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
@@ -434,11 +435,12 @@ SPECIES = [
       xp=16, rideable=True, jump=0.5, ride_offset=3.44, ride_forward=1.59, ride_speed=1.1, trample=True,
       saddle="STYRACOSAURUS_SADDLE", rig="Centrosaurine"),
  dict(id="pachyrhinosaurus", cls="Pachyrhinosaurus", base="HerbivoreDinosaur",
-      doc="Pachyrhinosaurus canadensis - 8 m horned herbivore of the cold north with a bony boss instead of a nose horn. Territorial: gores with the boss. Its musk calms the herbivores around it and draws the predators onto itself. Tamed with plants; rideable, breaks the brush in its way.",
-      attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
+      doc="Pachyrhinosaurus canadensis - the bossed centrosaurine of the cold north (Horseshoe Canyon, Alberta; late Campanian to early Maastrichtian), 8 m, built like a bison: a huge hump over the shoulders, the back stepping down to a short tail, short legs under a barrel body, and a ram's head carried low with a flat rough boss of horn on the snout instead of a nose horn and two hooks curving off a short frill. The defence ring: when a big predator comes near, the grown ones of the herd do not run nor charge one by one, they close a ring facing out with the calves and the wounded in the middle, and only the one the predator comes closest to breaks out for a short butt of the boss and goes back (the musk ox; a hypothesis). Two males butt boss to boss and push brow to brow until one gives in. The herbivore that migrates: the herd waits on the bank, the leader wades in first and the others follow together. Digs the snow for the plants under it. Territorial in the herd: whoever comes near the calves gets the boss. Rideable with its own pack saddle; ridden or charging it breaks the brush in its way. Behaviour in Pachyrhinosaurine.",
+      attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=24),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.1, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=22, rideable=True, jump=0.45, ride_offset=2.95, ride_forward=0.2, ride_speed=1.05, trample=True, musk=True),
+      xp=22, rideable=True, jump=0.45, ride_offset=3.4, ride_forward=0.6, ride_speed=1.05, trample=True,
+      saddle="PACHYRHINOSAURUS_SADDLE", rig="Pachyrhinosaurine"),
  dict(id="protoceratops", cls="Protoceratops", base="HerbivoreDinosaur",
       doc="Protoceratops andrewsi - sheep-sized frilled herbivore of the dunes. Bites back when bothered. Digs in soft ground: a tame one turns up roots, bones and shallow fossils.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ATTACK_KNOCKBACK=0.5, ARMOR=3, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=16),
@@ -897,7 +899,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine", "Pachyrhinosaurine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1142,7 +1144,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine", "Pachyrhinosaurine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

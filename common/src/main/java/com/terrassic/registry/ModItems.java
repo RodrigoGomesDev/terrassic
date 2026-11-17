@@ -348,6 +348,10 @@ public final class ModItems {
      *  under branches, a pad of beaten bark cloth and a bone grip. */
     public static final RegistrySupplier<Item> CORYTHOSAURUS_SADDLE = ITEMS.register("corythosaurus_saddle",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
+    /** The Pachyrhinosaurus' own saddle (only it saddles a Pachyrhinosaurus): the pack saddle, a thick felted blanket
+     *  over the hump, a low seat behind it and packs of hide on both flanks. */
+    public static final RegistrySupplier<Item> PACHYRHINOSAURUS_SADDLE = ITEMS.register("pachyrhinosaurus_saddle",
+            () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));
     /** The Velociraptor's hunting harness: its "saddle" for the armour it gives; it can never be ridden. */
     public static final RegistrySupplier<Item> VELOCIRAPTOR_HARNESS = ITEMS.register("velociraptor_harness",
             () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON).arch$tab(ModTabs.MAIN)));

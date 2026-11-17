@@ -73,6 +73,10 @@ public record DuelStyle(float profile, double reach, double lunge, String jab, i
                     0.18F, 0.45F, 0.04F, 70, 0.40F)),
             Map.entry("styracosaurus", new DuelStyle(0.0F, 2.6D, 7.0D, "nose_jab", 6, 16, "horn_hook", 9, 20, false,
                     0.20F, 0.35F, 0.06F, 60, 0.50F)),
+            // the boss: face on, a toss of the head as the jab, the short butt of the boss (3-4 steps) as its signature;
+            // blocks a lot with the boss, hardly parries, never dodges, circles little (docs/estudos/15, Paquirrinossauro)
+            Map.entry("pachyrhinosaurus", new DuelStyle(0.0F, 2.4D, 4.5D, "head_toss", 7, 18, "boss_ram", 12, 30, false,
+                    0.15F, 0.50F, 0.02F, 85, 0.35F)),
             // small and stubborn: the beak that holds, the frill shove
             Map.entry("protoceratops", new DuelStyle(0.0F, 1.3D, 4.0D, "attack", 8, 16, "frill_shove", 8, 24, false,
                     0.15F, 0.30F, 0.12F, 45, 0.70F)),

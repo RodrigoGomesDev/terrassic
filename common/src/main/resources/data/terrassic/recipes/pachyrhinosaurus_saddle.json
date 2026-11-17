@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "WHW",
+    "LWL",
+    "S S"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:brown_wool"
+    },
+    "H": {
+      "item": "terrassic:pachyrhinosaurus_hide"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "terrassic:pachyrhinosaurus_saddle",
+    "count": 1
+  }
+}

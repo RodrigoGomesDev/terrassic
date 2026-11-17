@@ -109,6 +109,7 @@ public final class BehaviorTest {
                     + ",daspleto,alberto,carcharo,majunga,bankexit"   // 1.10.1: the four remade predators
                     + ",maia"                                            // 1.11.0: the Maiasaura's colony
                     + ",cory"                                           // 1.11.0: the Corythosaurus' voice and ear
+                    + ",pachy"                                          // 1.11.0: the Pachyrhinosaurus' ring, bout and crossing
                     + ",nests";   // 1.11: their own eggs and nests
         }
         if (java.util.stream.Stream.of("roarfear", "aggro", "eggrage", "helpcall", "babystay", "herdmove", "quirks", "feet", "stable").anyMatch(only::contains)) {
@@ -173,6 +174,9 @@ public final class BehaviorTest {
         }
         if (only.contains("cory")) {
             planCory();
+        }
+        if (java.util.Arrays.asList(only.split(",")).contains("pachy")) {
+            planPachy();
         }
         if (only.contains("steps")) {
             planSteps();
@@ -1953,6 +1957,412 @@ public final class BehaviorTest {
             maiaClear(mc, x0);
             return 20;
         });
+    }
+
+    // ------------------------------------------------------------------ 1.11.0: the Pachyrhinosaurus (study 15)
+    private static void pachyShot(String name) {
+        STEPS.add(mc -> {
+            pachyShotNow(mc, name);
+            return 2;
+        });
+    }
+
+    private static void pachyShotNow(Minecraft mc, String name) {
+        Screenshot.grab(mc.gameDirectory, "behavior_pachy_" + name + ".png", mc.getMainRenderTarget(), msg -> {
+        });
+    }
+
+    private static List<com.terrassic.entity.Pachyrhinosaurine> pachyAll(Minecraft mc, UUID... ids) {
+        List<com.terrassic.entity.Pachyrhinosaurine> out = new java.util.ArrayList<>();
+        for (UUID u : ids) {
+            if (server(mc, u) instanceof com.terrassic.entity.Pachyrhinosaurine c) {
+                out.add(c);
+            }
+        }
+        return out;
+    }
+
+    private static float yawTo(Entity from, double x, double z) {
+        return (float) (Mth.atan2(z - from.getZ(), x - from.getX()) * Mth.RAD_TO_DEG) - 90.0F;
+    }
+
+    /** 1.11.0, the Pachyrhinosaurus (docs/estudos/15): photos (side, 3/4, front, head, male and female, the calf, next to
+     *  the Triceratops, the Styracosaurus and the Protoceratops), then the defence ring (five grown ones and two calves,
+     *  a Daspletosaurus moved round them by the test: the calves inside, the grown ones facing out, the sally of the
+     *  nearest and the ring broken up when the predator goes), the boss bout of two males (the butt, brow to brow, one
+     *  gives in, nobody badly hurt), the river crossing of a migrating herd (it waits on the bank, the leader in first,
+     *  all across) and the snow dug off to graze. TERRASSIC_PACHY_FAST=1 shortens the bout cooldowns. */
+    private static void planPachy() {
+        double x0 = 8600.5D;
+        UUID male = id(), female = id(), calf = id(), tri = id(), sty = id(), pro = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Pachyrhinosaurus (1.11.0)");
+            clear(mc, x0, 72);
+            return 40;
+        });
+        STEPS.add(mc -> {
+            maiaClear(mc, x0);
+            command(mc, "time set 1000");
+            command(mc, "gamerule doDaylightCycle false");
+            return 20;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "pachyrhinosaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"pachy\"]");
+            noAutoShots = true;
+            return 40;
+        });
+        awaitAll(male);
+        String[][] views = {{"side", "0", "0.15", "1"}, {"tq", "0.75", "0.35", "0.75"}, {"front", "-1", "0.25", "0.1"}};
+        for (String[] v : views) {
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, male);
+                if (d == null) {
+                    REPORT.add("  pachy photo: NOT FOUND");
+                    return 1;
+                }
+                double r = 3.0D + d.getBbWidth() * 2.0D + d.getBbHeight() * 1.0D;
+                Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.5D, 0.0D);
+                look(mc.player, c.add(Double.parseDouble(v[1]) * r, Double.parseDouble(v[2]) * r, Double.parseDouble(v[3]) * r), c);
+                return 40;
+            });
+            pachyShot(v[0]);
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, male);
+            if (d != null) {
+                double k = d.getBbHeight();
+                Vec3 head = d.position().add(-0.75D * k, 0.45D * k, 0.0D);
+                look(mc.player, head.add(-0.5D * k, 0.15D * k, 0.8D * k), head);
+                REPORT.add(String.format(Locale.ROOT, "  pachy size: hitbox %.2f x %.2f, scale %.3f", d.getBbWidth(), d.getBbHeight(), d.getScale()));
+            }
+            return 40;
+        });
+        pachyShot("head");
+        STEPS.add(mc -> {
+            summon(mc, "pachyrhinosaurus", x0 + 14.0D, Y, 0.5D, female, "NoAI:1b,Female:1b,Rotation:[90f,0f],Tags:[\"pachy\"]");
+            summon(mc, "pachyrhinosaurus", x0 + 6.0D, Y, -14.5D, calf, "NoAI:1b,Age:-24000,Rotation:[90f,0f],Tags:[\"pachy\"]");
+            summon(mc, "triceratops", x0 - 18.0D, Y, 0.5D, tri, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"pachy\"]");
+            summon(mc, "styracosaurus", x0 - 34.0D, Y, 0.5D, sty, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"pachy\"]");
+            summon(mc, "protoceratops", x0 - 44.0D, Y, 0.5D, pro, "NoAI:1b,Female:0b,Rotation:[90f,0f],Tags:[\"pachy\"]");
+            return 40;
+        });
+        awaitAll(female, calf, tri, sty, pro);
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, calf);
+            if (c != null) {
+                Vec3 p = c.position().add(0.0D, c.getBbHeight() * 0.6D, 0.0D);
+                look(mc.player, p.add(-1.4D, 0.9D, -3.4D), p);
+                REPORT.add(String.format(Locale.ROOT, "  pachy calf: scale %.3f, hitbox %.2f x %.2f", c.getScale(), c.getBbWidth(), c.getBbHeight()));
+            }
+            return 40;
+        });
+        pachyShot("calf");
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 + 7.0D, Y + 4.0D, 24.0D), new Vec3(x0 + 7.0D, Y + 2.5D, 0.0D));
+            return 40;
+        });
+        pachyShot("male_female");
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 - 20.0D, Y + 6.0D, 42.0D), new Vec3(x0 - 20.0D, Y + 2.0D, 0.0D));
+            return 40;
+        });
+        pachyShot("with_ceratopsians");
+        STEPS.add(mc -> {
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the defence ring: five grown ones, two calves, a Daspletosaurus walked round them by the test
+        UUID[] herd = {id(), id(), id(), id(), id()};
+        UUID[] calves = {id(), id()};
+        UUID das = id();
+        double rz = 30.5D;
+        STEPS.add(mc -> {
+            REPORT.add("  -- the defence ring");
+            noAutoShots = false;
+            for (int i = 0; i < herd.length; i++) {
+                double a = Mth.TWO_PI * i / herd.length;
+                summon(mc, "pachyrhinosaurus", x0 + Math.cos(a) * 6.0D, Y, rz + Math.sin(a) * 6.0D, herd[i],
+                        "Female:" + (i % 2) + "b,Tags:[\"pachy\"]");
+            }
+            summon(mc, "pachyrhinosaurus", x0 + 3.0D, Y, rz + 9.0D, calves[0], "Age:-24000,Tags:[\"pachy\"]");
+            summon(mc, "pachyrhinosaurus", x0 - 4.0D, Y, rz - 9.0D, calves[1], "Age:-24000,Tags:[\"pachy\"]");
+            look(mc.player, new Vec3(x0, Y + 26.0D, rz - 22.0D), new Vec3(x0, Y, rz));
+            return 20;
+        });
+        awaitAll(herd);
+        awaitAll(calves);
+        STEPS.add(mc -> {
+            mc.getSingleplayerServer().execute(() -> {
+                for (com.terrassic.entity.Pachyrhinosaurine p : pachyAll(mc, herd)) {
+                    p.testQuiet();
+                    p.testNoBout();
+                }
+            });
+            summon(mc, "daspletosaurus", x0 + 18.0D, Y, rz, das, "NoAI:1b,Tags:[\"pachy\"]");
+            return 20;
+        });
+        awaitAll(das);
+        int[] rk = {0};
+        double[] ringStat = new double[12];   // formed, adults, calves in, calves, facing ok, mean off, braced, sallies, hits, back, over, overAt
+        STEPS.add(mc -> {
+            int k = rk[0]++;
+            DinosaurEntity pred = server(mc, das);
+            List<com.terrassic.entity.Pachyrhinosaurine> grown = pachyAll(mc, herd);
+            List<com.terrassic.entity.Pachyrhinosaurine> small = pachyAll(mc, calves);
+            com.terrassic.entity.Pachyrhinosaurine.Ring ring = grown.stream().map(com.terrassic.entity.Pachyrhinosaurine::ring)
+                    .filter(r -> r != null).findFirst().orElse(null);
+            if (ring != null) {
+                ringStat[0] = 1;
+            }
+            Vec3 c = ring != null ? ring.centre : new Vec3(x0, Y, rz);
+            if (pred != null) {
+                Vec3 to;
+                if (k < 300) {
+                    double a = 0.006D * k;          // walks slowly round the herd at 15 blocks
+                    to = c.add(Math.cos(a) * 15.0D, 0.0D, Math.sin(a) * 15.0D);
+                } else if (k < 460) {
+                    // closes in on the nearest grown one, to 3 blocks of its box
+                    com.terrassic.entity.Pachyrhinosaurine n = grown.stream()
+                            .min(java.util.Comparator.comparingDouble(e -> e.distanceToSqr(pred))).orElse(null);
+                    Vec3 d = n == null ? Vec3.ZERO : pred.position().subtract(n.position());
+                    double want = n == null ? 0.0D : (n.getBbWidth() + pred.getBbWidth()) * 0.5D + 3.0D;
+                    to = n == null ? pred.position() : n.position().add(new Vec3(d.x, 0.0D, d.z).normalize().scale(Math.max(want, d.horizontalDistance() - 0.12D)));
+                } else {
+                    Vec3 d = pred.position().subtract(c);
+                    to = pred.position().add(new Vec3(d.x, 0.0D, d.z).normalize().scale(0.3D));
+                }
+                Vec3 t = to;
+                float yaw = yawTo(pred, c.x, c.z);
+                mc.getSingleplayerServer().execute(() -> {
+                    pred.moveTo(t.x, Y, t.z, yaw, 0.0F);
+                    pred.setYHeadRot(yaw);
+                    pred.yBodyRot = yaw;
+                });
+            }
+            if (k == 260 && ring != null) {
+                int in = 0, ok = 0, braced = 0;
+                double off = 0.0D;
+                for (com.terrassic.entity.Pachyrhinosaurine s2 : small) {
+                    if (s2.position().distanceTo(ring.centre) < ring.radius - 0.5D) {
+                        in++;
+                    }
+                }
+                List<com.terrassic.entity.Pachyrhinosaurine> edge = new java.util.ArrayList<>(ring.adults);
+                for (com.terrassic.entity.Pachyrhinosaurine a : edge) {
+                    float out = yawTo(ring.centre.x, ring.centre.z, a);
+                    float at = pred == null ? out : yawTo(a, pred.getX(), pred.getZ());
+                    double d = Math.min(Math.abs(Mth.wrapDegrees(a.getYRot() - out)), Math.abs(Mth.wrapDegrees(a.getYRot() - at)));
+                    off += d;
+                    if (d < 35.0D) {
+                        ok++;
+                    }
+                    if (a.isBraced()) {
+                        braced++;
+                    }
+                }
+                ringStat[1] = edge.size();
+                ringStat[2] = in;
+                ringStat[3] = small.size();
+                ringStat[4] = ok;
+                ringStat[5] = edge.isEmpty() ? -1 : off / edge.size();
+                ringStat[6] = braced;
+                look(mc.player, ring.centre.add(0.0D, 24.0D, -20.0D), ring.centre);
+            }
+            if (k == 262) {
+                pachyShotNow(mc, "ring_top");
+                if (ring != null && pred != null) {
+                    Vec3 side = ring.centre.subtract(pred.position()).normalize();
+                    look(mc.player, ring.centre.add(-side.z * 18.0D, 6.0D, side.x * 18.0D), ring.centre.add(0.0D, 1.5D, 0.0D));
+                }
+            }
+            if (k == 266) {
+                pachyShotNow(mc, "ring_side");
+            }
+            if (ring != null) {
+                ringStat[7] = ring.sallies;
+                ringStat[8] = ring.hits;
+                if (k == 330) {
+                    pachyShotNow(mc, "ring_sally");
+                }
+                if (ring.over && ringStat[10] == 0) {
+                    ringStat[10] = 1;
+                    ringStat[11] = pred == null ? -1 : pred.position().distanceTo(ring.centre);
+                }
+            }
+            if (k == 455) {
+                // after the sallies: is everyone of the edge back in its place (braced)?
+                ringStat[9] = grown.stream().filter(com.terrassic.entity.Pachyrhinosaurine::isBraced).count();
+            }
+            if (k < 640 && ringStat[10] == 0) {
+                return -1;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  pachy ring: formed %s, %d grown on the ring, calves inside %d of %d, facing out or at the predator %d of %d (mean off %.0f deg), braced %d of %d",
+                    ringStat[0] > 0 ? "YES" : "NO", (int) ringStat[1], (int) ringStat[2], (int) ringStat[3], (int) ringStat[4], (int) ringStat[1],
+                    ringStat[5], (int) ringStat[6], (int) ringStat[1]));
+            REPORT.add(String.format(Locale.ROOT, "  pachy ring sally: %d sallies, %d blows landed, %d braced in place after",
+                    (int) ringStat[7], (int) ringStat[8], (int) ringStat[9]));
+            REPORT.add(String.format(Locale.ROOT, "  pachy ring over: %s (predator %.0f blocks off)", ringStat[10] > 0 ? "YES" : "NO", ringStat[11]));
+            return 1;
+        });
+        STEPS.add(mc -> {
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the boss bout of two males
+        UUID ma = id(), mb = id();
+        int[] bt = {0, 0, 0, 0};          // samples, locked seen, rams at start, bouts at start
+        double[] gap = {0.0D};
+        STEPS.add(mc -> {
+            REPORT.add("  -- the boss bout");
+            summon(mc, "pachyrhinosaurus", x0, Y, 60.5D, ma, "Female:0b,Tags:[\"pachy\"]");
+            summon(mc, "pachyrhinosaurus", x0 + 7.0D, Y, 60.5D, mb, "Female:0b,Tags:[\"pachy\"]");
+            look(mc.player, new Vec3(x0 + 3.5D, Y + 7.0D, 42.0D), new Vec3(x0 + 3.5D, Y + 2.0D, 60.5D));
+            return 20;
+        });
+        awaitAll(ma, mb);
+        STEPS.add(mc -> {
+            List<com.terrassic.entity.Pachyrhinosaurine> two = pachyAll(mc, ma, mb);
+            if (bt[0] == 0) {
+                bt[2] = com.terrassic.entity.Pachyrhinosaurine.boutRams;
+                bt[3] = com.terrassic.entity.Pachyrhinosaurine.bouts;
+                mc.getSingleplayerServer().execute(() -> two.forEach(c -> {
+                    c.testQuiet();
+                    c.testBoutReady();
+                }));
+            }
+            bt[0]++;
+            if (two.stream().anyMatch(DinosaurEntity::isLocked)) {
+                if (bt[1] == 0) {
+                    pachyShotNow(mc, "boss_push");
+                }
+                bt[1] = 1;
+            }
+            boolean over = com.terrassic.entity.Pachyrhinosaurine.bouts > bt[3];
+            if (!over && bt[0] < 900) {
+                return -1;
+            }
+            gap[0] = two.size() == 2 ? two.get(0).distanceTo(two.get(1)) : -1.0D;
+            return 1;
+        });
+        STEPS.add(mc -> 200);
+        STEPS.add(mc -> {
+            List<com.terrassic.entity.Pachyrhinosaurine> two = pachyAll(mc, ma, mb);
+            double g = two.size() == 2 ? two.get(0).distanceTo(two.get(1)) : -1.0D;
+            double h0 = two.size() > 0 ? 100.0D * two.get(0).getHealth() / two.get(0).getMaxHealth() : -1.0D;
+            double h1 = two.size() > 1 ? 100.0D * two.get(1).getHealth() / two.get(1).getMaxHealth() : -1.0D;
+            REPORT.add(String.format(Locale.ROOT, "  pachy bout: butts %d, brow to brow %s, over %s after %d s, then %.1f to %.1f blocks apart, health %.0f%% and %.0f%%",
+                    com.terrassic.entity.Pachyrhinosaurine.boutRams - bt[2], bt[1] > 0 ? "YES" : "NO",
+                    com.terrassic.entity.Pachyrhinosaurine.bouts > bt[3] ? "YES" : "NO", bt[0] / 20, gap[0], g, h0, h1));
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the river crossing: a migrating herd meets a shallow river
+        UUID[] mig = {id(), id(), id(), id(), id()};
+        int[] rv = {0, 0, 0};             // ticks, leader first (1 yes, -1 no), shot taken
+        STEPS.add(mc -> {
+            REPORT.add("  -- the river crossing");
+            command(mc, fill(x0 - 30.0D, Y - 1, 70.0D, x0 + 30.0D, Y - 1, 77.0D, "minecraft:water"));
+            for (int i = 0; i < mig.length; i++) {
+                summon(mc, "pachyrhinosaurus", x0 - 6.0D + (i % 3) * 5.0D, Y, 58.5D - (i / 3) * 5.0D, mig[i],
+                        "Female:" + (i % 2) + "b,Tags:[\"pachy\"]");
+            }
+            look(mc.player, new Vec3(x0 - 26.0D, Y + 14.0D, 66.0D), new Vec3(x0, Y, 70.0D));
+            return 20;
+        });
+        awaitAll(mig);
+        STEPS.add(mc -> {
+            mc.getSingleplayerServer().execute(() -> {
+                for (com.terrassic.entity.Pachyrhinosaurine p : pachyAll(mc, mig)) {
+                    p.testQuiet();
+                    p.testNoBout();
+                    p.setMigrationTarget(BlockPos.containing(x0, Y, 100.5D));
+                }
+            });
+            com.terrassic.entity.Pachyrhinosaurine.lastCrossing = null;
+            return 10;
+        });
+        STEPS.add(mc -> {
+            int k = rv[0]++;
+            List<com.terrassic.entity.Pachyrhinosaurine> all = pachyAll(mc, mig);
+            com.terrassic.entity.Pachyrhinosaurine.Crossing c = com.terrassic.entity.Pachyrhinosaurine.lastCrossing;
+            if (rv[1] == 0) {
+                for (com.terrassic.entity.Pachyrhinosaurine p : all) {
+                    if (p.isInWater()) {
+                        rv[1] = c != null && p == c.leader ? 1 : -1;
+                        break;
+                    }
+                }
+            }
+            if (c != null && c.wait > 0 && rv[2] == 0) {
+                rv[2] = 1;
+                pachyShotNow(mc, "hesitate");
+            }
+            if (rv[2] == 1 && all.stream().filter(net.minecraft.world.entity.Entity::isInWater).count() >= 2) {
+                rv[2] = 2;
+                pachyShotNow(mc, "wade");
+            }
+            long across = all.stream().filter(p -> p.getZ() > 79.0D).count();
+            if (across < all.size() && k < 2400) {
+                if (k % 200 == 0 && k > 0) {
+                    // the destination may have been reached or dropped by a waypoint failure: keep the herd on its way
+                    mc.getSingleplayerServer().execute(() -> all.forEach(p -> {
+                        if (p.getMigrationTarget() == null && p.getZ() < 79.0D) {
+                            p.setMigrationTarget(BlockPos.containing(x0, Y, 100.5D));
+                        }
+                    }));
+                }
+                return -1;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  pachy river: waited on the bank %s s, the leader in first %s, across %d of %d in %d s",
+                    c == null ? "-" : String.valueOf(c.waited / 20), rv[1] > 0 ? "YES" : rv[1] < 0 ? "NO" : "-", across, all.size(), k / 20));
+            return 1;
+        });
+        STEPS.add(mc -> {
+            command(mc, fill(x0 - 30.0D, Y - 1, 70.0D, x0 + 30.0D, Y - 1, 77.0D, "minecraft:grass_block"));
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the cold: snow dug off to graze
+        UUID dig = id();
+        int[] sn = {0};
+        STEPS.add(mc -> {
+            REPORT.add("  -- the snow");
+            command(mc, fill(x0 - 6.0D, Y, 104.0D, x0 + 6.0D, Y, 116.0D, "minecraft:snow[layers=2]"));
+            summon(mc, "pachyrhinosaurus", x0, Y, 110.5D, dig, "Female:1b,Tags:[\"pachy\"]");
+            look(mc.player, new Vec3(x0 + 10.0D, Y + 6.0D, 100.0D), new Vec3(x0, Y + 1.0D, 110.5D));
+            return 20;
+        });
+        awaitAll(dig);
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, dig);
+            if (sn[0] == 0 && d instanceof com.terrassic.entity.Pachyrhinosaurine p) {
+                mc.getSingleplayerServer().execute(() -> {
+                    p.testNoBout();
+                    p.setHunger(10);
+                });
+            }
+            int dug = TRIGGERS.getOrDefault("pachyrhinosaurus", Map.of()).getOrDefault("snow_dig", 0);
+            if (dug == 0 && sn[0]++ < 60) {
+                return -20;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  pachy snow: dug %s after %d s", dug > 0 ? "YES" : "NO", sn[0]));
+            return 30;
+        });
+        pachyShot("snow_dig");
+        STEPS.add(mc -> {
+            command(mc, fill(x0 - 6.0D, Y, 104.0D, x0 + 6.0D, Y, 116.0D, "minecraft:air"));
+            maiaClear(mc, x0);
+            return 20;
+        });
+    }
+
+    private static float yawTo(double fromX, double fromZ, Entity to) {
+        return (float) (Mth.atan2(to.getZ() - fromZ, to.getX() - fromX) * Mth.RAD_TO_DEG) - 90.0F;
     }
 
     private static void coryShotNow(Minecraft mc, String name) {
