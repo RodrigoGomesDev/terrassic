@@ -34,7 +34,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
     private final ResourceLocation alphaFemaleTexture;
     /** 1.11.0: the calf's own coat (the Maiasaura's, paler and smooth); null for the species whose young share the adult's. */
     private final ResourceLocation babyTexture;
-    private static final java.util.Set<String> BABY_SKINS = java.util.Set.of("maiasaura", "corythosaurus");
+    private static final java.util.Set<String> BABY_SKINS = java.util.Set.of("maiasaura", "corythosaurus", "thescelosaurus");
 
     public DinoGeoModel(String speciesId) {
         super(Terrassic.id(speciesId), "head");

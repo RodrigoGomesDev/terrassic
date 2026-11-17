@@ -1568,39 +1568,77 @@
   "render_scale": 0.5
  },
  "thescelosaurus": {
-  "bones": 24,
-  "cubes": 68,
+  "bones": 31,
+  "cubes": 46,
   "texture": [
    128,
-   128
+   32
   ],
   "bounds_px": [
    [
-    -7.0,
-    4.553887690351674e-06,
-    -38.88200362326126
+    -7.670999983763291,
+    -2.2516710718178956e-15,
+    -25.926717644396806
    ],
    [
-    7.0,
-    30.480842505899673,
-    45.07602117034106
+    7.665950830792086,
+    44.680927518251934,
+    49.510255012861705
    ]
   ],
   "animations": [
    "animation.thescelosaurus.idle",
    "animation.thescelosaurus.walk",
    "animation.thescelosaurus.run",
-   "animation.thescelosaurus.sit",
+   "animation.thescelosaurus.bolt",
+   "animation.thescelosaurus.swim",
+   "animation.thescelosaurus.turn_left",
+   "animation.thescelosaurus.turn_right",
+   "animation.thescelosaurus.walk_tired",
+   "animation.thescelosaurus.idle_tired",
+   "animation.thescelosaurus.freeze",
+   "animation.thescelosaurus.sniff_ground",
+   "animation.thescelosaurus.sniff_air",
+   "animation.thescelosaurus.sniff",
+   "animation.thescelosaurus.dig",
+   "animation.thescelosaurus.burrow_dig",
+   "animation.thescelosaurus.burrow_sleep",
+   "animation.thescelosaurus.hide",
+   "animation.thescelosaurus.peek",
+   "animation.thescelosaurus.tail_flag",
+   "animation.thescelosaurus.alarm",
+   "animation.thescelosaurus.call",
+   "animation.thescelosaurus.look_back",
+   "animation.thescelosaurus.shake",
+   "animation.thescelosaurus.hatch",
+   "animation.thescelosaurus.eat",
    "animation.thescelosaurus.graze",
+   "animation.thescelosaurus.drink",
    "animation.thescelosaurus.attack",
+   "animation.thescelosaurus.kick",
+   "animation.thescelosaurus.kick_back",
+   "animation.thescelosaurus.hurt",
+   "animation.thescelosaurus.death",
+   "animation.thescelosaurus.knockout",
    "animation.thescelosaurus.knocked_out",
    "animation.thescelosaurus.wake",
-   "animation.thescelosaurus.eat",
+   "animation.thescelosaurus.sit",
+   "animation.thescelosaurus.sleep",
+   "animation.thescelosaurus.wake_sleep",
+   "animation.thescelosaurus.lie_down",
+   "animation.thescelosaurus.get_up",
    "animation.thescelosaurus.beg",
-   "animation.thescelosaurus.tame",
-   "animation.thescelosaurus.dig"
+   "animation.thescelosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.8638,
+  "handmade": true,
+  "px_per_m": 18.522,
+  "texels_per_block": 17.81,
+  "colours": {
+   "male": 24,
+   "female": 22,
+   "baby": 22
+  }
  },
  "pachyrhinosaurus": {
   "bones": 27,

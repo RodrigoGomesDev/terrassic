@@ -109,6 +109,7 @@ public final class BehaviorTest {
                     + ",daspleto,alberto,carcharo,majunga,bankexit"   // 1.10.1: the four remade predators
                     + ",maia"                                            // 1.11.0: the Maiasaura's colony
                     + ",cory"                                           // 1.11.0: the Corythosaurus' voice and ear
+                    + ",thesc"                                          // 1.11.0: the Thescelosaurus' freeze, bolt and burrow
                     + ",nests";   // 1.11: their own eggs and nests
         }
         if (java.util.stream.Stream.of("roarfear", "aggro", "eggrage", "helpcall", "babystay", "herdmove", "quirks", "feet", "stable").anyMatch(only::contains)) {
@@ -173,6 +174,9 @@ public final class BehaviorTest {
         }
         if (only.contains("cory")) {
             planCory();
+        }
+        if (only.contains("thesc")) {
+            planThesc();
         }
         if (only.contains("steps")) {
             planSteps();
@@ -497,7 +501,7 @@ public final class BehaviorTest {
     private static void planLook() {
         double x0 = 4400.5D;
         String[] all = {"tyrannosaurus", "triceratops", "edmontosaurus", "quetzalcoatlus", "therizinosaurus", "deinosuchus",
-                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus"};
+                "ankylosaurus", "spinosaurus", "gallimimus", "parasaurolophus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus", "thescelosaurus"};
         for (String sp : all) {
             UUID u = id();
             STEPS.add(mc -> {
@@ -1575,6 +1579,417 @@ public final class BehaviorTest {
     }
 
     // ------------------------------------------------------------------ 1.11.0: the Corythosaurus (study 15)
+    // ================================================================== 1.11.0, the Thescelosaurus (docs/estudos/15)
+    private static void thescShot(String name) {
+        STEPS.add(mc -> {
+            Screenshot.grab(mc.gameDirectory, "behavior_thesc_" + name + ".png", mc.getMainRenderTarget(), msg -> {
+            });
+            return 2;
+        });
+    }
+
+    private static com.terrassic.entity.Thescelosaurine thesc(Minecraft mc, UUID u) {
+        return server(mc, u) instanceof com.terrassic.entity.Thescelosaurine t ? t : null;
+    }
+
+    private static String waryName(com.terrassic.entity.Thescelosaurine t) {
+        return t == null ? "gone" : new String[]{"calm", "freeze", "bolt", "hide"}[t.wary()];
+    }
+
+    /** 1.11.0, the Thescelosaurus (docs/estudos/15): photos (side, 3/4, front, head, male and female, the calf, next to the
+     *  Gallimimus, the Pachycephalosaurus and the Dakotaraptor), then the wary animal: a Dakotaraptor coming up makes a
+     *  group of three freeze at 16 blocks and bolt at 10 for a thicket of ferns and leaves, where they hide (one sees the
+     *  flag of the other); a raptor behind a stone wall is smelled without sight; a survival player standing at 12
+     *  blocks makes it freeze; at dusk it digs a burrow in a bank of earth and sleeps in it at night, and lays its eggs
+     *  there; tame, it follows its owner, digs up roots and is not rideable. */
+    private static void planThesc() {
+        double x0 = 8600.5D;
+        UUID male = id(), female = id(), calf = id(), galli = id(), pachy = id(), dakota = id();
+        STEPS.add(mc -> {
+            REPORT.add("");
+            REPORT.add("== Thescelosaurus (1.11.0)");
+            clear(mc, x0, 72);
+            return 40;
+        });
+        STEPS.add(mc -> {
+            maiaClear(mc, x0);
+            command(mc, "time set 1000");
+            command(mc, "gamerule doDaylightCycle false");
+            return 20;
+        });
+        STEPS.add(mc -> {
+            summon(mc, "thescelosaurus", x0, Y, 0.5D, male, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            noAutoShots = true;
+            return 40;
+        });
+        awaitAll(male);
+        String[][] views = {{"side", "0", "0.15", "1"}, {"tq", "0.75", "0.35", "0.75"}, {"front", "-1", "0.25", "0.1"}};
+        for (String[] v : views) {
+            STEPS.add(mc -> {
+                DinosaurEntity d = server(mc, male);
+                if (d == null) {
+                    REPORT.add("  thesc photo: NOT FOUND");
+                    return 1;
+                }
+                double r = 2.0D + d.getBbWidth() * 2.0D + d.getBbHeight() * 1.0D;
+                Vec3 c = d.position().add(0.0D, d.getBbHeight() * 0.5D, 0.0D);
+                look(mc.player, c.add(Double.parseDouble(v[1]) * r, Double.parseDouble(v[2]) * r, Double.parseDouble(v[3]) * r), c);
+                return 40;
+            });
+            thescShot(v[0]);
+        }
+        STEPS.add(mc -> {
+            DinosaurEntity d = server(mc, male);
+            if (d != null) {
+                double k = d.getBbHeight();
+                Vec3 head = d.position().add(-0.55D * k, 1.0D * k, 0.0D);
+                look(mc.player, head.add(-0.25D * k, 0.1D * k, 0.6D * k), head);
+                REPORT.add(String.format(Locale.ROOT, "  thesc size: hitbox %.2f x %.2f, scale %.3f, rideable %s", d.getBbWidth(),
+                        d.getBbHeight(), d.getScale(), d.isRideable() ? "YES" : "no"));
+            }
+            return 40;
+        });
+        thescShot("head");
+        STEPS.add(mc -> {
+            summon(mc, "thescelosaurus", x0 + 6.0D, Y, 0.5D, female, "NoAI:1b,Female:1b,Rotation:[90f,0f]");
+            summon(mc, "thescelosaurus", x0 + 3.0D, Y, -6.5D, calf, "NoAI:1b,Age:-24000,Rotation:[90f,0f]");
+            summon(mc, "gallimimus", x0 - 10.0D, Y, 0.5D, galli, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            summon(mc, "pachycephalosaurus", x0 - 20.0D, Y, 0.5D, pachy, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            summon(mc, "dakotaraptor", x0 - 30.0D, Y, 0.5D, dakota, "NoAI:1b,Female:0b,Rotation:[90f,0f]");
+            return 40;
+        });
+        awaitAll(female, calf, galli, pachy, dakota);
+        STEPS.add(mc -> {
+            DinosaurEntity c = server(mc, calf);
+            if (c != null) {
+                Vec3 p = c.position().add(0.0D, c.getBbHeight() * 0.6D, 0.0D);
+                look(mc.player, p.add(-0.8D, 0.6D, -2.2D), p);
+                REPORT.add(String.format(Locale.ROOT, "  thesc calf: scale %.3f, hitbox %.2f x %.2f", c.getScale(), c.getBbWidth(), c.getBbHeight()));
+            }
+            return 40;
+        });
+        thescShot("calf");
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 + 3.0D, Y + 2.5D, 11.0D), new Vec3(x0 + 3.0D, Y + 1.6D, 0.0D));
+            return 40;
+        });
+        thescShot("male_female");
+        STEPS.add(mc -> {
+            look(mc.player, new Vec3(x0 - 13.0D, Y + 4.0D, 26.0D), new Vec3(x0 - 13.0D, Y + 1.5D, 0.0D));
+            return 40;
+        });
+        thescShot("with_bipeds");
+        STEPS.add(mc -> {
+            noAutoShots = false;
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- freeze, bolt and hide: three in the open, a thicket of ferns and leaves 12 blocks off, a raptor coming up
+        UUID[] three = {id(), id(), id()};
+        UUID rap = id();
+        double tx = x0 + 14.0D;
+        int[] st = {0, 0, 0, 0};          // samples, froze (bits), bolted (bits), hid (bits)
+        double[] frozeAt = {-1.0D}, boltAt = {-1.0D};
+        STEPS.add(mc -> {
+            REPORT.add("  -- freeze, bolt and hide");
+            for (int dx = -2; dx <= 2; dx++) {
+                for (int dz = -2; dz <= 2; dz++) {
+                    command(mc, String.format(Locale.ROOT, "setblock %d %d %d minecraft:%s", (int) Math.floor(tx + dx), (int) Y,
+                            (int) (30 + dz), (dx + dz) % 2 == 0 ? "large_fern[half=lower]" : "fern"));
+                    if ((dx + dz) % 2 == 0) {
+                        command(mc, String.format(Locale.ROOT, "setblock %d %d %d minecraft:large_fern[half=upper]", (int) Math.floor(tx + dx),
+                                (int) Y + 1, (int) (30 + dz)));
+                    }
+                }
+            }
+            command(mc, fill(tx - 2, Y + 2, 28, tx + 2, Y + 2, 32, "minecraft:oak_leaves[persistent=true]"));
+            for (int i = 0; i < 3; i++) {
+                summon(mc, "thescelosaurus", x0 + i * 3.0D, Y, 20.5D, three[i], "Rotation:[0f,0f]");
+            }
+            look(mc.player, new Vec3(x0 + 4.0D, Y + 26.0D, 2.0D), new Vec3(x0 + 4.0D, Y, 24.0D));
+            return 60;
+        });
+        awaitAll(three);
+        STEPS.add(mc -> {
+            mc.getSingleplayerServer().execute(() -> {
+                for (UUID u : three) {
+                    com.terrassic.entity.Thescelosaurine t = thesc(mc, u);
+                    if (t != null) {
+                        t.testCalm();
+                    }
+                }
+            });
+            // the raptor at 26 blocks, out of reach of the senses, then brought in step by step (no AI: it only stands)
+            summon(mc, "dakotaraptor", x0 - 22.0D, Y, 20.5D, rap, "NoAI:1b,Rotation:[-90f,0f]");
+            return 20;
+        });
+        awaitAll(rap);
+        int[] walkIn = {0};
+        STEPS.add(mc -> {
+            DinosaurEntity r = server(mc, rap);
+            com.terrassic.entity.Thescelosaurine a = thesc(mc, three[0]);
+            if (r == null || a == null) {
+                REPORT.add("  thesc freeze: NOT FOUND");
+                return 1;
+            }
+            for (int i = 0; i < 3; i++) {
+                com.terrassic.entity.Thescelosaurine t = thesc(mc, three[i]);
+                if (t == null) {
+                    continue;
+                }
+                if (t.wary() == com.terrassic.entity.Thescelosaurine.FREEZE && (st[1] & (1 << i)) == 0) {
+                    st[1] |= 1 << i;
+                    if (frozeAt[0] < 0) {
+                        frozeAt[0] = t.distanceTo(r);
+                    }
+                }
+                if (t.wary() == com.terrassic.entity.Thescelosaurine.BOLT && (st[2] & (1 << i)) == 0) {
+                    st[2] |= 1 << i;
+                    if (boltAt[0] < 0) {
+                        boltAt[0] = t.distanceTo(r);
+                    }
+                }
+                if (t.wary() == com.terrassic.entity.Thescelosaurine.HIDE) {
+                    st[3] |= 1 << i;
+                }
+            }
+            if (walkIn[0] == 25) {
+                Screenshot.grab(mc.gameDirectory, "behavior_thesc_freeze.png", mc.getMainRenderTarget(), msg -> {
+                });
+            }
+            if (walkIn[0] == 36) {
+                Screenshot.grab(mc.gameDirectory, "behavior_thesc_bolt.png", mc.getMainRenderTarget(), msg -> {
+                });
+            }
+            // the raptor steps in half a block every 5 ticks up to 7 blocks from the first one
+            double gap = r.distanceTo(a);
+            if (gap > 7.5D && walkIn[0] < 120) {
+                mc.getSingleplayerServer().execute(() -> r.moveTo(r.getX() + 0.5D, r.getY(), r.getZ(), -90.0F, 0.0F));
+            }
+            if (walkIn[0]++ < 140 && Integer.bitCount(st[3]) < 3) {
+                return -5;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  thesc freeze: froze %s at %.1f blocks (%d of 3 froze)",
+                    st[1] != 0 ? "YES" : "NO", frozeAt[0], Integer.bitCount(st[1])));
+            REPORT.add(String.format(Locale.ROOT, "  thesc bolt: bolted %s at %.1f blocks (%d of 3 bolted)",
+                    st[2] != 0 ? "YES" : "NO", boltAt[0], Integer.bitCount(st[2])));
+            return 40;
+        });
+        STEPS.add(mc -> {
+            int inCover = 0;
+            for (UUID u : three) {
+                com.terrassic.entity.Thescelosaurine t = thesc(mc, u);
+                if (t != null && t.wary() == com.terrassic.entity.Thescelosaurine.HIDE
+                        && Math.abs(t.getX() - tx) < 5.0D && Math.abs(t.getZ() - 30.0D) < 5.0D) {
+                    inCover++;
+                }
+            }
+            REPORT.add(String.format(Locale.ROOT, "  thesc hide: %d of 3 hid, %d of 3 in the thicket", Integer.bitCount(st[3]), inCover));
+            look(mc.player, new Vec3(tx - 6.0D, Y + 5.0D, 22.0D), new Vec3(tx, Y + 0.5D, 30.0D));
+            return 40;
+        });
+        thescShot("hide");
+        // the danger leaves: they come out
+        int[] out = {0};
+        STEPS.add(mc -> {
+            if (out[0] == 0) {
+                command(mc, "kill @e[type=terrassic:dakotaraptor,x=" + (int) x0 + ",y=" + (int) Y + ",z=0,distance=..150]");
+            }
+            long calm = java.util.Arrays.stream(three).map(u -> thesc(mc, u))
+                    .filter(t -> t != null && t.wary() == com.terrassic.entity.Thescelosaurine.CALM).count();
+            if (calm < 3 && out[0]++ < 30) {
+                return -20;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  thesc out of hiding: %d of 3 after %d s", calm, out[0]));
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the nose: a raptor behind a stone wall, 20 blocks off
+        UUID sniffer = id(), rap2 = id();
+        STEPS.add(mc -> {
+            REPORT.add("  -- the nose");
+            command(mc, fill(x0 - 8.0D, Y, 30.0D, x0 + 8.0D, Y + 8.0D, 30.0D, "minecraft:stone"));
+            summon(mc, "thescelosaurus", x0, Y, 40.5D, sniffer, "");
+            return 20;
+        });
+        awaitAll(sniffer);
+        STEPS.add(mc -> {
+            mc.getSingleplayerServer().execute(() -> {
+                com.terrassic.entity.Thescelosaurine t = thesc(mc, sniffer);
+                if (t != null) {
+                    t.testCalm();
+                }
+            });
+            summon(mc, "dakotaraptor", x0, Y, 20.5D, rap2, "NoAI:1b");
+            return 60;
+        });
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, sniffer);
+            DinosaurEntity r = server(mc, rap2);
+            boolean sees = t != null && r != null && t.hasLineOfSight(r);
+            REPORT.add(String.format(Locale.ROOT, "  thesc nose: smelled without sight %s (raptor visible %s, %.0f blocks), state %s",
+                    t != null && t.smelledBlind ? "YES" : "NO", sees ? "yes" : "no", t != null && r != null ? t.distanceTo(r) : -1.0F,
+                    waryName(t)));
+            command(mc, fill(x0 - 8.0D, Y, 30.0D, x0 + 8.0D, Y + 8.0D, 30.0D, "minecraft:air"));
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the player: in survival, standing at 12 blocks
+        UUID shy = id();
+        STEPS.add(mc -> {
+            REPORT.add("  -- the player");
+            summon(mc, "thescelosaurus", x0, Y, 40.5D, shy, "Rotation:[180f,0f]");
+            return 20;
+        });
+        awaitAll(shy);
+        int[] pl = {0, 0};
+        STEPS.add(mc -> {
+            if (pl[0] == 0) {
+                mc.getSingleplayerServer().execute(() -> {
+                    com.terrassic.entity.Thescelosaurine t = thesc(mc, shy);
+                    if (t != null) {
+                        t.testCalm();
+                    }
+                });
+                command(mc, "gamemode survival @a");
+                look(mc.player, new Vec3(x0, Y + 1.62D, 28.5D), new Vec3(x0, Y + 1.0D, 40.5D));
+                serverTp(mc);
+                command(mc, "effect give @a minecraft:resistance 30 4 true");
+            }
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, shy);
+            if (t != null && t.wary() != com.terrassic.entity.Thescelosaurine.CALM) {
+                pl[1] = 1;
+            }
+            if (pl[1] == 0 && pl[0]++ < 10) {
+                return -20;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  thesc player: standing at 12 blocks, noticed %s (%s) after %d s",
+                    pl[1] == 1 ? "YES" : "NO", waryName(t), pl[0]));
+            command(mc, "gamemode creative @a");
+            mc.player.getAbilities().flying = true;
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- the burrow: a bank of earth, dusk, then the night; the eggs at its end
+        UUID digger = id();
+        double bz = 50.0D;
+        STEPS.add(mc -> {
+            REPORT.add("  -- the burrow");
+            command(mc, fill(x0 - 6.0D, Y, bz, x0 + 6.0D, Y + 2.0D, bz + 4.0D, "minecraft:dirt"));
+            command(mc, "time set 12000");
+            summon(mc, "thescelosaurus", x0, Y, bz - 6.5D, digger, "Female:1b");
+            look(mc.player, new Vec3(x0 - 7.0D, Y + 6.0D, bz - 12.0D), new Vec3(x0, Y + 1.0D, bz));
+            return 20;
+        });
+        awaitAll(digger);
+        int[] dig = {0};
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, digger);
+            if (dig[0] == 0 && t != null) {
+                mc.getSingleplayerServer().execute(() -> {
+                    t.testCalm();
+                    t.testDigBurrowNow();
+                });
+            }
+            if (dig[0] == 12) {
+                Screenshot.grab(mc.gameDirectory, "behavior_thesc_burrow_dig.png", mc.getMainRenderTarget(), msg -> {
+                });
+            }
+            if ((t == null || t.burrow() == null) && dig[0]++ < 45) {
+                return -20;
+            }
+            BlockPos b = t == null ? null : t.burrow();
+            boolean open = b != null && mc.getSingleplayerServer().overworld().isEmptyBlock(b);
+            REPORT.add(String.format(Locale.ROOT, "  thesc burrow: dug %s after %d s, the hole open %s", b != null ? "YES" : "NO", dig[0], open ? "YES" : "NO"));
+            command(mc, "time set 18000");
+            return 20;
+        });
+        int[] night = {0};
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, digger);
+            boolean in = t != null && t.isSleeping() && t.inBurrow();
+            if (!in && night[0]++ < 60) {
+                return -20;
+            }
+            REPORT.add(String.format(Locale.ROOT, "  thesc burrow night: sleeps in its burrow %s after %d s", in ? "YES" : "NO", night[0]));
+            DinosaurEntity d = t;
+            if (d != null) {
+                Vec3 c = d.position();
+                look(mc.player, c.add(-3.0D, 3.0D, -4.5D), c.add(0.0D, 0.6D, 0.0D));
+            }
+            return 40;
+        });
+        thescShot("burrow_sleep");
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, digger);
+            if (t != null && t.burrow() != null) {
+                mc.getSingleplayerServer().execute(() -> t.testLayEgg());
+            }
+            return 20;
+        });
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, digger);
+            int n = t == null || t.burrow() == null ? 0 : eggsIn(mc.getSingleplayerServer().overworld(), t.burrow(), 3, false);
+            REPORT.add(String.format(Locale.ROOT, "  thesc eggs: %d egg(s) within 3 blocks of the burrow", n));
+            command(mc, "time set 1000");
+            command(mc, fill(x0 - 8.0D, Y, bz - 2.0D, x0 + 8.0D, Y + 3.0D, bz + 6.0D, "minecraft:air"));
+            maiaClear(mc, x0);
+            return 20;
+        });
+
+        // ---- tame: follows its owner, digs up roots, not rideable
+        UUID pet = id();
+        double[] follow = {0.0D, 0.0D};
+        STEPS.add(mc -> {
+            REPORT.add("  -- tame");
+            summon(mc, "thescelosaurus", x0, Y, 70.5D, pet, "");
+            return 20;
+        });
+        awaitAll(pet);
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, pet);
+            ServerPlayer sp = player(mc);
+            if (t != null && sp != null) {
+                mc.getSingleplayerServer().execute(() -> {
+                    t.tame(sp);
+                    t.setOrderedToSit(false);
+                });
+            }
+            look(mc.player, new Vec3(x0 + 16.0D, Y + 1.62D, 70.5D), new Vec3(x0, Y + 1.0D, 70.5D));
+            serverTp(mc);
+            return 20;
+        });
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, pet);
+            follow[0] = t == null ? -1.0D : t.distanceTo(mc.getSingleplayerServer().overworld().getPlayers(p -> true).get(0));
+            return 300;
+        });
+        STEPS.add(mc -> {
+            com.terrassic.entity.Thescelosaurine t = thesc(mc, pet);
+            follow[1] = t == null ? -1.0D : t.distanceTo(mc.getSingleplayerServer().overworld().getPlayers(p -> true).get(0));
+            int before = mc.getSingleplayerServer().overworld().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,
+                    new net.minecraft.world.phys.AABB(BlockPos.containing(x0, Y, 70.5D)).inflate(30.0D)).size();
+            if (t != null) {
+                mc.getSingleplayerServer().execute(t::testDigRoots);
+            }
+            REPORT.add(String.format(Locale.ROOT, "  thesc tame: follows its owner from %.1f to %.1f blocks, rideable %s, tame %s",
+                    follow[0], follow[1], t != null && t.isRideable() ? "YES" : "no", t != null && t.isTame() ? "YES" : "no"));
+            return 30;
+        });
+        STEPS.add(mc -> {
+            int items = mc.getSingleplayerServer().overworld().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,
+                    new net.minecraft.world.phys.AABB(BlockPos.containing(x0, Y, 70.5D)).inflate(30.0D)).size();
+            REPORT.add(String.format(Locale.ROOT, "  thesc roots: %d item(s) dug up", items));
+            maiaClear(mc, x0);
+            command(mc, "time set 1000");
+            return 20;
+        });
+    }
+
     private static void coryShot(String name) {
         STEPS.add(mc -> {
             Screenshot.grab(mc.gameDirectory, "behavior_cory_" + name + ".png", mc.getMainRenderTarget(), msg -> {
@@ -3054,7 +3469,7 @@ public final class BehaviorTest {
     private static void planJaws() {
         String[] all = {"edmontosaurus", "pteranodon", "quetzalcoatlus", "parasaurolophus", "triceratops", "tyrannosaurus",
                 "carnotaurus", "giganotosaurus", "spinosaurus", "styracosaurus", "protoceratops", "pachycephalosaurus",
-                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus"};
+                "therizinosaurus", "gallimimus", "dakotaraptor", "velociraptor", "ankylosaurus", "deinosuchus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus", "thescelosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2800.5D;
         STEPS.add(mc -> {
@@ -3130,7 +3545,7 @@ public final class BehaviorTest {
     private static void planGaits() {
         String[] all = {"triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "tyrannosaurus", "carnotaurus",
                 "giganotosaurus", "spinosaurus", "therizinosaurus", "pachycephalosaurus", "dakotaraptor", "velociraptor",
-                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus"};
+                "gallimimus", "parasaurolophus", "edmontosaurus", "deinosuchus", "quetzalcoatlus", "daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus", "maiasaura", "corythosaurus", "thescelosaurus"};
         String only = System.getenv("TERRASSIC_GAIT_ONLY");
         double x0 = 2600.5D;
         STEPS.add(mc -> {

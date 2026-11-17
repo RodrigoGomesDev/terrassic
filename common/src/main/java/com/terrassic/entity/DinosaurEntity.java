@@ -1634,7 +1634,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      *  triggers their rest transitions and tracks their fatigue. */
     private static final java.util.Set<String> LIVELY_SET_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
             "spinosaurus", "velociraptor", "dakotaraptor", "pachycephalosaurus", "gallimimus", "parasaurolophus", "edmontosaurus",
-            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura", "corythosaurus");
+            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura", "corythosaurus", "thescelosaurus");
 
     public boolean hasLivelySet() {
         return LIVELY_SET_SPECIES.contains(this.speciesId());
@@ -4703,7 +4703,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (egg == null) {
             return false;
         }
-        BlockPos pos = findEggSpot(level, groundUnder(level, this));
+        BlockPos pos = findEggSpot(level, this.eggCentre(level));
         if (pos == null) {
             return false;
         }
@@ -4738,7 +4738,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 other.setHunger(other.getHunger() - 15);
             }
         } else {
-            BlockPos pos = findEggSpot(level, groundUnder(level, mother));
+            BlockPos pos = findEggSpot(level, mother.eggCentre(level));
             if (pos != null) {
                 level.setBlock(pos, egg.defaultBlockState(), Block.UPDATE_ALL);
                 level.playSound(null, pos, ModSounds.SFX_EGG_LAY.get(), SoundSource.BLOCKS, 0.7F, 0.9F);
@@ -4770,9 +4770,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
-    /** Where a mother lays: her own block on the ground, or the ground under her when she mates on the wing or swimming
+    /** Where a mother lays (a species may lay elsewhere: the Thescelosaurus at the end of its burrow): her own block on the ground, or the ground under her when she mates on the wing or swimming
      *  (1.9: a Quetzalcoatlus pair mating in the air looked for a nest spot one block round the flying mother, found
      *  none and dropped the egg as an item from the sky). */
+    protected BlockPos eggCentre(LevelAccessor level) {
+        return groundUnder(level, this);
+    }
+
     private static BlockPos groundUnder(LevelAccessor level, DinosaurEntity mother) {
         BlockPos at = mother.blockPosition();
         if (mother.onGround()) {

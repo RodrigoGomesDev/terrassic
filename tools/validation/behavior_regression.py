@@ -282,6 +282,39 @@ for sp in ("daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasau
     hatched = re.search(r"hatching: .*", body)
     check(f"ninho {sp}: o ovo choca", hatched is not None and "HATCHED" in hatched.group(0), hatched.group(0) if hatched else "")
 
+# 1.11.0, the Thescelosaurus' freeze, bolt and burrow (docs/estudos/15; BehaviorTest phase "thesc")
+if "== Thescelosaurus (1.11.0)" in text:
+    m = re.search(r"thesc size: hitbox \S+ x \S+, scale \S+, rideable (\w+)", text)
+    check("thesc: não é montável", m is not None and m.group(1) == "no", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc freeze: froze (\w+) at (-?[\d.]+) blocks \((\d) of 3 froze\)", text)
+    check("thesc: congela ao notar o predador (a 16 blocos ou menos)", m is not None and m.group(1) == "YES"
+          and 0 < float(m.group(2)) <= 16.5, m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc bolt: bolted (\w+) at (-?[\d.]+) blocks \((\d) of 3 bolted\)", text)
+    check("thesc: dispara quando o perigo chega a 10 blocos", m is not None and m.group(1) == "YES"
+          and 0 < float(m.group(2)) <= 10.5, m.group(0)[2:] if m else "sem medida")
+    check("thesc: os outros veem o lenço e disparam junto", m is not None and int(m.group(3)) == 3, "")
+    m = re.search(r"thesc hide: (\d) of 3 hid, (\d) of 3 in the thicket", text)
+    check("thesc: se esconde no mato", m is not None and int(m.group(1)) >= 2 and int(m.group(2)) >= 1,
+          m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc out of hiding: (\d) of 3", text)
+    check("thesc: sai do esconderijo quando o perigo some", m is not None and int(m.group(1)) == 3, m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc nose: smelled without sight (\w+) \(raptor visible (\w+)", text)
+    check("thesc: fareja o predador sem linha de visão", m is not None and m.group(1) == "YES" and m.group(2) == "no",
+          m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc player: standing at 12 blocks, noticed (\w+)", text)
+    check("thesc: nota o jogador em pé a 12 blocos", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc burrow: dug (\w+) after (\d+) s, the hole open (\w+)", text)
+    check("thesc: cava a toca no barranco", m is not None and m.group(1) == "YES" and m.group(3) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc burrow night: sleeps in its burrow (\w+)", text)
+    check("thesc: dorme na toca à noite", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc eggs: (\d+) egg\(s\) within 3 blocks of the burrow", text)
+    check("thesc: os ovos ficam na toca", m is not None and int(m.group(1)) >= 1, m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc tame: follows its owner from ([\d.-]+) to ([\d.-]+) blocks, rideable (\w+), tame (\w+)", text)
+    check("thesc: domado segue o dono", m is not None and m.group(4) == "YES" and float(m.group(2)) < float(m.group(1)) - 4,
+          m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"thesc roots: (\d+) item", text)
+    check("thesc: domado acha raízes", m is not None and int(m.group(1)) >= 1, m.group(0)[2:] if m else "sem medida")
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))

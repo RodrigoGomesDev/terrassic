@@ -20,7 +20,7 @@ PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
     "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
-    "majungasaurus", "maiasaura", "corythosaurus",
+    "majungasaurus", "maiasaura", "corythosaurus", "thescelosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -149,9 +149,10 @@ SIZES = {
     # 32 px/m and shown at its real 4.5 m (16 / 32 = 0.5), its own study and rig (the growth series: the baby shows the
     # young's spikes, the adult the dome); the hitbox is kept.
     "pachycephalosaurus": dict(real=4.5,  scale=0.5,  w=1.0, h=1.9, baby=0.4,  shadow=0.8),
-    # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
-    # Thescelosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "thescelosaurus":     dict(real=4.0,  scale=0.76, w=1.0, h=1.6, baby=0.35, shadow=0.8),
+    # Thescelosaurus neglectus: 2.5 to 4.0 m (Galton 1974), 200 to 300 kg (Erickson 2003); the top, 4 m.
+    # Thescelosaurus v4 (16/11, the 1.11.0, silhouette A "tipo ave") is hand-made at ~17.8 texels per block (75 px for
+    # 4 m): the short trunk pitched up like a ground bird's, the neck in an S, the stiff tail as long as the rest.
+    "thescelosaurus":     dict(real=4.0,  scale=0.849, w=0.9, h=2.1, baby=0.3,  shadow=0.7),
     # Gallimimus bullatus: 6 m, ~440 kg (Osmolska et al. 1972; Paul 2010). Gallimimus v1 (02/11) is hand-made at
     # 32 px/m and shown at its real 6 m (16 / 32 = 0.5), its own study and rig; the hitbox is kept.
     "gallimimus":         dict(real=6.0,  scale=0.5,  w=1.2, h=2.6, baby=0.35, shadow=0.9),
@@ -343,7 +344,7 @@ WORLD = {
     "lepisosteus":        dict(biomes=("river", "swamp", "coast"), weight=10, group=(2, 4), track=8),              # the gar of the rivers and deltas
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
-    "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
+    "thescelosaurus":     dict(biomes=("forest", "swamp", "river"), weight=5, group=(2, 4), track=8),     # the undergrowth, the swamp and the river bank (study 15)
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
     "struthiomimus":      dict(biomes=("plains", "savanna", "forest"), weight=6, group=(3, 6), track=10),   # flocks on the floodplain
     "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(6, 12), track=10),  # big herds of the open uplands; colonies (gen_structures)
@@ -652,10 +653,10 @@ SPECIES = [
       food="Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.APPLE",
       sounds=("GOAT_AMBIENT", "GOAT_HURT", "GOAT_DEATH", 0.7, 1.0, 240), xp=10, run=0.02, rig="Pachycephalosaurid"),
  dict(id="thescelosaurus", cls="Thescelosaurus", base="HerbivoreDinosaur",
-      doc="Thescelosaurus neglectus - 4 m stout ornithopod of the undergrowth, nose to the ground. Bites back when cornered. Roots in soft soil: a tame one turns up roots and tubers.",
-      attrs=dict(MAX_HEALTH=34, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ATTACK_KNOCKBACK=0.6, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=16),
-      food="Items.CARROT, Items.POTATO, Items.BEETROOT, Items.FERN",
-      sounds=("PIG_AMBIENT", "PIG_HURT", "PIG_DEATH", 0.75, 1.0, 260), xp=9, run=0.02, dig="tubers"),
+      doc="Thescelosaurus neglectus - the small ornithopod of the Hell Creek undergrowth (Maastrichtian), 4 m: a short trunk carried up like a ground bird's, the neck in an S, thick thighs over long shins, a stiff tail as long as the rest; a long low head with a big eye under a bar of bone, cheek plates and real teeth at the tip of the snout. Wary prey: at 16 blocks from a predator or a player it FREEZES, then BOLTS in zigzag with the pale tail flag up into the thickest cover and hides lying flat, peeking until the danger is gone; the others see the flag and run too. A keen nose: it smells a predator at 24 blocks without seeing it, sniffs the ground and the air. It digs a burrow in a bank of earth or sand and sleeps in it, and lays its eggs at the end of it (a hypothesis). Cornered, it bites and kicks. Tamed with plants, not rideable: a tame one follows its owner and digs up roots and tubers. Behaviour in Thescelosaurine.",
+      attrs=dict(MAX_HEALTH=34, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=5, ATTACK_KNOCKBACK=0.6, ARMOR=2, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=24),
+      food="Items.CARROT, Items.POTATO, Items.BEETROOT, Items.FERN, Items.SWEET_BERRIES",
+      sounds=("PIG_AMBIENT", "PIG_HURT", "PIG_DEATH", 0.75, 1.0, 260), xp=9, rig="Thescelosaurine"),
  dict(id="gallimimus", cls="Gallimimus", base="HerbivoreDinosaur",
       doc="Gallimimus bullatus - ostrich-like ornithomimid, the fastest dinosaur. Flocks flee from players and predators. A very fast mount when tamed.",
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
@@ -897,7 +898,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine", "Thescelosaurine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1142,7 +1143,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine", "Thescelosaurine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

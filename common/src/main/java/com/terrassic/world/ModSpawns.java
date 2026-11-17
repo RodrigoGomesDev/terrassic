@@ -64,7 +64,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Lepisosteus         river, swamp, mangrove, beach, stony shore 10      2-4
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
- *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
+ *  Thescelosaurus      forest, swamp, mangrove, river  5       2-4
  *  Gallimimus          savanna, plains, desert*        6       3-6
  *  Struthiomimus       plains, savanna, forest         6       3-6
  *  Maiasaura           plains, savanna                 4       6-12
@@ -305,7 +305,7 @@ public final class ModSpawns {
             if (taiga || hill) {
                 add(props, ModEntities.PACHYCEPHALOSAURUS.get(), 4, 2, 3);
             }
-            if (forest || plains || swamp) {
+            if (forest || swamp || river) {
                 add(props, ModEntities.THESCELOSAURUS.get(), 5, 2, 4);
             }
             if (savanna || plains || desert) {
