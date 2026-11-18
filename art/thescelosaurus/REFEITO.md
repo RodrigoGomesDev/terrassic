@@ -13,19 +13,23 @@ erguido e some no mato**.
 
 ## Modelo (`tools/modelgen/handmade/thescelosaurus/thes.py`)
 
-- **Postura:** tronco curto (peito, torso e quadril) empinado 22 graus no osso `body`, como o de uma ave do chão;
+- **Postura:** tronco curto (peito, torso e quadril, cada um com um cubo mais estreito encaixado embaixo: quilha do
+  peito, barriga e lombo, afinando do peito fundo para a barriga) empinado 22 graus no osso `body`, como o de uma ave do chão;
   pescoço em S em três peças (`neck1..3`: 52, 0 e -60 graus), a cabeça levada nivelada no alto; braços pequenos dobrados
   sob o peito (mão de cinco dedos com unhas escuras).
-- **Pernas:** coxa grossa (`thigh` funda, entrando no quadril, e o `knee` mais estreito), canela longa e fina, metatarso
+- **Pernas:** coxa em três degraus (`thigh` larga e funda no quadril, `thigh_mid`, `knee` estreito), com as fileiras
+  de pintas e a sela escura do dorso descendo por ela, canela longa e fina, metatarso
   longo, dedos deitados no chão com unhas escuras; em meio passo, como na blocagem.
 - **Cauda:** reta e dura (tendões ossificados), cinco peças que afinam e se sobrepõem, do comprimento do resto do bicho,
   levada 22 graus acima (a blocagem pedia 14; com 22 a silhueta se afasta do Paquicefalossauro e do Coritossauro v4).
 - **Cabeça do padrão v3, desenhada da anatomia dele:** comprida e baixa; olho grande (íris amarelo-clara, pupila
   redonda, brilho) sob a barra de osso da palpebral, que lhe dá o ar desconfiado; placas da bochecha saltando no canto da
-  boca; ponta do bico curta, sem dente; **quatro pinos de marfim desiguais do pré-maxilar** debaixo do focinho, atrás
-  da ponta (os únicos dentes de verdade dos quatro herbívoros da 1.11), predentário embaixo; narinas grandes na ponta
+  boca; ponta do bico curta, sem dente; **três pinos pequenos do pré-maxilar** só na ponta do focinho, recuados sob o
+  lábio e em marfim gasto (os únicos dentes de verdade dos quatro herbívoros da 1.11; nada de fileira à mostra),
+  predentário embaixo; narinas grandes na ponta
   (o faro). A faixa escura vai do olho ao canto da boca e uma linha clara corre do olho para trás pelo pescoço até o
-  ombro. O macho tem a **sobrancelha amarela** (o acento, `male_display`), vista quando ele levanta a cabeça.
+  ombro. O macho tem a **barra palpebral amarela**, pintada rente sobre o olho e pela borda da testa (o acento), sem sair
+  do contorno.
 - **Pele desenhada, não gerada ("samambaia", estudo 15):** dorso escuro com **selas escuras quebradas no espinhaço**,
   **fileiras de pintas claras** que seguem as costelas (luz de mata, como no filhote de anta), flanco verde com um grão
   fino de escamas de um passo de tom, barriga creme-esverdeada; coxa com pintas; canelas e pés mais escuros com escudos
@@ -39,10 +43,10 @@ erguido e some no mato**.
 |---|---|
 | Comprimento | 4,0 m (Galton 1974), 73,5 px, 17,4 texels por bloco, escala 0,922 |
 | Hitbox | 0,95 x 2,22 blocos; filhote 0,3 |
-| Silhueta (`silcheck.py --built`, no geo do jogo) | blocagem A 0,822; Galimimo 0,546; Paquicefalossauro 0,594; Dakotaraptor 0,483; Velociraptor 0,442; Coritossauro v4 0,603 |
-| `headcheck` | cabeça 0,42 de troca de vizinhos (x1,95 o corpo, 0,21); 6,2 texels de dente visíveis de cada lado; íris 6, brilho 1; acento 16 |
-| `uniquecheck` | máximo 0,59 (Majungassauro: os dentes; olho e rosto 0,51 e 0,36); limite 0,78 |
-| `colourcheck --remade` | mais perto: Maiassauro 11,0, Terizinossauro 15,2, Mosassauro 17,2 |
+| Silhueta (`silcheck.py --built`, no geo do jogo) | blocagem A 0,821; Galimimo 0,551; Paquicefalossauro 0,595; Dakotaraptor 0,477; Velociraptor 0,440; Coritossauro v4 0,600 |
+| `headcheck` | cabeça 0,45 de troca de vizinhos (x1,86 o corpo, 0,24); 5,7 texels de dente visíveis de cada lado (de lado, boca fechada); íris 6, brilho 1; acento 12 |
+| `uniquecheck` | máximo 0,55 (Majungassauro); limite 0,78 |
+| `colourcheck --remade` | mais perto: Maiassauro 11,1, Terizinossauro 15,2, Mosassauro 17,4 |
 | QA | 0 coplanares, 0 pixel bugs, 0 animações fora do chão, 42 animações |
 
 ## Animações (`thesanims.py`, 42)

@@ -13,9 +13,9 @@ that blocking bone for bone (the same pivots and rest angles, the blocking's met
 3. the TAIL: straight and stiff (ossified tendons), as long as the rest of the animal, carried as one rod;
 4. the HEAD of the padrao v3, drawn from its own anatomy: long and low, a big eye under a bar of bone (the palpebral)
    that gives it a wary look, the cheek plates bulging at the corner of the mouth, a short toothless beak tip and,
-   under the snout behind it, REAL TEETH: four uneven ivory pegs of the premaxilla (the only one of the 1.11 four that
-   shows teeth), a predentary under them; big nostrils at the tip (a keen nose, Button & Zanno 2023). The male's
-   accent is a yellow brow (male_display), seen when he lifts the head;
+   at the tip of the snout, REAL TEETH: three small worn pegs of the premaxilla set in under the lip (the only one of
+   the 1.11 four that shows teeth), a predentary under them; big nostrils at the tip (a keen nose, Button & Zanno
+   2023). The male's accent is the palpebral bar painted yellow, flush over the eye and along the brow;
 5. the SKIN drawn, not generated (proto stamps and drawn body-space marks): "samambaia" (study 15), a dark back broken
    by short dark saddles with rows of small pale spots between them following the ribs (the light of the forest
    floor, as on a fawn or a tapir calf), the flank fern green, a cream-green belly; a pale line from the eye along the
@@ -50,7 +50,7 @@ SCHEME = {
 }
 PAL = {
     "iris": hx("e6d672"), "iris2": hx("c4b44a"), "pupil": hx("0b0d08"), "glint": hx("f7f8ea"),
-    "tooth": hx("e8dfc2"), "tooth2": hx("c9bd98"), "gum": hx("5a2e2c"), "mouth": hx("3e2224"),
+    "tooth": hx("cdc29e"), "tooth2": hx("9e967a"), "gum": hx("5a2e2c"), "mouth": hx("3e2224"),
     "claw0": hx("1e1c16"), "claw1": hx("38342a"),
 }
 # the female: no yellow brow, the green a touch duller; the calf: a paler ground, the spots bolder
@@ -105,12 +105,11 @@ def head(m, parent):
     m.cube(sk, (-2, 19.5, -29.5), (2, 23.5, -27.5), name="face", faces=OUT("south"))
     m.cube(sk, (-1.5, 19.5, -33.5), (1.5, 22.5, -29.5), name="snout", faces=OUT("south"))
     m.cube(sk, (-1, 19.5, -34.5), (1, 21.5, -33.5), name="beak", mat="beak", faces=OUT("south"))
-    # the premaxillary teeth: a row of uneven pegs on each side under the snout, behind the beak tip (cut-out)
-    m.pair(sk, sk, (0.5, 17.5, -33.5), (1.5, 19.5, -28.5), name="teeth", mat="teeth")
-    # the palpebral bar over the eye (both sexes); the male's raised yellow brow over it
-    m.pair(sk, sk, (2.5, 23.5, -27.5), (3.5, 24.5, -24.5), name="brow")
+    # the premaxillary teeth: three small pegs in the first four pixels of the snout only, just behind the toothless beak, set in
+    # under the lip (the snout's edge overhangs them) so they peep out below it; one cube across the mouth, cut out
+    m.cube(sk, (-0.5, 17.5, -33.5), (0.5, 19.5, -29.5), name="teeth", mat="teeth")
+    # the palpebral bar over the eye is drawn flush on the braincase (decals and head_tone): yellow in the male
     md = m.bone("male_display", sk, (0, 24.5, -26))
-    m.pair(md, md, (2, 24.5, -27), (3, 25.5, -26), name="brow_m")
     fd = m.bone("female_display", sk, (0, 24.5, -26))
     # the cheek plates over the corner of the mouth (they flex out as it chews)
     for side, sx in (("l", 1), ("r", -1)):
@@ -159,8 +158,10 @@ def legs(m, body):
         sh = m.bone(f"shin_{side}", th, (HIP[0] * sx, KNEE_Y, HIP[2]), (b, 0, -2 * sx))
         ft = m.bone(f"foot_{side}", sh, (HIP[0] * sx, ANKLE_Y, HIP[2]), (c, 0, 0))
         m.bone(f"toes_{side}", ft, (HIP[0] * sx, BALL_Y, HIP[2]), (-(BODY_TILT + a + b + c), 0, 0))
-    m.pair("thigh_l", "thigh_r", (1.5, 13.5, -0.5), (7.5, 20.5, 9.5), name="thigh")
-    m.pair("thigh_l", "thigh_r", (2.5, 9.5, 1.5), (6.5, 14.5, 7.5), name="knee")
+    # the drumstick: wide and deep at the hip, narrowing in two steps to the knee
+    m.pair("thigh_l", "thigh_r", (1.5, 16.5, -0.5), (7.5, 20.5, 9.5), name="thigh")
+    m.pair("thigh_l", "thigh_r", (2, 12.5, 0.5), (7, 17.5, 8.5), name="thigh_mid")
+    m.pair("thigh_l", "thigh_r", (2.5, 9.5, 2), (6.5, 13.5, 7), name="knee")
     m.pair("shin_l", "shin_r", (3.5, -0.5, 3), (5.5, 10.5, 6), name="shin")
     m.pair("foot_l", "foot_r", (3.5, -6.5, 3.5), (5.5, 0.5, 5.5), name="meta")
     m.pair("toes_l", "toes_r", (3, -7.5, 1.5), (6, -6.5, 6.5), name="pes")
@@ -187,9 +188,13 @@ def build(saddle_on=False):
     root = m.bone("root", None, (0, 0, 0))
     body = m.bone("body", root, (0, 18.5, 4.5), (REST["body"], 0, 0))
     # the short trunk: the deep chest of a bird, the belly, the hips over the thighs
-    m.cube(body, (-4, 13, -13), (4, 23, -5), name="chest")
-    m.cube(body, (-4.5, 13, -6), (4.5, 24, 2), name="torso")
-    m.cube(body, (-4, 14, 1), (4, 24, 9), name="hips")
+    # (each part narrows toward the belly in an inner cube, so the trunk tapers from the deep breast to the belly)
+    m.cube(body, (-4, 15, -13), (4, 23, -5), name="chest")
+    m.cube(body, (-3, 12, -12), (3, 15, -6), name="keel")
+    m.cube(body, (-4.5, 16, -6), (4.5, 24, 2), name="torso")
+    m.cube(body, (-3.5, 13, -7), (3.5, 16, 1), name="belly")
+    m.cube(body, (-4, 17, 1), (4, 24, 9), name="hips")
+    m.cube(body, (-3, 15, 0), (3, 17, 6), name="loin")
     neck(m, body)
     arms(m, body); legs(m, body); tail(m, body)
     _ground(m)
@@ -206,7 +211,7 @@ def preview_faces(m):
 
 
 # ------------------------------------------------------------------ the skin: DRAWN
-TRUNK = {"chest", "torso", "hips"}
+TRUNK = {"chest", "torso", "hips", "keel", "belly", "loin"}
 NECK = set(NECKS)
 TAILN = set(TAILS)
 HEAD = {"cranium", "face", "snout", "cheek", "dentary"}
@@ -248,7 +253,7 @@ def trunk_tone(t, calf=False):
     if f == "down":
         return "b2" if (math.floor(z) + math.floor(t.L[0])) % 5 else "b1"
     h = 1.0 if f == "up" else _trunk_h(t)
-    if f == "north" and n == "chest":
+    if f == "north" and n in ("chest", "keel", "belly"):
         # the breast: cream at the bottom, the fern green rising to the throat
         return "b2" if h < 0.45 else "b0" if h < 0.58 else "k4" if h < 0.8 else "k3"
     hh = h + 0.05 * math.sin(z * 0.5 + 1.1)
@@ -322,16 +327,16 @@ def limb_tone(t, calf=False):
     n = t.cube["name"]; f = t.face
     side = f in ("east", "west", "north", "south")
     v = float(t.rel[1]) if side else (1.0 if f == "up" else 0.0)
-    if n in ("thigh", "knee"):
+    if n in ("thigh", "thigh_mid", "knee"):
         if f == "down":
             return "k2"
         if f == "up":
             return "k2"
         if n == "thigh" and v > 0.88:
             return "k2"
-        base = "k4" if v > 0.3 or n == "knee" else "k3"
+        base = "k4" if v > 0.3 or n != "thigh" else "k3"
         if f == "north":
-            base = "k5" if n == "thigh" else "k4"
+            base = "k5" if n != "knee" else "k4"
         if f in ("east", "west") and v > 0.15:
             # the flank's rows of spots run on down the thigh, slanting back (every 3 px along a row, rows 4 px apart)
             zz, yy = math.floor(t.L[2]), math.floor(t.L[1])
@@ -362,10 +367,12 @@ def head_tone(t, sex):
     n = t.cube["name"]; f = t.face
     if f == "down":
         return "b1"
+    if n == "cranium" and f == "up" and abs(t.L[0]) > 1.5 and -28.5 < t.L[2] < -24.5:
+        return "y1" if sex == "male" else "k0"           # the palpebral bar, flush along the brow
     if n == "dentary":
         if f == "up":
             return "k3"
-        return "b1" if t.rel[1] < 0.5 else "k4"
+        return "k3" if t.rel[1] < 0.5 else "k4"            # the jaw in the face's green: only the pegs read pale
     if n == "cheek":
         if f == "down" or (f in ("east", "west") and t.j == t.h - 1):
             return "k1"
@@ -389,29 +396,16 @@ def beak_px(t, p):
 
 
 def teeth_px(t, p):
-    """four uneven pegs of the premaxilla, front to back: 2, 0, 1, 2, 1 texels down (the gaps are cut out)"""
+    """three small pegs of the premaxilla at the tip, front to back 2, 0, 2, 2 texels down (the gaps cut out); the
+    lower texel in shadow, so they read half hidden under the lip"""
     if t.face not in ("east", "west"):
         return None
     col = int(math.floor(t.L[2] - t.cube["from"][2]))          # 0 at the front
-    length = (2, 0, 1, 2, 1)[min(col, 4)]
+    length = (2, 0, 2, 2)[min(col, 3)]
     row = int(math.floor(t.cube["to"][1] - t.L[1]))            # 0 at the top (the lip)
     if row >= length:
         return None
     return p["tooth"] if row == 0 else p["tooth2"]
-
-
-def brow_px(t, p, sex):
-    """the palpebral bar: dark bone over the eye; in the male its top and the raised brow over it are yellow"""
-    n = t.cube["name"]; f = t.face
-    if n == "brow_m":
-        return p["y1"] if f in ("up", "east", "west") and t.j == 0 or f == "up" else p["y0"]
-    if n == "brow_f":
-        return p["k2"]
-    if f == "up":
-        return p["y1"] if sex == "male" else p["k2"]
-    if f == "down":
-        return p["k0"]
-    return p["y0"] if sex == "male" and t.j == 0 else p["k1"]
 
 
 def shader_for(sex):
@@ -428,8 +422,6 @@ def shader_for(sex):
             return teeth_px(t, p)
         if mat == "mouth":
             return p["gum"] if f == "up" else p["mouth"]
-        if n.startswith("brow"):
-            return brow_px(t, p, sex)
         if n in TRUNK:
             return p[trunk_tone(t, calf)]
         if n in NECK:
@@ -447,12 +439,12 @@ def shader_for(sex):
 # 6 x 6: the big eye at its front under the brow (the brow bar is its own cube above row 0), the dark band from the
 # eye down and forward to the corner of the mouth, the pale line over it running back to the neck, the ear behind.
 CRANIUM = [
+    "BBBBk3",
     "kiik23",
     "ipgIkl",
     "kiIkll",
     "dkkd33",
     "dd3333",
-    "3d3333",
 ]
 # the face (2 x 4) ahead of the eye: the band goes on down to the mouth corner
 FACE = [
@@ -472,7 +464,8 @@ SNOUT = [
 def decals_for(sex):
     p = pal_for(sex)
     cm = {"k": p["k0"], "g": p["glint"], "i": p["iris"], "I": p["iris2"], "p": p["pupil"], "n": p["k0"],
-          "d": p["k1"], "2": p["k2"], "3": p["k3"], "l": p["b1"], "e": p["k1"]}
+          "d": p["k1"], "2": p["k2"], "3": p["k3"], "l": p["b1"], "e": p["k1"],
+          "B": p["y1"] if sex == "male" else p["k0"]}
 
     def dec(img, m):
         C = {c["name"]: c for c in m.cubes if c["mirror_of"] is None}
