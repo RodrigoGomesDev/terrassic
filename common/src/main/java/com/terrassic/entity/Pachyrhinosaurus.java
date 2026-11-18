@@ -32,16 +32,16 @@ import net.minecraft.world.phys.AABB;
  */
 public class Pachyrhinosaurus extends Pachyrhinosaurine {
     /** Hitbox (blocks). Adult real length ~8.0 m. */
-    public static final float WIDTH = 2.753F;
-    public static final float HEIGHT = 4.129F;
+    public static final float WIDTH = 2.541F;
+    public static final float HEIGHT = 4.447F;
     /** Renderer scale of the GeckoLib model and shadow radius, read by TerrassicClient. */
-    public static final float MODEL_SCALE = 1.059F;
+    public static final float MODEL_SCALE = 0.986F;
     @Override
     public float livelyModelScale() {
         return MODEL_SCALE;
     }
 
-    public static final float SHADOW = 2.118F;
+    public static final float SHADOW = 1.906F;
     private static final Ingredient FOOD = Ingredient.of(Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES);
 
     public Pachyrhinosaurus(EntityType<? extends Pachyrhinosaurus> type, Level level) {
@@ -77,7 +77,7 @@ public class Pachyrhinosaurus extends Pachyrhinosaurine {
 
     @Override
     protected double cullingInflate() {
-        return 3.4D;
+        return 3.5D;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Pachyrhinosaurus extends Pachyrhinosaurine {
 
     @Override
     public double getPassengersRidingOffset() {
-        return 3.6D * this.getScale();
+        return 5.27D * this.getScale();
     }
 
     @Override
@@ -102,12 +102,12 @@ public class Pachyrhinosaurus extends Pachyrhinosaurine {
 
     @Override
     protected double riderForwardOffset() {
-        return 0.64D;
+        return -0.65D;
     }
 
     @Override
     protected double riderReach() {
-        return Math.max(super.riderReach(), 5.65D * this.getScale());
+        return Math.max(super.riderReach(), 5.71D * this.getScale());
     }
 
     @Override
@@ -130,33 +130,29 @@ public class Pachyrhinosaurus extends Pachyrhinosaurine {
      *  (tools/javagen/parts.py; parts_coverage.py checks they leave no gaps). */
     private static final DinoPart.Spec[] PARTS = {
             new DinoPart.Spec(DinoPart.Kind.HEAD,
-                    new float[]{3.474F, 0.0F, 0.779F, 2.501F, 2.287F, 3.303F},
-                    new float[]{3.451F, 0.0F, 0.523F, 2.757F, 10.485F, 2.735F},
-                    new float[]{3.513F, 0.0F, 0.124F, 2.37F, 2.086F, 3.845F}),
+                    new float[]{3.268F, 0.0F, 0.014F, 3.484F, 3.06F, 4.676F},
+                    new float[]{3.171F, 0.0F, 0.146F, 4.253F, 6.133F, 4.007F},
+                    new float[]{3.283F, 0.0F, -0.05F, 3.019F, 2.839F, 4.724F}),
             new DinoPart.Spec(DinoPart.Kind.NECK,
-                    new float[]{2.621F, 0.0F, 1.26F, 1.354F, 1.614F, 1.705F},
-                    new float[]{2.595F, 0.0F, 0.505F, 1.473F, 8.554F, 1.804F},
-                    new float[]{2.592F, 0.0F, 1.209F, 1.459F, 1.424F, 1.648F}),
+                    new float[]{2.26F, 0.0F, 1.234F, 1.597F, 1.999F, 2.327F},
+                    new float[]{2.367F, 0.0F, 0.682F, 1.812F, 2.563F, 2.145F},
+                    new float[]{2.262F, 0.0F, 1.337F, 1.416F, 1.854F, 2.036F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{1.911F, 0.0F, -0.065F, 2.433F, 2.726F, 3.088F},
-                    new float[]{1.985F, 0.0F, -0.017F, 2.31F, 8.652F, 2.78F},
-                    new float[]{1.456F, 0.0F, -0.072F, 1.953F, 2.648F, 2.968F}),
+                    new float[]{1.247F, 0.0F, -0.103F, 2.525F, 2.797F, 5.696F},
+                    new float[]{1.158F, 0.0F, -0.35F, 2.372F, 6.547F, 5.036F},
+                    new float[]{1.048F, 0.0F, -0.052F, 2.307F, 2.744F, 5.595F}),
             new DinoPart.Spec(DinoPart.Kind.BODY,
-                    new float[]{-0.422F, 0.0F, -0.177F, 2.433F, 2.45F, 3.465F},
-                    new float[]{-0.225F, 0.0F, 0.104F, 2.31F, 9.121F, 2.671F},
-                    new float[]{-0.397F, 0.0F, -0.05F, 1.953F, 2.383F, 3.217F}),
+                    new float[]{-1.178F, 0.0F, -0.125F, 2.525F, 2.817F, 5.41F},
+                    new float[]{-1.114F, 0.0F, -0.308F, 2.372F, 5.962F, 4.677F},
+                    new float[]{-1.16F, 0.0F, -0.045F, 2.307F, 2.688F, 5.281F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-3.421F, 0.0F, 1.647F, 1.028F, 1.239F, 1.103F},
-                    new float[]{-3.478F, 0.0F, 0.546F, 1.055F, 8.36F, 1.375F},
-                    new float[]{-3.423F, 0.0F, 1.649F, 1.015F, 0.762F, 0.988F}),
+                    new float[]{-3.301F, 0.0F, 1.518F, 1.01F, 1.428F, 1.333F},
+                    new float[]{-3.256F, 0.0F, 0.875F, 0.934F, 1.474F, 1.026F},
+                    new float[]{-3.236F, 0.0F, 1.617F, 0.94F, 1.04F, 1.016F}),
             new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-2.494F, 0.0F, 1.848F, 1.028F, 1.243F, 1.383F},
-                    new float[]{-2.523F, 0.0F, 0.877F, 1.055F, 8.997F, 1.385F},
-                    new float[]{-2.509F, 0.0F, 1.848F, 1.015F, 1.093F, 1.233F}),
-            new DinoPart.Spec(DinoPart.Kind.TAIL,
-                    new float[]{-1.566F, 0.0F, 1.784F, 1.028F, 1.222F, 1.633F},
-                    new float[]{-1.569F, 0.0F, 0.958F, 1.055F, 9.376F, 1.562F},
-                    new float[]{-1.594F, 0.0F, 1.792F, 1.015F, 1.093F, 1.506F})
+                    new float[]{-2.39F, 0.0F, 1.736F, 1.01F, 1.263F, 1.396F},
+                    new float[]{-2.421F, 0.0F, 0.896F, 0.934F, 1.514F, 1.278F},
+                    new float[]{-2.396F, 0.0F, 1.925F, 0.94F, 1.151F, 1.158F})
     };
 
     @Override
@@ -166,12 +162,12 @@ public class Pachyrhinosaurus extends Pachyrhinosaurine {
 
     @Override
     public float partPivot() {
-        return 2.913F;
+        return 2.712F;
     }
 
     @Override
     public float partPivotUp() {
-        return 2.151F;
+        return 2.831F;
     }
 
     @Override

@@ -57,8 +57,9 @@ SIZES = {
     "styracosaurus":      dict(real=5.5,  scale=0.5,  w=1.6, h=2.0, baby=0.3,  shadow=1.4),
     # Pachyrhinosaurus canadensis: 6-8 m, 3-4 t (Holtz 2011; Brusatte 2013; Paul 2016); 8 m = the top (Rodrigo,
     # 10/11/2026). v4 (1.11.0, study 15, the "bisão" silhouette) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown
-    # at ~1: a huge hump over the shoulders, the back stepping down to a short tail, the ram's head hanging low.
-    "pachyrhinosaurus":   dict(real=8.0,  scale=1.0,  w=2.6, h=3.9, baby=0.2,  shadow=2.0),
+    # at ~1 (137.5 px long, 16.2 texels per block): a huge hump over the shoulders (5.3 m), the back stepping down to a
+    # short tail, the ram's head hanging low; the hitbox covers the barrel and the hump.
+    "pachyrhinosaurus":   dict(real=8.0,  scale=0.931, w=2.4, h=4.2, baby=0.2,  shadow=1.8),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
     # Protoceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     # Protoceratops v1 (01/11) is hand-made at 48 px/m and shown at its real 1.9 m (16 / 48 = 1/3), its own study and rig.
@@ -439,7 +440,7 @@ SPECIES = [
       attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=24),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.1, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=22, rideable=True, jump=0.45, ride_offset=3.4, ride_forward=0.6, ride_speed=1.05, trample=True,
+      xp=22, rideable=True, jump=0.45, ride_offset=5.34, ride_forward=-0.66, ride_speed=1.05, trample=True,
       saddle="PACHYRHINOSAURUS_SADDLE", rig="Pachyrhinosaurine"),
  dict(id="protoceratops", cls="Protoceratops", base="HerbivoreDinosaur",
       doc="Protoceratops andrewsi - sheep-sized frilled herbivore of the dunes. Bites back when bothered. Digs in soft ground: a tame one turns up roots, bones and shallow fossils.",

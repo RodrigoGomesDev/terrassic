@@ -53,13 +53,13 @@ import software.bernie.geckolib.core.object.PlayState;
  */
 public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
     /** The cycles (pachyanims.py WALK, RUNP, CHARGEP): pixels of ground each covers at 16.94 px/m and its length in
-     *  ticks. PROVISIONAL until the rig is exported. */
-    private static final double WALK_PX = 40.0D;
+     *  ticks. */
+    private static final double WALK_PX = 26.0D;
     private static final double WALK_TICKS = 30.0D;
-    private static final double RUN_PX = 80.0D;
-    private static final double RUN_TICKS = 13.0D;
-    private static final double CHARGE_PX = 88.0D;
-    private static final double CHARGE_TICKS = 12.0D;
+    private static final double RUN_PX = 54.0D;
+    private static final double RUN_TICKS = 12.4D;
+    private static final double CHARGE_PX = 60.0D;
+    private static final double CHARGE_TICKS = 11.2D;
 
     /** A predator this close makes the herd ring up; the ring holds while it stays within RING_KEEP of the middle. */
     public static final double RING_ALERT = 20.0D;
