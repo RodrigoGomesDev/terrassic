@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 1.11 (docs/DESEMPENHO_1_11.md): vanilla's A* with a small memory per animal (the last four searches). Asked again within a second for the
- * same targets from the same block (the same search, so the same answer while the ground stays as it is), it hands
+ * 1.11 (docs/DESEMPENHO_1_11.md): vanilla's A* with a small memory per animal (the last four searches). Asked again
+ * within a second for the same targets from the very same position (the same search, so the same answer while the ground stays as it is), it hands
  * back a copy of the last answer instead of searching again. The goals ask that a lot: a path that stops short ends at
  * once, "the navigation is done", and several goals re-plan every tick while it is done (a stuck animal searched the
  * whole node budget twenty times a second; a big animal's search reads every block its body covers at each node).
@@ -32,6 +32,9 @@ public class MemoPathFinder extends PathFinder {
     private static final class Entry {
         long at;
         BlockPos from;
+        double x;
+        double y;
+        double z;
         boolean fromGround;
         boolean fromWater;
         Set<BlockPos> to;
@@ -54,7 +57,9 @@ public class MemoPathFinder extends PathFinder {
         boolean ground = mob.onGround();
         boolean water = mob.isInWater();
         for (Entry e : this.entries) {
-            if (e != null && now >= e.at && now - e.at <= TICKS && start.equals(e.from) && ground == e.fromGround
+            // the exact position, not only the block: vanilla's start node looks at the corners of the body's box
+            if (e != null && now >= e.at && now - e.at <= TICKS && mob.getX() == e.x && mob.getY() == e.y && mob.getZ() == e.z
+                    && start.equals(e.from) && ground == e.fromGround
                     && water == e.fromWater && maxRange == e.range && accuracy == e.accuracy && depth == e.depth
                     && targets.equals(e.to)) {
                 return e.nodes == null ? null : new Path(new ArrayList<>(e.nodes), e.target, e.reached);
@@ -64,6 +69,9 @@ public class MemoPathFinder extends PathFinder {
         Entry e = new Entry();
         e.at = now;
         e.from = start.immutable();
+        e.x = mob.getX();
+        e.y = mob.getY();
+        e.z = mob.getZ();
         e.fromGround = ground;
         e.fromWater = water;
         e.to = Set.copyOf(targets);
