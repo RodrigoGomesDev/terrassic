@@ -5,6 +5,7 @@ server thread and of the render thread ran Terrassic code, and where (docs/DESEM
     TERRASSIC_PERF=1 TERRASSIC_PERF_LABEL=depois1 caffeinate -dimsu ./gradlew :fabric:runClient
     python3 -B tools/validation/perf_report.py fabric/run/perf/terrassic_perf_depois1.jfr [more.jfr ...]
 
+The share "no próprio código" counts only the samples whose innermost frame is the mod's (self time).
 A sample counts for the mod when any frame of its stack is ours (com.terrassic.*, or a mixin handler merged into a
 vanilla class with "$terrassic$" in its name): the same "this mod is on the stack" attribution a sampling profiler such
 as Spark makes. The measurement itself (com.terrassic.client.dev.*) is left out. Each sample is also put in one bucket
@@ -86,6 +87,7 @@ def samples(path):
 def report(path):
     tot = collections.Counter()
     mod = collections.Counter()
+    own = collections.Counter()
     buckets = {t: collections.Counter() for t in BUCKETS}
     inner = {t: collections.Counter() for t in BUCKETS}
     for thread, frames in samples(path):
@@ -96,6 +98,8 @@ def report(path):
         if not mine:
             continue
         mod[thread] += 1
+        if frames and ours(*frames[0]):
+            own[thread] += 1        # the sample is in the mod's own method, not in vanilla code it called
         c, m = mine[0]
         inner[thread][c.rsplit(".", 1)[-1] + "." + m] += 1
         names = [c.rsplit(".", 1)[-1] + "." + m for c, m in frames]
@@ -109,13 +113,13 @@ def report(path):
     for t in BUCKETS:
         n = tot[t]
         share = 100.0 * mod[t] / n if n else 0.0
-        print(f"{t}: {n} amostras, {mod[t]} com o mod = {share:.1f}%")
+        print(f"{t}: {n} amostras, {mod[t]} com o mod = {share:.1f}% (no próprio código do mod: {100.0 * own[t] / max(1, n):.1f}%)")
         for label, k in buckets[t].most_common():
             print(f"    {100.0 * k / max(1, n):5.1f}%  {label}")
         print("  quadro mais interno do mod:")
         for name, k in inner[t].most_common(12):
             print(f"    {100.0 * k / max(1, n):5.1f}%  {name}")
-    return {t: (tot[t], mod[t]) for t in BUCKETS}
+    return {t: (tot[t], mod[t], own[t], dict(buckets[t])) for t in BUCKETS}
 
 
 if __name__ == "__main__":
