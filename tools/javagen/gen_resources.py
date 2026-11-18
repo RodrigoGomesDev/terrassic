@@ -620,6 +620,52 @@ HUD_LANG = {
 for _lang, _keys in HUD_LANG.items():
     LANG_EXTRA[_lang].update(_keys)
 
+# Jade (1.11, compat.jade): the lines over a Terrassic animal, the plugin's switch in Jade's settings, and the HUD
+# switch that keeps our nameplate beside Jade's tooltip (docs/DESEMPENHO_1_11.md)
+JADE_LANG = {
+    "en_us": {
+        "config.jade.plugin_terrassic.dinosaur": "Terrassic animals",
+        "jade.terrassic.baby": "calf",
+        "jade.terrassic.adult": "adult",
+        "jade.terrassic.alpha": "Alpha",
+        "jade.terrassic.wild": "Wild",
+        "jade.terrassic.tame": "Tame",
+        "jade.terrassic.owner": "Tame, owner: %s",
+        "jade.terrassic.torpor": "torpor %s%%",
+        "jade.terrassic.wakes": "wakes in %s",
+        "jade.terrassic.taming": "Taming: %s%%",
+        "gui.terrassic.hud.hud_nameplate_with_jade": "Nameplate with Jade too",
+    },
+    "pt_br": {
+        "config.jade.plugin_terrassic.dinosaur": "Animais do Terrassic",
+        "jade.terrassic.baby": "filhote",
+        "jade.terrassic.adult": "adulto",
+        "jade.terrassic.alpha": "Alfa",
+        "jade.terrassic.wild": "Selvagem",
+        "jade.terrassic.tame": "Domado",
+        "jade.terrassic.owner": "Domado, dono: %s",
+        "jade.terrassic.torpor": "torpor %s%%",
+        "jade.terrassic.wakes": "acorda em %s",
+        "jade.terrassic.taming": "Doma: %s%%",
+        "gui.terrassic.hud.hud_nameplate_with_jade": "Placa de nome com o Jade também",
+    },
+    "es_es": {
+        "config.jade.plugin_terrassic.dinosaur": "Animales de Terrassic",
+        "jade.terrassic.baby": "cría",
+        "jade.terrassic.adult": "adulto",
+        "jade.terrassic.alpha": "Alfa",
+        "jade.terrassic.wild": "Salvaje",
+        "jade.terrassic.tame": "Domesticado",
+        "jade.terrassic.owner": "Domesticado, dueño: %s",
+        "jade.terrassic.torpor": "torpor %s%%",
+        "jade.terrassic.wakes": "despierta en %s",
+        "jade.terrassic.taming": "Doma: %s%%",
+        "gui.terrassic.hud.hud_nameplate_with_jade": "Placa de nombre también con Jade",
+    },
+}
+for _lang, _keys in JADE_LANG.items():
+    LANG_EXTRA[_lang].update(_keys)
+
 # the alphas (docs/ALFAS.md, entity/Alphas): name, knockout messages, server chat, the /terrassic alfa command
 ALPHA_LANG = {
     "en_us": {

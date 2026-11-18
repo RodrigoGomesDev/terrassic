@@ -37,6 +37,19 @@ public abstract class LevelMixin implements PartOwners {
         }
     }
 
+    @Unique
+    private DinoParts.Index terrassic$index;
+
+    @Override
+    public DinoParts.Index terrassic$partIndex() {
+        return this.terrassic$index;
+    }
+
+    @Override
+    public void terrassic$setPartIndex(DinoParts.Index index) {
+        this.terrassic$index = index;
+    }
+
     @Override
     public DinosaurEntity[] terrassic$partOwners() {
         return this.terrassic$owners;

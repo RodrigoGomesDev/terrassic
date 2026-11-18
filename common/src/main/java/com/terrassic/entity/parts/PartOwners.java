@@ -14,4 +14,9 @@ public interface PartOwners {
 
     /** Drops the owners that were removed (dead, unloaded, changed dimension). */
     void terrassic$prunePartOwners();
+
+    /** 1.11: the owners' padded bounds in one flat array, rebuilt once a tick (DinoParts#addParts). */
+    DinoParts.Index terrassic$partIndex();
+
+    void terrassic$setPartIndex(DinoParts.Index index);
 }

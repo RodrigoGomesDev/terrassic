@@ -19,8 +19,17 @@ public class HudOptionsScreen extends Screen {
     private static final int ROW = 17;
     /** The switches, in order; each label is gui.terrassic.hud.&lt;option&gt;. "hud_era_title" is left out while the era's
      *  title is off for everyone (v0.15.2, WorldConfig "titulo_da_era"). */
-    private static final String[] OPTIONS = {"hud_mount", "hud_nameplate", "hud_taming", "hud_notices", "hud_new_species",
+    private static final String[] BASE = {"hud_mount", "hud_nameplate", "hud_taming", "hud_notices", "hud_new_species",
             "hud_numbers_always"};
+    /** 1.11: with Jade installed, one more switch: keep the nameplate beside Jade's tooltip (off by default). */
+    private static final String[] OPTIONS = ClientConfig.jade() ? withJade() : BASE;
+
+    private static String[] withJade() {
+        String[] all = java.util.Arrays.copyOf(BASE, BASE.length + 1);
+        System.arraycopy(BASE, 2, all, 3, BASE.length - 2);
+        all[2] = "hud_nameplate_with_jade";
+        return all;
+    }
     private final Screen parent;
     private int left;
     private int top;
