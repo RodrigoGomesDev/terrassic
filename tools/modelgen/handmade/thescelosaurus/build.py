@@ -84,7 +84,7 @@ def main():
     print("colour --remade: nearest", ", ".join(f"{o} {d:.1f}" for d, o in near))
     heads += [("colour", c) for c in clash]
     import silcheck
-    srows = silcheck.check(spec=m.spec())
+    srows = silcheck.check(spec=silcheck.sil.load_game("thescelosaurus"))     # the geo the game loads
     print("silhouette: " + ", ".join(f"{n} {v:.3f}" for n, v, _ok in srows))
     heads += [("silhouette", n, round(v, 3)) for n, v, ok in srows if not ok]
 

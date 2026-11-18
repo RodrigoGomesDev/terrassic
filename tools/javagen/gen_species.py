@@ -150,9 +150,9 @@ SIZES = {
     # young's spikes, the adult the dome); the hitbox is kept.
     "pachycephalosaurus": dict(real=4.5,  scale=0.5,  w=1.0, h=1.9, baby=0.4,  shadow=0.8),
     # Thescelosaurus neglectus: 2.5 to 4.0 m (Galton 1974), 200 to 300 kg (Erickson 2003); the top, 4 m.
-    # Thescelosaurus v4 (16/11, the 1.11.0, silhouette A "tipo ave") is hand-made at ~17.8 texels per block (75 px for
+    # Thescelosaurus v4 (16/11, the 1.11.0, silhouette A "tipo ave") is hand-made at ~17.4 texels per block (73.5 px for
     # 4 m): the short trunk pitched up like a ground bird's, the neck in an S, the stiff tail as long as the rest.
-    "thescelosaurus":     dict(real=4.0,  scale=0.849, w=0.9, h=2.1, baby=0.3,  shadow=0.7),
+    "thescelosaurus":     dict(real=4.0,  scale=0.871, w=0.9, h=2.1, baby=0.3,  shadow=0.7),
     # Gallimimus bullatus: 6 m, ~440 kg (Osmolska et al. 1972; Paul 2010). Gallimimus v1 (02/11) is hand-made at
     # 32 px/m and shown at its real 6 m (16 / 32 = 0.5), its own study and rig; the hitbox is kept.
     "gallimimus":         dict(real=6.0,  scale=0.5,  w=1.2, h=2.6, baby=0.35, shadow=0.9),

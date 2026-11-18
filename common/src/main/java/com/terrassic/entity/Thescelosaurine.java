@@ -315,7 +315,7 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
                 || s.is(Blocks.SWEET_BERRY_BUSH);
     }
 
-    /** The densest cover within 14 blocks, away from the threat (its burrow first, if it has one near). */
+    /** The densest cover within 16 blocks, away from the threat (its burrow first, if it has one near). */
     private Vec3 findCover(LivingEntity threat) {
         if (this.burrow != null && this.mouth != null && this.burrow.distSqr(this.blockPosition()) < 20 * 20
                 && Vec3.atCenterOf(this.burrow).distanceTo(threat.position()) > threat.distanceTo(this)) {
@@ -324,8 +324,8 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
         BlockPos here = this.blockPosition();
         Vec3 best = null;
         double bs = -1e9;
-        for (int dx = -14; dx <= 14; dx += 2) {
-            for (int dz = -14; dz <= 14; dz += 2) {
+        for (int dx = -16; dx <= 16; dx += 2) {
+            for (int dz = -16; dz <= 16; dz += 2) {
                 for (int dy = -3; dy <= 3; dy++) {
                     BlockPos p = here.offset(dx, dy, dz);
                     if (!this.level().getBlockState(p.below()).isSolid() || this.level().getBlockState(p).isSolid()) {
@@ -376,10 +376,20 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
             }
             boolean close = this.danger != null && this.danger.distanceTo(this) <= BOLT_AT;
             if (close || --this.freezeLeft <= 0) {
-                if (this.danger != null && this.danger.distanceTo(this) <= NOTICE + 2.0D) {
+                double d = this.danger == null ? 1e9 : this.danger.distanceTo(this);
+                if (d <= NOTICE + 2.0D) {
                     this.bolt(this.danger, false);
+                } else if (d <= SMELL + 2.0D) {
+                    // still there but not coming: it slinks off the other way, alert (it does not freeze again at once)
+                    this.setWary(CALM);
+                    this.wariness = 160;
+                    Vec3 away = this.position().subtract(this.danger.position());
+                    Vec3 to = this.position().add(new Vec3(away.x, 0.0D, away.z).normalize().scale(6.0D));
+                    this.getNavigation().moveTo(to.x, to.y, to.z, 0.6D);
+                    this.log("slinks off: " + name(this.danger) + " still at " + Math.round(d) + " blocks, not coming");
                 } else {
                     this.setWary(CALM);
+                    this.wariness = 60;
                     this.log("relaxes: the danger went off");
                 }
             }
@@ -388,7 +398,7 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
         if (w == BOLT) {
             this.boltLeft--;
             boolean there = this.cover != null && this.cover.distanceToSqr(this.position()) < 2.5D * 2.5D;
-            boolean far = this.danger == null || this.danger.distanceTo(this) > 24.0D;
+            boolean far = this.cover == null && (this.danger == null || this.danger.distanceTo(this) > SMELL + 4.0D);
             if (there || far || this.boltLeft <= 0) {
                 this.hide(there);
                 return;
@@ -406,7 +416,7 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
                 this.bolt(d, false);
                 return;
             }
-            boolean near = d != null && d.isAlive() && d.distanceTo(this) < 20.0D;
+            boolean near = d != null && d.isAlive() && d.distanceTo(this) < SMELL;
             this.calmFor = near ? 0 : this.calmFor + 1;
             if (this.hideTicks % 70 == 35) {
                 triggerAnim(ACTION_CONTROLLER, "peek");

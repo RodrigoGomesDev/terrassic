@@ -77,11 +77,13 @@ def pal_for(sex):
 # bent by the bone rest angles, as in the blocking (sil.chain): the neck and the tail along the body axis, the legs and
 # the arms hanging down. Signs (geo.rot_matrix): +x lifts what lies in front (-z), lowers what lies behind (+z); a
 # hanging limb with +x swings its far end forward. The legs and the tail hang from the body here (the blocking hangs
-# them from the root): their first angle has the body's 22 taken off.
+# them from the root): their first angle has the body's 22 taken off. Two angles moved from the blocking (16/11, measured on
+# the exported geo): the tail rises 22 degrees instead of 14 and the neck base 52 instead of 50, which takes the
+# silhouette off the Pachycephalosaurus (0.625 -> 0.59) and the Corythosaurus v4 (0.623 -> 0.60), the blocking still 0.82.
 BODY_TILT = 22
-REST = {"body": BODY_TILT, "neck1": 50, "neck2": 0, "neck3": -60, "skull": -12,
+REST = {"body": BODY_TILT, "neck1": 52, "neck2": 0, "neck3": -60, "skull": -12,
         "arm": 14, "forearm": 70, "hand": -30,
-        "tail1": -14 - BODY_TILT, "tail2": 0, "tail3": 0, "tail4": 0, "tail5": 0}
+        "tail1": -22 - BODY_TILT, "tail2": 0, "tail3": 0, "tail4": 0, "tail5": 0}
 # the half-stride of the blocking (left forward, right back): thigh, shin, foot; the toes flat on the ground
 LEG_REST = {"l": (32 - BODY_TILT, -70, 52), "r": (10 - BODY_TILT, -55, 58)}
 HIP = (4.5, 17.5, 4.5)
@@ -115,7 +117,7 @@ def head(m, parent):
         m.bone(f"cheek_{side}", sk, (2.0 * sx, 19.5, -28))
     m.pair("cheek_l", "cheek_r", (2, 18, -28.5), (3, 20, -25.5), name="cheek")
     jaw = m.bone("jaw", sk, (0, 19.5, -23.5))
-    m.cube(jaw, (-1.5, 17.5, -28.5), (1.5, 19.5, -23.5), name="dentary")
+    m.cube(jaw, (-1.5, 17.5, -29.5), (1.5, 19.5, -23.5), name="dentary")
     m.cube(jaw, (-1, 16.5, -33.5), (1, 17.5, -28.5), name="predentary", mat="beak", faces=OUT("south"))
     m.cube(jaw, (-1, 17.5, -28.5), (1, 18.5, -27.5), name="mouth", mat="mouth", faces=["north", "up"])
     return sk
@@ -330,9 +332,14 @@ def limb_tone(t, calf=False):
         base = "k4" if v > 0.3 or n == "knee" else "k3"
         if f == "north":
             base = "k5" if n == "thigh" else "k4"
-        if f in ("east", "west") and (math.floor(t.L[2]) % 3 == 1) and (math.floor(t.L[1]) % 3 == (math.floor(t.L[2] / 3) % 3)) \
-                and h32(math.floor(t.L[2]), math.floor(t.L[1]), 11) % 3 != 0 and v > 0.2:
-            return "b1"
+        if f in ("east", "west") and v > 0.15:
+            # the flank's rows of spots run on down the thigh, slanting back (every 3 px along a row, rows 4 px apart)
+            zz, yy = math.floor(t.L[2]), math.floor(t.L[1])
+            if zz % 2 == 0 and (yy + zz // 2) % 3 == 0 and h32(zz, yy, 11) % 4 != 0:
+                return "b1"
+            # a broken dark saddle over the top of the thigh, the back's pattern carried down
+            if n == "thigh" and v > 0.7 and abs(t.L[2] - 4.5 + 0.6 * (t.L[1] - 17.0)) < 1.2 and h32(zz, 5) % 3:
+                return "k2"
         return base
     if n in ("arm", "forearm"):
         return "k4" if f not in ("south", "down") else "k3"
