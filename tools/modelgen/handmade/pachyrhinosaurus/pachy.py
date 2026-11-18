@@ -94,9 +94,9 @@ def _ground(m):
 # THE BACK: the hump and the steps down to the tail, (name, x half width, y0, y1, z0, z1); the hump is a ridge
 # (narrower as it rises), every step a tier of the cape a little lower and shorter than the one in front
 BACK = (("withers", 17, 46, 68, -34, -22),
-        ("hump_a", 16, 50, 78, -26, -15),
-        ("hump_b", 15, 52, 83, -17, -4),
-        ("step_1", 16, 50, 78, -6, 5),
+        ("hump_a", 16, 48, 78, -26, -15),
+        ("hump_b", 15, 47, 83, -17, -4),
+        ("step_1", 16, 46, 78, -6, 5),
         ("step_2", 17, 48, 72, 3, 12),
         ("step_3", 18, 45, 65, 10, 19),
         ("step_4", 18.5, 42, 58, 17, 26),
@@ -111,7 +111,7 @@ def trunk(m, body):
     """the barrel: a deep chest under the hump, the belly, the hips; then the hump and its steps"""
     m.cube(body, (-19, 18, -34), (19, 52, -10), name="chest")
     m.cube(body, (-21, 17, -11), (21, 50, 14), name="torso")
-    m.cube(body, (-19, 21, 13), (19, 45, 38), name="hips")
+    m.cube(body, (-19, 18, 13), (19, 45, 38), name="hips")
     m.cube(body, (-17, 15, -26), (17, 19, 30), name="belly", mat="belly", faces=OUT("up"))
     m.cube(body, (-14, 16, -38), (14, 34, -32), name="brisket", mat="belly", faces=OUT("south"))
     for n, hw, y0, y1, z0, z1 in BACK:
