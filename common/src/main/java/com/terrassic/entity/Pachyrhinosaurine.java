@@ -83,6 +83,11 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
 
     private Ring ring;
     private int sallyTick = -1;
+    /** Ticks the loser of a bout keeps walking off, and where to. */
+    private int walkOff;
+    private Vec3 walkOffTo;
+    /** Ticks it holds its place after a sally before it may break out again. */
+    private int sallyRest;
     private boolean placed;
     private int still;
     private int gestureCooldown = 200;
@@ -264,7 +269,7 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             for (Pachyrhinosaurine p : this.adults) {
                 w = Math.max(w, p.getBbWidth());
             }
-            this.radius = Math.max(w * 1.15D + 1.2D, n * w * 1.15D / Mth.TWO_PI);
+            this.radius = Math.max(w * 1.5D + 1.5D, n * w * 1.4D / Mth.TWO_PI);
             // the greedy assignment: each slot in turn takes the nearest free grown one
             List<Pachyrhinosaurine> free = new ArrayList<>(this.adults);
             List<Pachyrhinosaurine> order = new ArrayList<>();
@@ -447,6 +452,9 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
         public void tick() {
             Pachyrhinosaurine me = Pachyrhinosaurine.this;
             Ring r = me.ring;
+            if (r == null) {
+                return;
+            }
             me.ringTick(r);
             if (r.over) {
                 return;
@@ -464,7 +472,7 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
                 return;
             }
             Vec3 slot = r.slot(me);
-            boolean there = me.goTo(slot, 1.1D, 1.2D);
+            boolean there = me.goTo(slot, 1.1D, 2.0D);
             // facing: out from the middle; the one the predator is on (within 12 blocks, on its side) faces it
             Vec3 out = slot.subtract(r.centre);
             if (out.lengthSqr() < 1.0E-4D) {
@@ -486,7 +494,11 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             me.setBraced(there);
             me.getLookControl().setLookAt(pred, 20.0F, 20.0F);
             // the sally: the nearest grown one breaks out when the predator comes within SALLY of it
-            if (there && r.sallier == null && r.sallyCooldown == 0 && me.gap(pred) <= SALLY) {
+            // (in its place or still shuffling into it: a predator at the wall is met either way)
+            if (me.sallyRest > 0) {
+                me.sallyRest--;
+            }
+            if (r.sallier == null && r.sallyCooldown == 0 && me.sallyRest == 0 && me.gap(pred) <= SALLY) {
                 Pachyrhinosaurine nearest = r.adults.stream().min(Comparator.comparingDouble(e -> e.distanceToSqr(pred))).orElse(me);
                 if (nearest == me) {
                     r.sallier = me;
@@ -544,6 +556,7 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             this.sallyTick = -1;
             r.sallier = null;
             r.sallyCooldown = 30;
+            this.sallyRest = 100;      // back in its place and braced before it breaks out again
             this.placed = false;
             this.log("ring: back to its place");
         }
@@ -570,7 +583,7 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             return;
         }
         if (this.boutCooldown > 0 || this.isFemale() || this.isBaby() || this.isTame() || this.busy() || this.isSleeping()
-                || this.tickCount % 20 != this.getId() % 20 || this.crossing != null) {
+                || this.tickCount % 20 != this.getId() % 20 || (this.crossing != null && !this.crossing.done)) {
             return;
         }
         for (Pachyrhinosaurine o : this.kind(10.0D)) {
@@ -671,6 +684,12 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
                         Vec3 away = loser.position().subtract(winner.position());
                         Vec3 to = loser.position().add(new Vec3(away.x, 0.0D, away.z).normalize().scale(14.0D));
                         loser.getNavigation().moveTo(to.x, to.y, to.z, 1.0D);
+                        loser.still = 0;
+                        loser.walkOff = 200;            // it keeps walking off, and leaves the winner alone for a while
+                        loser.walkOffTo = to;
+                        loser.boutCooldown = Math.max(loser.boutCooldown, 2400);
+                        winner.boutCooldown = Math.max(winner.boutCooldown, 600);
+                        winner.still = 120;             // the winner holds its ground (and does not follow it)
                         winner.triggerAnim(ACTION_CONTROLLER, "roar");
                         bouts++;
                         this.log("boss bout over: #" + loser.getId() + " gives in and walks off, #" + winner.getId() + " stays");
@@ -763,7 +782,7 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
                     // its own crossing: until it is over on the far bank (then it waits for the rest, no new one)
                     return me.crossing.crossed.contains(me.getId()) ? null : me.crossing;
                 }
-                if (me.tickCount % 10 != 0) {
+                if (me.tickCount % 5 != 0) {
                     return null;
                 }
                 Vec3 to = Vec3.atBottomCenterOf(me.getMigrationTarget()).subtract(me.position());
@@ -772,7 +791,10 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
                     return null;
                 }
                 dir = dir.normalize();
-                if (!me.isInWater() && me.waterToward(dir, 4 + (int) me.getBbWidth())) {
+                // on the bank, or just in at the edge (the ground 3 blocks back still dry): a fast herd steps in before it looks
+                boolean edge = !me.isInWater() || me.level().getFluidState(BlockPos.containing(
+                        me.position().subtract(dir.scale(3.0D)))).isEmpty();
+                if (edge && me.waterToward(dir, 6 + (int) me.getBbWidth())) {
                     Vec3 far = me.farBank(dir);
                     if (far != null) {
                         Crossing c = new Crossing(me);
@@ -821,7 +843,7 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             Pachyrhinosaurine me = Pachyrhinosaurine.this;
             Crossing c = me.crossing;
             me.getNavigation().stop();
-            this.delay = c.leader == me ? 0 : 8 + (me.getId() % 6) * 8;
+            this.delay = c.leader == me ? 0 : 40 + (me.getId() % 6) * 10;     // the leader a good way in before the first follows
             me.triggerAnim(ACTION_CONTROLLER, "hesitate");
         }
 
@@ -854,9 +876,16 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
                 return;
             }
             if (!leader && !c.leaderIn) {
-                // on the bank, behind the leader, waiting
+                // on the bank, behind the leader, waiting (one already in at the edge steps back out first)
                 me.getLookControl().setLookAt(c.far.x, c.far.y, c.far.z);
-                me.getNavigation().stop();
+                if (me.isInWater()) {
+                    Vec3 back = c.bank.subtract(c.far.subtract(c.bank).normalize().scale(4.0D));
+                    if (me.getNavigation().isDone() || me.tickCount % 20 == 0) {
+                        me.getNavigation().moveTo(back.x, back.y, back.z, 1.0D);
+                    }
+                } else {
+                    me.getNavigation().stop();
+                }
                 return;
             }
             if (!leader && this.delay > 0) {
@@ -874,6 +903,9 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             side = side.lengthSqr() < 1.0E-4D ? Vec3.ZERO : side.normalize().scale(((me.getId() % 5) - 2) * 1.5D);
             Vec3 at = leader ? c.far : c.far.add(side);
             if (me.goTo(at, 1.0D, 3.0D) || me.position().distanceTo(at) < 4.0D) {
+                if (c.crossed.contains(me.getId())) {
+                    return;
+                }
                 c.crossed.add(me.getId());
                 long n = c.crossed.size();
                 me.log("river crossing: across (" + n + (leader ? ", the leader)" : ")"));
@@ -916,11 +948,12 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             this.gestureCooldown--;
             return;
         }
-        if (this.isBaby() || this.busy() || this.isSleeping() || this.boutWith != null || this.crossing != null
-                || !this.getNavigation().isDone()) {
+        if (this.isBaby() || this.busy() || this.isSleeping() || this.boutWith != null || (this.crossing != null && !this.crossing.done)) {
             return;
         }
-        if (this.onSnow() && this.random.nextInt(this.isHungry() ? 60 : 300) == 0) {
+        // on snow it stops where it is to dig (checked once a second, walking or not: grazing is what it does there)
+        if (this.onSnow() && this.tickCount % 20 == this.getId() % 20 && this.random.nextInt(this.isHungry() ? 2 : 10) == 0) {
+            this.getNavigation().stop();
             this.triggerAnim(ACTION_CONTROLLER, "snow_dig");
             BlockPos at = this.blockPosition();
             int cleared = 0;
@@ -935,6 +968,9 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             this.still = 64;
             this.gestureCooldown = FAST ? 100 : 400;
             this.log("digs the snow off to graze (" + cleared + " snow layers cleared)");
+            return;
+        }
+        if (!this.getNavigation().isDone()) {
             return;
         }
         if (this.random.nextInt(900) == 0) {
@@ -1014,6 +1050,15 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
         this.calfGuardStep();
         this.boutStep();
         if (this.boutWith != null) {
+            return;
+        }
+        if (this.walkOff > 0) {
+            this.walkOff--;
+            // the herd's goals would pull it straight back to the winner: its own walk wins until it is done
+            if (this.walkOffTo != null && (this.getNavigation().isDone() || this.walkOff % 20 == 0)
+                    && this.walkOffTo.distanceToSqr(this.position()) > 4.0D) {
+                this.getNavigation().moveTo(this.walkOffTo.x, this.walkOffTo.y, this.walkOffTo.z, 1.2D);
+            }
             return;
         }
         if (this.still > 0) {

@@ -2105,6 +2105,7 @@ public final class BehaviorTest {
         });
         awaitAll(das);
         int[] rk = {0};
+        com.terrassic.entity.Pachyrhinosaurine.Ring[] ringHeld = {null};
         double[] ringStat = new double[12];   // formed, adults, calves in, calves, facing ok, mean off, braced, sallies, hits, back, over, overAt
         STEPS.add(mc -> {
             int k = rk[0]++;
@@ -2112,23 +2113,24 @@ public final class BehaviorTest {
             List<com.terrassic.entity.Pachyrhinosaurine> grown = pachyAll(mc, herd);
             List<com.terrassic.entity.Pachyrhinosaurine> small = pachyAll(mc, calves);
             com.terrassic.entity.Pachyrhinosaurine.Ring ring = grown.stream().map(com.terrassic.entity.Pachyrhinosaurine::ring)
-                    .filter(r -> r != null).findFirst().orElse(null);
+                    .filter(r -> r != null).findFirst().orElse(ringHeld[0]);
             if (ring != null) {
                 ringStat[0] = 1;
+                ringHeld[0] = ring;     // kept: the members drop it when it is over
             }
             Vec3 c = ring != null ? ring.centre : new Vec3(x0, Y, rz);
             if (pred != null) {
                 Vec3 to;
-                if (k < 300) {
-                    double a = 0.006D * k;          // walks slowly round the herd at 15 blocks
+                if (k < 60) {
+                    double a = 0.03D * k;          // walks slowly round the herd at 15 blocks
                     to = c.add(Math.cos(a) * 15.0D, 0.0D, Math.sin(a) * 15.0D);
-                } else if (k < 460) {
+                } else if (k < 150) {
                     // closes in on the nearest grown one, to 3 blocks of its box
                     com.terrassic.entity.Pachyrhinosaurine n = grown.stream()
                             .min(java.util.Comparator.comparingDouble(e -> e.distanceToSqr(pred))).orElse(null);
                     Vec3 d = n == null ? Vec3.ZERO : pred.position().subtract(n.position());
                     double want = n == null ? 0.0D : (n.getBbWidth() + pred.getBbWidth()) * 0.5D + 3.0D;
-                    to = n == null ? pred.position() : n.position().add(new Vec3(d.x, 0.0D, d.z).normalize().scale(Math.max(want, d.horizontalDistance() - 0.12D)));
+                    to = n == null ? pred.position() : n.position().add(new Vec3(d.x, 0.0D, d.z).normalize().scale(Math.max(want, d.horizontalDistance() - 0.35D)));
                 } else {
                     Vec3 d = pred.position().subtract(c);
                     to = pred.position().add(new Vec3(d.x, 0.0D, d.z).normalize().scale(0.3D));
@@ -2141,7 +2143,7 @@ public final class BehaviorTest {
                     pred.yBodyRot = yaw;
                 });
             }
-            if (k == 260 && ring != null) {
+            if (k == 50 && ring != null) {
                 int in = 0, ok = 0, braced = 0;
                 double off = 0.0D;
                 for (com.terrassic.entity.Pachyrhinosaurine s2 : small) {
@@ -2170,20 +2172,20 @@ public final class BehaviorTest {
                 ringStat[6] = braced;
                 look(mc.player, ring.centre.add(0.0D, 24.0D, -20.0D), ring.centre);
             }
-            if (k == 262) {
+            if (k == 52) {
                 pachyShotNow(mc, "ring_top");
                 if (ring != null && pred != null) {
                     Vec3 side = ring.centre.subtract(pred.position()).normalize();
                     look(mc.player, ring.centre.add(-side.z * 18.0D, 6.0D, side.x * 18.0D), ring.centre.add(0.0D, 1.5D, 0.0D));
                 }
             }
-            if (k == 266) {
+            if (k == 56) {
                 pachyShotNow(mc, "ring_side");
             }
             if (ring != null) {
                 ringStat[7] = ring.sallies;
                 ringStat[8] = ring.hits;
-                if (k == 330) {
+                if (k == 110) {
                     pachyShotNow(mc, "ring_sally");
                 }
                 if (ring.over && ringStat[10] == 0) {
@@ -2191,11 +2193,11 @@ public final class BehaviorTest {
                     ringStat[11] = pred == null ? -1 : pred.position().distanceTo(ring.centre);
                 }
             }
-            if (k == 455) {
+            if (k == 145) {
                 // after the sallies: is everyone of the edge back in its place (braced)?
                 ringStat[9] = grown.stream().filter(com.terrassic.entity.Pachyrhinosaurine::isBraced).count();
             }
-            if (k < 640 && ringStat[10] == 0) {
+            if (k < 260 && ringStat[10] == 0) {
                 return -1;
             }
             REPORT.add(String.format(Locale.ROOT, "  pachy ring: formed %s, %d grown on the ring, calves inside %d of %d, facing out or at the predator %d of %d (mean off %.0f deg), braced %d of %d",
@@ -2207,6 +2209,8 @@ public final class BehaviorTest {
             return 1;
         });
         STEPS.add(mc -> {
+            // the predator out of the way, or the herds of the next arenas close their rings on it
+            command(mc, "kill @e[type=terrassic:daspletosaurus]");
             maiaClear(mc, x0);
             return 20;
         });
@@ -2290,11 +2294,10 @@ public final class BehaviorTest {
             List<com.terrassic.entity.Pachyrhinosaurine> all = pachyAll(mc, mig);
             com.terrassic.entity.Pachyrhinosaurine.Crossing c = com.terrassic.entity.Pachyrhinosaurine.lastCrossing;
             if (rv[1] == 0) {
-                for (com.terrassic.entity.Pachyrhinosaurine p : all) {
-                    if (p.isInWater()) {
-                        rv[1] = c != null && p == c.leader ? 1 : -1;
-                        break;
-                    }
+                // the first time any of them is in the water: is the leader among those in it?
+                // judged when the leader goes in: none of the others in the water yet
+                if (c != null && c.leaderIn) {
+                    rv[1] = all.stream().noneMatch(p -> p != c.leader && p.isInWater()) ? 1 : -1;
                 }
             }
             if (c != null && c.wait > 0 && rv[2] == 0) {
@@ -2332,6 +2335,7 @@ public final class BehaviorTest {
         int[] sn = {0};
         STEPS.add(mc -> {
             REPORT.add("  -- the snow");
+            command(mc, "time set noon");      // by now the test may have run into the night: asleep, it would not dig
             command(mc, fill(x0 - 6.0D, Y, 104.0D, x0 + 6.0D, Y, 116.0D, "minecraft:snow[layers=2]"));
             summon(mc, "pachyrhinosaurus", x0, Y, 110.5D, dig, "Female:1b,Tags:[\"pachy\"]");
             look(mc.player, new Vec3(x0 + 10.0D, Y + 6.0D, 100.0D), new Vec3(x0, Y + 1.0D, 110.5D));
