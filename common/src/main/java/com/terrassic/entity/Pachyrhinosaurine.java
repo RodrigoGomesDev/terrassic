@@ -732,6 +732,15 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
     }
 
     /** Water within {@code r} blocks ahead toward {@code to}, at the feet. */
+    /** How far in front of the leader's place on the bank, toward the far bank (negative: behind it). */
+    private double aheadOfBank(Crossing c) {
+        Vec3 dir = c.far.subtract(c.bank).multiply(1.0D, 0.0D, 1.0D);
+        if (dir.lengthSqr() < 1.0E-4D) {
+            return 0.0D;
+        }
+        return this.position().subtract(c.bank).multiply(1.0D, 0.0D, 1.0D).dot(dir.normalize());
+    }
+
     private boolean waterToward(Vec3 dir, int r) {
         for (int k = 1; k <= r; k++) {
             BlockPos p = BlockPos.containing(this.getX() + dir.x * k, this.getY() - 0.5D, this.getZ() + dir.z * k);
@@ -866,6 +875,15 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
             Crossing c = me.crossing;
             boolean leader = c.leader == me;
             if (leader && c.wait > 0) {
+                // the leader goes in only once the bank is clear: one of the herd that reached the edge first may still
+                // be stepping back out of the water (the test saw it in the river as the leader waded in), up to 10 s more
+                if (c.wait == 1 && c.waited < 260 && me.kind(HERD + 16.0D).stream()
+                        .anyMatch(e -> e.crossing == c && (e.isInWater() || e.aheadOfBank(c) > -1.0D))) {
+                    c.waited++;
+                    me.getNavigation().stop();
+                    me.getLookControl().setLookAt(c.far.x, c.far.y, c.far.z);
+                    return;
+                }
                 c.wait--;
                 c.waited++;
                 me.getNavigation().stop();
@@ -876,12 +894,16 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
                 return;
             }
             if (!leader && !c.leaderIn) {
-                // on the bank, behind the leader, waiting (one already in at the edge steps back out first)
+                // on the bank, behind the leader, waiting (one already in at the edge, or ahead of the leader, steps
+                // back first: the herd walks abreast, and one a few blocks in front was in the river as the leader
+                // waded in, or was pushed in by it)
                 me.getLookControl().setLookAt(c.far.x, c.far.y, c.far.z);
-                if (me.isInWater()) {
-                    Vec3 back = c.bank.subtract(c.far.subtract(c.bank).normalize().scale(4.0D));
+                double ahead = me.aheadOfBank(c);
+                if (me.isInWater() || ahead > -1.0D) {
+                    Vec3 dir = c.far.subtract(c.bank).multiply(1.0D, 0.0D, 1.0D).normalize();
+                    Vec3 back = me.position().subtract(dir.scale(Math.max(0.0D, ahead) + 4.0D));
                     if (me.getNavigation().isDone() || me.tickCount % 20 == 0) {
-                        me.getNavigation().moveTo(back.x, back.y, back.z, 1.0D);
+                        me.getNavigation().moveTo(back.x, c.bank.y, back.z, 1.0D);
                     }
                 } else {
                     me.getNavigation().stop();
@@ -1082,6 +1104,16 @@ public abstract class Pachyrhinosaurine extends HerbivoreDinosaur {
     // ------------------------------------------------------------------ test hooks (BehaviorTest "pachy")
     public void testBoutReady() {
         this.boutCooldown = 0;
+    }
+
+    /** Test only: whether it is in a river crossing now (as leader or follower). */
+    public boolean testInCrossing() {
+        return this.crossing != null;
+    }
+
+    /** Test only: the goals running now. */
+    public String testGoals() {
+        return this.goalSelector.getRunningGoals().map(g -> g.getGoal().getClass().getSimpleName()).toList().toString();
     }
 
     public void testNoBout() {

@@ -1227,9 +1227,13 @@ public final class BehaviorTest {
     }
 
     private static void maiaClear(Minecraft mc, double x0) {
+        maiaClear(mc, x0, 0.0D);
+    }
+
+    private static void maiaClear(Minecraft mc, double x0, double z0) {
         ServerLevel l = mc.getSingleplayerServer().overworld();
         mc.getSingleplayerServer().execute(() -> {
-            for (Entity e : l.getEntitiesOfClass(Entity.class, new net.minecraft.world.phys.AABB(BlockPos.containing(x0, Y, 0)).inflate(70.0D, 40.0D, 70.0D),
+            for (Entity e : l.getEntitiesOfClass(Entity.class, new net.minecraft.world.phys.AABB(BlockPos.containing(x0, Y, z0)).inflate(70.0D, 40.0D, 70.0D),
                     e -> !(e instanceof net.minecraft.world.entity.player.Player))) {
                 e.discard();
             }
@@ -2201,9 +2205,17 @@ public final class BehaviorTest {
                     c.testNoDisplay();
                     c.heardBlind = false;
                 }
+                // "50 blocks": from where the near herd is now, not from where it was summoned (it follows its
+                // leader towards the wall, and the far herd's drift took the caller to 60-66 blocks, past the
+                // 64 of the call: the far herd then ran 0 or 1 of 3)
+                List<com.terrassic.entity.Corythosaurine> nh = coryAll(mc, near);
+                double cx = nh.stream().mapToDouble(Entity::getX).average().orElse(x0 - 2.0D);
+                int i = 0;
                 for (com.terrassic.entity.Corythosaurine c : coryAll(mc, farHerd)) {
                     c.testDrowsy(false);
                     c.testNoDisplay();
+                    c.moveTo(cx - 50.0D, Y, 14.5D + 7 * i++, 90.0F, 0.0F);
+                    c.getNavigation().stop();
                     c.testNap(2400);
                 }
             });
@@ -2226,14 +2238,16 @@ public final class BehaviorTest {
             List<com.terrassic.entity.Corythosaurine> a = coryAll(mc, near);
             List<com.terrassic.entity.Corythosaurine> b = coryAll(mc, farHerd);
             boolean heard = a.stream().anyMatch(c -> c.heardBlind);
-            // latched each second: a flight lasts 5 s
-            a.stream().filter(com.terrassic.entity.Corythosaurine::isFleeing).forEach(c -> nearRan.add(c.getUUID()));
-            b.stream().filter(com.terrassic.entity.Corythosaurine::isFleeing).forEach(c -> farRan.add(c.getUUID()));
+            // latched by the animal when the alarm reaches it (sampling a 5 s flight once a second missed some on a
+            // slow client)
+            a.stream().filter(c -> c.alarmsGot > 0).forEach(c -> nearRan.add(c.getUUID()));
+            b.stream().filter(c -> c.alarmsGot > 0).forEach(c -> farRan.add(c.getUUID()));
             long ran = nearRan.size();
             if (ear[0]++ < 30 && (ran < a.size() || farRan.size() < b.size())) {
                 return -20;
             }
-            long farAwake = b.stream().filter(c -> !c.isSleeping()).count();
+            // woken by the call (latched: with the test's 8-16 s watches it may doze again before this line)
+            long farAwake = b.stream().filter(c -> c.wokeToAlarm && c.alarmsGot > 0).count();
             long farRanN = farRan.size();
             boolean seen = r != null && a.stream().anyMatch(c -> c.hasLineOfSight(r));
             REPORT.add(String.format(Locale.ROOT, "  cory ear: heard without sight %s (%d of %d heard blind, raptor visible %s), herd ran %d of %d after %d s",
@@ -2735,6 +2749,13 @@ public final class BehaviorTest {
                 // judged when the leader goes in: none of the others in the water yet
                 if (c != null && c.leaderIn) {
                     rv[1] = all.stream().noneMatch(p -> p != c.leader && p.isInWater()) ? 1 : -1;
+                    REPORT.add("  pachy river detail: leader #" + c.leader.getId() + " at " + c.leader.blockPosition().toShortString()
+                            + " bank " + BlockPos.containing(c.bank).toShortString() + "; in the water with it: "
+                            + all.stream().filter(p -> p != c.leader && p.isInWater())
+                                    .map(p -> "#" + p.getId() + " at " + p.blockPosition().toShortString() + " (crossing "
+                                            + p.testInCrossing() + ", herd leader " + (p.herdLeader() == null ? "-" : "#" + p.herdLeader().getId())
+                                            + ", goals " + p.testGoals() + ")").toList()
+                            + "; leader goals " + c.leader.testGoals());
                 }
             }
             if (c != null && c.wait > 0 && rv[2] == 0) {
@@ -2764,6 +2785,9 @@ public final class BehaviorTest {
         STEPS.add(mc -> {
             command(mc, fill(x0 - 30.0D, Y - 1, 70.0D, x0 + 30.0D, Y - 1, 77.0D, "minecraft:grass_block"));
             maiaClear(mc, x0);
+            // the migrating herd stops at z = 100, beyond maiaClear's 70 blocks and 4 blocks from the snow: the lone
+            // digger would join it and walk off the snow before its first gesture (the snow test failed 3 runs in 6)
+            maiaClear(mc, x0, 100.0D);
             return 20;
         });
 
@@ -2798,6 +2822,7 @@ public final class BehaviorTest {
         STEPS.add(mc -> {
             command(mc, fill(x0 - 6.0D, Y, 104.0D, x0 + 6.0D, Y, 116.0D, "minecraft:air"));
             maiaClear(mc, x0);
+            maiaClear(mc, x0, 100.0D);
             return 20;
         });
     }

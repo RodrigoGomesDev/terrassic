@@ -98,6 +98,7 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
     private int answerIn = -1;
     private LivingEntity answerTo;
     private int fruitCooldown = 100;
+    private int bushTicks;
     private BlockPos bush;
 
     protected Corythosaurine(EntityType<? extends Corythosaurine> type, Level level) {
@@ -356,6 +357,7 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
         this.napLeft = 0;
         this.fleeing = threat;
         this.fleeTicks = 100;
+        this.alarmsGot++;
         this.fleeFrom(threat);
         int n = 0, far = 0, woke = 0, blind = 0;
         for (Corythosaurine other : this.kind(CALL_RANGE)) {
@@ -364,7 +366,9 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
             }
             if (other.isSleeping()) {
                 woke++;
+                other.wokeToAlarm = true;
             }
+            other.alarmsGot++;
             if (!other.hasLineOfSight(threat)) {
                 blind++;
             }
@@ -526,6 +530,10 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
         Vec3 to = loser.position().add(new Vec3(d.x, 0.0D, d.z).normalize().scale(14.0D));
         loser.headFor(to, 300, 1.0D);
         winner.displayCooldown = Math.max(winner.displayCooldown, 1200);
+        // the winner holds its ground: when the loser led their herd, the winner's herd goal walked it straight after
+        // the loser (6 to 8 blocks apart ten seconds later, in the test)
+        winner.still = Math.max(winner.still, 300);
+        winner.getNavigation().stop();
         this.log("helmet display over: #" + loser.getId() + " lowers the head and walks off, #" + winner.getId() + " stays");
     }
 
@@ -615,13 +623,24 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
                 this.log("plucks berries from the bush at " + this.bush.toShortString() + " (the bush back to stage 1)");
                 this.bush = null;
                 this.fruitCooldown = FAST ? 100 : 600;
-            } else if (this.getNavigation().isDone()) {
-                this.getNavigation().moveTo(this.bush.getX() + 0.5D, this.bush.getY(), this.bush.getZ() + 0.5D, 0.9D);
+            } else if (++this.bushTicks > 600) {
+                // 30 s without reaching it (no way through): it gives up for a while
+                this.log("gives up on the bush at " + this.bush.toShortString());
+                this.bush = null;
+                this.fruitCooldown = FAST ? 100 : 600;
+            } else {
+                // the herd and grazing goals take the navigation over and lead it elsewhere (the test bush was
+                // never reached in 41 s): while it heads for the bush its own path wins, as in goalStep
+                net.minecraft.world.level.pathfinder.Path path = this.getNavigation().getPath();
+                if (this.bushTicks % 10 == 1 && (this.getNavigation().isDone() || path == null || path.getTarget().distSqr(this.bush) > 4.0D)) {
+                    this.getNavigation().moveTo(this.bush.getX() + 0.5D, this.bush.getY(), this.bush.getZ() + 0.5D, 0.9D);
+                }
             }
             return;
         }
         if (this.tickCount % 40 == this.getId() % 40 && (this.isHungry() || this.random.nextInt(4) == 0)) {
             this.bush = this.ripeBush(10);
+            this.bushTicks = 0;
             if (this.bush == null && this.leavesHigh()) {
                 triggerAnim(ACTION_CONTROLLER, "fruit_pick");
                 this.still = 84;
@@ -733,6 +752,10 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
 
     /** Test only: it heard a predator it could not see (since the last reset). */
     public boolean heardBlind;
+    /** Test: alarms this one gave or got, and whether one of them woke it from a nap (latched; the shortened test
+     *  shifts let it doze again a few seconds later). */
+    public int alarmsGot;
+    public boolean wokeToAlarm;
 
     public boolean isFleeing() {
         return this.fleeTicks > 0;
