@@ -4134,6 +4134,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Client: the live motion layer (tail spring, bank, turn rate), for the species that have it (LivelyMotion). */
     private LivelyMotion lively;
+    /** 1.11, client only (client/DinoLod): the live layer's weight by distance from the camera (0 = off, not ticked),
+     *  and the last pose worked out for the far-away frame skipping. */
+    public float lodLively = 1.0F;
+    public Object lodPose;
 
     /** Whether it stands and fights a duel with a big predator (circling, guarding, blocking) instead of being plain
      *  prey: the T. rex's ApexBiteGoal duels such targets. */
@@ -4264,9 +4268,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     @Override
     public void tick() {
+        this.stillSkipped = false;   // set again by travel, if it runs
         super.tick();
         this.tickParts();
-        if (this.level().isClientSide() && this.livelyMotion()) {
+        if (this.level().isClientSide() && this.livelyMotion() && this.lodLively > 0.0F) {
             if (this.lively == null) {
                 this.lively = new LivelyMotion();
             }
@@ -4594,8 +4599,66 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    // ------------------------------------------------------------------ physics of an animal standing still
+
+    /** TERRASSIC_NO_STILL=1 turns the skip off (to compare in the tests). */
+    private static final boolean STILL_PHYSICS = !"1".equals(System.getenv("TERRASSIC_NO_STILL"));
+    /** Ticks standing still before the physics is skipped. */
+    private static final int STILL_AFTER = 10;
+    /** Even standing still, the whole physics runs every this many ticks (contact with fire, cactus, plates). */
+    private static final int STILL_CHECK = 10;
+    private int stillTicks;
+    private boolean stillSkipped;
+
+    /**
+     * 1.11 (docs/DESEMPENHO_1_11.md, approved by Rodrigo): an animal standing on the ground with nothing to do (no path,
+     * no target, no move wanted, no rider, no speed, not hurt, not in water, lava, fire or powder snow, not leashed) for
+     * half a second skips the vanilla movement and collision (Entity.move, a third of the server's time with big
+     * bodies) and its own pushing of the others. Anything that changes wakes it at once: a path or a goal that moves it,
+     * a push or a hit (speed), the block it stands on losing its collision. The whole physics still runs one tick in ten.
+     */
+    private boolean standingStill(Vec3 input) {
+        if (!STILL_PHYSICS || this.level().isClientSide()) {
+            return false;
+        }
+        Vec3 v = this.getDeltaMovement();
+        boolean still = this.onGround() && v.y <= 0.0D && v.x * v.x + v.z * v.z < 1.0E-6D && input.lengthSqr() < 1.0E-6D
+                && !this.jumping && this.hurtTime == 0 && this.deathTime == 0 && this.isAlive()
+                && !this.noPhysics && !this.isNoGravity() && !this.isVehicle() && !this.isPassenger() && !this.isLeashed()
+                && !this.isInWater() && !this.isInLava() && !this.isOnFire() && !this.isInPowderSnow
+                && this.getTarget() == null && this.getNavigation().isDone() && !this.getMoveControl().hasWanted();
+        if (!still) {
+            this.stillTicks = 0;
+            return false;
+        }
+        if (++this.stillTicks < STILL_AFTER || (this.tickCount + this.getId()) % STILL_CHECK == 0) {
+            return false;
+        }
+        BlockPos on = this.mainSupportingBlockPos.orElse(null);
+        if (on == null || this.level().getBlockState(on).getCollisionShape(this.level(), on).isEmpty()) {
+            this.stillTicks = 0;   // the ground went: it falls this very tick
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void pushEntities() {
+        if (this.stillSkipped) {
+            return;   // the ones that move still push it (and themselves) from their own tick
+        }
+        super.pushEntities();
+    }
+
     @Override
     public void travel(Vec3 input) {
+        this.stillSkipped = this.standingStill(input);
+        if (this.stillSkipped) {
+            Vec3 v = this.getDeltaMovement();
+            this.setDeltaMovement(0.0D, v.y, 0.0D);
+            this.calculateEntityAnimation(false);
+            return;
+        }
         if (this.isEntangled()) {
             // tied by a bola: no steps, no jump, ridden or not; it just stands (or drops) where it is
             input = Vec3.ZERO;

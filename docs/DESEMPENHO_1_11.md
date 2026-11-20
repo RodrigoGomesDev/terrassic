@@ -111,6 +111,70 @@ cenário (quantos estão lutando, fugindo ou comendo) é maior que a diferença.
   - no cliente, diminuir os quadros-chave das animações no exportador (`anim2.py`) e/ou LOD de modelo.
   Ficam como propostas para o Rodrigo aprovar.
 
+## Segunda rodada: física de bicho parado e modelo simplificado longe (aprovadas pelo Rodrigo)
+
+### O que mudou
+
+1. **Física de bicho parado** (`DinosaurEntity.standingStill`, servidor). O JFR mostrou que `Entity.move` (colisão com os
+   blocos, `BlockCollisions`, `checkSupportingBlock`) era 28-29% da thread do servidor; `pushEntities`, só 2%. Um bicho no
+   chão sem nada a fazer (sem caminho, sem alvo, sem movimento pedido ao `MoveControl`, sem passageiro, sem coleira,
+   velocidade horizontal zero, sem dano recente, fora de água, lava, fogo e neve fofa) há meio segundo pula o
+   `travel` vanilla e o próprio `pushEntities`; a animação de passo continua (`calculateEntityAnimation`). Acorda na
+   hora: caminho ou objetivo que anda, empurrão ou golpe (velocidade), bloco de apoio que perde a colisão (conferido
+   a cada tick pelo `mainSupportingBlockPos`). Mesmo parado, a física inteira roda 1 tick em 10 (fogo, cacto, placa:
+   atraso de até 0,5 s). Quem se mexe continua empurrando o parado. Na cena do `PerfTest`, 63% das chamadas de `travel`
+   cumpriam as condições. `TERRASSIC_NO_STILL=1` desliga, para comparar.
+2. **Modelo simplificado longe da câmera** (`client/DinoLod`, cliente). Opções novas em `config/terrassic-client.json`:
+   `"lod_near": 32` e `"lod_far": 64` (0 desliga). Depois de `lod_near` os ossos são calculados a cada 2 quadros e depois
+   de `lod_far` a cada 3; nos quadros do meio a última pose daquele bicho volta para o modelo compartilhado
+   (`DinoLod.Pose`, com as marcas de "mudado" limpas como o GeckoLib deixa, e o `lastRenderedInstance` do GeckoLib
+   invalidado para um segundo passe no mesmo quadro, como a sombra de shader). A `LivelyMotion` some aos poucos nos 8
+   blocos depois de `lod_near` (mistura da pose com e sem a camada, sem salto) e deixa de rodar além disso. Cubos com
+   menos de meio pixel na tela (pelo FOV e pela altura da janela) não são desenhados. Telas (Caderno, HUD) nunca usam o LOD.
+
+### Números
+
+Mesmo `PerfTest` (cena de 2 de cada espécie, câmera sobre a clareira). Antes = `perf/jade-1.11` em `6a58112d`.
+
+| Rodada | Carga da máquina | Bichos | CPU do servidor (ms/tick) | Com o mod (ms/tick) | `Entity.move` (% do servidor) | Animação GeckoLib (% do render) | FPS |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Antes 1 | ~5 | 126 | 13.0 | 7.7 | 28.2% | 27.5% | 63 |
+| Antes 2 | ~5 | 123 | 14.3 | 8.3 | 29.1% | 25.2% | 57 |
+| Depois 1* | 30-40 | 133 | 12.7 | 7.4 | - | - | 48 |
+| Depois 2* | 30-40 | 118 | 10.5 | 5.6 | 28% | - | 52 |
+| Depois 3* | 4 → 23 | 119 | 21.1 | 11.3 | 25.7% | 22.1% | 38 |
+| Depois 4* | 23 → 32 | 116 | 26.4 | 14.9 | 20.8% | 16.7% | 27 |
+
+\* outro agente gerava modelos no Blockbench e rodava um cliente Minecraft na mesma máquina (carga de 20 a 120 em
+8 núcleos). Os ms/tick e o FPS dessas rodadas não servem para comparar; as frações dentro de cada thread (amostras com o
+método na pilha ÷ amostras da thread) aguentam melhor a contenção e são o que se pode afirmar:
+
+- servidor: `Entity.move` caiu de 28-29% para 21-26% da thread (cerca de -20%); o resto é de bichos que andam;
+- cliente: a animação do GeckoLib caiu de 25-27% para 17-22% da thread de render; os vértices (`renderCube`, 42-45%)
+  não mudaram, porque na cena quase todos os bichos ficam a menos de 32 blocos da câmera. O LOD rende no cenário
+  espalhado do jogador, não nesta cena compacta; o corte de cubos de meio pixel quase não tira vértices.
+- a rodada "Depois 2" tem 5,6 ms/tick com o mod, mas com a máquina carregada; não está na conta.
+
+Gráfico: `Claude outputs/desempenho-jade-1.11/img/desempenho_rodada2.svg`.
+
+### Regressão (segunda rodada)
+
+Bateria completa com o código final: 190 passaram, 9 falharam, com a máquina sob carga de 40 a 120. Repetidas só as
+fases das falhas (`water,paths,roarfear,maia,thesc` e depois `maia` sozinha), todas passaram: Deinossuco e T. rex na
+água, caminho do Edmontossauro, rugido assusta o pequeno, filhote fica no ninho (2,7 blocos), a colônia toda defende,
+Tescelossauro dorme na toca. Ficam as duas conhecidas do Coritossauro (manada foge junta, chamado a 50 blocos).
+
+### O que ficou de fora
+
+- Medida limpa (máquina livre) do depois: as quatro rodadas pegaram outro agente trabalhando.
+- Menos quadros-chave no exportador (`anim2.py`) e vértices mais baratos (é o maior custo do cliente, 42-45%).
+- LOD de IA por distância e repath mais espaçado nos objetivos de perseguição.
+- Foto do Jade no Forge: `:forge:runClient -Pjade` carrega o nosso plugin ("Start loading plugin at
+  com.terrassic.compat.jade.TerrassicJadePlugin"), mas o próprio Jade 11.13.3 cai no cliente de desenvolvimento antes de
+  abrir o mundo: o mixin `jade.mixins.json:StringRenderOutputMixin` não acha o `@Shadow this$0` em
+  `Font$StringRenderOutput` com o refmap remapeado pelo Architectury Loom. É do ambiente de dev com o jar do Jade, não
+  do Terrassic; falta conferir num Forge de verdade (instância com o jar final e o Jade da loja).
+
 ## Jade
 
 - `compat/jade/TerrassicJadePlugin` (comum e servidor) e `JadeDinoTooltip` (cliente). Dependência só de compilação

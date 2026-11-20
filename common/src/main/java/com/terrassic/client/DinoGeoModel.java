@@ -57,6 +57,28 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         return animatable.isFemale() ? this.femaleTexture : this.maleTexture;
     }
 
+    /** 1.11 (client/DinoLod): far from the camera the bones are worked out every second or third frame; on the
+     *  frames in between the animal's last pose goes back on the shared model. */
+    @Override
+    public void handleAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
+        double d2 = DinoLod.distSq(animatable);
+        animatable.lodLively = DinoLod.livelyWeight(d2);
+        int level = DinoLod.level(d2);
+        DinoLod.Pose pose = animatable.lodPose instanceof DinoLod.Pose p ? p : null;
+        if (pose != null && pose.skip(level, getAnimationProcessor())) {
+            pose.restore(this);
+            return;
+        }
+        super.handleAnimations(animatable, instanceId, animationState);
+        if (level > 0) {
+            if (pose == null) {
+                pose = new DinoLod.Pose();
+                animatable.lodPose = pose;
+            }
+            pose.capture(getAnimationProcessor());
+        }
+    }
+
     @Override
     public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
@@ -110,9 +132,14 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             headB.resetStateChanges();
         }
         com.terrassic.entity.LivelyMotion lively = animatable.lively();
-        if (lively != null) {
+        float weight = animatable.lodLively;
+        if (lively != null && weight > 0.0F) {
             this.scaleOf = animatable.livelyModelScale() * animatable.getScale();
+            float[] before = weight < 1.0F ? this.livelyBones() : null;
             this.applyLively(lively, animationState.getPartialTick());
+            if (before != null) {
+                this.fadeLively(before, weight);   // 1.11: fades out past "lod_near" (client/DinoLod), no jump
+            }
             // HOTFIX 1.9.1: GeckoLib clears the "changed" marks at the end of its own tick, before this; the live layer's
             // additions marked the bones changed again, so on the next frame a bone the playing animation does not key
             // (a jaw, a beak, a tail tip, a leg) was not reset to its rest and the addition piled up frame after frame:
@@ -123,6 +150,41 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
                 if (b != null) {
                     b.resetStateChanges();
                 }
+            }
+        }
+    }
+
+    private final float[] livelyBuf = new float[LIVELY_BONES.length * 6];
+
+    /** Rotation and position of every bone the live layer adds to, before it adds. */
+    private float[] livelyBones() {
+        for (int i = 0; i < LIVELY_BONES.length; i++) {
+            CoreGeoBone b = getAnimationProcessor().getBone(LIVELY_BONES[i]);
+            if (b != null) {
+                int v = i * 6;
+                this.livelyBuf[v] = b.getRotX();
+                this.livelyBuf[v + 1] = b.getRotY();
+                this.livelyBuf[v + 2] = b.getRotZ();
+                this.livelyBuf[v + 3] = b.getPosX();
+                this.livelyBuf[v + 4] = b.getPosY();
+                this.livelyBuf[v + 5] = b.getPosZ();
+            }
+        }
+        return this.livelyBuf;
+    }
+
+    /** Keeps only {@code w} of what the live layer added. */
+    private void fadeLively(float[] before, float w) {
+        for (int i = 0; i < LIVELY_BONES.length; i++) {
+            CoreGeoBone b = getAnimationProcessor().getBone(LIVELY_BONES[i]);
+            if (b != null) {
+                int v = i * 6;
+                b.setRotX(before[v] + (b.getRotX() - before[v]) * w);
+                b.setRotY(before[v + 1] + (b.getRotY() - before[v + 1]) * w);
+                b.setRotZ(before[v + 2] + (b.getRotZ() - before[v + 2]) * w);
+                b.setPosX(before[v + 3] + (b.getPosX() - before[v + 3]) * w);
+                b.setPosY(before[v + 4] + (b.getPosY() - before[v + 4]) * w);
+                b.setPosZ(before[v + 5] + (b.getPosZ() - before[v + 5]) * w);
             }
         }
     }
