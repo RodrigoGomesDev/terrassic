@@ -1,0 +1,73 @@
+{
+ "comment": "tools/modelgen/geo_cull.py: cubes that were whole boxes before their hidden faces were taken out (bone -> cube index -> faces left); LeanGeoRenderer treats them as closed. Valid only for the geo.json with this SHA-1.",
+ "geo_sha1": "4ff29524e023b04ac73524c5d3a103ebad8a5e6d",
+ "closed": {
+  "body": {
+   "0": 5,
+   "1": 5,
+   "2": 4,
+   "3": 5,
+   "4": 4,
+   "5": 5,
+   "6": 4,
+   "7": 5,
+   "8": 4,
+   "10": 5,
+   "11": 5,
+   "12": 5,
+   "13": 5,
+   "14": 5,
+   "15": 5,
+   "16": 5,
+   "17": 5,
+   "18": 5,
+   "19": 5,
+   "20": 5,
+   "21": 5,
+   "22": 5,
+   "23": 5,
+   "24": 5,
+   "25": 5,
+   "26": 5,
+   "27": 5,
+   "28": 5,
+   "29": 5,
+   "30": 5
+  },
+  "forearm_l": {
+   "2": 5,
+   "3": 5,
+   "4": 5
+  },
+  "forearm_r": {
+   "2": 5,
+   "3": 5,
+   "4": 5
+  },
+  "jaw": {
+   "1": 5,
+   "2": 5
+  },
+  "shin_l": {
+   "2": 5,
+   "3": 5,
+   "4": 5
+  },
+  "shin_r": {
+   "2": 5,
+   "3": 5,
+   "4": 5
+  },
+  "skull": {
+   "1": 5,
+   "2": 5,
+   "3": 5,
+   "4": 5,
+   "5": 5,
+   "6": 5
+  },
+  "tail1": {
+   "1": 5
+  }
+ }
+}

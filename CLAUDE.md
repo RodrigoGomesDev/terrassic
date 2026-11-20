@@ -63,6 +63,10 @@ azul-fumaça listrado, chamado grave a 64 blocos (reagrupa, alarme às manadas v
 (`nap` em pé de dia), colhe bagas (`pluck`) e frutos altos, dois machos mostram o elmo de perfil; Sela de Mata; ninho
 entre raízes (`cory_extras.py`); fase `cory` da `BehaviorTest` (na `regressao`), log `[cory]`. Faltam
 Paquirrinossauro e Tescelossauro.
+**Desenho dos modelos (1.11, `docs/DESEMPENHO_1_11.md`, "Modelos")**: `client/LeanGeoRenderer` (base de `DinosaurRenderer`
+e `CarcassRenderer`) escreve os cubos sem alocar e sem as faces de trás de cubos fechados e opacos; `tools/modelgen/geo_cull.py`
+tira as faces escondidas dos geo.json (roda sozinho no fim do build pelo `_engine/proto.geo_json`; registro em
+`assets/terrassic/geo_cull/`); medida por espécie em `client/dev/DrawBench` (`TERRASSIC_DRAWBENCH=1`). Bicho custa ~metade.
 **1.10.0 (10/11/2026, `mod_version`; chamada de 1.10.1 durante o trabalho)**: quatro predadores refeitos (`Tyrannosaurine` Daspletossauro, `Albertosaurine`,
 `Carcharodontosaurine`, `Majungasaurine`; `art/<espécie>/REFEITO.md`), sangramento (`effect/BleedingEffect`), padrão de
 modelo v1→v3 do estudo 14 (16 texels por bloco, `_engine/skin2.py`, cabeça detalhada, desenho PRÓPRIO por espécie;

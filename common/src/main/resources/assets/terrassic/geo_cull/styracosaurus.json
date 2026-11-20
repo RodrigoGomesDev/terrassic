@@ -1,0 +1,92 @@
+{
+ "comment": "tools/modelgen/geo_cull.py: cubes that were whole boxes before their hidden faces were taken out (bone -> cube index -> faces left); LeanGeoRenderer treats them as closed. Valid only for the geo.json with this SHA-1.",
+ "geo_sha1": "cfa8434a3219f7214987aef88e99f7e2e6a7ca4e",
+ "closed": {
+  "adult_horns": {
+   "1": 5
+  },
+  "body": {
+   "4": 5
+  },
+  "frill": {
+   "2": 5,
+   "5": 5
+  },
+  "fspike0_l": {
+   "1": 5
+  },
+  "fspike0_r": {
+   "1": 5
+  },
+  "fspike1_l": {
+   "1": 5
+  },
+  "fspike1_r": {
+   "1": 5
+  },
+  "fspike2_l": {
+   "1": 5
+  },
+  "fspike2_r": {
+   "1": 5
+  },
+  "fspike3_l": {
+   "1": 5
+  },
+  "fspike3_r": {
+   "1": 5
+  },
+  "jaw": {
+   "1": 5,
+   "4": 5,
+   "5": 5
+  },
+  "mspike0_l": {
+   "1": 5
+  },
+  "mspike0_r": {
+   "1": 5
+  },
+  "mspike1_l": {
+   "1": 5
+  },
+  "mspike1_r": {
+   "1": 5
+  },
+  "mspike2_l": {
+   "1": 5
+  },
+  "mspike2_r": {
+   "1": 5
+  },
+  "mspike3_l": {
+   "1": 5
+  },
+  "mspike3_r": {
+   "1": 5
+  },
+  "neck": {
+   "1": 5
+  },
+  "skull": {
+   "1": 5
+  },
+  "thigh_l": {
+   "1": 5
+  },
+  "thigh_r": {
+   "1": 5
+  },
+  "toes_l": {
+   "2": 5,
+   "3": 5
+  },
+  "toes_r": {
+   "2": 5,
+   "3": 5
+  },
+  "young_horns": {
+   "1": 5
+  }
+ }
+}

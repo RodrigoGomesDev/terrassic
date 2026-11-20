@@ -111,6 +111,7 @@ public final class PerfTest {
         }
         if (measuring) {
             measuredTicks++;
+            alternate(mc);
             if (measuredTicks % 20 == 0) {
                 FPS.add(mc.getFps());
             }
@@ -139,6 +140,56 @@ public final class PerfTest {
         }
         STEPS.poll();
         wait = w;
+    }
+
+    // 1.11, "Modelos" (docs/DESEMPENHO_1_11.md): TERRASSIC_PERF_ALTERNATE=1 switches the cube writer every 5 s during
+    // the recording, GeckoLib's own (A) and the lean one with back faces left out (C, client/LeanGeoRenderer), so both
+    // are measured on the same scene at the same time; the report gives render-thread CPU and wall time per frame of each
+    private static final boolean ALTERNATE = "1".equals(System.getenv("TERRASSIC_PERF_ALTERNATE"));
+    private static final double[][] WAYS = new double[2][3];    // [A, C] x [frames, cpu ns, wall ns]
+    private static long altCpu;
+    private static long altWall;
+    private static int altLog;
+    private static int altFrames;
+
+    private static void alternate(Minecraft mc) {
+        if (!ALTERNATE) {
+            return;
+        }
+        int end = mc.getFrameTimer().getLogEnd();
+        altFrames += Math.floorMod(end - altLog, 240);
+        altLog = end;
+        if (measuredTicks % 100 != 1) {
+            return;
+        }
+        long cpu = java.lang.management.ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
+        long wall = System.nanoTime();
+        if (measuredTicks > 1) {
+            int way = com.terrassic.client.LeanGeoRenderer.lean() ? 1 : 0;
+            WAYS[way][0] += altFrames;
+            WAYS[way][1] += cpu - altCpu;
+            WAYS[way][2] += wall - altWall;
+        }
+        boolean lean = (measuredTicks / 100) % 2 == 1;
+        com.terrassic.client.LeanGeoRenderer.setLean(lean);
+        com.terrassic.client.LeanGeoRenderer.setBackfaces(lean);
+        altCpu = cpu;
+        altWall = wall;
+        altFrames = 0;
+    }
+
+    private static void alternateReport() {
+        if (!ALTERNATE) {
+            return;
+        }
+        String[] names = {"A (GeckoLib's cube writer)", "C (lean writer, back faces left out)"};
+        for (int i = 0; i < 2; i++) {
+            double f = Math.max(1, WAYS[i][0]);
+            REPORT.add(String.format(Locale.ROOT, "alternate %s: %.0f frames in %.1f s, %.1f fps, render thread %.2f ms CPU and %.2f ms wall per frame",
+                    names[i], WAYS[i][0], WAYS[i][2] / 1.0E9D, WAYS[i][0] / (WAYS[i][2] / 1.0E9D), WAYS[i][1] / 1.0E6D / f, WAYS[i][2] / 1.0E6D / f));
+        }
+        com.terrassic.client.LeanGeoRenderer.setLean(true);
+        com.terrassic.client.LeanGeoRenderer.setBackfaces(true);
     }
 
     /** The mean of the last 100 server ticks (the server's own ring of tick times), in ms. */
@@ -267,6 +318,7 @@ public final class PerfTest {
             cpuEnd = cpu(mc);
             ticks = mc.getSingleplayerServer().getTickCount() - tickStart;
             REPORT.add("at the end of the recording: " + census(mc));
+            alternateReport();
             try {
                 Path dir = new File(mc.gameDirectory, "perf").toPath();
                 Files.createDirectories(dir);

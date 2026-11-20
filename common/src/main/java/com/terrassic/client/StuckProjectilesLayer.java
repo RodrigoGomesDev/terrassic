@@ -53,9 +53,22 @@ public class StuckProjectilesLayer<T extends DinosaurEntity> extends GeoRenderLa
         super(renderer);
     }
 
+    /** 1.11: whether this animal has anything stuck in it, read once per frame (renderForBone runs for every bone). */
+    private boolean any;
+
+    @Override
+    public void preRender(PoseStack poseStack, T animatable, software.bernie.geckolib.cache.object.BakedGeoModel bakedModel,
+                          RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick,
+                          int packedLight, int packedOverlay) {
+        this.any = animatable.getStuckDarts() + animatable.getArrowCount() > 0;
+    }
+
     @Override
     public void renderForBone(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource,
                               VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        if (!this.any) {
+            return;
+        }
         int darts = Math.min(animatable.getStuckDarts(), MAX_DRAWN);
         int arrows = Math.min(animatable.getArrowCount(), MAX_DRAWN);
         if (darts + arrows == 0 || animatable.isInvisible() || bone.isHidden()) {

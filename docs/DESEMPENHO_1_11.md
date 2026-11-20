@@ -218,3 +218,178 @@ Bateria completa (`TERRASSIC_BEHAVIOR_SPECIES=regressao` + `behavior_regression.
 
 Também: `python3 -B tools/validation/check_project.py` (0 erros) e `./gradlew build` (Fabric e Forge, regressões
 de pesquisa e movimento) passaram; os jars finais não contêm classes do Jade.
+
+## Modelos: custo de desenho no cliente (20/11)
+
+Pedido: "os modelos estão pesados" (3,7% no Spark contra 0,5% de outro mod; outro jogador pediu modelos otimizados). No
+cliente, 82-85% da thread de render era o GeckoLib desenhando os nossos modelos (46-52% escrevendo vértices, 21-28%
+animando). Esta parte cuida só da escrita dos vértices; o LOD de animação por distância é do `perf-jade`
+(`client/DinoLod`). Nada aqui muda a aparência.
+
+### Como medir
+
+- **Por espécie**: `client/dev/DrawBench` (`TERRASSIC_DRAWBENCH=1`). Mundo superplano sem spawn, jogador espectador
+  olhando uma grade de N bichos parados (NoAI, tocando o idle). Para cada espécie mede a vista vazia e a grade desenhada
+  de três jeitos no mesmo lugar: **A** = escritor de cubos do próprio GeckoLib, **B** = escritor enxuto, **C** = enxuto e
+  sem as faces de trás dos cubos fechados. Por jeito: quadros, CPU da thread de render por quadro, quads escritos e tempo
+  dentro do renderizador. Com `TERRASSIC_DRAWBENCH_SHOTS=1` também pausa o jogo (as animações e a camada viva param) e
+  fotografa o MESMO quadro nos três jeitos; `tools/validation/drawbench_shots.py` compara pixel a pixel.
+  `TERRASSIC_DRAWBENCH_MODES=A,C,A,C,...` alterna os jeitos (a primeira janela de cada jeito é aquecimento do JIT);
+  `TERRASSIC_DRAWBENCH_COWS` põe a régua das vacas. Relatórios: `tools/validation/drawbench_report.py`.
+- **Cena de 120 bichos**: o `PerfTest` de cima com `TERRASSIC_PERF_ALTERNATE=1` troca A e C a cada 5 s durante a
+  gravação, na mesma cena e na mesma hora. Foi preciso: o agente do `perf-jade` rodava clientes na mesma máquina e duas
+  rodadas seguidas (A num cliente, C no outro) deram 42 e 30 fps, puro ruído de máquina e de cena. A alternância divide o
+  mesmo ruído entre os dois lados. As rodadas finais foram feitas com a máquina livre (carga 3 a 7, nenhum outro cliente).
+
+### Quanto custa um bicho (em vacas)
+
+64 bichos parados na frente da câmera, A e C alternados quatro vezes, sem a primeira janela; o custo é a CPU da thread
+de render por quadro acima da vista vazia, dividida por 64. Régua: 512 vacas, **4,3-4,6 µs por vaca por quadro**.
+Antes = geo original e escritor do GeckoLib (A); depois = geo cortado e escritor enxuto (C).
+
+| Bicho | quads antes | depois | µs por quadro antes | depois | vacas antes | depois |
+|---|---:|---:|---:|---:|---:|---:|
+| Tiranossauro | 384 | 190 | 58,6 | 26,6 | 13,6 | 5,7 |
+| Euoplocéfalo | 1.230 | 578 | 154,8 | 45,9 | 35,9 | 9,9 |
+| Majungassauro (refeito médio, 412 quads) | 412 | 194 | 64,7 | 32,1 | 15,0 | 6,9 |
+| Maiassaura | 329 | 207 | 61,2 | 29,9 | 14,2 | 6,4 |
+
+Só no renderizador (tempo dentro de `render`, sem o envio à GPU): Tiranossauro 60,6 → 33,1 µs, Euoplocéfalo 153 → 52 µs,
+Majungassauro 67 → 38 µs. O que sobra é sobretudo a animação (GeckoLib procura quadros-chave linearmente) e a cópia dos
+vértices para a GPU. Uma vaca vanilla tem 9 cubos (~54 quads) e quase nenhuma animação; um refeito tem 70-110 cubos.
+
+Quads escritos por bicho por quadro (um de cada, ossos escondidos já fora): **14.270 → 7.858 (−45%)**.
+
+| Espécie | antes | depois | | Espécie | antes | depois | |
+|---|---:|---:|---:|---|---:|---:|---:|
+| euoplocephalus* | 1230 | 578 | −53% | therizinosaurus | 382 | 198 | −48% |
+| stegosaurus* | 864 | 415 | −52% | edmontosaurus | 360 | 242 | −33% |
+| ankylosaurus | 803 | 583 | −27% | spinosaurus | 358 | 188 | −47% |
+| pachyrhinosaurus* | 728 | 362 | −50% | velociraptor | 348 | 179 | −48% |
+| deinosuchus | 722 | 464 | −36% | protoceratops | 333 | 233 | −30% |
+| pteranodon | 602 | 276 | −54% | dakotaraptor | 332 | 168 | −49% |
+| styracosaurus | 571 | 377 | −34% | maiasaura | 329 | 207 | −37% |
+| quetzalcoatlus | 490 | 309 | −37% | parasaurolophus | 316 | 192 | −39% |
+| triceratops | 477 | 324 | −32% | elasmosaurus | 307 | 187 | −39% |
+| giganotosaurus | 466 | 224 | −52% | gallimimus | 304 | 148 | −51% |
+| pachycephalosaurus | 460 | 245 | −47% | mosasaurus | 292 | 180 | −38% |
+| daspletosaurus | 442 | 209 | −53% | thescelosaurus | 266 | 142 | −47% |
+| carcharodontosaurus | 436 | 206 | −53% | tyrannosaurus | 384 | 190 | −51% |
+| albertosaurus | 430 | 205 | −52% | majungasaurus | 412 | 194 | −53% |
+| carnotaurus | 418 | 199 | −52% | corythosaurus | 409 | 234 | −43% |
+
+\* Fora do jogo padrão: só as 27 espécies refeitas (`Eras.REMADE`) nascem; Euoplocéfalo, Estegossauro e Paquirrinossauro
+só aparecem com `especies_antigas`. O Paquirrinossauro está sem o corte de geometria (está sendo refeito); o número
+dele é só o das faces de trás.
+
+### Cena de 120 bichos (PerfTest, A e C alternados a cada 5 s)
+
+| Rodada | geo | A: fps | A: ms CPU/quadro | C: fps | C: ms CPU/quadro | C/A |
+|---|---|---:|---:|---:|---:|---:|
+| 1 | original | 69,6 | 12,27 | 89,3 | 9,49 | −23% |
+| 2 | cortado | 71,6 | 11,91 | 94,4 | 9,00 | −24% |
+| 3 (final, com cascas seladas) | cortado | 59,2 | 13,82 | 83,1 | 10,17 | −26% |
+
+"ms CPU/quadro" é a thread de render inteira (terreno, céu, partículas, interface), não só os bichos: os bichos caíram
+pela metade, o quadro inteiro caiu um quarto, e o fps subiu 28-40%. A rodada 3 teve uma cena mais pesada (lutas e
+carcaças na frente da câmera); por isso a comparação vale dentro de cada linha. Fração da thread de render com o mod
+na pilha na rodada 3 (metade A, metade C): 80,6% (antes: 84-85%).
+
+### O que mudou
+
+1. **`client/LeanGeoRenderer`** (base de `DinosaurRenderer` e `CarcassRenderer`): escreve os cubos sem alocar nada
+   por vértice, quad ou cubo (o GeckoLib fazia um `Vector4f` por vértice, `Vector3f` por quad, `Matrix4f` e três
+   `Quaternionf` por cubo: 640 MB/s na cena de 120); cubo sem rotação própria vai direto com a matriz do osso (o
+   GeckoLib empilhava e girava por três ângulos zero em cada cubo); a rotação de um cubo girado é calculada uma vez por
+   modelo; osso escondido junto com os filhos é pulado inteiro (o GeckoLib já não desenhava os cubos, mas percorria o
+   osso e chamava as camadas).
+2. **Faces de trás**: o modelo é desenhado sem descarte de faces (`entityCutoutNoCull`), então a CPU escrevia as seis
+   faces e a GPU escondia as de trás atrás das da frente. Agora, num cubo fechado e opaco, a face que olha para longe do
+   olho não é escrita. O olho sai das matrizes de projeção e de visão do momento (vale no mundo e nas telas). Fica tudo
+   como estava num cubo achatado, espelhado, com qualquer texel transparente nas faces (lido da textura que está sendo
+   desenhada), num bicho invisível ou esmaecido, e com Iris/Oculus instalados (a passada de sombra tem outro olho).
+   "Fechado" = seis faces, ou faces a menos só onde o `geo_cull` provou que o buraco está tapado (abaixo).
+3. **`tools/modelgen/geo_cull.py`**: tira do geo.json as faces que nunca aparecem. Só cubos do MESMO osso servem de
+   cobertura (as animações mexem os ossos; esconder um osso esconde os cubos dele juntos); só cubo "sólido" cobre
+   (sem rotação, sem lado zero, seis faces, todos os texels das seis faces opacos em todas as peles da espécie). Sai a
+   face cujo interior inteiro está no interior da união dos sólidos do osso (teste exato numa grade comprimida; face
+   encostada na superfície fica, face prensada contra outro sólido sai junto com a face dele); de cubo girado, só se
+   os quatro cantos estiverem dentro de um único sólido. Cubos em UV de caixa que perdem face viram UV por face com
+   exatamente os números que o GeckoLib calcula (a ferramenta confere face a face). Ao lado escreve
+   `assets/terrassic/geo_cull/<id>.json` (fora de `geo/`, que o GeckoLib lê inteiro): os cubos que eram caixas
+   inteiras, e as **cascas seladas** (cubo a que o `qa.separate_coplanar` tirou a face colada, quando sólidos do mesmo
+   osso tapam o buraco por fora), com o SHA-1 do geo.json; o renderizador só confia no registro se o SHA-1 bater.
+   Saíram **1.947 faces de 26.438 (7,4%)** em 57 espécies; mais: Euoplocéfalo 179, Dilofossauro 89, Hatzegopteryx 83,
+   Estrutiomimo 82, Argentinossauro 80, Saltassauro 79, Deinoqueiro 71, Estegossauro 68; refeitos: T. rex 43,
+   Giganotossauro 37, Carnotauro 32, Albertossauro 22, Majungassauro 22, Carcarodontossauro 23, Daspletossauro 21,
+   Coritossauro 17, Quetzalcoatlo 17, Maiassaura 16, Terizinossauro 15, Triceratops 15, Anquilossauro 14,
+   Paquicefalossauro 13, Galimimo 12, Estiracossauro 10, Dakotaraptor 9, Tescelossauro 10, Elasmossauro 10, Edmontossauro
+   8, Mosassauro 8, Parassaurolofo 7, Espinossauro 7, Protocerátops 3, Deinossuco 1. Os refeitos ganham pouco aqui porque o
+   `qa.separate_coplanar` já tirava as faces coladas; o ganho deles vem das faces de trás (e das cascas seladas:
+   Deinossuco 641 → 464 quads só com elas).
+   Ligado ao fim do export: `_engine/proto.geo_json` (e as cópias do T. rex, Pteranodonte e Velociraptor) registra o
+   corte para o fim do processo, quando as peles já foram escritas; só corta se aquele build escreveu o geo.json (uma
+   prévia que só lê não mexe). `build_all.py` (modelos antigos) chama depois de escrever. Idempotente.
+   **Paquirrinossauro, para rodar quando o refeito entrar** (o build pelo `_engine` já faz sozinho):
+   `build/menu-render-venv/bin/python -B tools/modelgen/geo_cull.py pachyrhinosaurus`.
+4. `StuckProjectilesLayer` lia dardos e flechas da entidade em cada osso de cada bicho; agora uma vez por quadro.
+
+### Prova de que nada mudou na tela
+
+- **Geometria, fora do jogo**: `tools/modelgen/geo_cull_check.py --ref HEAD` desenha cada espécie (o geo do git contra
+  o cortado, e o cortado ainda sem as faces de trás vista a vista, como o jogo escreve) com o renderizador do motor
+  (`_engine/geo.py`: z-buffer, sem descarte, recorte abaixo de alfa 10, como o `entityCutoutNoCull`) de 8 direções, em
+  3 poses e 2 conjuntos de ossos (macho adulto sem sela; filhote fêmea com sela), e compara pixel a pixel. Com pixel
+  exatamente sobre uma aresta esse renderizador desempata a profundidade pela ordem de desenho (uma face tirada, vista
+  de quina numa emenda, ganhava o pixel por ser desenhada antes): o quadro é deslocado duas vezes por fração de pixel e
+  só conta a diferença que aparece nas duas. Resultado (59 espécies, 2.832 fotos de 420 × 300): **0 pixels persistentes**; 292 pixels de desempate soltos
+  em toda a bateria (0 a 14 por espécie), nenhum repetido no segundo deslocamento.
+  A ferramenta detecta face visível tirada: tirar a face de cima do corpo e a lateral da mandíbula do T. rex deu
+  35.077 pixels diferentes.
+- **No jogo, mesmo quadro**: `drawbench_shots.py` com o jogo pausado. A contra B (só a ordem das contas muda) e B
+  contra C (faces de trás) ficam em 0-36 pixels por foto de 16 bichos (1708 × 960), todos isolados sobre arestas: é o
+  desempate de profundidade na borda entre face da frente e face de trás. Antes da correção das cascas (abaixo) a
+  Maiassaura dava 507 pixels em faixas; depois, 2-3.
+- Fotos: `Claude outputs/desempenho-modelos-1.11/img/` (`mesmo_quadro_<espécie>.png`: A, C e a diferença em magenta no
+  mesmo quadro; `antes_depois_<espécie>.png`: geo original + GeckoLib contra geo cortado + escritor enxuto, rodadas
+  diferentes, então pose e sexo podem mudar).
+
+Achado no caminho: a primeira versão tratava como fechado qualquer cubo com faces opacas. Os refeitos têm muitas
+"cascas" (cubos de cinco faces: o QA tira a face colada), e por um buraco desses aparece o lado de dentro das outras
+faces; descartar as de trás abria faixas no jogo (Maiassaura, Tricerátops, Edmontossauro). Por isso o registro ao lado
+do modelo.
+
+### O que o renderizador fazia (auditoria)
+
+- Cada bicho é desenhado UMA vez por quadro. A segunda passada só existe para criaturas da Fenda (`RiftLayer`,
+  `isRift`), como deve ser. Sela, arreio, crista, display de macho/fêmea e partes de adulto/filhote são ossos do mesmo
+  modelo, escondidos por `setHidden` (que no GeckoLib 4.8 também esconde os filhos). Placa de nome (`DinoNameplate`) é
+  texto e barra; aura do alfa são partículas; o chapéu (Hats) só lê a matriz do osso; sombra é a do vanilla (uma por
+  bicho).
+- Um `RenderType` por bicho (o GeckoLib pega um buffer só); textura resolvida por `ResourceLocation` guardado em
+  `DinoGeoModel` (a carcaça monta o nome a cada quadro: pouco, ficou).
+- O caro era: alocação por vértice (acima), rotação por cubo, as faces de trás, e — fora daqui — a animação.
+- Ossos escondidos ainda são ANIMADOS pelo GeckoLib (o processador de animação não sabe do `hidden`). Não mexi: é a
+  frente do `perf-jade`.
+
+### Propostas que mudam a aparência (para o Rodrigo decidir)
+
+1. **Anquilossauro** (o mais caro dos ativos depois do corte: 583 quads, 171 cubos, 76 girados): os osteodermos são
+   cubos girados pequenos (412 das 917 faces do modelo); girado não serve de cobertura e quase nunca é cortado. Juntar
+   as fileiras de osteodermos em menos cubos maiores, ou pintar os menores na pele, é o maior corte que resta num bicho
+   ativo (estimativa: metade daquelas 412 faces).
+2. **Deinossuco, Estiracossauro, Tricerátops, Quetzalcoatlo, Edmontossauro**: ainda há cascas cujo buraco não é tapado
+   por cubo do mesmo osso (encostam em osso vizinho). Mover o cubo para o osso do vizinho, ou deixar o QA fechar a
+   casca com uma face recuada, permite descartar as faces de trás delas (Deinossuco ainda tem 24 cascas abertas).
+3. **Modelos antigos** (Euoplocéfalo 205 cubos, Estegossauro 144, Paquirrinossauro 130): só aparecem com
+   `especies_antigas`; quando forem refeitos, seguir a contagem dos refeitos (70-110 cubos).
+4. **Dentes e garras em cubo**: cubos de até 2 px somam só 4% das faces dos refeitos (0 a 15% por espécie); pouco
+   a ganhar pintando-os, e o LOD de cubos pequenos do `perf-jade` já os tira de longe. Não recomendo.
+5. Animação: menos quadros-chave no exportador (`anim2.py`, hoje 25-80 por canal) é o próximo grande corte do lado da
+   CPU; já proposto acima.
+
+### Testes
+
+`./gradlew :fabric:compileJava :forge:compileJava`, `python3 -B tools/validation/check_project.py` (0 erros),
+DrawBench completo antes/depois (31 espécies + vacas), três rodadas alternadas do PerfTest, fotos congeladas.
+Não rodei a bateria de comportamento: nada aqui toca entidade, IA ou servidor.
