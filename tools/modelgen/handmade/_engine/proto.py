@@ -143,5 +143,21 @@ def geo_json(m):
             cubes.append(cj)
         if cubes: bj["cubes"] = cubes
         bones.append(bj)
+    _cull_after_build(m.id)
     return {"format_version": "1.12.0", "minecraft:geometry": [{"description": {"identifier": f"geometry.{m.id}",
             "texture_width": m.tw, "texture_height": m.th}, "bones": bones}]}
+
+
+def _cull_after_build(sid):
+    """1.11: when this build writes the species' geo.json, tools/modelgen/geo_cull.py takes out of it the faces that are
+    never seen, at the end of the run (the skins it reads are written after the geo; docs/DESEMPENHO_1_11.md)."""
+    import importlib.util, os as _os
+    done = _cull_after_build.__dict__.setdefault("done", set())
+    if sid in done:
+        return
+    done.add(sid)
+    path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "..", "geo_cull.py")
+    spec = importlib.util.spec_from_file_location("geo_cull", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    mod.after_build(sid)

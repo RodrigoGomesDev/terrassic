@@ -23,7 +23,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
  *   geo/entity/&lt;id&gt;.geo.json, animations/entity/&lt;id&gt;.animation.json,
  *   textures/entity/&lt;id&gt;_male.png and _female.png
  */
-public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRenderer<T> {
+public class DinosaurRenderer<T extends DinosaurEntity> extends LeanGeoRenderer<T> {
     /** How far from the player's centre the left shoulder is (blocks). */
     private static final double SHOULDER_SIDE = 0.37D;
 
