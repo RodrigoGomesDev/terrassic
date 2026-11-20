@@ -31,7 +31,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Compsognathus       forest, jungle                  8       3-6
  *  Triceratops         savanna, plains                 6       2-4
  *  Styracosaurus       savanna, plains, forest         5       2-5
- *  Pachyrhinosaurus    taiga, hills, forest            4       2-5
+ *  Pachyrhinosaurus    taiga, hills, forest            4       4-8
  *  Protoceratops       desert*, badlands, savanna      7       2-5
  *  Leptoceratops       plains, forest, savanna         9       3-5
  *  Stegosaurus         forest, plains                  4       1-3
@@ -207,7 +207,7 @@ public final class ModSpawns {
                 add(props, ModEntities.STYRACOSAURUS.get(), 5, 2, 5);
             }
             if (taiga || hill || forest) {
-                add(props, ModEntities.PACHYRHINOSAURUS.get(), 4, 2, 5);
+                add(props, ModEntities.PACHYRHINOSAURUS.get(), 4, 4, 8);
             }
             if (desert || badlands || savanna) {
                 add(props, ModEntities.PROTOCERATOPS.get(), 7, 2, 5);

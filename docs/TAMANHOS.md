@@ -37,7 +37,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Protoceratops (v0.6) | 1,8-2,5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011) | novo | **2,0 x 0,8** | 0,7 x 0,8 | 50% |
 | Struthiomimus (v0.6) | 4,3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985) | novo | **4,3 x 2,5** (cabeça erguida) | 1,0 x 2,4 | 35% |
 | Thescelosaurus (v0.6; refeito na 1.11.0) | 2,5 a 4,0 m (Galton 1974), 200 a 300 kg (Erickson 2003); *T. garbanii* 4 a 4,5 m (Morris 1976) é espécie discutida (Galton 1995). 4 m = o topo de *T. neglectus* (resposta do Rodrigo em 10/11/2026) | refeito | **4,0 x 2,4** com o pescoço erguido (73,5 px, escala 0,922, 17,4 texels por bloco) | 0,95 x 2,2 | 30% |
-| Pachyrhinosaurus (v0.6) | 6-8 m, ~4 t (Currie et al. 2008) | novo | **8,0 x 4,2** (com chifres do escudo) | 2,4 x 3,6 | 30% |
+| Pachyrhinosaurus (v0.6; refeito na 1.11.0) | *P. canadensis* de 6 a 8 m e 3 a 4 t (Holtz 2011; Brusatte 2013; Paul 2016); *P. lakustai* e *P. perotorum* menores, ~5 m e ~2 t (Paul 2016). 8 m = o topo, a espécie-tipo *P. canadensis* (resposta do Rodrigo em 10/11/2026) | refeito | **8,0** (silhueta "bisão" a 16,94 px/m; altura e escala finais no build do modelo) | 2,6 x 3,9 (provisório) | 20% |
 | Therizinosaurus (v0.6) | 9-10 m, ~5 t (Zanno 2010; Paul 2010), garras de 52 cm | novo | **10,0 x 6,4** (pescoço erguido) | 2,4 x 5,0 | 20% |
 | Deinocheirus (v0.6) | 11 m, ~6,4 t (Lee et al. 2014), braços de 2,4 m | novo | **11,0 x 6,1** (pescoço erguido) | 2,4 x 4,8 | 20% |
 | Alamosaurus (v0.6) | 26-30 m, 30-80 t (Fowler & Sullivan 2011) | novo | **30,0 x 13,4** (cabeça erguida) | 5,0 x 9,0 | 10% |

@@ -989,11 +989,12 @@ def egg_blocks():
     from maia_extras import CUSTOM_EGGS as MAIA_EGGS
     from cory_extras import CUSTOM_EGGS as CORY_EGGS
     from thesc_extras import CUSTOM_EGGS as THESC_EGGS
+    from pachyrhino_extras import CUSTOM_EGGS as PACHYRHINO_EGGS
     from dasple_extras import CUSTOM_EGGS as DASPLE_EGGS
     from alberto_extras import CUSTOM_EGGS as ALBERTO_EGGS
     from carcharo_extras import CUSTOM_EGGS as CARCHARO_EGGS
     from majunga_extras import CUSTOM_EGGS as MAJUNGA_EGGS
-    CUSTOM_EGGS = {**THESC_EGGS, **CORY_EGGS, **MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS, **DASPLE_EGGS, **ALBERTO_EGGS, **CARCHARO_EGGS, **MAJUNGA_EGGS}
+    CUSTOM_EGGS = {**THESC_EGGS, **PACHYRHINO_EGGS, **CORY_EGGS, **MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS, **DASPLE_EGGS, **ALBERTO_EGGS, **CARCHARO_EGGS, **MAJUNGA_EGGS}
     for name, (shell, spot) in EGG_BLOCK.items():
         if name in CUSTOM_EGGS:
             continue
@@ -1555,6 +1556,8 @@ if __name__ == "__main__":
     cory_extras.main()    # the Corythosaurus' round eggs between roots under conifer needles, and its forest saddle
     import thesc_extras
     thesc_extras.main()   # the Thescelosaurus' tall eggs standing in dug earth at the end of its burrow
+    import pachyrhino_extras
+    pachyrhino_extras.main()   # the Pachyrhinosaurus' soft eggs in a mound of sand and peat under moss, and its pack saddle
     import edmo_extras
     edmo_extras.main()    # the Edmontosaurus' spiral of eggs under a heap of fern fronds, and its traveller's saddle
     import dakota_extras

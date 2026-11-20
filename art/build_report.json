@@ -1641,39 +1641,85 @@
   }
  },
  "pachyrhinosaurus": {
-  "bones": 27,
-  "cubes": 130,
+  "bones": 36,
+  "cubes": 110,
   "texture": [
    256,
    512
   ],
   "bounds_px": [
    [
-    -20.254799096739777,
-    -0.027601619008803535,
-    -70.2161446634613
+    -21.0,
+    3.560217434740218e-15,
+    -70.25696610692523
    ],
    [
-    20.254799096739777,
-    60.82512968328255,
-    58.57771875732307
+    21.0,
+    89.94640613698236,
+    60.95072816332521
    ]
   ],
   "animations": [
    "animation.pachyrhinosaurus.idle",
    "animation.pachyrhinosaurus.walk",
    "animation.pachyrhinosaurus.run",
+   "animation.pachyrhinosaurus.charge",
+   "animation.pachyrhinosaurus.swim",
+   "animation.pachyrhinosaurus.wade",
+   "animation.pachyrhinosaurus.turn_left",
+   "animation.pachyrhinosaurus.turn_right",
+   "animation.pachyrhinosaurus.strafe_left",
+   "animation.pachyrhinosaurus.strafe_right",
+   "animation.pachyrhinosaurus.walk_tired",
+   "animation.pachyrhinosaurus.idle_tired",
+   "animation.pachyrhinosaurus.ring_defence",
+   "animation.pachyrhinosaurus.brace",
+   "animation.pachyrhinosaurus.boss_ram",
+   "animation.pachyrhinosaurus.boss_push",
+   "animation.pachyrhinosaurus.boss_rub",
+   "animation.pachyrhinosaurus.snow_dig",
+   "animation.pachyrhinosaurus.hesitate",
+   "animation.pachyrhinosaurus.head_toss",
+   "animation.pachyrhinosaurus.horn_lock_start",
+   "animation.pachyrhinosaurus.horn_lock",
+   "animation.pachyrhinosaurus.horn_lock_break",
+   "animation.pachyrhinosaurus.guard",
+   "animation.pachyrhinosaurus.feint",
+   "animation.pachyrhinosaurus.block",
+   "animation.pachyrhinosaurus.recoil",
+   "animation.pachyrhinosaurus.submit",
+   "animation.pachyrhinosaurus.lunge",
+   "animation.pachyrhinosaurus.parry",
+   "animation.pachyrhinosaurus.stagger",
    "animation.pachyrhinosaurus.attack",
-   "animation.pachyrhinosaurus.sit",
-   "animation.pachyrhinosaurus.graze",
+   "animation.pachyrhinosaurus.hurt",
+   "animation.pachyrhinosaurus.roar",
+   "animation.pachyrhinosaurus.call",
+   "animation.pachyrhinosaurus.death",
+   "animation.pachyrhinosaurus.knockout",
    "animation.pachyrhinosaurus.knocked_out",
    "animation.pachyrhinosaurus.wake",
+   "animation.pachyrhinosaurus.sit",
+   "animation.pachyrhinosaurus.sleep",
+   "animation.pachyrhinosaurus.wake_sleep",
+   "animation.pachyrhinosaurus.lie_down",
+   "animation.pachyrhinosaurus.get_up",
    "animation.pachyrhinosaurus.eat",
+   "animation.pachyrhinosaurus.graze",
+   "animation.pachyrhinosaurus.drink",
+   "animation.pachyrhinosaurus.hatch",
    "animation.pachyrhinosaurus.beg",
-   "animation.pachyrhinosaurus.tame",
-   "animation.pachyrhinosaurus.scent"
+   "animation.pachyrhinosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 15.49,
+  "colours": {
+   "male": 55,
+   "female": 52,
+   "baby": 49
+  }
  },
  "therizinosaurus": {
   "bones": 29,
