@@ -1807,7 +1807,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         boolean sitting = this.isInSittingPose() && !this.isVehicle();
         boolean sleeping = this.isSleeping();
         if (sleeping && !this.wasSleeping && !this.wasSitting) {
-            triggerAnim(ACTION_CONTROLLER, "fall_asleep");
+            // only the T. rex and the Spinosaurus have it: a trigger for a missing animation made GeckoLib print
+            // "Unable to find animation" on every frame of the client (4,285 lines in one Corythosaurus test)
+            if (this.hasAnim("fall_asleep")) {
+                triggerAnim(ACTION_CONTROLLER, "fall_asleep");
+            }
         } else if (sitting && !this.wasSitting && !sleeping) {
             triggerAnim(ACTION_CONTROLLER, "lie_down");
         } else if (!sitting && this.wasSitting && !sleeping && !this.wasSleeping && this.isAlive()) {
