@@ -39,7 +39,10 @@ import java.nio.file.Path;
  *   "terrassic_fonts": true, // the mod's own typefaces (Sedimento, Entalhe, Caderno); false = vanilla font
  *   "roar_shake": true,      // the camera shakes near a loud roar (T. rex)
  *   "mount_attack": true,    // v0.12: riding your dinosaur, a left click is its attack (false = your own hand)
- *   "alpha_aura": true       // the alphas' aura: motes in the colours of their coat (docs/ALFAS.md)
+ *   "alpha_aura": true,      // the alphas' aura: motes in the colours of their coat (docs/ALFAS.md)
+ *   "lod_near": 32,          // 1.11: past this many blocks the animals are animated every second frame, without the
+ *                            // live layer and without cubes under half a pixel (client/DinoLod); 0 = always full
+ *   "lod_far": 64            // 1.11: past this many blocks, every third frame
  * }
  * </pre>
  */
@@ -104,6 +107,15 @@ public final class ClientConfig {
         return Math.max(1, gui - 1);
     }
 
+    /** A whole-number option ("lod_near", "lod_far"), or {@code def} when it is missing or not a number. */
+    public static int intOption(String name, int def) {
+        JsonObject cfg = load();
+        if (cfg.has(name) && cfg.get(name).isJsonPrimitive() && cfg.get(name).getAsJsonPrimitive().isNumber()) {
+            return cfg.get(name).getAsInt();
+        }
+        return def;
+    }
+
     /** "hud_scale" as the options screen shows it: 0 for "auto", or 1 to 4. */
     public static int hudScaleOption() {
         JsonObject cfg = load();
@@ -161,6 +173,14 @@ public final class ClientConfig {
         }
         if (!cfg.has("hud_style")) {
             cfg.addProperty("hud_style", "amber");
+            changed = true;
+        }
+        if (!cfg.has("lod_near")) {
+            cfg.addProperty("lod_near", 32);
+            changed = true;
+        }
+        if (!cfg.has("lod_far")) {
+            cfg.addProperty("lod_far", 64);
             changed = true;
         }
         if (!cfg.has("hud_scale")) {
