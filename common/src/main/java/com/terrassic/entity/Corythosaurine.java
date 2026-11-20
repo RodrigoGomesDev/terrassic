@@ -529,6 +529,9 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
         Vec3 d = loser.position().subtract(winner.position());
         Vec3 to = loser.position().add(new Vec3(d.x, 0.0D, d.z).normalize().scale(14.0D));
         loser.headFor(to, 300, 1.0D);
+        // once there it grazes apart for a while: when the winner led their herd, the herd goal brought it straight
+        // back (9.8 blocks apart ten seconds later in the regression of 20/11)
+        loser.stillAfterGoal = 300;
         winner.displayCooldown = Math.max(winner.displayCooldown, 1200);
         // the winner holds its ground: when the loser led their herd, the winner's herd goal walked it straight after
         // the loser (6 to 8 blocks apart ten seconds later, in the test)
@@ -540,6 +543,7 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
     // ------------------------------------------------------------------ walking somewhere far, leg by leg
     private Vec3 goal;
     private int goalTicks;
+    private int stillAfterGoal;
     private double goalSpeed;
 
     /** Walks to {@code to} over up to {@code ticks}, in legs of 14 blocks (a path is only found within the follow range). */
@@ -567,6 +571,11 @@ public abstract class Corythosaurine extends HerbivoreDinosaur {
         }
         if (--this.goalTicks <= 0 || this.goal.distanceToSqr(this.position()) < 9.0D) {
             this.goal = null;
+            if (this.stillAfterGoal > 0) {
+                this.still = Math.max(this.still, this.stillAfterGoal);
+                this.stillAfterGoal = 0;
+                this.getNavigation().stop();
+            }
             return false;
         }
         // the herd goals pull it back to the others: while on its way its own leg wins

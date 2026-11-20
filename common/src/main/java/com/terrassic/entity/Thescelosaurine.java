@@ -272,6 +272,9 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
         this.cover = this.findCover(threat);
         this.boltLeg();
         triggerAnim(ACTION_CONTROLLER, "tail_flag");
+        if (!flag) {
+            this.boltedAt = threat.distanceTo(this);
+        }
         this.log((flag ? "sees the flag and bolts" : "bolts") + " from " + name(threat) + " at "
                 + Math.round(threat.distanceTo(this)) + " blocks toward " + (this.cover == null ? "nowhere (open ground)"
                 : "cover " + Math.round(this.cover.distanceTo(this.position())) + " blocks off"));
@@ -742,6 +745,8 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
     // ------------------------------------------------------------------ test hooks (BehaviorTest "thesc")
     /** It smelled a predator it could not see (since the last reset). */
     public boolean smelledBlind;
+    /** Test only: the danger's distance when it decided to bolt by itself (not on a mate's flag); -1 if it has not. */
+    public double boltedAt = -1.0D;
 
     public void testDigBurrowNow() {
         this.digCooldown = 0;

@@ -1755,9 +1755,12 @@ public final class BehaviorTest {
                 }
                 if (t.wary() == com.terrassic.entity.Thescelosaurine.BOLT && (st[2] & (1 << i)) == 0) {
                     st[2] |= 1 << i;
-                    if (boltAt[0] < 0) {
-                        boltAt[0] = t.distanceTo(r);
-                    }
+                }
+                // the distance at the moment it decided, kept by the animal: read here up to a second later, the
+                // sprint had already taken it further (19.0 blocks in one run), or the first seen was a mate that
+                // bolted on the flag
+                if (t.boltedAt >= 0.0D && (boltAt[0] < 0 || t.boltedAt < boltAt[0])) {
+                    boltAt[0] = t.boltedAt;
                 }
                 if (t.wary() == com.terrassic.entity.Thescelosaurine.HIDE) {
                     st[3] |= 1 << i;
@@ -1925,7 +1928,9 @@ public final class BehaviorTest {
         STEPS.add(mc -> {
             com.terrassic.entity.Thescelosaurine t = thesc(mc, digger);
             boolean in = t != null && t.isSleeping() && t.inBurrow();
-            if (!in && night[0]++ < 60) {
+            // an animal sleeps only from its 60th second (DinosaurEntity.isSleepTime, hotfix 1.9.1), and this one was
+            // summoned 15-20 s before the night: it fell asleep 42 and 64 s into the night in two runs (60 s allowed)
+            if (!in && night[0]++ < 100) {
                 return -20;
             }
             REPORT.add(String.format(Locale.ROOT, "  thesc burrow night: sleeps in its burrow %s after %d s", in ? "YES" : "NO", night[0]));
