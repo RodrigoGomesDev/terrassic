@@ -1604,7 +1604,7 @@
  },
  "pachyrhinosaurus": {
   "bones": 36,
-  "cubes": 104,
+  "cubes": 110,
   "texture": [
    256,
    512
@@ -1613,7 +1613,7 @@
    [
     -21.0,
     3.560217434740218e-15,
-    -76.50118422151056
+    -70.25696610692523
    ],
    [
     21.0,
@@ -1676,7 +1676,7 @@
   "render_scale": 0.9443,
   "handmade": true,
   "px_per_m": 16.944,
-  "texels_per_block": 16.22,
+  "texels_per_block": 15.49,
   "colours": {
    "male": 55,
    "female": 52,

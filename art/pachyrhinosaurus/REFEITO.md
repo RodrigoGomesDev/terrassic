@@ -33,8 +33,14 @@ receita recusada (`wip/paquirrino-receita-antiga`) não foi usado.
   parry 1,5 s, stagger 1,6 s) e as dele: `ring_defence`, `brace` (laço), `boss_ram` (golpe 0,60 s), `boss_push` /
   `horn_lock` (testa colada), `horn_lock_start`/`_break`, `head_toss` (0,35 s), `boss_rub`, `snow_dig`, `hesitate`,
   `wade`, `charge`, `roar`.
-- **Portões:** QA limpo, headcheck (cabeça 0,27 x corpo 0,20, olho e gume visíveis, acento 37), uniquecheck (máx. 0,62, Daspletossauro; limite 0,78),
-  colourcheck --remade 11,5 (Velociraptor), silcheck como acima.
+- **Portões:** QA limpo, headcheck (cabeça 0,26 x corpo 0,20, olho e gume visíveis, acento 37), uniquecheck (máx. 0,63, Daspletossauro e Protocerátops; limite 0,78),
+  colourcheck --remade 10,6 (Velociraptor), silcheck 0,801 com a blocagem (Tricerátops 0,53, Estiracossauro 0,63,
+  Protocerátops 0,65, Maiassauro 0,63, Edmontossauro 0,41).
+- **Passada da bossa e da corcova (20/11/2026):** bossa mais curta e baixa (18 x 26 x 8 texels, antes 30 de comprido
+  até a ponta do bico), uma almofada de chifre sobre o focinho; queratina pardo-acinzentada quente, poucas placas
+  grandes com bordas gastas claras, sem poros nem ruído. Corcova em 12 camadas curtas a 4-5 texels uma da outra
+  (antes 9 degraus de 6-7), lã do topo contínua no espaço do corpo (tufos 3x4, sem faixa de tábua), espelhos dos
+  degraus no tom da lã sem a linha clara de cada degrau.
 
 ## Teste no jogo (fase `pachy` da `BehaviorTest`, Fabric, 18-19/11/2026)
 

@@ -39,8 +39,8 @@ SCHEME = {
     "b0": "bcab92", "b1": "d2c6b0", "b2": "e4dccb", "b3": "f2ece0",
     # the cape: the bison's dark wool, a hair warmer than the legs
     "c0": "35251a", "c1": "4b3424", "c2": "64472f", "c3": "805f40",
-    # the boss and the hooks: worn horn, grey, never bone white
-    "h0": "2c2926", "h1": "47423d", "h2": "666059", "h3": "8a8379", "h4": "aea698",
+    # the boss and the hooks: worn horn, warm grey-brown keratin, its worn edges pale, never bone white
+    "h0": "2f2720", "h1": "4d4034", "h2": "6e5f4e", "h3": "8e7d67", "h4": "b6a68b",
     # the male's ocre-gold at the base of the hooks
     "o0": "6a5e1e", "o1": "988a2e", "o2": "bcae3e", "o3": "d4c662",
     "bk0": "1a1816", "bk1": "2e2b27", "bk2": "48433d",
@@ -91,17 +91,20 @@ def _ground(m):
     m.shift(-lo)
 
 
-# THE BACK: the hump and the steps down to the tail, (name, x half width, y0, y1, z0, z1); the hump is a ridge
-# (narrower as it rises), every step a tier of the cape a little lower and shorter than the one in front
-BACK = (("withers", 17, 46, 68, -34, -22),
-        ("hump_a", 16, 48, 78, -26, -15),
-        ("hump_b", 15, 47, 83, -17, -4),
-        ("step_1", 16, 46, 78, -6, 5),
-        ("step_2", 17, 48, 72, 3, 12),
-        ("step_3", 18, 45, 65, 10, 19),
-        ("step_4", 18.5, 42, 58, 17, 26),
-        ("step_5", 18, 40, 52, 24, 32),
-        ("step_6", 17, 38, 45, 30, 38))
+# THE BACK: the hump and the slope down to the tail, (name, x half width, y0, y1, z0, z1); the hump is a ridge
+# (narrower as it rises) built of short overlapping tiers 4-5 texels apart, so the cape reads as one rounded mass
+BACK = (("withers", 17, 46, 68, -34, -25),
+        ("hump_a", 16.5, 47, 75, -28, -19),
+        ("hump_b", 16, 47, 80, -22, -12),
+        ("hump_c", 15, 47, 83, -15, -3),
+        ("step_1", 15.5, 46, 79, -6, 3),
+        ("step_2", 16, 47, 74, 1, 9),
+        ("step_3", 17, 47, 70, 6, 14),
+        ("step_4", 18, 45, 65, 12, 19),
+        ("step_5", 18.5, 43, 60, 17, 25),
+        ("step_6", 18.5, 41, 55, 23, 30),
+        ("step_7", 18, 40, 50, 28, 34),
+        ("step_8", 17, 38, 45, 31, 38))
 LIFT = 5      # the barrel stands this much higher on the legs than the blocking (a gap under the belly)
 CAPE_TOP = {n: (y1, hw) for n, hw, _y0, y1, _z0, _z1 in BACK}
 CAPE_TOP.update({n + "_cap": (y1 + 2, hw - 3) for n, hw, _y0, y1, _z0, _z1 in BACK})
@@ -140,10 +143,10 @@ def head(m, parent, y, z):
     # THE BOSS (adult_boss: one rough mass of horn over the nose, its top flat and wide; behind it the brow bosses,
     # almost fused to it, over the eyes). One mass: a body and a rounded cap set into it, never stacked bricks
     ab = m.bone("adult_boss", sk, (0, y + 6, z - 26))
-    m.cube(ab, *B(-12, 2, -38, 12, 11, -8), name="boss", mat="boss")
-    m.cube(ab, *B(-10, 11, -36, 10, 13, -10), name="boss_cap", mat="boss", faces=OUT("down"))
-    m.cube(ab, *B(-10, 0, -39, 10, 9, -38), name="boss_lip", mat="boss", faces=OUT("south"))
-    m.cube(ab, *B(-13, 4, -20, 13, 10, -9), name="brow_boss", mat="boss", faces=OUT("up", "down"))
+    m.cube(ab, *B(-13, 3, -32, 13, 8, -14), name="boss", mat="boss")
+    m.cube(ab, *B(-11, 8, -30, 11, 10, -16), name="boss_cap", mat="boss", faces=OUT("down"))
+    m.cube(ab, *B(-11, 2, -33, 11, 7, -32), name="boss_lip", mat="boss", faces=OUT("south"))
+    m.cube(ab, *B(-13, 4, -17, 13, 8, -9), name="brow_boss", mat="boss", faces=OUT("up", "down"))
     # the calf's brow: a low swelling where the boss will grow
     yb = m.bone("young_brow", sk, (0, y + 6, z - 22))
     m.cube(yb, *B(-8, 6, -27, 8, 10, -12), name="young_nub", mat="horn")
@@ -395,17 +398,23 @@ def body_tone(t, prof, calf=False):
         return "b1"
     # the hump and its steps: the cape over the top, each tier's top edge a step lighter (the roll of wool)
     if n in BACKS:
-        top = CAPE_TOP[n][0]
         if f == "up":
-            # the wool on top: strokes running front to back, the parting of the hair
-            return "c2" if h32(t.i, t.j // 4, 44) % 11 == 0 else "c3"
+            # the wool on top: one continuous mat (body space, not per tier), lighter on the crown of the ridge and
+            # darker down the shoulders, broken in irregular clumps of 2x3 texels, never lines across
+            hw = CAPE_TOP[n][1]
+            side = abs(t.P[0]) / max(hw, 1.0)
+            cl = h32(math.floor(t.P[0] / 3 + 0.5 * math.floor(t.P[2] / 4)), math.floor(t.P[2] / 4), 44) % 9
+            if side > 0.8:
+                return "c2"
+            return "c2" if cl == 0 else "c3"
         if calf:
-            return "c2" if t.P[1] > top - 4 else "k4"
-        if f in ("east", "west", "north", "south") and t.P[1] > top - 1.5:
-            # the roll of wool along the tier's edge, broken by locks
-            return "c2" if h32(math.floor((t.P[2] if f in ("east", "west") else t.P[0]) / 2), 52) % 3 == 0 else "c3"
-        if f == "south" and n.startswith("step"):
-            return "c2" if (t.i + t.j) % 4 else "c1"
+            return "c2" if t.P[1] > CAPE_TOP[n][0] - 4 else "k4"
+        if f in ("north", "south"):
+            # the short risers between tiers: the wool's own tone, no strokes (they read as the curve, not as planks)
+            hi = t.P[1] - HIPW[1] > 22
+            if h32(math.floor(t.P[0]), math.floor(t.P[1] / 3), 61) % 6 == 0:
+                return "c1" if hi else "c0"
+            return "c2" if hi else "c1"
         return cape_hair(t, True)
     if n == "neck":
         if f == "up":
@@ -527,8 +536,9 @@ def head_tone(t, sex):
     return "k3" if hv > 0.45 else "k4"
 
 
-def plates(t, cell=4.5, seed=91):
-    """the boss's plates: a Voronoi of irregular horn plates in body space; returns (plate id, on a crack)"""
+def plates(t, cell=5.5, seed=91):
+    """the boss's plates: a Voronoi of a few large irregular horn plates in body space; returns (plate id, on a crack,
+    near a crack)"""
     u, v = skin2.surface_uv(t)
     uc, vc = math.floor(u) + 0.5, math.floor(v) + 0.5
     gx, gy = math.floor(uc / cell), math.floor(vc / cell)
@@ -536,32 +546,35 @@ def plates(t, cell=4.5, seed=91):
     for dx in (-1, 0, 1):
         for dy in (-1, 0, 1):
             cx, cy = gx + dx, gy + dy
-            px = (cx + 0.15 + 0.7 * (h32(cx, cy, seed, 1) % 1000) / 1000) * cell
-            py = (cy + 0.15 + 0.7 * (h32(cx, cy, seed, 2) % 1000) / 1000) * cell
-            best.append((math.hypot(uc - px, (vc - py) * 1.2), (cx, cy), vc - py))
+            px = (cx + 0.2 + 0.6 * (h32(cx, cy, seed, 1) % 1000) / 1000) * cell
+            py = (cy + 0.2 + 0.6 * (h32(cx, cy, seed, 2) % 1000) / 1000) * cell
+            best.append((math.hypot(uc - px, (vc - py) * 1.2), (cx, cy)))
     best.sort()
-    (d1, cid, dy), (d2, _c, _y) = best[0], best[1]
-    return h32(*cid, seed, 3), d2 - d1 < 0.7, dy
+    (d1, cid), (d2, _c) = best[0], best[1]
+    return h32(*cid, seed, 3), d2 - d1 < 0.6, d2 - d1 < 1.8
 
 
 def boss_px(t, p):
-    """the boss: worn horn, one mass of irregular plates 3-5 texels across, each plate one tone, split by dark cracks,
-    the upper edge of every plate worn pale, a pore now and then. The plates run on over the cube edges (body space),
-    so the boss reads as one rough mass"""
+    """the boss: a low pad of worn horn, warm grey-brown, a few large plates (one tone each) split by thin dark
+    cracks, the rims of the plates and the pad's outer edges worn pale. The plates run on over the cube edges (body
+    space), so the pad reads as one mass from afar"""
     f = t.face
-    pid, crack, dy = plates(t)
-    if crack:
-        return p["h0"] if f in ("east", "west", "south") else p["h1"]
-    u, v = skin2.surface_uv(t)
-    if h32(math.floor(u), math.floor(v), 17) % 29 == 0:
-        return p["h1"]
-    worn = f in ("up", "north") or t.cube["name"] == "boss_cap"
-    tone = ("h2", "h3", "h3", "h4")[pid % 4] if worn else ("h2", "h2", "h3", "h3")[pid % 4]
-    if f in ("east", "west") and dy > 1.2:
-        tone = {"h2": "h3", "h3": "h4", "h4": "h4"}[tone]     # the plate's upper edge, worn pale
+    pid, crack, rim = plates(t)
+    top = f in ("up", "north") or t.cube["name"] == "boss_cap"
     # its root in the skin (the ornament grows from the skull): the lowest row the face's colour
     if f in ("east", "west") and t.j == t.h - 1 and t.cube["name"] != "boss_lip":
         return p["k2"]
+    if crack:
+        return p["h1"]
+    # the pad's outer edge, worn smooth and pale: the top row of the sides, the rim of the cap
+    if (f in ("east", "west", "south") and t.j == 0) or (top and (t.i in (0, t.w - 1) or t.j in (0, t.h - 1))):
+        return p["h4"]
+    tone = ("h2", "h3", "h3", "h2", "h3")[pid % 5]
+    if rim:
+        # every plate's rim worn a step paler than its middle (on top, two steps: the pad's crown is the most worn)
+        tone = ("h4" if tone == "h3" else "h3") if top else ("h3" if tone == "h2" else "h4")
+    if not top and tone == "h3" and pid % 3 == 0:
+        tone = "h2"
     return p[tone]
 
 
