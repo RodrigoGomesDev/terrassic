@@ -1,0 +1,89 @@
+{
+ "comment": "tools/modelgen/geo_cull.py: cubes that were whole boxes before their hidden faces were taken out (bone -> cube index -> faces left); LeanGeoRenderer treats them as closed. Valid only for the geo.json with this SHA-1.",
+ "geo_sha1": "c846d157045eb08e5de767a5aef94519d835b0bf",
+ "closed": {
+  "finger1_l": {
+   "1": 5
+  },
+  "finger1_r": {
+   "1": 5
+  },
+  "foot_l": {
+   "1": 5,
+   "2": 5,
+   "3": 5,
+   "4": 4
+  },
+  "foot_r": {
+   "1": 5,
+   "2": 5,
+   "3": 5,
+   "4": 4
+  },
+  "hand_l": {
+   "1": 5
+  },
+  "hand_r": {
+   "1": 5
+  },
+  "mem_arm_l": {
+   "1": 5
+  },
+  "mem_arm_r": {
+   "1": 5
+  },
+  "mem_finger1_l": {
+   "1": 5,
+   "2": 5
+  },
+  "mem_finger1_r": {
+   "1": 5,
+   "2": 5
+  },
+  "mem_finger2_l": {
+   "1": 5,
+   "2": 5,
+   "3": 5
+  },
+  "mem_finger2_r": {
+   "1": 5,
+   "2": 5,
+   "3": 5
+  },
+  "mem_forearm_l": {
+   "1": 5,
+   "2": 5,
+   "3": 5
+  },
+  "mem_forearm_r": {
+   "1": 5,
+   "2": 5,
+   "3": 5
+  },
+  "mem_hand_l": {
+   "1": 5,
+   "2": 5,
+   "3": 5
+  },
+  "mem_hand_r": {
+   "1": 5,
+   "2": 5,
+   "3": 5
+  },
+  "neck1": {
+   "1": 5
+  },
+  "saddle": {
+   "1": 5,
+   "3": 5
+  },
+  "skull": {
+   "1": 5,
+   "2": 4,
+   "3": 4,
+   "4": 5,
+   "5": 5,
+   "6": 5
+  }
+ }
+}
