@@ -393,3 +393,97 @@ do modelo.
 `./gradlew :fabric:compileJava :forge:compileJava`, `python3 -B tools/validation/check_project.py` (0 erros),
 DrawBench completo antes/depois (31 espécies + vacas), três rodadas alternadas do PerfTest, fotos congeladas.
 Não rodei a bateria de comportamento: nada aqui toca entidade, IA ou servidor.
+
+## Bateria final da 1.11.0 (20-21/11)
+
+Código da `rel/1.11.0` de `fbd23208` em diante, com os consertos abaixo (commits `dd94508f` a `a1a279dc`).
+
+### Consertos
+
+- **Coritossauro**, "o chamado chega a 50 blocos": teste. A manada distante ficava a 50 blocos de onde a vizinha nasceu,
+  mas a vizinha anda atrás do líder até o muro e o chamador ficava a 60-66 blocos (o alcance é 64). Agora ela é posta a
+  50 blocos de onde a vizinha está. O "acordado" era lido no fim do laço, depois de o teste encurtar a vigília para
+  8-16 s; o bicho marca quando o alarme o alcança e se o acordou (`alarmsGot`, `wokeToAlarm`).
+- **Coritossauro**, "colhe bagas": comportamento. Os objetivos de manada e de pastar tomavam a navegação e o levavam
+  para longe do arbusto; enquanto vai ao arbusto o caminho dele vale (desiste após 30 s).
+- **Coritossauro**, "um baixa a cabeça e sai": comportamento. O vencedor seguia o perdedor quando o perdedor era o
+  líder da manada, e o perdedor era trazido de volta pelo objetivo de manada. O vencedor fica 15 s; o perdedor pasta
+  15 s onde parou.
+- **Paquirrinossauro**, "raspa a neve": teste. A manada da travessia para em z = 100, a 4 blocos da neve e fora do raio
+  de limpeza; a fêmea sozinha se juntava a ela e saía da neve antes do primeiro gesto.
+- **Paquirrinossauro**, "o líder entra primeiro" (falhou 3 vezes seguidas na bateria): comportamento. A manada anda lado
+  a lado e um seguidor à frente do líder entrava no rio antes dele. Esperando, quem está na água ou à frente do lugar do
+  líder recua para trás dele, e o líder só entra com a margem livre (até 13 s).
+- **Tescelossauro**: dois testes mal medidos ("dispara a 18 blocos": a distância era lida depois, já na corrida, ou de
+  um companheiro que disparou pelo lenço; "dorme na toca": bicho só dorme depois do 60º segundo de vida, e este nascia
+  15-20 s antes da noite) e o domado posto a 11 blocos de onde o dono está mesmo (o cliente ainda movia o jogador).
+- **Sono que não acordava** (achado no Playtest): o seletor de objetivos só pergunta `canUse`/`canContinueToUse` a cada
+  2 ticks (tick do servidor + id par). `DinoSleepGoal` (acordar com caçador perto, `tickCount % 10 == 0`),
+  `SafeRestGoal` (`% 40`) e o lanche de chão do Anquilossauro (`% 10`) nunca coincidiam para metade dos bichos: um
+  Estiracossauro dormiu a 5 blocos de um Albertossauro acordado. Agora `% N <= 1`.
+- **Tescelossauro à noite**: ia até 1,5 bloco do centro da toca, mas a boca de uma toca apertada fica a ~1,6; andava no
+  lugar (22 s no Playtest). "Chegou" é o mesmo raio de 2 blocos do `isSleepTime`.
+- **Predador que acompanha manada** (`ShadowHerdGoal`): um ponto do flanco inalcançável (Albertossauro entre sequoias)
+  o deixava andando no lugar 28 s. Sem avanço em 10 s, tenta o outro flanco; na segunda, desiste por ora.
+- **`fall_asleep`**: 18 das 20 espécies do conjunto comum não têm a animação, e o GeckoLib escrevia "Unable to find
+  animation" a cada quadro (4.285 linhas numa fase). Só dispara se o rig tem.
+
+### Regressão de comportamento
+
+Primeira bateria completa: **208 de 213**. Repetidas as fases das 5 falhas: caminho do Edmontossauro e do Tricerátops
+(13,2 e 17,1 s), filhote do Maiassauro no ninho (2,0 blocos) e Tescelossauro domado passaram; "um baixa a cabeça" era
+defeito (consertado). Na repetição apareceram os dois testes mal medidos do Tescelossauro (consertados).
+
+Bateria completa depois dos consertos de sono (camada compartilhada): **208 de 213**. Repetidas: Tiranossauro nadando
+(3 quiques), degrau do Tiranossauro (0,18 bloco por tick), manada sem andar no lugar (4 bicho-segundos) e Tescelossauro
+se esconde no mato passaram; o domado falhou de novo (30,4 a 30,4 blocos: começava fora do alcance, consertado no
+teste) e passou na rodada seguinte (11,5 a 4,8). Tudo o que falhou passou na repetição: são instabilidades perto do
+limite (caminho, nado, degrau, esconderijo), não defeitos.
+
+### Rodada num mundo real (Playtest)
+
+`TERRASSIC_PLAYTEST=1`, mundo novo, 10 lugares + a Colônia de Ninhos + um habitat de cada herbívoro novo
+(`tools/validation/playtest_report.py`): **89 de 90** na rodada final.
+
+- Nascem e se comportam no mundo: Maiassauro 53, Coritossauro 4, Paquirrinossauro 7, Tescelossauro 32 vistos;
+  log com `[maia]` 77, `[cory]` 65, `[pachy]` 3 e `[thesc]` 178 linhas, 16 de toca do Tescelossauro.
+- Colônia de Ninhos (-288, -272): 13 ovos de Maiassauro nos ninhos (10 cobertos) e 8 Maiassauros em volta; à noite um
+  Dakotaraptor veio pelo ovo e a colônia o expulsou. Fora da colônia, manadas de Maiassauro põem ninhos no campo e os
+  defendem (é a regra: colonista defende).
+- Ninguém preso 20 s ou mais (a primeira rodada teve dois, consertados acima), ninguém quicando na água, nenhum
+  dorminhoco perto de caçador (o mais perto a 19 blocos), sem exceção do mod, 0 "Unable to find animation".
+- **Física de bicho parado**: ninguém flutuando (fora do chão, sem subir nem descer, com ar embaixo, 3 s seguidos) nas
+  duas rodadas. A única falha: um Protocerátops 1 s dentro de bloco (empurrado e saiu; não se repetiu).
+- **LOD**: a câmera vai de 76 a 10 blocos de um bicho parado em 16 s e `client/dev/LodProbe` mede a mudança dos ossos
+  por quadro. No cruzamento de 32, 40 e 64 blocos o maior quadro (0,20, 0,20 e 0,17) não passa do maior em volta
+  (0,33, 0,33 e 1,20): sem pulo.
+
+### Medida limpa de desempenho
+
+`PerfTest`, máquina livre (`ps`: só o cliente; carga 4-6), 2 rodadas. A cena agora tem 27 espécies em terra (138
+bichos; antes 120-126).
+
+| Rodada | Bichos | CPU do servidor (ms/tick) | Com o mod (ms/tick) | % de 50 ms | Render com o mod | FPS |
+|---|---:|---:|---:|---:|---:|---:|
+| Antes A (`dcda48d5`) | 120 | 25.1 | 19.9 | 40% | 84% | 53 |
+| Antes B (`dcda48d5`) | 121 | 19.2 | 12.6 | 25% | 84% | 56 |
+| Antes 1 (`6a58112d`) | 126 | 13.0 | 7.7 | 15% | - | 63 |
+| Antes 2 (`6a58112d`) | 123 | 14.3 | 8.3 | 17% | - | 57 |
+| **Final 1** | 138 | 10.5 | **6.6** | 13% | 79% | **91** |
+| **Final 2** | 138 | 9.8 | **5.9** | 12% | 79% | **95** |
+
+Mod no servidor: de 16,3 ms/tick (média antes) para 6,2 (−62%), com mais bichos; FPS de 53-56 para 91-95 (+70%).
+Gráfico: `Claude outputs/bateria-1.11/img/desempenho_final.png` (e `.svg`), cena em `cena_perf_final.png`.
+
+### Forge e build
+
+- `./gradlew :forge:runClient` sem o Jade, com `TERRASSIC_PLAYTEST_ONLY=portraits`: mundo Terrassic novo, os 4
+  herbívoros chamados em seus habitats e fotografados, sem crash e sem erro do mod no log
+  (`Claude outputs/bateria-1.11/img/forge/`).
+- `./gradlew build` (Fabric e Forge): passou. `python3 -B tools/validation/check_project.py`: 0 erros.
+
+### Fotos
+
+`Claude outputs/bateria-1.11/img/<espécie>_34.png` e `_lado.png` (Fabric, num bioma real ao meio-dia), feitas por
+`TERRASSIC_PLAYTEST=1 TERRASSIC_PLAYTEST_ONLY=portraits` (`TERRASSIC_PLAYTEST_SPECIES=...` escolhe as espécies): chão
+aberto de 17 × 17, os outros bichos tirados, câmera do lado com visão livre.
