@@ -51,7 +51,10 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
-**1.11.0 (em trabalho, branch `rel/1.11.0`, estudo `docs/estudos/15_HERBIVOROS_1_11.md`)**: Maiassaura refeito
+**1.11.0 (21/11/2026, `mod_version`; estudo `docs/estudos/15_HERBIVOROS_1_11.md`, changelog `docs/changelog/1.11.0.md`)**:
+MÉTODO SILHUETA-PRIMEIRO (`tools/modelgen/handmade/_silhuetas`, `silcheck.py` por espécie: blocagem em preto aprovada pelo
+Rodrigo antes do modelo, semelhança ≤ 0,62 contra os vizinhos, pele com padrão desenhado e não manchas geradas).
+Maiassaura refeito
 (`entity/Maiasaurine`, `tools/modelgen/handmade/maiasaura`, `art/maiasaura/REFEITO.md`): cabeça curta com calombo sólido,
 filhote em duas patas com pele própria (`_baby.png`, `DinoGeoModel.BABY_SKINS`, `babyHeadScale`), Colônia de Ninhos de
 volta a ele, ninho coberto (`DinoEggBlock.COVERED`, modelo `_covered` só dele), filhote que fica no ninho e só cresce
@@ -61,8 +64,13 @@ alimentado, colônia que defende (40 blocos), ladrão de ovo à noite (`ai/NestR
 azul-fumaça listrado, chamado grave a 64 blocos (reagrupa, alarme às manadas vizinhas, acalma os herbívoros: o antigo
 `calm`), ouve predador sem linha de visão a 24 blocos (`listen`), cochilos catemerais em turnos com um sempre acordado
 (`nap` em pé de dia), colhe bagas (`pluck`) e frutos altos, dois machos mostram o elmo de perfil; Sela de Mata; ninho
-entre raízes (`cory_extras.py`); fase `cory` da `BehaviorTest` (na `regressao`), log `[cory]`. Faltam
-Paquirrinossauro e Tescelossauro.
+entre raízes (`cory_extras.py`); fase `cory` da `BehaviorTest` (na `regressao`), log `[cory]`. Paquirrinossauro
+(`entity/Pachyrhinosaurine`, bisão: roda de defesa, duelo de bossa, travessia em manada, Sela de Carga; o almíscar saiu) e
+Tescelossauro (`entity/Thescelosaurine`, tipo ave: congela/dispara/esconde, fareja, toca com ninho no fundo, não montável).
+Desempenho (`docs/DESEMPENHO_1_11.md`): `ai/MemoPathFinder`, `DinoParts.Index`, física de bicho parado
+(`DinosaurEntity.standingStill`, `TERRASSIC_NO_STILL=1` desliga), LOD em `client/DinoLod` (`lod_near`/`lod_far`), medida em
+`client/dev/PerfTest` (`TERRASSIC_PERF=1`); ~6 ms/tick e 91-95 FPS com 138 bichos. Jade opcional em `compat/jade`
+(`-Pjade` no runClient; placa de nome sai com o Jade, opção `hud_nameplate_with_jade`).
 **Desenho dos modelos (1.11, `docs/DESEMPENHO_1_11.md`, "Modelos")**: `client/LeanGeoRenderer` (base de `DinosaurRenderer`
 e `CarcassRenderer`) escreve os cubos sem alocar e sem as faces de trás de cubos fechados e opacos; `tools/modelgen/geo_cull.py`
 tira as faces escondidas dos geo.json (roda sozinho no fim do build pelo `_engine/proto.geo_json`; registro em
