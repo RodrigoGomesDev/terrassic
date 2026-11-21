@@ -1997,10 +1997,21 @@ public final class BehaviorTest {
             }
             return 5;
         });
+        int[] placed = {0};
         STEPS.add(mc -> {
             com.terrassic.entity.Thescelosaurine t = thesc(mc, pet);
             ServerPlayer sp = player(mc);
             follow[0] = t == null || sp == null ? -1.0D : t.distanceTo(sp);
+            // the client may still move the player after the teleport (the pet then started 30 blocks off, past the
+            // follow's teleport range with nowhere to land, and the run measured 30.4 to 30.4): put it 11 blocks off
+            // where the owner really is, again, until it is so
+            if (t != null && sp != null && (follow[0] < 10.3D || follow[0] > 11.7D) && placed[0]++ < 10) {
+                mc.getSingleplayerServer().execute(() -> {
+                    t.moveTo(sp.getX() - 11.0D, sp.getY(), sp.getZ(), 0.0F, 0.0F);
+                    t.getNavigation().stop();
+                });
+                return -10;
+            }
             return 300;
         });
         STEPS.add(mc -> {

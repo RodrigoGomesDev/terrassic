@@ -204,11 +204,13 @@ public final class Playtest {
         // from the crater outwards, every heading; the continent is about 1200 blocks across (world_preset raio)
         int[][] places = {{0, 60}, {260, 0}, {0, -420}, {-520, 120}, {380, 520}, {760, -200}, {-300, -800}, {-900, -300},
                 {150, 950}, {1000, 450}};
-        for (int i = 0; i < places.length; i++) {
+        // TERRASSIC_PLAYTEST_ONLY=portraits: only the four habitats and their portraits (a few minutes)
+        boolean portraitsOnly = "portraits".equals(System.getenv("TERRASSIC_PLAYTEST_ONLY"));
+        for (int i = 0; i < places.length && !portraitsOnly; i++) {
             boolean night = i == 4 || i == 8;
             visit(i, places[i][0], places[i][1], night);
         }
-        newHerbivores();
+        newHerbivores(portraitsOnly);
         STEPS.add(mc -> {
             int total = 0;
             StringBuilder b = new StringBuilder();
@@ -325,8 +327,9 @@ public final class Playtest {
 
     // ------------------------------------------------------------------ 1.11.0: where the new herbivores live
     /** The Nest Colony (the Maiasaura's nests) and a biome of each new herbivore's habitat, found in this world. */
-    private static void newHerbivores() {
+    private static void newHerbivores(boolean portraitsOnly) {
         int[] colony = {0, 0};
+        if (!portraitsOnly) {
         STEPS.add(mc -> {
             ServerLevel lv = mc.getSingleplayerServer().overworld();
             var reg = lv.registryAccess().registryOrThrow(Registries.STRUCTURE);
@@ -361,6 +364,7 @@ public final class Playtest {
             REPORT.add(String.format(Locale.ROOT, "  colony: %d maiasaura eggs in the nests (%d covered), %d maiasaura within 48 blocks", eggs, covered, maia));
             return 1;
         });
+        }
         // a habitat of each: the Maiasaura's plains, the Corythosaurus' swamp, the Pachyrhinosaurus' taiga, the
         // Thescelosaurus' river bank (its burrow)
         String[][] habitats = {{"plains", "maiasaura"}, {"swamp", "corythosaurus"}, {"taiga", "pachyrhinosaurus"}, {"river", "thescelosaurus"}};
@@ -380,7 +384,7 @@ public final class Playtest {
                 REPORT.add("== Habitat " + hab[0] + " (" + hab[1] + "): " + (found == null ? "NOT FOUND" : at[0] + " " + at[1]));
                 return 1;
             });
-            visit(11 + h, at, false, 90);
+            visit(11 + h, at, false, portraitsOnly ? 5 : 90);
             STEPS.add(mc -> {
                 StringBuilder b = new StringBuilder();
                 for (String sp : NEW_HERBIVORES) {
@@ -391,7 +395,7 @@ public final class Playtest {
                 return 1;
             });
             portrait(hab[1]);
-            if (h == 0) {
+            if (h == 0 && !portraitsOnly) {
                 approach();
             }
         }
@@ -406,11 +410,14 @@ public final class Playtest {
             command(mc, "time set 6000");
             command(mc, "gamemode spectator");
             ServerLevel lv = mc.getSingleplayerServer().overworld();
-            Vec3 look = Vec3.directionFromRotation(0.0F, mc.player.getYRot());
-            int x = Mth.floor(mc.player.getX() + look.x * 12.0D), z = Mth.floor(mc.player.getZ() + look.z * 12.0D);
-            int y = lv.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-            command(mc, String.format(Locale.ROOT, "summon terrassic:%s %d.5 %d %d.5 {NoAI:1b,PersistenceRequired:1b,Female:0b,"
-                    + "Rotation:[%.0ff,0f],UUID:[I;%d,%d,%d,%d]}", species, x, y, z, mc.player.getYRot() + 90.0F,
+            int[] spot = openGround(lv, mc.player.getBlockX(), mc.player.getBlockZ());
+            int x = spot[0], z = spot[1], y = spot[2];
+            REPORT.add(String.format(Locale.ROOT, "  portrait spot for %s: %d %d %d (%s)", species, x, y, z,
+                    lv.getBiome(new BlockPos(x, y, z)).unwrapKey().map(k -> k.location().getPath()).orElse("?")));
+            // the others out of the picture (a portrait, not the tour)
+            command(mc, String.format(Locale.ROOT, "kill @e[type=!player,x=%d,y=%d,z=%d,distance=..40]", x, y, z));
+            command(mc, String.format(Locale.ROOT, "summon terrassic:%s %d.5 %d %d.5 {NoAI:1b,Invulnerable:1b,PersistenceRequired:1b,Female:0b,"
+                    + "Rotation:[%.0ff,0f],UUID:[I;%d,%d,%d,%d]}", species, x, y, z, 30.0F,
                     (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
                     (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits()));
             return 40;
@@ -434,9 +441,20 @@ public final class Playtest {
                 Vec3 side = new Vec3(-Mth.cos(bodyYaw), 0, -Mth.sin(bodyYaw));
                 Vec3 forward = new Vec3(-Mth.sin(bodyYaw), 0, Mth.cos(bodyYaw));
                 double dist = size * 0.75D + 2.0D;
-                Vec3 eye = "34".equals(view)
+                Vec3 eye0 = "34".equals(view)
                         ? c.add(side.scale(dist * 0.8D)).add(forward.scale(dist * 0.7D)).add(0, size * 0.25D, 0)
                         : c.add(side.scale(dist * 1.1D)).add(0, size * 0.1D, 0);
+                // never inside the ground or a bush: up until the eye and the block over it are open
+                ServerLevel lv = mc.getSingleplayerServer().overworld();
+                Vec3 e1 = eye0;
+                for (int up = 0; up < 10; up++) {
+                    BlockPos b = BlockPos.containing(e1);
+                    if (lv.getBlockState(b).isAir() && lv.getBlockState(b.above()).isAir()) {
+                        break;
+                    }
+                    e1 = e1.add(0, 1.0D, 0);
+                }
+                Vec3 eye = e1;
                 Vec3 d = c.subtract(eye);
                 float yaw = (float) (Mth.atan2(d.z, d.x) * Mth.RAD_TO_DEG) - 90.0F;
                 float pitch = (float) -(Mth.atan2(d.y, Math.sqrt(d.x * d.x + d.z * d.z)) * Mth.RAD_TO_DEG);
@@ -460,6 +478,32 @@ public final class Playtest {
             command(mc, "gamemode survival");
             return 10;
         });
+    }
+
+    /** A level, open patch near (x0, z0) for a portrait: no leaves over it, dry, the ground within 1 block over 9 x 9
+     *  (searched in rings up to 64 blocks out); {x, y, z}, or the place itself if none. */
+    private static int[] openGround(ServerLevel lv, int x0, int z0) {
+        for (int r = 6; r <= 64; r += 6) {
+            for (int a = 0; a < 16; a++) {
+                int x = x0 + (int) Math.round(Math.cos(a * Math.PI / 8.0D) * r), z = z0 + (int) Math.round(Math.sin(a * Math.PI / 8.0D) * r);
+                int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE;
+                boolean ok = true;
+                for (int dx = -4; dx <= 4 && ok; dx += 2) {
+                    for (int dz = -4; dz <= 4 && ok; dz += 2) {
+                        int h = lv.getHeight(Heightmap.Types.MOTION_BLOCKING, x + dx, z + dz);
+                        int hn = lv.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x + dx, z + dz);
+                        BlockPos g = new BlockPos(x + dx, hn - 1, z + dz);
+                        ok = h == hn && lv.getFluidState(g).isEmpty() && lv.getFluidState(g.above()).isEmpty();
+                        lo = Math.min(lo, hn);
+                        hi = Math.max(hi, hn);
+                    }
+                }
+                if (ok && hi - lo <= 1) {
+                    return new int[]{x, lv.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z};
+                }
+            }
+        }
+        return new int[]{x0, lv.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x0, z0), z0};
     }
 
     /** The LOD (client/DinoLod) as the player walks up: the camera glides from 76 to 10 blocks of a grown animal in
