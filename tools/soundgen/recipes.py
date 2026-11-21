@@ -1011,6 +1011,309 @@ SPECIES = {
           P(1.3, "clack", 0.8, dur=0.15, freq=700, q=400, seed=2113), room=(1.1, 0.16), drive=1.8)]})),
 }
 
+# ---------------------------------------------------------------- own sets (1.11): the four predators remade in 1.10
+# Written whole for the species, not re-voiced from an archetype. These synthesized recipes define the events of
+# each set and are the fallback; like every species, the sounds actually built come from arkstyle.py (its own
+# profile for each of the four and its EXTRA functions for the behaviour sounds) when the recordings of
+# art/sounds/src are present (the "vozes no estilo ARK" block at the end of this file). Events beyond the usual five
+# are played by the behaviours of their rigs (entity/Tyrannosaurine, Albertosaurine, Carcharodontosaurine,
+# Majungasaurine). Notes for the author, spectrograms and the .ogg files: art/<species>/vozes/VOZES.md.
+_WIDE = [(170, 160, 0), (380, 240, -3), (800, 380, -10), (1600, 600, -19)]   # a huge throat, open and breathy
+_NASAL = [(300, 170, 0), (700, 240, -5), (1500, 420, -13), (2800, 700, -22)]  # the broad short snout
+
+
+def _grind(start, f0, dur, gain=1.0, rate=13, seed=0, **kw):
+    """Daspletosaurus: closed mouth, the voice broken into coarse slow pulses and chugging (the grinding growl)."""
+    return P(start, "call", gain, dur=dur, f0=f0, tilt=-7, sub=kw.pop("sub", 0.5), fry=kw.pop("fry", 0.82),
+             fry_rate=rate, fry_sharp=5, flutter=kw.pop("flutter", (3.4, 0.35)), breath=0.18, breath_color=1.2,
+             formants=kw.pop("formants", [(210, 120, 0), (500, 190, -4), (1000, 320, -11), (2000, 600, -20)]),
+             body=kw.pop("body", 0.12), attack=kw.pop("attack", 0.12), release=kw.pop("release", dur * 0.35),
+             seed=seed, **kw)
+
+
+def _hoot(start, f0, dur, gain=1.0, seed=0, **kw):
+    """Albertosaurus: a hollow closed-mouth hoot through a long neck (tube), breathy and a little rough."""
+    return P(start, "call", gain, dur=dur, f0=f0, tilt=-8, sub=kw.pop("sub", 0.3), fry=kw.pop("fry", 0.25),
+             fry_rate=34, breath=kw.pop("breath", 0.3), breath_color=1, tube=kw.pop("tube", (140, 0.55)),
+             formants=kw.pop("formants", CLOSED_MID[:3]), notch=(1100, 400, 0.6), attack=kw.pop("attack", 0.05),
+             release=kw.pop("release", dur * 0.5), seed=seed, **kw)
+
+
+def _rasp(start, f0, dur, gain=1.0, rate=8, seed=0, **kw):
+    """Carcharodontosaurus: a huge breathy throat, the voice creaking in very slow pulses (a rasp, not a boom)."""
+    return P(start, "call", gain, dur=dur, f0=f0, tilt=-7.5, sub=kw.pop("sub", 0.55), fry=kw.pop("fry", 0.72),
+             fry_rate=rate, fry_sharp=7, flutter=kw.pop("flutter", (2.4, 0.25)), breath=kw.pop("breath", 0.45),
+             breath_color=1.5, formants=kw.pop("formants", _WIDE), lp=kw.pop("lp", 2600),
+             attack=kw.pop("attack", 0.3), release=kw.pop("release", dur * 0.4), seed=seed, **kw)
+
+
+def _drum(start, f0, gain=1.0, dur=0.2, seed=0):
+    """Majungasaurus: one pulse of the inflated throat, mouth shut (a short drum beat)."""
+    return P(start, "call", gain, dur=dur, f0=f0, tilt=-9, sub=0.2, body=0.45, breath=0.05, formants=_NASAL[:3],
+             tube=(95, 0.5), attack=0.01, release=dur * 0.7, seed=seed)
+
+
+def _chuff(start, gain=1.0, k=1.0, seed=0):
+    """Majungasaurus: a short hard blast out of the broad nose."""
+    return P(start, "breath", gain, dur=0.13, formants=[(520 * k, 300, 0), (1300 * k, 600, -5), (2600 * k, 900, -14)],
+             hp=140, attack=0.004, release=0.08, seed=seed)
+
+
+def _grunt(start, f0, gain=1.0, dur=0.28, seed=0):
+    return P(start, "call", gain, dur=dur, f0=f0, tilt=-7, sub=0.5, fry=0.45, fry_rate=26, breath=0.25,
+             formants=_NASAL, notch=(900, 260, 0.7), tube=(95, 0.45), attack=0.01, release=dur * 0.6, seed=seed)
+
+
+OWN_SETS = {
+    # ---- Daspletosaurus: the grinding tyrant. f0 48-64 Hz (between the T. rex and the Albertosaurus), closed mouth,
+    # a coarse slow rattle (11-15 pulses/s) chugging at ~3.4 Hz; short phrases, not long booms.
+    "daspletosaurus": {
+        "ambient": ("deep", 40, [
+            V(_grind(0, tr(0, 54, 0.4, 60, 1, 50), 2.2, seed=3001), room=(1.4, 0.18)),
+            V(snort(0, 0.7, 0.18, 0.75, seed=3002), snort(0.32, 0.6, 0.16, 0.7, seed=3003),
+              _grind(0.7, tr(0, 58, 1, 51), 1.4, rate=12, seed=3004), room=(1.4, 0.18)),
+            V(P(0, "clack", 0.7, freq=480, q=330, seed=3005),
+              _grind(0.15, tr(0, 50, 0.6, 62, 1, 56), 1.6, rate=tr(0, 11, 1, 16), seed=3006),
+              exhale(1.7, 0.4, 0.6, 0.75, seed=3007), room=(1.4, 0.18)),
+        ]),
+        # the jaw_test and the warning: the growl opening into the bared teeth, two jaw knocks after
+        "threat": ("deep", 56, [
+            V(_grind(0, tr(0, 56, 1, 64), 0.8, rate=14, seed=3011),
+              P(0.7, "call", dur=1.6, f0=tr(0, 64, 0.3, 96, 0.7, 84, 1, 62), tilt=-6, sub=0.6, fry=0.55, fry_rate=18,
+                fry_sharp=5, breath=0.3, breath_color=1.2, formants=opening(440, 1000, 2000), lp=3000, attack=0.08,
+                release=0.5, seed=3012),
+              P(2.35, "clack", 0.8, freq=460, q=320, seed=3013), P(2.55, "clack", 0.7, freq=500, q=320, seed=3014),
+              room=(1.8, 0.22), drive=2.3),
+            V(_grind(0, tr(0, 52, 0.5, 66, 1, 58), 2.0, rate=tr(0, 12, 1, 18), fry=0.9, seed=3015),
+              P(1.9, "clack", 0.8, freq=470, q=320, seed=3016), room=(1.6, 0.2), drive=2.0),
+        ]),
+        # CarcassStealGoal: the loudest thing it does, an inhale and an open bellow that grinds at the end
+        "steal_roar": ("deep", 96, [
+            V(P(0, "breath", 0.4, dur=0.45, formants=[(480, 500, 0), (1400, 800, -6)], lp=2400, attack=0.3,
+                release=0.06, amp=tr(0, 0.2, 1, 0.7), seed=3021),
+              P(0.4, "call", dur=2.6, f0=tr(0, 62, 0.15, 104, 0.55, 92, 0.8, 70, 1, 56), tilt=-6, sub=0.65, fry=0.5,
+                fry_rate=tr(0, 22, 0.7, 20, 1, 12), fry_sharp=5, breath=0.32, breath_color=1.3,
+                formants=opening(500, 1150, 2200), lp=3200, body=0.1, attack=0.06, release=0.9, seed=3022),
+              room=(2.2, 0.26), drive=2.6),
+            V(P(0, "clack", 0.8, freq=470, q=320, seed=3023),
+              P(0.1, "call", dur=2.9, f0=tr(0, 58, 0.2, 98, 0.6, 88, 1, 50), tilt=-6, sub=0.7, fry=0.6,
+                fry_rate=tr(0, 20, 1, 11), fry_sharp=5, breath=0.3, breath_color=1.3, formants=opening(470, 1080, 2100),
+                lp=3000, body=0.12, attack=0.1, release=1.1, seed=3024),
+              exhale(2.9, 0.4, 0.8, 0.8, seed=3025), room=(2.2, 0.26), drive=2.4),
+        ]),
+        # standing over its carcass at a meat eater that comes near: a long low purring growl, the coarsest rattle
+        "carcass_growl": ("deep", 28, [
+            V(_grind(0, tr(0, 48, 0.5, 52, 1, 47), 2.2, rate=11, fry=0.92, flutter=(4.6, 0.3), seed=3031),
+              P(2.0, "clack", 0.6, freq=440, q=300, seed=3032), room=(1.2, 0.15), drive=1.8),
+            V(snort(0, 0.6, 0.2, 0.7, seed=3033),
+              _grind(0.25, tr(0, 50, 1, 46), 1.8, rate=tr(0, 10, 1, 13), fry=0.92, flutter=(4.0, 0.35), seed=3034),
+              room=(1.2, 0.15), drive=1.8),
+        ]),
+        "hurt": ("deep", 32, [
+            V(P(0, "call", dur=0.45, f0=tr(0, 112, 0.3, 100, 1, 62), tilt=-7, sub=0.65, fry=0.6, fry_rate=18,
+                breath=0.3, breath_color=1, formants=opening(320, 720, 1500), lp=3200, attack=0.01, release=0.22,
+                seed=3041), room=(1.0, 0.15), drive=2.2),
+            V(snort(0, 0.6, 0.12, 0.8, seed=3042),
+              P(0.1, "call", dur=0.5, f0=tr(0, 104, 1, 58), tilt=-7, sub=0.65, fry=0.65, fry_rate=15, breath=0.3,
+                formants=opening(300, 700, 1450), lp=3200, attack=0.01, release=0.25, seed=3043),
+              room=(1.0, 0.15), drive=2.2),
+        ]),
+        "death": ("deep", 48, [
+            V(_grind(0, tr(0, 72, 0.2, 76, 1, 30), 3.2, rate=tr(0, 15, 1, 5), fry=0.75, flutter=(3.0, 0.3),
+                     amp=tr(0, 1, 0.6, 0.8, 1, 0.4), release=1.4, seed=3051),
+              exhale(2.9, 0.45, 1.1, 0.8, seed=3052), room=(1.8, 0.22), drive=1.6),
+        ]),
+        "step": ("ground", 24, step_set(48, 1.1, 0.6, 0.42)),
+    },
+
+    # ---- Albertosaurus: the hooting runner. f0 72-140 Hz, lighter throat, tonal hollow hoots with a long-neck
+    # tube resonance, quick rhythm; the pack calls in rising triplets and answers in falling pairs; pants after a chase.
+    "albertosaurus": {
+        "ambient": ("voice", 40, [
+            V(_hoot(0, tr(0, 84, 1, 92), 0.32, seed=3101), _hoot(0.42, tr(0, 92, 0.5, 104, 1, 86), 0.55, seed=3102),
+              room=(1.4, 0.2)),
+            V(*[snort(i * 0.34, 0.55, 0.12, 1.2, seed=3103 + i) for i in range(3)],
+              _hoot(1.15, tr(0, 78, 1, 72), 0.6, seed=3106), room=(1.2, 0.18)),
+            V(P(0, "clack", 0.6, dur=0.08, freq=820, q=500, seed=3107), P(0.12, "clack", 0.5, dur=0.08, freq=860, q=500, seed=3108),
+              _hoot(0.35, tr(0, 80, 0.7, 108, 1, 100), 0.7, seed=3109), room=(1.3, 0.18)),
+        ]),
+        "threat": ("voice", 48, [
+            V(hiss(0, 0.6, 0.5, 1.1, seed=3111),
+              P(0.4, "call", dur=1.4, f0=tr(0, 96, 0.25, 150, 0.7, 128, 1, 104), tilt=-6, sub=0.5, fry=0.3,
+                fry_rate=40, breath=0.4, breath_color=0.8, formants=opening(520, 1180, 2300), lp=4000,
+                attack=0.05, release=0.5, seed=3112), room=(1.5, 0.2), drive=2.2),
+            V(P(0, "clack", 0.7, dur=0.09, freq=800, q=480, seed=3113),
+              P(0.1, "call", dur=1.2, f0=tr(0, 110, 0.3, 146, 1, 98), tilt=-6, sub=0.55, fry=0.35, fry_rate=38,
+                breath=0.4, breath_color=0.8, formants=opening(500, 1150, 2250), lp=4000, attack=0.04,
+                release=0.45, seed=3114), room=(1.5, 0.2), drive=2.2),
+        ]),
+        # call_pack (Albertosaurine): head up, three rising hoots that carry
+        "call_pack": ("voice", 96, [
+            V(_hoot(0, tr(0, 78, 1, 104), 0.5, seed=3121), _hoot(0.62, tr(0, 88, 1, 118), 0.5, seed=3122),
+              _hoot(1.24, tr(0, 98, 0.6, 136, 1, 124), 0.75, seed=3123), room=(2.2, 0.28)),
+            V(_hoot(0, tr(0, 82, 1, 108), 0.45, seed=3124), _hoot(0.55, tr(0, 92, 1, 122), 0.45, seed=3125),
+              _hoot(1.1, tr(0, 100, 0.5, 140, 1, 120), 0.9, seed=3126), room=(2.2, 0.28)),
+        ]),
+        # answer: the others reply with two shorter hoots that fall
+        "answer": ("voice", 64, [
+            V(_hoot(0, tr(0, 112, 1, 92), 0.32, seed=3131), _hoot(0.42, tr(0, 104, 1, 82), 0.38, seed=3132),
+              room=(1.8, 0.24)),
+            V(_hoot(0, tr(0, 118, 1, 96), 0.3, seed=3133), _hoot(0.38, tr(0, 108, 1, 84), 0.42, seed=3134),
+              room=(1.8, 0.24)),
+        ]),
+        # pant: the long chase over, breath in and out at ~2.3 per second with a faint voice on the out-breath
+        "pant": ("voice", 16, [
+            V(*[part for i in range(5) for part in (
+                P(i * 0.44, "breath", 0.8, dur=0.22, formants=[(600, 500, 0), (1600, 900, -6)], hp=200, lp=3400,
+                  attack=0.02, release=0.12, seed=3141 + i),
+                P(i * 0.44, "call", 0.22, dur=0.2, f0=tr(0, 76, 1, 66), tilt=-9, breath=0.5, formants=CLOSED_MID[:3],
+                  attack=0.02, release=0.12, seed=3151 + i),
+                P(i * 0.44 + 0.24, "breath", 0.45, dur=0.16, formants=[(1800, 1400, 0), (3600, 1800, -6)], hp=700,
+                  attack=0.03, release=0.08, seed=3161 + i))], room=(0.8, 0.12)),
+            V(*[part for i in range(4) for part in (
+                P(i * 0.5, "breath", 0.8, dur=0.25, formants=[(560, 480, 0), (1500, 900, -6)], hp=200, lp=3200,
+                  attack=0.02, release=0.14, seed=3171 + i),
+                P(i * 0.5 + 0.28, "breath", 0.4, dur=0.18, formants=[(1700, 1400, 0), (3400, 1800, -6)], hp=700,
+                  attack=0.03, release=0.09, seed=3181 + i))], room=(0.8, 0.12)),
+        ]),
+        "hurt": ("voice", 24, [
+            V(P(0, "call", dur=0.3, f0=tr(0, 168, 1, 98), tilt=-6, sub=0.6, fry=0.3, fry_rate=42, breath=0.4,
+                formants=opening(400, 900, 1900), tube=(150, 0.4), lp=4400, attack=0.008, release=0.16, seed=3191),
+              drive=2.2),
+            V(snort(0, 0.6, 0.1, 1.2, seed=3192),
+              P(0.08, "call", dur=0.28, f0=tr(0, 150, 1, 92), tilt=-6, sub=0.6, fry=0.35, fry_rate=40, breath=0.4,
+                formants=opening(380, 860, 1800), lp=4400, attack=0.008, release=0.15, seed=3193), drive=2.2),
+        ]),
+        "death": ("voice", 32, [
+            V(_hoot(0, tr(0, 120, 0.2, 126, 1, 42), 2.0, sub=0.5, fry=0.45, attack=0.04, release=0.9,
+                    amp=tr(0, 1, 1, 0.45), seed=3195),
+              exhale(1.8, 0.35, 0.8, 1.0, seed=3196), room=(1.4, 0.2), drive=1.5),
+        ]),
+        "step": ("ground", 16, step_set(64, 0.75, 0.7, 0.3)),
+    },
+
+    # ---- Carcharodontosaurus: the breathing giant. f0 32-42 Hz in a wide, open, breathy throat; the voice creaks
+    # in very slow pulses (7-9 a second, a rasp you can count); long and sparse. Silent in ambush (Carcharodontosaurine
+    # keeps its ambient calls quiet while it waits); its warning is the open-jawed hiss.
+    "carcharodontosaurus": {
+        "ambient": ("deep", 44, [
+            V(_rasp(0, tr(0, 36, 0.5, 41, 1, 33), 3.2, seed=3201), room=(1.8, 0.22)),
+            V(P(0, "breath", 0.8, dur=1.1, formants=[(260, 260, 0), (700, 500, -6)], lp=900, attack=0.3,
+                release=0.6, seed=3202),
+              _rasp(1.0, tr(0, 38, 1, 34), 1.6, rate=7, seed=3203), room=(1.8, 0.22)),
+            V(exhale(0, 0.6, 1.4, 0.7, seed=3204),
+              _rasp(1.1, tr(0, 34, 0.6, 39, 1, 35), 2.2, rate=tr(0, 6, 1, 9), breath=0.55, seed=3205),
+              room=(1.8, 0.22)),
+        ]),
+        # gape_hiss and the warning: the jaws wide, a loud swelling hiss over a low rasp, a knock as they shut
+        "threat": ("deep", 56, [
+            V(P(0, "breath", 1.0, dur=1.7, formants=[(1400, 1600, 0), (3000, 2400, -4), (5600, 3000, -10)], hp=500,
+                attack=0.5, release=0.5, seed=3211),
+              _rasp(0.15, tr(0, 40, 1, 36), 1.6, gain=0.7, rate=9, attack=0.4, seed=3212),
+              P(1.8, "clack", 0.8, freq=420, q=300, seed=3213), room=(1.8, 0.24), drive=2.0),
+            V(_rasp(0, tr(0, 38, 0.4, 46, 1, 38), 0.9, rate=8, seed=3214),
+              P(0.6, "breath", 1.0, dur=1.4, formants=[(1300, 1500, 0), (2900, 2300, -4), (5400, 3000, -10)], hp=480,
+                attack=0.35, release=0.45, seed=3215), room=(1.8, 0.24), drive=2.0),
+        ]),
+        # the tear (Carcharodontosaurine): a sharp hiss through the blade teeth as it heaves back, and the flesh
+        "tear_hiss": ("voice", 24, [
+            V(P(0, "breath", 0.9, dur=0.5, formants=[(2600, 2200, 0), (5200, 2800, -5)], hp=900, attack=0.03,
+                release=0.25, seed=3221),
+              P(0.05, "wet", 0.7, dur=0.55, low=420.0, tear=0.9, bubbles=2, seed=3222),
+              _rasp(0.25, tr(0, 44, 1, 38), 0.6, gain=0.6, rate=9, attack=0.05, seed=3223), room=(1.0, 0.14),
+              drive=1.6),
+            V(P(0, "wet", 0.8, dur=0.5, low=380.0, tear=1.0, bubbles=3, seed=3224),
+              P(0.1, "breath", 0.8, dur=0.45, formants=[(2400, 2000, 0), (4800, 2600, -5)], hp=900, attack=0.02,
+                release=0.25, seed=3225), room=(1.0, 0.14), drive=1.6),
+        ]),
+        "hurt": ("deep", 32, [
+            V(P(0, "call", dur=0.55, f0=tr(0, 74, 0.3, 66, 1, 40), tilt=-7, sub=0.7, fry=0.5, fry_rate=10,
+                fry_sharp=6, breath=0.5, breath_color=1.2, formants=opening(280, 640, 1300), lp=2800,
+                attack=0.01, release=0.3, seed=3231), room=(1.2, 0.16), drive=2.0),
+            V(snort(0, 0.7, 0.16, 0.6, seed=3232),
+              P(0.12, "call", dur=0.5, f0=tr(0, 68, 1, 38), tilt=-7, sub=0.7, fry=0.55, fry_rate=9, fry_sharp=6,
+                breath=0.5, formants=opening(270, 620, 1250), lp=2800, attack=0.01, release=0.3, seed=3233),
+              room=(1.2, 0.16), drive=2.0),
+        ]),
+        "death": ("deep", 48, [
+            V(_rasp(0, tr(0, 46, 0.3, 48, 1, 26), 4.0, rate=tr(0, 9, 1, 3), amp=tr(0, 1, 0.7, 0.7, 1, 0.35),
+                    release=1.8, seed=3241),
+              exhale(3.4, 0.5, 1.3, 0.7, seed=3242), room=(2.0, 0.24), drive=1.5),
+        ]),
+        "step": ("ground", 24, step_set(38, 1.4, 0.4, 0.55)),
+    },
+
+    # ---- Majungasaurus: the short-tempered drummer. f0 55-85 Hz through a broad nose (nasal notch and a short
+    # tube), staccato: nasal chuffs and grunts in uneven bursts, and the inflated throat beaten like a drum; the
+    # temper (dome display, waterhole warning) is a drum roll that speeds up and ends in a snort.
+    "majungasaurus": {
+        "ambient": ("voice", 32, [
+            V(_chuff(0, 0.9, seed=3301), _chuff(0.16, 0.8, 1.1, seed=3302), _chuff(0.52, 0.85, seed=3303),
+              _grunt(0.8, tr(0, 78, 1, 66), 0.9, 0.42, seed=3304), room=(1.1, 0.15)),
+            V(*[_drum(t, 60 + 2 * i, 0.7 + 0.08 * i, seed=3305 + i) for i, t in enumerate((0, 0.45, 0.8, 1.05))],
+              room=(1.2, 0.16)),
+            V(P(0, "call", dur=1.2, f0=tr(0, 72, 0.5, 78, 1, 64), tilt=-7, sub=0.45, fry=0.5, fry_rate=20,
+                breath=0.2, formants=_NASAL, notch=(900, 260, 0.7), tube=(95, 0.5), attack=0.08, release=0.4,
+                seed=3310), _chuff(1.25, 0.8, seed=3311), room=(1.1, 0.15)),
+        ]),
+        "threat": ("voice", 48, [
+            V(_chuff(0, 1.0, seed=3321),
+              P(0.15, "call", dur=1.3, f0=tr(0, 82, 0.25, 130, 0.7, 112, 1, 90), tilt=-6, sub=0.6, fry=0.5,
+                fry_rate=28, breath=0.35, breath_color=0.8, formants=[(tr(0, 330, 0.3, 520, 1, 400), 200, 0),
+                                                                     (tr(0, 760, 0.3, 1150, 1, 900), 300, -5),
+                                                                     (2200, 600, -13)],
+                notch=(950, 280, 0.6), tube=(100, 0.45), lp=4000, attack=0.03, release=0.4, seed=3322),
+              _grunt(1.55, 92, 0.9, 0.22, seed=3323), _grunt(1.85, 86, 0.8, 0.22, seed=3324),
+              room=(1.4, 0.18), drive=2.3),
+            V(_grunt(0, 96, 0.9, 0.2, seed=3325), _grunt(0.26, 100, 0.9, 0.2, seed=3326),
+              P(0.55, "call", dur=1.0, f0=tr(0, 90, 0.3, 124, 1, 88), tilt=-6, sub=0.6, fry=0.55, fry_rate=26,
+                breath=0.35, formants=opening(480, 1100, 2100), notch=(950, 280, 0.6), lp=4000, attack=0.03,
+                release=0.35, seed=3327), room=(1.4, 0.18), drive=2.3),
+        ]),
+        # temper: the dome shown (dome_display, waterhole_threat, the carcass guard, the 8-block warning)
+        "temper": ("voice", 40, [
+            V(*[_drum(t, 54 + 3 * i, 0.45 + 0.08 * i, 0.18, seed=3331 + i)
+                for i, t in enumerate((0, 0.42, 0.74, 0.98, 1.16, 1.3, 1.42))],
+              _chuff(1.62, 1.0, 0.9, seed=3340), room=(1.3, 0.17), drive=1.6),
+            V(*[_drum(t, 56 + 2 * i, 0.5 + 0.07 * i, 0.17, seed=3341 + i)
+                for i, t in enumerate((0, 0.36, 0.64, 0.86, 1.04, 1.18))],
+              _grunt(1.36, 84, 1.0, 0.3, seed=3349), _chuff(1.62, 0.9, seed=3350), room=(1.3, 0.17), drive=1.6),
+        ]),
+        "hurt": ("voice", 24, [
+            V(_chuff(0, 0.8, 1.2, seed=3361),
+              P(0.06, "call", dur=0.3, f0=tr(0, 142, 1, 82), tilt=-6, sub=0.65, fry=0.4, fry_rate=30, breath=0.4,
+                formants=_NASAL, notch=(900, 260, 0.6), lp=4200, attack=0.006, release=0.16, seed=3362), drive=2.2),
+            V(P(0, "call", dur=0.26, f0=tr(0, 132, 1, 86), tilt=-6, sub=0.65, fry=0.45, fry_rate=28, breath=0.4,
+                formants=_NASAL, notch=(900, 260, 0.6), lp=4200, attack=0.006, release=0.14, seed=3363),
+              _grunt(0.3, 90, 0.7, 0.2, seed=3364), drive=2.2),
+        ]),
+        "death": ("voice", 32, [
+            V(*[_grunt(t, 92 - 9 * i, 0.9 - 0.12 * i, 0.3, seed=3371 + i) for i, t in enumerate((0, 0.38, 0.85))],
+              P(1.3, "call", dur=1.6, f0=tr(0, 70, 1, 34), tilt=-7, sub=0.55, fry=0.55, fry_rate=tr(0, 22, 1, 7),
+                breath=0.35, formants=_NASAL, tube=(95, 0.45), attack=0.05, release=0.9, amp=tr(0, 1, 1, 0.4),
+                seed=3375), room=(1.3, 0.18), drive=1.5),
+        ]),
+        "step": ("ground", 16, step_set(54, 1.0, 0.8, 0.38)),
+    },
+}
+OWN_SUBTITLES = {
+    ("daspletosaurus", "ambient"): ("Rosnado áspero", "Grinding growl", "Gruñido áspero"),
+    ("daspletosaurus", "threat"): ("Rosnado de dentes à mostra", "Bared-teeth growl", "Gruñido mostrando los dientes"),
+    ("daspletosaurus", "steal_roar"): ("Rugido de quem toma a carcaça", "Carcass-stealing roar", "Rugido para robar la carroña"),
+    ("daspletosaurus", "carcass_growl"): ("Rosnado sobre a carcaça", "Growl over the carcass", "Gruñido sobre la carroña"),
+    ("albertosaurus", "ambient"): ("Pio oco", "Hollow hoot", "Ululato hueco"),
+    ("albertosaurus", "threat"): ("Silvo e rosnado", "Hiss and snarl", "Siseo y gruñido"),
+    ("albertosaurus", "call_pack"): ("Chamado do bando", "Pack call", "Llamada de la manada"),
+    ("albertosaurus", "answer"): ("O bando responde", "The pack answers", "La manada responde"),
+    ("albertosaurus", "pant"): ("Ofego", "Panting", "Jadeo"),
+    ("carcharodontosaurus", "ambient"): ("Respiração rascante", "Rasping breath", "Respiración áspera"),
+    ("carcharodontosaurus", "threat"): ("Sopro de boca aberta", "Open-jawed hiss", "Bufido con las fauces abiertas"),
+    ("carcharodontosaurus", "tear_hiss"): ("Silvo ao rasgar", "Hiss as it tears", "Siseo al desgarrar"),
+    ("majungasaurus", "ambient"): ("Bufos nasais", "Nasal chuffs", "Resoplidos nasales"),
+    ("majungasaurus", "threat"): ("Rosnado nasal", "Nasal snarl", "Gruñido nasal"),
+    ("majungasaurus", "temper"): ("Tambor de garganta", "Throat drumming", "Tamborileo de garganta"),
+}
+
 # species that have no footsteps of their own in gen_species.py (their step sounds would be unused)
 _NO_STEPS = {"dilophosaurus", "velociraptor", "compsognathus", "oviraptor", "citipati", "gallimimus", "struthiomimus",
              "protoceratops"}
@@ -1020,7 +1323,7 @@ for _sid, (_arch, _prof) in SPECIES.items():
     _prof = dict(_prof)
     if _sid in _NO_STEPS:
         _prof["steps"] = False
-    VOICE_SETS[_sid] = species_voice(_arch, **_prof)
+    VOICE_SETS[_sid] = OWN_SETS[_sid] if _sid in OWN_SETS else species_voice(_arch, **_prof)
 
 # a soft low cut on every sound: the felt sub-bass stays, but the energy moves up where speakers can play it
 for _events in VOICE_SETS.values():
@@ -1091,7 +1394,9 @@ for _sid, _events in VOICE_SETS.items():
     _set = ARCHETYPE_OF[_sid]
     for _ev in _events:
         _key = (_sid, _ev)
-        if _ev == "ambient":
+        if _key in OWN_SUBTITLES:
+            SUBTITLES[_key] = OWN_SUBTITLES[_key]
+        elif _ev == "ambient":
             SUBTITLES[_key] = _AMBIENT[_set]
         elif _ev == "threat":
             SUBTITLES[_key] = _THREAT[_set]
@@ -1243,10 +1548,11 @@ except ImportError:  # gen_resources.py only needs SUBTITLES and runs without nu
 
 for _sid, _events in VOICE_SETS.items():
     if _ark is not None and _sid in _ark.P:
-        for _ev in _ark.EVENTS:
+        for _ev in tuple(_ark.EVENTS) + tuple(getattr(_ark, "EXTRA", {}).get(_sid, ())):
             if _ev in _events:
                 _fx, _dist, _ = _events[_ev]
-                _events[_ev] = (_fx, _dist, [("ark", _sid, _ev, _n) for _n in range(_ark.COUNT[_ev])])
+                _count = _ark.COUNT[_ev] if _ev in _ark.COUNT else _ark.EXTRA_COUNT
+                _events[_ev] = (_fx, _dist, [("ark", _sid, _ev, _n) for _n in range(_count)])
 
 
 # ---------------------------------------------------------------- passos e asas no estilo ARK (2026-11)

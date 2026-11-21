@@ -134,8 +134,7 @@ Quatro rodadas; a última com o código final (`TERRASSIC_GAIT_ONLY=albertosauru
   para ver no relatório se foi o vencedor que voltou nele ou outro bicho do teste; o piloto não teve isso. Olhar no
   próximo teste (a rendição é genérica, `DinosaurEntity.submitTo`).
 - **Gancho da perseguição**: trocar o contorno por um `chaseLimit()` no `DinosaurEntity`.
-- **O chamado usa a voz de ameaça** (`roarSound()` é gerado na classe da espécie); o chamado próprio fica para as
-  vozes novas.
+- ~~O chamado usa a voz de ameaça~~: resolvido na 1.11 (`ApexTheropod.roarVoice`, `ALBERTOSAURUS_CALL_PACK`).
 - **Jovens listrados e mais claros** (cor de folhiço, no estudo): a textura é uma só por sexo; um jovem com pele
   própria precisa de suporte no renderizador.
 - **Batida em mundo gerado**: o teste usa um bando invocado; o spawn natural do bando (dois adultos e dois jovens) só
@@ -143,9 +142,9 @@ Quatro rodadas; a última com o código final (`TERRASSIC_GAIT_ONLY=albertosauru
   de predadores adultos, e o arquivo está com a outra frente).
 - **Regra da luz** (B6), **gomos e silhueta** (item 4) e a falha do `gen_species.py` fora da faixa de densidade: como no
   piloto, ficam para o próximo patch.
-- Ovo e ninho continuam com o desenho gerado (só a cor do ovo-bloco mudou para a do bicho); o ninho na borda da mata
-  de coníferas não foi feito.
-- Vozes antigas, não ouvidas no jogo.
+- Ovo e ninho próprios na 1.11 (`alberto_extras.py`, `previews/ovo_ninho.png`): leque de ovos manchados num crescente
+  de agulhas de conífera. Conferir no jogo.
+- Vozes próprias na 1.11 (o corredor que pia; `call_pack`, `answer`, `pant`): `vozes/VOZES.md`. Ainda não ouvidas.
 - As abas da sela não aparecem nas prévias (a face de fora fica de fora, `faces=out("east", ...)`), igual ao piloto do
   Daspletossauro: conferir no jogo e, se for o caso, corrigir nos dois.
 - O Guia de Bolso agora lista a sela própria do Daspletossauro e do Albertossauro no tópico "Montaria".

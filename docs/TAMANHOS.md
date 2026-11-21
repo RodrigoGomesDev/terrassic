@@ -31,13 +31,13 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Deinosuchus (v0.5) | 10,6 m bem medidos (Cossette & Brochu 2020), até 12 m em estimativas antigas (Schwimmer 2002) | novo | **12,0 x 1,6** | 2,6 x 1,4 | 20% |
 | Baurusuchus (v0.5) | ~3,5 m (Carvalho, Campos & Nobre 2005), crocodilomorfo terrestre de pernas eretas | novo | **3,5 x 1,0** | 1,0 x 1,0 | 30% |
 | Edmontosaurus (v0.6) | 12 m, ~4 t (E. annectens; Campione & Evans 2011; espécimes maiores reivindicados) | novo | **12,0 x 3,6** | 2,4 x 3,6 | 20% |
-| Corythosaurus (v0.6) | 9 m, 3-4 t (Evans et al. 2009), crista em elmo | novo | **9,0 x 3,3** | 2,0 x 3,3 | 20% |
+| Corythosaurus (v0.6; refeito na 1.11.0) | ~9 m em média (Benson et al. 2012); AMNH 5240 com 8,1 m e 3,1 t (Seebacher 2001); 8 m e 2,8 t para *C. casuarius* (Paul 2016). 9 m = o topo (resposta do Rodrigo em 10/11/2026); elmo em meia-lua um pouco maior no macho (decisão do estudo 15) | refeito | **9,0 x 4,2** com o elmo (165 px a 16,94 px/m, escala 0,925, 17,3 texels por bloco) | 1,9 x 3,4 | 18% |
 | Styracosaurus (v0.6) | 5-5,5 m, ~2,7 t (Ryan et al. 2007), chifre nasal 57 cm | novo | **5,5 x 2,9** (com espinhos) | 1,6 x 2,9 | 30% |
 | Euoplocephalus (v0.6) | 5,5-6 m, ~2,5 t (Arbour & Currie 2013; Paul 2010), 2 m de largura | novo | **6,0 x 1,7** | 2,0 x 1,8 | 30% |
 | Protoceratops (v0.6) | 1,8-2,5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011) | novo | **2,0 x 0,8** | 0,7 x 0,8 | 50% |
 | Struthiomimus (v0.6) | 4,3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985) | novo | **4,3 x 2,5** (cabeça erguida) | 1,0 x 2,4 | 35% |
-| Thescelosaurus (v0.6) | 3,5-4 m, ~250-300 kg (Boyd 2014) | novo | **4,0 x 1,6** | 1,0 x 1,6 | 35% |
-| Pachyrhinosaurus (v0.6) | 6-8 m, ~4 t (Currie et al. 2008) | novo | **8,0 x 4,2** (com chifres do escudo) | 2,4 x 3,6 | 30% |
+| Thescelosaurus (v0.6; refeito na 1.11.0) | 2,5 a 4,0 m (Galton 1974), 200 a 300 kg (Erickson 2003); *T. garbanii* 4 a 4,5 m (Morris 1976) é espécie discutida (Galton 1995). 4 m = o topo de *T. neglectus* (resposta do Rodrigo em 10/11/2026) | refeito | **4,0 x 2,4** com o pescoço erguido (73,5 px, escala 0,922, 17,4 texels por bloco) | 0,95 x 2,2 | 30% |
+| Pachyrhinosaurus (v0.6; refeito na 1.11.0) | *P. canadensis* de 6 a 8 m e 3 a 4 t (Holtz 2011; Brusatte 2013; Paul 2016); *P. lakustai* e *P. perotorum* menores, ~5 m e ~2 t (Paul 2016). 8 m = o topo, a espécie-tipo *P. canadensis* (resposta do Rodrigo em 10/11/2026) | refeito | **8,0** (silhueta "bisão" a 16,94 px/m; altura e escala finais no build do modelo) | 2,6 x 3,9 (provisório) | 20% |
 | Therizinosaurus (v0.6) | 9-10 m, ~5 t (Zanno 2010; Paul 2010), garras de 52 cm | novo | **10,0 x 6,4** (pescoço erguido) | 2,4 x 5,0 | 20% |
 | Deinocheirus (v0.6) | 11 m, ~6,4 t (Lee et al. 2014), braços de 2,4 m | novo | **11,0 x 6,1** (pescoço erguido) | 2,4 x 4,8 | 20% |
 | Alamosaurus (v0.6) | 26-30 m, 30-80 t (Fowler & Sullivan 2011) | novo | **30,0 x 13,4** (cabeça erguida) | 5,0 x 9,0 | 10% |
@@ -64,7 +64,7 @@ Comparação visual: `art/tamanhos/comparacao_tamanhos.png` (cor = novo, sombra 
 | Basilemys (v0.7, 2x) | casco de 1-1,3 m, ~1,7 m com cabeça e cauda (Brinkman 1998; Mallon & Brinkman 2011) | novo | **1,7 x 0,49** | 0,9 x 0,5 | 40% |
 | Enchodus (v0.7, 5x) | a maioria das espécies 0,5-1 m, E. petrosus 1,5 m (Goody 1976; Everhart 2005) | novo | **0,8 x 0,25** | 0,4 x 0,3 | 40% |
 | Lepisosteus (v0.7, 5x) | gares de Hell Creek ~1-1,2 m (Grande 2010; Brinkman et al. 2014) | novo | **1,0 x 0,23** | 0,4 x 0,3 | 40% |
-| Maiasaura (v0.3) | 7-9 m, ~3 t | novo | **9,0 x 2,8** | 2,0 x 2,8 | 20% |
+| Maiasaura (v0.3; refeito na 1.11.0) | até ~9 m e ~4 t (Wosik et al. 2020); dois grupos de tamanho, um ~45% maior, lidos como dimorfismo sexual (Saitta et al. 2020; só no Guia, a variação individual fica 0,94-1,06). 9 m = o topo (resposta do Rodrigo em 10/11/2026); filhote de ~41 cm ao sair do ovo, ~147 cm com um ano (Bert et al. 2025) | refeito | **9,0 x 2,8** (160 px a 16,94 px/m, escala 0,955, 16,8 texels por bloco) | 2,0 x 2,6 | 15% |
 | Quetzalcoatlus (v0.4) | envergadura 10-11 m (Witton & Habib 2010; Andres & Langston 2021), ~5 m de altura em pé | novo | **11 de envergadura** x ~6,8 em pé | 2,5 x 5,0 | 25% |
 | Hatzegopteryx (v0.4) | envergadura 10-12 m (Buffetaut et al. 2002; Naish & Witton 2017), crânio ~3 m e meio metro de largura | novo | **12 de envergadura** x ~5,7 em pé | 2,5 x 4,6 | 25% |
 | Ichthyornis (v0.4) | envergadura ~60 cm, corpo ~25 cm (Clarke 2004; Field et al. 2018), ave do tamanho de um trinta-réis | novo | **0,66 de envergadura** x 0,3 | 0,4 x 0,4 | 50% |

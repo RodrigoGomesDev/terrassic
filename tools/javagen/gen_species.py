@@ -20,7 +20,7 @@ PARTS_SPECIES = {
     "tyrannosaurus", "carnotaurus", "giganotosaurus", "protoceratops", "spinosaurus", "velociraptor", "pteranodon",
     "triceratops", "gallimimus", "pachycephalosaurus", "parasaurolophus", "ankylosaurus", "mosasaurus", "styracosaurus", "deinosuchus", "elasmosaurus",
     "therizinosaurus", "quetzalcoatlus", "edmontosaurus", "dakotaraptor", "daspletosaurus", "albertosaurus", "carcharodontosaurus",
-    "majungasaurus",
+    "majungasaurus", "maiasaura", "corythosaurus", "thescelosaurus", "pachyrhinosaurus",
 }
 
 # In-game size of each species, in metres: the player (1.8 blocks) is a 1.70 m person, so a metre is METRE blocks (below).
@@ -55,9 +55,11 @@ SIZES = {
     # study and rig (page "Estiracossauro: estudo para a 1.8"); the hitbox covers the body (the hips at 1.9 m), the hit
     # parts the crown.
     "styracosaurus":      dict(real=5.5,  scale=0.5,  w=1.6, h=2.0, baby=0.3,  shadow=1.4),
-    # Pachyrhinosaurus canadensis: 6-8 m, ~4 t (Currie et al. 2008); the heavy polar centrosaurine.
-    # Pachyrhinosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "pachyrhinosaurus":   dict(real=8.0,  scale=1.0,  w=2.4, h=3.6, baby=0.3,  shadow=2.0),
+    # Pachyrhinosaurus canadensis: 6-8 m, 3-4 t (Holtz 2011; Brusatte 2013; Paul 2016); 8 m = the top (Rodrigo,
+    # 10/11/2026). v4 (1.11.0, study 15, the "bisão" silhouette) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown
+    # at ~1 (137.5 px long, 16.2 texels per block): a huge hump over the shoulders (5.3 m), the back stepping down to a
+    # short tail, the ram's head hanging low; the hitbox covers the barrel and the hump.
+    "pachyrhinosaurus":   dict(real=8.0,  scale=0.931, w=2.4, h=4.2, baby=0.2,  shadow=1.8),
     # Protoceratops andrewsi: 1.8-2.5 m, 60-180 kg (Dodson 1976; Fastovsky et al. 2011). Modelled at 2x.
     # Protoceratops v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     # Protoceratops v1 (01/11) is hand-made at 48 px/m and shown at its real 1.9 m (16 / 48 = 1/3), its own study and rig.
@@ -149,25 +151,34 @@ SIZES = {
     # 32 px/m and shown at its real 4.5 m (16 / 32 = 0.5), its own study and rig (the growth series: the baby shows the
     # young's spikes, the adult the dome); the hitbox is kept.
     "pachycephalosaurus": dict(real=4.5,  scale=0.5,  w=1.0, h=1.9, baby=0.4,  shadow=0.8),
-    # Thescelosaurus neglectus: 3.5-4 m, ~250-300 kg (Boyd 2014); a stout digger, modelled at 1.25x.
-    # Thescelosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "thescelosaurus":     dict(real=4.0,  scale=0.76, w=1.0, h=1.6, baby=0.35, shadow=0.8),
+    # Thescelosaurus neglectus: 2.5 to 4.0 m (Galton 1974), 200 to 300 kg (Erickson 2003); the top, 4 m.
+    # Thescelosaurus v4 (16/11, the 1.11.0, silhouette A "tipo ave") is hand-made at ~17.4 texels per block (73.5 px for
+    # 4 m): the short trunk pitched up like a ground bird's, the neck in an S, the stiff tail as long as the rest.
+    "thescelosaurus":     dict(real=4.0,  scale=0.871, w=0.9, h=2.1, baby=0.3,  shadow=0.7),
     # Gallimimus bullatus: 6 m, ~440 kg (Osmolska et al. 1972; Paul 2010). Gallimimus v1 (02/11) is hand-made at
     # 32 px/m and shown at its real 6 m (16 / 32 = 0.5), its own study and rig; the hitbox is kept.
     "gallimimus":         dict(real=6.0,  scale=0.5,  w=1.2, h=2.6, baby=0.35, shadow=0.9),
     # Struthiomimus altus: 4.3 m, ~150 kg (Osborn 1917; Nicholls & Russell 1985), the lighter ostrich mimic.
     # Struthiomimus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     "struthiomimus":      dict(real=4.3,  scale=0.81, w=1.0, h=2.4, baby=0.35, shadow=0.8),
-    # Maiasaura v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "maiasaura":          dict(real=9.0,  scale=0.83, w=2.0, h=2.8, baby=0.2,  shadow=1.6),
+    # Maiasaura peeblesorum: 9 m, the top (up to ~9 m and ~4 t, Wosik et al. 2020; Rodrigo 10/11/2026: as it is).
+    # Maiasaura v1 (10/11, the 1.11.0, study 15) is hand-made at skin2.PX_PER_M (16.94 px/m) and shown at ~1 (16.8
+    # texels per block, 160 px long); the calf is small (a hatchling of ~41 cm grew to ~1.5 m in its first year,
+    # Bert et al. 2025; 0.15 of the adult keeps it visible) and walks on two legs.
+    # Maiasaura v4 (16/11, silhueta C "a mãe empinada"): at rest half-reared on the hind legs and the tail, 169 px from
+    # the bill to the tail tip at rest (9 m at 0.90, 17.7 texels per block), 5 m tall; on all four when it walks.
+    "maiasaura":          dict(real=9.0,  scale=0.90,  w=2.0, h=3.2, baby=0.15, shadow=1.7),
     # Edmontosaurus annectens: 12 m, ~4 t (Campione & Evans 2011); the hadrosaur rig scaled up from the Maiasaura.
     # Edmontosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
     # Edmontosaurus v1 (06/11/2026, the 1.9) is hand-made at 20 px/m and shown at its real 12 m (16 / 20 = 0.8), its own
     # study and rig (page "1.9: estudos..."); the hitbox covers the body, the hit parts the long head and the tail.
     "edmontosaurus":      dict(real=12.0, scale=0.8, w=2.4, h=3.2, baby=0.2,  shadow=2.0),
-    # Corythosaurus casuarius: 9 m, 3-4 t (Evans et al. 2009); the hadrosaur rig at the Maiasaura scale.
-    # Corythosaurus v2x is modelled at 2x (16 px = 1 m), see docs/TAMANHOS.md.
-    "corythosaurus":      dict(real=9.0,  scale=0.83, w=2.0, h=3.3, baby=0.2,  shadow=1.6),
+    # Corythosaurus casuarius: ~9 m on average (Benson et al. 2012; Rodrigo 10/11/2026: as it is, the top).
+    # Corythosaurus v4 (16/11, the 1.11.0, the silhouette Rodrigo chose: B "leque alto") is hand-made at
+    # skin2.PX_PER_M (16.94 px/m) and shown at ~1 (17.1 texels per block, 163 px long, 9.4 m tall to the fan's tip):
+    # the trunk pitched up on long forelegs, the neck almost upright, the fan over the forest. The hitbox is kept
+    # (it walks under branches; the hit parts cover the neck and the head).
+    "corythosaurus":      dict(real=9.0,  scale=0.925, w=1.9, h=3.4, baby=0.18, shadow=1.5),
     # Pteranodon: "real" is the wingspan (largest males ~7.25 m). GAME EXCEPTION (Rodrigo 2026-10-24, so the rider
     # fits): drawn 1.5x real, ~10.8 m wingspan and 3 m standing, still below the azhdarchids (11 and 12 m).
     # v3 is modelled at 2x (16 px = 1 m) like the T. rex.
@@ -302,7 +313,7 @@ WORLD = {
     "compsognathus":      dict(biomes=("forest", "jungle"), weight=8, group=(3, 6), track=8),
     "triceratops":        dict(biomes=("savanna", "plains"), weight=6, group=(2, 4), track=10),
     "styracosaurus":      dict(biomes=("savanna", "plains", "forest"), weight=5, group=(2, 5), track=10),  # herds at the forest edge
-    "pachyrhinosaurus":   dict(biomes=("taiga", "hill", "forest"), weight=4, group=(2, 5), track=10),     # cold country herds
+    "pachyrhinosaurus":   dict(biomes=("taiga", "hill", "forest"), weight=4, group=(4, 8), track=10),     # cold country herds with calves (the ring)
     "protoceratops":      dict(biomes=("desert", "badlands", "savanna"), weight=7, group=(2, 5), track=8),    # dunes and dry scrub
     "leptoceratops":      dict(biomes=("plains", "forest", "savanna"), weight=9, group=(3, 5), track=8),     # the "pig" of the undergrowth, small herds
     "stegosaurus":        dict(biomes=("forest", "plains"), weight=4, group=(1, 3), track=10),
@@ -335,12 +346,12 @@ WORLD = {
     "lepisosteus":        dict(biomes=("river", "swamp", "coast"), weight=10, group=(2, 4), track=8),              # the gar of the rivers and deltas
     "parasaurolophus":    dict(biomes=("plains", "forest"), weight=5, group=(2, 5), track=10),
     "pachycephalosaurus": dict(biomes=("taiga", "hill"), weight=4, group=(2, 3), track=8),
-    "thescelosaurus":     dict(biomes=("forest", "plains", "swamp"), weight=5, group=(2, 4), track=8),     # the undergrowth
+    "thescelosaurus":     dict(biomes=("forest", "swamp", "river"), weight=5, group=(2, 4), track=8),     # the undergrowth, the swamp and the river bank (study 15)
     "gallimimus":         dict(biomes=("savanna", "plains", "desert"), weight=6, group=(3, 6), track=10),
     "struthiomimus":      dict(biomes=("plains", "savanna", "forest"), weight=6, group=(3, 6), track=10),   # flocks on the floodplain
-    "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(3, 6), track=10),   # nesting colonies
+    "maiasaura":          dict(biomes=("plains", "savanna"), weight=4, group=(6, 12), track=10),  # big herds of the open uplands; colonies (gen_structures)
     "edmontosaurus":      dict(biomes=("plains", "forest", "savanna"), weight=6, group=(4, 8), track=10),  # big herds
-    "corythosaurus":      dict(biomes=("forest", "plains"), weight=5, group=(3, 6), track=10),            # wooded floodplains
+    "corythosaurus":      dict(biomes=("forest", "swamp"), weight=5, group=(4, 8), track=10),             # the forest and the swamp edge, rarely the open plain
     "pteranodon":         dict(biomes=("coast",), weight=8, group=(2, 4), track=10),
     "quetzalcoatlus":     dict(biomes=("plains", "savanna", "badlands"), weight=3, group=(1, 2), track=12),  # stalks open country
     "hatzegopteryx":      dict(biomes=("hill", "forest"), weight=2, group=(1, 1), track=12),                 # island top predator
@@ -426,11 +437,12 @@ SPECIES = [
       xp=16, rideable=True, jump=0.5, ride_offset=3.44, ride_forward=1.59, ride_speed=1.1, trample=True,
       saddle="STYRACOSAURUS_SADDLE", rig="Centrosaurine"),
  dict(id="pachyrhinosaurus", cls="Pachyrhinosaurus", base="HerbivoreDinosaur",
-      doc="Pachyrhinosaurus canadensis - 8 m horned herbivore of the cold north with a bony boss instead of a nose horn. Territorial: gores with the boss. Its musk calms the herbivores around it and draws the predators onto itself. Tamed with plants; rideable, breaks the brush in its way.",
-      attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=20),
+      doc="Pachyrhinosaurus canadensis - the bossed centrosaurine of the cold north (Horseshoe Canyon, Alberta; late Campanian to early Maastrichtian), 8 m, built like a bison: a huge hump over the shoulders, the back stepping down to a short tail, short legs under a barrel body, and a ram's head carried low with a flat rough boss of horn on the snout instead of a nose horn and two hooks curving off a short frill. The defence ring: when a big predator comes near, the grown ones of the herd do not run nor charge one by one, they close a ring facing out with the calves and the wounded in the middle, and only the one the predator comes closest to breaks out for a short butt of the boss and goes back (the musk ox; a hypothesis). Two males butt boss to boss and push brow to brow until one gives in. The herbivore that migrates: the herd waits on the bank, the leader wades in first and the others follow together. Digs the snow for the plants under it. Territorial in the herd: whoever comes near the calves gets the boss. Rideable with its own pack saddle; ridden or charging it breaks the brush in its way. Behaviour in Pachyrhinosaurine.",
+      attrs=dict(MAX_HEALTH=120, MOVEMENT_SPEED=0.21, ATTACK_DAMAGE=11, ATTACK_KNOCKBACK=2.4, ARMOR=9, KNOCKBACK_RESISTANCE=0.85, FOLLOW_RANGE=24),
       food="Items.WHEAT, Items.FERN, Items.LARGE_FERN, Items.SWEET_BERRIES",
       sounds=("RAVAGER_AMBIENT", "RAVAGER_HURT", "RAVAGER_DEATH", 1.1, 1.0, 300), step=("RAVAGER_STEP", 0.6, 0.8),
-      xp=22, rideable=True, jump=0.45, ride_offset=2.95, ride_forward=0.2, ride_speed=1.05, trample=True, musk=True),
+      xp=22, rideable=True, jump=0.45, ride_offset=5.34, ride_forward=-0.66, ride_speed=1.05, trample=True,
+      saddle="PACHYRHINOSAURUS_SADDLE", rig="Pachyrhinosaurine"),
  dict(id="protoceratops", cls="Protoceratops", base="HerbivoreDinosaur",
       doc="Protoceratops andrewsi - sheep-sized frilled herbivore of the dunes. Bites back when bothered. Digs in soft ground: a tame one turns up roots, bones and shallow fossils.",
       attrs=dict(MAX_HEALTH=24, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ATTACK_KNOCKBACK=0.5, ARMOR=3, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=16),
@@ -644,10 +656,10 @@ SPECIES = [
       food="Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.APPLE",
       sounds=("GOAT_AMBIENT", "GOAT_HURT", "GOAT_DEATH", 0.7, 1.0, 240), xp=10, run=0.02, rig="Pachycephalosaurid"),
  dict(id="thescelosaurus", cls="Thescelosaurus", base="HerbivoreDinosaur",
-      doc="Thescelosaurus neglectus - 4 m stout ornithopod of the undergrowth, nose to the ground. Bites back when cornered. Roots in soft soil: a tame one turns up roots and tubers.",
-      attrs=dict(MAX_HEALTH=34, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ATTACK_KNOCKBACK=0.6, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=16),
-      food="Items.CARROT, Items.POTATO, Items.BEETROOT, Items.FERN",
-      sounds=("PIG_AMBIENT", "PIG_HURT", "PIG_DEATH", 0.75, 1.0, 260), xp=9, run=0.02, dig="tubers"),
+      doc="Thescelosaurus neglectus - the small ornithopod of the Hell Creek undergrowth (Maastrichtian), 4 m: a short trunk carried up like a ground bird's, the neck in an S, thick thighs over long shins, a stiff tail as long as the rest; a long low head with a big eye under a bar of bone, cheek plates and real teeth at the tip of the snout. Wary prey: at 16 blocks from a predator or a player it FREEZES, then BOLTS in zigzag with the pale tail flag up into the thickest cover and hides lying flat, peeking until the danger is gone; the others see the flag and run too. A keen nose: it smells a predator at 24 blocks without seeing it, sniffs the ground and the air. It digs a burrow in a bank of earth or sand and sleeps in it, and lays its eggs at the end of it (a hypothesis). Cornered, it bites and kicks. Tamed with plants, not rideable: a tame one follows its owner and digs up roots and tubers. Behaviour in Thescelosaurine.",
+      attrs=dict(MAX_HEALTH=34, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=5, ATTACK_KNOCKBACK=0.6, ARMOR=2, KNOCKBACK_RESISTANCE=0.2, FOLLOW_RANGE=24),
+      food="Items.CARROT, Items.POTATO, Items.BEETROOT, Items.FERN, Items.SWEET_BERRIES",
+      sounds=("PIG_AMBIENT", "PIG_HURT", "PIG_DEATH", 0.75, 1.0, 260), xp=9, rig="Thescelosaurine"),
  dict(id="gallimimus", cls="Gallimimus", base="HerbivoreDinosaur",
       doc="Gallimimus bullatus - ostrich-like ornithomimid, the fastest dinosaur. Flocks flee from players and predators. A very fast mount when tamed.",
       attrs=dict(MAX_HEALTH=30, MOVEMENT_SPEED=0.36, ATTACK_DAMAGE=3, FOLLOW_RANGE=20),
@@ -662,11 +674,12 @@ SPECIES = [
       sounds=("CHICKEN_AMBIENT", "CHICKEN_HURT", "CHICKEN_DEATH", 0.7, 1.1, 200), xp=8, run=0.03,
       fights=False, rideable=True, jump=0.9, ride_offset=1.85, ride_forward=0.2, ride_speed=1.45),
  dict(id="maiasaura", cls="Maiasaura", base="HerbivoreDinosaur",
-      doc="Maiasaura peeblesorum - the \"good mother\" hadrosaur. Lives in nesting colonies; babies of any species near an adult grow twice as fast. Rideable when tamed.",
-      attrs=dict(MAX_HEALTH=65, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=5, ARMOR=3, KNOCKBACK_RESISTANCE=0.4, FOLLOW_RANGE=20),
+      doc="Maiasaura peeblesorum - the \"good mother\" hadrosaur of the Two Medicine uplands (Campanian), 9 m: a short deep head with a broad drooping bill and a solid hump of bone in front of the eyes, a heavy quadruped when grown, the young on two legs. Nests in colonies: a mother keeps her nest as her home, covers the eggs with leaves (covered eggs hatch faster), feeds the calf that stays in the nest and grows only when fed (feeding it starts taming it); the whole colony defends eggs and young, and draws egg thieves at night. Out of a colony, a big herd that runs in a block at the alarm. Rideable with its own nesting-ground saddle. Behaviour in Maiasaurine.",
+      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.25, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.5, FOLLOW_RANGE=22),
       food="Items.WHEAT, Items.FERN, Items.SWEET_BERRIES",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
-      rideable=True, jump=0.6, ride_offset=2.55, ride_forward=0.8, ride_speed=1.05, call=True, nurse=True),
+      rideable=True, jump=0.5, ride_offset=2.6, ride_forward=1.15, ride_speed=1.05,
+      saddle="MAIASAURA_SADDLE", rig="Maiasaurine"),
  dict(id="edmontosaurus", cls="Edmontosaurus", base="HerbivoreDinosaur",
       doc="Edmontosaurus annectens - 12 m flat-headed duckbill, the biggest of the hadrosaurs, grazing in large herds on the plains. Tamed with plants; a steady riding and pack mount (the cargo inventory arrives with the v0.6 systems).",
       attrs=dict(MAX_HEALTH=90, MOVEMENT_SPEED=0.24, ATTACK_DAMAGE=6, ARMOR=3, KNOCKBACK_RESISTANCE=0.6, FOLLOW_RANGE=24),
@@ -675,11 +688,12 @@ SPECIES = [
       rideable=True, jump=0.5, ride_offset=3.91, ride_forward=1.87, ride_speed=1.0, call=True,
       saddle="EDMONTOSAURUS_SADDLE", rig="Saurolophine"),
  dict(id="corythosaurus", cls="Corythosaurus", base="HerbivoreDinosaur",
-      doc="Corythosaurus casuarius - 9 m helmet-crested duckbill of the wooded floodplains. Its deep call calms every herbivore around it (they stop panicking and heal a little). Tamed with plants; rideable.",
-      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.26, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=20),
-      food="Items.WHEAT, Items.FERN, Items.APPLE, Items.SWEET_BERRIES",
+      doc="Corythosaurus casuarius - the helmet-crested lambeosaurine of the Dinosaur Park forests (Campanian), 9 m, the peacock of the forest: a fan-shaped helmet swept back like a cockatoo's crest over a short narrow beak, a big eye, the trunk pitched up on long forelegs, the neck almost upright and a sail of tall spines on the back. The voice and the ear of the forest: its deep call through the helmet is heard by its kind at 64 blocks (the lost come back, the alarm sends every herd near running, the herbivores near calm down and heal a little); it hears a predator on the move at 24 blocks without seeing it; catemeral, it naps in short shifts by day and by night with one of the herd always awake; it plucks berries and rears to fruit; two males show the helmet in profile, never fighting. Wary, it strikes back only cornered. Fruit tames it faster than wheat. The fastest hadrosaur to ride, with its own forest saddle. Behaviour in Corythosaurine.",
+      attrs=dict(MAX_HEALTH=70, MOVEMENT_SPEED=0.27, ATTACK_DAMAGE=4, ARMOR=2, KNOCKBACK_RESISTANCE=0.3, FOLLOW_RANGE=24),
+      food="Items.APPLE, Items.SWEET_BERRIES, Items.GLOW_BERRIES, Items.FERN, Items.WHEAT",
       sounds=("CAMEL_AMBIENT", "CAMEL_HURT", "CAMEL_DEATH", 0.6, 1.6, 260), xp=12,
-      fights=False, rideable=True, jump=0.6, ride_offset=2.55, ride_forward=0.8, ride_speed=1.1, call=True, calm=True),
+      rideable=True, jump=0.6, ride_offset=5.23, ride_forward=1.55, ride_speed=1.25,
+      saddle="CORYTHOSAURUS_SADDLE", rig="Corythosaurine"),
  # ---- flyers (FlyingDinosaur: flying navigation, no fall damage, ridden flight)
  dict(id="pteranodon", cls="Pteranodon", base="FlyingDinosaur",
       doc="Pteranodon longiceps - big crested pterosaur that fishes along the coast. Tamed by hand-feeding fish; the first flying mount (light and fast).",
@@ -887,7 +901,7 @@ def gen(s, bounds):
         extras.append("scent")
     if s.get("scoop"):
         extras.append("fish")
-    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur"):
+    if s.get("apex") or s.get("rig") in ("Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine", "Thescelosaurine", "Pachyrhinosaurine"):
         pass  # the rig lists the whole set of its own
     elif base == "PredatorDinosaur" and extras:
         body.append("    @Override\n    protected String[] extraActions() {\n        return new String[]{%s};\n    }\n" % ", ".join(f'"{e}"' for e in extras))
@@ -1131,7 +1145,7 @@ def gen(s, bounds):
         body.append("    @Override\n    public DinoPart.Spec[] partSpecs() {\n        return PARTS;\n    }\n")
         body.append(f"    @Override\n    public float partPivot() {{\n        return {round(pivot_f * k, 3)}F;\n    }}\n")
         body.append(f"    @Override\n    public float partPivotUp() {{\n        return {round(pivot_u * k, 3)}F;\n    }}\n")
-    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur"):
+    if s.get("rig") in ("Raptor", "Protoceratopsid", "Triceratopsine", "Ornithomimid", "Pachycephalosaurid", "Lambeosaurine", "Ankylosaurid", "Centrosaurine", "Crocodylian", "Plesiosaurid", "Therizinosaurid", "Saurolophine", "Eudromaeosaur", "Maiasaurine", "Corythosaurine", "Thescelosaurine", "Pachyrhinosaurine"):
         body.append("    @Override\n    protected float modelScale() {\n        return MODEL_SCALE;\n    }\n")
     if s.get("apex"):
         # ApexTheropod roars (timed to the jaws) and needs the model scale and the voice

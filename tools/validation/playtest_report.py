@@ -24,7 +24,7 @@ def check(name, ok, detail):
 
 
 places = re.findall(r"== Place (\d+): ([^\n]+)", text)
-check("lugares visitados", len(places) >= 10, f"{len(places)} de 10")
+check("lugares visitados", len(places) >= 10, f"{len(places)} de 10 (mais a Colônia e 4 habitats na 1.11)")
 met = [int(x) for x in re.findall(r"animals met: (\d+)", text)]
 check("bichos em todo lugar", met and min(met) >= 8, f"mínimo {min(met) if met else 0} por lugar")
 species = set()
@@ -46,6 +46,26 @@ check("ninguém dentro de bloco", walls == 0, f"{walls}")
 hops = sum(int(x) for x in re.findall(r"hopping in water (\d+)", text))
 check("ninguém quicando na água", hops == 0, f"{hops}")
 
+floats = sum(int(x) for x in re.findall(r"\| floating (\d+)", text))
+check("ninguém flutuando (física de bicho parado)", floats == 0,
+      f"{floats}: " + " | ".join(p[:140] for p in problems if "floating" in p)[:400])
+
+# 1.11.0: the four remade herbivores in the world
+m = re.search(r"== Nest Colony: ([^\n]+)", text)
+check("Colônia de Ninhos achada", m is not None and "NOT FOUND" not in m.group(1), m.group(1) if m else "sem medida")
+m = re.search(r"colony: (\d+) maiasaura eggs in the nests \((\d+) covered\), (\d+) maiasaura within 48 blocks", text)
+check("ninhos do Maiassauro na Colônia", m is not None and int(m.group(1)) >= 4 and int(m.group(3)) >= 1, m.group(0) if m else "sem medida")
+m = re.search(r"== New herbivores met on the whole tour: ([^\n]+)", text)
+if m:
+    for kv in m.group(1).split("(")[0].split():
+        sp, n = kv.split("=")
+        check(f"nasce no mundo: {sp}", int(n) >= 1, f"{n} vistos")
+else:
+    check("herbívoros novos no mundo", False, "sem medida")
+for edge, big, nf, p95, rmax, nr in re.findall(r"lod crossing (\d+) blocks: largest frame change ([\d.]+) \((\d+) frames\); round it p95 ([\d.]+), largest ([\d.]+) \((\d+) frames\)", text):
+    ok = int(nf) > 0 and float(big) <= max(1.5 * float(rmax), 0.02)
+    check(f"LOD sem pulo a {edge} blocos", ok, f"{float(big):.4f} no cruzamento, até {float(rmax):.4f} em volta ({nf}/{nr} quadros)")
+
 sleepers = [int(x) for x in re.findall(r"closest sleeper to a hunter (\d+)", text)]
 check("à noite alguém dormiu", bool(sleepers), f"{len(sleepers)} lugares de noite com dorminhoco")
 near = re.findall(r"PROBLEM asleep near a hunter: ([^\n]+)", text)
@@ -58,7 +78,7 @@ check("herbívoro que foge nunca bate", not bad, ", ".join(bad))
 
 try:
     lines = open(log, encoding="utf-8", errors="replace").read().splitlines()
-    fired = Counter(re.search(r"\[(\w+)\] ([a-z ]+)", l).group(0)[:40] for l in lines if re.search(r"\[(eco|dasp|alberto|carcharo|majunga)\] ", l))
+    fired = Counter(re.search(r"\[(\w+)\] ([a-z ]+)", l).group(0)[:40] for l in lines if re.search(r"\[(eco|dasp|alberto|carcharo|majunga|maia|cory|pachy|thesc)\] ", l))
     # an exception the mod logs as an error or a crash; the known INFO notice "era filter not active
     # (FileNotFoundException ...)" is not one
     crashes = [l for l in lines if "Exception" in l and "terrassic" in l.lower()
@@ -66,6 +86,13 @@ try:
     check("sem exceção do mod no log", not crashes, " | ".join(c[:120] for c in crashes[:3]))
     for k, n in sorted(fired.items()):
         results.append((f"disparou {k}", True, str(n)))
+    for tag, name in (("maia", "Maiassauro"), ("cory", "Coritossauro"), ("pachy", "Paquirrinossauro"), ("thesc", "Tescelossauro")):
+        n = sum(1 for l in lines if f"[{tag}] " in l)
+        check(f"comportamento do {name} no mundo", n > 0, f"{n} linhas [{tag}] no log")
+    burrows = [l for l in lines if "[thesc] " in l and "burrow" in l]
+    check("toca do Tescelossauro no mundo", bool(burrows), f"{len(burrows)} linhas de toca")
+    unable = sum(1 for l in lines if "Unable to find animation" in l)
+    check("nenhuma animação faltando no log", unable == 0, f"{unable} linhas")
 except FileNotFoundError:
     pass
 

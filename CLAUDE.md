@@ -51,6 +51,22 @@ nocaute de 20 s (regra `knockout_seconds`) que não acaba enquanto o bicho come;
 vida x2 (`gen_species.health_of`, salvos migram); doma por progresso com pilhas de carne (`foodGoal`); Guia de Bolso com
 "Os dinossauros" e "Domesticação"; Better Combat (`data/terrassic/weapon_attributes`). Compilado só contra o jar do
 Minecraft da loom-cache; build Gradle e teste no jogo pendentes.
+**1.11.0 (em trabalho, branch `rel/1.11.0`, estudo `docs/estudos/15_HERBIVOROS_1_11.md`)**: Maiassaura refeito
+(`entity/Maiasaurine`, `tools/modelgen/handmade/maiasaura`, `art/maiasaura/REFEITO.md`): cabeça curta com calombo sólido,
+filhote em duas patas com pele própria (`_baby.png`, `DinoGeoModel.BABY_SKINS`, `babyHeadScale`), Colônia de Ninhos de
+volta a ele, ninho coberto (`DinoEggBlock.COVERED`, modelo `_covered` só dele), filhote que fica no ninho e só cresce
+alimentado, colônia que defende (40 blocos), ladrão de ovo à noite (`ai/NestRaidGoal`), fase `maia` da `BehaviorTest`
+(na `regressao`), log `[maia]`. Coritossauro refeito (`entity/Corythosaurine`, `tools/modelgen/handmade/corythosaurus`,
+`art/corythosaurus/REFEITO.md`): elmo em meia-lua (`adult_crest`, borda maior no macho em `male_display`), pescoço alto,
+azul-fumaça listrado, chamado grave a 64 blocos (reagrupa, alarme às manadas vizinhas, acalma os herbívoros: o antigo
+`calm`), ouve predador sem linha de visão a 24 blocos (`listen`), cochilos catemerais em turnos com um sempre acordado
+(`nap` em pé de dia), colhe bagas (`pluck`) e frutos altos, dois machos mostram o elmo de perfil; Sela de Mata; ninho
+entre raízes (`cory_extras.py`); fase `cory` da `BehaviorTest` (na `regressao`), log `[cory]`. Faltam
+Paquirrinossauro e Tescelossauro.
+**Desenho dos modelos (1.11, `docs/DESEMPENHO_1_11.md`, "Modelos")**: `client/LeanGeoRenderer` (base de `DinosaurRenderer`
+e `CarcassRenderer`) escreve os cubos sem alocar e sem as faces de trás de cubos fechados e opacos; `tools/modelgen/geo_cull.py`
+tira as faces escondidas dos geo.json (roda sozinho no fim do build pelo `_engine/proto.geo_json`; registro em
+`assets/terrassic/geo_cull/`); medida por espécie em `client/dev/DrawBench` (`TERRASSIC_DRAWBENCH=1`). Bicho custa ~metade.
 **1.10.0 (10/11/2026, `mod_version`; chamada de 1.10.1 durante o trabalho)**: quatro predadores refeitos (`Tyrannosaurine` Daspletossauro, `Albertosaurine`,
 `Carcharodontosaurine`, `Majungasaurine`; `art/<espécie>/REFEITO.md`), sangramento (`effect/BleedingEffect`), padrão de
 modelo v1→v3 do estudo 14 (16 texels por bloco, `_engine/skin2.py`, cabeça detalhada, desenho PRÓPRIO por espécie;
@@ -58,6 +74,12 @@ modelo v1→v3 do estudo 14 (16 texels por bloco, `_engine/skin2.py`, cabeça de
 líder, manias, pés no chão, `world/RegionPopulation`), ícones de minimapa, rodada de jogo num mundo real
 (`client/dev/Playtest`, `TERRASSIC_PLAYTEST=1`, `tools/validation/playtest_report.py`). Testes de jogo sempre com
 `caffeinate -dimsu` (tela apagada = nada renderiza = medidas vazias).
+**1.11 (em andamento, branch `extras/1.11`)**: ovos, ninhos e vozes próprios dos quatro predadores da 1.10
+(`tools/spritegen/{dasple,alberto,carcharo,majunga}_extras.py` com `nestkit.py`; prévia fora do jogo
+`nest_preview.py` → `art/<espécie>/previews/ovo_ninho.png`; vozes em `arkstyle.P`/`arkstyle.EXTRA`, sons dos
+comportamentos tocados pelas bases, `ApexTheropod.roarVoice`; para ouvir: `art/<espécie>/vozes/`, feito por
+`tools/soundgen/voice_sheet.py`). Teste: fase `nests` da `BehaviorTest` (também na `regressao`). `build.py` aceita nomes
+de conjuntos e usa o `oggenc` quando o ffmpeg não tem libvorbis.
 **1.9.5 (07/11/2026, `mod_version`)**: ecossistema (`docs/estudos/12_ECOSSISTEMA_ARK.md`, `docs/changelog/1.9.5.md`): noite
 segura (`ai/SafeRestGoal`, sentinela do Edmontossauro), o mais fraco primeiro e presa do tamanho certo, spawn por zona em
 `world/EcoSpawner` (margem 15%, planície 25%, mata fechada 60% de predadores), fuga do ferido (`ai/FleeHurtGoal`), cura,

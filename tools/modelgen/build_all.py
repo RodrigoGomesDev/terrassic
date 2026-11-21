@@ -155,6 +155,8 @@ async def run(names, force_py=False):
             geo = json.loads(out["geo"])
             with open(os.path.join(ASSETS, "geo", "entity", f"{name}.geo.json"), "w") as f:
                 json.dump(geo, f, indent=1)
+            import geo_cull   # 1.11: the faces never seen go once the skins are written (docs/DESEMPENHO_1_11.md)
+            geo_cull.after_build(name)
             anim = clean_anim(out["anim"])
             with open(os.path.join(ASSETS, "animations", "entity", f"{name}.animation.json"), "w") as f:
                 json.dump(anim, f, indent=1)

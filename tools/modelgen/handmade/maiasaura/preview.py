@@ -1,0 +1,161 @@
+"""Previews of the Maiasaura for the author (art/maiasaura/previews): side, 3/4, front, back, head, male and female,
+the calf (its own skin, the bigger head without the hump), with the saddle, and next to the two remade hadrosaurs it
+must not look like (Edmontosaurus, Parasaurolophus) at their in-game sizes; with --gifs, its own animations.
+
+usage:  python3 -B tools/modelgen/handmade/maiasaura/preview.py [out_dir] [--quick] [--gifs]
+"""
+import json
+import os
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ENGINE = os.path.join(HERE, "..", "_engine")
+sys.path[:0] = [HERE, ENGINE, os.path.join(ENGINE, "plans")]
+ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
+
+import numpy as np  # noqa: E402
+from PIL import Image  # noqa: E402
+import geo  # noqa: E402
+import proto as P  # noqa: E402
+import shots  # noqa: E402
+import skin2  # noqa: E402
+import maia  # noqa: E402
+
+ASSETS = os.path.join(ROOT, "common", "src", "main", "resources", "assets", "terrassic")
+HEAD = ("head", "skull", "jaw", "adult_bump", "cheek_l", "cheek_r")
+
+
+def model(saddle_on):
+    m = maia.build(saddle_on=saddle_on)
+    P.pack(m, maia.TEX_W)
+    return m
+
+
+def spec_tex(m, sex, out, calf=False):
+    gp = os.path.join(out, "_tmp.geo.json")
+    maia.preview_faces(m)
+    tex = maia.paint_sex(m, sex)
+    if calf:      # the calf: no hump (adult_bump hidden), the head 1.3x (DinosaurEntity.babyHeadScale)
+        m.cubes = [c for c in m.cubes if c["bone"] != "adult_bump"]
+    json.dump(P.geo_json(m), open(gp, "w"))
+    return geo.load_geo(gp), tex
+
+
+def side_by_side(images, gap=24, bg=shots.BG):
+    h = max(i.height for i in images)
+    w = sum(i.width for i in images) + gap * (len(images) - 1)
+    out = Image.new("RGB", (w, h), bg)
+    x = 0
+    for i in images:
+        out.paste(i, (x, h - i.height)); x += i.width + gap
+    return out
+
+
+def _render_side(name, spec, tex, k):
+    if spec is None:
+        spec = geo.load_geo(os.path.join(ASSETS, "geo", "entity", f"{name}.geo.json"))
+        tex = Image.open(os.path.join(ASSETS, "textures", "entity", f"{name}_male.png"))
+        spec = {**spec, "cubes": [c for c in spec["cubes"] if c.get("bone") != "saddle"]}
+    pts = np.concatenate([q for c, q in geo.cube_points(spec)])
+    L = pts[:, 2].max() - pts[:, 2].min(); Hh = pts[:, 1].max() - pts[:, 1].min()
+    return geo.render(spec, tex, 90, 0, (int(L * k * 1.04) + 8, int(Hh * k * 1.04) + 8), bg=shots.BG, margin=0.02)[0].convert("RGB")
+
+
+KIN = ("maiasaura", "edmontosaurus", "parasaurolophus", "corythosaurus")
+
+
+def next_to_kin(spec, tex, out, px=3):
+    """side-on at their in-game scale (MODEL_SCALE of gen_species), the Maiasaura and the other duck-bills: in colour
+    and as black silhouettes (the "silhueta primeiro" test of the 1.11)"""
+    sys.path.insert(0, os.path.join(HERE, "..", "_silhuetas"))
+    import sil
+    from PIL import ImageDraw
+    sc = {n: sil.game_scale(n) / sil.METRE for n in KIN}
+    ims = [_render_side("maiasaura", spec, tex, sc["maiasaura"] * px)]
+    ims += [_render_side(n, None, None, sc[n] * px) for n in KIN[1:]]
+    side_by_side(ims, gap=40).save(os.path.join(out, "ao_lado_dos_hadrossauros.png"))
+    blacks = []
+    for n in KIN:
+        s = spec if n == "maiasaura" else sil.load_game(n)
+        if n == "maiasaura":
+            k = sil.game_scale(n) * 16.0 / sil.PX
+            s = {**s, "bones": [dict(b, origin=[v * k for v in b["origin"]]) for b in s["bones"]],
+                 "cubes": [dict(c, **{"from": [v * k for v in c["from"]], "to": [v * k for v in c["to"]],
+                                      "origin": [v * k for v in c["origin"]]}) for c in s["cubes"] if c["bone"] != "saddle"]}
+        x0, x1, y0, y1 = sil.extent(s, sil.SIDE)
+        ppm = 60
+        im = Image.new("RGB", (int((x1 - x0) * ppm) + 10, int((y1 - y0) * ppm) + 10), (236, 233, 224))
+        sil.draw(im, s, sil.SIDE, ppm, (5, im.height - 5))
+        blacks.append(im)
+    side_by_side(blacks, gap=40, bg=(236, 233, 224)).save(os.path.join(out, "ao_lado_dos_hadrossauros_preto.png"))
+
+
+GIFS = ("walk", "run", "biped_walk", "biped_run", "idle", "colony_call", "alarm", "cover_nest", "feed_young", "nest_guard",
+        "nest_dig", "nuzzle", "adopt", "rear_browse", "nest_beg", "nest_sleep", "hatch", "attack", "graze", "sleep")
+
+
+def gifs(out, sex="male"):
+    from jsongif import pose_at, load_anims
+    spec = geo.load_geo(os.path.join(ASSETS, "geo", "entity", "maiasaura.geo.json"))
+    tex = Image.open(os.path.join(ASSETS, "textures", "entity", f"maiasaura_{sex}.png"))
+    btex = Image.open(os.path.join(ASSETS, "textures", "entity", "maiasaura_baby.png"))
+    A = load_anims(os.path.join(ASSETS, "animations", "entity", "maiasaura.animation.json"))
+    hid = ("saddle",)
+    gdir = os.path.join(out, "animacoes"); os.makedirs(gdir, exist_ok=True)
+    only = [a.split("=", 1)[1].split(",") for a in sys.argv if a.startswith("--only=")]
+    for n in (only[0] if only else GIFS):
+        young = n in ("biped_walk", "biped_run", "nest_beg", "nest_sleep", "hatch")
+        sp = {**spec, "cubes": [c for c in spec["cubes"] if c["bone"] != "adult_bump"]} if young else spec
+        tx = btex if young else tex
+        an = A[f"animation.maiasaura.{n}"]; L = an["animation_length"]
+        fps = 12; N = max(2, int(round(L * fps)))
+        poses = [pose_at(an, L * i / N) for i in range(N + (0 if an.get("loop") else 1))]
+        yaw, pitch = (60, 12)
+        fits = [geo.render(sp, tx, yaw, pitch, (64, 48), pose=p, hidden=hid)[1] for p in poses[::max(1, len(poses) // 8)]]
+        fit = (min(f[0] for f in fits), max(f[1] for f in fits), min(f[2] for f in fits), max(f[3] for f in fits))
+        ims = [geo.render(sp, tx, yaw, pitch, (560, 380), pose=p, hidden=hid, fit=fit, bg=shots.BG, margin=0.06)[0].convert("RGB")
+               for p in poses]
+        ims[0].save(os.path.join(gdir, f"{n}.gif"), save_all=True, append_images=ims[1:], duration=int(1000 / fps), loop=0)
+        pick = [ims[int(i * (len(ims) - 1) / 4)] for i in range(5)]
+        side_by_side([i.resize((280, 190), Image.LANCZOS) for i in pick], gap=4).save(os.path.join(gdir, f"{n}_quadros.png"))
+        print("gif", n, len(ims), flush=True)
+
+
+def main():
+    out = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else os.path.join(ROOT, "art", "maiasaura", "previews")
+    os.makedirs(out, exist_ok=True)
+    m = model(saddle_on=False)
+    spec, tex = spec_tex(m, "male", out)
+    tex.save(os.path.join(out, "pele_macho.png"))
+    pts = np.concatenate([q for c, q in geo.cube_points(spec)])
+    L = float(pts[:, 2].max() - pts[:, 2].min())
+    print(f"length {L:.1f} px, density {skin2.density(L, 9.0):.1f} tx/block, height {pts[:, 1].max():.1f} px, "
+          f"colours {skin2.colour_count(tex)}")
+    shots.shot(spec, tex, 90, 0, (1400, 620)).save(os.path.join(out, "lateral.png"))
+    shots.shot(spec, tex, 35, 18, (1200, 800)).save(os.path.join(out, "tres_quartos.png"))
+    shots.shot(spec, tex, 62, 12, (900, 600), bones=HEAD).save(os.path.join(out, "cabeca.png"))
+    shots.shot(spec, tex, 90, 0, (900, 600), bones=HEAD).save(os.path.join(out, "cabeca_perfil.png"))
+    if "--quick" in sys.argv:
+        return
+    shots.shot(spec, tex, 0, 8, (800, 700)).save(os.path.join(out, "frente.png"))
+    shots.shot(spec, tex, 300, 22, (1200, 760)).save(os.path.join(out, "traseira.png"))
+    shots.shot(spec, tex, 0, 4, (700, 600), bones=HEAD).save(os.path.join(out, "cabeca_frente.png"))
+    fspec, ftex = spec_tex(model(saddle_on=False), "female", out)
+    ftex.save(os.path.join(out, "pele_femea.png"))
+    side_by_side([shots.shot(spec, tex, 35, 18, (1000, 680)), shots.shot(fspec, ftex, 35, 18, (1000, 680))]).save(
+        os.path.join(out, "macho_e_femea.png"))
+    side_by_side([shots.shot(spec, tex, 62, 12, (700, 480), bones=HEAD),
+                  shots.shot(fspec, ftex, 62, 12, (700, 480), bones=HEAD)]).save(os.path.join(out, "cabeca_macho_e_femea.png"))
+    cspec, ctex = spec_tex(model(saddle_on=False), "baby", out, calf=True)
+    ctex.save(os.path.join(out, "pele_filhote.png"))
+    shots.shot(cspec, ctex, 35, 18, (1000, 680)).save(os.path.join(out, "filhote.png"))
+    sspec, stex = spec_tex(model(saddle_on=True), "male", out)
+    shots.shot(sspec, stex, 35, 18, (1200, 800)).save(os.path.join(out, "com_sela.png"))
+    next_to_kin(spec, tex, out)
+    os.remove(os.path.join(out, "_tmp.geo.json"))
+    if "--gifs" in sys.argv:
+        gifs(out)
+
+
+if __name__ == "__main__":
+    main()

@@ -16,6 +16,9 @@ Agora a pasta da espécie tem só os cubos, a pintura e as animações que são 
     cubo com menos de 1 px;
   - `clean_orphans` (apaga os pontos soltos dos recortes) e `metrics` (os números do padrão do T. rex);
   - `pinholes` (opcional, precisa de scipy): rachaduras onde o fundo aparece através do animal, para olhar à mão.
+- `proto.geo_json` registra `tools/modelgen/geo_cull.py` para o fim do build (1.11): tira do geo.json as faces que
+  nunca aparecem e grava `assets/terrassic/geo_cull/<id>.json` (cubos fechados para o `LeanGeoRenderer` descartar as
+  faces de trás). Prova visual: `tools/modelgen/geo_cull_check.py`. Ver `docs/DESEMPENHO_1_11.md`, "Modelos".
 - `shots.py`: as prévias padrão (lateral, 3/4, frente, traseira, cabeça). `jsongif.py`: poses lidas do animation.json.
 - `plans/theropod.py`: molde do terópode grande. As 26 animações do T. rex v2 escritas sobre um contrato de nomes de
   ossos (root, body, neck..., head, skull, jaw, arm/forearm, thigh/shin/foot/toes, tail1..N). Conferido contra o

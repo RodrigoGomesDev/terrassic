@@ -217,6 +217,126 @@ check("população: repõe aos poucos", m is not None and int(m.group(1)) > 0, f
 for sp, how in re.findall(r"  bank (\w+(?: calf)?): (out in [\d.]+ s|STILL IN THE WATER after 30 s)", text):
     check(f"sai da água: {sp}", how.startswith("out"), how)
 
+# 1.11.0, the Maiasaura's colony (docs/estudos/15; BehaviorTest phase "maia")
+if "== Maiasaura (1.11.0)" in text:
+    m = re.search(r"maia calf: scale [\d.]+, on two legs (\w+)", text)
+    check("maia: filhote em duas patas", m is not None and m.group(1) == "true", m.group(0) if m else "sem medida")
+    m = re.search(r"maia home: (.*?); nest covered by its mother after ([\d.]+) s: (\d+) of (\d+) eggs; the nest without a mother: (\d+) covered", text)
+    check("maia: a mãe toma o ninho", m is not None and "(nest A)" in m.group(1), m.group(1) if m else "sem medida")
+    check("maia: a mãe cobre os ovos", m is not None and int(m.group(3)) > 0 and int(m.group(5)) == 0,
+          f"{m.group(3)} de {m.group(4)} cobertos em {m.group(2)} s, ninho sem mãe {m.group(5)}" if m else "sem medida")
+    m = re.search(r"maia hatching: covered clutch out after (NEVER|\d+) random ticks, open clutch after (NEVER|\d+)", text)
+    sec = lambda v: 1e9 if v == "NEVER" else float(v)
+    check("maia: ovo coberto choca mais rápido", m is not None and sec(m.group(1)) < sec(m.group(2)),
+          f"coberto {m.group(1)}, aberto {m.group(2)}" if m else "sem medida")
+    m = re.search(r"maia nest calf after 30 s: ([\d.]+) blocks from the nest, grew (-?\d+) ticks, fed (\w+), still in the nest (\w+)", text)
+    check("maia: filhote fica no ninho", m is not None and float(m.group(1)) <= 3.5 and m.group(4) == "true", m.group(0)[:110] if m else "sem medida")
+    check("maia: a mãe alimenta o filhote", m is not None and m.group(3) == "true", "")
+    m = re.search(r"maia calf alone in a nest, 20 s unfed: grew (-?\d+) ticks", text)
+    check("maia: filhote sem comida não cresce", m is not None and int(m.group(1)) <= 40, f"{m.group(1) if m else '?'} tiques")
+    m = re.search(r"maia calf fed by the player, 20 s later: grew (-?\d+) ticks, taming progress ([\d.]+)", text)
+    check("maia: alimentado cresce e começa a doma", m is not None and int(m.group(1)) >= 300 and float(m.group(2)) > 0.0,
+          f"cresceu {m.group(1)}, doma {m.group(2)}" if m else "sem medida")
+    m = re.search(r"maia egg taken in the colony: (\d+) of (\d+) grown ones go for the player, (\d+) of them beyond 24 blocks", text)
+    check("maia: a colônia toda defende o ovo", m is not None and int(m.group(1)) >= 3 and int(m.group(3)) >= 1,
+          m.group(0)[24:] if m else "sem medida")
+    m = re.search(r"maia calf hit by a velociraptor: (\d+) of (\d+)", text)
+    check("maia: a colônia defende o filhote", m is not None and int(m.group(1)) >= 2, m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"maia night: egg thief (\w+), the colony goes for it (\w+)", text)
+    check("maia: ladrão de ovo à noite", m is not None and m.group(1) == "CAME", m.group(0) if m else "sem medida")
+    check("maia: a colônia expulsa o ladrão", m is not None and m.group(2) == "YES", "")
+
+# 1.11.0, the Corythosaurus' voice and ear (docs/estudos/15; BehaviorTest phase "cory")
+if "== Corythosaurus (1.11.0)" in text:
+    for when in ("day", "night"):
+        m = re.search(rf"cory naps {when}: max (\d+) of (\d+) napping at once, awake while napping at least (\S+), (\d+) napped in 60 s", text)
+        check(f"cory: cochila em turnos ({when})", m is not None and int(m.group(4)) >= 2 and int(m.group(1)) >= 1,
+              m.group(0)[2:] if m else "sem medida")
+        check(f"cory: sempre um acordado ({when})", m is not None and m.group(3) != "-" and int(m.group(3)) >= 1,
+              f"acordados no mínimo {m.group(3)}" if m else "sem medida")
+    m = re.search(r"cory ear: heard without sight (\w+) \((\d+) of (\d+) heard blind, raptor visible (\w+)\), herd ran (\d+) of (\d+)", text)
+    check("cory: ouve o predador sem linha de visão", m is not None and m.group(1) == "YES" and m.group(4) == "no",
+          m.group(0)[2:] if m else "sem medida")
+    check("cory: a manada foge junta", m is not None and int(m.group(5)) == int(m.group(6)), "")
+    m = re.search(r"cory call at 50 blocks: the napping herd ran (\d+) of (\d+), awake (\d+) of (\d+)", text)
+    check("cory: o chamado chega a 50 blocos e acorda", m is not None and int(m.group(1)) == int(m.group(2)) and int(m.group(3)) == int(m.group(4)),
+          m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory regroup: the lost one from (\d+) to (-?\d+) blocks", text)
+    check("cory: o perdido volta ao chamado", m is not None and int(m.group(2)) >= 0 and int(m.group(2)) <= int(m.group(1)) - 15,
+          m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory calm: the frightened herbivore calmed (\w+), regeneration (\w+)", text)
+    check("cory: o chamado acalma", m is not None and m.group(1) == "YES" and m.group(2) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory fruit: ripe bush plucked (\w+) after (\d+) s", text)
+    check("cory: colhe bagas do arbusto", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"cory display: both in profile (\w+) after (\d+) s; then one walks off: ([\d.-]+) to ([\d.-]+) blocks apart", text)
+    check("cory: dois machos mostram o elmo", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+    check("cory: um baixa a cabeça e sai", m is not None and float(m.group(4)) >= float(m.group(3)) + 5.0, "")
+# 1.11.0, the Pachyrhinosaurus' ring, boss bout and river crossing (docs/estudos/15; BehaviorTest phase "pachy")
+if "== Pachyrhinosaurus (1.11.0)" in text:
+    m = re.search(r"pachy ring: formed (\w+), (\d+) grown on the ring, calves inside (\d+) of (\d+), facing out or at the predator (\d+) of (\d+) \(mean off (-?\d+) deg\), braced (\d+) of (\d+)", text)
+    check("pachy: a manada fecha a roda", m is not None and m.group(1) == "YES" and int(m.group(2)) >= 4, m.group(0)[2:] if m else "sem medida")
+    check("pachy: filhotes no meio da roda", m is not None and int(m.group(4)) > 0 and int(m.group(3)) == int(m.group(4)), "")
+    check("pachy: a parede virada para fora", m is not None and int(m.group(6)) > 0 and int(m.group(5)) >= int(m.group(6)) - 1, "")
+    check("pachy: firmes em brace", m is not None and int(m.group(8)) >= int(m.group(9)) - 1, "")
+    m = re.search(r"pachy ring sally: (\d+) sallies, (\d+) blows landed, (\d+) braced in place after", text)
+    check("pachy: sai um da roda e dá a bossa", m is not None and int(m.group(1)) >= 1 and int(m.group(2)) >= 1, m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"pachy ring over: (\w+)", text)
+    check("pachy: a roda desfaz com o predador longe", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+    m = re.search(r"pachy bout: butts (\d+), brow to brow (\w+), over (\w+) after (\d+) s, then ([\d.-]+) to ([\d.-]+) blocks apart, health (\d+)% and (\d+)%", text)
+    check("pachy: dois machos batem bossa", m is not None and int(m.group(1)) >= 1, m.group(0)[2:] if m else "sem medida")
+    check("pachy: empurram de testa colada", m is not None and m.group(2) == "YES", "")
+    check("pachy: um cede e sai", m is not None and m.group(3) == "YES" and float(m.group(6)) >= float(m.group(5)) + 4.0, "")
+    check("pachy: o duelo não mata", m is not None and int(m.group(7)) >= 60 and int(m.group(8)) >= 60, "")
+    m = re.search(r"pachy river: waited on the bank (\S+) s, the leader in first (\S+), across (\d+) of (\d+)", text)
+    check("pachy: a manada espera na margem", m is not None and m.group(1) != "-" and int(m.group(1)) >= 2, m.group(0)[2:] if m else "sem medida")
+    check("pachy: o líder entra primeiro", m is not None and m.group(2) == "YES", "")
+    check("pachy: todos atravessam", m is not None and int(m.group(3)) == int(m.group(4)), "")
+    m = re.search(r"pachy snow: dug (\w+)", text)
+    check("pachy: raspa a neve para pastar", m is not None and m.group(1) == "YES", m.group(0)[2:] if m else "sem medida")
+# 1.11: the own eggs and nests of the four predators remade in 1.10 (phase "nests"): the three stages stand, a tamed
+# pair lays an egg block, and it hatches (look at behavior_nest_<species>.png and _close.png too)
+for sp in ("daspletosaurus", "albertosaurus", "carcharodontosaurus", "majungasaurus"):
+    block = re.search(r"== Nest of the %s \(1\.11\)\n(.*?)(?=\n== |\Z)" % sp, text, re.S)
+    body = block.group(1) if block else ""
+    check(f"ninho {sp}: três estágios", "stages: hatch=0 hatch=1 hatch=2" in body, "sem a fase nests" if not block else "")
+    laid = re.search(r"breeding: an egg block laid at .*", body)
+    check(f"ninho {sp}: a fêmea põe o ovo", laid is not None, laid.group(0) if laid else "")
+    hatched = re.search(r"hatching: .*", body)
+    check(f"ninho {sp}: o ovo choca", hatched is not None and "HATCHED" in hatched.group(0), hatched.group(0) if hatched else "")
+
+# 1.11.0, the Thescelosaurus' freeze, bolt and burrow (docs/estudos/15; BehaviorTest phase "thesc")
+if "== Thescelosaurus (1.11.0)" in text:
+    m = re.search(r"thesc size: hitbox \S+ x \S+, scale \S+, rideable (\w+)", text)
+    check("thesc: não é montável", m is not None and m.group(1) == "no", m.group(0) if m else "sem medida")
+    m = re.search(r"thesc freeze: froze (\w+) at (-?[\d.]+) blocks \((\d) of 3 froze\)", text)
+    check("thesc: congela ao notar o predador (pelo faro, a 24 blocos ou menos)", m is not None and m.group(1) == "YES"
+          and 0 < float(m.group(2)) <= 24.5, m.group(0) if m else "sem medida")
+    m = re.search(r"thesc bolt: bolted (\w+) at (-?[\d.]+) blocks \((\d) of 3 bolted\)", text)
+    check("thesc: dispara quando o perigo se aproxima (a 18 blocos ou menos)", m is not None and m.group(1) == "YES"
+          and 0 < float(m.group(2)) <= 18.5, m.group(0) if m else "sem medida")
+    check("thesc: os outros veem o lenço e disparam junto", m is not None and int(m.group(3)) == 3, "")
+    m = re.search(r"thesc hide: (\d) of 3 hid, (\d) of 3 in the thicket", text)
+    check("thesc: se esconde no mato", m is not None and int(m.group(1)) >= 2 and int(m.group(2)) >= 1,
+          m.group(0) if m else "sem medida")
+    m = re.search(r"thesc out of hiding: (\d) of 3", text)
+    check("thesc: sai do esconderijo quando o perigo some", m is not None and int(m.group(1)) == 3, m.group(0) if m else "sem medida")
+    m = re.search(r"thesc nose: smelled without sight (\w+) \(raptor visible (\w+)", text)
+    check("thesc: fareja o predador sem linha de visão", m is not None and m.group(1) == "YES" and m.group(2) == "no",
+          m.group(0) if m else "sem medida")
+    m = re.search(r"thesc player: standing at 12 blocks, noticed (\w+)", text)
+    check("thesc: nota o jogador em pé a 12 blocos", m is not None and m.group(1) == "YES", m.group(0) if m else "sem medida")
+    m = re.search(r"thesc burrow: dug (\w+) after (\d+) s, the hole open (\w+)", text)
+    check("thesc: cava a toca no barranco", m is not None and m.group(1) == "YES" and m.group(3) == "YES", m.group(0) if m else "sem medida")
+    m = re.search(r"thesc burrow night: sleeps in its burrow (\w+)", text)
+    check("thesc: dorme na toca à noite", m is not None and m.group(1) == "YES", m.group(0) if m else "sem medida")
+    m = re.search(r"thesc eggs: (\d+) egg\(s\) within 3 blocks of the burrow", text)
+    check("thesc: os ovos ficam na toca", m is not None and int(m.group(1)) >= 1, m.group(0) if m else "sem medida")
+    m = re.search(r"thesc tame: follows its owner from ([\d.-]+) to ([\d.-]+) blocks, rideable (\w+), tame (\w+)", text)
+    check("thesc: domado segue o dono", m is not None and m.group(4) == "YES" and float(m.group(2)) < float(m.group(1)) - 4,
+          m.group(0) if m else "sem medida")
+    m = re.search(r"thesc roots: (\d+) item", text)
+    check("thesc: domado acha raízes", m is not None and int(m.group(1)) >= 1, m.group(0) if m else "sem medida")
+
 bad = [r for r in results if not r[1]]
 for name, ok, detail in results:
     print(("OK    " if ok else "FALHA ") + name + (f"  ({detail})" if detail else ""))

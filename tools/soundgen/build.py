@@ -5,7 +5,11 @@ Builds the mod's own sounds from recipes.py (all procedural, see synth.py):
   common/src/main/java/com/terrassic/registry/ModSounds.java
 Unchanged sounds are not rewritten (git sees no diff). Needs numpy and ffmpeg (with libvorbis).
 Old recipes could cut recordings from art/sounds/src (fetch.py); no voice set uses them any more.
-usage: python3 build.py
+usage: python3 build.py [set ...]
+With set names, only those sets are encoded again (the other files stay as they are; sounds.json and ModSounds.java
+are always written whole). Without libvorbis in ffmpeg (Homebrew's ffmpeg has only the experimental encoder) the
+filtered audio goes through oggenc (vorbis-tools) instead, with a fixed stream serial so a rebuild is byte-identical;
+the encoders differ, so a full rebuild there would rewrite every file: name the sets you changed.
 """
 import glob
 import json
@@ -153,6 +157,17 @@ def write_wav(path, x):
         w.writeframes(pcm.tobytes())
 
 
+_LIBVORBIS = None
+
+
+def has_libvorbis():
+    global _LIBVORBIS
+    if _LIBVORBIS is None:
+        out = subprocess.run(["ffmpeg", "-hide_banner", "-encoders"], capture_output=True, text=True).stdout
+        _LIBVORBIS = "libvorbis" in out
+    return _LIBVORBIS
+
+
 def encode(variant, fx, out, loud=LOUDNESS):
     with tempfile.TemporaryDirectory() as tmp:
         wav = os.path.join(tmp, "in.wav")
@@ -160,9 +175,16 @@ def encode(variant, fx, out, loud=LOUDNESS):
         inp = ["-i", wav]
         chain = f"{fx},{loud},aresample={SR}"
         tmp_out = os.path.join(tmp, "out.ogg")
-        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", *inp, "-af", chain,
-                        "-ac", "1", "-ar", str(SR), "-c:a", "libvorbis", "-q:a", "4", "-map_metadata", "-1",
-                        "-fflags", "+bitexact", "-flags:a", "+bitexact", tmp_out], check=True)
+        if has_libvorbis():
+            subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", *inp, "-af", chain,
+                            "-ac", "1", "-ar", str(SR), "-c:a", "libvorbis", "-q:a", "4", "-map_metadata", "-1",
+                            "-fflags", "+bitexact", "-flags:a", "+bitexact", tmp_out], check=True)
+        else:
+            filtered = os.path.join(tmp, "f.wav")
+            subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", *inp, "-af", chain,
+                            "-ac", "1", "-ar", str(SR), "-c:a", "pcm_s16le", "-map_metadata", "-1",
+                            "-fflags", "+bitexact", "-flags:a", "+bitexact", filtered], check=True)
+            subprocess.run(["oggenc", "-Q", "-q", "4", "--serial", "1", "-o", tmp_out, filtered], check=True)
         data = open(tmp_out, "rb").read()
     if os.path.exists(out) and open(out, "rb").read() == data:
         return False
@@ -173,6 +195,7 @@ def encode(variant, fx, out, loud=LOUDNESS):
 
 
 def main():
+    only = set(sys.argv[1:])
     sounds_json = {}
     changed = 0
     recorded = 0
@@ -185,6 +208,8 @@ def main():
                 recorded += uses_recording(var)
                 if wants_recording(var) and not uses_recording(var) and os.path.exists(out):
                     pass  # recording not downloaded here: keep the file built where it was (never downgrade)
+                elif only and vset not in only and os.path.exists(out):
+                    pass  # not asked for: keep the file as it is
                 else:
                     changed += encode(var, FX[fx], out, LOUD.get(fx, LOUDNESS))
                 names.append({"name": f"terrassic:{rel}", "attenuation_distance": dist})

@@ -775,39 +775,78 @@
   "handmade": true
  },
  "maiasaura": {
-  "bones": 28,
-  "cubes": 67,
+  "bones": 29,
+  "cubes": 74,
   "texture": [
    256,
    256
   ],
   "bounds_px": [
    [
-    -15.0,
-    -0.07037776599369788,
-    -73.79448256938159
+    -21.818697647093938,
+    -1.609823385706477e-15,
+    -85.72381647241144
    ],
    [
-    15.0,
-    55.699703827016535,
-    99.35249538655133
+    21.818697647093938,
+    96.92790017430043,
+    83.65803483936108
    ]
   ],
   "animations": [
    "animation.maiasaura.idle",
    "animation.maiasaura.walk",
    "animation.maiasaura.run",
-   "animation.maiasaura.attack",
-   "animation.maiasaura.sit",
-   "animation.maiasaura.graze",
+   "animation.maiasaura.biped_walk",
+   "animation.maiasaura.biped_run",
+   "animation.maiasaura.swim",
+   "animation.maiasaura.turn_left",
+   "animation.maiasaura.turn_right",
+   "animation.maiasaura.walk_tired",
+   "animation.maiasaura.idle_tired",
+   "animation.maiasaura.colony_call",
    "animation.maiasaura.call",
+   "animation.maiasaura.answer",
+   "animation.maiasaura.alarm",
+   "animation.maiasaura.cover_nest",
+   "animation.maiasaura.feed_young",
+   "animation.maiasaura.nest_guard",
+   "animation.maiasaura.nest_dig",
+   "animation.maiasaura.nuzzle",
+   "animation.maiasaura.adopt",
+   "animation.maiasaura.rear_browse",
+   "animation.maiasaura.nest_beg",
+   "animation.maiasaura.nest_sleep",
+   "animation.maiasaura.hatch",
+   "animation.maiasaura.eat",
+   "animation.maiasaura.graze",
+   "animation.maiasaura.drink",
+   "animation.maiasaura.attack",
+   "animation.maiasaura.kick_back",
+   "animation.maiasaura.body_shove",
+   "animation.maiasaura.hurt",
+   "animation.maiasaura.death",
+   "animation.maiasaura.knockout",
    "animation.maiasaura.knocked_out",
    "animation.maiasaura.wake",
-   "animation.maiasaura.eat",
+   "animation.maiasaura.sit",
+   "animation.maiasaura.sleep",
+   "animation.maiasaura.wake_sleep",
+   "animation.maiasaura.lie_down",
+   "animation.maiasaura.get_up",
+   "animation.maiasaura.ridden_idle",
    "animation.maiasaura.beg",
    "animation.maiasaura.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 17.77,
+  "colours": {
+   "male": 47,
+   "female": 44,
+   "baby": 44
+  }
  },
  "quetzalcoatlus": {
   "bones": 39,
@@ -1260,39 +1299,72 @@
   "handmade": true
  },
  "corythosaurus": {
-  "bones": 28,
-  "cubes": 102,
+  "bones": 39,
+  "cubes": 89,
   "texture": [
-   128,
-   512
+   256,
+   256
   ],
   "bounds_px": [
    [
-    -15.0,
-    -0.07737015435298994,
-    -74.07009247448559
+    -15.108237033860734,
+    -0.0478816773489746,
+    -76.35242116950536
    ],
    [
-    15.0,
-    61.43669070767981,
-    99.24773047592682
+    15.108237033860734,
+    159.7179225492301,
+    86.91190652223874
    ]
   ],
   "animations": [
    "animation.corythosaurus.idle",
    "animation.corythosaurus.walk",
    "animation.corythosaurus.run",
-   "animation.corythosaurus.attack",
-   "animation.corythosaurus.sit",
-   "animation.corythosaurus.graze",
+   "animation.corythosaurus.swim",
+   "animation.corythosaurus.wade",
+   "animation.corythosaurus.turn_left",
+   "animation.corythosaurus.turn_right",
+   "animation.corythosaurus.walk_tired",
+   "animation.corythosaurus.idle_tired",
+   "animation.corythosaurus.deep_call",
    "animation.corythosaurus.call",
+   "animation.corythosaurus.answer",
+   "animation.corythosaurus.alarm",
+   "animation.corythosaurus.listen",
+   "animation.corythosaurus.nap",
+   "animation.corythosaurus.fruit_pick",
+   "animation.corythosaurus.pluck",
+   "animation.corythosaurus.helmet_display",
+   "animation.corythosaurus.hatch",
+   "animation.corythosaurus.eat",
+   "animation.corythosaurus.graze",
+   "animation.corythosaurus.drink",
+   "animation.corythosaurus.attack",
+   "animation.corythosaurus.kick_back",
+   "animation.corythosaurus.body_shove",
+   "animation.corythosaurus.hurt",
+   "animation.corythosaurus.death",
+   "animation.corythosaurus.knockout",
    "animation.corythosaurus.knocked_out",
    "animation.corythosaurus.wake",
-   "animation.corythosaurus.eat",
+   "animation.corythosaurus.sit",
+   "animation.corythosaurus.sleep",
+   "animation.corythosaurus.wake_sleep",
+   "animation.corythosaurus.lie_down",
+   "animation.corythosaurus.get_up",
    "animation.corythosaurus.beg",
    "animation.corythosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 17.13,
+  "colours": {
+   "male": 48,
+   "female": 48,
+   "baby": 41
+  }
  },
  "styracosaurus": {
   "bones": 48,
@@ -1496,74 +1568,158 @@
   "render_scale": 0.5
  },
  "thescelosaurus": {
-  "bones": 24,
-  "cubes": 68,
+  "bones": 31,
+  "cubes": 46,
   "texture": [
    128,
-   128
+   64
   ],
   "bounds_px": [
    [
-    -7.0,
-    4.553887690351674e-06,
-    -38.88200362326126
+    -7.568589406864185,
+    -2.2516710718178956e-15,
+    -25.665843364616897
    ],
    [
-    7.0,
-    30.480842505899673,
-    45.07602117034106
+    7.562842946005546,
+    44.04747471395594,
+    47.81068516303657
    ]
   ],
   "animations": [
    "animation.thescelosaurus.idle",
    "animation.thescelosaurus.walk",
    "animation.thescelosaurus.run",
-   "animation.thescelosaurus.sit",
+   "animation.thescelosaurus.bolt",
+   "animation.thescelosaurus.swim",
+   "animation.thescelosaurus.turn_left",
+   "animation.thescelosaurus.turn_right",
+   "animation.thescelosaurus.walk_tired",
+   "animation.thescelosaurus.idle_tired",
+   "animation.thescelosaurus.freeze",
+   "animation.thescelosaurus.sniff_ground",
+   "animation.thescelosaurus.sniff_air",
+   "animation.thescelosaurus.sniff",
+   "animation.thescelosaurus.dig",
+   "animation.thescelosaurus.burrow_dig",
+   "animation.thescelosaurus.burrow_sleep",
+   "animation.thescelosaurus.hide",
+   "animation.thescelosaurus.peek",
+   "animation.thescelosaurus.tail_flag",
+   "animation.thescelosaurus.alarm",
+   "animation.thescelosaurus.call",
+   "animation.thescelosaurus.look_back",
+   "animation.thescelosaurus.shake",
+   "animation.thescelosaurus.hatch",
+   "animation.thescelosaurus.eat",
    "animation.thescelosaurus.graze",
+   "animation.thescelosaurus.drink",
    "animation.thescelosaurus.attack",
+   "animation.thescelosaurus.kick",
+   "animation.thescelosaurus.kick_back",
+   "animation.thescelosaurus.hurt",
+   "animation.thescelosaurus.death",
+   "animation.thescelosaurus.knockout",
    "animation.thescelosaurus.knocked_out",
    "animation.thescelosaurus.wake",
-   "animation.thescelosaurus.eat",
+   "animation.thescelosaurus.sit",
+   "animation.thescelosaurus.sleep",
+   "animation.thescelosaurus.wake_sleep",
+   "animation.thescelosaurus.lie_down",
+   "animation.thescelosaurus.get_up",
    "animation.thescelosaurus.beg",
-   "animation.thescelosaurus.tame",
-   "animation.thescelosaurus.dig"
+   "animation.thescelosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.8638,
+  "handmade": true,
+  "px_per_m": 18.522,
+  "texels_per_block": 17.35,
+  "colours": {
+   "male": 23,
+   "female": 22,
+   "baby": 22
+  }
  },
  "pachyrhinosaurus": {
-  "bones": 27,
-  "cubes": 130,
+  "bones": 36,
+  "cubes": 110,
   "texture": [
    256,
    512
   ],
   "bounds_px": [
    [
-    -20.254799096739777,
-    -0.027601619008803535,
-    -70.2161446634613
+    -21.0,
+    3.560217434740218e-15,
+    -70.25696610692523
    ],
    [
-    20.254799096739777,
-    60.82512968328255,
-    58.57771875732307
+    21.0,
+    89.94640613698236,
+    60.95072816332521
    ]
   ],
   "animations": [
    "animation.pachyrhinosaurus.idle",
    "animation.pachyrhinosaurus.walk",
    "animation.pachyrhinosaurus.run",
+   "animation.pachyrhinosaurus.charge",
+   "animation.pachyrhinosaurus.swim",
+   "animation.pachyrhinosaurus.wade",
+   "animation.pachyrhinosaurus.turn_left",
+   "animation.pachyrhinosaurus.turn_right",
+   "animation.pachyrhinosaurus.strafe_left",
+   "animation.pachyrhinosaurus.strafe_right",
+   "animation.pachyrhinosaurus.walk_tired",
+   "animation.pachyrhinosaurus.idle_tired",
+   "animation.pachyrhinosaurus.ring_defence",
+   "animation.pachyrhinosaurus.brace",
+   "animation.pachyrhinosaurus.boss_ram",
+   "animation.pachyrhinosaurus.boss_push",
+   "animation.pachyrhinosaurus.boss_rub",
+   "animation.pachyrhinosaurus.snow_dig",
+   "animation.pachyrhinosaurus.hesitate",
+   "animation.pachyrhinosaurus.head_toss",
+   "animation.pachyrhinosaurus.horn_lock_start",
+   "animation.pachyrhinosaurus.horn_lock",
+   "animation.pachyrhinosaurus.horn_lock_break",
+   "animation.pachyrhinosaurus.guard",
+   "animation.pachyrhinosaurus.feint",
+   "animation.pachyrhinosaurus.block",
+   "animation.pachyrhinosaurus.recoil",
+   "animation.pachyrhinosaurus.submit",
+   "animation.pachyrhinosaurus.lunge",
+   "animation.pachyrhinosaurus.parry",
+   "animation.pachyrhinosaurus.stagger",
    "animation.pachyrhinosaurus.attack",
-   "animation.pachyrhinosaurus.sit",
-   "animation.pachyrhinosaurus.graze",
+   "animation.pachyrhinosaurus.hurt",
+   "animation.pachyrhinosaurus.roar",
+   "animation.pachyrhinosaurus.call",
+   "animation.pachyrhinosaurus.death",
+   "animation.pachyrhinosaurus.knockout",
    "animation.pachyrhinosaurus.knocked_out",
    "animation.pachyrhinosaurus.wake",
+   "animation.pachyrhinosaurus.sit",
+   "animation.pachyrhinosaurus.sleep",
+   "animation.pachyrhinosaurus.wake_sleep",
+   "animation.pachyrhinosaurus.lie_down",
+   "animation.pachyrhinosaurus.get_up",
    "animation.pachyrhinosaurus.eat",
+   "animation.pachyrhinosaurus.graze",
+   "animation.pachyrhinosaurus.drink",
+   "animation.pachyrhinosaurus.hatch",
    "animation.pachyrhinosaurus.beg",
-   "animation.pachyrhinosaurus.tame",
-   "animation.pachyrhinosaurus.scent"
+   "animation.pachyrhinosaurus.tame"
   ],
-  "render_scale": 0.5
+  "render_scale": 0.9443,
+  "handmade": true,
+  "px_per_m": 16.944,
+  "texels_per_block": 15.49,
+  "colours": {
+   "male": 55,
+   "female": 52,
+   "baby": 49
+  }
  },
  "therizinosaurus": {
   "bones": 29,

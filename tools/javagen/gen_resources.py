@@ -27,7 +27,15 @@ from theri_extras import CUSTOM_EGGS as THERI_EGGS  # noqa: E402  (the Therizino
 from quetz_extras import CUSTOM_EGGS as QUETZ_EGGS  # noqa: E402  (the Quetzalcoatlus' soft eggs half buried in sand)
 from edmo_extras import CUSTOM_EGGS as EDMO_EGGS  # noqa: E402  (the Edmontosaurus' spiral of eggs under fern fronds)
 from dakota_extras import CUSTOM_EGGS as DAKOTA_EGGS  # noqa: E402  (the Dakotaraptor's ring of eggs under a log)
-CUSTOM_EGGS = {**DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS}
+from maia_extras import CUSTOM_EGGS as MAIA_EGGS, COVERED_EGGS  # noqa: E402  (the Maiasaura's ring in a mud mound, covered with litter or not)
+from cory_extras import CUSTOM_EGGS as CORY_EGGS  # noqa: E402  (the Corythosaurus' round eggs between roots under needles)
+from thesc_extras import CUSTOM_EGGS as THESC_EGGS  # noqa: E402  (the Thescelosaurus' tall eggs in dug earth at its burrow)
+from pachyrhino_extras import CUSTOM_EGGS as PACHYRHINO_EGGS  # noqa: E402  (the Pachyrhinosaurus' soft eggs in a mound of sand and peat on a dry bank)
+from dasple_extras import CUSTOM_EGGS as DASPLE_EGGS  # noqa: E402  (the Daspletosaurus' dark ridged pairs in a pit in a forest river bank)
+from alberto_extras import CUSTOM_EGGS as ALBERTO_EGGS  # noqa: E402  (the Albertosaurus' fan of speckled eggs in a crescent of conifer needles)
+from carcharo_extras import CUSTOM_EGGS as CARCHARO_EGGS  # noqa: E402  (the Carcharodontosaurus' round eggs in a mangrove sand mound)
+from majunga_extras import CUSTOM_EGGS as MAJUNGA_EGGS  # noqa: E402  (the Majungasaurus' rows of scrawled eggs under dry grass)
+CUSTOM_EGGS = {**THESC_EGGS, **PACHYRHINO_EGGS, **CORY_EGGS, **MAIA_EGGS, **DAKOTA_EGGS, **EDMO_EGGS, **QUETZ_EGGS, **THERI_EGGS, **DEINO_EGGS, **REX_EGGS, **PTERA_EGGS, **RAPT_EGGS, **PROTO_EGGS, **CARNO_EGGS, **GIGA_EGGS, **SPINO_EGGS, **TRI_EGGS, **GALLI_EGGS, **PACHY_EGGS, **PARA_EGGS, **ANKY_EGGS, **STYR_EGGS, **DASPLE_EGGS, **ALBERTO_EGGS, **CARCHARO_EGGS, **MAJUNGA_EGGS}
 
 SPECIES = {  # id: (en, pt, es, large egg; None = no egg block, e.g. live-bearing marine reptiles)
     "tyrannosaurus": ("Tyrannosaurus", "Tiranossauro", "Tiranosaurio", True),
@@ -121,6 +129,12 @@ ITEMS = {  # id: (en, pt, es, model parent)
     # the Edmontosaurus' traveller's saddle: a deep seat on felt, a hide bedroll behind, water bladders at the sides
     # the Dakotaraptor's light hunting saddle: a short pad, a low seat with knee rolls, a bone grip
     "dakotaraptor_saddle": ("Dakotaraptor Hunting Saddle", "Sela de Caça de Dakotaraptor", "Silla de caza de Dakotaraptor", "item/generated"),
+    # 1.11.0: the Maiasaura's nesting-ground saddle: a broad reed mat, a low seat and deep saddlebags of bark fibre
+    # 1.11.0: the Corythosaurus' forest saddle: a narrow pad of beaten bark cloth, a low seat and a bone grip
+    # 1.11.0: the Pachyrhinosaurus' pack saddle: a thick felted blanket over the hump, a low seat and packs of hide
+    "pachyrhinosaurus_saddle": ("Pachyrhinosaurus Pack Saddle", "Sela de Carga de Paquirrinossauro", "Silla de carga de Pachyrhinosaurus", "item/generated"),
+    "corythosaurus_saddle": ("Corythosaurus Forest Saddle", "Sela de Mata de Coritossauro", "Silla de bosque de Corythosaurus", "item/generated"),
+    "maiasaura_saddle": ("Maiasaura Nesting Saddle", "Sela de Ninhal de Maiassaura", "Silla de nidal de Maiasaura", "item/generated"),
     "edmontosaurus_saddle": ("Edmontosaurus Traveller's Saddle", "Sela de Viagem de Edmontossauro", "Silla de viaje de Edmontosaurus", "item/generated"),
     "quetzalcoatlus_saddle": ("Quetzalcoatlus Saddle", "Sela de Quetzalcoatlus", "Silla de Quetzalcoatlus", "item/generated"),
     "therizinosaurus_saddle": ("Therizinosaurus Saddle", "Sela de Terizinossauro", "Silla de Therizinosaurus", "item/generated"),
@@ -609,6 +623,52 @@ HUD_LANG = {
 for _lang, _keys in HUD_LANG.items():
     LANG_EXTRA[_lang].update(_keys)
 
+# Jade (1.11, compat.jade): the lines over a Terrassic animal, the plugin's switch in Jade's settings, and the HUD
+# switch that keeps our nameplate beside Jade's tooltip (docs/DESEMPENHO_1_11.md)
+JADE_LANG = {
+    "en_us": {
+        "config.jade.plugin_terrassic.dinosaur": "Terrassic animals",
+        "jade.terrassic.baby": "calf",
+        "jade.terrassic.adult": "adult",
+        "jade.terrassic.alpha": "Alpha",
+        "jade.terrassic.wild": "Wild",
+        "jade.terrassic.tame": "Tame",
+        "jade.terrassic.owner": "Tame, owner: %s",
+        "jade.terrassic.torpor": "torpor %s%%",
+        "jade.terrassic.wakes": "wakes in %s",
+        "jade.terrassic.taming": "Taming: %s%%",
+        "gui.terrassic.hud.hud_nameplate_with_jade": "Nameplate with Jade too",
+    },
+    "pt_br": {
+        "config.jade.plugin_terrassic.dinosaur": "Animais do Terrassic",
+        "jade.terrassic.baby": "filhote",
+        "jade.terrassic.adult": "adulto",
+        "jade.terrassic.alpha": "Alfa",
+        "jade.terrassic.wild": "Selvagem",
+        "jade.terrassic.tame": "Domado",
+        "jade.terrassic.owner": "Domado, dono: %s",
+        "jade.terrassic.torpor": "torpor %s%%",
+        "jade.terrassic.wakes": "acorda em %s",
+        "jade.terrassic.taming": "Doma: %s%%",
+        "gui.terrassic.hud.hud_nameplate_with_jade": "Placa de nome com o Jade também",
+    },
+    "es_es": {
+        "config.jade.plugin_terrassic.dinosaur": "Animales de Terrassic",
+        "jade.terrassic.baby": "cría",
+        "jade.terrassic.adult": "adulto",
+        "jade.terrassic.alpha": "Alfa",
+        "jade.terrassic.wild": "Salvaje",
+        "jade.terrassic.tame": "Domesticado",
+        "jade.terrassic.owner": "Domesticado, dueño: %s",
+        "jade.terrassic.torpor": "torpor %s%%",
+        "jade.terrassic.wakes": "despierta en %s",
+        "jade.terrassic.taming": "Doma: %s%%",
+        "gui.terrassic.hud.hud_nameplate_with_jade": "Placa de nombre también con Jade",
+    },
+}
+for _lang, _keys in JADE_LANG.items():
+    LANG_EXTRA[_lang].update(_keys)
+
 # the alphas (docs/ALFAS.md, entity/Alphas): name, knockout messages, server chat, the /terrassic alfa command
 ALPHA_LANG = {
     "en_us": {
@@ -849,7 +909,15 @@ def main():
         # egg block: 3 hatch stages
         for st in range(3):
             write(f"{A}/models/block/{sid}_egg_{st}.json", egg_model(sid, st, large))
-        write(f"{A}/blockstates/{sid}_egg.json", {"variants": {f"hatch={st}": {"model": f"terrassic:block/{sid}_egg_{st}"} for st in range(3)}})
+        if sid in COVERED_EGGS:
+            # 1.11.0: a nest the mother covers with leaves (DinoEggBlock.COVERED): its own model for each stage
+            for st in range(3):
+                write(f"{A}/models/block/{sid}_egg_{st}_covered.json", COVERED_EGGS[sid](sid, st))
+            write(f"{A}/blockstates/{sid}_egg.json", {"variants": {
+                f"covered={str(c).lower()},hatch={st}": {"model": f"terrassic:block/{sid}_egg_{st}" + ("_covered" if c else "")}
+                for c in (False, True) for st in range(3)}})
+        else:
+            write(f"{A}/blockstates/{sid}_egg.json", {"variants": {f"hatch={st}": {"model": f"terrassic:block/{sid}_egg_{st}"} for st in range(3)}})
         write(f"{A}/models/item/{sid}_egg.json", {"parent": f"terrassic:block/{sid}_egg_0"})
         write(f"{D}/loot_tables/blocks/{sid}_egg.json", {"type": "minecraft:block", "pools": [{
             "rolls": 1, "entries": [{"type": "minecraft:item", "name": f"terrassic:{sid}_egg"}],
@@ -963,6 +1031,15 @@ def main():
     # the Dakotaraptor's hunting saddle: its hide, leather for the seat, grey wool for the pad, a bone for the grip
     shaped("dakotaraptor_saddle", [" B ", "LHL", " W "], {"H": "terrassic:dakotaraptor_hide", "L": "minecraft:leather",
            "W": "minecraft:gray_wool", "B": "minecraft:bone"}, "terrassic:dakotaraptor_saddle")
+    # the Maiasaura's nesting-ground saddle: a mat of woven rushes, its hide over a wooden frame, saddlebags of string
+    shaped("maiasaura_saddle", ["RRR", "SHS", "TLT"], {"R": "terrassic:rush", "S": "minecraft:stick",
+           "H": "terrassic:maiasaura_hide", "T": "minecraft:string", "L": "minecraft:leather"}, "terrassic:maiasaura_saddle")
+    # the Pachyrhinosaurus' pack saddle: its hide for the seat, wool felted into the thick blanket, string for the packs
+    shaped("pachyrhinosaurus_saddle", ["WHW", "LWL", "S S"], {"W": "minecraft:brown_wool", "H": "terrassic:pachyrhinosaurus_hide",
+           "L": "minecraft:leather", "S": "minecraft:string"}, "terrassic:pachyrhinosaurus_saddle")
+    # the Corythosaurus' forest saddle: bark (stripped logs) for the pad, its hide for the seat, a bone for the grip
+    shaped("corythosaurus_saddle", [" B ", "LHL", "SPS"], {"B": "minecraft:bone", "L": "minecraft:leather",
+           "H": "terrassic:corythosaurus_hide", "S": "minecraft:string", "P": "minecraft:stripped_oak_log"}, "terrassic:corythosaurus_saddle")
     shaped("edmontosaurus_saddle", ["HHH", "LWL", " B "], {"H": "terrassic:edmontosaurus_hide", "L": "minecraft:leather",
            "W": "minecraft:blue_wool", "B": "minecraft:glass_bottle"}, "terrassic:edmontosaurus_saddle")
     shaped("quetzalcoatlus_saddle", [" S ", "LHL", "TWT"], {"S": "minecraft:stick", "L": "minecraft:leather",

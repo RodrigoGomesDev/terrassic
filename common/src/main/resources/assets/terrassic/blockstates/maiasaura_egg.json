@@ -1,13 +1,22 @@
 {
   "variants": {
-    "hatch=0": {
+    "covered=false,hatch=0": {
       "model": "terrassic:block/maiasaura_egg_0"
     },
-    "hatch=1": {
+    "covered=false,hatch=1": {
       "model": "terrassic:block/maiasaura_egg_1"
     },
-    "hatch=2": {
+    "covered=false,hatch=2": {
       "model": "terrassic:block/maiasaura_egg_2"
+    },
+    "covered=true,hatch=0": {
+      "model": "terrassic:block/maiasaura_egg_0_covered"
+    },
+    "covered=true,hatch=1": {
+      "model": "terrassic:block/maiasaura_egg_1_covered"
+    },
+    "covered=true,hatch=2": {
+      "model": "terrassic:block/maiasaura_egg_2_covered"
     }
   }
 }

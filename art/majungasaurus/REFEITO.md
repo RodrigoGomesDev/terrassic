@@ -186,9 +186,10 @@ e depois `python3 tools/validation/behavior_regression.py`.
   recusando-o. Do meu lado o log `[majunga]` já não repete.
 - **Cor fria**: a primeira entre os grandes predadores; conferir no jogo ao lado dos outros e decidir.
 - **Dente caído como item**: fora, até o Rodrigo decidir (estudo 13). O `tooth_spit` é só animação.
-- **Ovo e ninho**: o ovo-bloco só trocou a cor (cinza-basalto); a cova rasa em areia seca coberta de capim (especulativo
-  no estudo) não foi feita.
-- **Vozes antigas**, não ouvidas no jogo; o domo e o bebedouro usam a voz de ameaça.
+- **Ovo e ninho próprios na 1.11** (`majunga_extras.py`, `previews/ovo_ninho.png`): cova de areia ocre seca sob palha de
+  capim, duas fileiras de ovos creme rabiscados. Conferir no jogo.
+- **Vozes próprias na 1.11** (o pavio curto que bufa; o domo, o bebedouro e a carcaça tocam `temper`):
+  `vozes/VOZES.md`. Ainda não ouvidas.
 - **Jovens**: a mesma pele e o mesmo domo do adulto (o filhote real não tinha domo; Ratsimbaholison et al. 2016).
 - As abas da sela continuam sem aparecer nas prévias, como nos outros três.
 - O bebedouro e a briga pela carcaça em mundo gerado (rio de verdade, manadas descendo para beber) só se veem num
