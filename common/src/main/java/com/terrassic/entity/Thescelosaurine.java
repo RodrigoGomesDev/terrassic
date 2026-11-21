@@ -598,7 +598,9 @@ public abstract class Thescelosaurine extends HerbivoreDinosaur {
         }
         boolean night = !this.level().isDay();
         double d = this.burrow.distToCenterSqr(this.position());
-        if (night && !this.isSleeping() && d > 1.5D * 1.5D && d < 48.0D * 48.0D && this.tickCount % 20 == 0) {
+        // "there" is the same 2 blocks as isSleepTime: aiming for 1.5 left one at the mouth of a tight hole walking on
+        // the spot for 22 s (the playtest of 20/11: the burrow centre 1.6 blocks off, never closer)
+        if (night && !this.isSleeping() && d > 2.0D * 2.0D && d < 48.0D * 48.0D && this.tickCount % 20 == 0) {
             this.getNavigation().moveTo(this.burrow.getX() + 0.5D, this.burrow.getY(), this.burrow.getZ() + 0.5D, 1.0D);
         }
         boolean in = this.isSleeping() && d < 2.0D * 2.0D;

@@ -21,6 +21,8 @@ public class ShadowHerdGoal extends Goal {
     private int repath;
     private int ticks;
     private float side;
+    private int stalls;
+    private Vec3 checkedAt = Vec3.ZERO;
 
     public ShadowHerdGoal(PredatorDinosaur mob) {
         this.mob = mob;
@@ -54,13 +56,16 @@ public class ShadowHerdGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.available() && this.herd != null && this.herd.isAlive() && this.herd.getMigrationTarget() != null && this.ticks < 2400;
+        return this.available() && this.herd != null && this.herd.isAlive() && this.herd.getMigrationTarget() != null && this.ticks < 2400
+                && this.stalls < 2;
     }
 
     @Override
     public void start() {
         this.ticks = 0;
         this.repath = 0;
+        this.stalls = 0;
+        this.checkedAt = this.mob.position();
     }
 
     @Override
@@ -72,6 +77,17 @@ public class ShadowHerdGoal extends Goal {
     @Override
     public void tick() {
         this.ticks++;
+        // a flank point it cannot reach (a 2-block-wide hunter among redwood trunks walked on the spot for 28 s in the
+        // playtest of 20/11): no headway in 10 s (100 goal ticks) with a path running, it tries the other flank, then gives up for now
+        if (this.ticks % 100 == 0) {
+            boolean trying = this.mob.getNavigation().isInProgress();
+            if (trying && this.mob.position().distanceToSqr(this.checkedAt) < 1.0D) {
+                this.stalls++;
+                this.side = -this.side;
+                this.repath = 0;
+            }
+            this.checkedAt = this.mob.position();
+        }
         if (--this.repath > 0) {
             return;
         }

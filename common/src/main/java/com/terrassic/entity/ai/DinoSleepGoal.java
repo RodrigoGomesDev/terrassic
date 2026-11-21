@@ -30,7 +30,10 @@ public class DinoSleepGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        if (!OLD && this.mob.tickCount % 10 == 0 && this.mob.wokenByThreat()) {
+        // the selector asks this only every second tick (Mob.serverAiStep: server tick + id even), so "% 10 == 0" never
+        // came for half the animals (tick count and server tick + id of opposite parity): they slept on with a hunter
+        // at 5 blocks (playtest of 20/11). Two ticks in ten catch both parities.
+        if (!OLD && this.mob.tickCount % 10 <= 1 && this.mob.wokenByThreat()) {
             return false;                   // a hunter close by: it wakes
         }
         return !this.mob.isTame() && this.mob.isSleepTime() && this.mob.getTarget() == null && !this.mob.isVehicle()
