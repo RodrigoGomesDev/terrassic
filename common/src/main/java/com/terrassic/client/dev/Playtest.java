@@ -82,6 +82,7 @@ public final class Playtest {
         int tryingStill;        // seconds with a path in progress and under 0.3 block moved
         int worstStill;
         int inWall;
+        String wallWhy = "";     // where and in what, the first time
         int waterHops;
         int floatSec;           // seconds in a row off the ground, out of the water, not climbing or falling
         int worstFloat;
@@ -694,7 +695,13 @@ public final class Playtest {
                 t.last = pos;
                 SEEN.computeIfAbsent(d.speciesId(), k -> ConcurrentHashMap.newKeySet()).add(d.getUUID());
                 if (d.isInWall()) {
-                    t.inWall++;
+                    if (t.inWall++ == 0) {
+                        BlockPos eye = BlockPos.containing(d.getEyePosition());
+                        t.wallWhy = String.format(Locale.ROOT, ": at %s, eye in %s, %s, sleeping %s, still %s",
+                                d.blockPosition().toShortString(), lv.getBlockState(eye).getBlock().getDescriptionId(),
+                                d.isBaby() ? "calf" : "grown", d.isSleeping(),
+                                d.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4D);
+                    }
                 }
                 if (d.isInWater() && !d.isUnderWater()) {
                     double vy = d.getDeltaMovement().y;
@@ -765,7 +772,7 @@ public final class Playtest {
             }
             if (t.inWall > 0) {
                 walls++;
-                problems.add(t.species + " inside a block " + t.inWall + " s");
+                problems.add(t.species + " inside a block " + t.inWall + " s" + t.wallWhy);
             }
             if (t.waterHops >= 3) {
                 hops++;
