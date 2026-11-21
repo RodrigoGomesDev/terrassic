@@ -67,6 +67,8 @@ public abstract class LeanGeoRenderer<T extends Entity & GeoAnimatable> extends 
     // state of the animal being drawn (render thread only)
     private ResourceLocation texture;
     private ModelPrep current;
+    /** Which cubes of {@link #current} are opaque in {@link #texture}: looked up once per animal, not once per cube. */
+    private boolean[] currentOpaque;
     private boolean cull;
     private boolean eyeIsPoint;
     private final Vector4d eyeView = new Vector4d();
@@ -129,6 +131,7 @@ public abstract class LeanGeoRenderer<T extends Entity & GeoAnimatable> extends 
             this.texture = this.getTextureLocation(animatable);
             this.current = lean ? this.prep(model, animatable) : null;
             this.cull = lean && backfaces && (colour >>> 24) == 0xFF && !animatable.isInvisible() && this.eye();
+            this.currentOpaque = this.cull && this.current != null ? this.current.opaqueFlags(this.texture) : null;
         }
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight,
                 packedOverlay, colour);
@@ -241,7 +244,8 @@ public abstract class LeanGeoRenderer<T extends Entity & GeoAnimatable> extends 
 
     private void draw(CubePrep p, Matrix4f pose, Matrix3f nrm, VertexConsumer buffer, int packedLight, int packedOverlay,
                       int colour) {
-        boolean cull = this.cull && p.closed && this.current.opaque(this.texture, p);
+        boolean[] op = this.currentOpaque;
+        boolean cull = this.cull && p.closed && op != null && p.index < op.length && op[p.index];
         float m00 = pose.m00(), m01 = pose.m01(), m02 = pose.m02();
         float m10 = pose.m10(), m11 = pose.m11(), m12 = pose.m12();
         float m20 = pose.m20(), m21 = pose.m21(), m22 = pose.m22();
@@ -468,16 +472,18 @@ public abstract class LeanGeoRenderer<T extends Entity & GeoAnimatable> extends 
             return p;
         }
 
-        boolean opaque(ResourceLocation texture, CubePrep p) {
+        /** Per cube index: every texel of its faces opaque in this texture (a cube added later reads as not opaque).
+         *  1.21.1: asked once per animal drawn; per cube, the texture's map lookup was 14% of the render thread. */
+        boolean[] opaqueFlags(ResourceLocation texture) {
             if (texture == null) {
-                return false;
+                return null;
             }
             boolean[] flags = this.opaque.get(texture);
             if (flags == null || flags.length < this.cubes.size()) {
                 flags = this.measure(texture);
                 this.opaque.put(texture, flags);
             }
-            return p.index < flags.length && flags[p.index];
+            return flags;
         }
 
         /** Every texel of every drawn face of each cube fully opaque in this texture (read once from the resource). */
