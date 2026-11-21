@@ -368,8 +368,12 @@ public final class Playtest {
         // a habitat of each: the Maiasaura's plains, the Corythosaurus' swamp, the Pachyrhinosaurus' taiga, the
         // Thescelosaurus' river bank (its burrow)
         String[][] habitats = {{"plains", "maiasaura"}, {"swamp", "corythosaurus"}, {"taiga", "pachyrhinosaurus"}, {"river", "thescelosaurus"}};
+        String onlySp = System.getenv("TERRASSIC_PLAYTEST_SPECIES");    // portraits of these only (comma list)
         for (int h = 0; h < habitats.length; h++) {
             String[] hab = habitats[h];
+            if (portraitsOnly && onlySp != null && !onlySp.contains(hab[1])) {
+                continue;
+            }
             int[] at = {0, 0};
             int[] from = {h % 2 == 0 ? 600 : -600, h < 2 ? 600 : -600};
             STEPS.add(mc -> {
@@ -406,22 +410,37 @@ public final class Playtest {
     private static void portrait(String species) {
         java.util.UUID id = java.util.UUID.nameUUIDFromBytes(("bateria-" + species).getBytes(StandardCharsets.UTF_8));
         DinosaurEntity[] dino = new DinosaurEntity[1];
+        int[] spotAt = new int[3];
         STEPS.add(mc -> {
             command(mc, "time set 6000");
             command(mc, "gamemode spectator");
             ServerLevel lv = mc.getSingleplayerServer().overworld();
-            int[] spot = openGround(lv, mc.player.getBlockX(), mc.player.getBlockZ());
-            int x = spot[0], z = spot[1], y = spot[2];
+            // on the server thread: the heightmap of chunks not loaded yet, read from the client thread, left the
+            // client without those chunks (only the sky in the photo, and the player fell out of the world)
+            int px = mc.player.getBlockX(), pz = mc.player.getBlockZ();
+            int[] spot = mc.getSingleplayerServer().submit(() -> openGround(lv, px, pz)).join();
+            int x = spot[0], y = spot[1], z = spot[2];
             REPORT.add(String.format(Locale.ROOT, "  portrait spot for %s: %d %d %d (%s)", species, x, y, z,
                     lv.getBiome(new BlockPos(x, y, z)).unwrapKey().map(k -> k.location().getPath()).orElse("?")));
+            spotAt[0] = x;
+            spotAt[1] = y;
+            spotAt[2] = z;
+            // the camera near first: a spot up to 64 blocks off was past where the client tracks the animal
+            command(mc, String.format(Locale.ROOT, "tp @s %d %d %d", x, y + 8, z + 10));
+            return 200;     // the chunks round it drawn (after 30 ticks the photo had only the sky)
+        });
+        STEPS.add(mc -> {
+            int x = spotAt[0], y = spotAt[1], z = spotAt[2];
             // the others out of the picture (a portrait, not the tour)
-            command(mc, String.format(Locale.ROOT, "kill @e[type=!player,x=%d,y=%d,z=%d,distance=..40]", x, y, z));
+            // (out of the world, not killed: a kill leaves a carcass in the picture)
+            command(mc, String.format(Locale.ROOT, "tp @e[type=!player,x=%d,y=%d,z=%d,distance=..40] ~ -200 ~", x, y, z));
             command(mc, String.format(Locale.ROOT, "summon terrassic:%s %d.5 %d %d.5 {NoAI:1b,Invulnerable:1b,PersistenceRequired:1b,Female:0b,"
                     + "Rotation:[%.0ff,0f],UUID:[I;%d,%d,%d,%d]}", species, x, y, z, 30.0F,
                     (int) (id.getMostSignificantBits() >> 32), (int) id.getMostSignificantBits(),
                     (int) (id.getLeastSignificantBits() >> 32), (int) id.getLeastSignificantBits()));
             return 40;
         });
+        int[] tries = {0};
         for (String view : new String[]{"34", "lado"}) {
             STEPS.add(mc -> {
                 dino[0] = null;
@@ -429,6 +448,9 @@ public final class Playtest {
                     if (e instanceof DinosaurEntity d && id.equals(d.getUUID())) {
                         dino[0] = d;
                     }
+                }
+                if (dino[0] == null && tries[0]++ < 200) {
+                    return -1;      // not on the client yet: again next tick (up to 10 s)
                 }
                 if (dino[0] == null) {
                     REPORT.add("  portrait " + species + " " + view + ": NOT FOUND");
@@ -441,27 +463,42 @@ public final class Playtest {
                 Vec3 side = new Vec3(-Mth.cos(bodyYaw), 0, -Mth.sin(bodyYaw));
                 Vec3 forward = new Vec3(-Mth.sin(bodyYaw), 0, Mth.cos(bodyYaw));
                 double dist = size * 0.75D + 2.0D;
-                Vec3 eye0 = "34".equals(view)
-                        ? c.add(side.scale(dist * 0.8D)).add(forward.scale(dist * 0.7D)).add(0, size * 0.25D, 0)
-                        : c.add(side.scale(dist * 1.1D)).add(0, size * 0.1D, 0);
-                // never inside the ground or a bush: up until the eye and the block over it are open
+                // from either side (the one with a clear view of it), the eye out of the ground and the leaves
                 ServerLevel lv = mc.getSingleplayerServer().overworld();
-                Vec3 e1 = eye0;
-                for (int up = 0; up < 10; up++) {
-                    BlockPos b = BlockPos.containing(e1);
-                    if (lv.getBlockState(b).isAir() && lv.getBlockState(b.above()).isAir()) {
-                        break;
+                ServerPlayer viewer = mc.getSingleplayerServer().getPlayerList().getPlayer(mc.player.getUUID());
+                Vec3 eye = mc.getSingleplayerServer().submit(() -> {
+                    Vec3 first = null;
+                    for (float s2 : new float[]{1.0F, -1.0F}) {
+                        for (double lift = 0.0D; lift <= 4.0D; lift += 2.0D) {
+                            Vec3 e0 = "34".equals(view)
+                                    ? c.add(side.scale(s2 * dist * 0.8D)).add(forward.scale(dist * 0.7D)).add(0, size * 0.25D + lift, 0)
+                                    : c.add(side.scale(s2 * dist * 1.1D)).add(0, size * 0.1D + lift, 0);
+                            for (int up = 0; up < 10; up++) {
+                                BlockPos b = BlockPos.containing(e0);
+                                if (lv.getBlockState(b).isAir() && lv.getBlockState(b.above()).isAir()) {
+                                    break;
+                                }
+                                e0 = e0.add(0, 1.0D, 0);
+                            }
+                            if (first == null) {
+                                first = e0;
+                            }
+                            var hit = lv.clip(new net.minecraft.world.level.ClipContext(e0, c,
+                                    net.minecraft.world.level.ClipContext.Block.VISUAL, net.minecraft.world.level.ClipContext.Fluid.NONE, viewer));
+                            if (hit.getType() == net.minecraft.world.phys.HitResult.Type.MISS) {
+                                return e0;
+                            }
+                        }
                     }
-                    e1 = e1.add(0, 1.0D, 0);
-                }
-                Vec3 eye = e1;
+                    return first;
+                }).join();
                 Vec3 d = c.subtract(eye);
                 float yaw = (float) (Mth.atan2(d.z, d.x) * Mth.RAD_TO_DEG) - 90.0F;
                 float pitch = (float) -(Mth.atan2(d.y, Math.sqrt(d.x * d.x + d.z * d.z)) * Mth.RAD_TO_DEG);
                 ServerPlayer sp = mc.getSingleplayerServer().getPlayerList().getPlayer(mc.player.getUUID());
                 double eyeH = mc.player.getEyeHeight();
                 mc.getSingleplayerServer().execute(() -> sp.teleportTo(sp.serverLevel(), eye.x, eye.y - eyeH, eye.z, yaw, pitch));
-                return 30;
+                return 60;
             });
             STEPS.add(mc -> {
                 if (dino[0] != null) {
@@ -480,7 +517,7 @@ public final class Playtest {
         });
     }
 
-    /** A level, open patch near (x0, z0) for a portrait: no leaves over it, dry, the ground within 1 block over 9 x 9
+    /** A level, open patch near (x0, z0) for a portrait: no leaves over it, dry, the ground within 2 blocks over 17 x 17 (room for the camera)
      *  (searched in rings up to 64 blocks out); {x, y, z}, or the place itself if none. */
     private static int[] openGround(ServerLevel lv, int x0, int z0) {
         for (int r = 6; r <= 64; r += 6) {
@@ -488,8 +525,8 @@ public final class Playtest {
                 int x = x0 + (int) Math.round(Math.cos(a * Math.PI / 8.0D) * r), z = z0 + (int) Math.round(Math.sin(a * Math.PI / 8.0D) * r);
                 int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE;
                 boolean ok = true;
-                for (int dx = -4; dx <= 4 && ok; dx += 2) {
-                    for (int dz = -4; dz <= 4 && ok; dz += 2) {
+                for (int dx = -8; dx <= 8 && ok; dx += 2) {
+                    for (int dz = -8; dz <= 8 && ok; dz += 2) {
                         int h = lv.getHeight(Heightmap.Types.MOTION_BLOCKING, x + dx, z + dz);
                         int hn = lv.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x + dx, z + dz);
                         BlockPos g = new BlockPos(x + dx, hn - 1, z + dz);
@@ -498,7 +535,7 @@ public final class Playtest {
                         hi = Math.max(hi, hn);
                     }
                 }
-                if (ok && hi - lo <= 1) {
+                if (ok && hi - lo <= 2) {
                     return new int[]{x, lv.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z};
                 }
             }
