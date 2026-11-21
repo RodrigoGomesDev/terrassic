@@ -96,7 +96,9 @@ páginas: fase `guide` do `PartsShowcase`. Pelo `VERSOES.md` seria 1.8.0; o Rodr
 **Partes de acerto (1.7, `docs/PLANO_PARTES.md`)**: cabeça 125%, pescoço 100%, cauda 75% nas 13 espécies refeitas
 (`entity/parts/DinoPart`, mixins em `mixin/parts`, medidas de `tools/javagen/parts.py` via `gen_species.PARTS_SPECIES`;
 espécie refeita nova entra lá); mordida medida da cabeça (`ai/HeadMeleeAttackGoal`). Regressão: `parts_regression.py`.
-A `mc/1.21.1` tem a 1.7 inteira portada (Fabric + NeoForge compilam; regressões de protocolo só Fabric nessa branch).
+A 1.11.0 foi portada para a 1.21.1 em `port/1.11.0-1.21.1` (API, Jade 15.10.6 e validação na seção "A 1.11.0 na
+1.21.1" de `docs/DESEMPENHO_1_11.md`; dados no formato do 1.21 pelo `para_1_21.py` no fim do `gen_resources.py`;
+BehaviorTest com `--quickPlaySingleplayer partes`, um mundo plano). A `mc/1.21.1` tem a 1.7 inteira portada (Fabric + NeoForge compilam; regressões de protocolo só Fabric nessa branch).
 Partes seguem o modelo animado (três layouts: em pé, deitado, cabeça baixa; posição por quadro no cliente,
 `PartFrameMixin`). Validação da 1.7 estável (05/11): tabela em `docs/FEEDBACK_1_7.md`; teste no cliente real com
 `client/dev/PartsShowcase` (`TERRASSIC_PARTS_SHOWCASE=1`, fases `still,flight,moving,feedback,bettercombat,density`);

@@ -487,3 +487,72 @@ Gráfico: `Claude outputs/bateria-1.11/img/desempenho_final.png` (e `.svg`), cen
 `Claude outputs/bateria-1.11/img/<espécie>_34.png` e `_lado.png` (Fabric, num bioma real ao meio-dia), feitas por
 `TERRASSIC_PLAYTEST=1 TERRASSIC_PLAYTEST_ONLY=portraits` (`TERRASSIC_PLAYTEST_SPECIES=...` escolhe as espécies): chão
 aberto de 17 × 17, os outros bichos tirados, câmera do lado com visão livre.
+
+## A 1.11.0 na 1.21.1 (21/11)
+
+Porte de `main..rel/1.11.0` para a branch `port/1.11.0-1.21.1` (de `mc/1.21.1` = `ca3fc17e`). Assets, ferramentas e
+documentos vieram iguais; os dados foram regerados pelo `gen_resources.py` (o `para_1_21.py` põe `recipe/`,
+`advancement/`, `loot_table/` e `structure/` no formato do 1.21).
+
+### O que mudou de API
+
+- GeckoLib 4.9: pacotes sem `core` (`animation.*`, `cache.object.GeoBone` no lugar de `CoreGeoBone`), `handleAnimations`
+  com `partialTick`, e no `LeanGeoRenderer` a cor é um `int` ARGB (`renderCube`, `renderCubesOfBone`,
+  `createVerticesOfQuad`, `renderRecursively` e `actuallyRender` com `int colour`; `addVertex` com cor inteira; o corte
+  das faces de trás só com alfa `0xFF`). O giro do cubo e o `fixInvertedFlatCube` do 4.9 são os mesmos do 4.8, então o
+  desenho enxuto continua igual ao do GeckoLib (fotos lado a lado com as da 1.20.1: mesmo modelo, mesmas cores).
+- `MemoWalkNodeEvaluator`: o 1.21 troca `getBlockPathType(BlockGetter, ...)` por `getPathType(PathfindingContext, ...)`
+  e já guarda o tipo do próprio bloco no `PathTypeCache` do mundo; a lembrança por busca continua valendo para a resposta
+  inteira (os 26 vizinhos procurando fogo ou cacto).
+- Dados sincronizados com `SynchedEntityData.Builder`, `finalizeSpawn` sem NBT, `NbtUtils.readBlockPos(tag, chave)`,
+  objetivos em execução pelo `WrappedGoal`, ovo coberto com `useItemOn` (`ItemInteractionResult`),
+  `ResourceLocation.fromNamespaceAndPath`, `createFreshLevel` com a tela de volta, ticks do servidor por
+  `getTickTimesNanos()`. O `FrameTimer` do 1.20.1 não existe mais: `PerfTest` e `DrawBench` contam os quadros por
+  `mixin/client/FrameCountMixin` (`DebugScreenOverlay.logFrameDuration`).
+- Jade 15.10.6 (`maven.modrinth:jade:15.10.6+fabric` / `+neoforge`), mesma API do plugin; `-Pjade` no `runClient` do
+  Fabric e do NeoForge.
+- Achado no `PerfTest` da 1.21.1: a procura das faces opacas da textura era feita a cada cubo e aparecia como 14% da
+  thread de render; agora é uma vez por bicho desenhado (mesmo resultado).
+
+### Validação
+
+- `./gradlew build` (Fabric e NeoForge): passou. `python3 -B tools/validation/check_project.py`: 0 erros.
+- **Regressão de comportamento** (`regressao`, cliente Fabric, mundo plano `partes` convertido da 1.20.1): **211 de 213**.
+  Repetidas as duas falhas: "manada junta" (12,7 blocos com migração; na repetição 11,2 contra 22,8 da referência:
+  passou) e "pernas do Tescelossauro" (145 graus num tique, no pico da corrida; na repetição 107, limite 125: passou).
+  As duas são instabilidade perto do limite, não defeito.
+- **Rodada num mundo real** (`TERRASSIC_PLAYTEST=1`): primeira rodada **77 de 79**. Os quatro herbívoros nascem e
+  se comportam (Maiassauro 49, Coritossauro 10, Paquirrinossauro 7, Tescelossauro 22 vistos; 101, 90, 3 e 65 linhas de
+  log), Colônia de Ninhos com 12 ovos (9 cobertos) e 11 Maiassauros, ninguém preso, 0 "Unable to find animation". As
+  duas falhas: um Protocerátops 1 s dentro de bloco (o mesmo caso da 1.20.1) e um Daspletossauro 5 s "flutuando" a 0,75
+  de bloco numa mata de sequoias, andando (não era a física de bicho parado: ela exige estar no chão).
+  Mais duas rodadas no mesmo mundo (semente fixa): **68 de 70** e **85 de 87**. O Daspletossauro "flutuando" não
+  voltou. O Protocerátops voltou na segunda (17 s, no mesmo lugar da primeira, Lugar 15, rio em -568 -600) e não na
+  terceira, que já registra onde o bicho está e em que bloco (`Playtest`: "inside a block ... at, eye in"). O
+  Paquirrinossauro não deu linha `[pachy]` em duas das três rodadas (4 vistos; a roda e o duelo dependem de um
+  predador ou de um rival chegando; na fase `pachy` da regressão as checagens passaram). Na terceira, o LOD teve um
+  quadro de 0,51 no cruzamento dos 64 blocos (0,07 e 0,13 nas outras duas); fica anotado. Ninguém preso 20 s ou mais
+  em nenhuma rodada.
+- **NeoForge**: `./gradlew :neoforge:runClient -Pjade` com `TERRASSIC_PLAYTEST_ONLY=portraits`: mundo Terrassic novo,
+  os 4 herbívoros chamados nos seus habitats e fotografados, o Jade carregou o plugin, sem crash nem erro do mod.
+- **Jade no Fabric**: `TERRASSIC_JADE_SHOTS=1 ./gradlew :fabric:runClient -Pjade --args="--quickPlaySingleplayer partes"`:
+  selvagem, filhote, domado, desmaiado em doma (torpor e tempo para acordar vindos do servidor), alfa, placa forçada e a
+  tela do HUD fotografados.
+
+### Desempenho na 1.21.1 (`PerfTest`, Fabric)
+
+| Rodada | Bichos | CPU do servidor (ms/tick) | Com o mod (ms/tick) | % de 50 ms | FPS |
+|---|---:|---:|---:|---:|---:|
+| A (`9bde0d1b`) | 123 | 16.6 | 9.4 | 19% | 63 |
+| B (`0d9cbab5`, opacas por bicho) | 115 | 8.8 | **4.5** | 9% | **94** |
+
+A rodada A teve janelas de 27-42 ms (duelos e caçadas; o cenário é caótico de propósito, ver "Como medir") e a máquina
+tinha carga 2-4; a B, carga 5-6. Na B, o mod no servidor fica em 4,5 ms/tick e o cliente em 94 FPS, o mesmo patamar da
+1.20.1 (6,2 ms e 91-95 FPS na medida limpa). Thread de render: 81% com o mod na pilha, quase tudo GeckoLib (animação
+45%, vértices 23%).
+
+Uma primeira tentativa do `PerfTest` travou: o motor de luz do vanilla lançou `MissingPaletteEntryException` num
+ProtoChunk durante a geração do mundo novo e a thread do servidor ficou esperando aquele chunk para sempre. Não se
+repetiu em mais quatro mundos novos (duas rodadas de jogo, o `PerfTest` B e o NeoForge); fica anotado.
+
+Fotos: `Claude outputs/bateria-1.11/img/1.21.1/` (`fabric_bateria_*`, `neoforge_bateria_*`, `fabric_jade_*`).
