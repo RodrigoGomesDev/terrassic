@@ -67,6 +67,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         DinoLod.Pose pose = animatable.lodPose instanceof DinoLod.Pose p ? p : null;
         if (pose != null && pose.skip(level, getAnimationProcessor())) {
             pose.restore(this);
+            com.terrassic.client.dev.LodProbe.frame(animatable, getAnimationProcessor());
             return;
         }
         super.handleAnimations(animatable, instanceId, animationState);
@@ -77,6 +78,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             }
             pose.capture(getAnimationProcessor());
         }
+        com.terrassic.client.dev.LodProbe.frame(animatable, getAnimationProcessor());
     }
 
     @Override
