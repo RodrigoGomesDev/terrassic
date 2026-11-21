@@ -27,7 +27,9 @@ import java.nio.file.Path;
  *   "hud_mount": true,       // HUD: plate of the dinosaur you ride
  *   "hud_notices": true,     // HUD: notices about your animals on the right (false = action bar, as before)
  *   "hud_numbers_always": false, // HUD: the mount's health in numbers all the time (default: when it changes)
- *   "hud_nameplate": true,   // HUD: nameplate over the animal you look at
+ *   "hud_nameplate": true,   // HUD: nameplate over the animal you look at (name, level, health bar)
+ *   "hud_nameplate_with_jade": false, // 1.11: keep the nameplate when Jade is installed (Jade shows the same, so
+ *                            // by default the nameplate steps aside for it; see nameplate())
  *   "hud_taming": true,      // HUD: torpor and taming bars beside a knocked-out animal
  *   "hud_new_species": true, // HUD: toast when a species reaches a new Field Guide level
  *   "hud_era_title": true,   // HUD: the era's name when you arrive
@@ -37,7 +39,10 @@ import java.nio.file.Path;
  *   "terrassic_fonts": true, // the mod's own typefaces (Sedimento, Entalhe, Caderno); false = vanilla font
  *   "roar_shake": true,      // the camera shakes near a loud roar (T. rex)
  *   "mount_attack": true,    // v0.12: riding your dinosaur, a left click is its attack (false = your own hand)
- *   "alpha_aura": true       // the alphas' aura: motes in the colours of their coat (docs/ALFAS.md)
+ *   "alpha_aura": true,      // the alphas' aura: motes in the colours of their coat (docs/ALFAS.md)
+ *   "lod_near": 32,          // 1.11: past this many blocks the animals are animated every second frame, without the
+ *                            // live layer and without cubes under half a pixel (client/DinoLod); 0 = always full
+ *   "lod_far": 64            // 1.11: past this many blocks, every third frame
  * }
  * </pre>
  */
@@ -49,7 +54,7 @@ public final class ClientConfig {
             "hud_taming", "hud_new_species", "hud_era_title", "hud_rift_alert", "shooting_stars", "ritual_sky",
             "terrassic_fonts", "roar_shake", "mount_attack", "alpha_aura"};
     /** The options that are off until the player turns them on. */
-    private static final String[] OFF = {"hud_numbers_always"};
+    private static final String[] OFF = {"hud_numbers_always", "hud_nameplate_with_jade"};
 
     private ClientConfig() {
     }
@@ -64,6 +69,19 @@ public final class ClientConfig {
 
     public static boolean loadingTips() {
         return flag("loading_tips");
+    }
+
+    /** Whether Jade (the "what am I looking at" tooltip mod) is installed; it shows our animals (compat.jade). */
+    public static boolean jade() {
+        return Platform.isModLoaded("jade");
+    }
+
+    /**
+     * The nameplate with its health bar over the animal you look at (1.11, a player's request): "hud_nameplate", and
+     * with Jade installed only if "hud_nameplate_with_jade" forces it back, so the two are not drawn on top of each other.
+     */
+    public static boolean nameplate() {
+        return flag("hud_nameplate") && (!jade() || flag("hud_nameplate_with_jade"));
     }
 
     /** Any boolean option above; missing ones count as their default (on, except {@link #OFF}). */
@@ -87,6 +105,15 @@ public final class ClientConfig {
             return Math.max(1, Math.min(gui, cfg.get("hud_scale").getAsInt()));
         }
         return Math.max(1, gui - 1);
+    }
+
+    /** A whole-number option ("lod_near", "lod_far"), or {@code def} when it is missing or not a number. */
+    public static int intOption(String name, int def) {
+        JsonObject cfg = load();
+        if (cfg.has(name) && cfg.get(name).isJsonPrimitive() && cfg.get(name).getAsJsonPrimitive().isNumber()) {
+            return cfg.get(name).getAsInt();
+        }
+        return def;
     }
 
     /** "hud_scale" as the options screen shows it: 0 for "auto", or 1 to 4. */
@@ -146,6 +173,14 @@ public final class ClientConfig {
         }
         if (!cfg.has("hud_style")) {
             cfg.addProperty("hud_style", "amber");
+            changed = true;
+        }
+        if (!cfg.has("lod_near")) {
+            cfg.addProperty("lod_near", 32);
+            changed = true;
+        }
+        if (!cfg.has("lod_far")) {
+            cfg.addProperty("lod_far", 64);
             changed = true;
         }
         if (!cfg.has("hud_scale")) {

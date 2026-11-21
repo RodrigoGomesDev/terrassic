@@ -117,6 +117,12 @@ public abstract class ApexTheropod extends PredatorDinosaur {
     /** The roar (its threat voice). */
     protected abstract SoundEvent roarSound();
 
+    /** The voice of the roar it is giving now (1.11: a rig can call with another voice, e.g. the Albertosaurus'
+     *  pack call); its threat voice unless the rig says otherwise. */
+    protected SoundEvent roarVoice() {
+        return this.roarSound();
+    }
+
     @Override
     protected String[] extraActions() {
         String[] common = this.hasDuelMoves()
@@ -465,7 +471,7 @@ public abstract class ApexTheropod extends PredatorDinosaur {
         this.roarAge++;
         this.roarLeft--;
         if (this.roarAge == (this.loudRoar ? LOUD_SOUND : ROAR_SOUND)) {
-            this.playSound(this.roarSound(), this.loudRoar ? 5.0F : 3.0F, (this.loudRoar ? 0.85F : 1.0F) * this.getVoicePitch());
+            this.playSound(this.roarVoice(), this.loudRoar ? 5.0F : 3.0F, (this.loudRoar ? 0.85F : 1.0F) * this.getVoicePitch());
             if (!Behaviour.oldRoar) {
                 this.roarFear();
             }

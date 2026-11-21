@@ -399,6 +399,16 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     /** Species id, used for asset and animation names. */
     public abstract String speciesId();
 
+    /** 1.11.0: just out of an egg at {@code pos} ({@code wild}: a wild clutch). The Maiasaura's calf stays in its nest. */
+    public void hatchedFrom(net.minecraft.core.BlockPos pos, boolean wild) {
+    }
+
+    /** 1.11.0, client: the head of a baby drawn this much bigger (the Maiasaura calf's big head and short snout,
+     *  Horner & Makela 1979); 1 for the others. */
+    public float babyHeadScale() {
+        return 1.0F;
+    }
+
     /** Extra one-shot animations besides "attack". */
     protected String[] extraActions() {
         return new String[0];
@@ -1467,7 +1477,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         // the head's axes in the body's frame (forward, side, up): turned by the look, tilted by the pitch
         double cl = Mth.cos(look), sl = Mth.sin(look), cp = Mth.cos(pitch), sp = Mth.sin(pitch);
         double[][] head = {{cp * cl, cp * sl, -sp}, {-sl, cl, 0.0D}, {sp * cl, sp * sl, cp}};
-        double[][] flat = {{1.0D, 0.0D, 0.0D}, {0.0D, 1.0D, 0.0D}, {0.0D, 0.0D, 1.0D}};
+        double[][] flat = FLAT_AXES;
         // a flyer's tilt about its saddle (DinosaurRenderer): roll about forward, then pitch about the side
         double tf = 0.0D, tu = 0.0D, ct = 1.0D, st = 0.0D, cr = 1.0D, sr = 0.0D;
         if (flyer != null && this.deathTime <= 0) {
@@ -1482,7 +1492,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         double pivotF = this.partPivot() * scale, pivotU = this.partPivotUp() * scale;
         double minX = px, minY = py, minZ = pz, maxX = px, maxY = py, maxZ = pz;
         double[] c = new double[3];
-        double[][] axes = new double[3][];
+        // 1.11: the same three axes and half sizes reused for every part (this runs every tick and, near the camera,
+        // every frame for every creature; it allocated six small arrays per part)
+        double[][] axes = new double[3][3];
+        double[] half = new double[3];
         for (DinoPart part : this.parts) {
             DinoPart.Kind kind = part.kind();
             float[] l = part.spec.layout(layout);
@@ -1503,7 +1516,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 c[2] = up;
             }
             for (int k = 0; k < 3; k++) {
-                axes[k] = a[k].clone();
+                axes[k][0] = a[k][0];
+                axes[k][1] = a[k][1];
+                axes[k][2] = a[k][2];
             }
             if (st != 0.0D || sr != 0.0D) {
                 tilt(c, tf, tu, ct, st, cr, sr, true);
@@ -1513,7 +1528,9 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
             }
             // to the world: x = forward*fX + side*sX, y = up, z = forward*fZ + side*sZ
             double x = px + c[0] * fX + c[1] * sX, y = py + c[2], z = pz + c[0] * fZ + c[1] * sZ;
-            double[] half = {half0, half1, half2};
+            half[0] = half0;
+            half[1] = half1;
+            half[2] = half2;
             double hx = 0.0D, hy = 0.0D, hz = 0.0D;
             for (int k = 0; k < 3; k++) {
                 hx += Math.abs(axes[k][0] * fX + axes[k][1] * sX) * half[k];
@@ -1534,6 +1551,8 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
         this.partsBounds = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
     }
+
+    private static final double[][] FLAT_AXES = {{1.0D, 0.0D, 0.0D}, {0.0D, 1.0D, 0.0D}, {0.0D, 0.0D, 1.0D}};
 
     /** A flyer's tilt on a vector of the body's frame (forward, side, up), about (pivotF, 0, pivotU) for a point: roll
      *  first (the model's +x side up), then pitch (the nose up), as DinosaurRenderer#applyRotations turns the model. */
@@ -1623,7 +1642,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** The species whose AI duels (their rigs have guard, sidesteps, feint, block, recoil, submit). */
     private static final java.util.Set<String> DUEL_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus", "spinosaurus",
-            "dakotaraptor", "pachycephalosaurus", "therizinosaurus", "triceratops", "styracosaurus", "protoceratops", "ankylosaurus");
+            "dakotaraptor", "pachycephalosaurus", "therizinosaurus", "triceratops", "styracosaurus", "protoceratops", "ankylosaurus", "pachyrhinosaurus");
 
     public boolean hasDuelMoves() {
         return DUEL_SPECIES.contains(this.speciesId());
@@ -1633,7 +1652,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
      *  triggers their rest transitions and tracks their fatigue. */
     private static final java.util.Set<String> LIVELY_SET_SPECIES = java.util.Set.of("tyrannosaurus", "carnotaurus", "giganotosaurus",
             "spinosaurus", "velociraptor", "dakotaraptor", "pachycephalosaurus", "gallimimus", "parasaurolophus", "edmontosaurus",
-            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops");
+            "ankylosaurus", "therizinosaurus", "deinosuchus", "triceratops", "styracosaurus", "protoceratops", "maiasaura", "corythosaurus", "thescelosaurus", "pachyrhinosaurus");
 
     public boolean hasLivelySet() {
         return LIVELY_SET_SPECIES.contains(this.speciesId());
@@ -1641,7 +1660,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     // ------------------------------------------------------------------ horn lock (Farke et al. 2009)
     /** Species whose grown rivals lock horns and push (horn_lock loop, horn_lock_start, horn_lock_break). */
-    private static final java.util.Set<String> HORN_LOCK_SPECIES = java.util.Set.of("triceratops");
+    private static final java.util.Set<String> HORN_LOCK_SPECIES = java.util.Set.of("triceratops", "pachyrhinosaurus");   // the Pachyrhinosaurus' lock is its boss push
     private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_LOCKED =
             net.minecraft.network.syncher.SynchedEntityData.defineId(DinosaurEntity.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
     private DinosaurEntity lockedWith;
@@ -1797,7 +1816,11 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         boolean sitting = this.isInSittingPose() && !this.isVehicle();
         boolean sleeping = this.isSleeping();
         if (sleeping && !this.wasSleeping && !this.wasSitting) {
-            triggerAnim(ACTION_CONTROLLER, "fall_asleep");
+            // only the T. rex and the Spinosaurus have it: a trigger for a missing animation made GeckoLib print
+            // "Unable to find animation" on every frame of the client (4,285 lines in one Corythosaurus test)
+            if (this.hasAnim("fall_asleep")) {
+                triggerAnim(ACTION_CONTROLLER, "fall_asleep");
+            }
         } else if (sitting && !this.wasSitting && !sleeping) {
             triggerAnim(ACTION_CONTROLLER, "lie_down");
         } else if (!sitting && this.wasSitting && !sleeping && !this.wasSleeping && this.isAlive()) {
@@ -4118,6 +4141,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     /** Client: the live motion layer (tail spring, bank, turn rate), for the species that have it (LivelyMotion). */
     private LivelyMotion lively;
+    /** 1.11, client only (client/DinoLod): the live layer's weight by distance from the camera (0 = off, not ticked),
+     *  and the last pose worked out for the far-away frame skipping. */
+    public float lodLively = 1.0F;
+    public Object lodPose;
 
     /** Whether it stands and fights a duel with a big predator (circling, guarding, blocking) instead of being plain
      *  prey: the T. rex's ApexBiteGoal duels such targets. */
@@ -4156,6 +4183,21 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
     // 1.9.5: ai/DinoPathNavigation (straight lines through a path) is NOT in use: tested through a field of pillars it
     // turned the body less (T. rex 697 -> 340 deg) but three of four walkers caught on the pillars and never arrived in
     // 30 s (vanilla: 15-21 s). Left off until the corner test and the stuck recovery are redone (Fluidez 2).
+
+    /** Vanilla's ground navigation, with the path search remembered for a second (1.11, ai/MemoPathFinder: the same
+     *  search asked again from the same block gets the same answer without searching) and each block's type read once
+     *  per search (ai/MemoWalkNodeEvaluator). Flyers and swimmers keep theirs. */
+    @Override
+    protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(Level level) {
+        return new net.minecraft.world.entity.ai.navigation.GroundPathNavigation(this, level) {
+            @Override
+            protected net.minecraft.world.level.pathfinder.PathFinder createPathFinder(int maxVisitedNodes) {
+                this.nodeEvaluator = new com.terrassic.entity.ai.MemoWalkNodeEvaluator();
+                this.nodeEvaluator.setCanPassDoors(true);
+                return new com.terrassic.entity.ai.MemoPathFinder(this.nodeEvaluator, maxVisitedNodes);
+            }
+        };
+    }
 
     public LivelyMotion lively() {
         return this.lively;
@@ -4233,9 +4275,10 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
 
     @Override
     public void tick() {
+        this.stillSkipped = false;   // set again by travel, if it runs
         super.tick();
         this.tickParts();
-        if (this.level().isClientSide() && this.livelyMotion()) {
+        if (this.level().isClientSide() && this.livelyMotion() && this.lodLively > 0.0F) {
             if (this.lively == null) {
                 this.lively = new LivelyMotion();
             }
@@ -4581,8 +4624,66 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
+    // ------------------------------------------------------------------ physics of an animal standing still
+
+    /** TERRASSIC_NO_STILL=1 turns the skip off (to compare in the tests). */
+    private static final boolean STILL_PHYSICS = !"1".equals(System.getenv("TERRASSIC_NO_STILL"));
+    /** Ticks standing still before the physics is skipped. */
+    private static final int STILL_AFTER = 10;
+    /** Even standing still, the whole physics runs every this many ticks (contact with fire, cactus, plates). */
+    private static final int STILL_CHECK = 10;
+    private int stillTicks;
+    private boolean stillSkipped;
+
+    /**
+     * 1.11 (docs/DESEMPENHO_1_11.md, approved by Rodrigo): an animal standing on the ground with nothing to do (no path,
+     * no target, no move wanted, no rider, no speed, not hurt, not in water, lava, fire or powder snow, not leashed) for
+     * half a second skips the vanilla movement and collision (Entity.move, a third of the server's time with big
+     * bodies) and its own pushing of the others. Anything that changes wakes it at once: a path or a goal that moves it,
+     * a push or a hit (speed), the block it stands on losing its collision. The whole physics still runs one tick in ten.
+     */
+    private boolean standingStill(Vec3 input) {
+        if (!STILL_PHYSICS || this.level().isClientSide()) {
+            return false;
+        }
+        Vec3 v = this.getDeltaMovement();
+        boolean still = this.onGround() && v.y <= 0.0D && v.x * v.x + v.z * v.z < 1.0E-6D && input.lengthSqr() < 1.0E-6D
+                && !this.jumping && this.hurtTime == 0 && this.deathTime == 0 && this.isAlive()
+                && !this.noPhysics && !this.isNoGravity() && !this.isVehicle() && !this.isPassenger() && !this.isLeashed()
+                && !this.isInWater() && !this.isInLava() && !this.isOnFire() && !this.isInPowderSnow
+                && this.getTarget() == null && this.getNavigation().isDone() && !this.getMoveControl().hasWanted();
+        if (!still) {
+            this.stillTicks = 0;
+            return false;
+        }
+        if (++this.stillTicks < STILL_AFTER || (this.tickCount + this.getId()) % STILL_CHECK == 0) {
+            return false;
+        }
+        BlockPos on = this.mainSupportingBlockPos.orElse(null);
+        if (on == null || this.level().getBlockState(on).getCollisionShape(this.level(), on).isEmpty()) {
+            this.stillTicks = 0;   // the ground went: it falls this very tick
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void pushEntities() {
+        if (this.stillSkipped) {
+            return;   // the ones that move still push it (and themselves) from their own tick
+        }
+        super.pushEntities();
+    }
+
     @Override
     public void travel(Vec3 input) {
+        this.stillSkipped = this.standingStill(input);
+        if (this.stillSkipped) {
+            Vec3 v = this.getDeltaMovement();
+            this.setDeltaMovement(0.0D, v.y, 0.0D);
+            this.calculateEntityAnimation(false);
+            return;
+        }
         if (this.isEntangled()) {
             // tied by a bola: no steps, no jump, ridden or not; it just stands (or drops) where it is
             input = Vec3.ZERO;
@@ -4714,7 +4815,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         if (egg == null) {
             return false;
         }
-        BlockPos pos = findEggSpot(level, groundUnder(level, this));
+        BlockPos pos = findEggSpot(level, this.eggCentre(level));
         if (pos == null) {
             return false;
         }
@@ -4749,7 +4850,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
                 other.setHunger(other.getHunger() - 15);
             }
         } else {
-            BlockPos pos = findEggSpot(level, groundUnder(level, mother));
+            BlockPos pos = findEggSpot(level, mother.eggCentre(level));
             if (pos != null) {
                 level.setBlock(pos, egg.defaultBlockState(), Block.UPDATE_ALL);
                 level.playSound(null, pos, ModSounds.SFX_EGG_LAY.get(), SoundSource.BLOCKS, 0.7F, 0.9F);
@@ -4781,9 +4882,13 @@ public abstract class DinosaurEntity extends TamableAnimal implements GeoEntity,
         }
     }
 
-    /** Where a mother lays: her own block on the ground, or the ground under her when she mates on the wing or swimming
+    /** Where a mother lays (a species may lay elsewhere: the Thescelosaurus at the end of its burrow): her own block on the ground, or the ground under her when she mates on the wing or swimming
      *  (1.9: a Quetzalcoatlus pair mating in the air looked for a nest spot one block round the flying mother, found
      *  none and dropped the egg as an item from the sky). */
+    protected BlockPos eggCentre(LevelAccessor level) {
+        return groundUnder(level, this);
+    }
+
     private static BlockPos groundUnder(LevelAccessor level, DinosaurEntity mother) {
         BlockPos at = mother.blockPosition();
         if (mother.onGround()) {

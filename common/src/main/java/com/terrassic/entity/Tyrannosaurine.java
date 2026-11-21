@@ -1,6 +1,7 @@
 package com.terrassic.entity;
 
 import com.terrassic.entity.ai.CarcassStealGoal;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.AgeableMob;
@@ -222,7 +223,7 @@ public abstract class Tyrannosaurine extends ApexTheropod {
     }
 
     public void stealRoarSound() {
-        this.playSound(this.roarSound(), 3.0F, 0.9F * this.getVoicePitch());
+        this.playSound(ModSounds.DASPLETOSAURUS_STEAL_ROAR.get(), 3.0F, this.getVoicePitch());
     }
 
     /** A scavenger first (Hone &amp; Tanke 2015): with meat lying in sight it goes for the carcass (to eat it, or to
@@ -258,7 +259,7 @@ public abstract class Tyrannosaurine extends ApexTheropod {
             this.getLookControl().setLookAt(other, 30.0F, 30.0F);
             this.triggerAnim(ACTION_CONTROLLER, "threat");
             this.logAct("carcass guard: growls at " + other.speciesId());
-            this.playSound(this.roarSound(), 1.4F, 0.7F * this.getVoicePitch());
+            this.playSound(ModSounds.DASPLETOSAURUS_CARCASS_GROWL.get(), 1.4F, this.getVoicePitch());
             this.carcassActCooldown = 160 + this.getRandom().nextInt(120);
             return;
         }

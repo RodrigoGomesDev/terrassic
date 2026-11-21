@@ -24,7 +24,8 @@ public class SafeRestGoal extends Goal {
     @Override
     public boolean canUse() {
         if (DinoSleepGoal.OLD || this.mob.isTame() || this.mob.isBaby() || this.mob.isSleeping() || this.mob.getTarget() != null
-                || this.mob.isVehicle() || !this.mob.isSleepTime() || this.mob.tickCount % 40 != 0 || this.mob.safeToSleep()) {
+                // "% 40 > 1": asked only every second tick (see DinoSleepGoal.canContinueToUse)
+                || this.mob.isVehicle() || !this.mob.isSleepTime() || this.mob.tickCount % 40 > 1 || this.mob.safeToSleep()) {
             return false;
         }
         return this.moveAway();

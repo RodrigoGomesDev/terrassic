@@ -32,6 +32,9 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
     /** The alpha's own coats (docs/ALFAS.md), for the species in entity/Alphas.SPECIES; null for the others. */
     private final ResourceLocation alphaMaleTexture;
     private final ResourceLocation alphaFemaleTexture;
+    /** 1.11.0: the calf's own coat (the Maiasaura's, paler and smooth); null for the species whose young share the adult's. */
+    private final ResourceLocation babyTexture;
+    private static final java.util.Set<String> BABY_SKINS = java.util.Set.of("maiasaura", "corythosaurus", "thescelosaurus", "pachyrhinosaurus");
 
     public DinoGeoModel(String speciesId) {
         super(Terrassic.id(speciesId), "head");
@@ -40,6 +43,7 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         boolean alpha = com.terrassic.entity.Alphas.hasAlpha(speciesId);
         this.alphaMaleTexture = alpha ? Terrassic.id("textures/entity/" + speciesId + "_alpha_male.png") : null;
         this.alphaFemaleTexture = alpha ? Terrassic.id("textures/entity/" + speciesId + "_alpha_female.png") : null;
+        this.babyTexture = BABY_SKINS.contains(speciesId) ? Terrassic.id("textures/entity/" + speciesId + "_baby.png") : null;
     }
 
     @Override
@@ -47,7 +51,34 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         if (this.alphaMaleTexture != null && animatable.isAlpha()) {
             return animatable.isFemale() ? this.alphaFemaleTexture : this.alphaMaleTexture;
         }
+        if (this.babyTexture != null && animatable.isBaby()) {
+            return this.babyTexture;
+        }
         return animatable.isFemale() ? this.femaleTexture : this.maleTexture;
+    }
+
+    /** 1.11 (client/DinoLod): far from the camera the bones are worked out every second or third frame; on the
+     *  frames in between the animal's last pose goes back on the shared model. */
+    @Override
+    public void handleAnimations(T animatable, long instanceId, AnimationState<T> animationState, float partialTick) {
+        double d2 = DinoLod.distSq(animatable);
+        animatable.lodLively = DinoLod.livelyWeight(d2);
+        int level = DinoLod.level(d2);
+        DinoLod.Pose pose = animatable.lodPose instanceof DinoLod.Pose p ? p : null;
+        if (pose != null && pose.skip(level, getAnimationProcessor())) {
+            pose.restore(this);
+            com.terrassic.client.dev.LodProbe.frame(animatable, getAnimationProcessor());
+            return;
+        }
+        super.handleAnimations(animatable, instanceId, animationState, partialTick);
+        if (level > 0) {
+            if (pose == null) {
+                pose = new DinoLod.Pose();
+                animatable.lodPose = pose;
+            }
+            pose.capture(getAnimationProcessor());
+        }
+        com.terrassic.client.dev.LodProbe.frame(animatable, getAnimationProcessor());
     }
 
     @Override
@@ -80,6 +111,21 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
         hide("adult_comb", baby);
         hide("adult_frill", baby);
         hide("young_frill", !baby);
+        // 1.11.0: the Maiasaura's solid hump between the eyes is the grown one's; the calf has a big head and a flat brow
+        hide("adult_bump", baby);
+        // 1.11.0: the Pachyrhinosaurus' boss and the two hooks of its frill are the grown one's (the boss appears with
+        // sexual maturity, Erickson & Druckenmiller 2011); the calf has a smooth brow
+        hide("adult_boss", baby);
+        hide("adult_hooks", baby);
+        hide("young_brow", !baby);
+        GeoBone headScaled = getAnimationProcessor().getBone("head");
+        float hs = baby ? animatable.babyHeadScale() : 1.0F;
+        if (headScaled != null && hs != 1.0F) {
+            headScaled.setScaleX(headScaled.getScaleX() * hs);
+            headScaled.setScaleY(headScaled.getScaleY() * hs);
+            headScaled.setScaleZ(headScaled.getScaleZ() * hs);
+            headScaled.resetStateChanges();
+        }
         // 1.9.5: the neck takes 40% of the look's turn from the head (the head alone turned like a vanilla mob's); the
         // sum is the same, so it still looks where it looks
         GeoBone headB = getAnimationProcessor().getBone("head");
@@ -93,9 +139,14 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
             headB.resetStateChanges();
         }
         com.terrassic.entity.LivelyMotion lively = animatable.lively();
-        if (lively != null) {
+        float weight = animatable.lodLively;
+        if (lively != null && weight > 0.0F) {
             this.scaleOf = animatable.livelyModelScale() * animatable.getScale();
+            float[] before = weight < 1.0F ? this.livelyBones() : null;
             this.applyLively(lively, animationState.getPartialTick());
+            if (before != null) {
+                this.fadeLively(before, weight);   // 1.11: fades out past "lod_near" (client/DinoLod), no jump
+            }
             // HOTFIX 1.9.1: GeckoLib clears the "changed" marks at the end of its own tick, before this; the live layer's
             // additions marked the bones changed again, so on the next frame a bone the playing animation does not key
             // (a jaw, a beak, a tail tip, a leg) was not reset to its rest and the addition piled up frame after frame:
@@ -106,6 +157,41 @@ public class DinoGeoModel<T extends DinosaurEntity> extends DefaultedEntityGeoMo
                 if (b != null) {
                     b.resetStateChanges();
                 }
+            }
+        }
+    }
+
+    private final float[] livelyBuf = new float[LIVELY_BONES.length * 6];
+
+    /** Rotation and position of every bone the live layer adds to, before it adds. */
+    private float[] livelyBones() {
+        for (int i = 0; i < LIVELY_BONES.length; i++) {
+            GeoBone b = getAnimationProcessor().getBone(LIVELY_BONES[i]);
+            if (b != null) {
+                int v = i * 6;
+                this.livelyBuf[v] = b.getRotX();
+                this.livelyBuf[v + 1] = b.getRotY();
+                this.livelyBuf[v + 2] = b.getRotZ();
+                this.livelyBuf[v + 3] = b.getPosX();
+                this.livelyBuf[v + 4] = b.getPosY();
+                this.livelyBuf[v + 5] = b.getPosZ();
+            }
+        }
+        return this.livelyBuf;
+    }
+
+    /** Keeps only {@code w} of what the live layer added. */
+    private void fadeLively(float[] before, float w) {
+        for (int i = 0; i < LIVELY_BONES.length; i++) {
+            GeoBone b = getAnimationProcessor().getBone(LIVELY_BONES[i]);
+            if (b != null) {
+                int v = i * 6;
+                b.setRotX(before[v] + (b.getRotX() - before[v]) * w);
+                b.setRotY(before[v + 1] + (b.getRotY() - before[v + 1]) * w);
+                b.setRotZ(before[v + 2] + (b.getRotZ() - before[v + 2]) * w);
+                b.setPosX(before[v + 3] + (b.getPosX() - before[v + 3]) * w);
+                b.setPosY(before[v + 4] + (b.getPosY() - before[v + 4]) * w);
+                b.setPosZ(before[v + 5] + (b.getPosZ() - before[v + 5]) * w);
             }
         }
     }

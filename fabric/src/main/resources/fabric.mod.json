@@ -20,6 +20,9 @@
     ],
     "client": [
       "com.terrassic.fabric.client.EraFilterFabric"
+    ],
+    "jade": [
+      "com.terrassic.compat.jade.TerrassicJadePlugin"
     ]
   },
   "depends": {
@@ -29,6 +32,9 @@
     "architectury": ">=13.0.0",
     "geckolib": ">=4.7.0",
     "fabric-api": "*"
+  },
+  "suggests": {
+    "jade": "*"
   },
   "mixins": [
     "terrassic.mixins.json"

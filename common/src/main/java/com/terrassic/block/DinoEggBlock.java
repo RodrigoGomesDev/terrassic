@@ -43,6 +43,13 @@ public class DinoEggBlock extends Block {
     public static final IntegerProperty HATCH = BlockStateProperties.HATCH;
     /** Laid by wild parents: hatches a wild baby and is guarded by the herd. */
     public static final BooleanProperty WILD = BooleanProperty.create("wild");
+    /** 1.11.0: a clutch covered with leaves (docs/estudos/15, Maiassaura): warmed by the rotting plants it hatches faster;
+     *  only the nesting colonies' species ({@link #nestCare}) use it, the others ignore it. */
+    public static final BooleanProperty COVERED = BooleanProperty.create("covered");
+    /** Hatch speed of a nest-care clutch, covered and open, against the 0.5 of an ordinary egg (a HYPOTHESIS: Horner's
+     *  reading of eggs warmed by rotting vegetation). */
+    public static final double COVERED_SPEED = 1.0D;
+    public static final double OPEN_SPEED = 0.25D;
     private static final VoxelShape SMALL = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 9.0D, 11.0D);
     private static final VoxelShape LARGE = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 13.0D, 12.0D);
 
@@ -53,12 +60,12 @@ public class DinoEggBlock extends Block {
         super(properties);
         this.species = species;
         this.large = large;
-        this.registerDefaultState(this.stateDefinition.any().setValue(HATCH, 0).setValue(WILD, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(HATCH, 0).setValue(WILD, false).setValue(COVERED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HATCH, WILD);
+        builder.add(HATCH, WILD, COVERED);
     }
 
     @Override
@@ -69,7 +76,8 @@ public class DinoEggBlock extends Block {
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         // one in two random ticks advances a stage at hatch speed 1; the Hatching speed rule scales that (docs/REGRAS.md)
-        int stages = Rules.scaled(random, 0.5D, Rule.HATCH_SPEED, level);
+        double speed = !this.nestCare() ? 0.5D : state.getValue(COVERED) ? COVERED_SPEED : OPEN_SPEED;
+        int stages = Rules.scaled(random, speed, Rule.HATCH_SPEED, level);
         int hatch = state.getValue(HATCH);
         for (int i = 0; i < stages; i++) {
             if (hatch < 2) {
@@ -83,6 +91,39 @@ public class DinoEggBlock extends Block {
             level.playSound(null, pos, ModSounds.SFX_EGG_CRACK.get(), SoundSource.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
             level.setBlock(pos, state.setValue(HATCH, hatch), Block.UPDATE_CLIENTS);
         }
+    }
+
+    /** 1.11.0: whether the species keeps its clutch in a covered nest and its colony defends it (the Maiasaura). */
+    public boolean nestCare() {
+        return this.species.get() == com.terrassic.registry.ModEntities.MAIASAURA.get();
+    }
+
+    /** Covers the clutch with leaves (a mother's cover_nest, or a player with leaves or a fern). */
+    public static boolean cover(Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof DinoEggBlock egg) || !egg.nestCare() || state.getValue(COVERED)) {
+            return false;
+        }
+        level.setBlock(pos, state.setValue(COVERED, true), Block.UPDATE_CLIENTS);
+        level.playSound(null, pos, SoundEvents.AZALEA_LEAVES_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F);
+        return true;
+    }
+
+    @Override
+    protected net.minecraft.world.ItemInteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level,
+            BlockPos pos, Player player, net.minecraft.world.InteractionHand hand, net.minecraft.world.phys.BlockHitResult hit) {
+        if (this.nestCare() && !state.getValue(COVERED)
+                && (stack.is(net.minecraft.tags.ItemTags.LEAVES) || stack.is(net.minecraft.world.item.Items.FERN)
+                || stack.is(net.minecraft.world.item.Items.LARGE_FERN))) {
+            if (!level.isClientSide()) {
+                cover(level, pos);
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
+            }
+            return net.minecraft.world.ItemInteractionResult.sidedSuccess(level.isClientSide());
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 
     /** The herd defends its nest: whoever starts breaking a wild egg becomes the enemy of the wild adults around. */
@@ -105,6 +146,9 @@ public class DinoEggBlock extends Block {
             return;
         }
         EntityType<?> type = this.species.get();
+        if (this.nestCare() && com.terrassic.entity.Maiasaurine.colonyDefends(level, pos, culprit)) {
+            return;         // 1.11.0: the whole colony defends its eggs (its radius, not the 24 blocks of the egg rage)
+        }
         if (!com.terrassic.entity.Behaviour.oldEgg && culprit instanceof Player thief) {
             // 1.10.1 (docs/estudos/12, section 6; ARK): a player taking a wild egg enrages the grown ones of its species
             // within 24 blocks for 60 s: the fighters go for the thief, the runners run
@@ -151,6 +195,7 @@ public class DinoEggBlock extends Block {
             }
         }
         level.addFreshEntity(baby);
+        baby.hatchedFrom(pos, wild);
         baby.playAmbientSound();
     }
 }

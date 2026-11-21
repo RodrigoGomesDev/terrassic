@@ -140,7 +140,7 @@ public class DuelGoal extends Goal {
         if (this.mob instanceof com.terrassic.entity.ApexTheropod apex) {
             opener = apex.hasRoaredAt(this.rival) ? null : apex.duelOpener();
         } else {
-            for (String o : new String[]{"crown_display", "claw_display", "paw_scrape", "threat", "display", "stamp"}) {
+            for (String o : new String[]{"crown_display", "claw_display", "paw_scrape", "threat", "display", "stamp", "head_toss"}) {
                 if (this.mob.hasAnim(o)) {
                     opener = o;
                     break;
@@ -641,9 +641,11 @@ public class DuelGoal extends Goal {
         this.stats[5]++;
         float away = Mth.wrapDegrees(this.yawTo(by) - this.mob.getYRot()) > 0.0F ? -1.0F : 1.0F;
         // the Majungasaurus' low centre of gravity: it barely gives (Majungasaurine.staggerGive)
-        this.spin = away * (90.0F + this.mob.getRandom().nextFloat() * 60.0F) * com.terrassic.entity.Majungasaurine.staggerGive(this.mob);
+        this.spin = away * (90.0F + this.mob.getRandom().nextFloat() * 60.0F) * com.terrassic.entity.Majungasaurine.staggerGive(this.mob)
+                * com.terrassic.entity.Pachyrhinosaurine.staggerGive(this.mob);
         this.mob.triggerAnim(DinosaurEntity.ACTION_CONTROLLER, this.mob.hasAnim("stagger") ? "stagger" : "recoil");
-        this.mob.pushedBy(by, 0.3D * com.terrassic.entity.Majungasaurine.staggerGive(this.mob));
+        this.mob.pushedBy(by, 0.3D * com.terrassic.entity.Majungasaurine.staggerGive(this.mob)
+                * com.terrassic.entity.Pachyrhinosaurine.staggerGive(this.mob));
         DuelGoal other = by instanceof DinosaurEntity d ? d.duelBrain() : null;
         if (other != null) {
             other.punishFrom = other.now;

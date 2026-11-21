@@ -16,7 +16,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
  * A carcass is drawn with the dead species' own model and texture (by sex), frozen in its knocked_out pose, at the
  * species' render scale (TerrassicClient.MODEL_SCALES) times the animal's own scale (babies).
  */
-public class CarcassRenderer extends GeoEntityRenderer<CarcassEntity> {
+public class CarcassRenderer extends LeanGeoRenderer<CarcassEntity> {
     public CarcassRenderer(EntityRendererProvider.Context context) {
         super(context, new CarcassModel());
         this.shadowRadius = 1.0F;

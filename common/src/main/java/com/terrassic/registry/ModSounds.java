@@ -26,11 +26,16 @@ public final class ModSounds {
     public static final RegistrySupplier<SoundEvent> TARBOSAURUS_STEP = register("voice.tarbosaurus.step");
     public static final RegistrySupplier<SoundEvent> DASPLETOSAURUS_AMBIENT = register("voice.daspletosaurus.ambient");
     public static final RegistrySupplier<SoundEvent> DASPLETOSAURUS_THREAT = register("voice.daspletosaurus.threat");
+    public static final RegistrySupplier<SoundEvent> DASPLETOSAURUS_STEAL_ROAR = register("voice.daspletosaurus.steal_roar");
+    public static final RegistrySupplier<SoundEvent> DASPLETOSAURUS_CARCASS_GROWL = register("voice.daspletosaurus.carcass_growl");
     public static final RegistrySupplier<SoundEvent> DASPLETOSAURUS_HURT = register("voice.daspletosaurus.hurt");
     public static final RegistrySupplier<SoundEvent> DASPLETOSAURUS_DEATH = register("voice.daspletosaurus.death");
     public static final RegistrySupplier<SoundEvent> DASPLETOSAURUS_STEP = register("voice.daspletosaurus.step");
     public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_AMBIENT = register("voice.albertosaurus.ambient");
     public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_THREAT = register("voice.albertosaurus.threat");
+    public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_CALL_PACK = register("voice.albertosaurus.call_pack");
+    public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_ANSWER = register("voice.albertosaurus.answer");
+    public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_PANT = register("voice.albertosaurus.pant");
     public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_HURT = register("voice.albertosaurus.hurt");
     public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_DEATH = register("voice.albertosaurus.death");
     public static final RegistrySupplier<SoundEvent> ALBERTOSAURUS_STEP = register("voice.albertosaurus.step");
@@ -41,6 +46,7 @@ public final class ModSounds {
     public static final RegistrySupplier<SoundEvent> GIGANOTOSAURUS_STEP = register("voice.giganotosaurus.step");
     public static final RegistrySupplier<SoundEvent> CARCHARODONTOSAURUS_AMBIENT = register("voice.carcharodontosaurus.ambient");
     public static final RegistrySupplier<SoundEvent> CARCHARODONTOSAURUS_THREAT = register("voice.carcharodontosaurus.threat");
+    public static final RegistrySupplier<SoundEvent> CARCHARODONTOSAURUS_TEAR_HISS = register("voice.carcharodontosaurus.tear_hiss");
     public static final RegistrySupplier<SoundEvent> CARCHARODONTOSAURUS_HURT = register("voice.carcharodontosaurus.hurt");
     public static final RegistrySupplier<SoundEvent> CARCHARODONTOSAURUS_DEATH = register("voice.carcharodontosaurus.death");
     public static final RegistrySupplier<SoundEvent> CARCHARODONTOSAURUS_STEP = register("voice.carcharodontosaurus.step");
@@ -56,6 +62,7 @@ public final class ModSounds {
     public static final RegistrySupplier<SoundEvent> CARNOTAURUS_STEP = register("voice.carnotaurus.step");
     public static final RegistrySupplier<SoundEvent> MAJUNGASAURUS_AMBIENT = register("voice.majungasaurus.ambient");
     public static final RegistrySupplier<SoundEvent> MAJUNGASAURUS_THREAT = register("voice.majungasaurus.threat");
+    public static final RegistrySupplier<SoundEvent> MAJUNGASAURUS_TEMPER = register("voice.majungasaurus.temper");
     public static final RegistrySupplier<SoundEvent> MAJUNGASAURUS_HURT = register("voice.majungasaurus.hurt");
     public static final RegistrySupplier<SoundEvent> MAJUNGASAURUS_DEATH = register("voice.majungasaurus.death");
     public static final RegistrySupplier<SoundEvent> MAJUNGASAURUS_STEP = register("voice.majungasaurus.step");

@@ -22,14 +22,58 @@ public final class DinoParts {
         return entity instanceof DinoPart part ? part.owner : entity;
     }
 
+    /** How far a creature's parts may move within one tick past the bounds the index took (blocks). */
+    private static final double PAD = 4.0D;
+
+    /**
+     * 1.11 (docs/DESEMPENHO_1_11.md): every Level#getEntities call (each entity's collisions and pushes, every tick)
+     * walked all the creatures with parts and read each one's bounds object; with every species in one place that was
+     * 5% of the server tick. Once a tick the bounds go into one flat array, padded by {@link #PAD}, and a query only
+     * looks closer at the creatures whose padded bounds touch its box. The exact test stays the same as before.
+     */
+    public static final class Index {
+        final DinosaurEntity[] owners;
+        final double[] box;
+        final long tick;
+
+        Index(DinosaurEntity[] owners, long tick) {
+            this.owners = owners;
+            this.tick = tick;
+            this.box = new double[owners.length * 6];
+            for (int i = 0; i < owners.length; i++) {
+                AABB b = owners[i].partsBounds();
+                int k = i * 6;
+                this.box[k] = b.minX - PAD;
+                this.box[k + 1] = b.minY - PAD;
+                this.box[k + 2] = b.minZ - PAD;
+                this.box[k + 3] = b.maxX + PAD;
+                this.box[k + 4] = b.maxY + PAD;
+                this.box[k + 5] = b.maxZ + PAD;
+            }
+        }
+    }
+
     /** Adds to a Level#getEntities result the parts that lie in the box (the owner itself is found by the engine). */
     public static void addParts(Level level, Entity except, AABB box, Predicate<? super Entity> filter, List<Entity> out) {
-        DinosaurEntity[] owners = ((PartOwners) level).terrassic$partOwners();
+        PartOwners holder = (PartOwners) level;
+        DinosaurEntity[] owners = holder.terrassic$partOwners();
         if (owners.length == 0) {
             return;
         }
+        long now = level.getGameTime();
+        Index index = holder.terrassic$partIndex();
+        if (index == null || index.owners != owners || index.tick != now) {
+            index = new Index(owners, now);
+            holder.terrassic$setPartIndex(index);
+        }
+        double[] b = index.box;
         boolean stale = false;
-        for (DinosaurEntity owner : owners) {
+        for (int i = 0, k = 0; i < owners.length; i++, k += 6) {
+            if (b[k] >= box.maxX || b[k + 3] <= box.minX || b[k + 1] >= box.maxY || b[k + 4] <= box.minY
+                    || b[k + 2] >= box.maxZ || b[k + 5] <= box.minZ) {
+                continue;
+            }
+            DinosaurEntity owner = owners[i];
             if (owner.isRemoved() || owner.level() != level) {
                 stale = true;
                 continue;
@@ -44,7 +88,7 @@ public final class DinoParts {
             }
         }
         if (stale) {
-            ((PartOwners) level).terrassic$prunePartOwners();
+            holder.terrassic$prunePartOwners();
         }
     }
 

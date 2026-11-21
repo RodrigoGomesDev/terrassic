@@ -29,7 +29,8 @@ import org.joml.Vector4f;
  *       taming (the numbers come from the server, like the Field Lens card).</li>
  * </ul>
  * Not while holding the Field Lens (its card says all of it), nor on the animal you ride. "hud_nameplate" and
- * "hud_taming" in config/terrassic-client.json turn them off. The camera of the frame comes from
+ * "hud_taming" in config/terrassic-client.json turn them off; with Jade installed the nameplate is off unless
+ * "hud_nameplate_with_jade" is on (1.11, ClientConfig#nameplate). The camera of the frame comes from
  * mixin/client/LevelRendererMixin; without it there are no nameplates.
  */
 public final class DinoNameplate {
@@ -60,7 +61,8 @@ public final class DinoNameplate {
 
     private static void tick(Minecraft mc) {
         LocalPlayer player = mc.player;
-        if (player == null || mc.level == null || FieldLensItem.holding(player)) {
+        // off (or stepping aside for Jade): no look-up every tick either
+        if (player == null || mc.level == null || FieldLensItem.holding(player) || !ClientConfig.nameplate()) {
             target = -1;
             return;
         }
@@ -80,7 +82,7 @@ public final class DinoNameplate {
     private static void render(GuiGraphics g, DeltaTracker delta) {
         float partialTick = delta.getGameTimeDeltaPartialTick(false);
         Minecraft mc = Minecraft.getInstance();
-        if (mc.options.hideGui || mc.level == null || target < 0 || projection == null || !ClientConfig.flag("hud_nameplate")) {
+        if (mc.options.hideGui || mc.level == null || target < 0 || projection == null || !ClientConfig.nameplate()) {
             return;
         }
         Entity e = mc.level.getEntity(target);

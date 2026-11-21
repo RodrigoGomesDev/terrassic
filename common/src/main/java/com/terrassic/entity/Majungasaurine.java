@@ -6,6 +6,7 @@ import com.terrassic.Terrassic;
 
 import com.terrassic.entity.ai.CarcassStealGoal;
 import com.terrassic.entity.ai.WaterholeGuardGoal;
+import com.terrassic.registry.ModSounds;
 import java.util.UUID;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -574,7 +575,7 @@ public abstract class Majungasaurine extends ApexTheropod {
                     e -> e != this && e.isAlive() && !e.isBaby() && !(e instanceof Majungasaurine) && CarcassStealGoal.eatsMeat(e))) {
                 this.getLookControl().setLookAt(other, 30.0F, 30.0F);
                 this.triggerAnim(ACTION_CONTROLLER, "carcass_guard");
-                this.playSound(this.roarSound(), 1.2F, 0.8F * this.getVoicePitch());
+                this.playSound(ModSounds.MAJUNGASAURUS_TEMPER.get(), 1.2F, 0.95F * this.getVoicePitch());
                 this.threatCooldown = 120 + this.getRandom().nextInt(80);
                 this.logAct("carcass guard: growls over the carcass at the " + other.speciesId());
                 return;
@@ -582,9 +583,9 @@ public abstract class Majungasaurine extends ApexTheropod {
         }
     }
 
-    /** The low warning voice (its threat), for the dome and the waterhole. */
+    /** The low warning voice (the throat drumming of its temper, 1.11), for the dome and the waterhole. */
     public void warnSound() {
-        this.playSound(this.roarSound(), 1.2F, 0.85F * this.getVoicePitch());
+        this.playSound(ModSounds.MAJUNGASAURUS_TEMPER.get(), 1.2F, this.getVoicePitch());
     }
 
     // ------------------------------------------------------------------ the temper
@@ -613,7 +614,7 @@ public abstract class Majungasaurine extends ApexTheropod {
         } else if (!warnedHim && this.warnCooldown <= 0) {
             this.getLookControl().setLookAt(p, 30.0F, 30.0F);
             this.triggerAnim(ACTION_CONTROLLER, this.mode() == MODE_CROUCH ? "waterhole_threat" : "dome_display");
-            this.playSound(this.roarSound(), 1.0F, 0.9F * this.getVoicePitch());
+            this.playSound(ModSounds.MAJUNGASAURUS_TEMPER.get(), 1.0F, this.getVoicePitch());
             this.warned = p.getUUID();
             this.warnedUntil = this.tickCount + 100;
             this.warnCooldown = 200;

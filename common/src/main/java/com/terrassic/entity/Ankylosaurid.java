@@ -572,7 +572,8 @@ public abstract class Ankylosaurid extends HerbivoreDinosaur {
         @Override
         public boolean canUse() {
             Ankylosaurid a = Ankylosaurid.this;
-            if (!this.free() || a.tickCount % 10 != 0) {
+            // asked only every second tick (see DinoSleepGoal.canContinueToUse): "% 10 != 0" never let half of them start
+            if (!this.free() || a.tickCount % 10 > 1) {
                 return false;
             }
             a.meal = a.findMeal();

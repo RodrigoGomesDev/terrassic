@@ -16,6 +16,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.cache.object.GeoCube;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 /**
@@ -23,7 +25,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
  *   geo/entity/&lt;id&gt;.geo.json, animations/entity/&lt;id&gt;.animation.json,
  *   textures/entity/&lt;id&gt;_male.png and _female.png
  */
-public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRenderer<T> {
+public class DinosaurRenderer<T extends DinosaurEntity> extends LeanGeoRenderer<T> {
     /** How far from the player's centre the left shoulder is (blocks). */
     private static final double SHOULDER_SIDE = 0.37D;
 
@@ -115,9 +117,39 @@ public class DinosaurRenderer<T extends DinosaurEntity> extends GeoEntityRendere
         }
     }
 
+    /** 1.11 (client/DinoLod): cubes smaller than this (model px) cover under half a screen pixel and are not drawn. */
+    private float cullPx;
+
+    @Override
+    public void renderCubesOfBone(PoseStack poseStack, GeoBone bone, com.mojang.blaze3d.vertex.VertexConsumer buffer,
+                                  int packedLight, int packedOverlay, int colour) {
+        float min = this.cullPx;
+        if (min <= 0.0F) {
+            super.renderCubesOfBone(poseStack, bone, buffer, packedLight, packedOverlay, colour);
+            return;
+        }
+        if (bone.isHidden()) {
+            return;
+        }
+        for (GeoCube cube : bone.getCubes()) {
+            Vec3 s = cube.size();
+            if (Math.max(s.x, Math.max(s.y, s.z)) + 2.0D * cube.inflate() < min) {
+                continue;
+            }
+            poseStack.pushPose();
+            this.renderCube(poseStack, cube, buffer, packedLight, packedOverlay, colour);
+            poseStack.popPose();
+        }
+    }
+
     @Override
     public void render(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+        this.cullPx = DinoLod.cullPx(DinoLod.distSq(entity), this.renderScale(entity));
+        try {
+            super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+        } finally {
+            this.cullPx = 0.0F;
+        }
         if (HatsCompat.PRESENT) {
             HatsCompat.capture(entity, this.getGeoModel(), this.renderScale(entity));
         }

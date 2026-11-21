@@ -6,10 +6,12 @@ import com.terrassic.Terrassic;
 
 import com.terrassic.entity.ai.PackAmbushGoal;
 import com.terrassic.entity.ai.PackDriveGoal;
+import com.terrassic.registry.ModSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -338,6 +340,12 @@ public abstract class Albertosaurine extends ApexTheropod {
                 e -> e != this && e.isAlive() && !e.isTame() && e.getType() == this.getType() && !e.isKnockedOut());
     }
 
+    /** While it calls the pack, its roar is the pack call (three rising hoots, 1.11). */
+    @Override
+    protected SoundEvent roarVoice() {
+        return this.packCalling ? ModSounds.ALBERTOSAURUS_CALL_PACK.get() : super.roarVoice();
+    }
+
     /** The roar on a new target becomes the pack call while it calls; an answer has no roar of its own. */
     @Override
     public void roar() {
@@ -451,6 +459,7 @@ public abstract class Albertosaurine extends ApexTheropod {
         this.spentLeft = SPENT_TICKS;
         this.getNavigation().stop();
         this.triggerAnim(ACTION_CONTROLLER, "pant");
+        this.playSound(ModSounds.ALBERTOSAURUS_PANT.get(), 0.9F, this.getVoicePitch());
         AttributeInstance speed = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.removeModifier(SPENT_SLOW);
@@ -495,7 +504,7 @@ public abstract class Albertosaurine extends ApexTheropod {
         }
         this.getLookControl().setLookAt(caller, 30.0F, 30.0F);
         this.triggerAnim(ACTION_CONTROLLER, "answer");
-        this.playSound(this.getAmbientSound(), 1.4F, 1.08F * this.getVoicePitch());
+        this.playSound(ModSounds.ALBERTOSAURUS_ANSWER.get(), 1.6F, this.getVoicePitch());
         if (this.isDriver()) {
             this.drivePrey = target;
             this.driveLeader = caller;

@@ -31,7 +31,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Compsognathus       forest, jungle                  8       3-6
  *  Triceratops         savanna, plains                 6       2-4
  *  Styracosaurus       savanna, plains, forest         5       2-5
- *  Pachyrhinosaurus    taiga, hills, forest            4       2-5
+ *  Pachyrhinosaurus    taiga, hills, forest            4       4-8
  *  Protoceratops       desert*, badlands, savanna      7       2-5
  *  Leptoceratops       plains, forest, savanna         9       3-5
  *  Stegosaurus         forest, plains                  4       1-3
@@ -64,12 +64,12 @@ import net.minecraft.world.level.levelgen.Heightmap;
  *  Lepisosteus         river, swamp, mangrove, beach, stony shore 10      2-4
  *  Parasaurolophus     plains, forest                  5       2-5
  *  Pachycephalosaurus  taiga, hills                    4       2-3
- *  Thescelosaurus      forest, plains, swamp, mangrove 5       2-4
+ *  Thescelosaurus      forest, swamp, mangrove, river  5       2-4
  *  Gallimimus          savanna, plains, desert*        6       3-6
  *  Struthiomimus       plains, savanna, forest         6       3-6
- *  Maiasaura           plains, savanna                 4       3-6
+ *  Maiasaura           plains, savanna                 4       6-12
  *  Edmontosaurus       plains, forest, savanna         6       4-8
- *  Corythosaurus       forest, plains                  5       3-6
+ *  Corythosaurus       forest, swamp, mangrove         5       4-8
  *  Pteranodon          beach, stony shore              8       2-4
  *  Quetzalcoatlus      plains, savanna, badlands       3       1-2
  *  Hatzegopteryx       hills, forest                   2       1
@@ -207,7 +207,7 @@ public final class ModSpawns {
                 add(props, ModEntities.STYRACOSAURUS.get(), 5, 2, 5);
             }
             if (taiga || hill || forest) {
-                add(props, ModEntities.PACHYRHINOSAURUS.get(), 4, 2, 5);
+                add(props, ModEntities.PACHYRHINOSAURUS.get(), 4, 4, 8);
             }
             if (desert || badlands || savanna) {
                 add(props, ModEntities.PROTOCERATOPS.get(), 7, 2, 5);
@@ -305,7 +305,7 @@ public final class ModSpawns {
             if (taiga || hill) {
                 add(props, ModEntities.PACHYCEPHALOSAURUS.get(), 4, 2, 3);
             }
-            if (forest || plains || swamp) {
+            if (forest || swamp || river) {
                 add(props, ModEntities.THESCELOSAURUS.get(), 5, 2, 4);
             }
             if (savanna || plains || desert) {
@@ -315,13 +315,13 @@ public final class ModSpawns {
                 add(props, ModEntities.STRUTHIOMIMUS.get(), 6, 3, 6);
             }
             if (plains || savanna) {
-                add(props, ModEntities.MAIASAURA.get(), 4, 3, 6);
+                add(props, ModEntities.MAIASAURA.get(), 4, 6, 12);
             }
             if (plains || forest || savanna) {
                 add(props, ModEntities.EDMONTOSAURUS.get(), 6, 4, 8);
             }
-            if (forest || plains) {
-                add(props, ModEntities.CORYTHOSAURUS.get(), 5, 3, 6);
+            if (forest || swamp) {
+                add(props, ModEntities.CORYTHOSAURUS.get(), 5, 4, 8);
             }
             if (coast) {
                 add(props, ModEntities.PTERANODON.get(), 8, 2, 4);

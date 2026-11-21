@@ -30,7 +30,8 @@
     "client.BlowgunMouthMixin",
     "client.PartHitboxMixin",
     "client.PartFrameMixin",
-    "client.HatsHeadMixin"
+    "client.HatsHeadMixin",
+    "client.FrameCountMixin"
   ],
   "injectors": {
     "defaultRequire": 1

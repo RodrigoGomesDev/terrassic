@@ -8,6 +8,7 @@ import com.terrassic.entity.ai.CarcassDragGoal;
 import com.terrassic.entity.ai.CarcassStealGoal;
 import com.terrassic.entity.ai.RiverAmbushGoal;
 import com.terrassic.registry.ModEffects;
+import com.terrassic.registry.ModSounds;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -168,6 +169,14 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
         return all;
     }
 
+    /** Silent in ambush (1.11): no calls while it waits; the burst is silent too. */
+    @Override
+    public void playAmbientSound() {
+        if (this.mode() != MODE_AMBUSH) {
+            super.playAmbientSound();
+        }
+    }
+
     @Override
     protected String[] gestures() {
         if (this.mode() == MODE_AMBUSH) {
@@ -228,6 +237,7 @@ public abstract class Carcharodontosaurine extends ApexTheropod {
         super.struck(target, strike);
         this.burstHit = true;
         if (strike == TEAR) {
+            this.playSound(ModSounds.CARCHARODONTOSAURUS_TEAR_HISS.get(), 1.2F, this.getVoicePitch());
             this.bleed(target, "tear");
         }
     }
